@@ -1,0 +1,49 @@
+{
+  "container": {
+    "argv": [
+      "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+      "container",
+      "ls",
+      "--all",
+      "--no-trunc",
+      "--filter",
+      "label=com.docker.compose.project=dispatcharr-configured-source-844e15c24f",
+      "--format",
+      "{{.ID}}"
+    ],
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": "",
+    "empty": true
+  },
+  "network": {
+    "argv": [
+      "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+      "network",
+      "ls",
+      "--filter",
+      "label=com.docker.compose.project=dispatcharr-configured-source-844e15c24f",
+      "--format",
+      "{{.ID}}"
+    ],
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": "",
+    "empty": true
+  },
+  "volume": {
+    "argv": [
+      "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+      "volume",
+      "ls",
+      "--filter",
+      "label=com.docker.compose.project=dispatcharr-configured-source-844e15c24f",
+      "--format",
+      "{{.Name}}"
+    ],
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": "",
+    "empty": true
+  }
+}

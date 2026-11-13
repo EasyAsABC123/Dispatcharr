@@ -1,0 +1,3 @@
+# Artwork-onward8 draft — tests/fixture UNEXECUTED during Root solo
+
+Remaining11 failed at artwork before prepared/worker action: Jobs::connect_fixture correctly rejected different broker/result physical endpoints, proxy command count0. QA3 routes both separate DB8/9 through the same existing reply proxy whenever either is gated, preserving native endpoint restriction. Runtime/ELF unchanged. Prebooks first four programmes/Recordings via actual Source model/signals+duplicate producers as explicit context, no successful physical prefix replay or old state import. Exact packet/inputs/controls will be frozen and checked after Root solo release; no tests/app launch during hold.

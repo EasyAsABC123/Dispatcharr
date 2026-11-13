@@ -1,0 +1,3 @@
+# Artwork-onward8 complete corrected collector — UNEXECUTED
+
+Same QA9 source/b677 ELF/runtime/budgets. Preserves prior failed QA1 and QA2 actuals. QA2 three PG phases passed43checks; artwork then correctly hit native Configuration guard before prepared/action/proxy command because endpoints differed. QA3 routes BOTH broker8/result9 through same proxy for either gated role, retaining DBs/credentials and native restriction. Before-child receipts/assertions bind actual same address, separate DBs, no process/actions or proxy command. Source-model first4 booked context avoids replaying successful prefixes. Eighteen-tool AST/61 local controls0. No app while Root Main-heavy hold; Root exact review/slot/release required.

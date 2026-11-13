@@ -1,0 +1,30 @@
+{
+  "recomputed_count": 123,
+  "retained_count": 123,
+  "ordered_equal": false,
+  "all_field_full_records_multiset_equal": true,
+  "reason": "Comparator EXECUTION is a Python set; field traversal order differs across processes. No timestamp/value/window/case is dropped. This is offline audit list-order equality, not an executed Source/Native mismatch.",
+  "first_order_difference": {
+    "index": 0,
+    "recomputed": {
+      "path": "channels:2.created_at",
+      "Source_raw": "2026-11-12 23:34:44.990962+00:00",
+      "Native_raw": "2026-11-13 02:42:24.924074+00:00",
+      "Native_window": [
+        "2026-11-13T02:42:08.583432+00:00",
+        "2026-11-13T02:42:28.324627+00:00"
+      ],
+      "changed_in_task": false
+    },
+    "retained": {
+      "path": "channels:2.updated_at",
+      "Source_raw": "2026-11-12 23:34:44.990966+00:00",
+      "Native_raw": "2026-11-13 02:42:24.924080+00:00",
+      "Native_window": [
+        "2026-11-13T02:42:08.583432+00:00",
+        "2026-11-13T02:42:28.324627+00:00"
+      ],
+      "changed_in_task": false
+    }
+  }
+}

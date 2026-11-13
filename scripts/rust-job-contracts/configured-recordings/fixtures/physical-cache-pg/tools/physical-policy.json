@@ -1,0 +1,12 @@
+{
+  "DVR_GET": "\nlocal kind=redis.call('TYPE',KEYS[1]).ok\nif kind~='none' and kind~='string' then return {-1,false} end\nif redis.call('STRLEN',KEYS[1])>1048576 then return {-2,false} end\nlocal value=redis.call('GET',KEYS[1])\nif not value then return {0,false} end\nreturn {1,value}\n",
+  "DVR_GET_sha1": "b9bb840e513d1b679cdc39d656206ddc49785fad",
+  "ARTWORK_PUBLISH": "\nlocal q=redis.call('TYPE',KEYS[1]).ok;local b=redis.call('TYPE',KEYS[2]).ok\nif(q~='none'and q~='list')or(b~='none'and b~='set')then return -3 end\nif #ARGV[1]>65536 then return -1 end\nif redis.call('LLEN',KEYS[1])>=tonumber(ARGV[2])then return -2 end\nredis.call('SADD',KEYS[2],'celery'..string.char(6,22)..string.char(6,22)..'celery')\nreturn redis.call('LPUSH',KEYS[1],ARGV[1])\n",
+  "ARTWORK_PUBLISH_sha1": "fccf3707fcf917c0d98f08dd78a77efebbbf0ef7",
+  "CHANNELS_PUBLISH": "\nfor _,key in ipairs(KEYS) do local t=redis.call('TYPE',key).ok;if t~='none' and t~='zset' then return redis.error_reply('CORRUPT channel type') end end\nlocal dropped=0;for index,key in ipairs(KEYS) do\n redis.call('ZREMRANGEBYSCORE',key,0,tonumber(ARGV[1])-60)\n if redis.call('ZCARD',key)<tonumber(ARGV[2]) then redis.call('ZADD',key,ARGV[1],ARGV[index+2]);redis.call('EXPIRE',key,60) else dropped=dropped+1 end\nend;return dropped\n",
+  "CHANNELS_PUBLISH_sha1": "dc636bb6a59a35eef552c31c01a0448129998548",
+  "result_write_lua": "\nlocal t=redis.call('TYPE',KEYS[1]).ok\nif t~='none'and t~='string'then return -1 end\nif #ARGV[1]>262144 then return -1 end\nif t=='string'then\n if redis.call('STRLEN',KEYS[1])>262144 then return -1 end\n local ok,old=pcall(cjson.decode,redis.call('GET',KEYS[1]))\n if not ok or type(old)~='table'then return -1 end\n if old.status=='SUCCESS'then return 0 end\nend\nredis.call('SETEX',KEYS[1],3600,ARGV[1]);redis.call('PUBLISH',KEYS[1],ARGV[1]);return 1\n",
+  "result_write_lua_sha1": "fce9b39b58ad3c271e70b21db9c428b48e04b169",
+  "expected_redis_version": "8.10.3",
+  "result_write_setex_line": 11
+}

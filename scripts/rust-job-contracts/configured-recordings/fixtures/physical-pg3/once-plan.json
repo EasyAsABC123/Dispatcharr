@@ -1,0 +1,39 @@
+{
+  "status": "UNEXECUTED remaining11-only; no retry of passed phase1",
+  "argv": [
+    "python",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-2/tools/run_physical.py",
+    "--repo",
+    "/home/justin/github/Dispatcharr",
+    "--support-root",
+    "/home/justin/github/Dispatcharr/scripts/rust-core-perf/support",
+    "--output",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-remaining-1",
+    "--execution-inputs",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-2/Root-inputs-physical-remaining.json"
+  ],
+  "cwd": "/home/justin/github/Dispatcharr",
+  "shell_environment_script": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/environment.sh",
+  "output": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-remaining-1",
+  "proposed_inputs_sha256": "390e87e7c8d4f859f97fd8b40b093c0bbea23a9a901a181f76f20023fc372e20",
+  "case_plan_sha256": "fb28662912cb5d8472b94bc8649fd0faf4d450ed54fd58e4703b8a4f810b193e",
+  "mode": "physical-remaining",
+  "cases": 11,
+  "global_slot_required": true,
+  "Root_prior_independent_cleanup_required": true,
+  "case_budgets_unchanged": {
+    "held_reply_seconds": 6.2,
+    "response_seconds": 35,
+    "drain_seconds": 10,
+    "host_seconds": 600,
+    "cleanup_seconds": 90,
+    "baseline_cpu": 1,
+    "baseline_memory_bytes": 1073741824,
+    "baseline_pids": 256,
+    "pipe_bytes": 1048576,
+    "projects_sequential": true
+  },
+  "runtime_ELF_unchanged": true,
+  "no_retry": true,
+  "no_Source_worker_capture": true
+}

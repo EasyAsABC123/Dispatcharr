@@ -1,0 +1,38 @@
+{
+  "status": "UNEXECUTED remaining7; Root review/slot/admission required",
+  "argv": [
+    "python",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-5/tools/run_physical.py",
+    "--repo",
+    "/home/justin/github/Dispatcharr",
+    "--support-root",
+    "/home/justin/github/Dispatcharr/scripts/rust-core-perf/support",
+    "--output",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-channels-1",
+    "--execution-inputs",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-5/Root-inputs-channels-onward.json"
+  ],
+  "cwd": "/home/justin/github/Dispatcharr",
+  "shell_environment_script": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/environment.sh",
+  "proposed_inputs_sha256": "6aef707da018fc1350462a62ef13054e09e7e73ba90e70fbf71e01aa2cd8733e",
+  "case_plan_sha256": "5810492e26342747616f4d195f942886dcd6fd5a56405d7b17d18f57aaa570e1",
+  "mode": "physical-channels-onward",
+  "cases": 7,
+  "global_slot_required": true,
+  "Root_prior_independent_cleanup_required": true,
+  "budgets_unchanged": {
+    "held_reply_seconds": 6.2,
+    "response_seconds": 35,
+    "drain_seconds": 10,
+    "host_seconds": 600,
+    "cleanup_seconds": 90,
+    "baseline_cpu": 1,
+    "baseline_memory_bytes": 1073741824,
+    "baseline_pids": 256,
+    "pipe_bytes": 1048576,
+    "projects_sequential": true
+  },
+  "no_retry": true,
+  "no_passed_prefix_replay": true,
+  "runtime_ELF_unchanged": true
+}

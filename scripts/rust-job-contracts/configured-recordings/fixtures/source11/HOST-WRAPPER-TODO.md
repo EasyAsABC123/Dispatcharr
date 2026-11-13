@@ -1,0 +1,7 @@
+# Bounded host implementation and remaining gate
+
+Root implemented run_source.py/bounded_process.py in prep2; independent static review and local controls are complete. This is no longer a placeholder wrapper. Nine exact tools, six safe exports, tooling-script/compose/Docker byte identities and fixed fresh output bind admission. Read-only Docker/Compose/info preflight is separately retained before claim; immutable Git archive is written to a file and checked before extraction. No mutableHEAD/Source fallback.
+
+Every claimed command has bounded1MiB pipes, exact argv/cwd/PID/start/wait/stream receipts, and constructor-start intent before spawn. Unknown constructor state cannot pass settlement. Timeout/cap invalidation stops only the owned Compose services before host CLI termination; all actual processes/pipes must settle. Actual raw CID/image bytes precede assertions. Both owned container identities and before/after PID start identities plus independent project3inventories/exactCID absence are retained. Lowercase exact missing-CID response is recognized; other errors remain unknown.
+
+Original Source payload/case order103checks and controller600s remain unchanged. Cleanup90s is an ACCEPTANCE deadline: physical stop/join may finish later to retain ownership, but a late cleanup cannot qualify. No new timing/resource measurement or budget widening. Source11 still needs Root final seal/input/slot/once approval. No Source app has been dispatched by this packet.

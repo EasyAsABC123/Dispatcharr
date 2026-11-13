@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "scope": "Full projected plaintext and decoded data-only PG/cache/Redis byte inspection, not gzip-only/JWT-only scan",
+  "selected_plaintext_and_restored_proof_file_occurrences": 2955,
+  "restored_projected_compressed_files": 54,
+  "projected_proof_files": 1319,
+  "decoded_base64_hex_fields": 35160,
+  "unique_decoded_objects": 538,
+  "decode_failures": 0,
+  "actual_auth_frames": {
+    "unredacted-benign-R-10": 94,
+    "frontend-PasswordMessage": 188,
+    "backend-SASLContinue": 94,
+    "backend-SASLFinal": 94,
+    "unredacted-benign-R-0": 94
+  },
+  "raw_frontend_password_or_SCRAM_proof_remaining": 0,
+  "raw_backend_challenge_verifier_remaining": 0,
+  "all_application_frames_SQL_values_timestamps_order_preserved": "Independent recursive walk376changes only; authentication-projection.json",
+  "unredacted_generic_row_credentials": {
+    "EPG_source_password": null,
+    "nonempty_actual_URL_username_password_APIkey_Authorization_fields": 0,
+    "all27_sensitive_DockerEnv_occurrences": "ExactlyDJANGO_SECRET_KEY/POSTGRES_PASSWORD/REDIS_PASSWORD=playback-fixture-only",
+    "Redis_ACL_password_hash": "SHA256(public playback-fixture-only),not nonce-derived private key",
+    "owned_leases": "51rust:canonicalUUIDv4 identities; all fixture projects absent, not account/API authentication"
+  },
+  "original_publication1": "Privateblocked/frozen, full raw auth retained privately with hash provenance",
+  "projected_input_hash_policy": "Exactlyone projected hash per file; original rawhashes never accepted as alternatives",
+  "authentication_replay_qualified": false,
+  "violations": [],
+  "encoded_secret_transcript_matches": [],
+  "independent_projection_receipt_sha256": "f07b9762492255c4eb23022182d5876d1d45844bc532025016f1bc17743397f9",
+  "raw_source_preservation_receipt_sha256": "118c226485705803401c7d239fb232237cb6ff67105803d8128fecc1cf36c1a8"
+}

@@ -1,0 +1,213 @@
+{
+  "source_map_sha256": "4b0c34b67c7dc0be7f8a386af3da91d259e46a1f65f7f8ee60ee44304e88f750",
+  "all811_inputs_verified": true,
+  "copied_after_all_waits_zero": true,
+  "actual_build_and_test_waits": [
+    {
+      "label": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/source/rust",
+      "began_epoch": 1794545227.7181575,
+      "settled": true,
+      "exit": 0,
+      "pid": 2861341,
+      "starttime": "26562276",
+      "finished_epoch": 1794545229.476514
+    },
+    {
+      "label": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/source/rust",
+      "began_epoch": 1794545229.5476105,
+      "settled": true,
+      "exit": 0,
+      "pid": 2861459,
+      "starttime": "26562459",
+      "finished_epoch": 1794545289.5947926
+    },
+    {
+      "label": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/source/rust",
+      "began_epoch": 1794545289.666503,
+      "settled": true,
+      "exit": 0,
+      "pid": 2873494,
+      "starttime": "26568471",
+      "finished_epoch": 1794545340.1520271
+    },
+    {
+      "label": "defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/source/rust",
+      "began_epoch": 1794545340.2292387,
+      "settled": true,
+      "exit": 0,
+      "pid": 2881141,
+      "starttime": "26573527",
+      "finished_epoch": 1794545469.2496283
+    },
+    {
+      "label": "store-caught",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "recording_schedule::caught_insert_tests::"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/source/rust",
+      "began_epoch": 1794545469.324268,
+      "settled": true,
+      "exit": 0,
+      "pid": 2899519,
+      "starttime": "26586437",
+      "finished_epoch": 1794545500.0666845
+    },
+    {
+      "label": "job-caught",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "configured_recording_service::caught_insert_tests::"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/source/rust",
+      "began_epoch": 1794545500.141286,
+      "settled": true,
+      "exit": 0,
+      "pid": 2901294,
+      "starttime": "26589518",
+      "finished_epoch": 1794545539.0288148
+    },
+    {
+      "label": "decisions",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "configured_recordings::"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/source/rust",
+      "began_epoch": 1794545539.1023433,
+      "settled": true,
+      "exit": 0,
+      "pid": 2907907,
+      "starttime": "26593414",
+      "finished_epoch": 1794545539.2809703
+    },
+    {
+      "label": "artwork",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "recording_artwork::"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/source/rust",
+      "began_epoch": 1794545539.3553271,
+      "settled": true,
+      "exit": 0,
+      "pid": 2907924,
+      "starttime": "26593440",
+      "finished_epoch": 1794545539.4879663
+    },
+    {
+      "label": "route",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "configured_parent_fixture::"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/source/rust",
+      "began_epoch": 1794545539.5603247,
+      "settled": true,
+      "exit": 0,
+      "pid": 2907940,
+      "starttime": "26593460",
+      "finished_epoch": 1794545539.6974618
+    }
+  ],
+  "binaries": [
+    {
+      "name": "job-library",
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/outside-peers/job-library",
+      "sha256": "f792d58567b1a36f3f9f977a29edbfa0b1e52919ab5af64cc162e31474f58d6e",
+      "bytes": 64353112,
+      "tested_original": "/home/justin/github/Dispatcharr/artifacts/rust/target-configured-recordings-graduation-797-2/debug/deps/dispatcharr_job_transport-6fc7d4b8b952688b",
+      "actual_selection_log": "route.log",
+      "actual_selection_log_sha256": "a41f81f6252c28319f21cb5c37255e6adb6fbe57935563e0e9ce53575068489a"
+    },
+    {
+      "name": "store-library",
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-graduation-797-build-2/outside-peers/store-library",
+      "sha256": "88fe30af24b1ca233a5f91c0d8035331f4f4af8d45a30a77ca97f4a3d5829204",
+      "bytes": 62957056,
+      "tested_original": "/home/justin/github/Dispatcharr/artifacts/rust/target-configured-recordings-graduation-797-2/debug/deps/dispatcharr_store-41d5cfe0cddb433e",
+      "actual_selection_log": "store-caught.log",
+      "actual_selection_log_sha256": "85c6075018e1d009664e418c7f9e967fa39599f1e59385494f4c2b8982e44c8a"
+    }
+  ],
+  "copy_only_correction": "run.py glob expected one generated ELF but wholeworkspace and package-focused feature sets yielded two; select exact actual focused-test lib from retained Running unittests log instead, no arbitrary newest/first selection",
+  "initial_host_script_exit": 1,
+  "original_all9_command_exits": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "no_recompile_or_retest": true
+}

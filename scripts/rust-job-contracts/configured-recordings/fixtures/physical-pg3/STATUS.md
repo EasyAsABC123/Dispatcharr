@@ -1,0 +1,5 @@
+# Physical remaining11 corrected QA — UNEXECUTED
+
+Preserve original QA1 all53purecontrols and actual host/guest1/15passed-first-phase checks plus false phase2 target/cleanup negative. Actual exchange6/two rows/SELECT2/Sync was observed but a stale legacy duplicate timeline line referenced undefined state before gate.set. QA2 removes that single line; controls execute the actual nested backend block and reproduce the old NameError before showing the corrected gate. No Native runtime/ELF/source/limits change.
+
+Remaining-only fresh fixture explicitly seeds programme1 and its booked Recording using actual Original model/signals plus actual duplicate artwork producer; this is setup context, no Source behavior reference or replayed passed Native control. All rows/frames/times retained. Original phases2–12 retain original indices, two-row phase2 target, one new booking per successful phase and budgets. Refusals remain separately unexecuted in immutable QA1. Root review/independent cleanup/slot/once required.

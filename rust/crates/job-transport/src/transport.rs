@@ -614,6 +614,99 @@ impl Jobs {
             Err(error) => Err(map(error)),
         }
     }
+    /// Only the explicit configured-recording publisher calls this private
+    /// method. Existing public Series/index/default APIs gain no new authority.
+    pub(crate) async fn publish_configured_artwork(
+        &self,
+        bytes: &[u8],
+        id: Uuid,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Published, Error> {
+        if !self.allows_series() {
+            return Err(Error::UnsupportedTask);
+        }
+        if bytes.len() > crate::protocol::MAX_ENVELOPE {
+            return Err(Error::Protocol);
+        }
+        let lease = self.lease(caller)?;
+        let limit = self.inner.config.max_queued_jobs.to_string();
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(
+                PUBLISH,
+                &["celery".into(), "_kombu.binding.celery".into()],
+                &[bytes, limit.as_bytes()],
+                lease,
+            )
+            .await
+        {
+            Ok((n, _)) if n > 0 => Ok(Published {
+                task_id: id,
+                queue_length: n as u64,
+            }),
+            Ok((-2, _)) => Err(Error::Capacity),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(id)),
+            Err(e) => Err(map(e)),
+        }
+    }
+    pub(crate) fn configured_candidate_canonical(
+        &self,
+        candidate: &DefaultCandidate,
+        task: crate::recording_artwork::DirectTask,
+    ) -> bool {
+        Arc::ptr_eq(&self.inner, &candidate.origin)
+            && crate::recording_artwork::canonical_frame(&candidate.bytes, task)
+    }
+    pub(crate) async fn write_configured_series_success(
+        &self,
+        message: &crate::series_protocol::SeriesMessage,
+        result: &crate::configured_recording_service::SeriesReport,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if !self.allows_series() {
+            return Err(Error::UnsupportedTask);
+        }
+        if crate::recording_artwork::DirectTask::series(message).is_none() {
+            return Err(Error::Protocol);
+        }
+        if result.task_id() != message.task_id {
+            return Err(Error::Protocol);
+        }
+        self.write_result(
+            message.task_id,
+            result.value(),
+            None,
+            result.children(),
+            caller,
+        )
+        .await
+    }
+    pub(crate) async fn write_configured_recurring_success(
+        &self,
+        message: &crate::default_protocol::Message,
+        result: &crate::configured_recording_service::RecurringReport,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if !self.allows_defaults() {
+            return Err(Error::UnsupportedTask);
+        }
+        if crate::recording_artwork::DirectTask::recurring(message).is_none() {
+            return Err(Error::Protocol);
+        }
+        if result.task_id() != message.task_id {
+            return Err(Error::Protocol);
+        }
+        self.write_result(
+            message.task_id,
+            result.value(),
+            None,
+            result.children(),
+            caller,
+        )
+        .await
+    }
     pub(crate) async fn write_series_success(
         &self,
         message: &crate::series_protocol::SeriesMessage,
@@ -1477,3 +1570,12 @@ mod scanner_refresh_io;
 #[path = "scanner_m3u_io.rs"]
 mod scanner_m3u_io;
 pub use scanner_m3u_io::M3uPorts;
+
+pub(crate) use default_transport::Candidate as DefaultCandidate;
+#[cfg(test)]
+#[path = "configured_parent_fixture.rs"]
+mod configured_parent_fixture;
+#[cfg(test)]
+pub(crate) use configured_parent_fixture::{
+    ParentCandidate as ConfiguredParentCandidate, ParentMessage as ConfiguredParentMessage,
+};

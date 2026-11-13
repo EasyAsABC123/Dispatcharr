@@ -368,3 +368,5 @@ pub fn source_scanner_epoch_string(value: f64) -> Option<String> {
 
 #[cfg(test)]
 mod json_float_peer;
+
+pub mod recording_schedule;

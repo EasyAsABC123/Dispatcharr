@@ -1,0 +1,117 @@
+{
+  "channel_uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+  "channel_pk": 1,
+  "stream_pk": 1,
+  "origin_path": "/live/0.ts",
+  "backup_stream_pk": 2,
+  "backup_origin_path": "/live/100.ts",
+  "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+  "channels": [
+    {
+      "channel_uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "channel_pk": 1,
+      "stream_pk": 1,
+      "origin_path": "/live/0.ts",
+      "backup_stream_pk": 2,
+      "backup_origin_path": "/live/100.ts",
+      "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts"
+    },
+    {
+      "channel_uuid": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+      "channel_pk": 2,
+      "stream_pk": 3,
+      "origin_path": "/live/1.ts",
+      "backup_stream_pk": 4,
+      "backup_origin_path": "/live/101.ts",
+      "path": "/proxy/ts/stream/aea9ce40-ee4a-51c4-8fa9-7e322f72caf6?output_format=ts"
+    },
+    {
+      "channel_uuid": "45342aff-1076-5f3b-89e6-9a30509cebbf",
+      "channel_pk": 3,
+      "stream_pk": 5,
+      "origin_path": "/live/2.ts",
+      "backup_stream_pk": 6,
+      "backup_origin_path": "/live/102.ts",
+      "path": "/proxy/ts/stream/45342aff-1076-5f3b-89e6-9a30509cebbf?output_format=ts"
+    },
+    {
+      "channel_uuid": "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+      "channel_pk": 4,
+      "stream_pk": 7,
+      "origin_path": "/live/3.ts",
+      "backup_stream_pk": 8,
+      "backup_origin_path": "/live/103.ts",
+      "path": "/proxy/ts/stream/b3cee3a2-4920-59a0-a25a-2b1e41dba054?output_format=ts"
+    },
+    {
+      "channel_uuid": "f37c9f64-7192-5791-9800-8047d7bc8d58",
+      "channel_pk": 5,
+      "stream_pk": 9,
+      "origin_path": "/live/4.ts",
+      "backup_stream_pk": 10,
+      "backup_origin_path": "/live/104.ts",
+      "path": "/proxy/ts/stream/f37c9f64-7192-5791-9800-8047d7bc8d58?output_format=ts"
+    },
+    {
+      "channel_uuid": "1269d1a6-bce6-5e48-88c6-4beccc2e7e3b",
+      "channel_pk": 6,
+      "stream_pk": 11,
+      "origin_path": "/live/5.ts",
+      "backup_stream_pk": 12,
+      "backup_origin_path": "/live/105.ts",
+      "path": "/proxy/ts/stream/1269d1a6-bce6-5e48-88c6-4beccc2e7e3b?output_format=ts"
+    },
+    {
+      "channel_uuid": "62b6ec5b-ecdd-506b-ba14-8e31f7343a05",
+      "channel_pk": 7,
+      "stream_pk": 13,
+      "origin_path": "/live/6.ts",
+      "backup_stream_pk": 14,
+      "backup_origin_path": "/live/106.ts",
+      "path": "/proxy/ts/stream/62b6ec5b-ecdd-506b-ba14-8e31f7343a05?output_format=ts"
+    },
+    {
+      "channel_uuid": "c586ff10-c149-52eb-93f9-a1300727a0d0",
+      "channel_pk": 8,
+      "stream_pk": 15,
+      "origin_path": "/live/7.ts",
+      "backup_stream_pk": 16,
+      "backup_origin_path": "/live/107.ts",
+      "path": "/proxy/ts/stream/c586ff10-c149-52eb-93f9-a1300727a0d0?output_format=ts"
+    },
+    {
+      "channel_uuid": "cb3c6af5-3779-5a7a-82a5-aee230aa7d8e",
+      "channel_pk": 9,
+      "stream_pk": 17,
+      "origin_path": "/live/8.ts",
+      "backup_stream_pk": 18,
+      "backup_origin_path": "/live/108.ts",
+      "path": "/proxy/ts/stream/cb3c6af5-3779-5a7a-82a5-aee230aa7d8e?output_format=ts"
+    },
+    {
+      "channel_uuid": "8e972c1b-14a2-5a7b-ae73-d3acd17b7955",
+      "channel_pk": 10,
+      "stream_pk": 19,
+      "origin_path": "/live/9.ts",
+      "backup_stream_pk": 20,
+      "backup_origin_path": "/live/109.ts",
+      "path": "/proxy/ts/stream/8e972c1b-14a2-5a7b-ae73-d3acd17b7955?output_format=ts"
+    }
+  ],
+  "profile": "Proxy",
+  "profile_locked": true,
+  "provider_account": "custom",
+  "default_provider_max_streams": 0,
+  "proxy_settings": {
+    "buffering_speed": 1.0,
+    "redis_chunk_ttl": 60,
+    "buffering_timeout": 15,
+    "channel_shutdown_delay": 5,
+    "channel_init_grace_period": 60,
+    "new_client_behind_seconds": 5,
+    "channel_client_wait_period": 5
+  },
+  "uwsgi_workers": 1,
+  "gevent_slots": 400,
+  "background_services": "internal PostgreSQL17 and Redis; no Celery/Daphne/nginx"
+}

@@ -1,0 +1,159 @@
+{
+  "scope": "Read-only pinned Original source/module/function identity, not new behavioral evidence",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "modules": {
+    "apps/channels/tasks.py": {
+      "sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+      "git_blob": "5d91737b03063cee15e5d62ba427ccb00e4b5c27",
+      "bytes": 192044,
+      "functions": {
+        "evaluate_series_rules_impl": {
+          "first_line": 487,
+          "last_line": 512,
+          "body_sha256": "10ac087bcd56db75fd6effa94f8a27fcd55c388ff3081ca6804316fa1c6695b2"
+        },
+        "_evaluate_series_rules_locked": {
+          "first_line": 515,
+          "last_line": 940,
+          "body_sha256": "be2f96c958ae2fdb2d5f93d0a84ba10da3fe9bfaadf816ab808b4497c8eca8a6"
+        },
+        "_notify_recordings_refresh": {
+          "first_line": 1024,
+          "last_line": 1029,
+          "body_sha256": "0359697181a7d8775350f268619abfc43796f3d27455fd070723cfc3c0c64a7d"
+        },
+        "_system_timezone": {
+          "first_line": 1050,
+          "last_line": 1059,
+          "body_sha256": "c3d8af2046bdb8b888906f6483523e09f58fbec6119656286c5b47a8917b6778"
+        },
+        "sync_recurring_rule_impl": {
+          "first_line": 1062,
+          "last_line": 1149,
+          "body_sha256": "aa8c403ea37e5127bebba17ee50bd7eb68642d37ef78638af198a83b14ad5340"
+        },
+        "maintain_recurring_recordings": {
+          "first_line": 1158,
+          "last_line": 1167,
+          "body_sha256": "ad202cd3e886a77d6a37b5ea19d470a58e5cadafc3309c8bfb88f86681181d6b"
+        }
+      }
+    },
+    "apps/channels/signals.py": {
+      "sha256": "06485b52efcc01864d67ff422dcff28f5937791e822e0061b883baf049a4b8cf",
+      "git_blob": "791395dc1d25a262de5ec8aeb1a1d731b1b0e55e",
+      "bytes": 18019,
+      "functions": {
+        "_queue_epg_program_refresh": {
+          "first_line": 21,
+          "last_line": 28,
+          "body_sha256": "b08da6283019eca124573ae27093a5f018b288c20716c4259003d5c5c40c00fb"
+        },
+        "refresh_epg_programs": {
+          "first_line": 183,
+          "last_line": 197,
+          "body_sha256": "48841e8cf6dd602a931d7a48dc8668166e3ca0b66447851c5e2bd54e4b3ce924"
+        },
+        "schedule_recording_task": {
+          "first_line": 276,
+          "last_line": 332,
+          "body_sha256": "0b40d4e9771a3e2fd3fea421bc074fb7d24422967eabb2fdae9a5352202ca107"
+        },
+        "schedule_task_on_save": {
+          "first_line": 376,
+          "last_line": 424,
+          "body_sha256": "ad30a4a9c3751968a42ba95fac18cf3c618705e1d2860eae93993fa6037d896b"
+        }
+      }
+    },
+    "apps/channels/managers.py": {
+      "sha256": "0b8e2854cd47edeb1d39d6b7f58dd6c03687c289240c1a528e710e4f4c4c7126",
+      "git_blob": "71dd86127a8797a22f2215aef0b05bd53c3a3d54",
+      "bytes": 15721,
+      "functions": {
+        "epg_ids_mapped_to_channels": {
+          "first_line": 300,
+          "last_line": 330,
+          "body_sha256": "854225649a138b3cce0841b4785b40bdb2d55dbb3b72bfd890ef5b308cbbd5e9"
+        },
+        "resolve_epg_data_for_series_rule": {
+          "first_line": 394,
+          "last_line": 434,
+          "body_sha256": "a7cc86946fc2f67ae0b4612b59a5c4799ceed21abb3acd23c435449316593e7c"
+        }
+      }
+    },
+    "apps/channels/models.py": {
+      "sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "git_blob": "b5410405e9eca7e70c5000d8086682e78e56fc84",
+      "bytes": 55977,
+      "functions": {
+        "Recording": {
+          "first_line": 1439,
+          "last_line": 1449,
+          "body_sha256": "ff7caed1f8681edd480af9161f0f569e64022608f8557eebdbbd71ba0adce906"
+        },
+        "RecurringRecordingRule": {
+          "first_line": 1452,
+          "last_line": 1481,
+          "body_sha256": "4c020a129f13ce4c6a36794c545bf9b2cd1f8baddcb152f08f231ba9f4c78d6c"
+        }
+      }
+    },
+    "apps/epg/models.py": {
+      "sha256": "975b645dee46899dec59f5620c664de9c246045d437b66c3edd52b1948589178",
+      "git_blob": "c7394ed68ec7694087abe8af3ecdadd4c0a1842e",
+      "bytes": 9685,
+      "functions": {
+        "EPGData": {
+          "first_line": 156,
+          "last_line": 172,
+          "body_sha256": "4ee0f0fc51a1dfa0c3dc66b4ea6fbc8f675669006c13e708e3f8f596e0625dea"
+        },
+        "ProgramData": {
+          "first_line": 174,
+          "last_line": 196,
+          "body_sha256": "a1623c494362d7db58d7c061deac5f12ffbd90676be383eb93bd5b61e0eaf122"
+        }
+      }
+    },
+    "apps/epg/signals.py": {
+      "sha256": "541c1157f01b794d05cf74b58eeaab521fa161273ce3430bb705955b94153e7a",
+      "git_blob": "7eaa8c0ed20e60a3a8d6019a4309ff14b4c9d6d1",
+      "bytes": 9682,
+      "functions": {
+        "trigger_refresh_on_new_epg_source": {
+          "first_line": 14,
+          "last_line": 24,
+          "body_sha256": "d39d0c0cc1fb6a67d37dea963634c7fd355191971c1378c99abacd7bd57b02d0"
+        }
+      }
+    },
+    "core/models.py": {
+      "sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+      "git_blob": "21cd01629b7162f90f6aef34451fb44039ebeee2",
+      "bytes": 41137,
+      "functions": {
+        "CoreSettings": {
+          "first_line": 362,
+          "last_line": 923,
+          "body_sha256": "0bd666b1085ccd9a960e048647b22f8c21fe1b179c5ec6fe4635d33a08a526da"
+        }
+      }
+    },
+    "core/utils.py": {
+      "sha256": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+      "git_blob": "b82531453f8b1c03ffde713ae000190194428ca9",
+      "bytes": 47842,
+      "functions": {
+        "send_websocket_update": {
+          "first_line": 552,
+          "last_line": 579,
+          "body_sha256": "47ad674facc40d8dfc116ee135184db91a650bf15bdc020641b654f05524bd96"
+        }
+      }
+    }
+  },
+  "actual_Source_execution": false,
+  "native_behavior_verified": false
+}

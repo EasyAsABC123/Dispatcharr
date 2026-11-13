@@ -1,0 +1,198 @@
+{
+  "status": "UNEXECUTED known9 exact Source11 normal/caught-INSERT proposal; Root review/once/global slot required",
+  "source_raw_sha256": "58e1bd132e8e1dbd876f8426245fc267ee42732e55471eab5470490f6316f5c3",
+  "source_host_exit": 1,
+  "captured_SQLSTATE_verified": false,
+  "parent_route_fixture": {
+    "fixed": "rust-owned-configured-recordings",
+    "production_override": false,
+    "requires": [
+      "JOB_DISPOSABLE_FIXTURE=playback-fixture-only",
+      "actual copiedDB exact POSTGRES_DB",
+      "db prefix rust_probe_backup_jobs_"
+    ],
+    "children_queue": "celery",
+    "children_consumed_or_removed_or_quarantined": false
+  },
+  "temporal_policy": {
+    "raw_fields_retained": true,
+    "fixture_anchor": "same UTC time-of-day as Source anchor on actual fixture UTC calendar date; validate ALL programme/recurring starts remain future/in declared horizons BEFORE task; do not retune after outputs",
+    "date_correspondence": "one declared integral-day delta for input programme dates, rule dates, clocked_time and corresponding program/periodic args only; map weekday=(Sourceweekday+daydelta)%7 for one-day recurring",
+    "execution_fields": "created_at/updated_at/date_changed/last_update/date_done and Redis scores remain actual backend clocks; Source observed changed/unchanged+Source windows where retained, Native actual setup/run command intervals; NEVER apply fixture-date delta to execution fields",
+    "Source_windows_absent": "explicit unknown/bounded observation class, never invent timestamps",
+    "identity_correspondence": "parent IDs fixed to predeclared Source IDs in fresh owned Redis; generated Recording/Clocked/Periodic IDs and artwork UUIDs mapped one-to-one by ordered observed creation/publication with ALL raw values retained; UUID/correlation/lineage/children relationships validated",
+    "field_presence": "missing/null/extra fields distinct; no blanket time stripping or generic normalization",
+    "delta_effects": "Source historical omitted unsupported-case prefixes remain raw, not replayed; compare per-case actual added effects plus preserve every Native prior row/frame/result; no full prefix-history equality claim"
+  },
+  "fixed_budgets": {
+    "normal_case_response_seconds": 35,
+    "SQL_or_Redis_control_hold_seconds": 6.2,
+    "worker_drain_seconds": 10,
+    "host_controller_seconds": 600,
+    "cleanup_seconds": 90,
+    "host_command_pipe_bytes": 1048576,
+    "baseline_cpus": 1,
+    "baseline_memory_bytes": 1073741824,
+    "baseline_pids": 256,
+    "one_owned_project_at_a_time": true,
+    "max_global_ordinary_projects": 3
+  },
+  "actual_execution_prerequisites": [
+    "Root exact sealed normal-only closure review",
+    "Root global ordinary-slot once admission; authorized inputs remainfalse until then"
+  ],
+  "scope_exclusions": [
+    "no default FIFO/application graph",
+    "no parented configured rule execution",
+    "no Source fault observer SQLSTATE repair",
+    "no full rule/timezone/title/offset domain",
+    "no >120s renewer or raw token parity",
+    "no artwork/recording child consumption",
+    "no resource/performance acceptance",
+    "no Main/default activation"
+  ],
+  "execution_ready": false,
+  "mode": "paired-known-insert",
+  "output": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-known-insert-1",
+  "Native_source_map_sha256": "3d45ecfed1b84e3d7fd561dc6df0bcf122edc1b97a8a677cf55ede869752bf62",
+  "Native_build_record_sha256": "596a713776092e2eaf99e39c8e8cf99772acbd1d6c32c411421778067900a52f",
+  "Native_binary_sha256": "9692144b91c5fd37dc8ef34e99559be4a0b797b6ee517c16850dd7bfe121ff3c",
+  "expected_case_count": 9,
+  "expected_check_count": 11,
+  "physical_execution_ready": false,
+  "no_retries": true,
+  "known_case_order": [
+    {
+      "source_index": 1,
+      "name": "series-positive",
+      "source_parent_id": "224e24f5-1d6f-4908-93cb-dbfee0400421",
+      "source_result": {
+        "scheduled": 1,
+        "details": [
+          {
+            "tvg_id": "rust.owned.configured",
+            "title": "Owned Exact Series",
+            "status": "ok",
+            "created": 1
+          }
+        ]
+      },
+      "source_backend_raw_sha256": "26a9913df8e6909e035b93e342b2b047e2b347cf08f7459c4ee239bd4e3f6ce4"
+    },
+    {
+      "source_index": 2,
+      "name": "series-repeat",
+      "source_parent_id": "d817cbd3-65d1-4d8b-9afd-d7064d62f3e3",
+      "source_result": {
+        "scheduled": 0,
+        "details": [
+          {
+            "tvg_id": "rust.owned.configured",
+            "title": "Owned Exact Series",
+            "status": "ok",
+            "created": 0
+          }
+        ]
+      },
+      "source_backend_raw_sha256": "ece196548bf08e53e4405c1602efbdee147f2417ca7cce567f68ea5166a92780"
+    },
+    {
+      "source_index": 3,
+      "name": "series-second-episode",
+      "source_parent_id": "07efa629-0ba6-4f7a-8e3e-631ec26bdb56",
+      "source_result": {
+        "scheduled": 1,
+        "details": [
+          {
+            "tvg_id": "rust.owned.configured",
+            "title": "Owned Exact Series",
+            "status": "ok",
+            "created": 1
+          }
+        ]
+      },
+      "source_backend_raw_sha256": "9d47d0d9d55ff810fd1105a1d25af79e0954183ccd2d7154b55cb9058e7a8ee3"
+    },
+    {
+      "source_index": 5,
+      "name": "series-busy",
+      "source_parent_id": "96dc9432-b237-4526-9c91-2db66a1c3822",
+      "source_result": {
+        "scheduled": 0,
+        "details": [
+          {
+            "status": "skipped",
+            "reason": "concurrent evaluation in progress"
+          }
+        ]
+      },
+      "source_backend_raw_sha256": "5b505a0879a5497b2cdb6570cc69923015d8d339192b96ca161dbd20f36a8e44"
+    },
+    {
+      "source_index": 6,
+      "name": "series-SQL-P0001",
+      "source_parent_id": "4f7a4065-5005-4ef6-b070-7cb4c61a017f",
+      "source_result": {
+        "scheduled": 0,
+        "details": [
+          {
+            "tvg_id": "rust.owned.configured",
+            "status": "error",
+            "error": "owned configured recording failure\nCONTEXT:  PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE"
+          },
+          {
+            "tvg_id": "rust.owned.configured",
+            "title": "Owned Exact Series",
+            "status": "ok",
+            "created": 0
+          }
+        ]
+      },
+      "source_backend_raw_sha256": "074db391e21f8d96dc7aecacd2f9a883965130b0ce03044121fb349ee95731d1"
+    },
+    {
+      "source_index": 7,
+      "name": "recurring-positive",
+      "source_parent_id": "f5b5d4dc-4bdc-4427-a2be-ff9af57fb551",
+      "source_result": 1,
+      "source_backend_raw_sha256": "7b74d67e2cbf4527d135205330bf74047253930800ed19349c2f8ee634daad71"
+    },
+    {
+      "source_index": 8,
+      "name": "recurring-repeat",
+      "source_parent_id": "53c25a6e-aad6-4cb9-a516-3a9d7274c900",
+      "source_result": 0,
+      "source_backend_raw_sha256": "b7da42ea9a9e8edaa82f7cd697f32ce6c03af17c0658b7412aeefa66723ce453"
+    },
+    {
+      "source_index": 9,
+      "name": "recurring-disabled",
+      "source_parent_id": "b316af4e-383c-439b-bb85-a8a1aa235907",
+      "source_result": 0,
+      "source_backend_raw_sha256": "7921f2399b0a13916d90bf9fea1351f026d969f49f6e776ea7217f63e77c7845"
+    },
+    {
+      "source_index": 10,
+      "name": "recurring-SQL-P0001",
+      "source_parent_id": "5e9df272-55aa-4ccd-8f5e-4d80de73cc87",
+      "source_result": 0,
+      "source_backend_raw_sha256": "6cdbf7de0ce4d2b64c39fcb26a305511a8c2363e0f45346eca02a6dcfb338ee1"
+    }
+  ],
+  "fault_domain": {
+    "source_indices": [
+      6,
+      10
+    ],
+    "source_raw_SQLSTATE": null,
+    "Source_captured_SQLSTATE_verified": false,
+    "Native_observed_SQLSTATE_required": "P0001",
+    "known_message": "owned configured recording failure",
+    "known_CONTEXT": "PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE",
+    "Native_one_eligible_intent_only": true,
+    "trigger_install": "Actual owned INSERT Parse seen after preflight; owned DDL then release to real PG; no preinstalled unknown trigger bypass",
+    "reply_hold_control": false,
+    "no_original_parent_worker_execution": true,
+    "no_new_Source_reference_capture": true
+  }
+}

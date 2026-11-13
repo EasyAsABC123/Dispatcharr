@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "variant": "qa9",
+  "base_git": "044f3ad0fb3ee68ffb17b23bbb796ccdae954298",
+  "source_map_sha256": "acf8115970690f2637dcc38b887e4712b26a096bed5eeed89412dff536530217",
+  "inputs": 806,
+  "Rust_inputs": 801,
+  "scope": "Exact historical source reconstruction only; no build/fixture/Main/default graph execution",
+  "git_argv": [
+    "git",
+    "-C",
+    "/home/justin/github/Dispatcharr",
+    "archive",
+    "--format=tar",
+    "044f3ad0fb3ee68ffb17b23bbb796ccdae954298",
+    "--",
+    "rust",
+    "scripts/rust-timeshift-contracts/python-busy-control-vectors.json",
+    "scripts/rust-timeshift-contracts/python-busy-seek-goldens.json",
+    "scripts/rust-timeshift-contracts/python-helper-goldens.json",
+    "scripts/rust-timeshift-contracts/python-range-goldens.json",
+    "scripts/rust-timeshift-contracts/python-session-goldens.json"
+  ],
+  "output": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-public-reconstruction-qa9-1/source"
+}

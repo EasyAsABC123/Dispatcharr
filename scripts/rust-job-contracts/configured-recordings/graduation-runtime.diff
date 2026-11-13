@@ -1,0 +1,3989 @@
+--- a/rust/crates/ingest-epg/src/cache_policy.rs
++++ b/rust/crates/ingest-epg/src/cache_policy.rs
+@@ -8,7 +8,7 @@
+     source_system_settings_defaults, Store,
+ };
+ use serde_json::{json, Value};
+-use sqlx::Row;
++use sqlx::{Connection as _, Row};
+ use std::{sync::Arc, time::Duration};
+ use tokio::sync::{Mutex, OwnedSemaphorePermit, Semaphore};
+ #[derive(Clone, Copy)]
+@@ -77,6 +77,60 @@
+     Value(Option<Value>),
+     Backend,
+ }
++#[derive(Debug)]
++pub enum ConfiguredSettingsStage {
++    Cache,
++    Admission,
++    Acquire,
++    Query,
++    Decode,
++    Ready,
++    Close,
++    Owner,
++}
++#[derive(Debug)]
++pub struct ConfiguredSettingsError {
++    pub stage: ConfiguredSettingsStage,
++    pub error: Box<ImportError>,
++    pub ready_error: Option<Box<sqlx::Error>>,
++    pub close_error: Option<Box<sqlx::Error>>,
++}
++impl ConfiguredSettingsError {
++    fn at(stage: ConfiguredSettingsStage, error: ImportError) -> Self {
++        Self {
++            stage,
++            error: Box::new(error),
++            ready_error: None,
++            close_error: None,
++        }
++    }
++}
++const DATABASE_SQL:&str="SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=1048576 THEN value ELSE NULL END AS value FROM core_coresettings WHERE key=$1";
++async fn database_row<'e, E: sqlx::Executor<'e, Database = sqlx::Postgres>>(
++    executor: E,
++    key: &'static str,
++) -> Result<Option<sqlx::postgres::PgRow>, sqlx::Error> {
++    sqlx::query(DATABASE_SQL)
++        .bind(key)
++        .fetch_optional(executor)
++        .await
++}
++fn database_value(row: Option<sqlx::postgres::PgRow>, group: Group) -> Result<Value, ImportError> {
++    let value = if let Some(row) = row {
++        if row.try_get::<Option<i32>, _>("bytes")?.unwrap_or(0) > MAX_BYTES as i32 {
++            return Err(ImportError::Capacity("EPG settings SQL value"));
++        }
++        row.try_get::<Option<Value>, _>("value")?
++            .unwrap_or(Value::Null)
++    } else {
++        Value::Null
++    };
++    Ok(if value.as_object().is_some_and(|map| !map.is_empty()) {
++        value
++    } else {
++        group.defaults()
++    })
++}
+ impl CachedSwapPolicy {
+     /// None explicitly bypasses cache, matching DISPATCHARR_SKIP_REDIS_CACHE.
+     /// Connections are acquired lazily inside an already-admitted physical job.
+@@ -156,6 +210,44 @@
+             }),
+         };
+         self.group(Group::Dvr, &context).await
++    }
++    /// Configured recording path only: same Source cache/default/version
++    /// decisions, but SQL fallback physically fences ErrorResponse/Ready/close.
++    /// Existing retained_system_settings behavior/API is unchanged.
++    pub async fn retained_configured_system_settings(
++        &self,
++        context: SwapPolicyContext,
++    ) -> Result<Value, ConfiguredSettingsError> {
++        self.configured_group(Group::System, context).await
++    }
++    pub async fn retained_configured_dvr_settings(
++        &self,
++        context: SwapPolicyContext,
++    ) -> Result<Value, ConfiguredSettingsError> {
++        self.configured_group(Group::Dvr, context).await
++    }
++    async fn configured_group(
++        &self,
++        group: Group,
++        context: SwapPolicyContext,
++    ) -> Result<Value, ConfiguredSettingsError> {
++        context
++            .ensure_active()
++            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Admission, e))?;
++        let permit = self.admission.clone().try_acquire_owned().map_err(|_| {
++            ConfiguredSettingsError::at(
++                ConfiguredSettingsStage::Admission,
++                ImportError::Capacity("policy physical work"),
++            )
++        })?;
++        let context = SwapPolicyContext {
++            cancelled: context.cancelled,
++            retained: Arc::new(PolicyWork {
++                _caller: context.retained,
++                _permit: permit,
++            }),
++        };
++        self.group_mode(group, &context, true).await
+     }
+     async fn transport(
+         &self,
+@@ -238,18 +330,83 @@
+         let retained = context.retained.clone();
+         // The private owned task retains the job/lock guard through the actual
+         // SQL reply even if a direct caller drops this policy future.
+-        let value=tokio::spawn(async move{
+-            let _retained=retained;
+-            let row=sqlx::query("SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=1048576 THEN value ELSE NULL END AS value FROM core_coresettings WHERE key=$1")
+-                .bind(group.name()).fetch_optional(store.pool()).await?;
+-            let value=if let Some(row)=row{
+-                if row.try_get::<Option<i32>,_>("bytes")?.unwrap_or(0)>MAX_BYTES as i32{return Err(ImportError::Capacity("EPG settings SQL value"));}
+-                row.try_get::<Option<Value>,_>("value")?.unwrap_or(Value::Null)
+-            }else{Value::Null};
+-            Ok(if value.as_object().is_some_and(|map|!map.is_empty()){value}else{group.defaults()})
+-        }).await.map_err(|_|ImportError::Worker)??;
++        let value = tokio::spawn(async move {
++            let _retained = retained;
++            database_value(database_row(store.pool(), group.name()).await?, group)
++        })
++        .await
++        .map_err(|_| ImportError::Worker)??;
+         context.ensure_active()?;
+         Ok(value)
++    }
++    async fn database_settled(
++        &self,
++        group: Group,
++        context: &SwapPolicyContext,
++    ) -> Result<Value, ConfiguredSettingsError> {
++        context
++            .ensure_active()
++            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Admission, e))?;
++        let store = self.store.clone();
++        let retained = context.retained.clone();
++        let value = tokio::spawn(async move {
++            let _retained = retained;
++            let mut connection = store.pool().acquire().await.map_err(|e| {
++                ConfiguredSettingsError::at(ConfiguredSettingsStage::Acquire, e.into())
++            })?;
++            let (observed, stage) = match database_row(&mut *connection, group.name()).await {
++                Ok(row) => (database_value(row, group), ConfiguredSettingsStage::Decode),
++                Err(error) => (Err(error.into()), ConfiguredSettingsStage::Query),
++            };
++            // A SQLx query can return an ErrorResponse before the driver's
++            // trailing ReadyForQuery/pool cleanup. Keep the actual owner here.
++            let ready = connection.ping().await;
++            let closed = connection.close().await;
++            match observed {
++                Err(error) => Err(ConfiguredSettingsError {
++                    stage,
++                    error: Box::new(error),
++                    ready_error: ready.err().map(Box::new),
++                    close_error: closed.err().map(Box::new),
++                }),
++                Ok(value) => {
++                    if let Err(error) = ready {
++                        return Err(ConfiguredSettingsError {
++                            stage: ConfiguredSettingsStage::Ready,
++                            error: Box::new(error.into()),
++                            ready_error: None,
++                            close_error: closed.err().map(Box::new),
++                        });
++                    }
++                    closed.map_err(|e| {
++                        ConfiguredSettingsError::at(ConfiguredSettingsStage::Close, e.into())
++                    })?;
++                    Ok(value)
++                }
++            }
++        })
++        .await
++        .map_err(|_| {
++            ConfiguredSettingsError::at(ConfiguredSettingsStage::Owner, ImportError::Worker)
++        })??;
++        context
++            .ensure_active()
++            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Admission, e))?;
++        Ok(value)
++    }
++    async fn database_mode(
++        &self,
++        group: Group,
++        context: &SwapPolicyContext,
++        settled: bool,
++    ) -> Result<Value, ConfiguredSettingsError> {
++        if settled {
++            self.database_settled(group, context).await
++        } else {
++            self.database(group, context)
++                .await
++                .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Query, e))
++        }
+     }
+     async fn fill(
+         &self,
+@@ -285,22 +442,46 @@
+         }
+     }
+     async fn group(&self, group: Group, context: &SwapPolicyContext) -> Result<Value, ImportError> {
+-        match self.read(&group.key(), context).await? {
++        self.group_mode(group, context, false)
++            .await
++            .map_err(|e| *e.error)
++    }
++    async fn group_mode(
++        &self,
++        group: Group,
++        context: &SwapPolicyContext,
++        settled: bool,
++    ) -> Result<Value, ConfiguredSettingsError> {
++        match self
++            .read(&group.key(), context)
++            .await
++            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, e))?
++        {
+             Read::Value(Some(value)) if value.is_object() => return Ok(value),
+-            Read::Backend => return self.database(group, context).await,
++            Read::Backend => return self.database_mode(group, context, settled).await,
+             _ => {}
+         }
+-        let before = match self.read(&group.version(), context).await? {
++        let before = match self
++            .read(&group.version(), context)
++            .await
++            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, e))?
++        {
+             Read::Value(value) => value.unwrap_or(Value::Null),
+-            Read::Backend => return self.database(group, context).await,
+-        };
+-        let value = self.database(group, context).await?;
+-        let after = match self.read(&group.version(), context).await? {
++            Read::Backend => return self.database_mode(group, context, settled).await,
++        };
++        let value = self.database_mode(group, context, settled).await?;
++        let after = match self
++            .read(&group.version(), context)
++            .await
++            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, e))?
++        {
+             Read::Value(value) => value.unwrap_or(Value::Null),
+             Read::Backend => return Ok(value),
+         };
+         if source_cache_values_equal(&before, &after) {
+-            self.fill(group.key(), &value, context).await?;
++            self.fill(group.key(), &value, context)
++                .await
++                .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, e))?;
+         }
+         Ok(value)
+     }
+--- a/rust/crates/job-transport/datasets/source-configured-recordings-normal.json
++++ b/rust/crates/job-transport/datasets/source-configured-recordings-normal.json
+@@ -0,0 +1,798 @@
++{
++  "scope": "Six captured Source11 normal-case projections for pure decision tests only. Does not validate SQL/events/publication/ACK/physical work. Full raw Source remains authoritative.",
++  "raw_source_sha256": "58e1bd132e8e1dbd876f8426245fc267ee42732e55471eab5470490f6316f5c3",
++  "captured_SQLSTATE_verified": false,
++  "source_host_exit": 1,
++  "cases": [
++    {
++      "name": "series-positive",
++      "source_task_id": "224e24f5-1d6f-4908-93cb-dbfee0400421",
++      "source_command_began_utc": "2026-11-12T23:34:48.239536+00:00",
++      "source_command_finished_utc": "2026-11-12T23:34:50.826522+00:00",
++      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
++      "source_return": {
++        "scheduled": 1,
++        "details": [
++          {
++            "tvg_id": "rust.owned.configured",
++            "title": "Owned Exact Series",
++            "status": "ok",
++            "created": 1
++          }
++        ]
++      },
++      "source_programmes": [
++        {
++          "id": 1,
++          "epg_id": 1,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 1",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 1
++          }
++        }
++      ],
++      "source_recordings_before": [],
++      "source_recordings_created": [
++        {
++          "id": 1,
++          "channel_id": 2,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "task_id": "dvr-recording-1",
++          "custom_properties": {
++            "program": {
++              "id": 1,
++              "title": "Owned Exact Series",
++              "season": 1,
++              "tvg_id": "rust.owned.configured",
++              "episode": 1,
++              "end_time": "2026-11-14T00:34:44+00:00",
++              "sub_title": "Owned Episode 1",
++              "start_time": "2026-11-13T23:34:44+00:00",
++              "description": null,
++              "epg_source_id": 1,
++              "onscreen_episode": null,
++              "original_air_date": ""
++            }
++          }
++        }
++      ],
++      "source_rules_before": [],
++      "source_dvr_settings_before": [
++        {
++          "id": 14,
++          "key": "dvr_settings",
++          "name": "Owned configured DVR fixture",
++          "value": {
++            "series_rules": [
++              {
++                "mode": "all",
++                "title": "Owned Exact Series",
++                "tvg_id": "rust.owned.configured",
++                "channel_id": 2,
++                "title_mode": "exact",
++                "epg_source_id": 1
++              }
++            ],
++            "pre_offset_minutes": 0,
++            "post_offset_minutes": 0
++          }
++        }
++      ]
++    },
++    {
++      "name": "series-repeat",
++      "source_task_id": "d817cbd3-65d1-4d8b-9afd-d7064d62f3e3",
++      "source_command_began_utc": "2026-11-12T23:34:50.917149+00:00",
++      "source_command_finished_utc": "2026-11-12T23:34:53.927577+00:00",
++      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
++      "source_return": {
++        "scheduled": 0,
++        "details": [
++          {
++            "tvg_id": "rust.owned.configured",
++            "title": "Owned Exact Series",
++            "status": "ok",
++            "created": 0
++          }
++        ]
++      },
++      "source_programmes": [
++        {
++          "id": 1,
++          "epg_id": 1,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 1",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 1
++          }
++        }
++      ],
++      "source_recordings_before": [
++        {
++          "id": 1,
++          "channel_id": 2,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "task_id": "dvr-recording-1",
++          "custom_properties": {
++            "program": {
++              "id": 1,
++              "title": "Owned Exact Series",
++              "season": 1,
++              "tvg_id": "rust.owned.configured",
++              "episode": 1,
++              "end_time": "2026-11-14T00:34:44+00:00",
++              "sub_title": "Owned Episode 1",
++              "start_time": "2026-11-13T23:34:44+00:00",
++              "description": null,
++              "epg_source_id": 1,
++              "onscreen_episode": null,
++              "original_air_date": ""
++            }
++          }
++        }
++      ],
++      "source_recordings_created": [],
++      "source_rules_before": [],
++      "source_dvr_settings_before": [
++        {
++          "id": 14,
++          "key": "dvr_settings",
++          "name": "Owned configured DVR fixture",
++          "value": {
++            "series_rules": [
++              {
++                "mode": "all",
++                "title": "Owned Exact Series",
++                "tvg_id": "rust.owned.configured",
++                "channel_id": 2,
++                "title_mode": "exact",
++                "epg_source_id": 1
++              }
++            ],
++            "pre_offset_minutes": 0,
++            "post_offset_minutes": 0
++          }
++        }
++      ]
++    },
++    {
++      "name": "series-second-episode",
++      "source_task_id": "07efa629-0ba6-4f7a-8e3e-631ec26bdb56",
++      "source_command_began_utc": "2026-11-12T23:34:54.049915+00:00",
++      "source_command_finished_utc": "2026-11-12T23:34:57.046972+00:00",
++      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
++      "source_return": {
++        "scheduled": 1,
++        "details": [
++          {
++            "tvg_id": "rust.owned.configured",
++            "title": "Owned Exact Series",
++            "status": "ok",
++            "created": 1
++          }
++        ]
++      },
++      "source_programmes": [
++        {
++          "id": 1,
++          "epg_id": 1,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 1",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 1
++          }
++        },
++        {
++          "id": 2,
++          "epg_id": 1,
++          "start_time": "2026-11-14 01:34:44+00:00",
++          "end_time": "2026-11-14 02:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 2",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 2
++          }
++        }
++      ],
++      "source_recordings_before": [
++        {
++          "id": 1,
++          "channel_id": 2,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "task_id": "dvr-recording-1",
++          "custom_properties": {
++            "program": {
++              "id": 1,
++              "title": "Owned Exact Series",
++              "season": 1,
++              "tvg_id": "rust.owned.configured",
++              "episode": 1,
++              "end_time": "2026-11-14T00:34:44+00:00",
++              "sub_title": "Owned Episode 1",
++              "start_time": "2026-11-13T23:34:44+00:00",
++              "description": null,
++              "epg_source_id": 1,
++              "onscreen_episode": null,
++              "original_air_date": ""
++            }
++          }
++        }
++      ],
++      "source_recordings_created": [
++        {
++          "id": 2,
++          "channel_id": 2,
++          "start_time": "2026-11-14 01:34:44+00:00",
++          "end_time": "2026-11-14 02:34:44+00:00",
++          "task_id": "dvr-recording-2",
++          "custom_properties": {
++            "program": {
++              "id": 2,
++              "title": "Owned Exact Series",
++              "season": 1,
++              "tvg_id": "rust.owned.configured",
++              "episode": 2,
++              "end_time": "2026-11-14T02:34:44+00:00",
++              "sub_title": "Owned Episode 2",
++              "start_time": "2026-11-14T01:34:44+00:00",
++              "description": null,
++              "epg_source_id": 1,
++              "onscreen_episode": null,
++              "original_air_date": ""
++            }
++          }
++        }
++      ],
++      "source_rules_before": [],
++      "source_dvr_settings_before": [
++        {
++          "id": 14,
++          "key": "dvr_settings",
++          "name": "Owned configured DVR fixture",
++          "value": {
++            "series_rules": [
++              {
++                "mode": "all",
++                "title": "Owned Exact Series",
++                "tvg_id": "rust.owned.configured",
++                "channel_id": 2,
++                "title_mode": "exact",
++                "epg_source_id": 1
++              }
++            ],
++            "pre_offset_minutes": 0,
++            "post_offset_minutes": 0
++          }
++        }
++      ]
++    },
++    {
++      "name": "recurring-positive",
++      "source_task_id": "f5b5d4dc-4bdc-4427-a2be-ff9af57fb551",
++      "source_command_began_utc": "2026-11-12T23:35:06.683418+00:00",
++      "source_command_finished_utc": "2026-11-12T23:35:10.250458+00:00",
++      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
++      "source_return": 1,
++      "source_programmes": [
++        {
++          "id": 1,
++          "epg_id": 1,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 1",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 1
++          }
++        },
++        {
++          "id": 2,
++          "epg_id": 1,
++          "start_time": "2026-11-14 01:34:44+00:00",
++          "end_time": "2026-11-14 02:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 2",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 2
++          }
++        },
++        {
++          "id": 3,
++          "epg_id": 1,
++          "start_time": "2026-11-14 03:34:44+00:00",
++          "end_time": "2026-11-14 04:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 3",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 3
++          }
++        }
++      ],
++      "source_recordings_before": [
++        {
++          "id": 1,
++          "channel_id": 2,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "task_id": "dvr-recording-1",
++          "custom_properties": {
++            "program": {
++              "id": 1,
++              "title": "Owned Exact Series",
++              "season": 1,
++              "tvg_id": "rust.owned.configured",
++              "episode": 1,
++              "end_time": "2026-11-14T00:34:44+00:00",
++              "sub_title": "Owned Episode 1",
++              "start_time": "2026-11-13T23:34:44+00:00",
++              "description": null,
++              "epg_source_id": 1,
++              "onscreen_episode": null,
++              "original_air_date": ""
++            }
++          }
++        },
++        {
++          "id": 2,
++          "channel_id": 2,
++          "start_time": "2026-11-14 01:34:44+00:00",
++          "end_time": "2026-11-14 02:34:44+00:00",
++          "task_id": "dvr-recording-2",
++          "custom_properties": {
++            "program": {
++              "id": 2,
++              "title": "Owned Exact Series",
++              "season": 1,
++              "tvg_id": "rust.owned.configured",
++              "episode": 2,
++              "end_time": "2026-11-14T02:34:44+00:00",
++              "sub_title": "Owned Episode 2",
++              "start_time": "2026-11-14T01:34:44+00:00",
++              "description": null,
++              "epg_source_id": 1,
++              "onscreen_episode": null,
++              "original_air_date": ""
++            }
++          }
++        }
++      ],
++      "source_recordings_created": [
++        {
++          "id": 4,
++          "channel_id": 2,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "task_id": "dvr-recording-4",
++          "custom_properties": {
++            "rule": {
++              "id": 1,
++              "name": "Owned Recurring",
++              "type": "recurring",
++              "days_of_week": [
++                4
++              ]
++            },
++            "status": "scheduled",
++            "program": {
++              "title": "Owned Recurring",
++              "end_time": "2026-11-14T00:34:44+00:00",
++              "start_time": "2026-11-13T23:34:44+00:00",
++              "description": "Owned Recurring"
++            },
++            "description": "Owned Recurring"
++          }
++        }
++      ],
++      "source_rules_before": [
++        {
++          "id": 1,
++          "channel_id": 2,
++          "days_of_week": [
++            4
++          ],
++          "start_time": "23:34:44",
++          "end_time": "00:34:44",
++          "enabled": true,
++          "name": "Owned Recurring",
++          "start_date": "2026-11-13",
++          "end_date": "2026-11-13",
++          "created_at": "2026-11-12 23:35:06.675204+00:00",
++          "updated_at": "2026-11-12 23:35:06.675211+00:00"
++        }
++      ],
++      "source_dvr_settings_before": [
++        {
++          "id": 14,
++          "key": "dvr_settings",
++          "name": "Owned configured DVR fixture",
++          "value": {
++            "series_rules": [
++              {
++                "mode": "all",
++                "title": "Owned Exact Series",
++                "tvg_id": "rust.owned.configured",
++                "channel_id": 2,
++                "title_mode": "exact",
++                "epg_source_id": 1
++              }
++            ],
++            "pre_offset_minutes": 0,
++            "post_offset_minutes": 0
++          }
++        }
++      ]
++    },
++    {
++      "name": "recurring-repeat",
++      "source_task_id": "53c25a6e-aad6-4cb9-a516-3a9d7274c900",
++      "source_command_began_utc": "2026-11-12T23:35:10.386784+00:00",
++      "source_command_finished_utc": "2026-11-12T23:35:13.466274+00:00",
++      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
++      "source_return": 0,
++      "source_programmes": [
++        {
++          "id": 1,
++          "epg_id": 1,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 1",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 1
++          }
++        },
++        {
++          "id": 2,
++          "epg_id": 1,
++          "start_time": "2026-11-14 01:34:44+00:00",
++          "end_time": "2026-11-14 02:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 2",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 2
++          }
++        },
++        {
++          "id": 3,
++          "epg_id": 1,
++          "start_time": "2026-11-14 03:34:44+00:00",
++          "end_time": "2026-11-14 04:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 3",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 3
++          }
++        }
++      ],
++      "source_recordings_before": [
++        {
++          "id": 1,
++          "channel_id": 2,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "task_id": "dvr-recording-1",
++          "custom_properties": {
++            "program": {
++              "id": 1,
++              "title": "Owned Exact Series",
++              "season": 1,
++              "tvg_id": "rust.owned.configured",
++              "episode": 1,
++              "end_time": "2026-11-14T00:34:44+00:00",
++              "sub_title": "Owned Episode 1",
++              "start_time": "2026-11-13T23:34:44+00:00",
++              "description": null,
++              "epg_source_id": 1,
++              "onscreen_episode": null,
++              "original_air_date": ""
++            }
++          }
++        },
++        {
++          "id": 2,
++          "channel_id": 2,
++          "start_time": "2026-11-14 01:34:44+00:00",
++          "end_time": "2026-11-14 02:34:44+00:00",
++          "task_id": "dvr-recording-2",
++          "custom_properties": {
++            "program": {
++              "id": 2,
++              "title": "Owned Exact Series",
++              "season": 1,
++              "tvg_id": "rust.owned.configured",
++              "episode": 2,
++              "end_time": "2026-11-14T02:34:44+00:00",
++              "sub_title": "Owned Episode 2",
++              "start_time": "2026-11-14T01:34:44+00:00",
++              "description": null,
++              "epg_source_id": 1,
++              "onscreen_episode": null,
++              "original_air_date": ""
++            }
++          }
++        },
++        {
++          "id": 4,
++          "channel_id": 2,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "task_id": "dvr-recording-4",
++          "custom_properties": {
++            "rule": {
++              "id": 1,
++              "name": "Owned Recurring",
++              "type": "recurring",
++              "days_of_week": [
++                4
++              ]
++            },
++            "status": "scheduled",
++            "program": {
++              "title": "Owned Recurring",
++              "end_time": "2026-11-14T00:34:44+00:00",
++              "start_time": "2026-11-13T23:34:44+00:00",
++              "description": "Owned Recurring"
++            },
++            "description": "Owned Recurring"
++          }
++        }
++      ],
++      "source_recordings_created": [],
++      "source_rules_before": [
++        {
++          "id": 1,
++          "channel_id": 2,
++          "days_of_week": [
++            4
++          ],
++          "start_time": "23:34:44",
++          "end_time": "00:34:44",
++          "enabled": true,
++          "name": "Owned Recurring",
++          "start_date": "2026-11-13",
++          "end_date": "2026-11-13",
++          "created_at": "2026-11-12 23:35:06.675204+00:00",
++          "updated_at": "2026-11-12 23:35:06.675211+00:00"
++        }
++      ],
++      "source_dvr_settings_before": [
++        {
++          "id": 14,
++          "key": "dvr_settings",
++          "name": "Owned configured DVR fixture",
++          "value": {
++            "series_rules": [
++              {
++                "mode": "all",
++                "title": "Owned Exact Series",
++                "tvg_id": "rust.owned.configured",
++                "channel_id": 2,
++                "title_mode": "exact",
++                "epg_source_id": 1
++              }
++            ],
++            "pre_offset_minutes": 0,
++            "post_offset_minutes": 0
++          }
++        }
++      ]
++    },
++    {
++      "name": "recurring-disabled",
++      "source_task_id": "b316af4e-383c-439b-bb85-a8a1aa235907",
++      "source_command_began_utc": "2026-11-12T23:35:13.570812+00:00",
++      "source_command_finished_utc": "2026-11-12T23:35:16.636219+00:00",
++      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
++      "source_return": 0,
++      "source_programmes": [
++        {
++          "id": 1,
++          "epg_id": 1,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 1",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 1
++          }
++        },
++        {
++          "id": 2,
++          "epg_id": 1,
++          "start_time": "2026-11-14 01:34:44+00:00",
++          "end_time": "2026-11-14 02:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 2",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 2
++          }
++        },
++        {
++          "id": 3,
++          "epg_id": 1,
++          "start_time": "2026-11-14 03:34:44+00:00",
++          "end_time": "2026-11-14 04:34:44+00:00",
++          "title": "Owned Exact Series",
++          "sub_title": "Owned Episode 3",
++          "description": null,
++          "tvg_id": "rust.owned.configured",
++          "program_id": null,
++          "custom_properties": {
++            "season": 1,
++            "episode": 3
++          }
++        }
++      ],
++      "source_recordings_before": [
++        {
++          "id": 1,
++          "channel_id": 2,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "task_id": "dvr-recording-1",
++          "custom_properties": {
++            "program": {
++              "id": 1,
++              "title": "Owned Exact Series",
++              "season": 1,
++              "tvg_id": "rust.owned.configured",
++              "episode": 1,
++              "end_time": "2026-11-14T00:34:44+00:00",
++              "sub_title": "Owned Episode 1",
++              "start_time": "2026-11-13T23:34:44+00:00",
++              "description": null,
++              "epg_source_id": 1,
++              "onscreen_episode": null,
++              "original_air_date": ""
++            }
++          }
++        },
++        {
++          "id": 2,
++          "channel_id": 2,
++          "start_time": "2026-11-14 01:34:44+00:00",
++          "end_time": "2026-11-14 02:34:44+00:00",
++          "task_id": "dvr-recording-2",
++          "custom_properties": {
++            "program": {
++              "id": 2,
++              "title": "Owned Exact Series",
++              "season": 1,
++              "tvg_id": "rust.owned.configured",
++              "episode": 2,
++              "end_time": "2026-11-14T02:34:44+00:00",
++              "sub_title": "Owned Episode 2",
++              "start_time": "2026-11-14T01:34:44+00:00",
++              "description": null,
++              "epg_source_id": 1,
++              "onscreen_episode": null,
++              "original_air_date": ""
++            }
++          }
++        },
++        {
++          "id": 4,
++          "channel_id": 2,
++          "start_time": "2026-11-13 23:34:44+00:00",
++          "end_time": "2026-11-14 00:34:44+00:00",
++          "task_id": "dvr-recording-4",
++          "custom_properties": {
++            "rule": {
++              "id": 1,
++              "name": "Owned Recurring",
++              "type": "recurring",
++              "days_of_week": [
++                4
++              ]
++            },
++            "status": "scheduled",
++            "program": {
++              "title": "Owned Recurring",
++              "end_time": "2026-11-14T00:34:44+00:00",
++              "start_time": "2026-11-13T23:34:44+00:00",
++              "description": "Owned Recurring"
++            },
++            "description": "Owned Recurring"
++          }
++        }
++      ],
++      "source_recordings_created": [],
++      "source_rules_before": [
++        {
++          "id": 1,
++          "channel_id": 2,
++          "days_of_week": [
++            4
++          ],
++          "start_time": "23:34:44",
++          "end_time": "00:34:44",
++          "enabled": false,
++          "name": "Owned Recurring",
++          "start_date": "2026-11-13",
++          "end_date": "2026-11-13",
++          "created_at": "2026-11-12 23:35:06.675204+00:00",
++          "updated_at": "2026-11-12 23:35:06.675211+00:00"
++        }
++      ],
++      "source_dvr_settings_before": [
++        {
++          "id": 14,
++          "key": "dvr_settings",
++          "name": "Owned configured DVR fixture",
++          "value": {
++            "series_rules": [
++              {
++                "mode": "all",
++                "title": "Owned Exact Series",
++                "tvg_id": "rust.owned.configured",
++                "channel_id": 2,
++                "title_mode": "exact",
++                "epg_source_id": 1
++              }
++            ],
++            "pre_offset_minutes": 0,
++            "post_offset_minutes": 0
++          }
++        }
++      ]
++    }
++  ]
++}
+--- a/rust/crates/job-transport/src/configured_parent_fixture.rs
++++ b/rust/crates/job-transport/src/configured_parent_fixture.rs
+@@ -0,0 +1,267 @@
++//! Test-only OWNED parent-route control. Source11 parents use this queue while
++//! real setup/artwork descendants stay UNTOUCHED on celery. No production route
++//! or default-FIFO/full-workflow authority. Original authors retain credit.
++use super::*;
++pub(crate) const QUEUE: &str = "rust-owned-configured-recordings";
++fn supported(
++    queue: &str,
++    database: Option<&str>,
++    actual: Option<&str>,
++    disposable: Option<&str>,
++) -> bool {
++    queue == QUEUE
++        && database
++            .is_some_and(|db| db.starts_with("rust_probe_backup_jobs_") && Some(db) == actual)
++        && disposable == Some("playback-fixture-only")
++}
++#[derive(Clone)]
++pub(crate) enum ParentMessage {
++    Series(crate::series_protocol::SeriesMessage),
++    Recurring(crate::default_protocol::Message),
++}
++impl ParentMessage {
++    pub(crate) fn id(&self) -> Uuid {
++        match self {
++            Self::Series(v) => v.task_id,
++            Self::Recurring(v) => v.task_id,
++        }
++    }
++}
++pub(crate) struct ParentCandidate {
++    pub(crate) message: ParentMessage,
++    bytes: Vec<u8>,
++    origin: Arc<Inner>,
++    held: Arc<Lease>,
++}
++impl ParentCandidate {
++    pub(crate) fn canonical(&self, task: crate::recording_artwork::DirectTask) -> bool {
++        crate::recording_artwork::canonical_frame(&self.bytes, task)
++    }
++}
++// Only the copied-DB fixture route is projected for legacy parser validation.
++// The original bytes remain the candidate/CAS authority and canonical input.
++fn parse_parent(bytes: &[u8], series: bool) -> Result<ParentMessage, Error> {
++    if bytes.len() > crate::protocol::MAX_ENVELOPE {
++        return Err(Error::UnsupportedTask);
++    }
++    let mut validation: serde_json::Value =
++        serde_json::from_slice(bytes).map_err(|_| Error::UnsupportedTask)?;
++    if validation["properties"]["delivery_info"]
++        != serde_json::json!({"exchange":"","routing_key":QUEUE})
++    {
++        return Err(Error::UnsupportedTask);
++    }
++    validation["properties"]["delivery_info"]["routing_key"] = serde_json::json!("celery");
++    let projected = serde_json::to_vec(&validation).map_err(|_| Error::UnsupportedTask)?;
++    let (message, task) = if series {
++        let value =
++            crate::series_protocol::parse(&projected).map_err(|_| Error::UnsupportedTask)?;
++        let task =
++            crate::recording_artwork::DirectTask::series(&value).ok_or(Error::UnsupportedTask)?;
++        (ParentMessage::Series(value), task)
++    } else {
++        let value =
++            crate::default_protocol::parse(&projected).map_err(|_| Error::UnsupportedTask)?;
++        let task = crate::recording_artwork::DirectTask::recurring(&value)
++            .ok_or(Error::UnsupportedTask)?;
++        (ParentMessage::Recurring(value), task)
++    };
++    if !crate::recording_artwork::canonical_frame(bytes, task) {
++        return Err(Error::UnsupportedTask);
++    }
++    Ok(message)
++}
++impl Jobs {
++    pub(crate) fn require_configured_parent_fixture(&self, queue: &str) -> Result<(), Error> {
++        if supported(
++            queue,
++            self.copied_database(),
++            std::env::var("POSTGRES_DB").ok().as_deref(),
++            std::env::var("JOB_DISPOSABLE_FIXTURE").ok().as_deref(),
++        ) {
++            Ok(())
++        } else {
++            Err(Error::Configuration)
++        }
++    }
++    pub(crate) async fn peek_configured_parent_fixture(
++        &self,
++        queue: &str,
++        series: bool,
++        caller: Arc<dyn Send + Sync>,
++    ) -> Result<Option<ParentCandidate>, Error> {
++        self.require_configured_parent_fixture(queue)?;
++        let held = Arc::new(self.lease(caller)?);
++        let (reply, _physical) = self
++            .inner
++            .broker
++            .command_classified::<(i64, Vec<u8>), _>(
++                PEEK_CREATE,
++                &[QUEUE.into()],
++                &[],
++                held.clone(),
++            )
++            .await
++            .map_err(map)?;
++        match reply.0 {
++            0 => Ok(None),
++            1 => {
++                let message = parse_parent(&reply.1, series)?;
++                Ok(Some(ParentCandidate {
++                    message,
++                    bytes: reply.1,
++                    origin: self.inner.clone(),
++                    held,
++                }))
++            }
++            _ => Err(Error::Corrupt),
++        }
++    }
++    pub(crate) async fn claim_configured_parent_fixture(
++        &self,
++        candidate: ParentCandidate,
++    ) -> Result<(), Error> {
++        self.require_configured_parent_fixture(QUEUE)?;
++        if !Arc::ptr_eq(&self.inner, &candidate.origin) {
++            return Err(Error::Configuration);
++        }
++        let id = candidate.message.id();
++        match self
++            .inner
++            .broker
++            .command_classified::<i64, _>(
++                CLAIM_CREATE,
++                &[QUEUE.into()],
++                &[&candidate.bytes],
++                candidate.held,
++            )
++            .await
++        {
++            Ok((1, _)) => Ok(()),
++            Ok((0, _)) => Err(Error::ClaimRace),
++            Ok(_) => Err(Error::Corrupt),
++            Err(ClassifiedError::Backend) => Err(Error::AmbiguousClaim(id)),
++            Err(e) => Err(map(e)),
++        }
++    }
++}
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn only_fixed_copied_parent_route_is_admitted() {
++        let db = "rust_probe_backup_jobs_owned";
++        assert!(supported(
++            QUEUE,
++            Some(db),
++            Some(db),
++            Some("playback-fixture-only")
++        ));
++        for queue in [
++            "celery",
++            "unknown",
++            "rust-owned-configured-recordings-other",
++        ] {
++            assert!(!supported(
++                queue,
++                Some(db),
++                Some(db),
++                Some("playback-fixture-only")
++            ));
++        }
++        assert!(!supported(
++            QUEUE,
++            None,
++            Some(db),
++            Some("playback-fixture-only")
++        ));
++        assert!(!supported(
++            QUEUE,
++            Some("real_database"),
++            Some("real_database"),
++            Some("playback-fixture-only")
++        ));
++        assert!(!supported(
++            QUEUE,
++            Some(db),
++            Some("other"),
++            Some("playback-fixture-only")
++        ));
++        assert!(!supported(QUEUE, Some(db), Some(db), None));
++    }
++    fn owned_series_frame() -> serde_json::Value {
++        let source: serde_json::Value =
++            serde_json::from_str(include_str!("../datasets/source-series-rules-wire.json"))
++                .unwrap();
++        let mut frame = source["cases"][0]["envelope"].clone();
++        let id = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
++        frame["headers"]["id"] = serde_json::json!(id);
++        frame["headers"]["root_id"] = serde_json::json!(id);
++        frame["properties"]["correlation_id"] = serde_json::json!(id);
++        frame["properties"]["delivery_info"]["routing_key"] = serde_json::json!(QUEUE);
++        frame
++    }
++    #[test]
++    fn only_owned_validation_clone_bridges_legacy_route() {
++        let frame = owned_series_frame();
++        let raw = serde_json::to_vec(&frame).unwrap();
++        assert!(crate::series_protocol::parse(&raw).is_err());
++        assert!(matches!(
++            parse_parent(&raw, true),
++            Ok(ParentMessage::Series(_))
++        ));
++        assert_eq!(
++            serde_json::from_slice::<serde_json::Value>(&raw).unwrap(),
++            frame
++        );
++        for (key, value) in [
++            ("exchange", "foreign"),
++            ("routing_key", "celery"),
++            ("routing_key", "unknown"),
++        ] {
++            let mut wrong = frame.clone();
++            wrong["properties"]["delivery_info"][key] = serde_json::json!(value);
++            assert!(parse_parent(&serde_json::to_vec(&wrong).unwrap(), true).is_err());
++        }
++    }
++    #[test]
++    fn owned_route_still_refuses_noncanonical_ids_and_parented_frames() {
++        let frame = owned_series_frame();
++        for key in ["id", "root_id"] {
++            let mut wrong = frame.clone();
++            wrong["headers"][key] = serde_json::json!("AAAAAAAA-AAAA-4AAA-8AAA-AAAAAAAAAAAA");
++            assert!(parse_parent(&serde_json::to_vec(&wrong).unwrap(), true).is_err());
++        }
++        let mut parented = frame.clone();
++        parented["headers"]["parent_id"] =
++            serde_json::json!("bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb");
++        assert!(parse_parent(&serde_json::to_vec(&parented).unwrap(), true).is_err());
++        let mut other = frame;
++        other["headers"]["task"] =
++            serde_json::json!("apps.channels.tasks.prefetch_recording_artwork");
++        assert!(parse_parent(&serde_json::to_vec(&other).unwrap(), true).is_err());
++    }
++    #[test]
++    fn actual_artwork_descendant_cannot_be_a_parent() {
++        let id = Uuid::new_v4();
++        let parent = Uuid::new_v4();
++        let task =
++            crate::recording_artwork::DirectTask::series(&crate::series_protocol::SeriesMessage {
++                task_id: parent,
++                root: parent,
++                parent: None,
++            })
++            .unwrap();
++        let bytes = crate::recording_artwork::encode(
++            1,
++            task,
++            id,
++            Uuid::new_v4(),
++            Uuid::new_v4(),
++            chrono::Utc::now(),
++        )
++        .unwrap();
++        assert!(crate::series_protocol::parse(&bytes).is_err());
++        assert!(crate::default_protocol::parse(&bytes).is_err());
++    }
++}
+--- a/rust/crates/job-transport/src/configured_recording_peer.rs
++++ b/rust/crates/job-transport/src/configured_recording_peer.rs
+@@ -0,0 +1,195 @@
++//! UNREGISTERED QA peer text. Disposable copied SQL/Redis only. Same normal
++//! configured worker/service; explicit fixed parent-route fixture control.
++use crate::{
++    configured_recording_worker::{Assembly, Family, Worker},
++    recording_artwork::Publisher,
++    transport::{Config, Jobs},
++};
++use dispatcharr_coordination::{TaskLockConfig, TaskLocks};
++use dispatcharr_store::Store;
++use serde_json::{json, Value};
++use std::{
++    io::{BufRead, Write},
++    sync::Arc,
++    time::Duration,
++};
++fn read(input: &mut impl BufRead) -> Value {
++    let mut raw = Vec::new();
++    loop {
++        let part = input.fill_buf().unwrap();
++        assert!(!part.is_empty());
++        let n = part
++            .iter()
++            .position(|v| *v == b'\n')
++            .map_or(part.len(), |n| n + 1);
++        assert!(raw.len() + n <= 8192);
++        raw.extend_from_slice(&part[..n]);
++        input.consume(n);
++        if raw.ends_with(b"\n") {
++            break;
++        }
++    }
++    serde_json::from_slice(&raw).unwrap()
++}
++fn output(value: Value) {
++    println!("NATIVE_CONFIGURED_RECORDINGS_JSON={value}");
++    std::io::stdout().flush().unwrap();
++}
++fn endpoint(url: &str, database: i64) {
++    let client = redis::Client::open(url).unwrap();
++    let info = client.get_connection_info();
++    assert_eq!(info.redis.db, database);
++    assert!(
++        matches!(&info.addr,redis::ConnectionAddr::Tcp(h,p)if matches!(h.as_str(),"localhost"|"127.0.0.1")&&(*p==6379||(61000..=65000).contains(p)))
++    );
++}
++#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
++#[ignore]
++async fn actual_configured_recording_parent_peer() {
++    assert_eq!(
++        std::env::var("JOB_DISPOSABLE_FIXTURE").as_deref(),
++        Ok("playback-fixture-only")
++    );
++    let database = std::env::var("POSTGRES_DB").unwrap();
++    assert!(database.starts_with("rust_probe_backup_jobs_"));
++    let stdin = std::io::stdin();
++    let mut input = stdin.lock();
++    let cfg = read(&mut input);
++    let broker = cfg["broker_url"].as_str().unwrap();
++    let backend = cfg["result_url"].as_str().unwrap();
++    let cache = cfg["cache_url"].as_str().unwrap();
++    endpoint(broker, 8);
++    endpoint(backend, 9);
++    endpoint(cache, 0);
++    for name in ["events_url", "locks_url"] {
++        if let Some(url) = cfg[name].as_str() {
++            endpoint(url, 0);
++        }
++    }
++    let database_url = cfg["database_url"].as_str().unwrap();
++    let options: sqlx::postgres::PgConnectOptions = database_url.parse().unwrap();
++    assert_eq!(options.get_database(), Some(database.as_str()));
++    assert!(matches!(options.get_host(), "localhost" | "127.0.0.1"));
++    assert!(options.get_port() == 5432 || (61000..=65000).contains(&options.get_port()));
++    assert_eq!(options.get_username(), "dispatch");
++    let store = Store::connect(database_url, 1).await.unwrap();
++    let actual: String = sqlx::query_scalar("SELECT current_database()")
++        .fetch_one(store.pool())
++        .await
++        .unwrap();
++    assert_eq!(actual, database);
++    let owned: i64 = sqlx::query_scalar(
++        "SELECT count(*) FROM dispatcharr_channels_channel WHERE name='Owned Configured'",
++    )
++    .fetch_one(store.pool())
++    .await
++    .unwrap();
++    assert_eq!(owned, 1);
++    let jobs = Jobs::connect_fixture(broker, backend, &database, Config::default())
++        .await
++        .unwrap();
++    let publisher = Arc::new(
++        Publisher::connect(broker, backend, Config::default())
++            .await
++            .unwrap(),
++    );
++    let events = Arc::new(
++        dispatcharr_realtime::RealtimeBus::connect(
++            cfg["events_url"].as_str().unwrap_or(cache),
++            Default::default(),
++        )
++        .await
++        .unwrap(),
++    );
++    let initial_connections = events.available_connections();
++    let initial_publish_bytes = events.available_publish_bytes();
++    let locks = TaskLocks::connect(
++        cfg["locks_url"].as_str().unwrap_or(cache),
++        TaskLockConfig::default(),
++    )
++    .await
++    .unwrap();
++    let family = match cfg["family"].as_str().unwrap() {
++        "series" => Family::Series,
++        "recurring" => Family::Recurring,
++        _ => panic!("declared family only"),
++    };
++    let worker = Worker::new_parent_route_fixture(
++        Assembly {
++            jobs: jobs.clone(),
++            locks,
++            store: store.clone(),
++            cache: cache.into(),
++            artwork: publisher.clone(),
++            events: events.clone(),
++            family,
++        },
++        "rust-owned-configured-recordings",
++    )
++    .unwrap();
++    let mut pending = None;
++    let mut weak = None;
++    output(
++        json!({"prepared":true,"parent_route":"rust-owned-configured-recordings","child_route":"celery","children_consumed":false}),
++    );
++    loop {
++        let command = read(&mut input);
++        match command["action"].as_str().unwrap() {
++            "run" => {
++                let caller = Arc::new(());
++                let reference = Arc::downgrade(&caller);
++                let began = chrono::Utc::now();
++                let result = worker.run_once(caller).await;
++                output(
++                    json!({"action":"run","began_utc":began.to_rfc3339(),"finished_utc":chrono::Utc::now().to_rfc3339(),"ok":result.is_ok(),"result":format!("{result:?}"),"caller_released":reference.upgrade().is_none(),"available_slots":worker.available_slots()}),
++                );
++            }
++            "start" => {
++                assert!(pending.is_none());
++                let caller = Arc::new(());
++                weak = Some(Arc::downgrade(&caller));
++                let worker = worker.clone();
++                pending = Some(tokio::spawn(async move { worker.run_once(caller).await }));
++                output(json!({"started":true,"utc":chrono::Utc::now().to_rfc3339()}));
++            }
++            "poll" => output(
++                json!({"caller_pending":pending.as_ref().is_some_and(|h|!h.is_finished()),"caller_released":weak.as_ref().is_some_and(|w|w.upgrade().is_none()),"available_slots":worker.available_slots(),"event_connections":events.available_connections(),"event_publish_bytes":events.available_publish_bytes()}),
++            ),
++            "abort" => {
++                let handle = pending.as_ref().unwrap();
++                handle.abort();
++                output(json!({"abort_requested":true,"utc":chrono::Utc::now().to_rfc3339()}));
++            }
++            "wait" => {
++                let handle = pending.take().unwrap();
++                let result = tokio::time::timeout(Duration::from_secs(35), handle).await;
++                output(
++                    json!({"wait":format!("{result:?}"),"utc":chrono::Utc::now().to_rfc3339(),"available_slots":worker.available_slots()}),
++                );
++            }
++            "drain" => {
++                let began = chrono::Utc::now();
++                let result = worker.shutdown(Duration::from_secs(10)).await;
++                output(
++                    json!({"drained":result.is_ok(),"result":format!("{result:?}"),"began_utc":began.to_rfc3339(),"finished_utc":chrono::Utc::now().to_rfc3339(),"caller_released":weak.as_ref().is_none_or(|w|w.upgrade().is_none()),"event_connections":events.available_connections(),"event_publish_bytes":events.available_publish_bytes()}),
++                );
++            }
++            "close" => {
++                assert!(pending.is_none());
++                worker.shutdown(Duration::from_secs(10)).await.unwrap();
++                assert_eq!(events.available_connections(), initial_connections);
++                assert_eq!(events.available_publish_bytes(), initial_publish_bytes);
++                publisher.shutdown(Duration::from_secs(10)).await.unwrap();
++                jobs.shutdown(Duration::from_secs(10)).await.unwrap();
++                events.stop_accepting();
++                drop(worker);
++                drop(events);
++                drop(publisher);
++                store.pool().close().await;
++                output(json!({"closed":true}));
++                break;
++            }
++            _ => panic!("finite peer command only"),
++        }
++    }
++}
+--- a/rust/crates/job-transport/src/configured_recording_service.rs
++++ b/rust/crates/job-transport/src/configured_recording_service.rs
+@@ -0,0 +1,541 @@
++//! PRIVATE uncompiled configured-Series/UTC-recurring service draft.
++//! Normal inert library path; no task consumer or Main constructor is changed.
++//! Original Dispatcharr authors retain rule/signal/event behavior credit.
++use crate::configured_recordings::{self as decisions, Existing, Intent, Programme, Recurring};
++use crate::recording_artwork::DirectTask;
++use chrono::{DateTime, Utc};
++use dispatcharr_contracts::{BoxFuture, UpdateEventError, UpdateEventSink};
++use dispatcharr_store::recording_schedule::{self, FutureRecording, SeriesScope};
++use serde_json::{json, Value};
++use sqlx::PgPool;
++use std::sync::Arc;
++use tokio::sync::oneshot;
++use uuid::Uuid;
++
++#[derive(Debug)]
++pub enum Error {
++    Unsupported,
++    Snapshot(recording_schedule::SnapshotError),
++    Sql(recording_schedule::Error),
++    ArtworkUncertain,
++    Event,
++    Supervisor,
++}
++#[derive(Clone, Copy, Debug)]
++pub enum ArtworkError {
++    SettledUnavailable,
++    Uncertain,
++}
++/// Only captured prefetch_recording_artwork([positive Recording id],countdown=1)
++/// authority. Implementation must await physical publication settlement and
++/// retain owner through actual reply. Arbitrary task names/options are absent.
++pub trait ArtworkSink: Send + Sync {
++    fn publish<'a>(
++        &'a self,
++        recording: i64,
++        task: DirectTask,
++        owner: Arc<dyn Send + Sync>,
++    ) -> BoxFuture<'a, Result<Uuid, ArtworkError>>;
++}
++pub struct Service {
++    pool: PgPool,
++    artwork: Arc<dyn ArtworkSink>,
++    events: Arc<dyn UpdateEventSink>,
++    identity: Arc<()>,
++}
++pub struct PreparedSeries {
++    origin: Arc<()>,
++    task: DirectTask,
++    title: String,
++    tvg: String,
++    intents: Vec<Intent>,
++}
++#[derive(Debug)]
++pub struct SeriesReport {
++    task: Uuid,
++    title: String,
++    tvg: String,
++    created: u32,
++    children: Vec<Uuid>,
++    caught_insert_errors: Vec<String>,
++}
++impl SeriesReport {
++    pub(crate) fn task_id(&self) -> Uuid {
++        self.task
++    }
++    pub(crate) fn children(&self) -> Vec<Uuid> {
++        self.children.clone()
++    }
++    pub fn value(&self) -> Value {
++        let mut details: Vec<Value> = self
++            .caught_insert_errors
++            .iter()
++            .map(|error| json!({"tvg_id":self.tvg,"status":"error","error":error}))
++            .collect();
++        details.push(
++            json!({"tvg_id":self.tvg,"title":self.title,"status":"ok","created":self.created}),
++        );
++        json!({"scheduled":self.created,"details":details})
++    }
++}
++#[derive(Debug)]
++pub struct RecurringReport {
++    task: Uuid,
++    created: u32,
++    children: Vec<Uuid>,
++}
++impl RecurringReport {
++    pub(crate) fn task_id(&self) -> Uuid {
++        self.task
++    }
++    pub(crate) fn children(&self) -> Vec<Uuid> {
++        self.children.clone()
++    }
++    pub fn value(&self) -> Value {
++        json!(self.created)
++    }
++}
++struct IntentOutcome {
++    created: u32,
++    children: Vec<Uuid>,
++    caught_insert_errors: Vec<recording_schedule::KnownInsertFailure>,
++}
++pub struct PreparedRecurring {
++    origin: Arc<()>,
++    task: DirectTask,
++    decision_now: DateTime<Utc>,
++    rule: Option<Recurring>,
++}
++struct EventReceipt {
++    finished: Option<oneshot::Sender<()>>,
++    _owner: Arc<dyn Send + Sync>,
++}
++impl Drop for EventReceipt {
++    fn drop(&mut self) {
++        if let Some(tx) = self.finished.take() {
++            let _ = tx.send(());
++        }
++    }
++}
++fn small(v: &Value) -> Result<&str, Error> {
++    v.as_str()
++        .filter(|s| {
++            !s.is_empty()
++                && s.len() <= 255
++                && s.is_ascii()
++                && !s.bytes().any(|b| b.is_ascii_control())
++        })
++        .ok_or(Error::Unsupported)
++}
++fn moment(v: &Value) -> Result<DateTime<Utc>, Error> {
++    v.as_str()
++        .filter(|s| s.len() <= 40)
++        .ok_or(Error::Unsupported)?
++        .parse()
++        .map_err(|_| Error::Unsupported)
++}
++fn number(v: &Value) -> Result<u32, Error> {
++    v.as_u64()
++        .and_then(|v| u32::try_from(v).ok())
++        .filter(|v| *v > 0)
++        .ok_or(Error::Unsupported)
++}
++impl Service {
++    /// Inert assembly only. The worker must use a matching retained policy/SQL
++    /// pool and keep its global lease until all service/result work settles.
++    pub fn new(
++        pool: PgPool,
++        artwork: Arc<dyn ArtworkSink>,
++        events: Arc<dyn UpdateEventSink>,
++    ) -> Self {
++        Self {
++            pool,
++            artwork,
++            events,
++            identity: Arc::new(()),
++        }
++    }
++    pub async fn prepare_series(
++        &self,
++        group: &Value,
++        now: DateTime<Utc>,
++        task: DirectTask,
++        owner: Arc<dyn Send + Sync>,
++    ) -> Result<PreparedSeries, Error> {
++        if group.get("pre_offset_minutes").and_then(Value::as_i64) != Some(0)
++            || group.get("post_offset_minutes").and_then(Value::as_i64) != Some(0)
++        {
++            return Err(Error::Unsupported);
++        }
++        let rules = group
++            .get("series_rules")
++            .and_then(Value::as_array)
++            .filter(|v| v.len() == 1)
++            .ok_or(Error::Unsupported)?;
++        let rule = rules[0].as_object().ok_or(Error::Unsupported)?;
++        let keys = [
++            "title",
++            "tvg_id",
++            "title_mode",
++            "mode",
++            "channel_id",
++            "epg_source_id",
++        ];
++        if rule.len() != keys.len()
++            || rule.keys().any(|k| !keys.contains(&k.as_str()))
++            || rule.get("title_mode") != Some(&json!("exact"))
++            || rule.get("mode") != Some(&json!("all"))
++        {
++            return Err(Error::Unsupported);
++        }
++        let title = small(&rules[0]["title"])?.to_owned();
++        let tvg = small(&rules[0]["tvg_id"])?.to_owned();
++        // Source strips these rule values; this first domain refuses noncanonical
++        // spacing rather than silently accepting a broader normalization domain.
++        if title.trim() != title || tvg.trim() != tvg {
++            return Err(Error::Unsupported);
++        }
++        let channel = rules[0]["channel_id"].as_i64().ok_or(Error::Unsupported)?;
++        let source = rules[0]["epg_source_id"]
++            .as_i64()
++            .ok_or(Error::Unsupported)?;
++        let scope = SeriesScope::new(channel, source, tvg.clone(), title.clone())
++            .ok_or(Error::Unsupported)?;
++        let snapshot = recording_schedule::series_snapshot(self.pool.clone(), scope, now, owner)
++            .await
++            .map_err(Error::Snapshot)?;
++        let mut programmes = Vec::new();
++        for row in snapshot.programmes {
++            let cp = row.custom_properties.ok_or(Error::Unsupported)?;
++            let cp = cp.as_object().ok_or(Error::Unsupported)?;
++            if cp.len() != 2
++                || !cp.contains_key("season")
++                || !cp.contains_key("episode")
++                || row.description.is_some()
++            {
++                return Err(Error::Unsupported);
++            }
++            programmes.push(Programme {
++                id: row.id,
++                source_id: source,
++                channel_id: channel,
++                tvg_id: row.tvg_id.ok_or(Error::Unsupported)?,
++                title: row.title.ok_or(Error::Unsupported)?,
++                subtitle: row.sub_title.ok_or(Error::Unsupported)?,
++                start: row.start_time,
++                end: row.end_time,
++                season: number(&cp["season"])?,
++                episode: number(&cp["episode"])?,
++            });
++        }
++        let mut existing = Vec::new();
++        for cp in snapshot.existing_properties {
++            if cp.is_null() {
++                continue;
++            }
++            let object = cp.as_object().ok_or(Error::Unsupported)?;
++            let Some(program) = object.get("program") else {
++                continue;
++            };
++            let program = program.as_object().ok_or(Error::Unsupported)?;
++            // Recurring Source snapshots have no tvg_id; Source ignores them
++            // for programme/episode dedup. Unknown non-string keys are refused.
++            let Some(key) = program.get("tvg_id") else {
++                continue;
++            };
++            if key.is_null() {
++                continue;
++            }
++            let key = small(key)?;
++            if key != tvg {
++                continue;
++            }
++            existing.push(Existing {
++                tvg_id: key.to_owned(),
++                title: small(program.get("title").ok_or(Error::Unsupported)?)?.to_owned(),
++                start: moment(program.get("start_time").ok_or(Error::Unsupported)?)?,
++                end: moment(program.get("end_time").ok_or(Error::Unsupported)?)?,
++                season: number(program.get("season").ok_or(Error::Unsupported)?)?,
++                episode: number(program.get("episode").ok_or(Error::Unsupported)?)?,
++            });
++        }
++        let intents = decisions::series(now, &title, &tvg, channel, source, &programmes, &existing)
++            .map_err(|_| Error::Unsupported)?;
++        Ok(PreparedSeries {
++            origin: self.identity.clone(),
++            task,
++            title,
++            tvg,
++            intents,
++        })
++    }
++    /// `system` must be the actual immutable group returned by retained_system_settings
++    /// under the SAME worker owner. No SQL/default fallback is performed here.
++    /// This scoped implementation accepts an explicit cached UTC value only.
++    pub async fn prepare_recurring(
++        &self,
++        system: &Value,
++        now: DateTime<Utc>,
++        task: DirectTask,
++        owner: Arc<dyn Send + Sync>,
++    ) -> Result<PreparedRecurring, Error> {
++        if system.get("time_zone").and_then(Value::as_str) != Some("UTC") {
++            return Err(Error::Unsupported);
++        }
++        let row = recording_schedule::recurring_snapshot(self.pool.clone(), owner)
++            .await
++            .map_err(Error::Snapshot)?;
++        let Some(row) = row else {
++            return Ok(PreparedRecurring {
++                origin: self.identity.clone(),
++                task,
++                decision_now: now,
++                rule: None,
++            });
++        };
++        let days = row
++            .days
++            .as_ref()
++            .and_then(Value::as_array)
++            .filter(|v| v.len() == 1)
++            .ok_or(Error::Unsupported)?;
++        let weekday = days[0]
++            .as_u64()
++            .filter(|v| *v <= 6)
++            .ok_or(Error::Unsupported)? as u32;
++        let day = row.start_date.ok_or(Error::Unsupported)?;
++        if row.end_date != Some(day) {
++            return Err(Error::Unsupported);
++        }
++        let name = row.name.ok_or(Error::Unsupported)?;
++        let rule = Recurring {
++            id: row.id,
++            channel_id: row.channel_id,
++            name,
++            enabled: true,
++            day,
++            weekday,
++            start: row.start,
++            end: row.end,
++        };
++        // Validate the entire admitted date/title/clock domain before claim;
++        // actual exact DB dedup is still repeated immediately before INSERT.
++        decisions::recurring(now, &rule, false).map_err(|_| Error::Unsupported)?;
++        Ok(PreparedRecurring {
++            origin: self.identity.clone(),
++            task,
++            decision_now: now,
++            rule: Some(rule),
++        })
++    }
++    pub async fn execute_prepared_recurring(
++        self: Arc<Self>,
++        prepared: PreparedRecurring,
++        owner: Arc<dyn Send + Sync>,
++    ) -> Result<RecurringReport, Error> {
++        if !Arc::ptr_eq(&self.identity, &prepared.origin) {
++            return Err(Error::Unsupported);
++        }
++        let task = prepared.task;
++        match prepared.rule {
++            Some(rule) => {
++                self.execute_recurring(prepared.decision_now, rule, task, owner)
++                    .await
++            }
++            None => Ok(RecurringReport {
++                task: task.id(),
++                created: 0,
++                children: Vec::new(),
++            }),
++        }
++    }
++    async fn execute_intents(
++        &self,
++        intents: Vec<Intent>,
++        task: DirectTask,
++        owner: Arc<dyn Send + Sync>,
++    ) -> Result<IntentOutcome, Error> {
++        // Source11 captures one eligible failing programme/rule. Preserve the
++        // existing32-cap normal domain, without inferring multi-error parity.
++        let one_eligible = intents.len() == 1;
++        let mut created = 0;
++        let mut children = Vec::new();
++        let mut caught_insert_errors = Vec::new();
++        for intent in intents {
++            let input = FutureRecording::new(
++                intent.channel_id,
++                intent.start,
++                intent.end,
++                intent.properties,
++                Utc::now(),
++            )
++            .ok_or(Error::Unsupported)?;
++            let row =
++                match recording_schedule::create_future(self.pool.clone(), input, owner.clone())
++                    .await
++                {
++                    Ok(Some(row)) => row,
++                    Ok(None) => continue,
++                    Err(error) => {
++                        if one_eligible {
++                            if let Some(observed) = error.known_source_insert_failure() {
++                                caught_insert_errors.push(observed);
++                                continue;
++                            }
++                        }
++                        return Err(Error::Sql(error));
++                    }
++                };
++            // Source signal publishes once; Series body publishes a SECOND time.
++            // Keep both attempts, even if the first has a settled failure.
++            for _ in 0..intent.artwork_publications {
++                match self
++                    .artwork
++                    .publish(row.recording_id, task, owner.clone())
++                    .await
++                {
++                    Ok(id) => children.push(id),
++                    Err(ArtworkError::SettledUnavailable) => {}
++                    Err(ArtworkError::Uncertain) => return Err(Error::ArtworkUncertain),
++                }
++            }
++            created += 1;
++        }
++        Ok(IntentOutcome {
++            created,
++            children,
++            caught_insert_errors,
++        })
++    }
++    async fn event(
++        &self,
++        scheduled: Option<u32>,
++        owner: Arc<dyn Send + Sync>,
++    ) -> Result<(), Error> {
++        let data = match scheduled {
++            Some(count) => json!({"success":true,"type":"recordings_refreshed","scheduled":count}),
++            None => json!({"success":true,"type":"recordings_refreshed"}),
++        };
++        let (tx, rx) = oneshot::channel();
++        let receipt = Arc::new(EventReceipt {
++            finished: Some(tx),
++            _owner: owner,
++        });
++        let result = self
++            .events
++            .send_retained(
++                "updates",
++                json!({"type":"update","data":data}),
++                receipt.clone(),
++            )
++            .await;
++        drop(receipt);
++        rx.await.map_err(|_| Error::Event)?;
++        match result {
++            Ok(()) | Err(UpdateEventError::Unavailable) => Ok(()),
++            Err(_) => Err(Error::Event),
++        }
++    }
++    /// Must be called after actual CAS/ACK under the SAME global lease retained
++    /// by `owner`. Detached caller cannot drop SQL/event/publication ownership.
++    pub async fn execute_series(
++        self: Arc<Self>,
++        prepared: PreparedSeries,
++        owner: Arc<dyn Send + Sync>,
++    ) -> Result<SeriesReport, Error> {
++        if !Arc::ptr_eq(&self.identity, &prepared.origin) {
++            return Err(Error::Unsupported);
++        }
++        let task = prepared.task;
++        tokio::spawn(async move {
++            let outcome = self
++                .execute_intents(prepared.intents, task, owner.clone())
++                .await?;
++            self.event(Some(outcome.created), owner).await?;
++            Ok(SeriesReport {
++                task: task.id(),
++                title: prepared.title,
++                tvg: prepared.tvg,
++                created: outcome.created,
++                children: outcome.children,
++                caught_insert_errors: outcome
++                    .caught_insert_errors
++                    .into_iter()
++                    .map(|e| e.message().to_owned())
++                    .collect(),
++            })
++        })
++        .await
++        .map_err(|_| Error::Supervisor)?
++    }
++    /// Explicit typed rule is not a DB-admission substitute. A future default
++    /// worker adapter must snapshot and reject unsupported enabled rules BEFORE
++    /// ACK; it must not call this with only the first of several actual rules.
++    async fn execute_recurring(
++        self: Arc<Self>,
++        now: DateTime<Utc>,
++        rule: Recurring,
++        task: DirectTask,
++        owner: Arc<dyn Send + Sync>,
++    ) -> Result<RecurringReport, Error> {
++        tokio::spawn(async move {
++            let intent = decisions::recurring(now, &rule, false).map_err(|_| Error::Unsupported)?;
++            let outcome = self
++                .execute_intents(intent.into_iter().collect(), task, owner.clone())
++                .await?;
++            if outcome.created > 0 {
++                self.event(None, owner).await?;
++            }
++            Ok(RecurringReport {
++                task: task.id(),
++                created: outcome.created,
++                children: outcome.children,
++            })
++        })
++        .await
++        .map_err(|_| Error::Supervisor)?
++    }
++}
++
++#[cfg(test)]
++mod caught_insert_tests {
++    use super::*;
++    #[test]
++    fn captured_source_error_is_normal_ordered_result_not_traceback() {
++        let source: Value = serde_json::from_str(include_str!(
++            "../datasets/source-configured-recordings-insert-errors.json"
++        ))
++        .unwrap();
++        assert_eq!(source["captured_SQLSTATE_verified"], json!(false));
++        for case in source["cases"].as_array().unwrap() {
++            assert!(case["raw_captured_SQLSTATE"].is_null());
++            if case["name"] == "series-SQL-P0001" {
++                let value = &case["backend"]["result"];
++                let report = SeriesReport {
++                    task: Uuid::parse_str(case["backend"]["task_id"].as_str().unwrap()).unwrap(),
++                    title: "Owned Exact Series".into(),
++                    tvg: "rust.owned.configured".into(),
++                    created: 0,
++                    children: Vec::new(),
++                    caught_insert_errors: vec![value["details"][0]["error"]
++                        .as_str()
++                        .unwrap()
++                        .to_owned()],
++                };
++                assert_eq!(report.value(), *value);
++                assert_eq!(case["event_delta"].as_array().unwrap().len(), 1);
++            } else {
++                let report = RecurringReport {
++                    task: Uuid::parse_str(case["backend"]["task_id"].as_str().unwrap()).unwrap(),
++                    created: 0,
++                    children: Vec::new(),
++                };
++                assert_eq!(report.value(), case["backend"]["result"]);
++                assert_eq!(case["event_delta"], json!([]));
++            }
++            assert_eq!(case["recording_delta"], json!(0));
++            assert_eq!(case["backend"]["status"], json!("SUCCESS"));
++            assert!(case["backend"]["traceback"].is_null());
++        }
++    }
++}
+--- a/rust/crates/job-transport/src/configured_recording_worker.rs
++++ b/rust/crates/job-transport/src/configured_recording_worker.rs
+@@ -0,0 +1,412 @@
++//! Explicit inert configured Series/recurring consumers. Original Dispatcharr
++//! authors retain credit. No default worker or Main behavior is changed.
++use crate::{
++    configured_recording_service::{self, Service},
++    default_protocol::Kind,
++    recording_artwork::DirectTask,
++    series_protocol::KnownReturn,
++    transport::{Error as TransportError, Jobs},
++};
++use dispatcharr_coordination::{TaskLease, TaskLockDetailedError, TaskLockError, TaskLocks};
++use dispatcharr_ingest_epg::{cache_policy::CachedSwapPolicy, SwapPolicyContext};
++use std::{
++    sync::{
++        atomic::{AtomicBool, Ordering},
++        Arc, Mutex,
++    },
++    time::Duration,
++};
++use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
++use uuid::Uuid;
++#[derive(Debug)]
++pub enum Error {
++    Configuration,
++    Closed,
++    Capacity,
++    Unsupported,
++    Transport(TransportError),
++    Domain(configured_recording_service::Error),
++    Operational,
++    Policy(dispatcharr_ingest_epg::cache_policy::ConfiguredSettingsError),
++    UnsettledRelease,
++    Supervisor,
++    DrainTimeout,
++}
++#[derive(Debug, PartialEq, Eq)]
++pub enum Run {
++    Empty,
++    UnsupportedHead,
++    Completed(Uuid),
++    AlreadySucceeded(Uuid),
++}
++struct Owner {
++    _slot: OwnedSemaphorePermit,
++    _caller: Arc<dyn Send + Sync>,
++}
++struct Scope {
++    lease: Mutex<Option<TaskLease>>,
++    _owner: Arc<Owner>,
++}
++impl Scope {
++    async fn release(&self) -> Result<(), Error> {
++        let lease = self
++            .lease
++            .lock()
++            .map_err(|_| Error::UnsettledRelease)?
++            .take()
++            .ok_or(Error::UnsettledRelease)?;
++        match lease.release_owned_detailed().await {
++            Ok(true) => Ok(()),
++            _ => Err(Error::UnsettledRelease),
++        }
++    }
++}
++#[derive(Clone, Copy)]
++pub enum Family {
++    Series,
++    Recurring,
++}
++pub struct Assembly {
++    pub jobs: Jobs,
++    pub locks: TaskLocks,
++    pub store: dispatcharr_store::Store,
++    pub cache: String,
++    pub artwork: Arc<dyn configured_recording_service::ArtworkSink>,
++    pub events: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
++    pub family: Family,
++}
++struct PolicyReceipt {
++    done: Option<oneshot::Sender<()>>,
++    _owner: Arc<dyn Send + Sync>,
++}
++impl Drop for PolicyReceipt {
++    fn drop(&mut self) {
++        if let Some(tx) = self.done.take() {
++            let _ = tx.send(());
++        }
++    }
++}
++struct Inner {
++    jobs: Jobs,
++    locks: TaskLocks,
++    policy: Arc<CachedSwapPolicy>,
++    service: Arc<Service>,
++    family: Family,
++    slots: Arc<Semaphore>,
++    closed: AtomicBool,
++    #[cfg(test)]
++    owned_parent_route: bool,
++}
++#[derive(Clone)]
++pub struct Worker {
++    inner: Arc<Inner>,
++}
++impl Worker {
++    /// Merely constructs this ONE family. Caller owns transport/policy/service
++    /// assembly and must retain/drain each before shared transport shutdown.
++    pub fn new(assembly: Assembly) -> Result<Self, Error> {
++        let Assembly {
++            jobs,
++            locks,
++            store,
++            cache,
++            artwork,
++            events,
++            family,
++        } = assembly;
++        let service = Arc::new(Service::new(store.pool().clone(), artwork, events));
++        let policy = Arc::new(CachedSwapPolicy::new(store, Some(cache)));
++        if !(match family {
++            Family::Series => jobs.allows_series(),
++            Family::Recurring => jobs.allows_defaults(),
++        }) {
++            return Err(Error::Configuration);
++        }
++        Ok(Self {
++            inner: Arc::new(Inner {
++                jobs,
++                locks,
++                policy,
++                service,
++                family,
++                slots: Arc::new(Semaphore::new(1)),
++                closed: AtomicBool::new(false),
++                #[cfg(test)]
++                owned_parent_route: false,
++            }),
++        })
++    }
++    #[cfg(test)]
++    pub fn new_parent_route_fixture(assembly: Assembly, queue: &str) -> Result<Self, Error> {
++        assembly
++            .jobs
++            .require_configured_parent_fixture(queue)
++            .map_err(Error::Transport)?;
++        let mut worker = Self::new(assembly)?;
++        Arc::get_mut(&mut worker.inner)
++            .ok_or(Error::Configuration)?
++            .owned_parent_route = true;
++        Ok(worker)
++    }
++    pub fn available_slots(&self) -> usize {
++        self.inner.slots.available_permits()
++    }
++    pub async fn run_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Run, Error> {
++        if self.inner.closed.load(Ordering::Acquire) {
++            return Err(Error::Closed);
++        }
++        let slot = self
++            .inner
++            .slots
++            .clone()
++            .try_acquire_owned()
++            .map_err(|_| Error::Capacity)?;
++        if self.inner.closed.load(Ordering::Acquire) {
++            return Err(Error::Closed);
++        }
++        let owner = Arc::new(Owner {
++            _slot: slot,
++            _caller: caller,
++        });
++        let inner = self.inner.clone();
++        tokio::spawn(async move {
++            match inner.family {
++                Family::Series => series(inner, owner).await,
++                Family::Recurring => recurring(inner, owner).await,
++            }
++        })
++        .await
++        .map_err(|_| Error::Supervisor)?
++    }
++    pub async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
++        self.inner.closed.store(true, Ordering::Release);
++        let _permit = tokio::time::timeout(timeout, self.inner.slots.clone().acquire_owned())
++            .await
++            .map_err(|_| Error::DrainTimeout)?
++            .map_err(|_| Error::Closed)?;
++        Ok(())
++    }
++}
++enum Message {
++    Series(crate::series_protocol::SeriesMessage),
++    Recurring(crate::default_protocol::Message),
++}
++enum Claim {
++    Series(Vec<u8>),
++    Recurring(crate::transport::DefaultCandidate),
++    #[cfg(test)]
++    Owned(crate::transport::ConfiguredParentCandidate),
++}
++struct Pending {
++    message: Message,
++    claim: Claim,
++}
++async fn peek(inner: &Inner, owner: Arc<Owner>) -> Result<Option<Pending>, TransportError> {
++    #[cfg(test)]
++    if inner.owned_parent_route {
++        return inner
++            .jobs
++            .peek_configured_parent_fixture(
++                "rust-owned-configured-recordings",
++                matches!(inner.family, Family::Series),
++                owner,
++            )
++            .await
++            .map(|v| {
++                v.map(|c| {
++                    let message = match c.message.clone() {
++                        crate::transport::ConfiguredParentMessage::Series(v) => Message::Series(v),
++                        crate::transport::ConfiguredParentMessage::Recurring(v) => {
++                            Message::Recurring(v)
++                        }
++                    };
++                    Pending {
++                        message,
++                        claim: Claim::Owned(c),
++                    }
++                })
++            });
++    }
++    match inner.family {
++        Family::Series => inner.jobs.peek_series(owner).await.map(|v| {
++            v.map(|(bytes, message)| Pending {
++                message: Message::Series(message),
++                claim: Claim::Series(bytes),
++            })
++        }),
++        Family::Recurring => inner.jobs.peek_default(owner).await.map(|v| {
++            v.map(|candidate| Pending {
++                message: Message::Recurring(candidate.message.clone()),
++                claim: Claim::Recurring(candidate),
++            })
++        }),
++    }
++}
++fn canonical(inner: &Inner, pending: &Pending, task: DirectTask) -> bool {
++    match &pending.claim {
++        Claim::Series(raw) => crate::recording_artwork::canonical_frame(raw, task),
++        Claim::Recurring(candidate) => inner.jobs.configured_candidate_canonical(candidate, task),
++        #[cfg(test)]
++        Claim::Owned(candidate) => candidate.canonical(task),
++    }
++}
++async fn claim(
++    inner: &Inner,
++    pending: Pending,
++    owner: Arc<dyn Send + Sync>,
++) -> Result<(), TransportError> {
++    match pending.claim {
++        Claim::Series(bytes) => inner.jobs.claim_series(&bytes, owner).await,
++        Claim::Recurring(candidate) => inner.jobs.claim_default(candidate).await.map(|_| ()),
++        #[cfg(test)]
++        Claim::Owned(candidate) => inner.jobs.claim_configured_parent_fixture(candidate).await,
++    }
++}
++async fn settings(
++    inner: &Inner,
++    owner: Arc<dyn Send + Sync>,
++    system: bool,
++) -> Result<serde_json::Value, Error> {
++    let (tx, rx) = oneshot::channel();
++    let receipt = Arc::new(PolicyReceipt {
++        done: Some(tx),
++        _owner: owner,
++    });
++    let context = SwapPolicyContext {
++        cancelled: Arc::new(AtomicBool::new(false)),
++        retained: receipt.clone(),
++    };
++    let observed = if system {
++        inner
++            .policy
++            .retained_configured_system_settings(context)
++            .await
++    } else {
++        inner.policy.retained_configured_dvr_settings(context).await
++    };
++    drop(receipt);
++    // Cached-policy logical fallback/error does not establish physical Redis
++    // settlement. Await every transferred guard before ACK or releasing lease.
++    rx.await.map_err(|_| Error::Operational)?;
++    observed.map_err(Error::Policy)
++}
++async fn series(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {
++    let pending = match peek(&inner, owner.clone()).await {
++        Ok(Some(v)) => v,
++        Ok(None) => return Ok(Run::Empty),
++        Err(TransportError::UnsupportedTask) => return Ok(Run::UnsupportedHead),
++        Err(e) => return Err(Error::Transport(e)),
++    };
++    let message = match &pending.message {
++        Message::Series(v) => v.clone(),
++        _ => return Ok(Run::UnsupportedHead),
++    };
++    // Configured children/parented rules remain OPEN: refuse before lease/cache,
++    // ACK, revocation or any SQL mutation. Old no-rule worker is untouched.
++    let task = DirectTask::series(&message).ok_or(Error::Unsupported)?;
++    if !canonical(&inner, &pending, task) {
++        return Err(Error::Unsupported);
++    }
++    let lease = match inner
++        .locks
++        .acquire_series_rules_retained(owner.clone())
++        .await
++    {
++        Ok(lease) => lease,
++        Err(TaskLockDetailedError::Operational(TaskLockError::Held)) => {
++            claim(&inner, pending, owner.clone())
++                .await
++                .map_err(Error::Transport)?;
++            return match inner
++                .jobs
++                .write_series_success(&message, KnownReturn::Busy, owner)
++                .await
++                .map_err(Error::Transport)?
++            {
++                true => Ok(Run::Completed(message.task_id)),
++                false => Ok(Run::AlreadySucceeded(message.task_id)),
++            };
++        }
++        Err(_) => return Err(Error::Operational),
++    };
++    let scope = Arc::new(Scope {
++        lease: Mutex::new(Some(lease)),
++        _owner: owner.clone(),
++    });
++    let result = async {
++        let group = settings(&inner, scope.clone(), false).await?;
++        let prepared = inner
++            .service
++            .prepare_series(&group, chrono::Utc::now(), task, scope.clone())
++            .await
++            .map_err(Error::Domain)?;
++        claim(&inner, pending, scope.clone())
++            .await
++            .map_err(Error::Transport)?;
++        inner
++            .service
++            .clone()
++            .execute_series(prepared, scope.clone())
++            .await
++            .map_err(Error::Domain)
++    }
++    .await;
++    // Finally release settles before terminal reporting. Any uncertain release
++    // remains operational; no fabricated normal result after ambiguous cleanup.
++    scope.release().await?;
++    let report = result?;
++    match inner
++        .jobs
++        .write_configured_series_success(&message, &report, owner)
++        .await
++        .map_err(Error::Transport)?
++    {
++        true => Ok(Run::Completed(message.task_id)),
++        false => Ok(Run::AlreadySucceeded(message.task_id)),
++    }
++}
++async fn recurring(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {
++    let pending = match peek(&inner, owner.clone()).await {
++        Ok(Some(v)) => v,
++        Ok(None) => return Ok(Run::Empty),
++        Err(TransportError::UnsupportedTask) => return Ok(Run::UnsupportedHead),
++        Err(e) => return Err(Error::Transport(e)),
++    };
++    let message = match &pending.message {
++        Message::Recurring(v) => v.clone(),
++        _ => return Ok(Run::UnsupportedHead),
++    };
++    // Essential inverse guard: recognizing other known families does not grant
++    // this assembly their expiry/revocation/admission/early-ACK authority.
++    if message.kind != Kind::RecurringMaintenance {
++        return Ok(Run::UnsupportedHead);
++    }
++    let task = DirectTask::recurring(&message).ok_or(Error::Unsupported)?;
++    if !canonical(&inner, &pending, task) {
++        return Err(Error::Unsupported);
++    }
++    let system = settings(&inner, owner.clone(), true).await?;
++    let prepared = inner
++        .service
++        .prepare_recurring(&system, chrono::Utc::now(), task, owner.clone())
++        .await
++        .map_err(Error::Domain)?;
++    claim(&inner, pending, owner.clone())
++        .await
++        .map_err(Error::Transport)?;
++    let report = inner
++        .service
++        .clone()
++        .execute_prepared_recurring(prepared, owner.clone())
++        .await
++        .map_err(Error::Domain)?;
++    match inner
++        .jobs
++        .write_configured_recurring_success(&message, &report, owner)
++        .await
++        .map_err(Error::Transport)?
++    {
++        true => Ok(Run::Completed(message.task_id)),
++        false => Ok(Run::AlreadySucceeded(message.task_id)),
++    }
++}
+--- a/rust/crates/job-transport/src/configured_recordings.rs
++++ b/rust/crates/job-transport/src/configured_recordings.rs
+@@ -0,0 +1,433 @@
++//! Bounded configured recording decisions, derived from pinned Dispatcharr
++//! tasks.py and signals.py. Original authors retain implementation credit.
++//! PRIVATE UNCOMPILED DRAFT: private module registration only, no worker/application authority.
++//! Callers must load a bounded immutable SQL snapshot under the retained owner.
++use chrono::{DateTime, Datelike, Duration, NaiveDate, NaiveTime, Utc};
++use serde_json::{json, Value};
++use std::collections::HashSet;
++
++const CAP: usize = 32;
++#[derive(Debug, PartialEq, Eq)]
++pub enum Refusal {
++    Capacity,
++    Shape,
++    Date,
++    Identity,
++}
++#[derive(Clone, Debug)]
++pub struct Programme {
++    pub id: i64,
++    pub source_id: i64,
++    pub channel_id: i64,
++    pub tvg_id: String,
++    pub title: String,
++    pub subtitle: String,
++    pub start: DateTime<Utc>,
++    pub end: DateTime<Utc>,
++    pub season: u32,
++    pub episode: u32,
++}
++#[derive(Clone, Debug)]
++pub struct Existing {
++    pub tvg_id: String,
++    pub title: String,
++    pub start: DateTime<Utc>,
++    pub end: DateTime<Utc>,
++    pub season: u32,
++    pub episode: u32,
++}
++#[derive(Clone, Debug)]
++pub struct Intent {
++    pub channel_id: i64,
++    pub start: DateTime<Utc>,
++    pub end: DateTime<Utc>,
++    pub properties: Value,
++    /// Source signal publishes once; Series explicitly publishes once more.
++    pub artwork_publications: u8,
++}
++fn text(v: &str, max: usize) -> bool {
++    !v.is_empty() && v.len() <= max && v.is_ascii() && !v.bytes().any(|b| b.is_ascii_control())
++}
++fn iso(v: DateTime<Utc>) -> String {
++    // Python aware datetime.isoformat() uses +00:00, preserves nonzero micros.
++    let base = v.format("%Y-%m-%dT%H:%M:%S").to_string();
++    if v.timestamp_subsec_micros() == 0 {
++        format!("{base}+00:00")
++    } else {
++        format!("{base}.{:06}+00:00", v.timestamp_subsec_micros())
++    }
++}
++fn date(v: DateTime<Utc>) -> bool {
++    v.timestamp_subsec_nanos().is_multiple_of(1_000)
++}
++
++/// Exact ASCII title/tvg, positive numeric season+episode, zero offsets, one
++/// channel/source, no date/title modes, drift or identity-less historical rows.
++/// SQL loader must refuse all other programme/property shapes BEFORE ACK.
++/// Input ordering MUST be the captured Source queryset order; never sort after
++/// comparison. Earliest airing replaces in-place, preserving insertion order.
++pub fn series(
++    now: DateTime<Utc>,
++    title: &str,
++    tvg: &str,
++    channel_id: i64,
++    source_id: i64,
++    programmes: &[Programme],
++    existing: &[Existing],
++) -> Result<Vec<Intent>, Refusal> {
++    if programmes.len() > CAP || existing.len() > CAP {
++        return Err(Refusal::Capacity);
++    }
++    if !text(title, 255) || !text(tvg, 255) || channel_id <= 0 || source_id <= 0 {
++        return Err(Refusal::Shape);
++    }
++    let mut unique: Vec<&Programme> = Vec::new();
++    for p in programmes {
++        if p.id <= 0
++            || p.source_id != source_id
++            || p.channel_id != channel_id
++            || !p.title.eq_ignore_ascii_case(title)
++            || p.tvg_id != tvg
++            || !text(&p.title, 255)
++            || !text(&p.subtitle, 255)
++            || p.season == 0
++            || p.episode == 0
++        {
++            return Err(Refusal::Shape);
++        }
++        if !date(p.start)
++            || !date(p.end)
++            || p.end <= p.start
++            || p.start <= now
++            || p.start > now + Duration::days(7)
++        {
++            return Err(Refusal::Date);
++        }
++        if let Some(slot) = unique
++            .iter_mut()
++            .find(|x| x.season == p.season && x.episode == p.episode)
++        {
++            if p.start < slot.start {
++                *slot = p;
++            }
++        } else {
++            unique.push(p);
++        }
++    }
++    let mut exact = HashSet::new();
++    let mut episodes = HashSet::new();
++    for p in existing {
++        if !text(&p.tvg_id, 255)
++            || !text(&p.title, 255)
++            || p.season == 0
++            || p.episode == 0
++            || !date(p.start)
++            || !date(p.end)
++            || p.end <= p.start
++        {
++            return Err(Refusal::Identity);
++        }
++        // Source preload excludes recordings with end_time < now. Caller has
++        // validated this property against actual Recording.end_time as well.
++        if p.end < now {
++            return Err(Refusal::Date);
++        }
++        exact.insert((p.tvg_id.clone(), p.start, p.end));
++        episodes.insert((
++            p.tvg_id.clone(),
++            p.title.trim().to_ascii_lowercase(),
++            p.season,
++            p.episode,
++        ));
++    }
++    let mut output = Vec::new();
++    for p in unique {
++        if exact.contains(&(p.tvg_id.clone(), p.start, p.end))
++            || episodes.contains(&(
++                p.tvg_id.clone(),
++                p.title.trim().to_ascii_lowercase(),
++                p.season,
++                p.episode,
++            ))
++        {
++            continue;
++        }
++        exact.insert((p.tvg_id.clone(), p.start, p.end));
++        episodes.insert((
++            p.tvg_id.clone(),
++            p.title.trim().to_ascii_lowercase(),
++            p.season,
++            p.episode,
++        ));
++        output.push(Intent { channel_id, start:p.start, end:p.end, artwork_publications:2,
++            properties:json!({"program":{"id":p.id,"tvg_id":p.tvg_id,"title":p.title,"sub_title":p.subtitle,"description":null,"original_air_date":"","start_time":iso(p.start),"end_time":iso(p.end),"season":p.season,"episode":p.episode,"onscreen_episode":null,"epg_source_id":source_id}}) });
++    }
++    Ok(output)
++}
++
++pub struct Recurring {
++    pub id: i64,
++    pub channel_id: i64,
++    pub name: String,
++    pub enabled: bool,
++    pub day: NaiveDate,
++    pub weekday: u32,
++    pub start: NaiveTime,
++    pub end: NaiveTime,
++}
++/// One explicit UTC date, nonempty ASCII name, captured overnight +1day only;
++/// equal-time, DST and offset modes remain unqualified.
++/// Disabled is Source integer0 without deleting existing schedules/recordings.
++/// `existing` is the exact DB predicate (channel,start,properties.rule.id), not
++/// a caller-provided shortcut inferred from a programme ID.
++pub fn recurring(
++    now: DateTime<Utc>,
++    r: &Recurring,
++    existing: bool,
++) -> Result<Option<Intent>, Refusal> {
++    if !r.enabled {
++        return Ok(None);
++    }
++    if r.id <= 0 || r.channel_id <= 0 || !text(&r.name, 255) || r.weekday > 6 {
++        return Err(Refusal::Shape);
++    }
++    if r.day.weekday().num_days_from_monday() != r.weekday || r.end == r.start {
++        return Err(Refusal::Date);
++    }
++    let start = r.day.and_time(r.start).and_utc();
++    let end = r.day.and_time(r.end).and_utc();
++    // Actual Source11 UTC recurring-positive crosses midnight. Source combines
++    // the date/time then advances end by one day; equal-time stays unqualified.
++    let end = if end < start {
++        end + Duration::days(1)
++    } else {
++        end
++    };
++    if !date(start)
++        || !date(end)
++        || r.day < now.date_naive()
++        || r.day > (now + Duration::days(14)).date_naive()
++    {
++        return Err(Refusal::Date);
++    }
++    if start <= now || existing {
++        return Ok(None);
++    }
++    Ok(Some(Intent {
++        channel_id: r.channel_id,
++        start,
++        end,
++        artwork_publications: 1,
++        properties: json!({"rule":{"type":"recurring","id":r.id,"days_of_week":[r.weekday],"name":r.name},"status":"scheduled","description":r.name,"program":{"title":r.name,"description":r.name,"start_time":iso(start),"end_time":iso(end)}}),
++    }))
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    fn now() -> DateTime<Utc> {
++        "2026-11-12T23:34:44+00:00".parse().unwrap()
++    }
++    fn p(id: i64, episode: u32, hours: i64) -> Programme {
++        Programme {
++            id,
++            source_id: 1,
++            channel_id: 2,
++            tvg_id: "rust.owned.configured".into(),
++            title: "Owned Exact Series".into(),
++            subtitle: format!("Owned Episode {episode}"),
++            start: now() + Duration::hours(hours),
++            end: now() + Duration::hours(hours + 1),
++            season: 1,
++            episode,
++        }
++    }
++    fn plan(programmes: &[Programme], existing: &[Existing]) -> Result<Vec<Intent>, Refusal> {
++        series(
++            now(),
++            "Owned Exact Series",
++            "rust.owned.configured",
++            2,
++            1,
++            programmes,
++            existing,
++        )
++    }
++    #[test]
++    fn same_episode_keeps_earliest_and_preserves_other_episode_order() {
++        let late = p(2, 1, 26);
++        let early = p(1, 1, 24);
++        let second = p(3, 2, 28);
++        let intents = plan(&[late, early, second], &[]).unwrap();
++        assert_eq!(intents.len(), 2);
++        assert_eq!(intents[0].properties["program"]["id"], 1);
++        assert_eq!(intents[1].properties["program"]["id"], 3);
++        assert!(intents.iter().all(|i| i.artwork_publications == 2));
++    }
++    #[test]
++    fn refresh_changes_programme_id_and_times_but_episode_still_deduplicates() {
++        let original = p(1, 1, 24);
++        let shifted = p(99, 1, 25);
++        let existing = Existing {
++            tvg_id: original.tvg_id,
++            title: original.title,
++            start: original.start,
++            end: original.end,
++            season: 1,
++            episode: 1,
++        };
++        assert!(plan(&[shifted], &[existing]).unwrap().is_empty());
++    }
++    #[test]
++    fn missing_identity_refuses_instead_of_suppressing_unrelated_airings() {
++        let mut programme = p(1, 1, 24);
++        programme.season = 0;
++        assert_eq!(plan(&[programme], &[]).unwrap_err(), Refusal::Shape);
++    }
++    #[test]
++    fn microseconds_use_python_six_digit_serialization() {
++        assert_eq!(
++            iso(now() + Duration::milliseconds(125)),
++            "2026-11-12T23:34:44.125000+00:00"
++        );
++        assert_eq!(iso(now()), "2026-11-12T23:34:44+00:00");
++    }
++    #[test]
++    fn recurring_disabled_is_noop_and_repeat_creates_no_second_intent() {
++        let mut rule = Recurring {
++            id: 1,
++            channel_id: 2,
++            name: "Owned Recurring".into(),
++            enabled: false,
++            day: NaiveDate::from_ymd_opt(2026, 11, 13).unwrap(),
++            weekday: 4,
++            start: NaiveTime::from_hms_opt(23, 34, 44).unwrap(),
++            end: NaiveTime::from_hms_opt(23, 59, 44).unwrap(),
++        };
++        assert!(recurring(now(), &rule, false).unwrap().is_none());
++        rule.enabled = true;
++        let intent = recurring(now(), &rule, false).unwrap().unwrap();
++        assert_eq!(intent.artwork_publications, 1);
++        assert_eq!(intent.properties["rule"]["id"], 1);
++        assert!(recurring(now(), &rule, true).unwrap().is_none());
++    }
++}
++
++#[cfg(test)]
++mod source_normal_cases {
++    use super::*;
++    fn time(v: &Value) -> DateTime<Utc> {
++        v.as_str().unwrap().parse().unwrap()
++    }
++    #[test]
++    fn captured_source_positive_repeat_next_episode_and_recurring_decisions() {
++        let data: Value = serde_json::from_str(include_str!(
++            "../datasets/source-configured-recordings-normal.json"
++        ))
++        .unwrap();
++        assert_eq!(
++            data["raw_source_sha256"],
++            "58e1bd132e8e1dbd876f8426245fc267ee42732e55471eab5470490f6316f5c3"
++        );
++        for c in data["cases"].as_array().unwrap() {
++            let now = time(&c["source_command_began_utc"]);
++            let expected = c["source_recordings_created"].as_array().unwrap();
++            let actual = if c["name"].as_str().unwrap().starts_with("series-") {
++                let rules = &c["source_dvr_settings_before"][0]["value"]["series_rules"][0];
++                let programmes: Vec<Programme> = c["source_programmes"]
++                    .as_array()
++                    .unwrap()
++                    .iter()
++                    .map(|p| Programme {
++                        id: p["id"].as_i64().unwrap(),
++                        source_id: rules["epg_source_id"].as_i64().unwrap(),
++                        channel_id: rules["channel_id"].as_i64().unwrap(),
++                        tvg_id: p["tvg_id"].as_str().unwrap().into(),
++                        title: p["title"].as_str().unwrap().into(),
++                        subtitle: p["sub_title"].as_str().unwrap().into(),
++                        start: time(&p["start_time"]),
++                        end: time(&p["end_time"]),
++                        season: p["custom_properties"]["season"].as_u64().unwrap() as u32,
++                        episode: p["custom_properties"]["episode"].as_u64().unwrap() as u32,
++                    })
++                    .collect();
++                let existing: Vec<Existing> = c["source_recordings_before"]
++                    .as_array()
++                    .unwrap()
++                    .iter()
++                    .filter(|r| r["custom_properties"]["program"]["tvg_id"].is_string())
++                    .map(|r| {
++                        let p = &r["custom_properties"]["program"];
++                        Existing {
++                            tvg_id: p["tvg_id"].as_str().unwrap().into(),
++                            title: p["title"].as_str().unwrap().into(),
++                            start: time(&p["start_time"]),
++                            end: time(&p["end_time"]),
++                            season: p["season"].as_u64().unwrap() as u32,
++                            episode: p["episode"].as_u64().unwrap() as u32,
++                        }
++                    })
++                    .collect();
++                series(
++                    now,
++                    rules["title"].as_str().unwrap(),
++                    rules["tvg_id"].as_str().unwrap(),
++                    rules["channel_id"].as_i64().unwrap(),
++                    rules["epg_source_id"].as_i64().unwrap(),
++                    &programmes,
++                    &existing,
++                )
++                .unwrap()
++            } else {
++                let rules: Vec<&Value> = c["source_rules_before"]
++                    .as_array()
++                    .unwrap()
++                    .iter()
++                    .filter(|r| r["enabled"] == true)
++                    .collect();
++                if rules.is_empty() {
++                    Vec::new()
++                } else {
++                    assert_eq!(rules.len(), 1);
++                    let r = rules[0];
++                    let rule = Recurring {
++                        id: r["id"].as_i64().unwrap(),
++                        channel_id: r["channel_id"].as_i64().unwrap(),
++                        name: r["name"].as_str().unwrap().into(),
++                        enabled: true,
++                        day: r["start_date"].as_str().unwrap().parse().unwrap(),
++                        weekday: r["days_of_week"][0].as_u64().unwrap() as u32,
++                        start: r["start_time"].as_str().unwrap().parse().unwrap(),
++                        end: r["end_time"].as_str().unwrap().parse().unwrap(),
++                    };
++                    let start = rule.day.and_time(rule.start).and_utc();
++                    let exists = c["source_recordings_before"]
++                        .as_array()
++                        .unwrap()
++                        .iter()
++                        .any(|row| {
++                            row["channel_id"].as_i64() == Some(rule.channel_id)
++                                && time(&row["start_time"]) == start
++                                && row["custom_properties"]["rule"]["id"].as_i64() == Some(rule.id)
++                        });
++                    recurring(now, &rule, exists).unwrap().into_iter().collect()
++                }
++            };
++            assert_eq!(actual.len(), expected.len(), "{}", c["name"]);
++            for (intent, row) in actual.iter().zip(expected) {
++                assert_eq!(intent.channel_id, row["channel_id"].as_i64().unwrap());
++                assert_eq!(intent.start, time(&row["start_time"]));
++                assert_eq!(intent.end, time(&row["end_time"]));
++                assert_eq!(intent.properties, row["custom_properties"], "{}", c["name"]);
++                assert_eq!(
++                    intent.artwork_publications,
++                    if c["name"].as_str().unwrap().starts_with("series-") {
++                        2
++                    } else {
++                        1
++                    }
++                );
++            }
++        }
++    }
++}
+--- a/rust/crates/job-transport/src/lib.rs
++++ b/rust/crates/job-transport/src/lib.rs
+@@ -180,3 +180,13 @@
+ 
+ // Explicit create/status adapter; no Main/default intake registration.
+ pub mod backup_application;
++
++pub mod configured_recording_service;
++pub mod configured_recordings;
++
++pub mod recording_artwork;
++
++pub mod configured_recording_worker;
++
++#[cfg(test)]
++mod configured_recording_peer;
+--- a/rust/crates/job-transport/src/recording_artwork.rs
++++ b/rust/crates/job-transport/src/recording_artwork.rs
+@@ -0,0 +1,300 @@
++//! Explicit typed artwork publication only; no child consumption or default
++//! graph activation. Original Dispatcharr/Celery/Kombu authors retain credit.
++use crate::{
++    configured_recording_service::{ArtworkError, ArtworkSink},
++    protocol::{self, ProtocolError},
++    transport::{Config, Jobs},
++};
++use base64::{engine::general_purpose::STANDARD, Engine};
++use chrono::{DateTime, Duration as ChronoDuration, Utc};
++use dispatcharr_contracts::BoxFuture;
++use serde_json::json;
++use std::{sync::Arc, time::Duration};
++use uuid::Uuid;
++#[derive(Clone, Copy, Debug)]
++pub struct DirectTask {
++    id: Uuid,
++}
++impl DirectTask {
++    pub(crate) fn series(message: &crate::series_protocol::SeriesMessage) -> Option<Self> {
++        if message.parent.is_some()
++            || message.root != message.task_id
++            || (message.task_id.get_version_num() != 4
++                || message.task_id.get_variant() != uuid::Variant::RFC4122)
++        {
++            return None;
++        }
++        Some(Self {
++            id: message.task_id,
++        })
++    }
++    pub(crate) fn recurring(message: &crate::default_protocol::Message) -> Option<Self> {
++        if message.kind != crate::default_protocol::Kind::RecurringMaintenance
++            || message.expires.is_some()
++            || (message.task_id.get_version_num() != 4
++                || message.task_id.get_variant() != uuid::Variant::RFC4122)
++        {
++            return None;
++        }
++        Some(Self {
++            id: message.task_id,
++        })
++    }
++    pub fn id(self) -> Uuid {
++        self.id
++    }
++}
++/// Raw spelling is checked separately because legacy protocol UUID parsing
++/// intentionally normalizes inputs; this new configured scope must not do so.
++pub(crate) fn canonical_frame(raw: &[u8], task: DirectTask) -> bool {
++    if raw.len() > protocol::MAX_ENVELOPE {
++        return false;
++    }
++    let Ok(frame) = serde_json::from_slice::<serde_json::Value>(raw) else {
++        return false;
++    };
++    let canonical = task.id.to_string();
++    frame
++        .get("headers")
++        .and_then(|h| h.get("id"))
++        .and_then(serde_json::Value::as_str)
++        == Some(canonical.as_str())
++        && frame
++            .get("headers")
++            .and_then(|h| h.get("root_id"))
++            .and_then(serde_json::Value::as_str)
++            == Some(canonical.as_str())
++        && frame.get("headers").and_then(|h| h.get("parent_id")) == Some(&serde_json::Value::Null)
++}
++fn python_utc(t: DateTime<Utc>) -> String {
++    let base = t.format("%Y-%m-%dT%H:%M:%S").to_string();
++    if t.timestamp_subsec_micros() == 0 {
++        format!("{base}+00:00")
++    } else {
++        format!("{base}.{:06}+00:00", t.timestamp_subsec_micros())
++    }
++}
++pub(crate) fn encode(
++    recording: i64,
++    task: DirectTask,
++    id: Uuid,
++    reply: Uuid,
++    delivery: Uuid,
++    now: DateTime<Utc>,
++) -> Result<Vec<u8>, ProtocolError> {
++    if !(1..=i64::from(i32::MAX)).contains(&recording) {
++        return Err(ProtocolError::InvalidArgument);
++    }
++    // Reuse the supported common protocol2 envelope, then set ONLY the captured
++    // family, one integer argument, direct lineage and one-second countdown ETA.
++    let mut frame: serde_json::Value = serde_json::from_slice(&protocol::encode(
++        &protocol::Task::CreateBackup,
++        id,
++        reply,
++        delivery,
++        "rust@configured-recordings",
++    )?)
++    .map_err(|_| ProtocolError::InvalidArgument)?;
++    frame["headers"]["task"] = json!("apps.channels.tasks.prefetch_recording_artwork");
++    frame["headers"]["root_id"] = json!(task.id.to_string());
++    frame["headers"]["parent_id"] = json!(task.id.to_string());
++    frame["headers"]["argsrepr"] = json!(format!("[{recording}]"));
++    frame["headers"]["eta"] = json!(python_utc(now + ChronoDuration::seconds(1)));
++    frame["body"] = json!(STANDARD.encode(
++        serde_json::to_vec(
++            &json!([[recording],{},{"callbacks":null,"errbacks":null,"chain":null,"chord":null}])
++        )
++        .map_err(|_| ProtocolError::InvalidArgument)?
++    ));
++    let bytes = serde_json::to_vec(&frame).map_err(|_| ProtocolError::InvalidArgument)?;
++    if bytes.len() > protocol::MAX_ENVELOPE {
++        return Err(ProtocolError::Capacity);
++    }
++    Ok(bytes)
++}
++/// Opening this typed publisher starts no intake. Its private Series transport
++/// is never exposed as generic default/index/backup publication authority.
++pub struct Publisher {
++    jobs: Jobs,
++    reply: Uuid,
++}
++impl Publisher {
++    pub async fn connect(
++        broker: &str,
++        backend: &str,
++        config: Config,
++    ) -> Result<Self, crate::transport::Error> {
++        let jobs = Jobs::connect_series(broker, backend, config).await?;
++        Ok(Self {
++            jobs,
++            reply: Uuid::new_v4(),
++        })
++    }
++    pub async fn shutdown(&self, timeout: Duration) -> Result<(), crate::transport::Error> {
++        self.jobs.shutdown(timeout).await
++    }
++}
++impl ArtworkSink for Publisher {
++    fn publish<'a>(
++        &'a self,
++        recording: i64,
++        task: DirectTask,
++        owner: Arc<dyn Send + Sync>,
++    ) -> BoxFuture<'a, Result<Uuid, ArtworkError>> {
++        Box::pin(async move {
++            // Python's clock is microsecond precision; trim actual Rust wallclock
++            // precision explicitly, never reuse a captured Source timestamp.
++            let now = DateTime::from_timestamp_micros(Utc::now().timestamp_micros())
++                .ok_or(ArtworkError::Uncertain)?;
++            let id = Uuid::new_v4();
++            let bytes = encode(recording, task, id, self.reply, Uuid::new_v4(), now)
++                .map_err(|_| ArtworkError::Uncertain)?;
++            self.jobs
++                .publish_configured_artwork(&bytes, id, owner)
++                .await
++                .map_err(|_| ArtworkError::Uncertain)?;
++            Ok(id)
++        })
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn captured_artwork_protocol_has_direct_parent_and_countdown_one() {
++        let id = Uuid::new_v4();
++        let parent = Uuid::new_v4();
++        let task = DirectTask::series(&crate::series_protocol::SeriesMessage {
++            task_id: parent,
++            root: parent,
++            parent: None,
++        })
++        .unwrap();
++        let now: DateTime<Utc> = "2026-11-12T23:34:49.548943+00:00".parse().unwrap();
++        let raw = encode(1, task, id, Uuid::new_v4(), Uuid::new_v4(), now).unwrap();
++        let frame: serde_json::Value = serde_json::from_slice(&raw).unwrap();
++        let body: serde_json::Value =
++            serde_json::from_slice(&STANDARD.decode(frame["body"].as_str().unwrap()).unwrap())
++                .unwrap();
++        assert_eq!(
++            body,
++            json!([[1],{},{"callbacks":null,"errbacks":null,"chain":null,"chord":null}])
++        );
++        assert_eq!(
++            frame["headers"]["task"],
++            "apps.channels.tasks.prefetch_recording_artwork"
++        );
++        assert_eq!(frame["headers"]["root_id"], parent.to_string());
++        assert_eq!(frame["headers"]["parent_id"], parent.to_string());
++        assert_eq!(frame["headers"]["eta"], "2026-11-12T23:34:50.548943+00:00");
++        assert_eq!(frame["headers"]["ignore_result"], false);
++        assert_eq!(
++            frame["properties"]["delivery_info"],
++            json!({"exchange":"","routing_key":"celery"})
++        );
++        assert!(frame["headers"]["expires"].is_null());
++    }
++    #[test]
++    fn configured_parented_or_foreign_root_is_not_admitted() {
++        let id = Uuid::new_v4();
++        let other = Uuid::new_v4();
++        assert!(DirectTask::series(&crate::series_protocol::SeriesMessage {
++            task_id: id,
++            root: other,
++            parent: Some(other)
++        })
++        .is_none());
++        assert!(DirectTask::series(&crate::series_protocol::SeriesMessage {
++            task_id: id,
++            root: other,
++            parent: None
++        })
++        .is_none());
++        assert!(DirectTask::series(&crate::series_protocol::SeriesMessage {
++            task_id: Uuid::nil(),
++            root: Uuid::nil(),
++            parent: None
++        })
++        .is_none());
++        assert!(DirectTask::recurring(&crate::default_protocol::Message {
++            task_id: id,
++            kind: crate::default_protocol::Kind::RedisBackendCleanup,
++            expires: None
++        })
++        .is_none());
++    }
++    #[test]
++    fn publication_refuses_non_recording_identifiers() {
++        let id = Uuid::new_v4();
++        let task = DirectTask::series(&crate::series_protocol::SeriesMessage {
++            task_id: id,
++            root: id,
++            parent: None,
++        })
++        .unwrap();
++        for recording in [0, -1, i64::from(i32::MAX) + 1] {
++            assert!(encode(
++                recording,
++                task,
++                Uuid::new_v4(),
++                Uuid::new_v4(),
++                Uuid::new_v4(),
++                Utc::now()
++            )
++            .is_err());
++        }
++    }
++}
++
++#[cfg(test)]
++mod canonical_controls {
++    use super::*;
++    #[test]
++    fn raw_uppercase_or_missing_explicit_null_cannot_gain_configured_authority() {
++        let id = Uuid::new_v4();
++        let task = DirectTask::series(&crate::series_protocol::SeriesMessage {
++            task_id: id,
++            root: id,
++            parent: None,
++        })
++        .unwrap();
++        let raw = protocol::encode(
++            &protocol::Task::CreateBackup,
++            id,
++            Uuid::new_v4(),
++            Uuid::new_v4(),
++            "owned",
++        )
++        .unwrap();
++        assert!(canonical_frame(&raw, task));
++        let mut frame: serde_json::Value = serde_json::from_slice(&raw).unwrap();
++        frame["headers"]["id"] = json!(id.to_string().to_uppercase());
++        assert!(!canonical_frame(&serde_json::to_vec(&frame).unwrap(), task));
++        frame["headers"]["id"] = json!(id.to_string());
++        frame["headers"]
++            .as_object_mut()
++            .unwrap()
++            .remove("parent_id");
++        assert!(!canonical_frame(&serde_json::to_vec(&frame).unwrap(), task));
++    }
++    #[test]
++    fn version_four_with_wrong_variant_is_not_captured_rfc4122_domain() {
++        let mut bytes = *Uuid::new_v4().as_bytes();
++        bytes[8] &= 0x3f;
++        let id = Uuid::from_bytes(bytes);
++        assert_eq!(id.get_version_num(), 4);
++        assert!(DirectTask::series(&crate::series_protocol::SeriesMessage {
++            task_id: id,
++            root: id,
++            parent: None
++        })
++        .is_none());
++        assert!(DirectTask::recurring(&crate::default_protocol::Message {
++            task_id: id,
++            kind: crate::default_protocol::Kind::RecurringMaintenance,
++            expires: None
++        })
++        .is_none());
++    }
++}
+--- a/rust/crates/job-transport/src/transport.rs
++++ b/rust/crates/job-transport/src/transport.rs
+@@ -613,6 +613,99 @@
+             Err(ClassifiedError::Backend) => Err(Error::AmbiguousClaim(message.task_id)),
+             Err(error) => Err(map(error)),
+         }
++    }
++    /// Only the explicit configured-recording publisher calls this private
++    /// method. Existing public Series/index/default APIs gain no new authority.
++    pub(crate) async fn publish_configured_artwork(
++        &self,
++        bytes: &[u8],
++        id: Uuid,
++        caller: Arc<dyn Send + Sync>,
++    ) -> Result<Published, Error> {
++        if !self.allows_series() {
++            return Err(Error::UnsupportedTask);
++        }
++        if bytes.len() > crate::protocol::MAX_ENVELOPE {
++            return Err(Error::Protocol);
++        }
++        let lease = self.lease(caller)?;
++        let limit = self.inner.config.max_queued_jobs.to_string();
++        match self
++            .inner
++            .broker
++            .command_classified::<i64, _>(
++                PUBLISH,
++                &["celery".into(), "_kombu.binding.celery".into()],
++                &[bytes, limit.as_bytes()],
++                lease,
++            )
++            .await
++        {
++            Ok((n, _)) if n > 0 => Ok(Published {
++                task_id: id,
++                queue_length: n as u64,
++            }),
++            Ok((-2, _)) => Err(Error::Capacity),
++            Ok(_) => Err(Error::Corrupt),
++            Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(id)),
++            Err(e) => Err(map(e)),
++        }
++    }
++    pub(crate) fn configured_candidate_canonical(
++        &self,
++        candidate: &DefaultCandidate,
++        task: crate::recording_artwork::DirectTask,
++    ) -> bool {
++        Arc::ptr_eq(&self.inner, &candidate.origin)
++            && crate::recording_artwork::canonical_frame(&candidate.bytes, task)
++    }
++    pub(crate) async fn write_configured_series_success(
++        &self,
++        message: &crate::series_protocol::SeriesMessage,
++        result: &crate::configured_recording_service::SeriesReport,
++        caller: Arc<dyn Send + Sync>,
++    ) -> Result<bool, Error> {
++        if !self.allows_series() {
++            return Err(Error::UnsupportedTask);
++        }
++        if crate::recording_artwork::DirectTask::series(message).is_none() {
++            return Err(Error::Protocol);
++        }
++        if result.task_id() != message.task_id {
++            return Err(Error::Protocol);
++        }
++        self.write_result(
++            message.task_id,
++            result.value(),
++            None,
++            result.children(),
++            caller,
++        )
++        .await
++    }
++    pub(crate) async fn write_configured_recurring_success(
++        &self,
++        message: &crate::default_protocol::Message,
++        result: &crate::configured_recording_service::RecurringReport,
++        caller: Arc<dyn Send + Sync>,
++    ) -> Result<bool, Error> {
++        if !self.allows_defaults() {
++            return Err(Error::UnsupportedTask);
++        }
++        if crate::recording_artwork::DirectTask::recurring(message).is_none() {
++            return Err(Error::Protocol);
++        }
++        if result.task_id() != message.task_id {
++            return Err(Error::Protocol);
++        }
++        self.write_result(
++            message.task_id,
++            result.value(),
++            None,
++            result.children(),
++            caller,
++        )
++        .await
+     }
+     pub(crate) async fn write_series_success(
+         &self,
+@@ -1477,3 +1570,12 @@
+ #[path = "scanner_m3u_io.rs"]
+ mod scanner_m3u_io;
+ pub use scanner_m3u_io::M3uPorts;
++
++pub(crate) use default_transport::Candidate as DefaultCandidate;
++#[cfg(test)]
++#[path = "configured_parent_fixture.rs"]
++mod configured_parent_fixture;
++#[cfg(test)]
++pub(crate) use configured_parent_fixture::{
++    ParentCandidate as ConfiguredParentCandidate, ParentMessage as ConfiguredParentMessage,
++};
+--- a/rust/crates/store/src/lib.rs
++++ b/rust/crates/store/src/lib.rs
+@@ -368,3 +368,5 @@
+ 
+ #[cfg(test)]
+ mod json_float_peer;
++
++pub mod recording_schedule;
+--- a/rust/crates/store/src/recording_schedule.rs
++++ b/rust/crates/store/src/recording_schedule.rs
+@@ -0,0 +1,524 @@
++//! PRIVATE UNCOMPILED bounded future-Recording persistence draft.
++//! Derived from Dispatcharr Recording post_save and django-celery-beat models;
++//! original authors retain credit. No application or task registration.
++//! Serial owned execution only: concurrent model/sentinel writers are unproved.
++use chrono::{DateTime, Utc};
++use serde_json::Value;
++use sqlx::{Connection, PgConnection, PgPool};
++use std::sync::Arc;
++
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub enum Stage {
++    Acquire,
++    SnapshotSchema,
++    SnapshotChannel,
++    SnapshotProgrammes,
++    SnapshotExisting,
++    SnapshotRecurring,
++    Dedup,
++    InsertRecording,
++    ClockedLookup,
++    ClockedInsert,
++    ClockedMarker,
++    PeriodicLookup,
++    PeriodicMarkerBefore,
++    PeriodicInsert,
++    PeriodicMarkerAfter,
++    AssignTask,
++    Ready,
++    Close,
++}
++#[derive(Debug)]
++pub struct Error {
++    pub stage: Stage,
++    pub source: sqlx::Error,
++    /// A committed row may remain after signal failure, matching Source's
++    /// independent autocommit boundary. This is not a successful normal report.
++    pub committed_recording: Option<i64>,
++    pub settlement_error: Option<sqlx::Error>,
++}
++/// Only the Source11 observed Recording INSERT exception. This opaque value
++/// can be obtained from the settled shared persistence result, not arbitrary
++/// text. It is normal task-result data, never Python exception metadata.
++#[derive(Debug)]
++pub struct KnownInsertFailure(String);
++impl KnownInsertFailure {
++    pub fn message(&self) -> &str {
++        &self.0
++    }
++}
++struct InsertErrorFields<'a> {
++    severity: sqlx::postgres::PgSeverity,
++    code: &'a str,
++    message: &'a str,
++    context: Option<&'a str>,
++    extra_diagnostics: bool,
++}
++fn observed_insert_failure(
++    stage: Stage,
++    committed: Option<i64>,
++    settled: bool,
++    fields: InsertErrorFields<'_>,
++) -> Option<KnownInsertFailure> {
++    const MESSAGE: &str = "owned configured recording failure";
++    const CONTEXT: &str = "PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE";
++    if stage != Stage::InsertRecording
++        || committed.is_some()
++        || !settled
++        || fields.severity != sqlx::postgres::PgSeverity::Error
++        || fields.code != "P0001"
++        || fields.message != MESSAGE
++        || fields.context != Some(CONTEXT)
++        || fields.extra_diagnostics
++    {
++        return None;
++    }
++    // Render actual bounded server fields. Source captured SQLSTATE is NULL;
++    // this Native classification does not relabel that missing observation.
++    Some(KnownInsertFailure(format!(
++        "{}\nCONTEXT:  {}",
++        fields.message, fields.context?
++    )))
++}
++impl Error {
++    pub fn known_source_insert_failure(&self) -> Option<KnownInsertFailure> {
++        let pg = self
++            .source
++            .as_database_error()?
++            .try_downcast_ref::<sqlx::postgres::PgDatabaseError>()?;
++        observed_insert_failure(
++            self.stage,
++            self.committed_recording,
++            self.settlement_error.is_none(),
++            InsertErrorFields {
++                severity: pg.severity(),
++                code: pg.code(),
++                message: pg.message(),
++                context: pg.r#where(),
++                extra_diagnostics: pg.detail().is_some()
++                    || pg.hint().is_some()
++                    || pg.position().is_some()
++                    || pg.schema().is_some()
++                    || pg.table().is_some()
++                    || pg.column().is_some()
++                    || pg.data_type().is_some()
++                    || pg.constraint().is_some(),
++            },
++        )
++    }
++}
++pub struct FutureRecording {
++    channel_id: i64,
++    start: DateTime<Utc>,
++    end: DateTime<Utc>,
++    properties: Value,
++    dedup: Dedup,
++}
++enum Dedup {
++    Series {
++        tvg: String,
++        start: String,
++        end: String,
++    },
++    Recurring {
++        rule_id: i64,
++    },
++}
++impl FutureRecording {
++    /// Smart constructor does not authorize any SQL, publication or result.
++    /// Caller must validate supported rule/domain and actual snapshot before ACK.
++    pub fn new(
++        channel_id: i64,
++        start: DateTime<Utc>,
++        end: DateTime<Utc>,
++        properties: Value,
++        now: DateTime<Utc>,
++    ) -> Option<Self> {
++        if channel_id <= 0
++            || channel_id > i64::from(i32::MAX)
++            || start <= now
++            || end <= start
++            || !properties.is_object()
++            || serde_json::to_vec(&properties).ok()?.len() > 8192
++            || !start.timestamp_subsec_nanos().is_multiple_of(1000)
++            || !end.timestamp_subsec_nanos().is_multiple_of(1000)
++        {
++            return None;
++        }
++        let dedup = if let Some(rule_id) = properties
++            .get("rule")
++            .and_then(|r| r.get("id"))
++            .and_then(Value::as_i64)
++        {
++            if rule_id <= 0 || rule_id > i64::from(i32::MAX) {
++                return None;
++            }
++            Dedup::Recurring { rule_id }
++        } else {
++            let program = properties.get("program")?;
++            let tvg = program.get("tvg_id")?.as_str()?;
++            let original_start = program.get("start_time")?.as_str()?;
++            let original_end = program.get("end_time")?.as_str()?;
++            if tvg.is_empty()
++                || tvg.len() > 255
++                || original_start.len() > 40
++                || original_end.len() > 40
++            {
++                return None;
++            }
++            if original_start.parse::<DateTime<Utc>>().ok()? != start
++                || original_end.parse::<DateTime<Utc>>().ok()? != end
++            {
++                return None;
++            }
++            Dedup::Series {
++                tvg: tvg.to_owned(),
++                start: original_start.to_owned(),
++                end: original_end.to_owned(),
++            }
++        };
++        Some(Self {
++            channel_id,
++            start,
++            end,
++            properties,
++            dedup,
++        })
++    }
++}
++#[derive(Debug)]
++pub struct Created {
++    pub recording_id: i64,
++    pub clocked_id: i64,
++    pub periodic_id: i64,
++    pub task_name: String,
++}
++fn error(stage: Stage, source: sqlx::Error, committed_recording: Option<i64>) -> Error {
++    Error {
++        stage,
++        source,
++        committed_recording,
++        settlement_error: None,
++    }
++}
++async fn marker(connection: &mut PgConnection) -> Result<(), sqlx::Error> {
++    // Beat's sentinel timestamp is an actual execution-time value. Do not reuse
++    // an old Source timestamp or the decision-clock injection for SQL dates.
++    sqlx::query("INSERT INTO django_celery_beat_periodictasks (ident,last_update) VALUES (1,$1) ON CONFLICT (ident) DO UPDATE SET last_update=EXCLUDED.last_update")
++        .bind(Utc::now()).execute(connection).await?;
++    Ok(())
++}
++fn python_time(v: DateTime<Utc>) -> String {
++    let base = v.format("%Y-%m-%d %H:%M:%S").to_string();
++    if v.timestamp_subsec_micros() == 0 {
++        format!("{base}+00:00")
++    } else {
++        format!("{base}.{:06}+00:00", v.timestamp_subsec_micros())
++    }
++}
++/// Shared Series/recurring persistence path, with no artwork/event side effects.
++/// The worker must retain the SAME owner through subsequent publications/events
++/// and terminal writer. SQL/signal errors are operational until separately typed.
++/// Cancelling the caller detaches this supervised physical operation; its owner
++/// remains alive through ReadyForQuery and actual connection close.
++pub async fn create_future(
++    pool: PgPool,
++    input: FutureRecording,
++    owner: Arc<dyn Send + Sync>,
++) -> Result<Option<Created>, Error> {
++    let handle = tokio::spawn(async move {
++        let _owner = owner;
++        let mut connection = pool
++            .acquire()
++            .await
++            .map_err(|e| error(Stage::Acquire, e, None))?;
++        let mut committed = None;
++        let observed=async {
++            // Source repeats an exact DB guard immediately before the INSERT,
++            // independently of its preload/episode dedup snapshot.
++            let exists=match &input.dedup {
++                Dedup::Series{tvg,start,end}=>sqlx::query_scalar::<_,bool>("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_recording WHERE custom_properties#>'{program,tvg_id}'=$1 AND custom_properties#>'{program,start_time}'=$2 AND custom_properties#>'{program,end_time}'=$3)")
++                    .bind(serde_json::json!(tvg)).bind(serde_json::json!(start)).bind(serde_json::json!(end))
++                    .fetch_one(&mut *connection).await,
++                Dedup::Recurring{rule_id}=>sqlx::query_scalar::<_,bool>("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_recording WHERE channel_id=$1 AND start_time=$2 AND custom_properties#>'{rule,id}'=$3)")
++                    .bind(input.channel_id).bind(input.start).bind(serde_json::json!(rule_id))
++                    .fetch_one(&mut *connection).await,
++            }.map_err(|e|error(Stage::Dedup,e,None))?;
++            if exists {return Ok(None);}
++            let recording:i64=sqlx::query_scalar("INSERT INTO dispatcharr_channels_recording (channel_id,start_time,end_time,task_id,custom_properties) VALUES ($1,$2,$3,NULL,$4) RETURNING id::bigint")
++                .bind(input.channel_id).bind(input.start).bind(input.end).bind(input.properties)
++                .fetch_one(&mut *connection).await.map_err(|e|error(Stage::InsertRecording,e,None))?;
++            committed=Some(recording);
++            // Deliberately retain Source's committed Recording before model
++            // signal operations. A later failure cannot erase that row.
++            let clocked:Vec<i64>=sqlx::query_scalar("SELECT id::bigint FROM django_celery_beat_clockedschedule WHERE clocked_time=$1 LIMIT 2")
++                .bind(input.start).fetch_all(&mut *connection).await.map_err(|e|error(Stage::ClockedLookup,e,committed))?;
++            if clocked.len()>1 {return Err(error(Stage::ClockedLookup,sqlx::Error::Protocol("multiple clocked rows at one time".into()),committed));}
++            let clocked=match clocked.first().copied() {Some(id)=>id,None=>{
++                let mut tx=connection.begin().await.map_err(|e|error(Stage::ClockedInsert,e,committed))?;
++                let inserted=async {
++                    let id:i64=sqlx::query_scalar("INSERT INTO django_celery_beat_clockedschedule (clocked_time) VALUES ($1) RETURNING id::bigint")
++                        .bind(input.start).fetch_one(&mut *tx).await.map_err(|e|error(Stage::ClockedInsert,e,committed))?;
++                    marker(&mut tx).await.map_err(|e|error(Stage::ClockedMarker,e,committed))?;
++                    Ok::<_,Error>(id)
++                }.await;
++                match inserted {Ok(id)=>{tx.commit().await.map_err(|e|error(Stage::ClockedInsert,e,committed))?;id},Err(mut e)=>{if let Err(rollback)=tx.rollback().await {e.settlement_error=Some(rollback);}return Err(e);}}
++            }};
++            let name=format!("dvr-recording-{recording}");
++            let args=format!("[{recording}, {}, {}, {}]",input.channel_id,
++                serde_json::to_string(&python_time(input.start)).expect("time JSON string"),
++                serde_json::to_string(&python_time(input.end)).expect("time JSON string"));
++            let mut tx=connection.begin().await.map_err(|e|error(Stage::PeriodicLookup,e,committed))?;
++            let inserted=async {
++                // Fresh Recording IDs imply a fresh task name in the qualified
++                // single-writer domain. Do not overwrite an unexpected schedule.
++                let exists:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE name=$1)")
++                    .bind(&name).fetch_one(&mut *tx).await.map_err(|e|error(Stage::PeriodicLookup,e,committed))?;
++                if exists {return Err(error(Stage::PeriodicLookup,sqlx::Error::Protocol("unexpected existing recording schedule".into()),committed));}
++                marker(&mut tx).await.map_err(|e|error(Stage::PeriodicMarkerBefore,e,committed))?;
++                let id:i64=sqlx::query_scalar("INSERT INTO django_celery_beat_periodictask (name,task,interval_id,crontab_id,solar_id,clocked_id,args,kwargs,queue,exchange,routing_key,headers,priority,expires,expire_seconds,one_off,start_time,enabled,last_run_at,total_run_count,date_changed,description) VALUES ($1,'apps.channels.tasks.run_recording',NULL,NULL,NULL,$2,$3,'{}',NULL,NULL,NULL,'{}',NULL,NULL,NULL,true,NULL,true,NULL,0,$4,'') RETURNING id::bigint")
++                    .bind(&name).bind(clocked).bind(args).bind(Utc::now()).fetch_one(&mut *tx).await.map_err(|e|error(Stage::PeriodicInsert,e,committed))?;
++                marker(&mut tx).await.map_err(|e|error(Stage::PeriodicMarkerAfter,e,committed))?;
++                Ok::<_,Error>(id)
++            }.await;
++            let periodic=match inserted {Ok(id)=>{tx.commit().await.map_err(|e|error(Stage::PeriodicInsert,e,committed))?;id},Err(mut e)=>{if let Err(rollback)=tx.rollback().await {e.settlement_error=Some(rollback);}return Err(e);}};
++            let assigned=sqlx::query("UPDATE dispatcharr_channels_recording SET task_id=$1 WHERE id=$2")
++                .bind(&name).bind(recording).execute(&mut *connection).await.map_err(|e|error(Stage::AssignTask,e,committed))?;
++            if assigned.rows_affected()!=1 {return Err(error(Stage::AssignTask,sqlx::Error::Protocol("recording disappeared during task assignment".into()),committed));}
++            Ok(Some(Created {recording_id:recording,clocked_id:clocked,periodic_id:periodic,task_name:name}))
++        }.await;
++        // A server ErrorResponse is not ReadyForQuery. Keep owner until both
++        // the explicit Sync barrier and physical close have actually settled.
++        let ready = connection.ping().await;
++        let closed = connection.close().await;
++        match observed {
++            Err(mut e) => {
++                if e.settlement_error.is_none() {
++                    e.settlement_error = ready.err().or_else(|| closed.err());
++                }
++                Err(e)
++            }
++            Ok(value) => {
++                ready.map_err(|e| error(Stage::Ready, e, committed))?;
++                closed.map_err(|e| error(Stage::Close, e, committed))?;
++                Ok(value)
++            }
++        }
++    });
++    handle.await.map_err(|_| {
++        error(
++            Stage::Close,
++            sqlx::Error::Protocol("recording supervisor failed".into()),
++            None,
++        )
++    })?
++}
++
++/// SQL transport bounds are applied in the SAME statement as each fetch. These
++/// cap returned/materialized rows and serialized field bytes, not DB scan/CPU.
++#[derive(Debug)]
++pub struct SeriesSnapshot {
++    pub programmes: Vec<ProgrammeRow>,
++    pub existing_properties: Vec<Value>,
++}
++#[derive(Debug)]
++pub struct ProgrammeRow {
++    pub id: i64,
++    pub start_time: DateTime<Utc>,
++    pub end_time: DateTime<Utc>,
++    pub title: Option<String>,
++    pub sub_title: Option<String>,
++    pub description: Option<String>,
++    pub custom_properties: Option<Value>,
++    pub tvg_id: Option<String>,
++    pub supported: bool,
++}
++#[derive(Debug)]
++pub enum SnapshotError {
++    Unsupported(&'static str),
++    Physical(Error),
++    Supervisor,
++}
++#[derive(Debug)]
++pub struct SeriesScope {
++    channel: i64,
++    source: i64,
++    tvg: String,
++    title: String,
++}
++impl SeriesScope {
++    pub fn new(channel: i64, source: i64, tvg: String, title: String) -> Option<Self> {
++        let valid = |s: &str| {
++            !s.is_empty()
++                && s.len() <= 255
++                && s.is_ascii()
++                && !s.bytes().any(|b| b.is_ascii_control())
++        };
++        if channel <= 0
++            || source <= 0
++            || channel > i64::from(i32::MAX)
++            || source > i64::from(i32::MAX)
++            || !valid(&tvg)
++            || !valid(&title)
++        {
++            return None;
++        }
++        Some(Self {
++            channel,
++            source,
++            tvg,
++            title,
++        })
++    }
++}
++async fn admit_schema(connection: &mut PgConnection) -> Result<(), SnapshotError> {
++    let custom:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN ('dispatcharr_channels_recording'::regclass,'django_celery_beat_clockedschedule'::regclass,'django_celery_beat_periodictask'::regclass,'django_celery_beat_periodictasks'::regclass))")
++        .fetch_one(connection).await.map_err(|e|SnapshotError::Physical(error(Stage::SnapshotSchema,e,None)))?;
++    if custom {
++        return Err(SnapshotError::Unsupported(
++            "unqualified recording/Beat user trigger",
++        ));
++    }
++    Ok(())
++}
++/// Prepare a bounded immutable pre-ACK snapshot. This conservative domain
++/// refuses channel overrides, ambiguous EPG resolution and unrelated opaque
++/// existing properties; it does not mask unsupported rows into fake updates.
++/// A second authoritative dedup query immediately before each INSERT is still
++/// required. Concurrent writer/configuration parity is NOT supplied by this
++/// snapshot, and admission must never be inferred from a logical timeout.
++pub async fn series_snapshot(
++    pool: PgPool,
++    scope: SeriesScope,
++    now: DateTime<Utc>,
++    owner: Arc<dyn Send + Sync>,
++) -> Result<SeriesSnapshot, SnapshotError> {
++    tokio::spawn(async move {
++        let _owner=owner;
++        let mut connection=pool.acquire().await.map_err(|e|SnapshotError::Physical(error(Stage::Acquire,e,None)))?;
++        let observed=async {
++            admit_schema(&mut connection).await?;
++            let ids:Vec<i64>=sqlx::query_scalar("SELECT e.id::bigint FROM epg_epgdata e JOIN dispatcharr_channels_channel c ON c.epg_data_id=e.id WHERE c.id=$1 AND e.epg_source_id=$2 AND e.tvg_id=$3 AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.channel_id=c.id) LIMIT 2")
++                .bind(scope.channel).bind(scope.source).bind(&scope.tvg).fetch_all(&mut *connection).await
++                .map_err(|e|SnapshotError::Physical(error(Stage::SnapshotChannel,e,None)))?;
++            if ids.len()!=1 {return Err(SnapshotError::Unsupported("pinned channel/source requires one unoverridden EPG row"));}
++            type ProgrammeTuple=(i64,DateTime<Utc>,DateTime<Utc>,Option<String>,Option<String>,Option<String>,Option<Value>,Option<String>,bool);
++            let programme_rows:Vec<ProgrammeTuple>=sqlx::query_as("SELECT id::bigint,start_time,end_time,CASE WHEN octet_length(title)<=255 THEN title ELSE NULL END AS title,CASE WHEN octet_length(sub_title)<=255 THEN sub_title ELSE NULL END AS sub_title,CASE WHEN octet_length(description)<=8192 THEN description ELSE NULL END AS description,CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END AS custom_properties,CASE WHEN octet_length(tvg_id)<=255 THEN tvg_id ELSE NULL END AS tvg_id,(octet_length(title)<=255 AND (sub_title IS NULL OR octet_length(sub_title)<=255) AND (description IS NULL OR octet_length(description)<=8192) AND (custom_properties IS NULL OR octet_length(custom_properties::text)<=8192) AND (tvg_id IS NULL OR octet_length(tvg_id)<=255)) AS supported FROM epg_programdata WHERE epg_id=$1 AND end_time>$2 AND start_time<=$3 AND UPPER(title::text)=UPPER($4) ORDER BY start_time LIMIT 33")
++                .bind(ids[0]).bind(now).bind(now+chrono::Duration::days(7)).bind(&scope.title)
++                .fetch_all(&mut *connection).await.map_err(|e|SnapshotError::Physical(error(Stage::SnapshotProgrammes,e,None)))?;
++            let programmes:Vec<ProgrammeRow>=programme_rows.into_iter().map(|(id,start_time,end_time,title,sub_title,description,custom_properties,tvg_id,supported)|ProgrammeRow{id,start_time,end_time,title,sub_title,description,custom_properties,tvg_id,supported}).collect();
++            if programmes.len()>32||programmes.iter().any(|p|!p.supported){return Err(SnapshotError::Unsupported("programme snapshot bound"));}
++            let existing:Vec<(Option<Value>,bool)>=sqlx::query_as("SELECT CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,(custom_properties IS NULL OR octet_length(custom_properties::text)<=8192) FROM dispatcharr_channels_recording WHERE end_time>=$1 LIMIT 33")
++                .bind(now).fetch_all(&mut *connection).await.map_err(|e|SnapshotError::Physical(error(Stage::SnapshotExisting,e,None)))?;
++            if existing.len()>32||existing.iter().any(|(_,supported)|!*supported){return Err(SnapshotError::Unsupported("existing recording snapshot bound"));}
++            Ok(SeriesSnapshot{programmes,existing_properties:existing.into_iter().map(|(v,_)|v.unwrap_or(Value::Null)).collect()})
++        }.await;
++        let ready=connection.ping().await;
++        let closed=connection.close().await;
++        // Even unsupported exits cannot release a retained owner while the
++        // actual PostgreSQL response/Sync/connection close is still pending.
++        match observed {
++            Err(SnapshotError::Physical(mut e))=>{e.settlement_error=ready.err().or_else(||closed.err());Err(SnapshotError::Physical(e))},
++            other=>{ready.map_err(|e|SnapshotError::Physical(error(Stage::Ready,e,None)))?;closed.map_err(|e|SnapshotError::Physical(error(Stage::Close,e,None)))?;other}
++        }
++    }).await.map_err(|_|SnapshotError::Supervisor)?
++}
++
++#[derive(Debug)]
++pub struct RecurringRow {
++    pub id: i64,
++    pub channel_id: i64,
++    pub name: Option<String>,
++    pub days: Option<Value>,
++    pub start: chrono::NaiveTime,
++    pub end: chrono::NaiveTime,
++    pub start_date: Option<chrono::NaiveDate>,
++    pub end_date: Option<chrono::NaiveDate>,
++}
++/// Source maintain_recurring selects only enabled rules. An empty snapshot is
++/// normal integer0, including the case where disabled rows/old schedules exist.
++/// This first domain refuses >1 enabled row; it never processes just row1 of an
++/// unsupported multi-rule configuration. No row data is changed during admission.
++pub async fn recurring_snapshot(
++    pool: PgPool,
++    owner: Arc<dyn Send + Sync>,
++) -> Result<Option<RecurringRow>, SnapshotError> {
++    tokio::spawn(async move {
++        let _owner=owner;
++        let mut connection=pool.acquire().await.map_err(|e|SnapshotError::Physical(error(Stage::Acquire,e,None)))?;
++        let observed=async {
++            admit_schema(&mut connection).await?;
++            type Row=(i64,i64,Option<String>,Option<Value>,chrono::NaiveTime,chrono::NaiveTime,Option<chrono::NaiveDate>,Option<chrono::NaiveDate>,bool);
++            let rows:Vec<Row>=sqlx::query_as("SELECT id::bigint,channel_id::bigint,CASE WHEN octet_length(name)<=255 THEN name ELSE NULL END,CASE WHEN octet_length(days_of_week::text)<=128 THEN days_of_week ELSE NULL END,start_time,end_time,start_date,end_date,(octet_length(name)<=255 AND octet_length(days_of_week::text)<=128) FROM dispatcharr_channels_recurringrecordingrule WHERE enabled ORDER BY channel_id,start_time LIMIT 2")
++                .fetch_all(&mut *connection).await.map_err(|e|SnapshotError::Physical(error(Stage::SnapshotRecurring,e,None)))?;
++            if rows.len()>1 {return Err(SnapshotError::Unsupported("multiple enabled recurring rules"));}
++            let Some((id,channel_id,name,days,start,end,start_date,end_date,supported))=rows.into_iter().next() else {return Ok(None);};
++            if !supported {return Err(SnapshotError::Unsupported("recurring text snapshot bound"));}
++            Ok(Some(RecurringRow{id,channel_id,name,days,start,end,start_date,end_date}))
++        }.await;
++        let ready=connection.ping().await;
++        let closed=connection.close().await;
++        match observed {
++            Err(SnapshotError::Physical(mut e))=>{e.settlement_error=ready.err().or_else(||closed.err());Err(SnapshotError::Physical(e))},
++            other=>{ready.map_err(|e|SnapshotError::Physical(error(Stage::Ready,e,None)))?;closed.map_err(|e|SnapshotError::Physical(error(Stage::Close,e,None)))?;other}
++        }
++    }).await.map_err(|_|SnapshotError::Supervisor)?
++}
++
++#[cfg(test)]
++mod caught_insert_tests {
++    use super::*;
++    fn fields() -> InsertErrorFields<'static> {
++        InsertErrorFields {
++            severity: sqlx::postgres::PgSeverity::Error,
++            code: "P0001",
++            message: "owned configured recording failure",
++            context: Some("PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE"),
++            extra_diagnostics: false,
++        }
++    }
++    #[test]
++    fn only_settled_observed_insert_context_has_normal_data_authority() {
++        assert_eq!(observed_insert_failure(Stage::InsertRecording,None,true,fields()).unwrap().message(),
++            "owned configured recording failure\nCONTEXT:  PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE");
++        for stage in [
++            Stage::Acquire,
++            Stage::Dedup,
++            Stage::SnapshotProgrammes,
++            Stage::ClockedInsert,
++            Stage::PeriodicInsert,
++            Stage::AssignTask,
++            Stage::Ready,
++            Stage::Close,
++        ] {
++            assert!(observed_insert_failure(stage, None, true, fields()).is_none());
++        }
++        assert!(observed_insert_failure(Stage::InsertRecording, Some(1), true, fields()).is_none());
++        assert!(observed_insert_failure(Stage::InsertRecording, None, false, fields()).is_none());
++    }
++    #[test]
++    fn no_general_error_or_uncertain_diagnostic_projection() {
++        let mut wrong = fields();
++        wrong.code = "23505";
++        assert!(observed_insert_failure(Stage::InsertRecording, None, true, wrong).is_none());
++        let mut wrong = fields();
++        wrong.message = "different server error";
++        assert!(observed_insert_failure(Stage::InsertRecording, None, true, wrong).is_none());
++        let mut wrong = fields();
++        wrong.context = None;
++        assert!(observed_insert_failure(Stage::InsertRecording, None, true, wrong).is_none());
++        let mut wrong = fields();
++        wrong.extra_diagnostics = true;
++        assert!(observed_insert_failure(Stage::InsertRecording, None, true, wrong).is_none());
++        let mut wrong = fields();
++        wrong.severity = sqlx::postgres::PgSeverity::Fatal;
++        assert!(observed_insert_failure(Stage::InsertRecording, None, true, wrong).is_none());
++        let io = Error {
++            stage: Stage::InsertRecording,
++            source: sqlx::Error::Io(std::io::Error::other("owned IO ambiguity")),
++            committed_recording: None,
++            settlement_error: None,
++        };
++        assert!(io.known_source_insert_failure().is_none());
++    }
++}
+--- a/rust/crates/job-transport/datasets/source-configured-recordings-insert-errors.json
++++ b/rust/crates/job-transport/datasets/source-configured-recordings-insert-errors.json
+@@ -0,0 +1,87 @@
++{
++  "scope": "Exact two Source11 observed known INSERT failures; host1/raw SQLSTATE NULL preserved; no general server-error authority",
++  "raw_source_sha256": "58e1bd132e8e1dbd876f8426245fc267ee42732e55471eab5470490f6316f5c3",
++  "source_host_exit": 1,
++  "captured_SQLSTATE_verified": false,
++  "cases": [
++    {
++      "name": "series-SQL-P0001",
++      "backend": {
++        "status": "SUCCESS",
++        "result": {
++          "scheduled": 0,
++          "details": [
++            {
++              "tvg_id": "rust.owned.configured",
++              "status": "error",
++              "error": "owned configured recording failure\nCONTEXT:  PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE"
++            },
++            {
++              "tvg_id": "rust.owned.configured",
++              "title": "Owned Exact Series",
++              "status": "ok",
++              "created": 0
++            }
++          ]
++        },
++        "traceback": null,
++        "children": [],
++        "date_done": "2026-11-12T23:35:04.818698+00:00",
++        "task_id": "4f7a4065-5005-4ef6-b070-7cb4c61a017f"
++      },
++      "recording_delta": 0,
++      "event_delta": [
++        {
++          "type": "update",
++          "data": {
++            "success": true,
++            "type": "recordings_refreshed",
++            "scheduled": 0
++          },
++          "__asgi_channel__": [
++            "specific.rust_owned_configured!receiver"
++          ]
++        }
++      ],
++      "raw_captured_SQLSTATE": null,
++      "captured_error_statements": [
++        {
++          "id": "4f7a4065-5005-4ef6-b070-7cb4c61a017f",
++          "sql": "INSERT INTO \"dispatcharr_channels_recording\" (\"channel_id\", \"start_time\", \"end_time\", \"task_id\", \"custom_properties\") VALUES (%s, %s, %s, %s, %s) RETURNING \"dispatcharr_channels_recording\".\"id\"",
++          "many": false,
++          "began_epoch": 1794526504.81172,
++          "exception_type": "django.db.utils.ProgrammingError",
++          "exception_text": "owned configured recording failure\nCONTEXT:  PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE",
++          "SQLSTATE": null,
++          "finished_epoch": 1794526504.8125086
++        }
++      ]
++    },
++    {
++      "name": "recurring-SQL-P0001",
++      "backend": {
++        "status": "SUCCESS",
++        "result": 0,
++        "traceback": null,
++        "children": [],
++        "date_done": "2026-11-12T23:35:18.059083+00:00",
++        "task_id": "5e9df272-55aa-4ccd-8f5e-4d80de73cc87"
++      },
++      "recording_delta": 0,
++      "event_delta": [],
++      "raw_captured_SQLSTATE": null,
++      "captured_error_statements": [
++        {
++          "id": "5e9df272-55aa-4ccd-8f5e-4d80de73cc87",
++          "sql": "INSERT INTO \"dispatcharr_channels_recording\" (\"channel_id\", \"start_time\", \"end_time\", \"task_id\", \"custom_properties\") VALUES (%s, %s, %s, %s, %s) RETURNING \"dispatcharr_channels_recording\".\"id\"",
++          "many": false,
++          "began_epoch": 1794526518.0571191,
++          "exception_type": "django.db.utils.ProgrammingError",
++          "exception_text": "owned configured recording failure\nCONTEXT:  PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE",
++          "SQLSTATE": null,
++          "finished_epoch": 1794526518.0579426
++        }
++      ]
++    }
++  ]
++}

@@ -1,0 +1,10 @@
+"""Retained copy-only correction: select actual tested library ELF from exact logs.
+No recompilation/retest; preserve run.py's ambiguous generated-target glob failure.
+"""
+import json,hashlib,re,shutil
+from pathlib import Path
+OUT=Path(__file__).resolve().parent;ROOT=OUT.parents[2];src=OUT/'source';report=json.loads((OUT/'receipt.json').read_text());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();expected=json.loads((OUT/'source-inputs.json').read_text());assert {str(p.relative_to(src)):sha(p)for p in src.rglob('*')if p.is_file()}==expected
+assert len(report['commands'])==9 and all(c['exit']==0 and c['settled']is True for c in report['commands']);peers=[]
+for name,label,stem in [('job-library','route','dispatcharr_job_transport'),('store-library','store-caught','dispatcharr_store')]:
+ log=(OUT/(label+'.log')).read_text();matches=re.findall(r'Running unittests src/lib.rs \(([^)]+/'+stem+r'-[a-f0-9]+)\)',log);assert len(matches)==1,(label,matches);original=Path(matches[0]);assert original.is_file()and original.open('rb').read(4)==b'\x7fELF';dest=OUT/'outside-peers'/name;assert not dest.exists();shutil.copy2(original,dest);assert sha(original)==sha(dest);peers.append({'name':name,'path':str(dest),'sha256':sha(dest),'bytes':dest.stat().st_size,'tested_original':str(original),'actual_selection_log':label+'.log','actual_selection_log_sha256':sha(OUT/(label+'.log'))})
+record={'source_map_sha256':sha(OUT/'source-inputs.json'),'all811_inputs_verified':True,'copied_after_all_waits_zero':True,'actual_build_and_test_waits':report['commands'],'binaries':peers,'copy_only_correction':'run.py glob expected one generated ELF but wholeworkspace and package-focused feature sets yielded two; select exact actual focused-test lib from retained Running unittests log instead, no arbitrary newest/first selection','initial_host_script_exit':1,'original_all9_command_exits':[c['exit']for c in report['commands']],'no_recompile_or_retest':True};(OUT/'build-record.json').write_text(json.dumps(record,indent=2)+'\n');print(json.dumps({'copied_after_all9waits0':True,'peers':peers}))

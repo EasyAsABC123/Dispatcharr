@@ -1,0 +1,66 @@
+{
+  "status": "UNEXECUTED complete finite collector proposal; Root closure and once/global-slot admission required",
+  "cases": [
+    "settings-cache-reply",
+    "programme-DataRow-CommandComplete-Ready",
+    "Clocked-marker-COMMIT-Ready",
+    "Periodic-COMMIT-Ready",
+    "artwork-LPUSH-reply",
+    "Channels-reply",
+    "result-SETEX-reply",
+    "result-reply-lost",
+    "result-SETEX-denied",
+    "oldSUCCESS-preserved",
+    "Recording-INSERT-P0001-Ready",
+    "snapshot-server-error-Ready",
+    "foreign-family-refused",
+    "oversize-programme-refused"
+  ],
+  "modes": {
+    "physical-prefix": 12,
+    "foreign-family-refused": 1,
+    "oversize-programme-refused": 1
+  },
+  "outputs": {
+    "physical-prefix": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-1",
+    "foreign-family-refused": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-foreign-refusal-1",
+    "oversize-programme-refused": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-oversize-refusal-1"
+  },
+  "budgets": {
+    "held_reply_seconds": 6.2,
+    "response_seconds": 35,
+    "drain_seconds": 10,
+    "host_seconds": 600,
+    "cleanup_seconds": 90,
+    "baseline_cpu": 1,
+    "baseline_memory_bytes": 1073741824,
+    "baseline_pids": 256,
+    "pipe_bytes": 1048576,
+    "projects_sequential": true
+  },
+  "normal_metadata": {
+    "scheduled": 1,
+    "details": [
+      {
+        "tvg_id": "rust.owned.configured",
+        "title": "Owned Exact Series",
+        "status": "ok",
+        "created": 1
+      }
+    ]
+  },
+  "Source_fault_normal_catch_parity": false,
+  "Source_SQLSTATE_captured": false,
+  "raw_fields_retained": true,
+  "refusal_heads_removed": false,
+  "default_children_consumed": false,
+  "Main_default_graph_enabled": false,
+  "runtime_source_changes_allowed": false,
+  "Native_source_map_sha256": "acf8115970690f2637dcc38b887e4712b26a096bed5eeed89412dff536530217",
+  "Native_binary_sha256": "b677d7efb980023a9b853a156561cbf5057dac47d528cab927055cea1564ad99",
+  "normal_fixture_route_correction": "QA9 cfg(test)-only exact owned route bridge; QA8/Normal1 failure retained",
+  "temporal_policy": "Native actual command/run/held/release instants and all raw SQL/cache/event/backend fields retained; no Source clock/timing comparison or blanket timestamp projection",
+  "programme_success_Ready": "Exactly phase2 two retained Programme DataRows and SELECT 2 CommandComplete, actual query identity; reject Parse/Describe/Sync and unrelated queries",
+  "operational_error_semantics": "Known Recording INSERT P0001/settings-read error remain operational/noMetadata; Source caught-normal result parity remains OPEN",
+  "refusal_cache_scope": "Foreign family is refused before cache/SQL; oversize programme can have prior read-only snapshot and configured cache-fill effects; no false all-cache-unchanged claim"
+}

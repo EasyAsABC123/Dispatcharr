@@ -1,0 +1,23 @@
+...........E....
+======================================================================
+ERROR: test_real_source_shape_offline_control (__main__.Contract.test_real_source_shape_offline_control)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-qa-prep-1/local-controls/test_normal.py", line 25, in test_real_source_shape_offline_control
+    s,n,r=normal();self.assertTrue(validate_case(s,n,r)['passed'])
+                                   ~~~~~~~~~~~~~^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-qa-prep-1/tools/normal_contract.py", line 176, in validate_case
+    uuid(properties['reply_to']);uuid(properties['delivery_tag'])
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-qa-prep-1/tools/normal_contract.py", line 23, in uuid
+    parsed=UUID(value);require(str(parsed)==value and parsed.version==4,'CanonicalUUID4');return value
+                       ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-qa-prep-1/tools/normal_contract.py", line 14, in require
+    if not value:raise ValueError(label)
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: CanonicalUUID4
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.019s
+
+FAILED (errors=1)

@@ -1,0 +1,333 @@
+{
+  "Id": "55a3d4143f082424a285b79d85025dfe0aa2ec1d656b4e0d9d6644e339176552",
+  "Created": "2026-11-13T02:19:18.912233346Z",
+  "Path": "bash",
+  "Args": [
+    "/verification/start.sh"
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 2267286,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-13T02:19:19.319312633Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "ResolvConfPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/55a3d4143f082424a285b79d85025dfe0aa2ec1d656b4e0d9d6644e339176552/resolv.conf",
+  "HostnamePath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/55a3d4143f082424a285b79d85025dfe0aa2ec1d656b4e0d9d6644e339176552/hostname",
+  "HostsPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/55a3d4143f082424a285b79d85025dfe0aa2ec1d656b4e0d9d6644e339176552/hosts",
+  "LogPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/55a3d4143f082424a285b79d85025dfe0aa2ec1d656b4e0d9d6644e339176552/55a3d4143f082424a285b79d85025dfe0aa2ec1d656b4e0d9d6644e339176552-json.log",
+  "Name": "/dispatcharr-configured-native-10ecaa023f-baseline-1",
+  "RestartCount": 0,
+  "Driver": "overlayfs",
+  "Platform": "linux",
+  "MountLabel": "",
+  "ProcessLabel": "",
+  "AppArmorProfile": "",
+  "ExecIDs": null,
+  "HostConfig": {
+    "Binds": [
+      "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/source:/app:ro",
+      "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/support/scripts/rust-playback-baseline:/verification:ro",
+      "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/support/scripts/rust-baseline:/baseline-tools:ro",
+      "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1:/evidence:rw",
+      "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/job-tools:/job-tools:ro",
+      "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/support/scripts/rust-integration:/backup-tools:ro",
+      "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-8-check-1/outside-peers/job-library:/native-configured-peer:ro"
+    ],
+    "ContainerIDFile": "",
+    "LogConfig": {
+      "Type": "json-file",
+      "Config": {}
+    },
+    "NetworkMode": "dispatcharr-configured-native-10ecaa023f_default",
+    "PortBindings": {
+      "5656/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "64655"
+        }
+      ]
+    },
+    "RestartPolicy": {
+      "Name": "no",
+      "MaximumRetryCount": 0
+    },
+    "AutoRemove": false,
+    "VolumeDriver": "",
+    "VolumesFrom": null,
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "CapAdd": null,
+    "CapDrop": null,
+    "CgroupnsMode": "private",
+    "Dns": null,
+    "DnsOptions": null,
+    "DnsSearch": null,
+    "ExtraHosts": [],
+    "GroupAdd": null,
+    "IpcMode": "private",
+    "Cgroup": "",
+    "Links": null,
+    "OomScoreAdj": 200,
+    "PidMode": "",
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyRootfs": false,
+    "SecurityOpt": null,
+    "Tmpfs": {
+      "/app/media": "mode=1777,size=67108864",
+      "/data": "mode=1777,size=2147483648",
+      "/tmp": "mode=1777,size=2147483648"
+    },
+    "UTSMode": "",
+    "UsernsMode": "",
+    "ShmSize": 67108864,
+    "Runtime": "runc",
+    "Isolation": "",
+    "CpuShares": 0,
+    "Memory": 1073741824,
+    "NanoCpus": 1000000000,
+    "CgroupParent": "",
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": null,
+    "BlkioDeviceReadBps": null,
+    "BlkioDeviceWriteBps": null,
+    "BlkioDeviceReadIOps": null,
+    "BlkioDeviceWriteIOps": null,
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "Devices": null,
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "MemoryReservation": 0,
+    "MemorySwap": 2147483648,
+    "MemorySwappiness": null,
+    "OomKillDisable": null,
+    "PidsLimit": 256,
+    "Ulimits": null,
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "IOMaximumIOps": 0,
+    "IOMaximumBandwidth": 0,
+    "MaskedPaths": [
+      "/proc/acpi",
+      "/proc/asound",
+      "/proc/interrupts",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/sys/devices/virtual/powercap",
+      "/sys/firmware"
+    ],
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ]
+  },
+  "Storage": {
+    "RootFS": {
+      "Snapshot": {
+        "Name": "overlayfs"
+      }
+    }
+  },
+  "Mounts": [
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/source",
+      "Destination": "/app",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/support/scripts/rust-integration",
+      "Destination": "/backup-tools",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/support/scripts/rust-baseline",
+      "Destination": "/baseline-tools",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1",
+      "Destination": "/evidence",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/job-tools",
+      "Destination": "/job-tools",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-8-check-1/outside-peers/job-library",
+      "Destination": "/native-configured-peer",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/support/scripts/rust-playback-baseline",
+      "Destination": "/verification",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    }
+  ],
+  "Config": {
+    "Hostname": "55a3d4143f08",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": true,
+    "AttachStderr": true,
+    "ExposedPorts": {
+      "5656/tcp": {}
+    },
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "REDIS_HOST=localhost",
+      "REDIS_PORT=6379",
+      "LC_ALL=C.UTF-8",
+      "POSTGRES_HOST=/var/run/postgresql",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "POSTGRES_PASSWORD=playback-fixture-only",
+      "LANG=C.UTF-8",
+      "POSTGRES_DIR=/data/db",
+      "BENCHMARK_RETENTION_SECONDS=60",
+      "POSTGRES_DB=dispatcharr",
+      "BENCHMARK_SHUTDOWN_DELAY=5",
+      "DISPATCHARR_ENV=aio",
+      "POSTGRES_USER=dispatch",
+      "REDIS_PASSWORD=playback-fixture-only",
+      "PGID=1000",
+      "REDISCLI_AUTH=playback-fixture-only",
+      "DJANGO_SECRET_KEY=playback-fixture-only",
+      "DISPATCHARR_LOG_LEVEL=WARNING",
+      "POSTGRES_PORT=5432",
+      "BENCHMARK_STARTUP_BEHIND=5",
+      "PUID=1000",
+      "PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility",
+      "NVIDIA_VISIBLE_DEVICES=all",
+      "LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri",
+      "DEBIAN_FRONTEND=noninteractive",
+      "UV_PROJECT_ENVIRONMENT=/dispatcharrpy",
+      "VIRTUAL_ENV=/dispatcharrpy",
+      "UV_COMPILE_BYTECODE=1",
+      "UV_LINK_MODE=copy"
+    ],
+    "Cmd": null,
+    "Image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "Volumes": null,
+    "WorkingDir": "/app",
+    "Entrypoint": [
+      "bash",
+      "/verification/start.sh"
+    ],
+    "Labels": {
+      "build_version": "DispatcharrBase version: base-20261103010601",
+      "com.docker.compose.config-hash": "dd2ea65f4268b19bff277405704dca9f007c10649c5f350cef5d307c1fdcbf3d",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.depends_on": "origin:service_started:false",
+      "com.docker.compose.image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "dispatcharr-configured-native-10ecaa023f",
+      "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/support/docker/compose.rust-playback.yml,/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/source.yml,/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/ports.yml",
+      "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-1/support/docker",
+      "com.docker.compose.service": "baseline",
+      "com.docker.compose.version": "2.40.3",
+      "maintainer": "SergeantPanda",
+      "org.opencontainers.image.authors": "SergeantPanda",
+      "org.opencontainers.image.created": "20261103010601",
+      "org.opencontainers.image.description": "Your ultimate IPTV & stream Management companion.",
+      "org.opencontainers.image.documentation": "https://dispatcharr.github.io/Dispatcharr-Docs/",
+      "org.opencontainers.image.licenses": "See repository",
+      "org.opencontainers.image.revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "org.opencontainers.image.source": "https://github.com/Dispatcharr/Dispatcharr",
+      "org.opencontainers.image.title": "dispatcharr",
+      "org.opencontainers.image.url": "https://github.com/Dispatcharr/Dispatcharr",
+      "org.opencontainers.image.vendor": "dispatcharr",
+      "org.opencontainers.image.version": "base-20261103010601"
+    }
+  },
+  "NetworkSettings": {
+    "SandboxID": "b4a591a11af31259fec05da79257ce58cd071fd4c1e25cfbf93edd4eb266035a",
+    "SandboxKey": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-exec/netns/b4a591a11af3",
+    "Ports": {
+      "5656/tcp": null
+    },
+    "Networks": {
+      "dispatcharr-configured-native-10ecaa023f_default": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": [
+          "dispatcharr-configured-native-10ecaa023f-baseline-1",
+          "baseline"
+        ],
+        "DriverOpts": null,
+        "GwPriority": 0,
+        "NetworkID": "e4d7f3b29f3a901eafea6495620411f22f4f347703e2876a4dddb4e2de54964b",
+        "EndpointID": "9a7490283ff91a5e5ad36aa6ec9677cd4b8978ecbbda9cb4fb04c7498df0d057",
+        "Gateway": "",
+        "IPAddress": "172.18.0.3",
+        "MacAddress": "c6:a5:69:24:16:4d",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": [
+          "dispatcharr-configured-native-10ecaa023f-baseline-1",
+          "baseline",
+          "55a3d4143f08"
+        ]
+      }
+    }
+  },
+  "ImageManifestDescriptor": {
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "digest": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "size": 3544,
+    "platform": {
+      "architecture": "amd64",
+      "os": "linux"
+    }
+  }
+}

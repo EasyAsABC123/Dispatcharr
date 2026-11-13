@@ -1,0 +1,23 @@
+............E................................................
+======================================================================
+ERROR: test_old_actual_body_reproduces_NameError_before_held (test_backend_hold_body.BackendBody.test_old_actual_body_reproduces_NameError_before_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-4/local-controls/test_backend_hold_body.py", line 27, in test_old_actual_body_reproduces_NameError_before_held
+    with self.assertRaisesRegex(NameError,"name 'state' is not defined"):block(ROOT/'local-controls/pg_reply_proxy-qa1.py.txt')(o,t,b'Z',b'I',2)
+                                                                         ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-4/local-controls/test_backend_hold_body.py", line 10, in block
+    tree=ast.parse(path.read_text());proxy=next(n for n in tree.body if isinstance(n,ast.ClassDef)and n.name=='Proxy');init=next(n for n in proxy.body if isinstance(n,ast.FunctionDef)and n.name=='__init__');handler=next(n for n in init.body if isinstance(n,ast.ClassDef)and n.name=='Handler');handle=next(n for n in handler.body if isinstance(n,ast.FunctionDef)and n.name=='handle')
+                   ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 787, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-4/local-controls/pg_reply_proxy-qa1.py.txt'
+
+----------------------------------------------------------------------
+Ran 61 tests in 0.090s
+
+FAILED (errors=1)

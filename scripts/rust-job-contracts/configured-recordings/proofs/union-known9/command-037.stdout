@@ -1,0 +1,9 @@
+PID                 COMMAND             COMMAND
+2964787             python              python /verification/supervisor.py serve
+2965156             postgres            /usr/lib/postgresql/17/bin/postgres -D /data/db
+2965157             postgres            postgres: checkpointer
+2965158             postgres            postgres: background writer
+2965160             postgres            postgres: walwriter
+2965161             postgres            postgres: autovacuum launcher
+2965162             postgres            postgres: logical replication launcher
+2965191             redis-server        redis-server 0.0.0.0:6379

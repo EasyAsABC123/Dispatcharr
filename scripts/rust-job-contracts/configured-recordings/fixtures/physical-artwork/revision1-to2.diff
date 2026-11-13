@@ -1,0 +1,73 @@
+--- QA1/tools/pg_reply_proxy.py
++++ QA2/tools/pg_reply_proxy.py
+@@ -136,7 +136,6 @@
+        matching=exchanges.backend(kind,payload)
+        hold=matching is not None and not owner.held.is_set()
+        if hold:owner.timeline.append({'stage':'actual-matching-Ready-held','epoch':time.time(),'connection':ident,'exchange':matching['exchange'],'identity':matching['identity'],'matching_rows':matching['rows'],'matching_commands_hex':[x.hex()for x in matching['commands']],'actual_error':matching['error'],'executions':len(matching['executions']),'frontend_Sync_or_simpleQuery_observed':matching['synced']})
+-      if hold:owner.timeline.append({'stage':'actual-matching-Ready-held','epoch':time.time(),'connection':ident,'identity':state['identity'],'matching_rows':state['rows'],'matching_commands_hex':[x.hex()for x in state['commands']],'actual_error':state['error']})
+       if hold:
+        owner.held.set()
+        if not owner.release.wait(20):raise TimeoutError('OwnedPGReady20s')
+--- QA1/tools/physical_contract.py
++++ QA2/tools/physical_contract.py
+@@ -10,7 +10,7 @@
+ def require(value,label):
+  if value is not True:raise ValueError(label)
+ def names(mode):
+- if mode=='physical-prefix':return list(PREFIX)
++ if mode=='physical-remaining':return list(PREFIX[1:])
+  if mode in REFUSALS:return[mode]
+  raise ValueError('UnknownPhysicalMode')
+ def required_checks(label):
+@@ -35,6 +35,9 @@
+  require(report.get('performance_verified')is False,'NoPerformanceScope')
+  require(report.get('mode')==mode and report.get('predeclared_modes')==names(mode),'ExactModeOrder')
+  require(report.get('finally_errors')==[],'CleanupErrorsNotDiscarded')
++ if mode=='physical-remaining':
++  setup=report.get('setup_context',{});require(setup.get('Native_control_replay')is False and setup.get('Source_behavior_reference_capture')is False,'ExplicitSeedContextNotControlReplay')
++  require(len(setup['before']['programmes'])==0 and len(setup['before']['recordings'])==0 and len(setup['after']['programmes'])==1 and len(setup['after']['recordings'])==1 and len(setup['after']['clocked'])-len(setup['before']['clocked'])==1 and len(setup['after']['frames'])-len(setup['before']['frames'])==2,'ExactBookedFirstProgrammeContext')
+  cases=report.get('cases');require(type(cases)is list and[x.get('name')for x in cases]==names(mode),'EveryExactCasePresent')
+  checks=report.get('checks');require(type(checks)is list and all(x.get('passed')is True for x in checks),'EveryActualCheckTrue')
+  actual_names=[x.get('name')for x in checks];require(len(actual_names)==len(set(actual_names)),'NoDuplicateChecks')
+--- QA1/tools/run_physical.py
++++ QA2/tools/run_physical.py
+@@ -30,7 +30,7 @@
+  return{k:v for k,v in os.environ.items()if not k.startswith(denied)and k!='ENABLE_VOD_FIXTURE'}
+ def main():
+  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--repo',type=Path,required=True);p.add_argument('--support-root',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--execution-inputs',type=Path,required=True);a=p.parse_args();tools=Path(__file__).resolve().parent;inputs=json.loads(a.execution_inputs.read_text());out=a.output.resolve();support=a.support_root.resolve();env=environment()
+- require(inputs.get('authorized')is True,'ExplicitRootPhysicalOnceAuthority');require(inputs.get('mode')in ('physical-prefix','foreign-family-refused','oversize-programme-refused'),'FiniteMode');require(inputs.get('case_plan_sha256')==sha(tools.parent/'case-plan.json'),'ExactCasePlan');require(set(inputs.get('tools_sha256',{}))==REQUIRED,'ExactPhysicalToolClosure')
++ require(inputs.get('authorized')is True,'ExplicitRootPhysicalOnceAuthority');require(inputs.get('mode')=='physical-remaining','FiniteMode');require(inputs.get('case_plan_sha256')==sha(tools.parent/'case-plan.json'),'ExactCasePlan');require(set(inputs.get('tools_sha256',{}))==REQUIRED,'ExactPhysicalToolClosure')
+  for name,h in inputs['tools_sha256'].items():require(sha(tools/name)==h,'ExactTool:'+name)
+  peer=inputs['Native_elf'];require(Path(peer['path']).is_file()and sha(peer['path'])==peer['sha256']and Path(peer['path']).open('rb').read(4)==b'\x7fELF','ExactOutsideNativeELF')
+  build=inputs['Native_build_record'];require(sha(build['path'])==build['sha256'],'ExactNativeBuildRecord');built=json.loads(Path(build['path']).read_text());require(built['copied_after_all_waits_zero']is True and built['binary']['sha256']==peer['sha256']and built['source_map_sha256']==inputs['Native_source_map_sha256'],'BoundSameSourceNativeBuild')
+--- QA1/tools/source_physical.py
++++ QA2/tools/source_physical.py
+@@ -86,8 +86,8 @@
+ POLICY=json.loads(Path('/job-tools/physical-policy.json').read_text())
+ MODE=CONTEXT['mode']
+ PREFIX_MODES=['settings-cache-reply','programme-DataRow-CommandComplete-Ready','Clocked-marker-COMMIT-Ready','Periodic-COMMIT-Ready','artwork-LPUSH-reply','Channels-reply','result-SETEX-reply','result-reply-lost','result-SETEX-denied','oldSUCCESS-preserved','Recording-INSERT-P0001-Ready','snapshot-server-error-Ready']
+-MODES=PREFIX_MODES if MODE=='physical-prefix'else[MODE]
+-if MODE not in ('physical-prefix','foreign-family-refused','oversize-programme-refused'):raise ValueError('FinitePhysicalMode')
++MODES=PREFIX_MODES[1:] if MODE=='physical-remaining'else[MODE]
++if MODE!='physical-remaining':raise ValueError('RemainingElevenOnly')
+ report={'lifecycle_began_utc':CONTEXT['lifecycle_began_utc'],'no_application_methods_replaced':True,'descendants_consumed':False,'passed':False,'Native_verified':False,'performance_verified':False,'scope':'Native physical ownership/refusal controls with actual Original producer/decoder; no Source timing parity/default FIFO/fullworkflow','mode':MODE,'predeclared_modes':MODES,'cases':[],'checks':[],'Source_reference_host_exit':1,'captured_SQLSTATE_verified':False}
+ peer=None;pg=None;reply=None;injector=None;acl=None;view=False
+ 
+@@ -250,7 +250,16 @@
+  layer=get_channel_layer();receiver='specific.rust_owned_configured!receiver';channel_key=layer.prefix+receiver.split('!')[0]+'!';async_to_sync(layer.group_add)('updates',receiver)
+  anchor=timezone.now().replace(microsecond=0);source=EPGSource.objects.create(name='rust-owned-configured-source',source_type='xmltv',is_active=False);epg=EPGData.objects.create(epg_source=source,tvg_id='rust.owned.configured',name='Owned Configured');channel=Channel.objects.create(name='Owned Configured',channel_number=999901,epg_data=epg,tvg_id=epg.tvg_id)
+  rule={'title':'Owned Exact Series','tvg_id':epg.tvg_id,'title_mode':'exact','mode':'all','channel_id':channel.id,'epg_source_id':source.id};settings([rule])
+- for index,label in enumerate(MODES):phase(index,label)
++ # Explicit setup context recreates the already-booked first programme,
++ # not its passed Native cache-hold control. Original model/signal/publication
++ # calls are real; all seed rows/frames/instants are retained before Native.
++ report['setup_context']={'kind':'prebooked programme1 via Original model/signals plus actual duplicate artwork producer','Native_control_replay':False,'Source_behavior_reference_capture':False,'before':snapshot(),'began_utc':utc()};save()
++ booked=ProgramData.objects.create(epg=epg,tvg_id=epg.tvg_id,title='Owned Exact Series',sub_title='Owned Physical 0',start_time=anchor+timedelta(hours=24),end_time=anchor+timedelta(hours=25),custom_properties={'season':1,'episode':1})
++ props={'program':{'id':booked.id,'tvg_id':booked.tvg_id,'title':booked.title,'sub_title':booked.sub_title,'description':booked.description,'original_air_date':'','start_time':booked.start_time.isoformat(),'end_time':booked.end_time.isoformat(),'season':1,'episode':1,'onscreen_episode':None,'epg_source_id':source.id}}
++ recorded=Recording.objects.create(channel=channel,start_time=booked.start_time,end_time=booked.end_time,custom_properties=props)
++ duplicate=tasks.prefetch_recording_artwork.apply_async(args=[recorded.id],countdown=1)
++ report['setup_context'].update(after=snapshot(),programme_id=booked.id,recording_id=recorded.id,duplicate_artwork_id=duplicate.id,finished_utc=utc());save()
++ for index,label in enumerate(MODES,start=1):phase(index,label)
+  report.update(passed=True,Native_verified=True)
+ except BaseException as error:
+  report.update(error_type=type(error).__name__,error=str(error)[:4096]);raise

@@ -1,0 +1,157 @@
+{
+  "TMPDIR": "/home/justin/github/Dispatcharr/artifacts/rust/tmp-configured-recordings-native-10-check-1",
+  "source_map_sha256": "3d45ecfed1b84e3d7fd561dc6df0bcf122edc1b97a8a677cf55ede869752bf62",
+  "target": "/home/justin/github/Dispatcharr/artifacts/rust/target-configured-recordings-native-10-check-1",
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2021",
+        "--check",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-private-10/source/rust/crates/store/src/recording_schedule.rs",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-private-10/source/rust/crates/job-transport/src/configured_recording_service.rs"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-private-10/source/rust",
+      "began_epoch": 1794539779.072119,
+      "pid": 2477031,
+      "exit": 0,
+      "settled": true,
+      "finished_epoch": 1794539779.1062114
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--lib",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "-p",
+        "dispatcharr-job-transport"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-private-10/source/rust",
+      "began_epoch": 1794539779.1301804,
+      "pid": 2477053,
+      "exit": 0,
+      "settled": true,
+      "finished_epoch": 1794539824.7697709
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "-p",
+        "dispatcharr-job-transport",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-private-10/source/rust",
+      "began_epoch": 1794539824.7929015,
+      "pid": 2489321,
+      "exit": 0,
+      "settled": true,
+      "finished_epoch": 1794539855.5803092
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "recording_schedule::caught_insert_tests::"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-private-10/source/rust",
+      "began_epoch": 1794539855.60742,
+      "pid": 2496254,
+      "exit": 0,
+      "settled": true,
+      "finished_epoch": 1794539904.15425
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "configured_recording_service::caught_insert_tests::"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-private-10/source/rust",
+      "began_epoch": 1794539904.1780152,
+      "pid": 2502599,
+      "exit": 0,
+      "settled": true,
+      "finished_epoch": 1794539938.9018517
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "configured_recordings::"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-private-10/source/rust",
+      "began_epoch": 1794539938.924688,
+      "pid": 2504897,
+      "exit": 0,
+      "settled": true,
+      "finished_epoch": 1794539939.093738
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "recording_artwork::"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-private-10/source/rust",
+      "began_epoch": 1794539939.1156025,
+      "pid": 2504914,
+      "exit": 0,
+      "settled": true,
+      "finished_epoch": 1794539939.2512233
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "configured_parent_fixture::"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-private-10/source/rust",
+      "began_epoch": 1794539939.2744098,
+      "pid": 2504936,
+      "exit": 0,
+      "settled": true,
+      "finished_epoch": 1794539939.419293
+    }
+  ],
+  "copied_ELFs": false,
+  "source_map_unchanged": true,
+  "passed": true
+}

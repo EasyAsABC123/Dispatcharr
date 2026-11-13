@@ -1,0 +1,86 @@
+{
+  "status": "PROPOSED/UNEXECUTED; no own fixture admission",
+  "commands_sequential": [
+    {
+      "mode": "physical-prefix",
+      "cases": 12,
+      "output": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-1",
+      "proposed_inputs": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-1/proposed-inputs-physical-prefix.json",
+      "proposed_inputs_sha256": "01fcbe3fc0eea2fb5dc77044adcd6931ad10a61455dec886e93c353bee3f638a",
+      "argv": [
+        "python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-1/tools/run_physical.py",
+        "--repo",
+        "/home/justin/github/Dispatcharr",
+        "--support-root",
+        "/home/justin/github/Dispatcharr/scripts/rust-core-perf/support",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-1",
+        "--execution-inputs",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-1/Root-inputs-physical-prefix.json"
+      ]
+    },
+    {
+      "mode": "foreign-family-refused",
+      "cases": 1,
+      "output": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-foreign-refusal-1",
+      "proposed_inputs": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-1/proposed-inputs-foreign-family-refused.json",
+      "proposed_inputs_sha256": "09b98fe8be26914c4a109a4dd4a8def3be23d73b38478faae2a3767e020fcd3f",
+      "argv": [
+        "python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-1/tools/run_physical.py",
+        "--repo",
+        "/home/justin/github/Dispatcharr",
+        "--support-root",
+        "/home/justin/github/Dispatcharr/scripts/rust-core-perf/support",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-foreign-refusal-1",
+        "--execution-inputs",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-1/Root-inputs-foreign-family-refused.json"
+      ]
+    },
+    {
+      "mode": "oversize-programme-refused",
+      "cases": 1,
+      "output": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-oversize-refusal-1",
+      "proposed_inputs": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-1/proposed-inputs-oversize-programme-refused.json",
+      "proposed_inputs_sha256": "7a62c34b45f16540d8003dadbe02cecba0a634c11763e1142912c98234e654d2",
+      "argv": [
+        "python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-1/tools/run_physical.py",
+        "--repo",
+        "/home/justin/github/Dispatcharr",
+        "--support-root",
+        "/home/justin/github/Dispatcharr/scripts/rust-core-perf/support",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-oversize-refusal-1",
+        "--execution-inputs",
+        "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-1/Root-inputs-oversize-programme-refused.json"
+      ]
+    }
+  ],
+  "cwd": "/home/justin/github/Dispatcharr",
+  "shell_environment_script": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/environment.sh",
+  "case_plan_sha256": "7576ab9e42ff199ad0471d3ef19b4cb999474825ab957b918868b8c21766d7e4",
+  "normal_case_replay": false,
+  "no_retries": true,
+  "global_slot_required": true,
+  "after_failure": "Only a separate fixed mode may proceed after settled process and independent project/CID cleanup; unknown settlement or infrastructure timeout halts later commands",
+  "Native_source_map_sha256": "acf8115970690f2637dcc38b887e4712b26a096bed5eeed89412dff536530217",
+  "Native_elf": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-9-check-1/outside-peers/job-library",
+    "sha256": "b677d7efb980023a9b853a156561cbf5057dac47d528cab927055cea1564ad99"
+  },
+  "budgets": {
+    "held_reply_seconds": 6.2,
+    "response_seconds": 35,
+    "drain_seconds": 10,
+    "host_seconds": 600,
+    "cleanup_seconds": 90,
+    "baseline_cpu": 1,
+    "baseline_memory_bytes": 1073741824,
+    "baseline_pids": 256,
+    "pipe_bytes": 1048576,
+    "projects_sequential": true
+  }
+}

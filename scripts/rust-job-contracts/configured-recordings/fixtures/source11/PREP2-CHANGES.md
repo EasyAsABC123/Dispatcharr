@@ -1,0 +1,5 @@
+# Prep2 only; prep1 remains immutable
+
+Root supplied bounded host process/service cleanup and its11 local controls. Agent independent review added start-intent receipts before constructor, unknown-constructor settlement failure, and explicit cleanup90 acceptance overrun gate (no release of physical owners merely to meet a timer), with3 focused controls. Full Channel/EPGSource/EPGData/ProgramData/system-settings input snapshots and actual model table names are retained;3 new missing-input/FK/change corruption controls close the prep1 input omission. Source11 payload/order103checks/clock/case/task budgets are unchanged. Root initial stdin12 controls are separately retained by Root; this packet claims only its locally executed41 controls.
+
+Both old prep1/24controls and old host prototypes remain artifacts, not Source authority. No actual Source/native/app/Docker/Cargo task ran for this preparation. Recording/clocked/artwork counts are predeclared code-derived hypotheses, not an observed Source result. No default graph or runtime code is promoted. Actual Source capture requires Root explicit once receipt and ordinary slot.

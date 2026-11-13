@@ -1,0 +1,97 @@
+{
+  "scope": "Offline retained artwork physical prefix and code diagnosis; failed original host/guest1 unchanged, no new fixture or posthoc assertion pass",
+  "actual_observed": {
+    "actual_host_exit": 1,
+    "actual_guest_exit": 1,
+    "checks_true": 12,
+    "checks_false": [
+      "artwork-LPUSH-reply-actual-normal-result-and-two-children"
+    ],
+    "physical_hold_seconds": 6.200087057950441,
+    "peer": {
+      "argv": [
+        "/native-configured-peer",
+        "configured_recording_peer::actual_configured_recording_parent_peer",
+        "--exact",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "pid": 389,
+      "starttime": "26478468",
+      "began_utc": "2026-11-13T04:33:09.642353+00:00",
+      "exit": 0,
+      "settled": true,
+      "pipes_settled": true,
+      "writer_settled": true,
+      "invalid": null,
+      "observed_utc": "2026-11-13T04:33:16.076595+00:00",
+      "finished_utc": "2026-11-13T04:33:16.076603+00:00"
+    },
+    "actual_backend": {
+      "key_base64": "Y2VsZXJ5LXRhc2tzOmNlbGVyeS10YXNrLW1ldGEtNTA3MjcxODctYTVlOC00MjU2LWJjMDctMjY0ODEwYWEzYmYw",
+      "raw_base64": null,
+      "metadata": null,
+      "ttl": -2
+    },
+    "Original_get_error": {
+      "type": "celery.exceptions.TimeoutError",
+      "text": "The operation timed out."
+    },
+    "new_rows_frames": {
+      "recordings": 1,
+      "clocked": 1,
+      "periodic": 1,
+      "frames": 1,
+      "Channels_decoded": 0
+    },
+    "actual_artwork_server_replies": [
+      {
+        "epoch": 1794544389.7620618,
+        "verb": "EVALSHA",
+        "reply_sha256": "386f025f90112edd267a258ecd987dff18d29effc021407abd68a9fdbfa56dc9",
+        "reply_bytes": 5,
+        "actual_server_reply_observed": true,
+        "mode": "artwork",
+        "script_sha1": "fccf3707fcf917c0d98f08dd78a77efebbbf0ef7"
+      }
+    ],
+    "actual_inner_error_observed": false,
+    "actual_wait_reply": [
+      {
+        "wait": "Ok(Err(JoinError::Cancelled(Id(19))))",
+        "utc": "2026-11-13T04:33:16.034367422+00:00",
+        "available_slots": 1
+      }
+    ],
+    "remaining_seven_executed": false
+  },
+  "static_code_diagnosis": {
+    "transport_default_logical_command_timeout_seconds": 2,
+    "physical_hold_exceeds_logical_timeout": true,
+    "publisher": "recording_artwork.rs Publisher::publish maps ALL Jobs publication errors to ArtworkError::Uncertain",
+    "service": "execute_intents stops on ArtworkError::Uncertain before second publication/event/normal report",
+    "worker": "series_body awaits scope release then propagates service error before result writer",
+    "distinction": "This is a code-derived explanation consistent with one frame/no metadata. Aborted outer JoinHandle exposes cancellation, not the actual inner domain error, so exact inner error is not independently observed.",
+    "Source_timing_parity_claim": false,
+    "separate_artwork_error_gate_needed": true
+  },
+  "remaining_seven_review": {
+    "Channels-reply": "Realtime error maps Unavailable; service awaits physical EventReceipt then intentionally accepts Unavailable and may report normal. Distinct from artwork Uncertain. Keep existing normal assertion pending actual evidence.",
+    "result-SETEX-reply": "Actual server result may exist before held reply; no no-early-metadata assertion. Retained backend successful effect can match normal despite logical writer error.",
+    "result-reply-lost": "Server writer may have committed; retain one observed write/no replay and actual metadata, do not infer writer returned success.",
+    "result-SETEX-denied": "Operational/no fabricated metadata; exact actual Redis version/ACL/SETEX denial preflight required.",
+    "oldSUCCESS-preserved": "Existing oldSUCCESS raw bytes and TTL guard unchanged.",
+    "Recording-INSERT-P0001-Ready": "QA9 historical runtime remains operational; do not transfer Source10 known-caught semantics to this QA9 ELF.",
+    "snapshot-server-error-Ready": "Read error remains operational/preACK and frame preserved."
+  },
+  "bindings": {
+    "artifacts/rust/configured-recordings-native-physical-artwork-1/integration.json": "15f8d05aefbe38be98dc9bf6a3935eaac7cb29fc492511506d819da24230653f",
+    "artifacts/rust/configured-recordings-native-physical-artwork-1/source-configured-recordings-private.json": "62fccea25dd6bee78593ff0c9d15511fa9336cfcde4043beed0adde5575f0c9d",
+    "artifacts/rust/configured-recordings-native-private-9/source/rust/crates/job-transport/src/recording_artwork.rs": "fc9d5103d26264f12aebf07471e1d3dd5ea1d308157e1d2533274fb82488b396",
+    "artifacts/rust/configured-recordings-native-private-9/source/rust/crates/job-transport/src/configured_recording_service.rs": "db31eb472ef36fdccefc08b823928c5c871c39b5ba3dde67893877f576e85fc2",
+    "artifacts/rust/configured-recordings-native-private-9/source/rust/crates/job-transport/src/configured_recording_worker.rs": "95f149a8d8d01deb32efca0354bd955a7b582ef01271015acc4f1fc979d66dd0",
+    "artifacts/rust/configured-recordings-native-private-9/source/rust/crates/job-transport/src/transport.rs": "f03a6db3ef629019d9c23ba38ad4e05503c78990ddc181e0bae6b0a9f46519cd",
+    "artifacts/rust/configured-recordings-native-private-9/source/rust/crates/realtime/src/bus.rs": "1a045ce6b82b8a102c8120daf06a7e05fc8d443c98789e34caa6740eec375513"
+  }
+}

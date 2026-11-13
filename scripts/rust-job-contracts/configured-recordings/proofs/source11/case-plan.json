@@ -1,0 +1,104 @@
+{
+  "status": "Bounded Source-first plan; NO execution authority",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "task_families": [
+    "apps.channels.tasks.evaluate_series_rules",
+    "apps.channels.tasks.maintain_recurring_recordings"
+  ],
+  "parent_route": "rust-owned-configured-recordings",
+  "source_functions_replaced": false,
+  "real_UTC_anchor": true,
+  "programme_hours_from_anchor": [
+    24,
+    26,
+    28
+  ],
+  "programme_duration_hours": 1,
+  "settings": {
+    "time_zone": "UTC",
+    "pre_offset_minutes": 0,
+    "post_offset_minutes": 0,
+    "mode": "all",
+    "title_mode": "exact",
+    "title": "Owned Exact Series",
+    "tvg_id": "rust.owned.configured",
+    "single_explicit_epg_source": true,
+    "single_explicit_channel": true
+  },
+  "cases": [
+    {
+      "name": "series-invalid",
+      "new_recordings": 0,
+      "new_artwork_frames": 0
+    },
+    {
+      "name": "series-positive",
+      "new_recordings": 1,
+      "new_artwork_frames": 2
+    },
+    {
+      "name": "series-repeat",
+      "new_recordings": 0,
+      "new_artwork_frames": 0
+    },
+    {
+      "name": "series-second-episode",
+      "new_recordings": 1,
+      "new_artwork_frames": 2
+    },
+    {
+      "name": "series-filter-miss",
+      "new_recordings": 0,
+      "new_artwork_frames": 0
+    },
+    {
+      "name": "series-busy",
+      "new_recordings": 0,
+      "new_artwork_frames": 0
+    },
+    {
+      "name": "series-SQL-P0001",
+      "new_recordings": 0,
+      "new_artwork_frames": 0
+    },
+    {
+      "name": "recurring-positive",
+      "new_recordings": 1,
+      "new_artwork_frames": 1
+    },
+    {
+      "name": "recurring-repeat",
+      "new_recordings": 0,
+      "new_artwork_frames": 0
+    },
+    {
+      "name": "recurring-disabled",
+      "new_recordings": 0,
+      "new_artwork_frames": 0
+    },
+    {
+      "name": "recurring-SQL-P0001",
+      "new_recordings": 0,
+      "new_artwork_frames": 0
+    }
+  ],
+  "setup_frame_retained": "apps.epg.tasks.parse_programs_for_tvg_id",
+  "predeclared_checks": 103,
+  "expected_total_new_recordings": 3,
+  "expected_total_new_clocked_periodic_pairs": 3,
+  "expected_total_artwork_frames": 5,
+  "descendants_consumed": false,
+  "descendants_removed_or_quarantined": false,
+  "unported_child_application_workflow": "OPEN",
+  "cache_and_SQL_observer_scope": "Small owned diagnostic observations, not strict global transfer/DB CPU bounds",
+  "case_wait_seconds": 35,
+  "worker_stop_seconds": 12,
+  "forced_stop_seconds": 5,
+  "host_controller_seconds": 600,
+  "default_database_tables_audited": 11,
+  "no_retry": true,
+  "no_main_default_activation": true,
+  "no_performance_claim": true,
+  "actual_capture_requires_Root_review_and_global_slot": true
+}

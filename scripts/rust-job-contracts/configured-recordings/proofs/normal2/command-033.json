@@ -1,0 +1,32 @@
+{
+  "argv": [
+    "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+    "compose",
+    "-p",
+    "dispatcharr-configured-native-607aaf5bd6",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-2/support/docker/compose.rust-playback.yml",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-2/source.yml",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-normal-2/ports.yml",
+    "exec",
+    "-T",
+    "-e",
+    "JOB_DISPOSABLE_FIXTURE=playback-fixture-only",
+    "baseline",
+    "/dispatcharrpy/bin/python",
+    "/job-tools/verify_roles.py"
+  ],
+  "cwd": "/home/justin/github/Dispatcharr",
+  "began_utc": "2026-11-13T02:42:23.619132+00:00",
+  "pid": 2367998,
+  "starttime": "25813866",
+  "spawn_state": "actual_child_started",
+  "exit": 0,
+  "completed_utc": "2026-11-13T02:42:23.710397+00:00",
+  "collection_invalid": null,
+  "physically_settled": true,
+  "pipes_settled": true,
+  "owned_stop_requested": false
+}

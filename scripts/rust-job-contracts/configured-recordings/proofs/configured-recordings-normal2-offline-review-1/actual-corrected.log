@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-normal2-offline-review-1/review.py", line 35, in <module>
+    check('all_actual_command_waits_and_pipes_settled',all(x['exit']==0 or ('inspect'in x['argv']and x['exit']==1)for x in r['processes'])and all(x['physically_settled']is True and x['pipes_settled']is True and x['collection_invalid']is None for x in r['processes']))
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-normal2-offline-review-1/review.py", line 9, in check
+    if not value:raise ValueError(name)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+ValueError: all_actual_command_waits_and_pipes_settled

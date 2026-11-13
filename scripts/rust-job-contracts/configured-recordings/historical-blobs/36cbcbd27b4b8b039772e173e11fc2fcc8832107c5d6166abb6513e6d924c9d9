@@ -1,0 +1,87 @@
+{
+  "scope": "Exact two Source11 observed known INSERT failures; host1/raw SQLSTATE NULL preserved; no general server-error authority",
+  "raw_source_sha256": "58e1bd132e8e1dbd876f8426245fc267ee42732e55471eab5470490f6316f5c3",
+  "source_host_exit": 1,
+  "captured_SQLSTATE_verified": false,
+  "cases": [
+    {
+      "name": "series-SQL-P0001",
+      "backend": {
+        "status": "SUCCESS",
+        "result": {
+          "scheduled": 0,
+          "details": [
+            {
+              "tvg_id": "rust.owned.configured",
+              "status": "error",
+              "error": "owned configured recording failure\nCONTEXT:  PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE"
+            },
+            {
+              "tvg_id": "rust.owned.configured",
+              "title": "Owned Exact Series",
+              "status": "ok",
+              "created": 0
+            }
+          ]
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-12T23:35:04.818698+00:00",
+        "task_id": "4f7a4065-5005-4ef6-b070-7cb4c61a017f"
+      },
+      "recording_delta": 0,
+      "event_delta": [
+        {
+          "type": "update",
+          "data": {
+            "success": true,
+            "type": "recordings_refreshed",
+            "scheduled": 0
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_configured!receiver"
+          ]
+        }
+      ],
+      "raw_captured_SQLSTATE": null,
+      "captured_error_statements": [
+        {
+          "id": "4f7a4065-5005-4ef6-b070-7cb4c61a017f",
+          "sql": "INSERT INTO \"dispatcharr_channels_recording\" (\"channel_id\", \"start_time\", \"end_time\", \"task_id\", \"custom_properties\") VALUES (%s, %s, %s, %s, %s) RETURNING \"dispatcharr_channels_recording\".\"id\"",
+          "many": false,
+          "began_epoch": 1794526504.81172,
+          "exception_type": "django.db.utils.ProgrammingError",
+          "exception_text": "owned configured recording failure\nCONTEXT:  PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE",
+          "SQLSTATE": null,
+          "finished_epoch": 1794526504.8125086
+        }
+      ]
+    },
+    {
+      "name": "recurring-SQL-P0001",
+      "backend": {
+        "status": "SUCCESS",
+        "result": 0,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-12T23:35:18.059083+00:00",
+        "task_id": "5e9df272-55aa-4ccd-8f5e-4d80de73cc87"
+      },
+      "recording_delta": 0,
+      "event_delta": [],
+      "raw_captured_SQLSTATE": null,
+      "captured_error_statements": [
+        {
+          "id": "5e9df272-55aa-4ccd-8f5e-4d80de73cc87",
+          "sql": "INSERT INTO \"dispatcharr_channels_recording\" (\"channel_id\", \"start_time\", \"end_time\", \"task_id\", \"custom_properties\") VALUES (%s, %s, %s, %s, %s) RETURNING \"dispatcharr_channels_recording\".\"id\"",
+          "many": false,
+          "began_epoch": 1794526518.0571191,
+          "exception_type": "django.db.utils.ProgrammingError",
+          "exception_text": "owned configured recording failure\nCONTEXT:  PL/pgSQL function rust_owned_recording_fail() line 1 at RAISE",
+          "SQLSTATE": null,
+          "finished_epoch": 1794526518.0579426
+        }
+      ]
+    }
+  ]
+}

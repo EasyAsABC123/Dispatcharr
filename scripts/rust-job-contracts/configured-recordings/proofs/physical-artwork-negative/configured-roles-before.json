@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "scope": "Point-in-time bounded proc roles only; not arbitrary-process settlement or SQL silence",
+  "unexpected_web_worker_beat": [],
+  "rows": [
+    {
+      "pid": 1,
+      "argv": [
+        "python",
+        "/verification/supervisor.py",
+        "serve"
+      ]
+    },
+    {
+      "pid": 88,
+      "argv": [
+        "/usr/lib/postgresql/17/bin/postgres",
+        "-D",
+        "/data/db"
+      ]
+    },
+    {
+      "pid": 89,
+      "argv": [
+        "postgres: checkpointer "
+      ]
+    },
+    {
+      "pid": 90,
+      "argv": [
+        "postgres: background writer "
+      ]
+    },
+    {
+      "pid": 92,
+      "argv": [
+        "postgres: walwriter "
+      ]
+    },
+    {
+      "pid": 93,
+      "argv": [
+        "postgres: autovacuum launcher "
+      ]
+    },
+    {
+      "pid": 94,
+      "argv": [
+        "postgres: logical replication launcher "
+      ]
+    },
+    {
+      "pid": 123,
+      "argv": [
+        "redis-server 0.0.0.0:6379"
+      ]
+    },
+    {
+      "pid": 341,
+      "argv": [
+        "/dispatcharrpy/bin/python",
+        "/job-tools/verify_roles.py"
+      ]
+    }
+  ],
+  "own_pid": 341
+}

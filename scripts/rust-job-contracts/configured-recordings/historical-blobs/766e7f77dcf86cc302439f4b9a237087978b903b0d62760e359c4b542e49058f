@@ -1,0 +1,396 @@
+//! PRIVATE UNCOMPILED bounded future-Recording persistence draft.
+//! Derived from Dispatcharr Recording post_save and django-celery-beat models;
+//! original authors retain credit. No application or task registration.
+//! Serial owned execution only: concurrent model/sentinel writers are unproved.
+use chrono::{DateTime, Utc};
+use serde_json::Value;
+use sqlx::{Connection, PgConnection, PgPool};
+use std::sync::Arc;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Stage {
+    Acquire,
+    SnapshotSchema,
+    SnapshotChannel,
+    SnapshotProgrammes,
+    SnapshotExisting,
+    SnapshotRecurring,
+    Dedup,
+    InsertRecording,
+    ClockedLookup,
+    ClockedInsert,
+    ClockedMarker,
+    PeriodicLookup,
+    PeriodicMarkerBefore,
+    PeriodicInsert,
+    PeriodicMarkerAfter,
+    AssignTask,
+    Ready,
+    Close,
+}
+#[derive(Debug)]
+pub struct Error {
+    pub stage: Stage,
+    pub source: sqlx::Error,
+    /// A committed row may remain after signal failure, matching Source's
+    /// independent autocommit boundary. This is not a successful normal report.
+    pub committed_recording: Option<i64>,
+    pub settlement_error: Option<sqlx::Error>,
+}
+pub struct FutureRecording {
+    channel_id: i64,
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+    properties: Value,
+    dedup: Dedup,
+}
+enum Dedup {
+    Series {
+        tvg: String,
+        start: String,
+        end: String,
+    },
+    Recurring {
+        rule_id: i64,
+    },
+}
+impl FutureRecording {
+    /// Smart constructor does not authorize any SQL, publication or result.
+    /// Caller must validate supported rule/domain and actual snapshot before ACK.
+    pub fn new(
+        channel_id: i64,
+        start: DateTime<Utc>,
+        end: DateTime<Utc>,
+        properties: Value,
+        now: DateTime<Utc>,
+    ) -> Option<Self> {
+        if channel_id <= 0
+            || channel_id > i64::from(i32::MAX)
+            || start <= now
+            || end <= start
+            || !properties.is_object()
+            || serde_json::to_vec(&properties).ok()?.len() > 8192
+            || !start.timestamp_subsec_nanos().is_multiple_of(1000)
+            || !end.timestamp_subsec_nanos().is_multiple_of(1000)
+        {
+            return None;
+        }
+        let dedup = if let Some(rule_id) = properties
+            .get("rule")
+            .and_then(|r| r.get("id"))
+            .and_then(Value::as_i64)
+        {
+            if rule_id <= 0 || rule_id > i64::from(i32::MAX) {
+                return None;
+            }
+            Dedup::Recurring { rule_id }
+        } else {
+            let program = properties.get("program")?;
+            let tvg = program.get("tvg_id")?.as_str()?;
+            let original_start = program.get("start_time")?.as_str()?;
+            let original_end = program.get("end_time")?.as_str()?;
+            if tvg.is_empty()
+                || tvg.len() > 255
+                || original_start.len() > 40
+                || original_end.len() > 40
+            {
+                return None;
+            }
+            if original_start.parse::<DateTime<Utc>>().ok()? != start
+                || original_end.parse::<DateTime<Utc>>().ok()? != end
+            {
+                return None;
+            }
+            Dedup::Series {
+                tvg: tvg.to_owned(),
+                start: original_start.to_owned(),
+                end: original_end.to_owned(),
+            }
+        };
+        Some(Self {
+            channel_id,
+            start,
+            end,
+            properties,
+            dedup,
+        })
+    }
+}
+#[derive(Debug)]
+pub struct Created {
+    pub recording_id: i64,
+    pub clocked_id: i64,
+    pub periodic_id: i64,
+    pub task_name: String,
+}
+fn error(stage: Stage, source: sqlx::Error, committed_recording: Option<i64>) -> Error {
+    Error {
+        stage,
+        source,
+        committed_recording,
+        settlement_error: None,
+    }
+}
+async fn marker(connection: &mut PgConnection) -> Result<(), sqlx::Error> {
+    // Beat's sentinel timestamp is an actual execution-time value. Do not reuse
+    // an old Source timestamp or the decision-clock injection for SQL dates.
+    sqlx::query("INSERT INTO django_celery_beat_periodictasks (ident,last_update) VALUES (1,$1) ON CONFLICT (ident) DO UPDATE SET last_update=EXCLUDED.last_update")
+        .bind(Utc::now()).execute(connection).await?;
+    Ok(())
+}
+fn python_time(v: DateTime<Utc>) -> String {
+    let base = v.format("%Y-%m-%d %H:%M:%S").to_string();
+    if v.timestamp_subsec_micros() == 0 {
+        format!("{base}+00:00")
+    } else {
+        format!("{base}.{:06}+00:00", v.timestamp_subsec_micros())
+    }
+}
+/// Shared Series/recurring persistence path, with no artwork/event side effects.
+/// The worker must retain the SAME owner through subsequent publications/events
+/// and terminal writer. SQL/signal errors are operational until separately typed.
+/// Cancelling the caller detaches this supervised physical operation; its owner
+/// remains alive through ReadyForQuery and actual connection close.
+pub async fn create_future(
+    pool: PgPool,
+    input: FutureRecording,
+    owner: Arc<dyn Send + Sync>,
+) -> Result<Option<Created>, Error> {
+    let handle = tokio::spawn(async move {
+        let _owner = owner;
+        let mut connection = pool
+            .acquire()
+            .await
+            .map_err(|e| error(Stage::Acquire, e, None))?;
+        let mut committed = None;
+        let observed=async {
+            // Source repeats an exact DB guard immediately before the INSERT,
+            // independently of its preload/episode dedup snapshot.
+            let exists=match &input.dedup {
+                Dedup::Series{tvg,start,end}=>sqlx::query_scalar::<_,bool>("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_recording WHERE custom_properties#>'{program,tvg_id}'=$1 AND custom_properties#>'{program,start_time}'=$2 AND custom_properties#>'{program,end_time}'=$3)")
+                    .bind(serde_json::json!(tvg)).bind(serde_json::json!(start)).bind(serde_json::json!(end))
+                    .fetch_one(&mut *connection).await,
+                Dedup::Recurring{rule_id}=>sqlx::query_scalar::<_,bool>("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_recording WHERE channel_id=$1 AND start_time=$2 AND custom_properties#>'{rule,id}'=$3)")
+                    .bind(input.channel_id).bind(input.start).bind(serde_json::json!(rule_id))
+                    .fetch_one(&mut *connection).await,
+            }.map_err(|e|error(Stage::Dedup,e,None))?;
+            if exists {return Ok(None);}
+            let recording:i64=sqlx::query_scalar("INSERT INTO dispatcharr_channels_recording (channel_id,start_time,end_time,task_id,custom_properties) VALUES ($1,$2,$3,NULL,$4) RETURNING id::bigint")
+                .bind(input.channel_id).bind(input.start).bind(input.end).bind(input.properties)
+                .fetch_one(&mut *connection).await.map_err(|e|error(Stage::InsertRecording,e,None))?;
+            committed=Some(recording);
+            // Deliberately retain Source's committed Recording before model
+            // signal operations. A later failure cannot erase that row.
+            let clocked:Vec<i64>=sqlx::query_scalar("SELECT id::bigint FROM django_celery_beat_clockedschedule WHERE clocked_time=$1 LIMIT 2")
+                .bind(input.start).fetch_all(&mut *connection).await.map_err(|e|error(Stage::ClockedLookup,e,committed))?;
+            if clocked.len()>1 {return Err(error(Stage::ClockedLookup,sqlx::Error::Protocol("multiple clocked rows at one time".into()),committed));}
+            let clocked=match clocked.first().copied() {Some(id)=>id,None=>{
+                let mut tx=connection.begin().await.map_err(|e|error(Stage::ClockedInsert,e,committed))?;
+                let inserted=async {
+                    let id:i64=sqlx::query_scalar("INSERT INTO django_celery_beat_clockedschedule (clocked_time) VALUES ($1) RETURNING id::bigint")
+                        .bind(input.start).fetch_one(&mut *tx).await.map_err(|e|error(Stage::ClockedInsert,e,committed))?;
+                    marker(&mut tx).await.map_err(|e|error(Stage::ClockedMarker,e,committed))?;
+                    Ok::<_,Error>(id)
+                }.await;
+                match inserted {Ok(id)=>{tx.commit().await.map_err(|e|error(Stage::ClockedInsert,e,committed))?;id},Err(mut e)=>{if let Err(rollback)=tx.rollback().await {e.settlement_error=Some(rollback);}return Err(e);}}
+            }};
+            let name=format!("dvr-recording-{recording}");
+            let args=format!("[{recording}, {}, {}, {}]",input.channel_id,
+                serde_json::to_string(&python_time(input.start)).expect("time JSON string"),
+                serde_json::to_string(&python_time(input.end)).expect("time JSON string"));
+            let mut tx=connection.begin().await.map_err(|e|error(Stage::PeriodicLookup,e,committed))?;
+            let inserted=async {
+                // Fresh Recording IDs imply a fresh task name in the qualified
+                // single-writer domain. Do not overwrite an unexpected schedule.
+                let exists:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE name=$1)")
+                    .bind(&name).fetch_one(&mut *tx).await.map_err(|e|error(Stage::PeriodicLookup,e,committed))?;
+                if exists {return Err(error(Stage::PeriodicLookup,sqlx::Error::Protocol("unexpected existing recording schedule".into()),committed));}
+                marker(&mut tx).await.map_err(|e|error(Stage::PeriodicMarkerBefore,e,committed))?;
+                let id:i64=sqlx::query_scalar("INSERT INTO django_celery_beat_periodictask (name,task,interval_id,crontab_id,solar_id,clocked_id,args,kwargs,queue,exchange,routing_key,headers,priority,expires,expire_seconds,one_off,start_time,enabled,last_run_at,total_run_count,date_changed,description) VALUES ($1,'apps.channels.tasks.run_recording',NULL,NULL,NULL,$2,$3,'{}',NULL,NULL,NULL,'{}',NULL,NULL,NULL,true,NULL,true,NULL,0,$4,'') RETURNING id::bigint")
+                    .bind(&name).bind(clocked).bind(args).bind(Utc::now()).fetch_one(&mut *tx).await.map_err(|e|error(Stage::PeriodicInsert,e,committed))?;
+                marker(&mut tx).await.map_err(|e|error(Stage::PeriodicMarkerAfter,e,committed))?;
+                Ok::<_,Error>(id)
+            }.await;
+            let periodic=match inserted {Ok(id)=>{tx.commit().await.map_err(|e|error(Stage::PeriodicInsert,e,committed))?;id},Err(mut e)=>{if let Err(rollback)=tx.rollback().await {e.settlement_error=Some(rollback);}return Err(e);}};
+            let assigned=sqlx::query("UPDATE dispatcharr_channels_recording SET task_id=$1 WHERE id=$2")
+                .bind(&name).bind(recording).execute(&mut *connection).await.map_err(|e|error(Stage::AssignTask,e,committed))?;
+            if assigned.rows_affected()!=1 {return Err(error(Stage::AssignTask,sqlx::Error::Protocol("recording disappeared during task assignment".into()),committed));}
+            Ok(Some(Created {recording_id:recording,clocked_id:clocked,periodic_id:periodic,task_name:name}))
+        }.await;
+        // A server ErrorResponse is not ReadyForQuery. Keep owner until both
+        // the explicit Sync barrier and physical close have actually settled.
+        let ready = connection.ping().await;
+        let closed = connection.close().await;
+        match observed {
+            Err(mut e) => {
+                if e.settlement_error.is_none() {
+                    e.settlement_error = ready.err().or_else(|| closed.err());
+                }
+                Err(e)
+            }
+            Ok(value) => {
+                ready.map_err(|e| error(Stage::Ready, e, committed))?;
+                closed.map_err(|e| error(Stage::Close, e, committed))?;
+                Ok(value)
+            }
+        }
+    });
+    handle.await.map_err(|_| {
+        error(
+            Stage::Close,
+            sqlx::Error::Protocol("recording supervisor failed".into()),
+            None,
+        )
+    })?
+}
+
+/// SQL transport bounds are applied in the SAME statement as each fetch. These
+/// cap returned/materialized rows and serialized field bytes, not DB scan/CPU.
+#[derive(Debug)]
+pub struct SeriesSnapshot {
+    pub programmes: Vec<ProgrammeRow>,
+    pub existing_properties: Vec<Value>,
+}
+#[derive(Debug)]
+pub struct ProgrammeRow {
+    pub id: i64,
+    pub start_time: DateTime<Utc>,
+    pub end_time: DateTime<Utc>,
+    pub title: Option<String>,
+    pub sub_title: Option<String>,
+    pub description: Option<String>,
+    pub custom_properties: Option<Value>,
+    pub tvg_id: Option<String>,
+    pub supported: bool,
+}
+#[derive(Debug)]
+pub enum SnapshotError {
+    Unsupported(&'static str),
+    Physical(Error),
+    Supervisor,
+}
+#[derive(Debug)]
+pub struct SeriesScope {
+    channel: i64,
+    source: i64,
+    tvg: String,
+    title: String,
+}
+impl SeriesScope {
+    pub fn new(channel: i64, source: i64, tvg: String, title: String) -> Option<Self> {
+        let valid = |s: &str| {
+            !s.is_empty()
+                && s.len() <= 255
+                && s.is_ascii()
+                && !s.bytes().any(|b| b.is_ascii_control())
+        };
+        if channel <= 0
+            || source <= 0
+            || channel > i64::from(i32::MAX)
+            || source > i64::from(i32::MAX)
+            || !valid(&tvg)
+            || !valid(&title)
+        {
+            return None;
+        }
+        Some(Self {
+            channel,
+            source,
+            tvg,
+            title,
+        })
+    }
+}
+async fn admit_schema(connection: &mut PgConnection) -> Result<(), SnapshotError> {
+    let custom:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN ('dispatcharr_channels_recording'::regclass,'django_celery_beat_clockedschedule'::regclass,'django_celery_beat_periodictask'::regclass,'django_celery_beat_periodictasks'::regclass))")
+        .fetch_one(connection).await.map_err(|e|SnapshotError::Physical(error(Stage::SnapshotSchema,e,None)))?;
+    if custom {
+        return Err(SnapshotError::Unsupported(
+            "unqualified recording/Beat user trigger",
+        ));
+    }
+    Ok(())
+}
+/// Prepare a bounded immutable pre-ACK snapshot. This conservative domain
+/// refuses channel overrides, ambiguous EPG resolution and unrelated opaque
+/// existing properties; it does not mask unsupported rows into fake updates.
+/// A second authoritative dedup query immediately before each INSERT is still
+/// required. Concurrent writer/configuration parity is NOT supplied by this
+/// snapshot, and admission must never be inferred from a logical timeout.
+pub async fn series_snapshot(
+    pool: PgPool,
+    scope: SeriesScope,
+    now: DateTime<Utc>,
+    owner: Arc<dyn Send + Sync>,
+) -> Result<SeriesSnapshot, SnapshotError> {
+    tokio::spawn(async move {
+        let _owner=owner;
+        let mut connection=pool.acquire().await.map_err(|e|SnapshotError::Physical(error(Stage::Acquire,e,None)))?;
+        let observed=async {
+            admit_schema(&mut connection).await?;
+            let ids:Vec<i64>=sqlx::query_scalar("SELECT e.id::bigint FROM epg_epgdata e JOIN dispatcharr_channels_channel c ON c.epg_data_id=e.id WHERE c.id=$1 AND e.epg_source_id=$2 AND e.tvg_id=$3 AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.channel_id=c.id) LIMIT 2")
+                .bind(scope.channel).bind(scope.source).bind(&scope.tvg).fetch_all(&mut *connection).await
+                .map_err(|e|SnapshotError::Physical(error(Stage::SnapshotChannel,e,None)))?;
+            if ids.len()!=1 {return Err(SnapshotError::Unsupported("pinned channel/source requires one unoverridden EPG row"));}
+            type ProgrammeTuple=(i64,DateTime<Utc>,DateTime<Utc>,Option<String>,Option<String>,Option<String>,Option<Value>,Option<String>,bool);
+            let programme_rows:Vec<ProgrammeTuple>=sqlx::query_as("SELECT id::bigint,start_time,end_time,CASE WHEN octet_length(title)<=255 THEN title ELSE NULL END AS title,CASE WHEN octet_length(sub_title)<=255 THEN sub_title ELSE NULL END AS sub_title,CASE WHEN octet_length(description)<=8192 THEN description ELSE NULL END AS description,CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END AS custom_properties,CASE WHEN octet_length(tvg_id)<=255 THEN tvg_id ELSE NULL END AS tvg_id,(octet_length(title)<=255 AND (sub_title IS NULL OR octet_length(sub_title)<=255) AND (description IS NULL OR octet_length(description)<=8192) AND (custom_properties IS NULL OR octet_length(custom_properties::text)<=8192) AND (tvg_id IS NULL OR octet_length(tvg_id)<=255)) AS supported FROM epg_programdata WHERE epg_id=$1 AND end_time>$2 AND start_time<=$3 AND UPPER(title::text)=UPPER($4) ORDER BY start_time LIMIT 33")
+                .bind(ids[0]).bind(now).bind(now+chrono::Duration::days(7)).bind(&scope.title)
+                .fetch_all(&mut *connection).await.map_err(|e|SnapshotError::Physical(error(Stage::SnapshotProgrammes,e,None)))?;
+            let programmes:Vec<ProgrammeRow>=programme_rows.into_iter().map(|(id,start_time,end_time,title,sub_title,description,custom_properties,tvg_id,supported)|ProgrammeRow{id,start_time,end_time,title,sub_title,description,custom_properties,tvg_id,supported}).collect();
+            if programmes.len()>32||programmes.iter().any(|p|!p.supported){return Err(SnapshotError::Unsupported("programme snapshot bound"));}
+            let existing:Vec<(Option<Value>,bool)>=sqlx::query_as("SELECT CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,(custom_properties IS NULL OR octet_length(custom_properties::text)<=8192) FROM dispatcharr_channels_recording WHERE end_time>=$1 LIMIT 33")
+                .bind(now).fetch_all(&mut *connection).await.map_err(|e|SnapshotError::Physical(error(Stage::SnapshotExisting,e,None)))?;
+            if existing.len()>32||existing.iter().any(|(_,supported)|!*supported){return Err(SnapshotError::Unsupported("existing recording snapshot bound"));}
+            Ok(SeriesSnapshot{programmes,existing_properties:existing.into_iter().map(|(v,_)|v.unwrap_or(Value::Null)).collect()})
+        }.await;
+        let ready=connection.ping().await;
+        let closed=connection.close().await;
+        // Even unsupported exits cannot release a retained owner while the
+        // actual PostgreSQL response/Sync/connection close is still pending.
+        match observed {
+            Err(SnapshotError::Physical(mut e))=>{e.settlement_error=ready.err().or_else(||closed.err());Err(SnapshotError::Physical(e))},
+            other=>{ready.map_err(|e|SnapshotError::Physical(error(Stage::Ready,e,None)))?;closed.map_err(|e|SnapshotError::Physical(error(Stage::Close,e,None)))?;other}
+        }
+    }).await.map_err(|_|SnapshotError::Supervisor)?
+}
+
+#[derive(Debug)]
+pub struct RecurringRow {
+    pub id: i64,
+    pub channel_id: i64,
+    pub name: Option<String>,
+    pub days: Option<Value>,
+    pub start: chrono::NaiveTime,
+    pub end: chrono::NaiveTime,
+    pub start_date: Option<chrono::NaiveDate>,
+    pub end_date: Option<chrono::NaiveDate>,
+}
+/// Source maintain_recurring selects only enabled rules. An empty snapshot is
+/// normal integer0, including the case where disabled rows/old schedules exist.
+/// This first domain refuses >1 enabled row; it never processes just row1 of an
+/// unsupported multi-rule configuration. No row data is changed during admission.
+pub async fn recurring_snapshot(
+    pool: PgPool,
+    owner: Arc<dyn Send + Sync>,
+) -> Result<Option<RecurringRow>, SnapshotError> {
+    tokio::spawn(async move {
+        let _owner=owner;
+        let mut connection=pool.acquire().await.map_err(|e|SnapshotError::Physical(error(Stage::Acquire,e,None)))?;
+        let observed=async {
+            admit_schema(&mut connection).await?;
+            type Row=(i64,i64,Option<String>,Option<Value>,chrono::NaiveTime,chrono::NaiveTime,Option<chrono::NaiveDate>,Option<chrono::NaiveDate>,bool);
+            let rows:Vec<Row>=sqlx::query_as("SELECT id::bigint,channel_id::bigint,CASE WHEN octet_length(name)<=255 THEN name ELSE NULL END,CASE WHEN octet_length(days_of_week::text)<=128 THEN days_of_week ELSE NULL END,start_time,end_time,start_date,end_date,(octet_length(name)<=255 AND octet_length(days_of_week::text)<=128) FROM dispatcharr_channels_recurringrecordingrule WHERE enabled ORDER BY channel_id,start_time LIMIT 2")
+                .fetch_all(&mut *connection).await.map_err(|e|SnapshotError::Physical(error(Stage::SnapshotRecurring,e,None)))?;
+            if rows.len()>1 {return Err(SnapshotError::Unsupported("multiple enabled recurring rules"));}
+            let Some((id,channel_id,name,days,start,end,start_date,end_date,supported))=rows.into_iter().next() else {return Ok(None);};
+            if !supported {return Err(SnapshotError::Unsupported("recurring text snapshot bound"));}
+            Ok(Some(RecurringRow{id,channel_id,name,days,start,end,start_date,end_date}))
+        }.await;
+        let ready=connection.ping().await;
+        let closed=connection.close().await;
+        match observed {
+            Err(SnapshotError::Physical(mut e))=>{e.settlement_error=ready.err().or_else(||closed.err());Err(SnapshotError::Physical(e))},
+            other=>{ready.map_err(|e|SnapshotError::Physical(error(Stage::Ready,e,None)))?;closed.map_err(|e|SnapshotError::Physical(error(Stage::Close,e,None)))?;other}
+        }
+    }).await.map_err(|_|SnapshotError::Supervisor)?
+}

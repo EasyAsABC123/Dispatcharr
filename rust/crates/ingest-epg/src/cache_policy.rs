@@ -8,7 +8,7 @@ use dispatcharr_store::{
     source_system_settings_defaults, Store,
 };
 use serde_json::{json, Value};
-use sqlx::Row;
+use sqlx::{Connection as _, Row};
 use std::{sync::Arc, time::Duration};
 use tokio::sync::{Mutex, OwnedSemaphorePermit, Semaphore};
 #[derive(Clone, Copy)]
@@ -76,6 +76,60 @@ pub struct CachedSwapPolicy {
 enum Read {
     Value(Option<Value>),
     Backend,
+}
+#[derive(Debug)]
+pub enum ConfiguredSettingsStage {
+    Cache,
+    Admission,
+    Acquire,
+    Query,
+    Decode,
+    Ready,
+    Close,
+    Owner,
+}
+#[derive(Debug)]
+pub struct ConfiguredSettingsError {
+    pub stage: ConfiguredSettingsStage,
+    pub error: Box<ImportError>,
+    pub ready_error: Option<Box<sqlx::Error>>,
+    pub close_error: Option<Box<sqlx::Error>>,
+}
+impl ConfiguredSettingsError {
+    fn at(stage: ConfiguredSettingsStage, error: ImportError) -> Self {
+        Self {
+            stage,
+            error: Box::new(error),
+            ready_error: None,
+            close_error: None,
+        }
+    }
+}
+const DATABASE_SQL:&str="SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=1048576 THEN value ELSE NULL END AS value FROM core_coresettings WHERE key=$1";
+async fn database_row<'e, E: sqlx::Executor<'e, Database = sqlx::Postgres>>(
+    executor: E,
+    key: &'static str,
+) -> Result<Option<sqlx::postgres::PgRow>, sqlx::Error> {
+    sqlx::query(DATABASE_SQL)
+        .bind(key)
+        .fetch_optional(executor)
+        .await
+}
+fn database_value(row: Option<sqlx::postgres::PgRow>, group: Group) -> Result<Value, ImportError> {
+    let value = if let Some(row) = row {
+        if row.try_get::<Option<i32>, _>("bytes")?.unwrap_or(0) > MAX_BYTES as i32 {
+            return Err(ImportError::Capacity("EPG settings SQL value"));
+        }
+        row.try_get::<Option<Value>, _>("value")?
+            .unwrap_or(Value::Null)
+    } else {
+        Value::Null
+    };
+    Ok(if value.as_object().is_some_and(|map| !map.is_empty()) {
+        value
+    } else {
+        group.defaults()
+    })
 }
 impl CachedSwapPolicy {
     /// None explicitly bypasses cache, matching DISPATCHARR_SKIP_REDIS_CACHE.
@@ -156,6 +210,44 @@ impl CachedSwapPolicy {
             }),
         };
         self.group(Group::Dvr, &context).await
+    }
+    /// Configured recording path only: same Source cache/default/version
+    /// decisions, but SQL fallback physically fences ErrorResponse/Ready/close.
+    /// Existing retained_system_settings behavior/API is unchanged.
+    pub async fn retained_configured_system_settings(
+        &self,
+        context: SwapPolicyContext,
+    ) -> Result<Value, ConfiguredSettingsError> {
+        self.configured_group(Group::System, context).await
+    }
+    pub async fn retained_configured_dvr_settings(
+        &self,
+        context: SwapPolicyContext,
+    ) -> Result<Value, ConfiguredSettingsError> {
+        self.configured_group(Group::Dvr, context).await
+    }
+    async fn configured_group(
+        &self,
+        group: Group,
+        context: SwapPolicyContext,
+    ) -> Result<Value, ConfiguredSettingsError> {
+        context
+            .ensure_active()
+            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Admission, e))?;
+        let permit = self.admission.clone().try_acquire_owned().map_err(|_| {
+            ConfiguredSettingsError::at(
+                ConfiguredSettingsStage::Admission,
+                ImportError::Capacity("policy physical work"),
+            )
+        })?;
+        let context = SwapPolicyContext {
+            cancelled: context.cancelled,
+            retained: Arc::new(PolicyWork {
+                _caller: context.retained,
+                _permit: permit,
+            }),
+        };
+        self.group_mode(group, &context, true).await
     }
     async fn transport(
         &self,
@@ -238,18 +330,83 @@ impl CachedSwapPolicy {
         let retained = context.retained.clone();
         // The private owned task retains the job/lock guard through the actual
         // SQL reply even if a direct caller drops this policy future.
-        let value=tokio::spawn(async move{
-            let _retained=retained;
-            let row=sqlx::query("SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=1048576 THEN value ELSE NULL END AS value FROM core_coresettings WHERE key=$1")
-                .bind(group.name()).fetch_optional(store.pool()).await?;
-            let value=if let Some(row)=row{
-                if row.try_get::<Option<i32>,_>("bytes")?.unwrap_or(0)>MAX_BYTES as i32{return Err(ImportError::Capacity("EPG settings SQL value"));}
-                row.try_get::<Option<Value>,_>("value")?.unwrap_or(Value::Null)
-            }else{Value::Null};
-            Ok(if value.as_object().is_some_and(|map|!map.is_empty()){value}else{group.defaults()})
-        }).await.map_err(|_|ImportError::Worker)??;
+        let value = tokio::spawn(async move {
+            let _retained = retained;
+            database_value(database_row(store.pool(), group.name()).await?, group)
+        })
+        .await
+        .map_err(|_| ImportError::Worker)??;
         context.ensure_active()?;
         Ok(value)
+    }
+    async fn database_settled(
+        &self,
+        group: Group,
+        context: &SwapPolicyContext,
+    ) -> Result<Value, ConfiguredSettingsError> {
+        context
+            .ensure_active()
+            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Admission, e))?;
+        let store = self.store.clone();
+        let retained = context.retained.clone();
+        let value = tokio::spawn(async move {
+            let _retained = retained;
+            let mut connection = store.pool().acquire().await.map_err(|e| {
+                ConfiguredSettingsError::at(ConfiguredSettingsStage::Acquire, e.into())
+            })?;
+            let (observed, stage) = match database_row(&mut *connection, group.name()).await {
+                Ok(row) => (database_value(row, group), ConfiguredSettingsStage::Decode),
+                Err(error) => (Err(error.into()), ConfiguredSettingsStage::Query),
+            };
+            // A SQLx query can return an ErrorResponse before the driver's
+            // trailing ReadyForQuery/pool cleanup. Keep the actual owner here.
+            let ready = connection.ping().await;
+            let closed = connection.close().await;
+            match observed {
+                Err(error) => Err(ConfiguredSettingsError {
+                    stage,
+                    error: Box::new(error),
+                    ready_error: ready.err().map(Box::new),
+                    close_error: closed.err().map(Box::new),
+                }),
+                Ok(value) => {
+                    if let Err(error) = ready {
+                        return Err(ConfiguredSettingsError {
+                            stage: ConfiguredSettingsStage::Ready,
+                            error: Box::new(error.into()),
+                            ready_error: None,
+                            close_error: closed.err().map(Box::new),
+                        });
+                    }
+                    closed.map_err(|e| {
+                        ConfiguredSettingsError::at(ConfiguredSettingsStage::Close, e.into())
+                    })?;
+                    Ok(value)
+                }
+            }
+        })
+        .await
+        .map_err(|_| {
+            ConfiguredSettingsError::at(ConfiguredSettingsStage::Owner, ImportError::Worker)
+        })??;
+        context
+            .ensure_active()
+            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Admission, e))?;
+        Ok(value)
+    }
+    async fn database_mode(
+        &self,
+        group: Group,
+        context: &SwapPolicyContext,
+        settled: bool,
+    ) -> Result<Value, ConfiguredSettingsError> {
+        if settled {
+            self.database_settled(group, context).await
+        } else {
+            self.database(group, context)
+                .await
+                .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Query, e))
+        }
     }
     async fn fill(
         &self,
@@ -285,22 +442,46 @@ impl CachedSwapPolicy {
         }
     }
     async fn group(&self, group: Group, context: &SwapPolicyContext) -> Result<Value, ImportError> {
-        match self.read(&group.key(), context).await? {
+        self.group_mode(group, context, false)
+            .await
+            .map_err(|e| *e.error)
+    }
+    async fn group_mode(
+        &self,
+        group: Group,
+        context: &SwapPolicyContext,
+        settled: bool,
+    ) -> Result<Value, ConfiguredSettingsError> {
+        match self
+            .read(&group.key(), context)
+            .await
+            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, e))?
+        {
             Read::Value(Some(value)) if value.is_object() => return Ok(value),
-            Read::Backend => return self.database(group, context).await,
+            Read::Backend => return self.database_mode(group, context, settled).await,
             _ => {}
         }
-        let before = match self.read(&group.version(), context).await? {
+        let before = match self
+            .read(&group.version(), context)
+            .await
+            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, e))?
+        {
             Read::Value(value) => value.unwrap_or(Value::Null),
-            Read::Backend => return self.database(group, context).await,
+            Read::Backend => return self.database_mode(group, context, settled).await,
         };
-        let value = self.database(group, context).await?;
-        let after = match self.read(&group.version(), context).await? {
+        let value = self.database_mode(group, context, settled).await?;
+        let after = match self
+            .read(&group.version(), context)
+            .await
+            .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, e))?
+        {
             Read::Value(value) => value.unwrap_or(Value::Null),
             Read::Backend => return Ok(value),
         };
         if source_cache_values_equal(&before, &after) {
-            self.fill(group.key(), &value, context).await?;
+            self.fill(group.key(), &value, context)
+                .await
+                .map_err(|e| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, e))?;
         }
         Ok(value)
     }

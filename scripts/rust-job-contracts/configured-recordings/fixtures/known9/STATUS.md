@@ -1,0 +1,3 @@
+# Known INSERT paired9 collector proposal — UNEXECUTED
+
+Source10 typed normal-library catch compiled/strict/focused18 all0; exact build596a7137 and job9692144b… bound. Seven prior normal/busy observations plus two actual Source11 caught INSERT failures; source host1/rawSQLSTATE NULL preserved, actual Native P0001 measured separately. Thirteen-tool AST/forty local controls0. Real owned DDL only after actual target Parse/preflight; no Source worker/recapture/child consumption, no blanket time projection or task-value substitution. Full Source11 fields/current Native command windows retained. Actual after closure/slot/Root approval and Main heavy release only.

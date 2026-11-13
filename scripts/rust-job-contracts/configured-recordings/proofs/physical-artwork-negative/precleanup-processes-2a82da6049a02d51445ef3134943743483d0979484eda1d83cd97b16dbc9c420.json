@@ -1,0 +1,4 @@
+{
+  "CID": "2a82da6049a02d51445ef3134943743483d0979484eda1d83cd97b16dbc9c420",
+  "raw": "PID                 COMMAND             COMMAND\n2809674             python              python /verification/supervisor.py serve\n2810132             postgres            /usr/lib/postgresql/17/bin/postgres -D /data/db\n2810133             postgres            postgres: checkpointer\n2810134             postgres            postgres: background writer\n2810136             postgres            postgres: walwriter\n2810137             postgres            postgres: autovacuum launcher\n2810138             postgres            postgres: logical replication launcher\n2810200             redis-server        redis-server 0.0.0.0:6379\n"
+}

@@ -1,0 +1,93 @@
+{
+  "status": "UNEXECUTED remaining11-only corrected collector; Root review/independent prior cleanup/global slot/once admission required",
+  "cases": [
+    "programme-DataRow-CommandComplete-Ready",
+    "Clocked-marker-COMMIT-Ready",
+    "Periodic-COMMIT-Ready",
+    "artwork-LPUSH-reply",
+    "Channels-reply",
+    "result-SETEX-reply",
+    "result-reply-lost",
+    "result-SETEX-denied",
+    "oldSUCCESS-preserved",
+    "Recording-INSERT-P0001-Ready",
+    "snapshot-server-error-Ready"
+  ],
+  "modes": {
+    "physical-remaining": 11
+  },
+  "outputs": {
+    "physical-remaining": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-remaining-1"
+  },
+  "budgets": {
+    "held_reply_seconds": 6.2,
+    "response_seconds": 35,
+    "drain_seconds": 10,
+    "host_seconds": 600,
+    "cleanup_seconds": 90,
+    "baseline_cpu": 1,
+    "baseline_memory_bytes": 1073741824,
+    "baseline_pids": 256,
+    "pipe_bytes": 1048576,
+    "projects_sequential": true
+  },
+  "normal_metadata": {
+    "scheduled": 1,
+    "details": [
+      {
+        "tvg_id": "rust.owned.configured",
+        "title": "Owned Exact Series",
+        "status": "ok",
+        "created": 1
+      }
+    ]
+  },
+  "Source_fault_normal_catch_parity": false,
+  "Source_SQLSTATE_captured": false,
+  "raw_fields_retained": true,
+  "refusal_heads_removed": false,
+  "default_children_consumed": false,
+  "Main_default_graph_enabled": false,
+  "runtime_source_changes_allowed": false,
+  "Native_source_map_sha256": "acf8115970690f2637dcc38b887e4712b26a096bed5eeed89412dff536530217",
+  "Native_binary_sha256": "b677d7efb980023a9b853a156561cbf5057dac47d528cab927055cea1564ad99",
+  "normal_fixture_route_correction": "QA9 cfg(test)-only exact owned route bridge; QA8/Normal1 failure retained",
+  "temporal_policy": "Native actual command/run/held/release instants and all raw SQL/cache/event/backend fields retained; no Source clock/timing comparison or blanket timestamp projection",
+  "programme_success_Ready": "Exactly phase2 two retained Programme DataRows and SELECT 2 CommandComplete, actual query identity; reject Parse/Describe/Sync and unrelated queries",
+  "operational_error_semantics": "Known Recording INSERT P0001/settings-read error remain operational/noMetadata; Source caught-normal result parity remains OPEN",
+  "refusal_cache_scope": "Foreign family is refused before cache/SQL; oversize programme can have prior read-only snapshot and configured cache-fill effects; no false all-cache-unchanged claim",
+  "preserved_failed_prefix": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-1",
+    "whole_host_exit": 1,
+    "whole_guest_exit": 1,
+    "first_phase_scoped_checks_passed": 15,
+    "phase2_target_check_false": true,
+    "remaining_phase_count_unexecuted": 10,
+    "raw_sha256": "8530efd93843b40c61989e16c27d8923c4b1453476ad916e0d3bef935932653d"
+  },
+  "setup_context": {
+    "kind": "actual Original model/signal/programme/Recording plus one duplicate actual artwork producer before any Native control",
+    "replays_passed_cache_hold": false,
+    "Source_reference_capture": false,
+    "initial_programmes": 1,
+    "initial_recordings": 1,
+    "additional_clocked": 1,
+    "additional_periodic": 1,
+    "additional_default_artwork_frames": 2,
+    "all_frames_retained": true,
+    "original_phase_indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "no_old_DB_or_metadata_restoration": true
+  }
+}

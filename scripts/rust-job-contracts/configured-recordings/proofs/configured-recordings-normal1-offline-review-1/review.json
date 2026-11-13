@@ -1,0 +1,49 @@
+{
+  "scope": "Offline retained-data diagnosis only; no runtime dispatch, no relabeling failed Normal7 as passed",
+  "host_exit": 1,
+  "guest_exit": 1,
+  "executed_passed": false,
+  "unexecuted_remaining_cases": 6,
+  "actual_native_responses": [
+    {
+      "prepared": true,
+      "parent_route": "rust-owned-configured-recordings",
+      "child_route": "celery",
+      "children_consumed": false
+    },
+    {
+      "action": "run",
+      "began_utc": "2026-11-13T02:19:35.654587681+00:00",
+      "finished_utc": "2026-11-13T02:19:35.655377073+00:00",
+      "ok": true,
+      "result": "Ok(UnsupportedHead)",
+      "caller_released": true,
+      "available_slots": 1
+    },
+    {
+      "closed": true
+    }
+  ],
+  "raw_parent_delivery_info": {
+    "exchange": "",
+    "routing_key": "rust-owned-configured-recordings"
+  },
+  "observed_frame_task": "apps.channels.tasks.evaluate_series_rules",
+  "before_after_recording_equal": true,
+  "before_after_periodic_equal": true,
+  "before_after_clocked_equal": true,
+  "backend_metadata": null,
+  "default_audit": true,
+  "retained_independent_inventories_empty": true,
+  "physical_cleanup_review_owner": "Root; this offline report reads retained receipt only",
+  "source_files": {
+    "integration.json": "3684be20de9bc67e09afe5830d6f143c1f737bc4f45c358fa0cdba1af018f39a",
+    "source-configured-recordings-private.json": "f72fd18eb477c2cae9cf9224c9115a329d50a309c93b4ac4eab9fa92448b84c5",
+    "independent-cleanup.json": "e0df9f19bcb4e9c325d927be340512a218ec562cef39ed10b7b57d812a221041",
+    "native-series-positive.stdout": "6a03c173314d66516b60e3dadb97d0962c3c56b5fa3e37ed596f5ffde3777193"
+  },
+  "diagnosis": "Owned parent route reaches unmodified legacy parser that requires delivery_info.routing_key=celery; UnsupportedTask becomes UnsupportedHead before configured lease/cache/SQL. This is a cfg(test) route adapter defect; no native task-body result/effect parity qualified.",
+  "proposed_minimal_correction": "Validate original fixed queue/exchange in fixture helper, project cloned parser input routing_key to celery, retain original raw candidate/CAS and canonical checks; production parsers unchanged.",
+  "retained_case_records": 1,
+  "completed_comparisons": 0
+}

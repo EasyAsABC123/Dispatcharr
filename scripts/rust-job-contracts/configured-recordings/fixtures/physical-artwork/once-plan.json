@@ -1,0 +1,38 @@
+{
+  "status": "UNEXECUTED remaining8; no dispatch before Root explicit heavy release",
+  "argv": [
+    "python",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-3/tools/run_physical.py",
+    "--repo",
+    "/home/justin/github/Dispatcharr",
+    "--support-root",
+    "/home/justin/github/Dispatcharr/scripts/rust-core-perf/support",
+    "--output",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-artwork-1",
+    "--execution-inputs",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-physical-prep-3/Root-inputs-artwork-onward.json"
+  ],
+  "cwd": "/home/justin/github/Dispatcharr",
+  "shell_environment_script": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/environment.sh",
+  "proposed_inputs_sha256": "14f9a9b3cbdc0cd0ef55d27da92e53a63524b01b03497663949d1d8c025aa416",
+  "case_plan_sha256": "dd31563e450e0111454664fba7c4a6a8445a04d923bc9bf354ff0833e341061f",
+  "mode": "physical-artwork-onward",
+  "cases": 8,
+  "global_slot_required": true,
+  "Root_prior_independent_cleanup_required": true,
+  "budgets_unchanged": {
+    "held_reply_seconds": 6.2,
+    "response_seconds": 35,
+    "drain_seconds": 10,
+    "host_seconds": 600,
+    "cleanup_seconds": 90,
+    "baseline_cpu": 1,
+    "baseline_memory_bytes": 1073741824,
+    "baseline_pids": 256,
+    "pipe_bytes": 1048576,
+    "projects_sequential": true
+  },
+  "no_retry": true,
+  "no_passed_prefix_replay": true,
+  "runtime_ELF_unchanged": true
+}

@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+    "compose",
+    "-p",
+    "dispatcharr-configured-physical-5d8d7a3672",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-1/support/docker/compose.rust-playback.yml",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-1/source.yml",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-1/ports.yml",
+    "exec",
+    "-T",
+    "baseline",
+    "/dispatcharrpy/bin/python",
+    "-c",
+    "import urllib.request;assert urllib.request.urlopen('http://127.0.0.1:5656/api/core/version/',timeout=2).status==200"
+  ],
+  "cwd": "/home/justin/github/Dispatcharr",
+  "began_utc": "2026-11-13T03:03:26.866708+00:00",
+  "pid": 2439935,
+  "starttime": "25940191",
+  "spawn_state": "actual_child_started",
+  "exit": 1,
+  "completed_utc": "2026-11-13T03:03:27.159375+00:00",
+  "collection_invalid": null,
+  "physically_settled": true,
+  "pipes_settled": true,
+  "owned_stop_requested": false
+}

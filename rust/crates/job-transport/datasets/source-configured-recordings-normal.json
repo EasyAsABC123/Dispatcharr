@@ -1,0 +1,798 @@
+{
+  "scope": "Six captured Source11 normal-case projections for pure decision tests only. Does not validate SQL/events/publication/ACK/physical work. Full raw Source remains authoritative.",
+  "raw_source_sha256": "58e1bd132e8e1dbd876f8426245fc267ee42732e55471eab5470490f6316f5c3",
+  "captured_SQLSTATE_verified": false,
+  "source_host_exit": 1,
+  "cases": [
+    {
+      "name": "series-positive",
+      "source_task_id": "224e24f5-1d6f-4908-93cb-dbfee0400421",
+      "source_command_began_utc": "2026-11-12T23:34:48.239536+00:00",
+      "source_command_finished_utc": "2026-11-12T23:34:50.826522+00:00",
+      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
+      "source_return": {
+        "scheduled": 1,
+        "details": [
+          {
+            "tvg_id": "rust.owned.configured",
+            "title": "Owned Exact Series",
+            "status": "ok",
+            "created": 1
+          }
+        ]
+      },
+      "source_programmes": [
+        {
+          "id": 1,
+          "epg_id": 1,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 1",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 1
+          }
+        }
+      ],
+      "source_recordings_before": [],
+      "source_recordings_created": [
+        {
+          "id": 1,
+          "channel_id": 2,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "task_id": "dvr-recording-1",
+          "custom_properties": {
+            "program": {
+              "id": 1,
+              "title": "Owned Exact Series",
+              "season": 1,
+              "tvg_id": "rust.owned.configured",
+              "episode": 1,
+              "end_time": "2026-11-14T00:34:44+00:00",
+              "sub_title": "Owned Episode 1",
+              "start_time": "2026-11-13T23:34:44+00:00",
+              "description": null,
+              "epg_source_id": 1,
+              "onscreen_episode": null,
+              "original_air_date": ""
+            }
+          }
+        }
+      ],
+      "source_rules_before": [],
+      "source_dvr_settings_before": [
+        {
+          "id": 14,
+          "key": "dvr_settings",
+          "name": "Owned configured DVR fixture",
+          "value": {
+            "series_rules": [
+              {
+                "mode": "all",
+                "title": "Owned Exact Series",
+                "tvg_id": "rust.owned.configured",
+                "channel_id": 2,
+                "title_mode": "exact",
+                "epg_source_id": 1
+              }
+            ],
+            "pre_offset_minutes": 0,
+            "post_offset_minutes": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "series-repeat",
+      "source_task_id": "d817cbd3-65d1-4d8b-9afd-d7064d62f3e3",
+      "source_command_began_utc": "2026-11-12T23:34:50.917149+00:00",
+      "source_command_finished_utc": "2026-11-12T23:34:53.927577+00:00",
+      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
+      "source_return": {
+        "scheduled": 0,
+        "details": [
+          {
+            "tvg_id": "rust.owned.configured",
+            "title": "Owned Exact Series",
+            "status": "ok",
+            "created": 0
+          }
+        ]
+      },
+      "source_programmes": [
+        {
+          "id": 1,
+          "epg_id": 1,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 1",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 1
+          }
+        }
+      ],
+      "source_recordings_before": [
+        {
+          "id": 1,
+          "channel_id": 2,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "task_id": "dvr-recording-1",
+          "custom_properties": {
+            "program": {
+              "id": 1,
+              "title": "Owned Exact Series",
+              "season": 1,
+              "tvg_id": "rust.owned.configured",
+              "episode": 1,
+              "end_time": "2026-11-14T00:34:44+00:00",
+              "sub_title": "Owned Episode 1",
+              "start_time": "2026-11-13T23:34:44+00:00",
+              "description": null,
+              "epg_source_id": 1,
+              "onscreen_episode": null,
+              "original_air_date": ""
+            }
+          }
+        }
+      ],
+      "source_recordings_created": [],
+      "source_rules_before": [],
+      "source_dvr_settings_before": [
+        {
+          "id": 14,
+          "key": "dvr_settings",
+          "name": "Owned configured DVR fixture",
+          "value": {
+            "series_rules": [
+              {
+                "mode": "all",
+                "title": "Owned Exact Series",
+                "tvg_id": "rust.owned.configured",
+                "channel_id": 2,
+                "title_mode": "exact",
+                "epg_source_id": 1
+              }
+            ],
+            "pre_offset_minutes": 0,
+            "post_offset_minutes": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "series-second-episode",
+      "source_task_id": "07efa629-0ba6-4f7a-8e3e-631ec26bdb56",
+      "source_command_began_utc": "2026-11-12T23:34:54.049915+00:00",
+      "source_command_finished_utc": "2026-11-12T23:34:57.046972+00:00",
+      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
+      "source_return": {
+        "scheduled": 1,
+        "details": [
+          {
+            "tvg_id": "rust.owned.configured",
+            "title": "Owned Exact Series",
+            "status": "ok",
+            "created": 1
+          }
+        ]
+      },
+      "source_programmes": [
+        {
+          "id": 1,
+          "epg_id": 1,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 1",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 1
+          }
+        },
+        {
+          "id": 2,
+          "epg_id": 1,
+          "start_time": "2026-11-14 01:34:44+00:00",
+          "end_time": "2026-11-14 02:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 2",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 2
+          }
+        }
+      ],
+      "source_recordings_before": [
+        {
+          "id": 1,
+          "channel_id": 2,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "task_id": "dvr-recording-1",
+          "custom_properties": {
+            "program": {
+              "id": 1,
+              "title": "Owned Exact Series",
+              "season": 1,
+              "tvg_id": "rust.owned.configured",
+              "episode": 1,
+              "end_time": "2026-11-14T00:34:44+00:00",
+              "sub_title": "Owned Episode 1",
+              "start_time": "2026-11-13T23:34:44+00:00",
+              "description": null,
+              "epg_source_id": 1,
+              "onscreen_episode": null,
+              "original_air_date": ""
+            }
+          }
+        }
+      ],
+      "source_recordings_created": [
+        {
+          "id": 2,
+          "channel_id": 2,
+          "start_time": "2026-11-14 01:34:44+00:00",
+          "end_time": "2026-11-14 02:34:44+00:00",
+          "task_id": "dvr-recording-2",
+          "custom_properties": {
+            "program": {
+              "id": 2,
+              "title": "Owned Exact Series",
+              "season": 1,
+              "tvg_id": "rust.owned.configured",
+              "episode": 2,
+              "end_time": "2026-11-14T02:34:44+00:00",
+              "sub_title": "Owned Episode 2",
+              "start_time": "2026-11-14T01:34:44+00:00",
+              "description": null,
+              "epg_source_id": 1,
+              "onscreen_episode": null,
+              "original_air_date": ""
+            }
+          }
+        }
+      ],
+      "source_rules_before": [],
+      "source_dvr_settings_before": [
+        {
+          "id": 14,
+          "key": "dvr_settings",
+          "name": "Owned configured DVR fixture",
+          "value": {
+            "series_rules": [
+              {
+                "mode": "all",
+                "title": "Owned Exact Series",
+                "tvg_id": "rust.owned.configured",
+                "channel_id": 2,
+                "title_mode": "exact",
+                "epg_source_id": 1
+              }
+            ],
+            "pre_offset_minutes": 0,
+            "post_offset_minutes": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "recurring-positive",
+      "source_task_id": "f5b5d4dc-4bdc-4427-a2be-ff9af57fb551",
+      "source_command_began_utc": "2026-11-12T23:35:06.683418+00:00",
+      "source_command_finished_utc": "2026-11-12T23:35:10.250458+00:00",
+      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
+      "source_return": 1,
+      "source_programmes": [
+        {
+          "id": 1,
+          "epg_id": 1,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 1",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 1
+          }
+        },
+        {
+          "id": 2,
+          "epg_id": 1,
+          "start_time": "2026-11-14 01:34:44+00:00",
+          "end_time": "2026-11-14 02:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 2",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 2
+          }
+        },
+        {
+          "id": 3,
+          "epg_id": 1,
+          "start_time": "2026-11-14 03:34:44+00:00",
+          "end_time": "2026-11-14 04:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 3",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 3
+          }
+        }
+      ],
+      "source_recordings_before": [
+        {
+          "id": 1,
+          "channel_id": 2,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "task_id": "dvr-recording-1",
+          "custom_properties": {
+            "program": {
+              "id": 1,
+              "title": "Owned Exact Series",
+              "season": 1,
+              "tvg_id": "rust.owned.configured",
+              "episode": 1,
+              "end_time": "2026-11-14T00:34:44+00:00",
+              "sub_title": "Owned Episode 1",
+              "start_time": "2026-11-13T23:34:44+00:00",
+              "description": null,
+              "epg_source_id": 1,
+              "onscreen_episode": null,
+              "original_air_date": ""
+            }
+          }
+        },
+        {
+          "id": 2,
+          "channel_id": 2,
+          "start_time": "2026-11-14 01:34:44+00:00",
+          "end_time": "2026-11-14 02:34:44+00:00",
+          "task_id": "dvr-recording-2",
+          "custom_properties": {
+            "program": {
+              "id": 2,
+              "title": "Owned Exact Series",
+              "season": 1,
+              "tvg_id": "rust.owned.configured",
+              "episode": 2,
+              "end_time": "2026-11-14T02:34:44+00:00",
+              "sub_title": "Owned Episode 2",
+              "start_time": "2026-11-14T01:34:44+00:00",
+              "description": null,
+              "epg_source_id": 1,
+              "onscreen_episode": null,
+              "original_air_date": ""
+            }
+          }
+        }
+      ],
+      "source_recordings_created": [
+        {
+          "id": 4,
+          "channel_id": 2,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "task_id": "dvr-recording-4",
+          "custom_properties": {
+            "rule": {
+              "id": 1,
+              "name": "Owned Recurring",
+              "type": "recurring",
+              "days_of_week": [
+                4
+              ]
+            },
+            "status": "scheduled",
+            "program": {
+              "title": "Owned Recurring",
+              "end_time": "2026-11-14T00:34:44+00:00",
+              "start_time": "2026-11-13T23:34:44+00:00",
+              "description": "Owned Recurring"
+            },
+            "description": "Owned Recurring"
+          }
+        }
+      ],
+      "source_rules_before": [
+        {
+          "id": 1,
+          "channel_id": 2,
+          "days_of_week": [
+            4
+          ],
+          "start_time": "23:34:44",
+          "end_time": "00:34:44",
+          "enabled": true,
+          "name": "Owned Recurring",
+          "start_date": "2026-11-13",
+          "end_date": "2026-11-13",
+          "created_at": "2026-11-12 23:35:06.675204+00:00",
+          "updated_at": "2026-11-12 23:35:06.675211+00:00"
+        }
+      ],
+      "source_dvr_settings_before": [
+        {
+          "id": 14,
+          "key": "dvr_settings",
+          "name": "Owned configured DVR fixture",
+          "value": {
+            "series_rules": [
+              {
+                "mode": "all",
+                "title": "Owned Exact Series",
+                "tvg_id": "rust.owned.configured",
+                "channel_id": 2,
+                "title_mode": "exact",
+                "epg_source_id": 1
+              }
+            ],
+            "pre_offset_minutes": 0,
+            "post_offset_minutes": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "recurring-repeat",
+      "source_task_id": "53c25a6e-aad6-4cb9-a516-3a9d7274c900",
+      "source_command_began_utc": "2026-11-12T23:35:10.386784+00:00",
+      "source_command_finished_utc": "2026-11-12T23:35:13.466274+00:00",
+      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
+      "source_return": 0,
+      "source_programmes": [
+        {
+          "id": 1,
+          "epg_id": 1,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 1",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 1
+          }
+        },
+        {
+          "id": 2,
+          "epg_id": 1,
+          "start_time": "2026-11-14 01:34:44+00:00",
+          "end_time": "2026-11-14 02:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 2",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 2
+          }
+        },
+        {
+          "id": 3,
+          "epg_id": 1,
+          "start_time": "2026-11-14 03:34:44+00:00",
+          "end_time": "2026-11-14 04:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 3",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 3
+          }
+        }
+      ],
+      "source_recordings_before": [
+        {
+          "id": 1,
+          "channel_id": 2,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "task_id": "dvr-recording-1",
+          "custom_properties": {
+            "program": {
+              "id": 1,
+              "title": "Owned Exact Series",
+              "season": 1,
+              "tvg_id": "rust.owned.configured",
+              "episode": 1,
+              "end_time": "2026-11-14T00:34:44+00:00",
+              "sub_title": "Owned Episode 1",
+              "start_time": "2026-11-13T23:34:44+00:00",
+              "description": null,
+              "epg_source_id": 1,
+              "onscreen_episode": null,
+              "original_air_date": ""
+            }
+          }
+        },
+        {
+          "id": 2,
+          "channel_id": 2,
+          "start_time": "2026-11-14 01:34:44+00:00",
+          "end_time": "2026-11-14 02:34:44+00:00",
+          "task_id": "dvr-recording-2",
+          "custom_properties": {
+            "program": {
+              "id": 2,
+              "title": "Owned Exact Series",
+              "season": 1,
+              "tvg_id": "rust.owned.configured",
+              "episode": 2,
+              "end_time": "2026-11-14T02:34:44+00:00",
+              "sub_title": "Owned Episode 2",
+              "start_time": "2026-11-14T01:34:44+00:00",
+              "description": null,
+              "epg_source_id": 1,
+              "onscreen_episode": null,
+              "original_air_date": ""
+            }
+          }
+        },
+        {
+          "id": 4,
+          "channel_id": 2,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "task_id": "dvr-recording-4",
+          "custom_properties": {
+            "rule": {
+              "id": 1,
+              "name": "Owned Recurring",
+              "type": "recurring",
+              "days_of_week": [
+                4
+              ]
+            },
+            "status": "scheduled",
+            "program": {
+              "title": "Owned Recurring",
+              "end_time": "2026-11-14T00:34:44+00:00",
+              "start_time": "2026-11-13T23:34:44+00:00",
+              "description": "Owned Recurring"
+            },
+            "description": "Owned Recurring"
+          }
+        }
+      ],
+      "source_recordings_created": [],
+      "source_rules_before": [
+        {
+          "id": 1,
+          "channel_id": 2,
+          "days_of_week": [
+            4
+          ],
+          "start_time": "23:34:44",
+          "end_time": "00:34:44",
+          "enabled": true,
+          "name": "Owned Recurring",
+          "start_date": "2026-11-13",
+          "end_date": "2026-11-13",
+          "created_at": "2026-11-12 23:35:06.675204+00:00",
+          "updated_at": "2026-11-12 23:35:06.675211+00:00"
+        }
+      ],
+      "source_dvr_settings_before": [
+        {
+          "id": 14,
+          "key": "dvr_settings",
+          "name": "Owned configured DVR fixture",
+          "value": {
+            "series_rules": [
+              {
+                "mode": "all",
+                "title": "Owned Exact Series",
+                "tvg_id": "rust.owned.configured",
+                "channel_id": 2,
+                "title_mode": "exact",
+                "epg_source_id": 1
+              }
+            ],
+            "pre_offset_minutes": 0,
+            "post_offset_minutes": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "recurring-disabled",
+      "source_task_id": "b316af4e-383c-439b-bb85-a8a1aa235907",
+      "source_command_began_utc": "2026-11-12T23:35:13.570812+00:00",
+      "source_command_finished_utc": "2026-11-12T23:35:16.636219+00:00",
+      "decision_clock_correspondence": "explicit Source command begin, NOT Native/SQL wallclock",
+      "source_return": 0,
+      "source_programmes": [
+        {
+          "id": 1,
+          "epg_id": 1,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 1",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 1
+          }
+        },
+        {
+          "id": 2,
+          "epg_id": 1,
+          "start_time": "2026-11-14 01:34:44+00:00",
+          "end_time": "2026-11-14 02:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 2",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 2
+          }
+        },
+        {
+          "id": 3,
+          "epg_id": 1,
+          "start_time": "2026-11-14 03:34:44+00:00",
+          "end_time": "2026-11-14 04:34:44+00:00",
+          "title": "Owned Exact Series",
+          "sub_title": "Owned Episode 3",
+          "description": null,
+          "tvg_id": "rust.owned.configured",
+          "program_id": null,
+          "custom_properties": {
+            "season": 1,
+            "episode": 3
+          }
+        }
+      ],
+      "source_recordings_before": [
+        {
+          "id": 1,
+          "channel_id": 2,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "task_id": "dvr-recording-1",
+          "custom_properties": {
+            "program": {
+              "id": 1,
+              "title": "Owned Exact Series",
+              "season": 1,
+              "tvg_id": "rust.owned.configured",
+              "episode": 1,
+              "end_time": "2026-11-14T00:34:44+00:00",
+              "sub_title": "Owned Episode 1",
+              "start_time": "2026-11-13T23:34:44+00:00",
+              "description": null,
+              "epg_source_id": 1,
+              "onscreen_episode": null,
+              "original_air_date": ""
+            }
+          }
+        },
+        {
+          "id": 2,
+          "channel_id": 2,
+          "start_time": "2026-11-14 01:34:44+00:00",
+          "end_time": "2026-11-14 02:34:44+00:00",
+          "task_id": "dvr-recording-2",
+          "custom_properties": {
+            "program": {
+              "id": 2,
+              "title": "Owned Exact Series",
+              "season": 1,
+              "tvg_id": "rust.owned.configured",
+              "episode": 2,
+              "end_time": "2026-11-14T02:34:44+00:00",
+              "sub_title": "Owned Episode 2",
+              "start_time": "2026-11-14T01:34:44+00:00",
+              "description": null,
+              "epg_source_id": 1,
+              "onscreen_episode": null,
+              "original_air_date": ""
+            }
+          }
+        },
+        {
+          "id": 4,
+          "channel_id": 2,
+          "start_time": "2026-11-13 23:34:44+00:00",
+          "end_time": "2026-11-14 00:34:44+00:00",
+          "task_id": "dvr-recording-4",
+          "custom_properties": {
+            "rule": {
+              "id": 1,
+              "name": "Owned Recurring",
+              "type": "recurring",
+              "days_of_week": [
+                4
+              ]
+            },
+            "status": "scheduled",
+            "program": {
+              "title": "Owned Recurring",
+              "end_time": "2026-11-14T00:34:44+00:00",
+              "start_time": "2026-11-13T23:34:44+00:00",
+              "description": "Owned Recurring"
+            },
+            "description": "Owned Recurring"
+          }
+        }
+      ],
+      "source_recordings_created": [],
+      "source_rules_before": [
+        {
+          "id": 1,
+          "channel_id": 2,
+          "days_of_week": [
+            4
+          ],
+          "start_time": "23:34:44",
+          "end_time": "00:34:44",
+          "enabled": false,
+          "name": "Owned Recurring",
+          "start_date": "2026-11-13",
+          "end_date": "2026-11-13",
+          "created_at": "2026-11-12 23:35:06.675204+00:00",
+          "updated_at": "2026-11-12 23:35:06.675211+00:00"
+        }
+      ],
+      "source_dvr_settings_before": [
+        {
+          "id": 14,
+          "key": "dvr_settings",
+          "name": "Owned configured DVR fixture",
+          "value": {
+            "series_rules": [
+              {
+                "mode": "all",
+                "title": "Owned Exact Series",
+                "tvg_id": "rust.owned.configured",
+                "channel_id": 2,
+                "title_mode": "exact",
+                "epg_source_id": 1
+              }
+            ],
+            "pre_offset_minutes": 0,
+            "post_offset_minutes": 0
+          }
+        }
+      ]
+    }
+  ]
+}

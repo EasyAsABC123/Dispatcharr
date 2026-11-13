@@ -180,3 +180,13 @@ mod scanner_m3u_peer;
 
 // Explicit create/status adapter; no Main/default intake registration.
 pub mod backup_application;
+
+pub mod configured_recording_service;
+pub mod configured_recordings;
+
+pub mod recording_artwork;
+
+pub mod configured_recording_worker;
+
+#[cfg(test)]
+mod configured_recording_peer;

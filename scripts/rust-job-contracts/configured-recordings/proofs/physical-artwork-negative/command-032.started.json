@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+    "compose",
+    "-p",
+    "dispatcharr-configured-physical-27246ad40d",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-artwork-1/support/docker/compose.rust-playback.yml",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-artwork-1/source.yml",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/configured-recordings-native-physical-artwork-1/ports.yml",
+    "exec",
+    "-T",
+    "-e",
+    "POSTGRES_DB=rust_probe_backup_jobs_664aceba1d",
+    "-e",
+    "BACKUP_DISPOSABLE_FIXTURE=playback-fixture-only",
+    "baseline",
+    "/dispatcharrpy/bin/python",
+    "/backup-tools/backup_fixture.py"
+  ],
+  "cwd": "/home/justin/github/Dispatcharr",
+  "began_utc": "2026-11-13T04:33:03.279426+00:00",
+  "pid": 2812297,
+  "starttime": "26477832",
+  "spawn_state": "actual_child_started"
+}
