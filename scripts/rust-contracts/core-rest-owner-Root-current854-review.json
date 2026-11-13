@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "base": "8b46c1028f77c20c5a56ba5fd4aa89d09c884f1a",
+  "source_map_sha256": "cac4106801234fabc06fc9c621c4779c2e0cc2afab7a1d6b9341d26feef04c9f",
+  "Rust_inputs": 854,
+  "coupled_inputs": 5,
+  "selected_paths": 3,
+  "checks": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 2431338,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794598321.9335167,
+      "completed_epoch": 1794598323.8599188,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 2431492,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794598323.897789,
+      "completed_epoch": 1794598332.7518187,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 2432022,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794598332.7891874,
+      "completed_epoch": 1794598373.99278,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    },
+    {
+      "stage": "defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 2435402,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794598374.03065,
+      "completed_epoch": 1794598486.7049396,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    }
+  ],
+  "default_totals": {
+    "passed": 768,
+    "ignored": 738,
+    "blocks": 172
+  },
+  "new_focused_controls": 11,
+  "Core_uses_retained_REST_reads": true,
+  "admitted_error_body_clones_hold_original_lease": true,
+  "existing_four_writer_slots_unchanged": true,
+  "Main_activated": false,
+  "fresh_Core_HTTP_or_physical_replay": false,
+  "Source_duplicate_key_HTML_gap_fixed": false,
+  "historical_component_acceptance_transferred": false,
+  "performance_claimed": false,
+  "credit": "Original Dispatcharr authors retain all application and algorithm credit."
+}

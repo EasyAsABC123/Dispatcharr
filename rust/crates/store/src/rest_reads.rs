@@ -2,10 +2,15 @@
 //! Legacy authentication and Main remain on their existing read paths.
 //! Original Dispatcharr authors retain application/algorithm credit.
 use crate::{AuthService, StoreError, User, XcUserReadLimits};
+use axum::http::HeaderMap;
 use dispatcharr_contracts::PlaybackRequest;
 use serde_json::{json, Value};
 use sqlx::{Connection, Row};
-use std::{future::Future, net::IpAddr, sync::Arc};
+use std::{
+    future::Future,
+    net::{IpAddr, SocketAddr},
+    sync::Arc,
+};
 use tokio::sync::OwnedSemaphorePermit;
 
 #[derive(Clone, Copy)]
@@ -299,7 +304,64 @@ impl AuthService {
         decode_user(scalars, bytes, raw.as_deref(), limits).map(Some)
     }
 }
+async fn authorize_ordered<A, N, F>(
+    authenticated: A,
+    network: N,
+    admin: bool,
+) -> Result<RetainedRestSubject, StoreError>
+where
+    A: Future<Output = Result<Option<RetainedRestSubject>, StoreError>>,
+    N: FnOnce(RetainedRestSubject) -> F,
+    F: Future<Output = Result<(RetainedRestSubject, bool), StoreError>>,
+{
+    let subject = authenticated.await?.ok_or(StoreError::Unauthorized(
+        "Authentication credentials were not provided.",
+    ))?;
+    // The subject and its SAME permit stay live while the UI cache/SQL policy
+    // settles. Network errors/denials precede the derived administrator check.
+    let (subject, allowed) = network(subject).await?;
+    if !allowed || (admin && subject.user().user_level < 10) {
+        return Err(StoreError::PermissionDenied);
+    }
+    Ok(subject)
+}
 impl RetainedRestReads {
+    /// REST adapter preserving raw byte validation before request conversion.
+    /// The caller owns this retained subject until it explicitly retires it.
+    pub async fn account_user(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        admin: bool,
+    ) -> Result<RetainedRestSubject, StoreError> {
+        if ["authorization", "x-api-key"].iter().any(|name| {
+            headers
+                .get(*name)
+                .is_some_and(|value| value.to_str().is_err())
+        }) {
+            return Err(StoreError::Unauthorized("Invalid authentication header"));
+        }
+        let request = crate::auth::request(peer, headers);
+        self.authorize_ui(&request, admin).await
+    }
+    /// Exact legacy order with bounded retained reads: auth, UI network, role.
+    pub async fn authorize_ui(
+        &self,
+        request: &PlaybackRequest,
+        admin: bool,
+    ) -> Result<RetainedRestSubject, StoreError> {
+        authorize_ordered(
+            self.authenticate(request),
+            |subject| async move {
+                let allowed = self
+                    .ui_network_allowed(self.auth.client_ip(request), Some(&subject))
+                    .await?;
+                Ok((subject, allowed))
+            },
+            admin,
+        )
+        .await
+    }
     pub async fn authenticate(
         &self,
         request: &PlaybackRequest,

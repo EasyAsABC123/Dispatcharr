@@ -229,3 +229,162 @@ async fn aborting_sql_observer_keeps_actual_original_slot_until_work_finishes() 
     .unwrap();
     assert_eq!(workers.available_permits(), 4);
 }
+
+fn ordered_subject(level: i32) -> (RetainedRestSubject, Arc<tokio::sync::Semaphore>) {
+    let workers = Arc::new(tokio::sync::Semaphore::new(4));
+    let token = Arc::new(workers.clone().try_acquire_owned().unwrap());
+    let mut scalars = scalar();
+    scalars.user_level = level;
+    let decoded = decode_user(scalars, 2, Some("{}"), RestReadLimits::default()).unwrap();
+    (
+        RetainedRestSubject {
+            user: decoded.user,
+            retained_bytes: decoded.retained_bytes,
+            _permit: token,
+        },
+        workers,
+    )
+}
+#[tokio::test]
+async fn rest_account_user_rejects_byte_invalid_headers_before_sql_or_network() {
+    use axum::http::{HeaderMap, HeaderValue};
+    let pool = sqlx::postgres::PgPoolOptions::new()
+        .connect_lazy("postgres://unused:unused@127.0.0.1:1/unused")
+        .unwrap();
+    let auth = AuthService::new(
+        crate::Store::from_pool(pool),
+        crate::AuthConfig::new("owned-rest-adapter-pure-key".into()).unwrap(),
+    );
+    let original = Arc::new(auth.user_agent_workers.clone().try_acquire_owned().unwrap());
+    let scoped = auth
+        .clone()
+        .with_request_writer_permit(original.clone())
+        .unwrap();
+    let reads = scoped
+        .retained_rest_reads(RestReadLimits::default())
+        .unwrap();
+    for name in ["authorization", "x-api-key"] {
+        let mut headers = HeaderMap::new();
+        headers.insert(name, HeaderValue::from_bytes(&[0xff]).unwrap());
+        assert!(matches!(
+            reads
+                .account_user("127.0.0.1:12345".parse().unwrap(), headers, true)
+                .await,
+            Err(StoreError::Unauthorized("Invalid authentication header"))
+        ));
+    }
+    assert_eq!(auth.store.pool().size(), 0);
+    assert_eq!(auth.user_agent_workers.available_permits(), 3);
+    drop(reads);
+    drop(scoped);
+    drop(original);
+    assert_eq!(auth.user_agent_workers.available_permits(), 4);
+}
+#[tokio::test]
+async fn rest_account_user_missing_credentials_precedes_network_lookup() {
+    let pool = sqlx::postgres::PgPoolOptions::new()
+        .connect_lazy("postgres://unused:unused@127.0.0.1:1/unused")
+        .unwrap();
+    let auth = AuthService::new(
+        crate::Store::from_pool(pool),
+        crate::AuthConfig::new("owned-rest-adapter-pure-key".into()).unwrap(),
+    );
+    let original = Arc::new(auth.user_agent_workers.clone().try_acquire_owned().unwrap());
+    let reads = auth
+        .clone()
+        .with_request_writer_permit(original)
+        .unwrap()
+        .retained_rest_reads(RestReadLimits::default())
+        .unwrap();
+    assert!(matches!(
+        reads
+            .account_user(
+                "127.0.0.1:12345".parse().unwrap(),
+                axum::http::HeaderMap::new(),
+                true
+            )
+            .await,
+        Err(StoreError::Unauthorized(
+            "Authentication credentials were not provided."
+        ))
+    ));
+    assert_eq!(auth.store.pool().size(), 0);
+}
+#[tokio::test]
+async fn rest_order_authentication_failure_never_evaluates_network() {
+    let result = authorize_ordered(
+        async { Err(StoreError::Unauthorized("owned failure")) },
+        |_subject| async { panic!("network must not run after authentication failure") },
+        true,
+    )
+    .await;
+    assert!(matches!(
+        result,
+        Err(StoreError::Unauthorized("owned failure"))
+    ));
+}
+#[tokio::test]
+async fn rest_order_network_error_precedes_low_role_and_retires_subject() {
+    let (subject, workers) = ordered_subject(0);
+    let result = authorize_ordered(
+        async { Ok(Some(subject)) },
+        |subject| async move {
+            assert_eq!(subject.user().user_level, 0);
+            Err(StoreError::StatusBody(
+                503,
+                json!({"error":"owned network read"}),
+            ))
+        },
+        true,
+    )
+    .await;
+    assert!(matches!(result, Err(StoreError::StatusBody(503, _))));
+    assert_eq!(workers.available_permits(), 4);
+}
+#[tokio::test]
+async fn rest_order_network_denial_precedes_administrator_success() {
+    let (subject, workers) = ordered_subject(10);
+    let result = authorize_ordered(
+        async { Ok(Some(subject)) },
+        |subject| async move { Ok((subject, false)) },
+        true,
+    )
+    .await;
+    assert!(matches!(result, Err(StoreError::PermissionDenied)));
+    assert_eq!(workers.available_permits(), 4);
+}
+#[tokio::test]
+async fn rest_order_administrator_role_follows_allowed_network() {
+    let (subject, workers) = ordered_subject(1);
+    let ran = Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let mark = ran.clone();
+    let result = authorize_ordered(
+        async { Ok(Some(subject)) },
+        |subject| async move {
+            mark.store(true, std::sync::atomic::Ordering::Release);
+            Ok((subject, true))
+        },
+        true,
+    )
+    .await;
+    assert!(ran.load(std::sync::atomic::Ordering::Acquire));
+    assert!(matches!(result, Err(StoreError::PermissionDenied)));
+    assert_eq!(workers.available_permits(), 4);
+}
+#[tokio::test]
+async fn rest_success_subject_retains_same_slot_until_caller_retires_it() {
+    let (subject, workers) = ordered_subject(10);
+    let original = Arc::downgrade(&subject._permit);
+    let result = authorize_ordered(
+        async { Ok(Some(subject)) },
+        |subject| async move { Ok((subject, true)) },
+        true,
+    )
+    .await
+    .unwrap();
+    assert!(original.upgrade().is_some());
+    assert_eq!(workers.available_permits(), 3);
+    drop(result);
+    assert!(original.upgrade().is_none());
+    assert_eq!(workers.available_permits(), 4);
+}

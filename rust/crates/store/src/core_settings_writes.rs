@@ -1,7 +1,7 @@
 //! Inert generic CoreSettings API, ported from pinned Original Source32.
 //! Original Dispatcharr authors retain model/serializer/signal/application credit.
 //! No Main registration, new pool, default worker or task-coupled write exists.
-use crate::{admin_writes::character, AuthService, StoreError, XcUserReadLimits};
+use crate::{admin_writes::character, AuthService, RestReadLimits, StoreError, XcUserReadLimits};
 use axum::{
     extract::{ConnectInfo, Path, Request, State},
     http::{HeaderMap, StatusCode},
@@ -54,7 +54,7 @@ impl Drop for Lease {
     }
 }
 struct Frame {
-    bytes: Vec<u8>,
+    bytes: Bytes,
     _lease: Arc<Lease>,
 }
 impl AsRef<[u8]> for Frame {
@@ -163,29 +163,44 @@ impl CoreSettingsWrites {
         // Native capacity admission is distinct from login failure. Within admitted
         // work, real authentication/network/role checks precede lookup/body parsing.
         let lease = self.reserve()?;
-        let auth = self
+        let auth = match self
             .state
             .auth
             .clone()
-            .with_request_writer_permit(lease._permit.clone())?
-            .with_retained_scope(lease.clone());
+            .with_request_writer_permit(lease._permit.clone())
+        {
+            Ok(auth) => auth.with_retained_scope(lease.clone()),
+            Err(error) => return Ok(retained_error(error, lease).await),
+        };
+        let actor_lease = lease.clone();
         let actor = tokio::spawn(async move {
-            auth.request_started_display_timezone().await;
-            let user = auth
-                .account_user(peer, request.headers().clone(), !matches!(kind, Kind::Read))
-                .await?;
-            if matches!(kind, Kind::Read) && user.user_level < 1 {
-                return Err(StoreError::PermissionDenied);
+            let result = async {
+                auth.request_started_display_timezone().await;
+                let reads = auth.retained_rest_reads(RestReadLimits::default())?;
+                let subject = reads
+                    .account_user(peer, request.headers().clone(), !matches!(kind, Kind::Read))
+                    .await?;
+                if matches!(kind, Kind::Read) && subject.user().user_level < 1 {
+                    return Err(StoreError::PermissionDenied);
+                }
+                // Retire the bounded user/property allocation before allocating
+                // metadata. Reads and the actor share the SAME original permit.
+                drop(subject);
+                drop(reads);
+                act(auth, peer, raw, request, kind, actor_lease.clone()).await
             }
-            drop(user);
-            act(auth, peer, raw, request, kind, lease).await
+            .await;
+            match result {
+                Ok(response) => response,
+                Err(error) => retained_error(error, actor_lease).await,
+            }
         });
-        // Dropping the observer JoinHandle detaches the SAME supervised actor. The
-        // existing lease remains through SQL/cache settlement and owned final bytes.
-        tokio::time::timeout(OBSERVER, actor)
-            .await
-            .map_err(|_| capacity())?
-            .map_err(|_| capacity())?
+        // Observer loss detaches the same actor. An admitted observer error has
+        // its own frame reference to that SAME lease, never a fifth allowance.
+        match tokio::time::timeout(OBSERVER, actor).await {
+            Ok(Ok(response)) => Ok(response),
+            _ => Ok(retained_error(capacity(), lease).await),
+        }
     }
 }
 fn capacity() -> StoreError {
@@ -193,6 +208,34 @@ fn capacity() -> StoreError {
         503,
         json!({"detail":"CoreSettings resource capacity is unavailable."}),
     )
+}
+async fn retained_error(error: StoreError, lease: Arc<Lease>) -> Response {
+    retained_error_response(error.into_response(), lease).await
+}
+async fn retained_error_response(response: Response, lease: Arc<Lease>) -> Response {
+    let (parts, body) = response.into_parts();
+    let (parts, bytes) = match axum::body::to_bytes(body, OUTPUT_LIMIT).await {
+        Ok(bytes) => (parts, bytes),
+        Err(_) => {
+            // Unknown over-cap/error bodies cannot escape the existing response
+            // quote. The small typed capacity error still retains this lease.
+            let (parts, _) = capacity().into_response().into_parts();
+            (
+                parts,
+                Bytes::from_static(
+                    b"{\"detail\":\"CoreSettings resource capacity is unavailable.\"}",
+                ),
+            )
+        }
+    };
+    // Wrap the existing Bytes allocation, without copying it into another Vec
+    // or charging another allowance. All status/headers and bounded body bytes
+    // remain exact; clones retain the same real permit until their last drop.
+    let bytes = Bytes::from_owner(Frame {
+        bytes,
+        _lease: lease,
+    });
+    Response::from_parts(parts, axum::body::Body::from(bytes))
 }
 fn missing() -> StoreError {
     StoreError::StatusBody(
@@ -623,7 +666,7 @@ fn reply(
         let mut out = Output { bytes: Vec::new() };
         encoded(&v, &mut out)?;
         let bytes = Bytes::from_owner(Frame {
-            bytes: out.bytes,
+            bytes: Bytes::from(out.bytes),
             _lease: lease,
         });
         Ok((
@@ -1041,6 +1084,106 @@ mod tests {
         assert_eq!(service.active_requests(), 0);
         assert!(service.shutdown().await);
         assert!(service.reserve().is_err());
+    }
+    #[tokio::test]
+    async fn admitted_error_preserves_exact_response_and_clone_owns_real_lease() {
+        let service = local_service();
+        let original = StoreError::Unauthorized("owned error").into_response();
+        let expected_status = original.status();
+        let expected_headers = original.headers().clone();
+        let expected = axum::body::to_bytes(original.into_body(), OUTPUT_LIMIT)
+            .await
+            .unwrap();
+        let lease = service.reserve().unwrap();
+        let response = retained_error(StoreError::Unauthorized("owned error"), lease).await;
+        assert_eq!(response.status(), expected_status);
+        assert_eq!(response.headers(), &expected_headers);
+        let bytes = axum::body::to_bytes(response.into_body(), OUTPUT_LIMIT)
+            .await
+            .unwrap();
+        assert_eq!(bytes, expected);
+        let cloned = bytes.clone();
+        drop(bytes);
+        assert_eq!(service.active_requests(), 1);
+        assert_eq!(service.state.auth.user_agent_workers.available_permits(), 3);
+        assert!(
+            tokio::time::timeout(Duration::from_millis(25), service.shutdown())
+                .await
+                .is_err()
+        );
+        drop(cloned);
+        assert!(service.shutdown().await);
+        assert_eq!(service.active_requests(), 0);
+        assert_eq!(service.state.auth.user_agent_workers.available_permits(), 4);
+    }
+    #[tokio::test]
+    async fn four_error_frames_refuse_fifth_before_auth_and_reuse_after_last_clone() {
+        let service = local_service();
+        let mut held = Vec::new();
+        for _ in 0..4 {
+            let lease = service.reserve().unwrap();
+            let response = retained_error(StoreError::PermissionDenied, lease).await;
+            held.push(
+                axum::body::to_bytes(response.into_body(), OUTPUT_LIMIT)
+                    .await
+                    .unwrap(),
+            );
+        }
+        assert_eq!(service.active_requests(), 4);
+        assert_eq!(service.state.auth.user_agent_workers.available_permits(), 0);
+        let fifth = service
+            .run(
+                SocketAddr::from(([127, 0, 0, 1], 12345)),
+                Some("1002".into()),
+                Request::new(axum::body::Body::empty()),
+                Kind::Read,
+            )
+            .await;
+        assert!(matches!(fifth, Err(StoreError::StatusBody(503, _))));
+        assert_eq!(service.state.auth.store.pool().size(), 0);
+        assert_eq!(service.active_requests(), 4);
+        let first = held.remove(0);
+        let cloned = first.clone();
+        drop(first);
+        assert!(service.reserve().is_err());
+        drop(cloned);
+        let reused = service.reserve().unwrap();
+        assert_eq!(service.active_requests(), 4);
+        drop(reused);
+        drop(held);
+        assert_eq!(service.active_requests(), 0);
+        assert_eq!(service.state.auth.user_agent_workers.available_permits(), 4);
+    }
+    #[tokio::test]
+    async fn over_limit_error_surface_is_bounded_and_still_retains_same_lease() {
+        let service = local_service();
+        let lease = service.reserve().unwrap();
+        let response = (StatusCode::BAD_REQUEST, vec![b'x'; OUTPUT_LIMIT + 1]).into_response();
+        let response = retained_error_response(response, lease).await;
+        assert_eq!(response.status(), StatusCode::SERVICE_UNAVAILABLE);
+        let bytes = axum::body::to_bytes(response.into_body(), OUTPUT_LIMIT)
+            .await
+            .unwrap();
+        assert_eq!(
+            serde_json::from_slice::<Value>(&bytes).unwrap(),
+            json!({"detail":"CoreSettings resource capacity is unavailable."})
+        );
+        assert_eq!(service.active_requests(), 1);
+        drop(bytes);
+        assert_eq!(service.active_requests(), 0);
+    }
+    #[tokio::test]
+    async fn successful_empty204_retires_without_fake_frame() {
+        let service = local_service();
+        let lease = service.reserve().unwrap();
+        let response = reply(StatusCode::NO_CONTENT, None, lease).unwrap();
+        assert_eq!(response.status(), StatusCode::NO_CONTENT);
+        assert_eq!(service.active_requests(), 0);
+        assert_eq!(service.state.auth.user_agent_workers.available_permits(), 4);
+        assert!(axum::body::to_bytes(response.into_body(), OUTPUT_LIMIT)
+            .await
+            .unwrap()
+            .is_empty());
     }
 }
 

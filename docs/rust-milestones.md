@@ -15,6 +15,8 @@ The [remaining acceptance work](rust-remaining-acceptance.md) separates the meas
 
 The [inert plugin metadata service](rust-plugin-repositories-current-validation.md) passes current 854-input workspace checks (757 tests, 738 ignored); its confirmed HTML/duplicate-key differences and Main integration remain open.
 
+The [Core retained-reader and error-body composition](rust-core-rest-owner-validation.md) passes 768 tests (738 ignored) on the plugin-inclusive 854-input library. Fresh HTTP/physical acceptance and Main assembly remain open.
+
 ## Progress ledger
 
 Statuses: **planned**, **in progress**, **blocked**, **passed**. A blocked runtime
