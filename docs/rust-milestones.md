@@ -17,6 +17,8 @@ The [inert plugin metadata service](rust-plugin-repositories-current-validation.
 
 The [Core retained-reader and error-body composition](rust-core-rest-owner-validation.md) passes 768 tests (738 ignored) on the plugin-inclusive 854-input library. Fresh HTTP/physical acceptance and Main assembly remain open.
 
+[Image58](rust-image58-build-validation.md) builds the newer 854-input library composition from exact committed source and preserves all114 installed React/credit hashes. This is build-only evidence; selected functional and measured acceptance remains image57.
+
 ## Progress ledger
 
 Statuses: **planned**, **in progress**, **blocked**, **passed**. A blocked runtime
