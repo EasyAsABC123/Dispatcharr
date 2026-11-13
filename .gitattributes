@@ -261,3 +261,17 @@ scripts/rust-xc-contracts/cached-info-component/native-stdout/native-13.txt -tex
 scripts/rust-xc-contracts/cached-info-component/native-stdout/native-14.txt -text whitespace=-blank-at-eof
 scripts/rust-xc-contracts/cached-info-component/native-stdout/native-15.txt -text whitespace=-blank-at-eof
 scripts/rust-xc-contracts/cached-info-component/verify.py -text -whitespace
+
+# Preserve exact backup proof logs, driver patch and upstream license/source bytes.
+scripts/rust-integration/union839-backup/defaults.log -text whitespace=-blank-at-eof
+scripts/rust-contracts/backup-job-physical2/executed/plan2/inputs/plan1-to2-driver-closure.diff -text -whitespace
+scripts/rust-contracts/backup-job-physical2/upstream/.cargo_vcs_info.json -text
+scripts/rust-contracts/backup-job-physical2/upstream/LICENSE-APACHE -text
+
+# Preserve exact executed controller and Cargo trailing blank lines.
+scripts/rust-contracts/backup-callback-physical4/executed/attempt1/controller/test_controller.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/backup-callback-physical4/executed/attempt2/controller/test_controller.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/backup-callback-physical4/executed/attempt3/controller/test_controller.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/backup-job-physical2/build/command-04.stdout -text whitespace=-blank-at-eof
+scripts/rust-contracts/backup-job-physical2/executed/plan1/build/command-04.stdout -text whitespace=-blank-at-eof
+scripts/rust-contracts/backup-job-physical2/executed/plan2/build/command-04.stdout -text whitespace=-blank-at-eof

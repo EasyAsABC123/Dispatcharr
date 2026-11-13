@@ -225,3 +225,7 @@ mod tests {
 #[cfg(test)]
 #[path = "backup_source16_peer.rs"]
 mod source16_peer;
+
+#[cfg(test)]
+#[path = "backup_job_physical_tests.rs"]
+mod physical_job_tests;

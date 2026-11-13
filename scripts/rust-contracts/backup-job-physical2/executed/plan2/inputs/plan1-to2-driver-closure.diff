@@ -1,0 +1,29 @@
+--- plan1/controller/audit.py
++++ plan2/controller/audit.py
+@@ -67,7 +67,7 @@
+     import psycopg,types
+     from public_manifest import manifest
+     require(database=='dispatcharr','FullDefaultReadOnlyOnly')
+-    expected=json.loads(Path('/native-root/inputs/source-authority/executed-executor5/inputs/schema62-authority.json').read_text())
++    expected=json.loads(Path('/native-inputs/schema62-authority.json').read_text())
+     connection=psycopg.connect(host='/var/run/postgresql',user='dispatch',dbname=database,connect_timeout=3,options='-c default_transaction_read_only=on -c statement_timeout=5000',autocommit=False)
+     class Adapter:
+         ops=types.SimpleNamespace(quote_name=lambda name:'"'+name.replace('"','""')+'"')
+--- plan1/controller/run.py
++++ plan2/controller/run.py
+@@ -6,6 +6,7 @@
+ from bounded_stop import collect as bounded_stop
+ import threading
+ from validate_physical import validate
++from runtime_closure import validate as runtime_closure
+ ROOT=Path(__file__).resolve().parents[1]
+ IMAGE='ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'
+ TESTS={5:'backup_application::physical_job_tests::real_backup_publish_fd_loss_retains_original_caller_until_reply',6:'backup_application::physical_job_tests::real_backup_status_logical_deadline_retains_original_caller_until_reply'}
+@@ -30,6 +31,7 @@
+  require(peer['actual_tool_exit']==0 and peer['state']=='OUTSIDE_ELF_COPIED_AFTER_ALL5_WAIT_POLL0_AND_TOOL_SESSION0','ActualCompletedOutsideCopy')
+  require(datetime.datetime.fromisoformat(peer['copied_utc'])>=datetime.datetime.fromisoformat(build['completed_utc']),'CopiedAfterAll5Completed')
+  for test in TESTS.values():require(test+': test'in(ROOT/'build/ELF-test-list.stdout').read_text(),'BothActualCompiledTestSelectors')
++ closure=runtime_closure(ROOT,source);require(closure['passed']is True,'RecursiveActualMountedRuntimeFiles')
+  return seal
+ 
+ def command_budget(serial,used,cleaning):

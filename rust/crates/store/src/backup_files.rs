@@ -827,3 +827,7 @@ fn decode_filename(raw: &str) -> String {
     .map(|(_, value)| value.into_owned())
     .unwrap_or_default()
 }
+
+#[cfg(test)]
+#[path = "backup_callback_physical_tests.rs"]
+mod callback_physical_tests;

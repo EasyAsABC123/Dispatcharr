@@ -1,0 +1,2041 @@
+{
+  "case": 5,
+  "passed": true,
+  "capture_complete": true,
+  "phase": "complete",
+  "database": "rust_probe_backup_jobs_physical_39b8d75466",
+  "production_changes": false,
+  "Source_app_runs": 0,
+  "Main_runs": 0,
+  "worker_polls": 0,
+  "request_count": 1,
+  "weak_only_observer": true,
+  "FD_loss_is_not_handler_abort": true,
+  "initial_SQL": {
+    "tables": {
+      "accounts_user": [],
+      "core_coresettings": [
+        {
+          "id": 6,
+          "key": "network_access",
+          "name": "Network Access",
+          "value": {}
+        },
+        {
+          "id": 7,
+          "key": "proxy_settings",
+          "name": "Proxy Settings",
+          "value": {
+            "buffering_speed": 1.0,
+            "redis_chunk_ttl": 60,
+            "buffering_timeout": 15,
+            "channel_shutdown_delay": 0,
+            "channel_init_grace_period": 60,
+            "channel_client_wait_period": 5
+          }
+        },
+        {
+          "id": 13,
+          "key": "stream_settings",
+          "name": "Stream Settings",
+          "value": {
+            "m3u_hash_key": "url",
+            "default_user_agent": 1,
+            "default_stream_profile": 1
+          }
+        },
+        {
+          "id": 14,
+          "key": "dvr_settings",
+          "name": "DVR Settings",
+          "value": {
+            "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+            "series_rules": [],
+            "movie_template": "Movies/{title} ({year}).mkv",
+            "comskip_enabled": false,
+            "tv_fallback_dir": "TV_Shows",
+            "pre_offset_minutes": 0,
+            "comskip_custom_path": "",
+            "post_offset_minutes": 0,
+            "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+            "movie_fallback_template": "Movies/{start}.mkv"
+          }
+        },
+        {
+          "id": 15,
+          "key": "backup_settings",
+          "name": "Backup Settings",
+          "value": {
+            "schedule_time": "03:00",
+            "retention_count": 3,
+            "schedule_enabled": true,
+            "schedule_frequency": "daily",
+            "schedule_day_of_week": 0,
+            "schedule_cron_expression": ""
+          }
+        },
+        {
+          "id": 16,
+          "key": "system_settings",
+          "name": "System Settings",
+          "value": {
+            "time_zone": "UTC",
+            "preferred_region": "us",
+            "max_system_events": 100,
+            "auto_import_mapped_files": true
+          }
+        },
+        {
+          "id": 17,
+          "key": "user_limit_settings",
+          "name": "User Limit Settings",
+          "value": {}
+        },
+        {
+          "id": 18,
+          "key": "reverse_proxy_auth",
+          "name": "Reverse Proxy Auth",
+          "value": {
+            "header": "",
+            "enabled": false
+          }
+        }
+      ],
+      "core_notificationdismissal": [],
+      "core_systemnotification": [
+        {
+          "id": 1,
+          "title": "Network Access Security Warning",
+          "source": "developer",
+          "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+          "priority": "high",
+          "is_active": true,
+          "admin_only": true,
+          "created_at": "2026-11-13T10:32:16.179096+00:00",
+          "expires_at": null,
+          "updated_at": "2026-11-13T10:32:16.179096+00:00",
+          "action_data": {
+            "condition": [
+              "m3u_epg_network_insecure"
+            ],
+            "action_url": "/settings#network-access",
+            "user_level": "admin",
+            "action_text": "Review Settings",
+            "max_version": null,
+            "min_version": null
+          },
+          "notification_key": "network_security_m3u_epg",
+          "notification_type": "warning"
+        }
+      ],
+      "m3u_m3uaccount": [
+        {
+          "id": 1,
+          "name": "custom",
+          "locked": true,
+          "status": "idle",
+          "password": null,
+          "priority": 0,
+          "username": null,
+          "file_path": null,
+          "is_active": true,
+          "created_at": "2026-11-13T10:32:16.179096+00:00",
+          "server_url": null,
+          "updated_at": "2026-11-13T10:32:16.179096+00:00",
+          "max_streams": 0,
+          "account_type": "STD",
+          "last_message": null,
+          "user_agent_id": null,
+          "refresh_task_id": 1,
+          "server_group_id": null,
+          "refresh_interval": 24,
+          "custom_properties": null,
+          "stale_stream_days": 7,
+          "stream_profile_id": null
+        }
+      ],
+      "m3u_m3uaccountprofile": [
+        {
+          "id": 1,
+          "name": "custom Default",
+          "exp_date": null,
+          "is_active": true,
+          "is_default": true,
+          "max_streams": 0,
+          "m3u_account_id": 1,
+          "search_pattern": "^(.*)$",
+          "current_viewers": 0,
+          "replace_pattern": "$1",
+          "custom_properties": {}
+        }
+      ],
+      "vod_episode": [],
+      "vod_m3uepisoderelation": [],
+      "vod_m3umovierelation": [],
+      "vod_movie": [],
+      "vod_series": []
+    },
+    "sequences": {
+      "accounts_user": {
+        "is_called": false,
+        "last_value": 1
+      },
+      "core_coresettings": {
+        "is_called": true,
+        "last_value": 18
+      },
+      "core_notificationdismissal": {
+        "is_called": false,
+        "last_value": 1
+      },
+      "core_systemnotification": {
+        "is_called": true,
+        "last_value": 1
+      },
+      "m3u_m3uaccount": {
+        "is_called": true,
+        "last_value": 1
+      },
+      "m3u_m3uaccountprofile": {
+        "is_called": true,
+        "last_value": 1
+      },
+      "vod_episode": {
+        "is_called": false,
+        "last_value": 1
+      },
+      "vod_m3uepisoderelation": {
+        "is_called": false,
+        "last_value": 1
+      },
+      "vod_m3umovierelation": {
+        "is_called": false,
+        "last_value": 1
+      },
+      "vod_movie": {
+        "is_called": false,
+        "last_value": 1
+      },
+      "vod_series": {
+        "is_called": false,
+        "last_value": 1
+      }
+    }
+  },
+  "before": {
+    "SQL": {
+      "tables": {
+        "accounts_user": [
+          {
+            "id": 1,
+            "email": "",
+            "api_key": {
+              "sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+              "bytes": 64
+            },
+            "is_staff": false,
+            "password": "!",
+            "username": "owned-backup-physical",
+            "is_active": true,
+            "last_name": "",
+            "first_name": "",
+            "last_login": null,
+            "user_level": 10,
+            "date_joined": "2026-11-13T10:32:16.338874+00:00",
+            "is_superuser": false,
+            "stream_limit": 0,
+            "avatar_config": null,
+            "custom_properties": {}
+          }
+        ],
+        "core_coresettings": [
+          {
+            "id": 6,
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {
+              "UI": "127.0.0.0/8"
+            }
+          },
+          {
+            "id": 7,
+            "key": "proxy_settings",
+            "name": "Proxy Settings",
+            "value": {
+              "buffering_speed": 1.0,
+              "redis_chunk_ttl": 60,
+              "buffering_timeout": 15,
+              "channel_shutdown_delay": 0,
+              "channel_init_grace_period": 60,
+              "channel_client_wait_period": 5
+            }
+          },
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          },
+          {
+            "id": 14,
+            "key": "dvr_settings",
+            "name": "DVR Settings",
+            "value": {
+              "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+              "series_rules": [],
+              "movie_template": "Movies/{title} ({year}).mkv",
+              "comskip_enabled": false,
+              "tv_fallback_dir": "TV_Shows",
+              "pre_offset_minutes": 0,
+              "comskip_custom_path": "",
+              "post_offset_minutes": 0,
+              "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+              "movie_fallback_template": "Movies/{start}.mkv"
+            }
+          },
+          {
+            "id": 15,
+            "key": "backup_settings",
+            "name": "Backup Settings",
+            "value": {
+              "schedule_time": "03:00",
+              "retention_count": 3,
+              "schedule_enabled": true,
+              "schedule_frequency": "daily",
+              "schedule_day_of_week": 0,
+              "schedule_cron_expression": ""
+            }
+          },
+          {
+            "id": 16,
+            "key": "system_settings",
+            "name": "System Settings",
+            "value": {
+              "time_zone": "UTC"
+            }
+          },
+          {
+            "id": 17,
+            "key": "user_limit_settings",
+            "name": "User Limit Settings",
+            "value": {}
+          },
+          {
+            "id": 18,
+            "key": "reverse_proxy_auth",
+            "name": "Reverse Proxy Auth",
+            "value": {
+              "header": "",
+              "enabled": false
+            }
+          }
+        ],
+        "core_notificationdismissal": [],
+        "core_systemnotification": [
+          {
+            "id": 1,
+            "title": "Network Access Security Warning",
+            "source": "developer",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "priority": "high",
+            "is_active": true,
+            "admin_only": true,
+            "created_at": "2026-11-13T10:32:16.179096+00:00",
+            "expires_at": null,
+            "updated_at": "2026-11-13T10:32:16.179096+00:00",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning"
+          }
+        ],
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "locked": true,
+            "status": "idle",
+            "password": null,
+            "priority": 0,
+            "username": null,
+            "file_path": null,
+            "is_active": true,
+            "created_at": "2026-11-13T10:32:16.179096+00:00",
+            "server_url": null,
+            "updated_at": "2026-11-13T10:32:16.179096+00:00",
+            "max_streams": 0,
+            "account_type": "STD",
+            "last_message": null,
+            "user_agent_id": null,
+            "refresh_task_id": 1,
+            "server_group_id": null,
+            "refresh_interval": 24,
+            "custom_properties": null,
+            "stale_stream_days": 7,
+            "stream_profile_id": null
+          }
+        ],
+        "m3u_m3uaccountprofile": [
+          {
+            "id": 1,
+            "name": "custom Default",
+            "exp_date": null,
+            "is_active": true,
+            "is_default": true,
+            "max_streams": 0,
+            "m3u_account_id": 1,
+            "search_pattern": "^(.*)$",
+            "current_viewers": 0,
+            "replace_pattern": "$1",
+            "custom_properties": {}
+          }
+        ],
+        "vod_episode": [],
+        "vod_m3uepisoderelation": [],
+        "vod_m3umovierelation": [],
+        "vod_movie": [],
+        "vod_series": []
+      },
+      "sequences": {
+        "accounts_user": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "core_coresettings": {
+          "is_called": true,
+          "last_value": 20
+        },
+        "core_notificationdismissal": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "core_systemnotification": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "m3u_m3uaccount": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "m3u_m3uaccountprofile": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "vod_episode": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_m3uepisoderelation": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_m3umovierelation": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_movie": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_series": {
+          "is_called": false,
+          "last_value": 1
+        }
+      }
+    },
+    "credentials": {
+      "accounts_user": [
+        {
+          "id": 1,
+          "email": "",
+          "api_key": {
+            "sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+            "bytes": 64
+          },
+          "is_staff": false,
+          "password": "!",
+          "username": "owned-backup-physical",
+          "is_active": true,
+          "last_name": "",
+          "first_name": "",
+          "last_login": null,
+          "user_level": 10,
+          "date_joined": "2026-11-13T10:32:16.338874+00:00",
+          "is_superuser": false,
+          "stream_limit": 0,
+          "avatar_config": null,
+          "custom_properties": {}
+        }
+      ],
+      "events": [],
+      "sequence": {
+        "is_called": false,
+        "last_value": 1
+      }
+    },
+    "cache": {
+      "raw_DUMP_PTTL": {},
+      "credential_Source_comparison": false
+    },
+    "broker_queue": {
+      "key": "celery",
+      "type": "none",
+      "DUMP_hex": null,
+      "pttl": -2,
+      "value": null,
+      "consumed": false
+    },
+    "binding": {
+      "key": "_kombu.binding.celery",
+      "type": "none",
+      "DUMP_hex": null,
+      "pttl": -2,
+      "value": null,
+      "consumed": false
+    },
+    "backend": {
+      "key": "celery-tasks:celery-task-meta-11111111-1111-4111-8111-111111111111",
+      "type": "none",
+      "DUMP_hex": null,
+      "pttl": -2,
+      "value": null,
+      "consumed": false
+    },
+    "all_broker": {
+      "database": 2,
+      "capture_bytes": 0,
+      "rows": []
+    },
+    "all_backend": {
+      "database": 3,
+      "capture_bytes": 0,
+      "rows": []
+    }
+  },
+  "held": {
+    "armed": true,
+    "selected": "publish",
+    "seen": 1,
+    "connections": 1,
+    "invalid": [],
+    "rows": [
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416524401,
+        "seen": 0,
+        "command_hex": "41555448",
+        "request_sha256": "21b8260c8674d354953d8e675850b5139b37bc23b450a94b57900e65eebd5454",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416584872,
+        "seen": 0,
+        "request_sha256": "21b8260c8674d354953d8e675850b5139b37bc23b450a94b57900e65eebd5454",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416640634,
+        "seen": 0,
+        "command_hex": "53454c454354",
+        "request_sha256": "cc17d144b48be8e5160afc81255d3e25aa5f2eb34ac97208dba2ec3acd09736f",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416677465,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416715456,
+        "seen": 0,
+        "request_sha256": "cc17d144b48be8e5160afc81255d3e25aa5f2eb34ac97208dba2ec3acd09736f",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416759817,
+        "seen": 0,
+        "command_hex": "434c49454e54",
+        "request_sha256": "682172b6dce9152d185e5a05ea9b1c1aea8e2d393e2629323f6e9564e30e4ee0",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416801739,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416825989,
+        "seen": 0,
+        "request_sha256": "682172b6dce9152d185e5a05ea9b1c1aea8e2d393e2629323f6e9564e30e4ee0",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.41687152,
+        "seen": 0,
+        "command_hex": "434c49454e54",
+        "request_sha256": "6eb04531c17bd863e7f8235d51d5eee5613c277f57ff833821faa94d3d85cdcd",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416896411,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416921312,
+        "seen": 0,
+        "request_sha256": "6eb04531c17bd863e7f8235d51d5eee5613c277f57ff833821faa94d3d85cdcd",
+        "target": false
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416959793,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.427953469,
+        "seen": 0,
+        "command_hex": "4556414c534841",
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true,
+        "target_arguments_hex": [
+          "4556414c534841",
+          "66636366333730376663663931376330643938663038646437386137376566656262626630656637",
+          "32",
+          "63656c657279",
+          "5f6b6f6d62752e62696e64696e672e63656c657279",
+          "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d",
+          "31303030"
+        ]
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428024151,
+        "seen": 0,
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.428076052,
+        "seen": 0,
+        "target": true,
+        "reply_sha256": "ec7e6a799a79baab7a10f175d78f4a5157b1bb7be3e95e7b20d95367c7d00299"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.428163615,
+        "seen": 0,
+        "command_hex": "534352495054",
+        "request_sha256": "3bd331c794b0876df6e76a1163fddc1514632530bf65ed74093bffcae5f8eea5",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428193996,
+        "seen": 0,
+        "request_sha256": "3bd331c794b0876df6e76a1163fddc1514632530bf65ed74093bffcae5f8eea5",
+        "target": false
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.428272308,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "8a8a531a2ba9f3db3358d5797a9c1965c9bfb1c07a196627c4adc96ead0493ea"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.428403771,
+        "seen": 0,
+        "command_hex": "4556414c534841",
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true,
+        "target_arguments_hex": [
+          "4556414c534841",
+          "66636366333730376663663931376330643938663038646437386137376566656262626630656637",
+          "32",
+          "63656c657279",
+          "5f6b6f6d62752e62696e64696e672e63656c657279",
+          "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d",
+          "31303030"
+        ]
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428445733,
+        "seen": 0,
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true
+      },
+      {
+        "kind": "backend-target-reply-read-held",
+        "monotonic": 286331.428567226,
+        "seen": 1,
+        "reply_hex": "3a310d0a",
+        "reply_sha256": "6d7dbcb27aa6e24f40bf1f4cb2cc8a36e2f3b7f1ae87edf906578a2936b756d2"
+      }
+    ]
+  },
+  "before_FD_loss": {
+    "calls": 1,
+    "Weak_Some": true,
+    "weak_observer_stores_no_Arc": true,
+    "logical_done": false,
+    "logical_result": null,
+    "logical_completed_utc": null,
+    "real_application_http_slots_available": 3,
+    "real_jobs_slots_available": 3
+  },
+  "pre_FD_loss_read": {
+    "result": "Err(Kind(WouldBlock))",
+    "successful_HTTP_body_or_status_observed": false
+  },
+  "actual_client_FD_receipt": {
+    "fd": 15,
+    "original_link": "socket:[72890265]",
+    "after_link": null,
+    "original_FD_absent_or_reused": true,
+    "namespace": "ELF container /proc/self"
+  },
+  "actual_client_FD_shutdown_and_drop": true,
+  "handler_abort_claimed": false,
+  "logical_completion": {
+    "calls": 1,
+    "Weak_Some": true,
+    "weak_observer_stores_no_Arc": true,
+    "logical_done": true,
+    "logical_result": "Err(StatusBody(500, Object {\"detail\": String(\"Failed to start backup: Native backup transport unavailable\")}))",
+    "logical_completed_utc": "2026-11-13T10:32:18.383637265+00:00",
+    "real_application_http_slots_available": 3,
+    "real_jobs_slots_available": 3
+  },
+  "while_held_after_logical_completion": {
+    "calls": 1,
+    "Weak_Some": true,
+    "weak_observer_stores_no_Arc": true,
+    "logical_done": true,
+    "logical_result": "Err(StatusBody(500, Object {\"detail\": String(\"Failed to start backup: Native backup transport unavailable\")}))",
+    "logical_completed_utc": "2026-11-13T10:32:18.383637265+00:00",
+    "real_application_http_slots_available": 3,
+    "real_jobs_slots_available": 3
+  },
+  "held_raw_state": {
+    "SQL": {
+      "tables": {
+        "accounts_user": [
+          {
+            "id": 1,
+            "email": "",
+            "api_key": {
+              "sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+              "bytes": 64
+            },
+            "is_staff": false,
+            "password": "!",
+            "username": "owned-backup-physical",
+            "is_active": true,
+            "last_name": "",
+            "first_name": "",
+            "last_login": null,
+            "user_level": 10,
+            "date_joined": "2026-11-13T10:32:16.338874+00:00",
+            "is_superuser": false,
+            "stream_limit": 0,
+            "avatar_config": null,
+            "custom_properties": {}
+          }
+        ],
+        "core_coresettings": [
+          {
+            "id": 6,
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {
+              "UI": "127.0.0.0/8"
+            }
+          },
+          {
+            "id": 7,
+            "key": "proxy_settings",
+            "name": "Proxy Settings",
+            "value": {
+              "buffering_speed": 1.0,
+              "redis_chunk_ttl": 60,
+              "buffering_timeout": 15,
+              "channel_shutdown_delay": 0,
+              "channel_init_grace_period": 60,
+              "channel_client_wait_period": 5
+            }
+          },
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          },
+          {
+            "id": 14,
+            "key": "dvr_settings",
+            "name": "DVR Settings",
+            "value": {
+              "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+              "series_rules": [],
+              "movie_template": "Movies/{title} ({year}).mkv",
+              "comskip_enabled": false,
+              "tv_fallback_dir": "TV_Shows",
+              "pre_offset_minutes": 0,
+              "comskip_custom_path": "",
+              "post_offset_minutes": 0,
+              "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+              "movie_fallback_template": "Movies/{start}.mkv"
+            }
+          },
+          {
+            "id": 15,
+            "key": "backup_settings",
+            "name": "Backup Settings",
+            "value": {
+              "schedule_time": "03:00",
+              "retention_count": 3,
+              "schedule_enabled": true,
+              "schedule_frequency": "daily",
+              "schedule_day_of_week": 0,
+              "schedule_cron_expression": ""
+            }
+          },
+          {
+            "id": 16,
+            "key": "system_settings",
+            "name": "System Settings",
+            "value": {
+              "time_zone": "UTC"
+            }
+          },
+          {
+            "id": 17,
+            "key": "user_limit_settings",
+            "name": "User Limit Settings",
+            "value": {}
+          },
+          {
+            "id": 18,
+            "key": "reverse_proxy_auth",
+            "name": "Reverse Proxy Auth",
+            "value": {
+              "header": "",
+              "enabled": false
+            }
+          }
+        ],
+        "core_notificationdismissal": [],
+        "core_systemnotification": [
+          {
+            "id": 1,
+            "title": "Network Access Security Warning",
+            "source": "developer",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "priority": "high",
+            "is_active": true,
+            "admin_only": true,
+            "created_at": "2026-11-13T10:32:16.179096+00:00",
+            "expires_at": null,
+            "updated_at": "2026-11-13T10:32:16.179096+00:00",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning"
+          }
+        ],
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "locked": true,
+            "status": "idle",
+            "password": null,
+            "priority": 0,
+            "username": null,
+            "file_path": null,
+            "is_active": true,
+            "created_at": "2026-11-13T10:32:16.179096+00:00",
+            "server_url": null,
+            "updated_at": "2026-11-13T10:32:16.179096+00:00",
+            "max_streams": 0,
+            "account_type": "STD",
+            "last_message": null,
+            "user_agent_id": null,
+            "refresh_task_id": 1,
+            "server_group_id": null,
+            "refresh_interval": 24,
+            "custom_properties": null,
+            "stale_stream_days": 7,
+            "stream_profile_id": null
+          }
+        ],
+        "m3u_m3uaccountprofile": [
+          {
+            "id": 1,
+            "name": "custom Default",
+            "exp_date": null,
+            "is_active": true,
+            "is_default": true,
+            "max_streams": 0,
+            "m3u_account_id": 1,
+            "search_pattern": "^(.*)$",
+            "current_viewers": 0,
+            "replace_pattern": "$1",
+            "custom_properties": {}
+          }
+        ],
+        "vod_episode": [],
+        "vod_m3uepisoderelation": [],
+        "vod_m3umovierelation": [],
+        "vod_movie": [],
+        "vod_series": []
+      },
+      "sequences": {
+        "accounts_user": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "core_coresettings": {
+          "is_called": true,
+          "last_value": 20
+        },
+        "core_notificationdismissal": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "core_systemnotification": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "m3u_m3uaccount": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "m3u_m3uaccountprofile": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "vod_episode": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_m3uepisoderelation": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_m3umovierelation": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_movie": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_series": {
+          "is_called": false,
+          "last_value": 1
+        }
+      }
+    },
+    "credentials": {
+      "accounts_user": [
+        {
+          "id": 1,
+          "email": "",
+          "api_key": {
+            "sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+            "bytes": 64
+          },
+          "is_staff": false,
+          "password": "!",
+          "username": "owned-backup-physical",
+          "is_active": true,
+          "last_name": "",
+          "first_name": "",
+          "last_login": null,
+          "user_level": 10,
+          "date_joined": "2026-11-13T10:32:16.338874+00:00",
+          "is_superuser": false,
+          "stream_limit": 0,
+          "avatar_config": null,
+          "custom_properties": {}
+        }
+      ],
+      "events": [],
+      "sequence": {
+        "is_called": false,
+        "last_value": 1
+      }
+    },
+    "cache": {
+      "raw_DUMP_PTTL": {
+        "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373": {
+          "dump_hex": "001d80047d2858020000005549580b0000003132372e302e302e302f38752e0f001549ffea556b2b59",
+          "pttl": 297938
+        },
+        "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773": {
+          "dump_hex": "001c80047d28580900000074696d655f7a6f6e655803000000555443752e0f00f6d0b91ebc8a3872",
+          "pttl": 297935
+        }
+      },
+      "credential_Source_comparison": false
+    },
+    "broker_queue": {
+      "key": "celery",
+      "type": "list",
+      "DUMP_hex": "120102c342c9438a1f8a0300000100e37f7b22626f6479223a22573174644c4874394c4873695932461f7362474a685932747a496a7075645778734c434a6c636e4a6959574e726379490736626e5673624377202b156868615734694f6d353162477773496d4e6f62334a6bc037166656303d222c22636f6e74656e742d656e636f64696e672071047574662d38e0021a037479706520160f6170706c69636174696f6e2f6a736f6e20210c68656164657273223a7b226c61603b0170792016037461736b803006732e6261636b752007401308732e6372656174655f8014005f4013202e016964202c04383838366320021b2d303762312d346363662d613963632d316439613763353733623462202b10736861646f77223a6e756c6c2c22657461e0000a047870697265208a80190467726f7570e0040c055f696e646578c012047265747269402e003020ae0a696d656c696d6974223a5b603d4004005d2023036f6f745fe0239c02706172214a60324042092c22617267737265707220df01282920bd016b77e00211017b7d2011056f726967696e201f0b727573742d70726f6265406e21630876652d636f6d706f6e205020260669676e6f72655f20e001756c20a60466616c736520a00665706c616365646148045f6e65737461c020d2047374616d702018e100a0808f60162123027b7d7d20ad05726f706572746105007b2207037272656c2079016f6e60c0e11f90408303795f746f20311f62623532653739362d386632622d346636612d623035312d6465643730373239036664343920cb0064216c07766572795f6d6f6422570032e0021102696e662048007b21cc016368224f201d0022203021ca40d8025f6b65430f0263656c203c002260c00069213e0074201420f1432d005fe202c405626173653634203de0006e01746142dc1f37666133313732382d323132322d343731352d383466322d63663337336530350930626436227d7d0781ff0f00691e595dbf38ee82",
+      "pttl": -1,
+      "value": {
+        "list_hex": [
+          "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d"
+        ]
+      },
+      "consumed": false
+    },
+    "binding": {
+      "key": "_kombu.binding.celery",
+      "type": "set",
+      "DUMP_hex": "14191900000001009063656c6572790616061663656c65727911ff0f0058db310a32925780",
+      "pttl": -1,
+      "value": {
+        "set_hex": [
+          "63656c6572790616061663656c657279"
+        ]
+      },
+      "consumed": false
+    },
+    "backend": {
+      "key": "celery-tasks:celery-task-meta-11111111-1111-4111-8111-111111111111",
+      "type": "none",
+      "DUMP_hex": null,
+      "pttl": -2,
+      "value": null,
+      "consumed": false
+    },
+    "all_broker": {
+      "database": 2,
+      "capture_bytes": 795,
+      "rows": [
+        {
+          "key_hex": "5f6b6f6d62752e62696e64696e672e63656c657279",
+          "type": "set",
+          "dump_hex": "14191900000001009063656c6572790616061663656c65727911ff0f0058db310a32925780",
+          "pttl": -1,
+          "set_hex": [
+            "63656c6572790616061663656c657279"
+          ]
+        },
+        {
+          "key_hex": "63656c657279",
+          "type": "list",
+          "dump_hex": "120102c342c9438a1f8a0300000100e37f7b22626f6479223a22573174644c4874394c4873695932461f7362474a685932747a496a7075645778734c434a6c636e4a6959574e726379490736626e5673624377202b156868615734694f6d353162477773496d4e6f62334a6bc037166656303d222c22636f6e74656e742d656e636f64696e672071047574662d38e0021a037479706520160f6170706c69636174696f6e2f6a736f6e20210c68656164657273223a7b226c61603b0170792016037461736b803006732e6261636b752007401308732e6372656174655f8014005f4013202e016964202c04383838366320021b2d303762312d346363662d613963632d316439613763353733623462202b10736861646f77223a6e756c6c2c22657461e0000a047870697265208a80190467726f7570e0040c055f696e646578c012047265747269402e003020ae0a696d656c696d6974223a5b603d4004005d2023036f6f745fe0239c02706172214a60324042092c22617267737265707220df01282920bd016b77e00211017b7d2011056f726967696e201f0b727573742d70726f6265406e21630876652d636f6d706f6e205020260669676e6f72655f20e001756c20a60466616c736520a00665706c616365646148045f6e65737461c020d2047374616d702018e100a0808f60162123027b7d7d20ad05726f706572746105007b2207037272656c2079016f6e60c0e11f90408303795f746f20311f62623532653739362d386632622d346636612d623035312d6465643730373239036664343920cb0064216c07766572795f6d6f6422570032e0021102696e662048007b21cc016368224f201d0022203021ca40d8025f6b65430f0263656c203c002260c00069213e0074201420f1432d005fe202c405626173653634203de0006e01746142dc1f37666133313732382d323132322d343731352d383466322d63663337336530350930626436227d7d0781ff0f00691e595dbf38ee82",
+          "pttl": -1,
+          "list_hex": [
+            "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d"
+          ]
+        }
+      ]
+    },
+    "all_backend": {
+      "database": 3,
+      "capture_bytes": 0,
+      "rows": []
+    }
+  },
+  "after_physical_reply": {
+    "calls": 1,
+    "Weak_Some": false,
+    "weak_observer_stores_no_Arc": true,
+    "logical_done": true,
+    "logical_result": "Err(StatusBody(500, Object {\"detail\": String(\"Failed to start backup: Native backup transport unavailable\")}))",
+    "logical_completed_utc": "2026-11-13T10:32:18.383637265+00:00",
+    "real_application_http_slots_available": 4,
+    "real_jobs_slots_available": 4
+  },
+  "reply_after_release": {
+    "armed": false,
+    "selected": "publish",
+    "seen": 1,
+    "connections": 1,
+    "invalid": [],
+    "rows": [
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416524401,
+        "seen": 0,
+        "command_hex": "41555448",
+        "request_sha256": "21b8260c8674d354953d8e675850b5139b37bc23b450a94b57900e65eebd5454",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416584872,
+        "seen": 0,
+        "request_sha256": "21b8260c8674d354953d8e675850b5139b37bc23b450a94b57900e65eebd5454",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416640634,
+        "seen": 0,
+        "command_hex": "53454c454354",
+        "request_sha256": "cc17d144b48be8e5160afc81255d3e25aa5f2eb34ac97208dba2ec3acd09736f",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416677465,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416715456,
+        "seen": 0,
+        "request_sha256": "cc17d144b48be8e5160afc81255d3e25aa5f2eb34ac97208dba2ec3acd09736f",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416759817,
+        "seen": 0,
+        "command_hex": "434c49454e54",
+        "request_sha256": "682172b6dce9152d185e5a05ea9b1c1aea8e2d393e2629323f6e9564e30e4ee0",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416801739,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416825989,
+        "seen": 0,
+        "request_sha256": "682172b6dce9152d185e5a05ea9b1c1aea8e2d393e2629323f6e9564e30e4ee0",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.41687152,
+        "seen": 0,
+        "command_hex": "434c49454e54",
+        "request_sha256": "6eb04531c17bd863e7f8235d51d5eee5613c277f57ff833821faa94d3d85cdcd",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416896411,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416921312,
+        "seen": 0,
+        "request_sha256": "6eb04531c17bd863e7f8235d51d5eee5613c277f57ff833821faa94d3d85cdcd",
+        "target": false
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416959793,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.427953469,
+        "seen": 0,
+        "command_hex": "4556414c534841",
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true,
+        "target_arguments_hex": [
+          "4556414c534841",
+          "66636366333730376663663931376330643938663038646437386137376566656262626630656637",
+          "32",
+          "63656c657279",
+          "5f6b6f6d62752e62696e64696e672e63656c657279",
+          "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d",
+          "31303030"
+        ]
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428024151,
+        "seen": 0,
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.428076052,
+        "seen": 0,
+        "target": true,
+        "reply_sha256": "ec7e6a799a79baab7a10f175d78f4a5157b1bb7be3e95e7b20d95367c7d00299"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.428163615,
+        "seen": 0,
+        "command_hex": "534352495054",
+        "request_sha256": "3bd331c794b0876df6e76a1163fddc1514632530bf65ed74093bffcae5f8eea5",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428193996,
+        "seen": 0,
+        "request_sha256": "3bd331c794b0876df6e76a1163fddc1514632530bf65ed74093bffcae5f8eea5",
+        "target": false
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.428272308,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "8a8a531a2ba9f3db3358d5797a9c1965c9bfb1c07a196627c4adc96ead0493ea"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.428403771,
+        "seen": 0,
+        "command_hex": "4556414c534841",
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true,
+        "target_arguments_hex": [
+          "4556414c534841",
+          "66636366333730376663663931376330643938663038646437386137376566656262626630656637",
+          "32",
+          "63656c657279",
+          "5f6b6f6d62752e62696e64696e672e63656c657279",
+          "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d",
+          "31303030"
+        ]
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428445733,
+        "seen": 0,
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true
+      },
+      {
+        "kind": "backend-target-reply-read-held",
+        "monotonic": 286331.428567226,
+        "seen": 1,
+        "reply_hex": "3a310d0a",
+        "reply_sha256": "6d7dbcb27aa6e24f40bf1f4cb2cc8a36e2f3b7f1ae87edf906578a2936b756d2"
+      },
+      {
+        "kind": "backend-target-reply-released",
+        "monotonic": 286333.494871332,
+        "seen": 1
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286333.494922584,
+        "seen": 1,
+        "target": true,
+        "reply_sha256": "6d7dbcb27aa6e24f40bf1f4cb2cc8a36e2f3b7f1ae87edf906578a2936b756d2"
+      }
+    ]
+  },
+  "after": {
+    "SQL": {
+      "tables": {
+        "accounts_user": [
+          {
+            "id": 1,
+            "email": "",
+            "api_key": {
+              "sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+              "bytes": 64
+            },
+            "is_staff": false,
+            "password": "!",
+            "username": "owned-backup-physical",
+            "is_active": true,
+            "last_name": "",
+            "first_name": "",
+            "last_login": null,
+            "user_level": 10,
+            "date_joined": "2026-11-13T10:32:16.338874+00:00",
+            "is_superuser": false,
+            "stream_limit": 0,
+            "avatar_config": null,
+            "custom_properties": {}
+          }
+        ],
+        "core_coresettings": [
+          {
+            "id": 6,
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {
+              "UI": "127.0.0.0/8"
+            }
+          },
+          {
+            "id": 7,
+            "key": "proxy_settings",
+            "name": "Proxy Settings",
+            "value": {
+              "buffering_speed": 1.0,
+              "redis_chunk_ttl": 60,
+              "buffering_timeout": 15,
+              "channel_shutdown_delay": 0,
+              "channel_init_grace_period": 60,
+              "channel_client_wait_period": 5
+            }
+          },
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          },
+          {
+            "id": 14,
+            "key": "dvr_settings",
+            "name": "DVR Settings",
+            "value": {
+              "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+              "series_rules": [],
+              "movie_template": "Movies/{title} ({year}).mkv",
+              "comskip_enabled": false,
+              "tv_fallback_dir": "TV_Shows",
+              "pre_offset_minutes": 0,
+              "comskip_custom_path": "",
+              "post_offset_minutes": 0,
+              "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+              "movie_fallback_template": "Movies/{start}.mkv"
+            }
+          },
+          {
+            "id": 15,
+            "key": "backup_settings",
+            "name": "Backup Settings",
+            "value": {
+              "schedule_time": "03:00",
+              "retention_count": 3,
+              "schedule_enabled": true,
+              "schedule_frequency": "daily",
+              "schedule_day_of_week": 0,
+              "schedule_cron_expression": ""
+            }
+          },
+          {
+            "id": 16,
+            "key": "system_settings",
+            "name": "System Settings",
+            "value": {
+              "time_zone": "UTC"
+            }
+          },
+          {
+            "id": 17,
+            "key": "user_limit_settings",
+            "name": "User Limit Settings",
+            "value": {}
+          },
+          {
+            "id": 18,
+            "key": "reverse_proxy_auth",
+            "name": "Reverse Proxy Auth",
+            "value": {
+              "header": "",
+              "enabled": false
+            }
+          }
+        ],
+        "core_notificationdismissal": [],
+        "core_systemnotification": [
+          {
+            "id": 1,
+            "title": "Network Access Security Warning",
+            "source": "developer",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "priority": "high",
+            "is_active": true,
+            "admin_only": true,
+            "created_at": "2026-11-13T10:32:16.179096+00:00",
+            "expires_at": null,
+            "updated_at": "2026-11-13T10:32:16.179096+00:00",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning"
+          }
+        ],
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "locked": true,
+            "status": "idle",
+            "password": null,
+            "priority": 0,
+            "username": null,
+            "file_path": null,
+            "is_active": true,
+            "created_at": "2026-11-13T10:32:16.179096+00:00",
+            "server_url": null,
+            "updated_at": "2026-11-13T10:32:16.179096+00:00",
+            "max_streams": 0,
+            "account_type": "STD",
+            "last_message": null,
+            "user_agent_id": null,
+            "refresh_task_id": 1,
+            "server_group_id": null,
+            "refresh_interval": 24,
+            "custom_properties": null,
+            "stale_stream_days": 7,
+            "stream_profile_id": null
+          }
+        ],
+        "m3u_m3uaccountprofile": [
+          {
+            "id": 1,
+            "name": "custom Default",
+            "exp_date": null,
+            "is_active": true,
+            "is_default": true,
+            "max_streams": 0,
+            "m3u_account_id": 1,
+            "search_pattern": "^(.*)$",
+            "current_viewers": 0,
+            "replace_pattern": "$1",
+            "custom_properties": {}
+          }
+        ],
+        "vod_episode": [],
+        "vod_m3uepisoderelation": [],
+        "vod_m3umovierelation": [],
+        "vod_movie": [],
+        "vod_series": []
+      },
+      "sequences": {
+        "accounts_user": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "core_coresettings": {
+          "is_called": true,
+          "last_value": 20
+        },
+        "core_notificationdismissal": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "core_systemnotification": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "m3u_m3uaccount": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "m3u_m3uaccountprofile": {
+          "is_called": true,
+          "last_value": 1
+        },
+        "vod_episode": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_m3uepisoderelation": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_m3umovierelation": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_movie": {
+          "is_called": false,
+          "last_value": 1
+        },
+        "vod_series": {
+          "is_called": false,
+          "last_value": 1
+        }
+      }
+    },
+    "credentials": {
+      "accounts_user": [
+        {
+          "id": 1,
+          "email": "",
+          "api_key": {
+            "sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+            "bytes": 64
+          },
+          "is_staff": false,
+          "password": "!",
+          "username": "owned-backup-physical",
+          "is_active": true,
+          "last_name": "",
+          "first_name": "",
+          "last_login": null,
+          "user_level": 10,
+          "date_joined": "2026-11-13T10:32:16.338874+00:00",
+          "is_superuser": false,
+          "stream_limit": 0,
+          "avatar_config": null,
+          "custom_properties": {}
+        }
+      ],
+      "events": [],
+      "sequence": {
+        "is_called": false,
+        "last_value": 1
+      }
+    },
+    "cache": {
+      "raw_DUMP_PTTL": {
+        "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373": {
+          "dump_hex": "001d80047d2858020000005549580b0000003132372e302e302e302f38752e0f001549ffea556b2b59",
+          "pttl": 297923
+        },
+        "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773": {
+          "dump_hex": "001c80047d28580900000074696d655f7a6f6e655803000000555443752e0f00f6d0b91ebc8a3872",
+          "pttl": 297921
+        }
+      },
+      "credential_Source_comparison": false
+    },
+    "broker_queue": {
+      "key": "celery",
+      "type": "list",
+      "DUMP_hex": "120102c342c9438a1f8a0300000100e37f7b22626f6479223a22573174644c4874394c4873695932461f7362474a685932747a496a7075645778734c434a6c636e4a6959574e726379490736626e5673624377202b156868615734694f6d353162477773496d4e6f62334a6bc037166656303d222c22636f6e74656e742d656e636f64696e672071047574662d38e0021a037479706520160f6170706c69636174696f6e2f6a736f6e20210c68656164657273223a7b226c61603b0170792016037461736b803006732e6261636b752007401308732e6372656174655f8014005f4013202e016964202c04383838366320021b2d303762312d346363662d613963632d316439613763353733623462202b10736861646f77223a6e756c6c2c22657461e0000a047870697265208a80190467726f7570e0040c055f696e646578c012047265747269402e003020ae0a696d656c696d6974223a5b603d4004005d2023036f6f745fe0239c02706172214a60324042092c22617267737265707220df01282920bd016b77e00211017b7d2011056f726967696e201f0b727573742d70726f6265406e21630876652d636f6d706f6e205020260669676e6f72655f20e001756c20a60466616c736520a00665706c616365646148045f6e65737461c020d2047374616d702018e100a0808f60162123027b7d7d20ad05726f706572746105007b2207037272656c2079016f6e60c0e11f90408303795f746f20311f62623532653739362d386632622d346636612d623035312d6465643730373239036664343920cb0064216c07766572795f6d6f6422570032e0021102696e662048007b21cc016368224f201d0022203021ca40d8025f6b65430f0263656c203c002260c00069213e0074201420f1432d005fe202c405626173653634203de0006e01746142dc1f37666133313732382d323132322d343731352d383466322d63663337336530350930626436227d7d0781ff0f00691e595dbf38ee82",
+      "pttl": -1,
+      "value": {
+        "list_hex": [
+          "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d"
+        ]
+      },
+      "consumed": false
+    },
+    "binding": {
+      "key": "_kombu.binding.celery",
+      "type": "set",
+      "DUMP_hex": "14191900000001009063656c6572790616061663656c65727911ff0f0058db310a32925780",
+      "pttl": -1,
+      "value": {
+        "set_hex": [
+          "63656c6572790616061663656c657279"
+        ]
+      },
+      "consumed": false
+    },
+    "backend": {
+      "key": "celery-tasks:celery-task-meta-11111111-1111-4111-8111-111111111111",
+      "type": "none",
+      "DUMP_hex": null,
+      "pttl": -2,
+      "value": null,
+      "consumed": false
+    },
+    "all_broker": {
+      "database": 2,
+      "capture_bytes": 795,
+      "rows": [
+        {
+          "key_hex": "5f6b6f6d62752e62696e64696e672e63656c657279",
+          "type": "set",
+          "dump_hex": "14191900000001009063656c6572790616061663656c65727911ff0f0058db310a32925780",
+          "pttl": -1,
+          "set_hex": [
+            "63656c6572790616061663656c657279"
+          ]
+        },
+        {
+          "key_hex": "63656c657279",
+          "type": "list",
+          "dump_hex": "120102c342c9438a1f8a0300000100e37f7b22626f6479223a22573174644c4874394c4873695932461f7362474a685932747a496a7075645778734c434a6c636e4a6959574e726379490736626e5673624377202b156868615734694f6d353162477773496d4e6f62334a6bc037166656303d222c22636f6e74656e742d656e636f64696e672071047574662d38e0021a037479706520160f6170706c69636174696f6e2f6a736f6e20210c68656164657273223a7b226c61603b0170792016037461736b803006732e6261636b752007401308732e6372656174655f8014005f4013202e016964202c04383838366320021b2d303762312d346363662d613963632d316439613763353733623462202b10736861646f77223a6e756c6c2c22657461e0000a047870697265208a80190467726f7570e0040c055f696e646578c012047265747269402e003020ae0a696d656c696d6974223a5b603d4004005d2023036f6f745fe0239c02706172214a60324042092c22617267737265707220df01282920bd016b77e00211017b7d2011056f726967696e201f0b727573742d70726f6265406e21630876652d636f6d706f6e205020260669676e6f72655f20e001756c20a60466616c736520a00665706c616365646148045f6e65737461c020d2047374616d702018e100a0808f60162123027b7d7d20ad05726f706572746105007b2207037272656c2079016f6e60c0e11f90408303795f746f20311f62623532653739362d386632622d346636612d623035312d6465643730373239036664343920cb0064216c07766572795f6d6f6422570032e0021102696e662048007b21cc016368224f201d0022203021ca40d8025f6b65430f0263656c203c002260c00069213e0074201420f1432d005fe202c405626173653634203de0006e01746142dc1f37666133313732382d323132322d343731352d383466322d63663337336530350930626436227d7d0781ff0f00691e595dbf38ee82",
+          "pttl": -1,
+          "list_hex": [
+            "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d"
+          ]
+        }
+      ]
+    },
+    "all_backend": {
+      "database": 3,
+      "capture_bytes": 0,
+      "rows": []
+    }
+  },
+  "published_owned_task_id": "8886c86c-07b1-4ccf-a9cc-1d9a7c573b4b",
+  "published_unconsumed_create_frame_sha256": "c931c8d0ac5292b58f4c85c68978d366a17a14aecf48d5b44969a09fbe170f6e",
+  "proxy_connections_absent_before_stop": {
+    "armed": false,
+    "selected": "publish",
+    "seen": 1,
+    "connections": 0,
+    "invalid": [],
+    "rows": [
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416524401,
+        "seen": 0,
+        "command_hex": "41555448",
+        "request_sha256": "21b8260c8674d354953d8e675850b5139b37bc23b450a94b57900e65eebd5454",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416584872,
+        "seen": 0,
+        "request_sha256": "21b8260c8674d354953d8e675850b5139b37bc23b450a94b57900e65eebd5454",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416640634,
+        "seen": 0,
+        "command_hex": "53454c454354",
+        "request_sha256": "cc17d144b48be8e5160afc81255d3e25aa5f2eb34ac97208dba2ec3acd09736f",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416677465,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416715456,
+        "seen": 0,
+        "request_sha256": "cc17d144b48be8e5160afc81255d3e25aa5f2eb34ac97208dba2ec3acd09736f",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416759817,
+        "seen": 0,
+        "command_hex": "434c49454e54",
+        "request_sha256": "682172b6dce9152d185e5a05ea9b1c1aea8e2d393e2629323f6e9564e30e4ee0",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416801739,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416825989,
+        "seen": 0,
+        "request_sha256": "682172b6dce9152d185e5a05ea9b1c1aea8e2d393e2629323f6e9564e30e4ee0",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.41687152,
+        "seen": 0,
+        "command_hex": "434c49454e54",
+        "request_sha256": "6eb04531c17bd863e7f8235d51d5eee5613c277f57ff833821faa94d3d85cdcd",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416896411,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416921312,
+        "seen": 0,
+        "request_sha256": "6eb04531c17bd863e7f8235d51d5eee5613c277f57ff833821faa94d3d85cdcd",
+        "target": false
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416959793,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.427953469,
+        "seen": 0,
+        "command_hex": "4556414c534841",
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true,
+        "target_arguments_hex": [
+          "4556414c534841",
+          "66636366333730376663663931376330643938663038646437386137376566656262626630656637",
+          "32",
+          "63656c657279",
+          "5f6b6f6d62752e62696e64696e672e63656c657279",
+          "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d",
+          "31303030"
+        ]
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428024151,
+        "seen": 0,
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.428076052,
+        "seen": 0,
+        "target": true,
+        "reply_sha256": "ec7e6a799a79baab7a10f175d78f4a5157b1bb7be3e95e7b20d95367c7d00299"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.428163615,
+        "seen": 0,
+        "command_hex": "534352495054",
+        "request_sha256": "3bd331c794b0876df6e76a1163fddc1514632530bf65ed74093bffcae5f8eea5",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428193996,
+        "seen": 0,
+        "request_sha256": "3bd331c794b0876df6e76a1163fddc1514632530bf65ed74093bffcae5f8eea5",
+        "target": false
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.428272308,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "8a8a531a2ba9f3db3358d5797a9c1965c9bfb1c07a196627c4adc96ead0493ea"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.428403771,
+        "seen": 0,
+        "command_hex": "4556414c534841",
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true,
+        "target_arguments_hex": [
+          "4556414c534841",
+          "66636366333730376663663931376330643938663038646437386137376566656262626630656637",
+          "32",
+          "63656c657279",
+          "5f6b6f6d62752e62696e64696e672e63656c657279",
+          "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d",
+          "31303030"
+        ]
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428445733,
+        "seen": 0,
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true
+      },
+      {
+        "kind": "backend-target-reply-read-held",
+        "monotonic": 286331.428567226,
+        "seen": 1,
+        "reply_hex": "3a310d0a",
+        "reply_sha256": "6d7dbcb27aa6e24f40bf1f4cb2cc8a36e2f3b7f1ae87edf906578a2936b756d2"
+      },
+      {
+        "kind": "backend-target-reply-released",
+        "monotonic": 286333.494871332,
+        "seen": 1
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286333.494922584,
+        "seen": 1,
+        "target": true,
+        "reply_sha256": "6d7dbcb27aa6e24f40bf1f4cb2cc8a36e2f3b7f1ae87edf906578a2936b756d2"
+      }
+    ]
+  },
+  "proxy_stop": {
+    "armed": false,
+    "selected": "publish",
+    "seen": 1,
+    "connections": 0,
+    "invalid": [],
+    "rows": [
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416524401,
+        "seen": 0,
+        "command_hex": "41555448",
+        "request_sha256": "21b8260c8674d354953d8e675850b5139b37bc23b450a94b57900e65eebd5454",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416584872,
+        "seen": 0,
+        "request_sha256": "21b8260c8674d354953d8e675850b5139b37bc23b450a94b57900e65eebd5454",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416640634,
+        "seen": 0,
+        "command_hex": "53454c454354",
+        "request_sha256": "cc17d144b48be8e5160afc81255d3e25aa5f2eb34ac97208dba2ec3acd09736f",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416677465,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416715456,
+        "seen": 0,
+        "request_sha256": "cc17d144b48be8e5160afc81255d3e25aa5f2eb34ac97208dba2ec3acd09736f",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.416759817,
+        "seen": 0,
+        "command_hex": "434c49454e54",
+        "request_sha256": "682172b6dce9152d185e5a05ea9b1c1aea8e2d393e2629323f6e9564e30e4ee0",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416801739,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416825989,
+        "seen": 0,
+        "request_sha256": "682172b6dce9152d185e5a05ea9b1c1aea8e2d393e2629323f6e9564e30e4ee0",
+        "target": false
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.41687152,
+        "seen": 0,
+        "command_hex": "434c49454e54",
+        "request_sha256": "6eb04531c17bd863e7f8235d51d5eee5613c277f57ff833821faa94d3d85cdcd",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416896411,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.416921312,
+        "seen": 0,
+        "request_sha256": "6eb04531c17bd863e7f8235d51d5eee5613c277f57ff833821faa94d3d85cdcd",
+        "target": false
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.416959793,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.427953469,
+        "seen": 0,
+        "command_hex": "4556414c534841",
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true,
+        "target_arguments_hex": [
+          "4556414c534841",
+          "66636366333730376663663931376330643938663038646437386137376566656262626630656637",
+          "32",
+          "63656c657279",
+          "5f6b6f6d62752e62696e64696e672e63656c657279",
+          "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d",
+          "31303030"
+        ]
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428024151,
+        "seen": 0,
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.428076052,
+        "seen": 0,
+        "target": true,
+        "reply_sha256": "ec7e6a799a79baab7a10f175d78f4a5157b1bb7be3e95e7b20d95367c7d00299"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.428163615,
+        "seen": 0,
+        "command_hex": "534352495054",
+        "request_sha256": "3bd331c794b0876df6e76a1163fddc1514632530bf65ed74093bffcae5f8eea5",
+        "target": false,
+        "target_arguments_hex": null
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428193996,
+        "seen": 0,
+        "request_sha256": "3bd331c794b0876df6e76a1163fddc1514632530bf65ed74093bffcae5f8eea5",
+        "target": false
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286331.428272308,
+        "seen": 0,
+        "target": false,
+        "reply_sha256": "8a8a531a2ba9f3db3358d5797a9c1965c9bfb1c07a196627c4adc96ead0493ea"
+      },
+      {
+        "kind": "request-read",
+        "monotonic": 286331.428403771,
+        "seen": 0,
+        "command_hex": "4556414c534841",
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true,
+        "target_arguments_hex": [
+          "4556414c534841",
+          "66636366333730376663663931376330643938663038646437386137376566656262626630656637",
+          "32",
+          "63656c657279",
+          "5f6b6f6d62752e62696e64696e672e63656c657279",
+          "7b22626f6479223a22573174644c4874394c4873695932467362474a685932747a496a7075645778734c434a6c636e4a6959574e7263794936626e56736243776959326868615734694f6d353162477773496d4e6f62334a6b496a7075645778736656303d222c22636f6e74656e742d656e636f64696e67223a227574662d38222c22636f6e74656e742d74797065223a226170706c69636174696f6e2f6a736f6e222c2268656164657273223a7b226c616e67223a227079222c227461736b223a22617070732e6261636b7570732e7461736b732e6372656174655f6261636b75705f7461736b222c226964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22736861646f77223a6e756c6c2c22657461223a6e756c6c2c2265787069726573223a6e756c6c2c2267726f7570223a6e756c6c2c2267726f75705f696e646578223a6e756c6c2c2272657472696573223a302c2274696d656c696d6974223a5b6e756c6c2c6e756c6c5d2c22726f6f745f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c22706172656e745f6964223a6e756c6c2c226172677372657072223a222829222c226b776172677372657072223a227b7d222c226f726967696e223a22727573742d70726f6265406e61746976652d636f6d706f6e656e74222c2269676e6f72655f726573756c74223a66616c73652c227265706c616365645f7461736b5f6e657374696e67223a302c227374616d7065645f68656164657273223a6e756c6c2c227374616d7073223a7b7d7d2c2270726f70657274696573223a7b22636f7272656c6174696f6e5f6964223a2238383836633836632d303762312d346363662d613963632d316439613763353733623462222c227265706c795f746f223a2262623532653739362d386632622d346636612d623035312d646564373037323966643439222c2264656c69766572795f6d6f6465223a322c2264656c69766572795f696e666f223a7b2265786368616e6765223a22222c22726f7574696e675f6b6579223a2263656c657279227d2c227072696f72697479223a302c22626f64795f656e636f64696e67223a22626173653634222c2264656c69766572795f746167223a2237666133313732382d323132322d343731352d383466322d636633373365303530626436227d7d",
+          "31303030"
+        ]
+      },
+      {
+        "kind": "request-forwarded",
+        "monotonic": 286331.428445733,
+        "seen": 0,
+        "request_sha256": "cf2cea4ab41d53f8be86fa3cfc5e80a7d9a141b2356824f1029ff84d5031ccc9",
+        "target": true
+      },
+      {
+        "kind": "backend-target-reply-read-held",
+        "monotonic": 286331.428567226,
+        "seen": 1,
+        "reply_hex": "3a310d0a",
+        "reply_sha256": "6d7dbcb27aa6e24f40bf1f4cb2cc8a36e2f3b7f1ae87edf906578a2936b756d2"
+      },
+      {
+        "kind": "backend-target-reply-released",
+        "monotonic": 286333.494871332,
+        "seen": 1
+      },
+      {
+        "kind": "reply-forwarded",
+        "monotonic": 286333.494922584,
+        "seen": 1,
+        "target": true,
+        "reply_sha256": "6d7dbcb27aa6e24f40bf1f4cb2cc8a36e2f3b7f1ae87edf906578a2936b756d2"
+      }
+    ],
+    "listener_joined": true
+  },
+  "closed_pool_size": 0,
+  "closed_pool_idle": 2
+}

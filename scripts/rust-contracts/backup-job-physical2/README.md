@@ -1,0 +1,22 @@
+# Backup publish/status physical cases5/6
+
+This packet records a separately accepted OFFLINE oracle correction for two retained physical cases. All four original host exits remain1: the first two attempts failed before ELF/requests on a missing audit schema dependency; the second pair ran the Rust cases/ELF to exit0 but the outer validator failed its declared closedidle0 oracle. The two actual captures remain `passed:true`, complete, with closed pool size0 and literal idle2. No application or request was replayed and no runtime/ELF/raw field was changed.
+
+Pinned sqlx-core0.8.6 has a separate num_idle atomic. Normal pop_idle decrements it and release increments it; close directly pops/awaits closing idle connections without decrementing/resetting that atomic. Thus idle2 after size0 is source-explained residual accounting. The same compiled final pool max is4, not the earlier max1 guard. The separately reviewed last predicate requires strict integer size0 and finite residualidle0..4, retaining idle2. All other Weak/slots/realreply/SQL/broker/HTTP/proxy/wait predicates remain unchanged. Preclose idle/queue length and while-alive external PG observation are UNOBSERVED; backend[] is explicitly observed after ELF exit. Older max1 size1/live-backend and notification2/4/6 negatives remain open.
+
+Case5 uses actual BackupFiles.with_jobs(real BackupApplication), committed PUBLISH Lua/LPUSH and an actual observed client FD shutdown/drop before logical completion. It does not equate FD loss with handler abort. Case6 holds the actual READ Lua response (GET inside Lua, not standalone GET) for a completed Source16 backend fixture through the real two-second logical deadline and Native HTTP500. No Source timeout exception/renderer parity is claimed. A decorator stores only Weak of the original caller, recording actual real-adapter completion before retention proof; no test Strong owner, new budget or Store-private counter is introduced. Both require real four-slot restoration, caller release after real reply, relay connections0 before stop and physical child/server/pool settlement.
+
+Per-request SQL scope is eleven tables/sequences plus credential/events. Default before/after audits separately cover named11 and all62 tables/59 sequences with exact bytes. All lifecycle/raw errors and Root fresh cleanup/offline reviews are retained. Root verified22 host command identities/pipes and8 service identities absent for each second attempt, all project/CID queries empty and defaults exact. No Source app, Main, workers, task consumption, packaged tooling, fullM8 or performance acceptance is inferred.
+
+The two public captures are NEW projected-only bindings. Exactly12 owned API-key scalars become original byte SHA/length evidence; every other field, raw response, SQL/cache/broker/wire, clock and counter remains unchanged. Original raw/projection hashes and each path are explicit, with no raw/alternate hash fallback. Disabled password markers remain. Published fixture key templates are not a claim of irreversible pseudonymization. Raw credential-bearing captures remain private.
+
+Historical source is830 inputs =825Rust+5, compiled on Git18bf with only two test paths. This must not be confused with a newer image's830 Rust files. Source/build/ELF bindings and both original execution controllers are preserved. The ELF and upstream .crate binary are not in Git. Eight exact upstream source/license files are included, with a local cached-crate recipe verifying Cargo.lock SHA. Root independently compared all100 installed upstream files to that archive. Results do not transfer to the newer workspace/image without qualification; Original and SQLx authors retain their respective credit/licenses, React unchanged.
+
+Read-only checks and reconstruction (no app/Cargo/Docker/network):
+
+    python3 -B scripts/rust-contracts/backup-job-physical2/verify.py
+    python3 -B scripts/rust-contracts/backup-job-physical2/test_controls.py
+    python3 -B scripts/rust-contracts/backup-job-physical2/reconstruct.py --git-repo . --destination /tmp/backup-physical2-reconstruction
+    python3 -B scripts/rust-contracts/backup-job-physical2/crate_recipe.py --crate /path/to/existing/sqlx-core-0.8.6.crate
+
+Original private offline-definition code/seal is retained as historical definition and cannot be run against omitted private captures. verify.py is the separate strict public projected reference. Relocated/new binaries/controllers require new explicit bindings and review, never automatic replay or reused output namespaces.

@@ -1,0 +1,7 @@
+# Backup publish/status: separate physical offline qualification
+
+Two real BackupFiles/BackupApplication physical cases have separate Root-accepted offline qualification. All original host exits remain1: two pre-ELF dependency failures, then two actual Rust0/host1 runs failing closedidle0. Literal size0/idle2 remains. Pinned SQLx0.8.6 closes idle connections without decrementing its separate idle counter; the corrected last oracle uses strict size0 plus residualidle0..4 from the same compiled pool, preserving every other physical predicate.
+
+The [portable packet](../scripts/rust-contracts/backup-job-physical2/README.md) binds twelve credential-field projections to original raw hashes,410 byte-exact lifecycle members, Root cleanup/offline reviews and exact upstream source/licenses/local-crate recipe. Historical830-input/825Rust+5 source and both execution definitions reconstruct without a target cache or published ELF. No application was rerun or original result relabeled.
+
+Actual FD loss, logical deadline and observed caller ownership remain distinct. External backend[] is after ELF exit, while-alive observation is unmeasured. Earlier SQLx max1 size1/live-backend and notification physical negatives remain unchanged. These test-only paths do not establish a production fix, current-image/Main/default activation, packaged tools, SQLite, performance or fullM8 acceptance. Original/SQLx credit is retained and React is unchanged.

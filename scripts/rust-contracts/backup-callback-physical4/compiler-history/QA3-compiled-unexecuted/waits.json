@@ -1,0 +1,63 @@
+[
+  {
+    "stage": "format",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all"
+    ],
+    "actual_PID": 4,
+    "began_epoch": 1794557025.9077537,
+    "finished_epoch": 1794557027.7737787,
+    "actual_exit": 0
+  },
+  {
+    "stage": "format-check",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "actual_PID": 31,
+    "began_epoch": 1794557027.834227,
+    "finished_epoch": 1794557029.5983438,
+    "actual_exit": 0
+  },
+  {
+    "stage": "test-build",
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "--no-run",
+      "--offline",
+      "--locked"
+    ],
+    "actual_PID": 58,
+    "began_epoch": 1794557029.5985193,
+    "finished_epoch": 1794557047.3807154,
+    "actual_exit": 0
+  },
+  {
+    "stage": "strict",
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "dispatcharr-store",
+      "--all-targets",
+      "--offline",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "actual_PID": 120,
+    "began_epoch": 1794557047.3808653,
+    "finished_epoch": 1794557057.2953355,
+    "actual_exit": 0
+  }
+]

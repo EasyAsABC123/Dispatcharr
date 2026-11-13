@@ -1,0 +1,29 @@
+{
+  "schema": "backup-physical-mounted-runtime-file-closure-v1",
+  "native_source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m8-backup-job-physical-private-1/source",
+  "mounts": {
+    "/native-root": "execution-plan-root",
+    "/native-inputs": "execution-plan-root/inputs",
+    "/native-tools": "execution-plan-root/controller",
+    "/native-source": "native_source_root",
+    "/pg-bootstrap": "execution-plan-root/inputs/pg-init"
+  },
+  "owned_outputs": [
+    "/evidence",
+    "/data",
+    "/tmp"
+  ],
+  "owned_runtime_interfaces": [
+    "/proc",
+    "/var/run/postgresql",
+    "127.0.0.1:6379"
+  ],
+  "schema62_sha256": "88e887321483a57093cc309ecd783aed7368b125c566a8e595a75fb8a92fc893",
+  "compiled_peer_root_env": "BACKUP_JOB_PHYSICAL_ROOT=/native-root",
+  "compiled_peer_output_env": "BACKUP_JOB_PHYSICAL_OUTPUT=/evidence",
+  "image_module_dependencies": [
+    "psycopg",
+    "redis"
+  ],
+  "image_dependency_scope": "pinned Original image bytes, no host import/app execution; actual ELF loader preflight remains required"
+}

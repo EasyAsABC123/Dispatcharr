@@ -1,0 +1,56 @@
+{
+  "state": "CODE_COMPLETE_TEST_ONLY_UNEXECUTED_REQUIRES_ROOT_COMPILE_REVIEW",
+  "base_Git": "18bf274cda795a0177e78b999fccfd4126d0a791",
+  "cases": [
+    {
+      "id": 5,
+      "test": "backup_application::physical_job_tests::real_backup_publish_fd_loss_retains_original_caller_until_reply",
+      "request": "POST /api/backups/create/ with actual persisted admin APIkey and literal malformed body {",
+      "target": "actual transport PUBLISH Lua, keys celery/_kombu.binding.celery; first non-NOSCRIPT target reply held after real LPUSH",
+      "caller_loss": "actual client FD write-shutdown/drop before adapter logical completion; not handler abort",
+      "expected": "no successful HTTP byte observed before client close; real adapter logical timeout/error; Weak.Some and real adapter/jobs3slots whileheld; committed one CreateBackup frame unconsumed; Weak.None and4slots afteractualreply"
+    },
+    {
+      "id": 6,
+      "test": "backup_application::physical_job_tests::real_backup_status_logical_deadline_retains_original_caller_until_reply",
+      "request": "GET /api/backups/status/11111111-1111-4111-8111-111111111111/ with actual persisted admin APIkey",
+      "target": "actual transport READ Lua (GET inside Lua, no standalone GET), exact celery-tasks:celery-task-meta-ID",
+      "caller_loss": "actual production2s command logical deadline; HTTP500 Native diagnostic predicted from current mapping, no Source exception-text authority",
+      "expected": "real Source16 completed backend fixture unchanged with TTLmonotonic; actual HTTP500 whiletargetheld; Weak.Some/3slots afterlogicaldone; Weak.None/4slots afteractualreply"
+    }
+  ],
+  "ownership": {
+    "decorator": "stores only Weak<dynSend+Sync> of originalcaller passed to real BackupApplication, no fake retained owner",
+    "real_call": "exactly one create/status call; ArchiveHandler prepared, no run_once/worker/backgroundgraph",
+    "physical": "actual backend command/replyforward ledger, one positive targetreply, no task/result replay; normal NOSCRIPT load handshake retained as protocol",
+    "final": "real BackupFiles.shutdown once after physicalsettlement; graceful real serverwait0; dropallrealapprefs, observe proxyconnections0 before stop; actual listener/thread/child/PID receipts; actual pool.close once bounded10,size0",
+    "failed": "partial capture/proxy forced kill staysnegative; outsidecontroller cleanup must settle exact owned resources, no retry"
+  },
+  "budgets_seconds": {
+    "reach_target": 15,
+    "hold_max": 25,
+    "proxy_safety": 45,
+    "case": 90,
+    "observe_logical": 10,
+    "observe_physical_release": 10,
+    "proxy_client_close": 10,
+    "server_wait": 10,
+    "pool_close": 10,
+    "outer": 1200,
+    "cleanup": 90
+  },
+  "isolation": "each case independent fresh owned database/project context; noRootpassed1-4 replay; globalordinaryslot required beforeactual",
+  "SQL": "all11rawtables/sequences plususer/events unchanged afterrequest; defaultall62tables/59seq beforeafteroutsideELF",
+  "broker_backend": "actual raw key/type/DUMP/GET/list/set/TTL; exacttaskFrame/create_identity/source16metadata; unconsumedworker0",
+  "no_claim": [
+    "Source or Main app",
+    "Source physical cancellation equivalence",
+    "FDloss equals handlerabort",
+    "productionbug/fix",
+    "new budget/pool",
+    "defaultworker activation",
+    "new packaged pgtools",
+    "pool reuse from accounting alone",
+    "SQLite/performance/fullM8"
+  ]
+}

@@ -1,0 +1,11 @@
+--- executed-validator.py
++++ corrected-validator.py
+@@ -73,5 +73,6 @@
+   require(equal(json.loads(value),report['Source16_result_seed_context']),'LiteralSource16BackendFixtureContext')
+  require(report['proxy_connections_absent_before_stop']['connections']==0 and report['proxy_stop']['connections']==0 and report['proxy_stop']['listener_joined']is True and report['proxy_stop']['invalid']==[],'ActualRelayClientEndpointsThenListenerSettled')
+  receipt=json.loads((output/'proxy-process.json').read_text());require(type(receipt['exit'])is int and type(receipt['wait'])is int and receipt['exit']==receipt['wait']==0 and receipt['signal']is None and receipt['forced']is False and receipt['proc_PID_absent_after_wait']is True and receipt['stdout_reader_joined']is True and type(receipt['starttime'])is str and receipt['starttime'].isdigit(),'ActualProxyWaitPipesPIDNoForcedKill')
+- require(type(report['closed_pool_size'])is int and type(report['closed_pool_idle'])is int and report['closed_pool_size']==report['closed_pool_idle']==0,'ActualSinglePoolCloseSizeIdle0')
+- return {'passed':True,'physical_case':case,'actual_requests':1,'real_adapter_logical_completion':True,'original_caller_retained_until_actual_reply_then_released':True,'actual_Lua_wire_and_reply_validated':True,'Source_or_Main_runs':0,'Root_cases1_4_replayed':False,'full_M8_or_production_bug_claimed':False,'no_HTTP_FD_loss_equals_handler_abort_claim':True}
++ require(type(report['closed_pool_size'])is int and report['closed_pool_size']==0,'ActualSinglePoolCloseSize0')
++ require(type(report['closed_pool_idle'])is int and 0<=report['closed_pool_idle']<=4,'SourceBoundFiniteResidualIdleDiagnostic')
++ return {'passed':True,'physical_case':case,'actual_requests':1,'real_adapter_logical_completion':True,'original_caller_retained_until_actual_reply_then_released':True,'actual_Lua_wire_and_reply_validated':True,'Source_or_Main_runs':0,'Root_cases1_4_replayed':False,'full_M8_or_production_bug_claimed':False,'original_idle0_gate_unmet_preserved':True,'closed_idle_diagnostic_literal':report['closed_pool_idle'],'compiled_final_pool_max':4,'qualification_kind':'OFFLINE_SOURCE_DERIVED_ORACLE_CORRECTION_NOT_ORIGINAL_CONTROLLER_PASS','no_HTTP_FD_loss_equals_handler_abort_claim':True}

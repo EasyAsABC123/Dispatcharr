@@ -1,0 +1,44 @@
+[
+  {
+    "stage": "format",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all"
+    ],
+    "actual_PID": 4,
+    "began_epoch": 1794554498.4264627,
+    "finished_epoch": 1794554500.2715693,
+    "actual_exit": 0
+  },
+  {
+    "stage": "format-check",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "actual_PID": 31,
+    "began_epoch": 1794554500.3116276,
+    "finished_epoch": 1794554502.178994,
+    "actual_exit": 0
+  },
+  {
+    "stage": "test-build",
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "--no-run",
+      "--offline",
+      "--locked"
+    ],
+    "actual_PID": 58,
+    "began_epoch": 1794554502.1792793,
+    "finished_epoch": 1794554551.3743603,
+    "actual_exit": 101
+  }
+]

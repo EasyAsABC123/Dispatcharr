@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "docker",
+    "compose",
+    "-p",
+    "dispatcharr-backup-jobs-physical-5f5d00d67d",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m8-backup-job-physical-sql-5-1/compose.json",
+    "exec",
+    "-T",
+    "-e",
+    "BACKUP_PHYSICAL_AUDIT=owned-native-only",
+    "-e",
+    "BACKUP_PHYSICAL_AUDIT_STAGE=default",
+    "-e",
+    "BACKUP_PHYSICAL_AUDIT_LABEL=default-before",
+    "-e",
+    "BACKUP_PHYSICAL_AUDIT_DATABASE=dispatcharr",
+    "baseline",
+    "/dispatcharrpy/bin/python",
+    "/native-tools/audit.py"
+  ],
+  "kind": null,
+  "pid": 119915,
+  "starttime": "28568765",
+  "actual_exit": 1,
+  "collection_invalid": null,
+  "owned_stop_requested": false,
+  "physically_settled": true,
+  "pipes_settled": true,
+  "began_utc": "2026-11-13T10:21:32.607606+00:00",
+  "completed_utc": "2026-11-13T10:21:33.342668+00:00"
+}

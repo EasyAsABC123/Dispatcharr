@@ -1,0 +1,38 @@
+{
+  "state": "COMPILED_UNEXECUTED_REQUIRES_ROOT_EXECUTION_REVIEW",
+  "cases": [
+    5,
+    6
+  ],
+  "one_invocation_one_case_and_fresh_namespace": true,
+  "fixed_output_pattern": "m8-backup-job-physical-sql-{case}-[1-9][0-9]* under artifacts/rust",
+  "source_map_sha256": "d4f63ffe3b0b2256a77adaa2dd262ad34bef9031fa7dfc1007c52f0589f90af0",
+  "source_inputs": 830,
+  "Rust_inputs": 825,
+  "coupled_inputs": 5,
+  "ELF_sha256": "710cb643d6e895869b87f540605fcc0f0b6ae06768c878ca9d62e6bc3915fbfc",
+  "ELF_bytes": 68029232,
+  "Source_app_runs": 0,
+  "Native_app_runs": 0,
+  "Root1_4_replayed": false,
+  "command_limits": {
+    "normal": 224,
+    "total": 256,
+    "one_separate_neutral_stop": 1,
+    "per_command_bytes": 1048576,
+    "normal_bytes": 58720256,
+    "total_bytes_including_stop": 67108864,
+    "stop_reserved_inside_total": 65536
+  },
+  "budgets_seconds": {
+    "normal": 1200,
+    "cleanup": 90,
+    "case": 90,
+    "ELF_collector": 100,
+    "reach": 15,
+    "hold_max": 25,
+    "proxy_safety": 45
+  },
+  "Root_review_and_global_ordinary_slot": "required before either actualcase",
+  "fullCurrent829_orMain_orperformance_transfer": false
+}

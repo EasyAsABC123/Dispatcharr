@@ -1,0 +1,18 @@
+{
+  "source_path": "rust/crates/job-transport/src/transport.rs",
+  "source_sha256": "6ff9460e47d14e98f79db8bd707f5f73a4b2f8a76aa43d6f067d0834451e771b",
+  "scripts": {
+    "PUBLISH": {
+      "literal": "\nlocal q=redis.call('TYPE',KEYS[1]).ok;local b=redis.call('TYPE',KEYS[2]).ok\nif(q~='none'and q~='list')or(b~='none'and b~='set')then return -3 end\nif #ARGV[1]>65536 then return -1 end\nif redis.call('LLEN',KEYS[1])>=tonumber(ARGV[2])then return -2 end\nredis.call('SADD',KEYS[2],'celery'..string.char(6,22)..string.char(6,22)..'celery')\nreturn redis.call('LPUSH',KEYS[1],ARGV[1])\n",
+      "sha1": "fccf3707fcf917c0d98f08dd78a77efebbbf0ef7",
+      "sha256": "1789bf68eea5037cefdbeaebdd66a83626c6d931d7aa20c02d395c90da4da2fe"
+    },
+    "READ": {
+      "literal": "\nlocal t=redis.call('TYPE',KEYS[1]).ok\nif t=='none'then return{0,''}end\nif t~='string'or redis.call('STRLEN',KEYS[1])>262144 then return{-1,''}end\nreturn{1,redis.call('GET',KEYS[1])}\n",
+      "sha1": "ce48c6fd9762d7880eeb138e0f7ce369fc5c64a6",
+      "sha256": "e36322a539c6a9fb650c34244da91823d6ae0d2173c24031ba8920193fdbb677"
+    }
+  },
+  "fixed_task_id": "11111111-1111-4111-8111-111111111111",
+  "real_application_config": "Config::default operations4/timeout2s; no test override"
+}

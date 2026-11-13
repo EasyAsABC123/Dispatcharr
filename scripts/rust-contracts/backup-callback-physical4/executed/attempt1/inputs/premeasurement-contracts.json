@@ -1,0 +1,27 @@
+{
+  "state": "UNEXECUTED_CODE_IN_PROGRESS_NOT_BUILD_ADMITTED",
+  "base_QA4_map": "880f06d7b8362e83a638ae672ec7e80ba509f9679f88c743c3d6a32b13f9cafe",
+  "compiled_transport_file_sha256": "84bfce9e71f8a423ccf4079d456a73297407e8969cf70c5b2f5895fba34838cf",
+  "compiled_scripts": {
+    "PUBLISH": {
+      "sha256": "1789bf68eea5037cefdbeaebdd66a83626c6d931d7aa20c02d395c90da4da2fe",
+      "sha1": "fccf3707fcf917c0d98f08dd78a77efebbbf0ef7",
+      "bytes": 378
+    },
+    "READ": {
+      "sha256": "e36322a539c6a9fb650c34244da91823d6ae0d2173c24031ba8920193fdbb677",
+      "sha1": "ce48c6fd9762d7880eeb138e0f7ce369fc5c64a6",
+      "bytes": 183
+    }
+  },
+  "case6_fixed_owned_task_id": "39a512a4-b4e9-4ab1-ae10-c75310e27e6f",
+  "case6_prediction_clarification": "Actual wire READ Lua array reply; GET is inside the pinned script, not a standalone wire GET",
+  "gate_safety_seconds": 45,
+  "actual_hold_max_seconds": 25,
+  "reach_seconds": 15,
+  "case_seconds": 90,
+  "physical_observe_seconds": 10,
+  "outer_seconds": 1200,
+  "cleanup_seconds": 90,
+  "remaining_code": "job-transport case5/6 peer, external controller/effect validator/fullseal"
+}

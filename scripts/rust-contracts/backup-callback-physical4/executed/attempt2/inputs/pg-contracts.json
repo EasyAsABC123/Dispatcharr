@@ -1,0 +1,24 @@
+{
+  "system_ready": {
+    "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+    "parameter_hex": [
+      "73797374656d5f73657474696e6773"
+    ],
+    "rows": 1,
+    "command": "SELECT 1",
+    "errors": [],
+    "tx": "I"
+  },
+  "network_timeout_ready": {
+    "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+    "parameter_hex": [
+      "6e6574776f726b5f616363657373"
+    ],
+    "rows": 0,
+    "command": null,
+    "errors": [
+      "57014"
+    ],
+    "tx": "I"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "scope": "Only remainingNative cache callback physical4; passed1/2/3 never replayed",
+  "cases": [
+    {
+      "case": 4,
+      "hold": "system-settings Redis GET response",
+      "caller": "logical401 while physical reply withheld"
+    }
+  ],
+  "reach_seconds": 15,
+  "hold_seconds": 25,
+  "case_seconds": 90,
+  "CLI_case_seconds": 100,
+  "phase_seconds": 1200,
+  "cleanup_seconds": 90,
+  "no_retry": true,
+  "Source_business_requests": 0,
+  "actual_cases_executed": 0,
+  "case2_setup": "Exact same subject PG statement read-only prepared before locking; require held error backend matches actual preparation PID; no runtime code change",
+  "historical_first_case": "root-backup-physical-native-1/case-1, outsideELF06fa428e...7062; actual0 preserved",
+  "historical_second_case_negative": "root-backup-physical-native-1/case-2, ActualStageReach15 before bound query; controller1 remains1",
+  "historical_passed_cases": {
+    "1": "root-backup-physical-native-1/case-1",
+    "2": "root-backup-physical-native-2/case-2",
+    "3": "root-backup-physical-native-2/case-3"
+  },
+  "case4_wire": "Exact compiled EVAL bounded GET wrapper for single system-settings key; no standalone GET request exists"
+}

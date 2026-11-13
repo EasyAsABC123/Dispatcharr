@@ -1,0 +1,106 @@
+{
+  "schema": "backup-physical2-owned-APIkey-projection-v1",
+  "new_projected_binding_not_executed_original_bytes": true,
+  "cases": [
+    {
+      "case": 5,
+      "Original_raw_sha256": "4d6f1080473b1be59a66f15fc077a4822a86959dff4a126ce039ad33c7a4af8d",
+      "projection_sha256": "a234de8bdac2219971cf2f4622336c261af0dfa0c5f01f77515c5e8a067b8a9a",
+      "changed_fields": 6,
+      "changes": [
+        {
+          "path": "$.before.SQL.tables.accounts_user[0].api_key",
+          "original_byte_sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        },
+        {
+          "path": "$.before.credentials.accounts_user[0].api_key",
+          "original_byte_sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        },
+        {
+          "path": "$.held_raw_state.SQL.tables.accounts_user[0].api_key",
+          "original_byte_sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        },
+        {
+          "path": "$.held_raw_state.credentials.accounts_user[0].api_key",
+          "original_byte_sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        },
+        {
+          "path": "$.after.SQL.tables.accounts_user[0].api_key",
+          "original_byte_sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        },
+        {
+          "path": "$.after.credentials.accounts_user[0].api_key",
+          "original_byte_sha256": "785055367aa7caef4ccee8dcc9e21ccb2fa5a666e61b3cb1f89240b5c580c21d",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        }
+      ],
+      "all_other_fields_unchanged": true
+    },
+    {
+      "case": 6,
+      "Original_raw_sha256": "c3f40ebe1f11230e75cd5002cdbb4e4e1eebfea9b262886d7b35e18756b65add",
+      "projection_sha256": "8d666459802f1445ccd9fa97cd06c8220989f6647a9bffe291d519a6d8a49489",
+      "changed_fields": 6,
+      "changes": [
+        {
+          "path": "$.before.SQL.tables.accounts_user[0].api_key",
+          "original_byte_sha256": "09be2cb409693598ef599a69222dd78837787433ca25eff0d48ea2dc42e40bcd",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        },
+        {
+          "path": "$.before.credentials.accounts_user[0].api_key",
+          "original_byte_sha256": "09be2cb409693598ef599a69222dd78837787433ca25eff0d48ea2dc42e40bcd",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        },
+        {
+          "path": "$.held_raw_state.SQL.tables.accounts_user[0].api_key",
+          "original_byte_sha256": "09be2cb409693598ef599a69222dd78837787433ca25eff0d48ea2dc42e40bcd",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        },
+        {
+          "path": "$.held_raw_state.credentials.accounts_user[0].api_key",
+          "original_byte_sha256": "09be2cb409693598ef599a69222dd78837787433ca25eff0d48ea2dc42e40bcd",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        },
+        {
+          "path": "$.after.SQL.tables.accounts_user[0].api_key",
+          "original_byte_sha256": "09be2cb409693598ef599a69222dd78837787433ca25eff0d48ea2dc42e40bcd",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        },
+        {
+          "path": "$.after.credentials.accounts_user[0].api_key",
+          "original_byte_sha256": "09be2cb409693598ef599a69222dd78837787433ca25eff0d48ea2dc42e40bcd",
+          "original_bytes": 64,
+          "rule": "owned persisted APIkey string -> exactbyte SHA/length"
+        }
+      ],
+      "all_other_fields_unchanged": true
+    }
+  ],
+  "total_changed_fields": 12,
+  "retained": [
+    "actualpassedtrue/capturecomplete",
+    "allrawresponsebytes/bodyhashes",
+    "allSQLfields except12APIkeyscalars",
+    "disabledpasswordmarkers! andnullM3Upasswords",
+    "allclock/Weak/slots/proxy/broker/backend/default scopes",
+    "literalclosedsize0/idle2/originalhost1negative"
+  ],
+  "noRawOrAlternateHashFallback": true
+}

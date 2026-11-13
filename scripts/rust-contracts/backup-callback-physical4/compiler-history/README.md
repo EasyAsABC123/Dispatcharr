@@ -1,0 +1,1 @@
+Historical QA1 compiler-negative and QA3 compiled-but-unexecuted definitions/logs remain literal. They are not actual physical cases or substituted for the QA2/QA4 executed source bindings. No target cache/ELF is included.
