@@ -1,0 +1,68 @@
+[
+    {
+        "Id": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
+        "RepoTags": [
+            "dispatcharr-rust-app:union794-image55"
+        ],
+        "RepoDigests": [
+            "dispatcharr-rust-app@sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-11-12T19:45:24.434033848-05:00",
+        "Config": {
+            "User": "65532:65532",
+            "ExposedPorts": {
+                "9192/tcp": {}
+            },
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "RUST_BIND=0.0.0.0:9192",
+                "RUST_FRONTEND_DIR=/opt/dispatcharr-frontend"
+            ],
+            "Entrypoint": [
+                "/usr/local/bin/dispatcharr-rs"
+            ],
+            "Labels": {
+                "org.opencontainers.image.description": "Original Dispatcharr credit belongs to its original authors and contributors; see /usr/share/doc/dispatcharr/ATTRIBUTION.md. Migration parity is incomplete.",
+                "org.opencontainers.image.licenses": "AGPL-3.0-only",
+                "org.opencontainers.image.source-tree-sha256": "6457d75bad17874f039eaed58941e3a047fb124a841637ff1a28392db2472e5c",
+                "org.opencontainers.image.title": "Dispatcharr derivative Rust backend port"
+            }
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 431784735,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:1d7b9dd8778ebc4d9bf2f64436dd358640718cb349f5640b33bebaea4ffd62c2",
+                "sha256:bb74c1a68092b97cc1b4b620ec6b4a3b80fce63df571b4984ae596613cdec25a",
+                "sha256:94def0216c53c447b76367f571ad4df7b0cfb8c6534661f9aae356f8dd03d7f2",
+                "sha256:b86b043ac233504cd26d23d3024e87c97eb1efeef866a2f6742beae852d53352",
+                "sha256:9172284ba065c7a8687dd1a44b8111fdc7db6af7be610ab91d9d93eedcf3d763",
+                "sha256:9a6505bb85d4a56c5dd2e87547d79844d84819a9aaec3a2549577fc5b9e311ca",
+                "sha256:d26420fe139f022640289229421288b75704e73d7ab9ca7f600096d60a113b00",
+                "sha256:8bec8b32894c8fcfbf0b88ab38a9a02a9cf080ee24d319f25c684162d8bd27e4",
+                "sha256:af592a53f015aacab8d1cc4c818940ca16e2b75e8dac3329430bdf011f939be5",
+                "sha256:98f57e6c23fbedcae2f36bb8b8db31f62bd390299da332a657202722ed10637f",
+                "sha256:19670460378e86e4d0e0c0f807960c9a23ba2f03be0a7e8178c70057195c4a64"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-11-13T00:45:26.321433021Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "ypqqop9h54yjy0vk8jj09fauq",
+                    "CreatedAt": "2026-11-12T19:45:27.069964031-05:00"
+                }
+            ]
+        }
+    }
+]

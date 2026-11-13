@@ -1,0 +1,15 @@
+name: dispatcharr-rust-verification
+services:
+  verify:
+    build:
+      context: ..
+      dockerfile: rust/Dockerfile
+    network_mode: none
+    environment:
+      EVIDENCE_DIR: /evidence
+      # Keep concurrent verification builds within the shared host budget.
+      CARGO_BUILD_JOBS: "2"
+    volumes:
+      - ${RUST_EVIDENCE_DIR:-../artifacts/rust}:/evidence
+    # This image verifies the core; it does not serve the application's API.
+    command: ["sh", "scripts/rust-verify.sh"]

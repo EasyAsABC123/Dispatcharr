@@ -1,0 +1,32 @@
+{
+  "container_id": "2ba61214bd036e3fad2553d09507393ae581491169b0f9915a9c302a973dfc56",
+  "image_id": "sha256:fcc4f0974f919735cfa521a2b292e47362c8f92410cc122d872ca82b4c507c7c",
+  "network_mode": "none",
+  "command": [
+    "sh",
+    "scripts/rust-verify.sh"
+  ],
+  "state": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 1769362,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-13T00:32:01.322679388Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "mounts": [
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-aca6-qualified-1/evidence",
+      "Destination": "/evidence",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": "rprivate"
+    }
+  ]
+}

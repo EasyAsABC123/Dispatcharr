@@ -1,0 +1,64 @@
+{
+  "scope": "ts-discontinuity-helper-only",
+  "application_performance_verified": false,
+  "fixture_sha256": "ff52208d1f3e75025b4c71ce2b173720d7b214ee276e0705fb9631ca33663f82",
+  "python_source_sha256": "861f96ec1111fbc3daff5f80d3fe0c634d2a532e9ca0cdb4b4d04281ee546855",
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "python": "3.11.2 (main, Apr 28 2025, 14:11:48) [GCC 12.2.0]",
+  "iterations": 2000,
+  "samples": [
+    {
+      "python": {
+        "implementation": "python",
+        "wall_ns": 352296468,
+        "cpu_ns": 347939829,
+        "checksum": 23046588,
+        "stamped": 128000,
+        "peak_rss_kib": 17328
+      },
+      "rust": {
+        "implementation": "rust",
+        "wall_ns": 10130639,
+        "checksum": 23046588,
+        "stamped": 128000,
+        "peak_rss_kib": 2584
+      }
+    },
+    {
+      "rust": {
+        "implementation": "rust",
+        "wall_ns": 12417444,
+        "checksum": 23046588,
+        "stamped": 128000,
+        "peak_rss_kib": 2528
+      },
+      "python": {
+        "implementation": "python",
+        "wall_ns": 343415474,
+        "cpu_ns": 341380352,
+        "checksum": 23046588,
+        "stamped": 128000,
+        "peak_rss_kib": 17756
+      }
+    },
+    {
+      "python": {
+        "implementation": "python",
+        "wall_ns": 343899178,
+        "cpu_ns": 340567361,
+        "checksum": 23046588,
+        "stamped": 128000,
+        "peak_rss_kib": 17708
+      },
+      "rust": {
+        "implementation": "rust",
+        "wall_ns": 11109037,
+        "checksum": 23046588,
+        "stamped": 128000,
+        "peak_rss_kib": 2444
+      }
+    }
+  ],
+  "median_wall_time_ratio_rust_over_python": 0.03230317985813854,
+  "notes": "Linux peak RSS includes interpreter/runtime and is component-only; no memory gain gate. Fixture uses existing adaptation fields. No network, Redis, transcoding, or HTTP work."
+}

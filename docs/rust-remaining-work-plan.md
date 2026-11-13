@@ -41,7 +41,8 @@ bound to the measured image/workload.
   pass. Configured Series/recurring Source11 observations are captured with an
   explicit missing-SQLSTATE instrumentation field; Native implementation, clocked
   scheduling and complete child execution remain separate work.
-- **Primary agent:** review/integrate the three tracks, finish Source-contract
+- **Primary agent:** the combined-source Compose SDK check and immutable image55
+  build pass; package/Main replay remains open. Review/integrate the three tracks, finish Source-contract
   assignments, keep evidence and milestone status current, and commit/push scoped
   completed work with receiving-ref verification.
 

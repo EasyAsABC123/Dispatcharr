@@ -27,7 +27,14 @@ Long-lived Source renewal, literal lock-token and pending-filesystem-syscall par
 remain open. Neither component activates Main/default workers.
 
 The selected functional image remains [image54](rust-image54-validation.md).
-Full SDK and packaged replay of this later combined source are separate next gates.
+The later [Compose SDK check](../scripts/rust-integration/sdkaca6/README.md)
+passes at committed `aca6d900`: 591 Rust tests, 361 Python tests plus one skip,
+and 1,806 TS helper comparisons. Its 710 ignored Rust fixture tests remain
+unexecuted in that default run. All 8,273 source files and 1,796 actual image
+COPY inputs are bound; independent cleanup passes. The combined-source
+[image55 build](../scripts/rust-integration/image55-build/README.md) also passes,
+with installed Original credit and React assets unchanged. Package/Main replay
+of this later image is the next application gate.
 [Image53 performance](rust-image53-live-performance.md) remains bound to its measured
 image and workload; no numerical gain transfers to this source. Full milestones,
 whole-graph performance, soak and local cutover/rollback remain open.
