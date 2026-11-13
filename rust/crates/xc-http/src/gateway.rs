@@ -479,42 +479,35 @@ impl XcGateway {
                 return Err(StoreError::Unsupported("XC info staging is test-only"));
             }
         } else if self.accepts_vod_list(action) {
-            #[cfg(test)]
-            {
-                let origin = dispatcharr_output_http::source_output_origin(&auth, &identity);
-                let result = crate::vod_lists::write(
-                    &crate::vod_lists::Context {
-                        store: &self.inner.store,
-                        user: &user,
-                        family: if action == "get_series" {
-                            crate::vod_priority::Family::Series
-                        } else {
-                            crate::vod_priority::Family::Movie
-                        },
-                        origin: &origin,
-                        category: identity.parameter("category_id"),
-                        limits: &limits,
-                        available_work_bytes: available_work_bytes
-                            .checked_sub(origin.capacity())
-                            .ok_or_else(reader::capacity)?,
+            let origin = dispatcharr_output_http::source_output_origin(&auth, &identity);
+            let result = crate::vod_lists::write(
+                &crate::vod_lists::Context {
+                    store: &self.inner.store,
+                    user: &user,
+                    family: if action == "get_series" {
+                        crate::vod_priority::Family::Series
+                    } else {
+                        crate::vod_priority::Family::Movie
                     },
-                    &mut out,
-                )
-                .await;
-                match result {
-                    Ok(()) => {}
-                    Err(crate::vod_lists::Error::Source) => return Ok(django_page(500)),
-                    Err(crate::vod_lists::Error::Unsupported) => {
-                        return Err(StoreError::Unsupported(
-                            "XC VOD list grammar has not completed its Source migration gates",
-                        ))
-                    }
-                    Err(crate::vod_lists::Error::Store(error)) => return Err(error),
+                    origin: &origin,
+                    category: identity.parameter("category_id"),
+                    limits: &limits,
+                    available_work_bytes: available_work_bytes
+                        .checked_sub(origin.capacity())
+                        .ok_or_else(reader::capacity)?,
+                },
+                &mut out,
+            )
+            .await;
+            match result {
+                Ok(()) => {}
+                Err(crate::vod_lists::Error::Source) => return Ok(django_page(500)),
+                Err(crate::vod_lists::Error::Unsupported) => {
+                    return Err(StoreError::Unsupported(
+                        "XC VOD list grammar has not completed its Source migration gates",
+                    ))
                 }
-            }
-            #[cfg(not(test))]
-            {
-                return Err(StoreError::Unsupported("XC VOD list staging is test-only"));
+                Err(crate::vod_lists::Error::Store(error)) => return Err(error),
             }
         } else if matches!(
             action,

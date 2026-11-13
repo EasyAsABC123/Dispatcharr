@@ -14,16 +14,11 @@ pub use gateway::{LiveDispatcher, XcConfig, XcGateway};
 mod vod;
 
 // Private DTO primitives: not routed until row/resource/HTTP gates pass.
-#[cfg(test)]
 mod vod_json;
-#[cfg(test)]
 mod vod_rating;
 
-#[cfg(test)]
 mod vod_lists;
-#[cfg(test)]
 mod vod_priority;
-#[cfg(test)]
 mod vod_properties;
 
 #[cfg(test)]
@@ -47,7 +42,6 @@ mod vod_seasons;
 #[cfg(test)]
 mod vod_series_info;
 
-#[cfg(test)]
 mod vod_span;
 
 #[cfg(test)]

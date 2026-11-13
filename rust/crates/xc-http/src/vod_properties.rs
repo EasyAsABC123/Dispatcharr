@@ -61,9 +61,13 @@ pub(crate) enum Field {
     Cast,
     ReleaseDate,
     EpisodeRunTime,
+    #[cfg_attr(not(test), allow(dead_code))] // Used only by the still-gated info DTOs.
     DetailedFetched,
+    #[cfg_attr(not(test), allow(dead_code))] // Used only by the still-gated info DTOs.
     EpisodesFetched,
+    #[cfg_attr(not(test), allow(dead_code))] // Used only by the still-gated info DTOs.
     DetailedInfo,
+    #[cfg_attr(not(test), allow(dead_code))] // Used only by the still-gated info DTOs.
     BasicData,
 }
 enum Shape<'a> {

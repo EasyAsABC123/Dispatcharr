@@ -1,0 +1,76 @@
+    Checking dispatcharr-ingest-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-2/source/rust/crates/ingest-core)
+    Checking dispatcharr-upstream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-2/source/rust/crates/upstream-http)
+    Checking dispatcharr-contracts v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-2/source/rust/crates/contracts)
+    Checking dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-2/source/rust/crates/output-store)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-2/source/rust/crates/store)
+    Checking dispatcharr-output-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-2/source/rust/crates/output-http)
+    Checking dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-2/source/rust/crates/xc-http)
+error: variants `DetailedFetched`, `EpisodesFetched`, `DetailedInfo`, and `BasicData` are never constructed
+  --> crates/xc-http/src/vod_properties.rs:64:5
+   |
+55 | pub(crate) enum Field {
+   |                 ----- variants in this enum
+...
+64 |     DetailedFetched,
+   |     ^^^^^^^^^^^^^^^
+65 |     EpisodesFetched,
+   |     ^^^^^^^^^^^^^^^
+66 |     DetailedInfo,
+   |     ^^^^^^^^^^^^
+67 |     BasicData,
+   |     ^^^^^^^^^
+   |
+   = note: `Field` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+   = note: `-D dead-code` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(dead_code)]`
+
+error: function `parse` is never used
+  --> crates/xc-http/src/vod_object.rs:10:15
+   |
+10 | pub(crate) fn parse(text: &str) -> Result<&RawValue, Error> {
+   |               ^^^^^
+
+error: function `mapping` is never used
+  --> crates/xc-http/src/vod_object.rs:15:4
+   |
+15 | fn mapping(raw: &RawValue) -> bool {
+   |    ^^^^^^^
+
+error: function `get` is never used
+  --> crates/xc-http/src/vod_object.rs:20:15
+   |
+20 | pub(crate) fn get<'a>(raw: &'a RawValue, name: &str) -> Result<Option<&'a RawValue>, Error> {
+   |               ^^^
+
+error: function `backdrop` is never used
+  --> crates/xc-http/src/vod_object.rs:33:4
+   |
+33 | fn backdrop(raw: &RawValue) -> Result<bool, Error> {
+   |    ^^^^^^^^
+
+error: function `stripped` is never used
+  --> crates/xc-http/src/vod_object.rs:40:4
+   |
+40 | fn stripped(value: Cow<'_, str>) -> Cow<'_, str> {
+   |    ^^^^^^^^
+
+error: struct `Artwork` is never constructed
+  --> crates/xc-http/src/vod_object.rs:46:19
+   |
+46 | pub(crate) struct Artwork<'a> {
+   |                   ^^^^^^^
+
+error: function `relation` is never used
+  --> crates/xc-http/src/vod_object.rs:52:4
+   |
+52 | fn relation<'a>(raw: Option<&'a RawValue>) -> Result<Artwork<'a>, Error> {
+   |    ^^^^^^^^
+
+error: function `prefer` is never used
+  --> crates/xc-http/src/vod_object.rs:99:15
+   |
+99 | pub(crate) fn prefer<'a>(
+   |               ^^^^^^
+
+error: could not compile `dispatcharr-xc-http` (lib) due to 9 previous errors
+warning: build failed, waiting for other jobs to finish...

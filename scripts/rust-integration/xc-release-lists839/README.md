@@ -1,0 +1,7 @@
+# Release catalogue writer validation
+
+`review.json` binds the complete 839-Rust/five-coupled source to the fresh full-workspace checks. `source-inputs.json` lists exact committed input bytes; obtain those paths from the delivery commit and verify every digest before compiling. `runtime-selection.json` identifies only the four changed production paths over its pinned base. `run_checks.py` records the original local execution recipe and completed target reused in place; source/results are retained separately from that cache. To repeat independently, populate its adjacent `source/` from those exact Git blobs, use a fresh local target path, and run the four listed commands offline with the locked toolchain/dependencies. ELF hashes are evidence identities, not portable executable downloads.
+
+The two `negative-private*` directories retain actual rejected non-test/lint attempts. `test_production_branch.py` is the original six-control branch regression check; its original relative source layout is recorded in the script. The focused agent checks and Root whole-workspace checks are separate. No application request, full milestone acceptance or new performance gain is claimed here. A successor Docker image and actual Main catalogue requests remain necessary.
+
+Original application and algorithm credit belongs to the original Dispatcharr authors and contributors; see the repository LICENSE and ATTRIBUTION.md.

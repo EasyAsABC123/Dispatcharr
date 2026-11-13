@@ -1,0 +1,125 @@
+--- a/rust/crates/xc-http/src/gateway.rs
++++ b/rust/crates/xc-http/src/gateway.rs
+@@ -479,42 +479,35 @@
+                 return Err(StoreError::Unsupported("XC info staging is test-only"));
+             }
+         } else if self.accepts_vod_list(action) {
+-            #[cfg(test)]
+-            {
+-                let origin = dispatcharr_output_http::source_output_origin(&auth, &identity);
+-                let result = crate::vod_lists::write(
+-                    &crate::vod_lists::Context {
+-                        store: &self.inner.store,
+-                        user: &user,
+-                        family: if action == "get_series" {
+-                            crate::vod_priority::Family::Series
+-                        } else {
+-                            crate::vod_priority::Family::Movie
+-                        },
+-                        origin: &origin,
+-                        category: identity.parameter("category_id"),
+-                        limits: &limits,
+-                        available_work_bytes: available_work_bytes
+-                            .checked_sub(origin.capacity())
+-                            .ok_or_else(reader::capacity)?,
++            let origin = dispatcharr_output_http::source_output_origin(&auth, &identity);
++            let result = crate::vod_lists::write(
++                &crate::vod_lists::Context {
++                    store: &self.inner.store,
++                    user: &user,
++                    family: if action == "get_series" {
++                        crate::vod_priority::Family::Series
++                    } else {
++                        crate::vod_priority::Family::Movie
+                     },
+-                    &mut out,
+-                )
+-                .await;
+-                match result {
+-                    Ok(()) => {}
+-                    Err(crate::vod_lists::Error::Source) => return Ok(django_page(500)),
+-                    Err(crate::vod_lists::Error::Unsupported) => {
+-                        return Err(StoreError::Unsupported(
+-                            "XC VOD list grammar has not completed its Source migration gates",
+-                        ))
+-                    }
+-                    Err(crate::vod_lists::Error::Store(error)) => return Err(error),
++                    origin: &origin,
++                    category: identity.parameter("category_id"),
++                    limits: &limits,
++                    available_work_bytes: available_work_bytes
++                        .checked_sub(origin.capacity())
++                        .ok_or_else(reader::capacity)?,
++                },
++                &mut out,
++            )
++            .await;
++            match result {
++                Ok(()) => {}
++                Err(crate::vod_lists::Error::Source) => return Ok(django_page(500)),
++                Err(crate::vod_lists::Error::Unsupported) => {
++                    return Err(StoreError::Unsupported(
++                        "XC VOD list grammar has not completed its Source migration gates",
++                    ))
+                 }
+-            }
+-            #[cfg(not(test))]
+-            {
+-                return Err(StoreError::Unsupported("XC VOD list staging is test-only"));
++                Err(crate::vod_lists::Error::Store(error)) => return Err(error),
+             }
+         } else if matches!(
+             action,
+--- a/rust/crates/xc-http/src/lib.rs
++++ b/rust/crates/xc-http/src/lib.rs
+@@ -14,16 +14,11 @@
+ mod vod;
+ 
+ // Private DTO primitives: not routed until row/resource/HTTP gates pass.
+-#[cfg(test)]
+ mod vod_json;
+-#[cfg(test)]
+ mod vod_rating;
+ 
+-#[cfg(test)]
+ mod vod_lists;
+-#[cfg(test)]
+ mod vod_priority;
+-#[cfg(test)]
+ mod vod_properties;
+ 
+ #[cfg(test)]
+@@ -47,7 +42,6 @@
+ #[cfg(test)]
+ mod vod_series_info;
+ 
+-#[cfg(test)]
+ mod vod_span;
+ 
+ #[cfg(test)]
+--- a/rust/crates/xc-http/src/project.rs
++++ b/rust/crates/xc-http/src/project.rs
+@@ -169,7 +169,6 @@
+             limit,
+         })
+     }
+-    #[cfg(test)]
+     pub(crate) fn maximum(&self) -> usize {
+         self.limit
+     }
+--- a/rust/crates/xc-http/src/vod_properties.rs
++++ b/rust/crates/xc-http/src/vod_properties.rs
+@@ -61,9 +61,13 @@
+     Cast,
+     ReleaseDate,
+     EpisodeRunTime,
++    #[cfg_attr(not(test), allow(dead_code))] // Used only by the still-gated info DTOs.
+     DetailedFetched,
++    #[cfg_attr(not(test), allow(dead_code))] // Used only by the still-gated info DTOs.
+     EpisodesFetched,
++    #[cfg_attr(not(test), allow(dead_code))] // Used only by the still-gated info DTOs.
+     DetailedInfo,
++    #[cfg_attr(not(test), allow(dead_code))] // Used only by the still-gated info DTOs.
+     BasicData,
+ }
+ enum Shape<'a> {

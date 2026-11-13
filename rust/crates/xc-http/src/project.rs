@@ -169,7 +169,6 @@ impl JsonBytes {
             limit,
         })
     }
-    #[cfg(test)]
     pub(crate) fn maximum(&self) -> usize {
         self.limit
     }

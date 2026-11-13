@@ -1,0 +1,73 @@
+   Compiling serde_core v1.0.229
+    Checking tokio v1.54.1
+   Compiling serde v1.0.229
+   Compiling typenum v1.20.1
+   Compiling smallvec v1.16.5
+   Compiling generic-array v0.14.7
+   Compiling subtle v2.6.1
+   Compiling ring v0.17.14
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling zeroize v1.9.1
+   Compiling digest v0.10.7
+   Compiling rustls-pki-types v1.15.1
+   Compiling num-traits v0.2.19
+   Compiling icu_normalizer v2.4.0
+   Compiling idna_adapter v1.2.2
+   Compiling parking_lot_core v0.9.12
+   Compiling futures-sink v0.3.34
+   Compiling serde_json v1.0.154
+   Compiling form_urlencoded v1.2.2
+   Compiling rustls-webpki v0.103.16
+   Compiling rustls v0.23.46
+   Compiling parking_lot v0.12.5
+   Compiling idna v1.1.0
+   Compiling webpki-roots v1.0.11
+   Compiling chrono v0.4.45
+   Compiling futures-util v0.3.34
+    Checking hyper v1.12.0
+   Compiling sha2 v0.10.9
+   Compiling webpki-roots v0.26.11
+   Compiling tokio-stream v0.1.19
+   Compiling url v2.5.8
+   Compiling futures-intrusive v0.5.0
+   Compiling hmac v0.12.1
+    Checking tokio-util v0.7.20
+   Compiling either v1.19.0
+   Compiling base64 v0.22.1
+   Compiling uuid v1.29.2
+    Checking hyper-util v0.1.21
+   Compiling hkdf v0.12.4
+   Compiling rand v0.8.8
+    Checking tower v0.5.3
+   Compiling sqlx-core v0.8.6
+   Compiling futures-channel v0.3.34
+   Compiling atoi v2.0.0
+   Compiling md-5 v0.10.6
+    Checking tokio-rustls v0.26.6
+   Compiling sqlx-postgres v0.8.6
+   Compiling heck v0.5.0
+    Checking hyper-rustls v0.27.10
+    Checking tower-http v0.6.11
+    Checking combine v4.6.9
+   Compiling sqlx-macros-core v0.8.6
+   Compiling sqlx-macros v0.8.6
+    Checking redis v0.32.7
+    Checking reqwest v0.12.28
+    Checking axum v0.8.9
+    Checking dispatcharr-ingest-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-1/source/rust/crates/ingest-core)
+    Checking dispatcharr-upstream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-1/source/rust/crates/upstream-http)
+    Checking sqlx v0.8.6
+    Checking dispatcharr-contracts v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-1/source/rust/crates/contracts)
+    Checking dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-1/source/rust/crates/output-store)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-1/source/rust/crates/store)
+    Checking dispatcharr-output-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-1/source/rust/crates/output-http)
+    Checking dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-main-release-lists-private-1/source/rust/crates/xc-http)
+error[E0599]: no method named `maximum` found for mutable reference `&mut JsonBytes` in the current scope
+   --> crates/xc-http/src/vod_lists.rs:122:45
+    |
+122 |             .and_then(|n| n.checked_add(out.maximum().checked_mul(2)?))
+    |                                             ^^^^^^^ method not found in `&mut JsonBytes`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `dispatcharr-xc-http` (lib) due to 1 previous error
