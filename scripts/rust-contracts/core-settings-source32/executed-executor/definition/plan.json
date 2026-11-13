@@ -1,0 +1,660 @@
+{
+  "schema": "dispatcharr.Source.core-settings.definition.v2",
+  "state": "UNEXECUTED_DEFINITION_ONLY",
+  "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_inputs_sha256": {
+    "LICENSE": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+    "core/api_urls.py": "aa780f16f02f7bcffe5fdf26aa3f658a0e91190e84377540c75ec73b1dbce81e",
+    "core/api_views.py": "2600b850ae65f6e160951024a777e51ae6f05ab8573eae23b4109d941989fbb8",
+    "core/models.py": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+    "core/serializers.py": "8f5c68238e2757f34fde5e0548ff5ca86a4e97fadae71ed694507e29c6db5688",
+    "core/utils.py": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+    "core/signals.py": "93b679b154a20e69164495f23efe859a7d60699c878303a3fb8c4dc2ff861bb4",
+    "core/apps.py": "de47309cb6f755fde18bf6299014426189d9ae856c30287936fd77ff60fac79e",
+    "apps/accounts/permissions.py": "407a0c6cbae122042c722e2bd3792579875a075cb6e6345ff43588250ac6fe6e",
+    "apps/accounts/authentication.py": "415d74d68295c9764d46bac3b851878fa6ed48027e4aebd3859b0aaade026fe5",
+    "apps/accounts/models.py": "05cab8c590de411e68ff83b72d9d6256ca43007cbbab5d2a7f96a3a8965a9ded",
+    "apps/accounts/throttling.py": "819d682914cdf4ae2c3f8260d50a23ea4217bbb7881fd483920972b0407f2ed0",
+    "dispatcharr/utils.py": "740da794553c7c059bff3a2d64a14d0a2448ea8d867e7331568e3cd9d4eecdf6",
+    "dispatcharr/settings.py": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+    "dispatcharr/display_timezone.py": "c65b95d6830f57cb0319db49a33a7340eabe35ff74a6dd5e52ef77ce2f235b56",
+    "dispatcharr/app_initialization.py": "ca589b7d22428ea2bd10557218a6e943ebd5665a6d076a1bcf57d41b20799021"
+  },
+  "authority_donor": "m5-notification-forms-source-executor-5 exact Original blobs; no Source app rerun",
+  "request_count": 32,
+  "auth": {
+    "kind": "persisted_API_key_only",
+    "force_authenticate": false,
+    "REMOTE_ADDR": "127.0.0.1",
+    "roles": {
+      "admin": {
+        "id": 1,
+        "user_level": 10
+      },
+      "standard": {
+        "id": 2,
+        "user_level": 1
+      },
+      "admin_denied": {
+        "id": 3,
+        "user_level": 10,
+        "custom_ui": "192.0.2.0/24"
+      },
+      "anonymous": null
+    }
+  },
+  "seed": {
+    "mode": "owned_database_only; retain initialized rows before replacing exact selected fixture tables",
+    "settings": [
+      {
+        "id": 1000,
+        "key": "network_access",
+        "name": "Owned network",
+        "value": {
+          "UI": "127.0.0.0/8"
+        }
+      },
+      {
+        "id": 1001,
+        "key": "system_settings",
+        "name": "Owned system",
+        "value": {
+          "time_zone": "UTC"
+        }
+      },
+      {
+        "id": 1002,
+        "key": "owned.settings.foreign",
+        "name": "Foreign sentinel",
+        "value": {
+          "untouched": true
+        }
+      }
+    ],
+    "settings_sequence": {
+      "last_value": 1002,
+      "is_called": true
+    },
+    "epg_row": "absent",
+    "cache": "explicit fixture sentinels for owned.settings.new and owned.settings.renamed only, preserve raw before first request; no imported auth/version/system cache"
+  },
+  "routes": {
+    "collection": "/api/core/settings/",
+    "detail": "/api/core/settings/{bound_id}/",
+    "check": "/api/core/settings/check/"
+  },
+  "target_policy": {
+    "created": "actual successful case5 returned id, retain binding after delete",
+    "array": "actual case18 returned id",
+    "epg": "actual case23 returned id",
+    "missing": 1000001002
+  },
+  "cases": [
+    {
+      "id": 1,
+      "name": "anonymous_create",
+      "role": "anonymous",
+      "method": "POST",
+      "target": "collection",
+      "content_type": "application/json",
+      "body": "inputs/bodies/01.bin",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "body_bytes": 2,
+      "prediction": {
+        "status": 401,
+        "measurement": "UNMEASURED",
+        "scope": "permission before serializer"
+      }
+    },
+    {
+      "id": 2,
+      "name": "standard_create",
+      "role": "standard",
+      "method": "POST",
+      "target": "collection",
+      "content_type": "application/json",
+      "body": "inputs/bodies/02.bin",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "body_bytes": 2,
+      "prediction": {
+        "status": 403,
+        "measurement": "UNMEASURED",
+        "scope": "admin role refusal"
+      }
+    },
+    {
+      "id": 3,
+      "name": "UI_denied_admin_create",
+      "role": "admin_denied",
+      "method": "POST",
+      "target": "collection",
+      "content_type": "application/json",
+      "body": "inputs/bodies/03.bin",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "body_bytes": 2,
+      "prediction": {
+        "status": 403,
+        "measurement": "UNMEASURED",
+        "scope": "UI permission refusal"
+      }
+    },
+    {
+      "id": 4,
+      "name": "required_key_name",
+      "role": "admin",
+      "method": "POST",
+      "target": "collection",
+      "content_type": "application/json",
+      "body": "inputs/bodies/04.bin",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "body_bytes": 2,
+      "prediction": {
+        "status": 400,
+        "measurement": "UNMEASURED",
+        "scope": "required fields"
+      }
+    },
+    {
+      "id": 5,
+      "name": "create_default_value",
+      "role": "admin",
+      "method": "POST",
+      "target": "collection",
+      "content_type": "application/json",
+      "body": "inputs/bodies/05.bin",
+      "body_sha256": "91039dd3d1552137ae61f62739401cba9fbc402556c19e216e527bb359b423a1",
+      "body_bytes": 47,
+      "prediction": {
+        "status": 201,
+        "measurement": "UNMEASURED",
+        "scope": "model default value dictionary"
+      },
+      "bind_created_alias": "created"
+    },
+    {
+      "id": 6,
+      "name": "duplicate_key",
+      "role": "admin",
+      "method": "POST",
+      "target": "collection",
+      "content_type": "application/json",
+      "body": "inputs/bodies/06.bin",
+      "body_sha256": "59190f502c9a3868a6ae9297a6912ff64b335e8d9b50a6f90644ea30a1cfd4fd",
+      "body_bytes": 47,
+      "prediction": {
+        "status": 400,
+        "measurement": "UNMEASURED",
+        "scope": "unique key validation before insert"
+      }
+    },
+    {
+      "id": 7,
+      "name": "standard_retrieve",
+      "role": "standard",
+      "method": "GET",
+      "target": "created",
+      "content_type": "application/json",
+      "body": "inputs/bodies/07.bin",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body_bytes": 0,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "standard role may retrieve"
+      }
+    },
+    {
+      "id": 8,
+      "name": "typed_json_patch",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "created",
+      "content_type": "application/json",
+      "body": "inputs/bodies/08.bin",
+      "body_sha256": "d8bb689a5b90fb6ef0f5ec41415f1ade2c937d2c9981881e215228e081f7c584",
+      "body_bytes": 85,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "JSON types preserved"
+      }
+    },
+    {
+      "id": 9,
+      "name": "PUT_required_key",
+      "role": "admin",
+      "method": "PUT",
+      "target": "created",
+      "content_type": "application/json",
+      "body": "inputs/bodies/09.bin",
+      "body_sha256": "23a4a8f03ae6a064f6e03ce3ae306256c0d1a85d4d913e74c46b35e9f06e2b64",
+      "body_bytes": 20,
+      "prediction": {
+        "status": 400,
+        "measurement": "UNMEASURED",
+        "scope": "PUT key required"
+      }
+    },
+    {
+      "id": 10,
+      "name": "PUT_optional_value_retains",
+      "role": "admin",
+      "method": "PUT",
+      "target": "created",
+      "content_type": "application/json",
+      "body": "inputs/bodies/10.bin",
+      "body_sha256": "de6c30ea94d0a8126af21c1a6863335bb6976bdbba47abadf8a35b0d4a6acb74",
+      "body_bytes": 53,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "optional omitted value retains prior JSON"
+      }
+    },
+    {
+      "id": 11,
+      "name": "readonly_unknown_ignored",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "created",
+      "content_type": "application/json",
+      "body": "inputs/bodies/11.bin",
+      "body_sha256": "862e84c06ea313741c1083c7d39f842cc7add589415627d9017b0fccb228f9da",
+      "body_bytes": 33,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "read-only ID and unknown field discarded; save still occurs"
+      }
+    },
+    {
+      "id": 12,
+      "name": "rename_key_cache_boundary",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "created",
+      "content_type": "application/json",
+      "body": "inputs/bodies/12.bin",
+      "body_sha256": "d0237bfe51fd979d76741d3177cf337ea77832940ac70f9e96a58cb3420da2bf",
+      "body_bytes": 32,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "post_save invalidates new key; capture old-key cache literally"
+      },
+      "pre_request_setup": {
+        "cache_set": [
+          {
+            "key": "coresettings:group:owned.settings.new",
+            "value": {
+              "owned_sentinel": "before_rename"
+            },
+            "timeout": 300
+          }
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "name": "missing_lookup_before_bad_json",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "missing",
+      "content_type": "application/json",
+      "body": "inputs/bodies/13.bin",
+      "body_sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+      "body_bytes": 1,
+      "prediction": {
+        "status": 404,
+        "measurement": "UNMEASURED",
+        "scope": "target lookup before body parse"
+      }
+    },
+    {
+      "id": 14,
+      "name": "missing_delete_ignores_body",
+      "role": "admin",
+      "method": "DELETE",
+      "target": "missing",
+      "content_type": "application/json",
+      "body": "inputs/bodies/14.bin",
+      "body_sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+      "body_bytes": 1,
+      "prediction": {
+        "status": 404,
+        "measurement": "UNMEASURED",
+        "scope": "lookup before delete; body ignored"
+      }
+    },
+    {
+      "id": 15,
+      "name": "standard_delete_refusal",
+      "role": "standard",
+      "method": "DELETE",
+      "target": "created",
+      "content_type": "application/json",
+      "body": "inputs/bodies/15.bin",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body_bytes": 0,
+      "prediction": {
+        "status": 403,
+        "measurement": "UNMEASURED",
+        "scope": "role before lookup"
+      }
+    },
+    {
+      "id": 16,
+      "name": "delete_created",
+      "role": "admin",
+      "method": "DELETE",
+      "target": "created",
+      "content_type": "application/json",
+      "body": "inputs/bodies/16.bin",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body_bytes": 0,
+      "prediction": {
+        "status": 204,
+        "measurement": "UNMEASURED",
+        "scope": "delete target only; cache invalidation"
+      }
+    },
+    {
+      "id": 17,
+      "name": "repeat_delete_missing",
+      "role": "admin",
+      "method": "DELETE",
+      "target": "created",
+      "content_type": "application/json",
+      "body": "inputs/bodies/17.bin",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body_bytes": 0,
+      "prediction": {
+        "status": 404,
+        "measurement": "UNMEASURED",
+        "scope": "deleted identity remains bound"
+      }
+    },
+    {
+      "id": 18,
+      "name": "create_array_value",
+      "role": "admin",
+      "method": "POST",
+      "target": "collection",
+      "content_type": "application/json",
+      "body": "inputs/bodies/18.bin",
+      "body_sha256": "f90f32550ee05110f6ba1932b1bab7726c11be71e16edb1f541b0da70583861b",
+      "body_bytes": 67,
+      "prediction": {
+        "status": 201,
+        "measurement": "UNMEASURED",
+        "scope": "arbitrary JSON arrays accepted"
+      },
+      "bind_created_alias": "array"
+    },
+    {
+      "id": 19,
+      "name": "patch_scalar_value",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "array",
+      "content_type": "application/json",
+      "body": "inputs/bodies/19.bin",
+      "body_sha256": "1e544d43b574a8e36402bd746d6a6260b4e1169718052ad5354a5b58c6ad01c5",
+      "body_bytes": 15,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "non-null JSON scalar accepted"
+      }
+    },
+    {
+      "id": 20,
+      "name": "null_value_rejected",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "array",
+      "content_type": "application/json",
+      "body": "inputs/bodies/20.bin",
+      "body_sha256": "1c197daef20de3f47eec5e2f735ec6669869d3180cc29f35be4788511e0af0f8",
+      "body_bytes": 14,
+      "prediction": {
+        "status": 400,
+        "measurement": "UNMEASURED",
+        "scope": "JSONField null validation"
+      }
+    },
+    {
+      "id": 21,
+      "name": "blank_name_rejected",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "array",
+      "content_type": "application/json",
+      "body": "inputs/bodies/21.bin",
+      "body_sha256": "1390696a77e5d6f4375e9b36450c26bb67e99662fcd31b71cecd8ceda332040e",
+      "body_bytes": 11,
+      "prediction": {
+        "status": 400,
+        "measurement": "UNMEASURED",
+        "scope": "CharField blank validation"
+      }
+    },
+    {
+      "id": 22,
+      "name": "rename_duplicate_rejected",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "array",
+      "content_type": "application/json",
+      "body": "inputs/bodies/22.bin",
+      "body_sha256": "2329d90c026b6eb8d38fa69b6d41001445b4957b8effc28799e43add64cdc596",
+      "body_bytes": 32,
+      "prediction": {
+        "status": 400,
+        "measurement": "UNMEASURED",
+        "scope": "unique key excludes only current row"
+      }
+    },
+    {
+      "id": 23,
+      "name": "create_epg_clamps",
+      "role": "admin",
+      "method": "POST",
+      "target": "collection",
+      "content_type": "application/json",
+      "body": "inputs/bodies/23.bin",
+      "body_sha256": "89697c83471578546504f5a96a94a8b957d6143190251265218a8fffc8abbbe3",
+      "body_bytes": 168,
+      "prediction": {
+        "status": 201,
+        "measurement": "UNMEASURED",
+        "scope": "create clamp helper only"
+      },
+      "bind_created_alias": "epg"
+    },
+    {
+      "id": 24,
+      "name": "patch_epg_ordered_clamps",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "epg",
+      "content_type": "application/json",
+      "body": "inputs/bodies/24.bin",
+      "body_sha256": "836791db96626d4e7ced841d212e12a428a30c9f36d249e35f177678e0507331",
+      "body_bytes": 114,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "max then min then prev/default clamp"
+      }
+    },
+    {
+      "id": 25,
+      "name": "patch_epg_array",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "epg",
+      "content_type": "application/json",
+      "body": "inputs/bodies/25.bin",
+      "body_sha256": "cfd5634a5131faf427c1550b4bb62028645e1703c84c6ab99d0f9f44f59a322b",
+      "body_bytes": 18,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "non-dictionary skips clamp helper"
+      }
+    },
+    {
+      "id": 26,
+      "name": "empty_epg_patch",
+      "role": "admin",
+      "method": "PATCH",
+      "target": "epg",
+      "content_type": "application/json",
+      "body": "inputs/bodies/26.bin",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "body_bytes": 2,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "optional value omitted"
+      }
+    },
+    {
+      "id": 27,
+      "name": "delete_epg",
+      "role": "admin",
+      "method": "DELETE",
+      "target": "epg",
+      "content_type": "application/json",
+      "body": "inputs/bodies/27.bin",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body_bytes": 0,
+      "prediction": {
+        "status": 204,
+        "measurement": "UNMEASURED",
+        "scope": "owned EPG row delete and version"
+      }
+    },
+    {
+      "id": 28,
+      "name": "check_network_membership",
+      "role": "admin",
+      "method": "POST",
+      "target": "check",
+      "content_type": "application/json",
+      "body": "inputs/bodies/28.bin",
+      "body_sha256": "18c199824a482b0584e7f4b1536a382a0b9fc82e4a2691df2dfa0d543ef6f01b",
+      "body_bytes": 74,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "check is read-only; literal client IP"
+      }
+    },
+    {
+      "id": 29,
+      "name": "check_invalid_CIDR",
+      "role": "admin",
+      "method": "POST",
+      "target": "check",
+      "content_type": "application/json",
+      "body": "inputs/bodies/29.bin",
+      "body_sha256": "d4428e5f47e11d6c4eef40af902ce316b9acebb53996e9f2fbd6cbe8a218f8ff",
+      "body_bytes": 57,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "invalid CIDRs reported as 200 error payload"
+      }
+    },
+    {
+      "id": 30,
+      "name": "standard_check_refusal",
+      "role": "standard",
+      "method": "POST",
+      "target": "check",
+      "content_type": "application/json",
+      "body": "inputs/bodies/30.bin",
+      "body_sha256": "0104eed0c8beafcb94b8dedcfd0e1dead440a342cfc1cd1f4d213cf7cf07183f",
+      "body_bytes": 24,
+      "prediction": {
+        "status": 403,
+        "measurement": "UNMEASURED",
+        "scope": "action explicit admin permission"
+      }
+    },
+    {
+      "id": 31,
+      "name": "UI_denied_admin_check",
+      "role": "admin_denied",
+      "method": "POST",
+      "target": "check",
+      "content_type": "application/json",
+      "body": "inputs/bodies/31.bin",
+      "body_sha256": "0104eed0c8beafcb94b8dedcfd0e1dead440a342cfc1cd1f4d213cf7cf07183f",
+      "body_bytes": 24,
+      "prediction": {
+        "status": 403,
+        "measurement": "UNMEASURED",
+        "scope": "action explicit admin retains network check"
+      }
+    },
+    {
+      "id": 32,
+      "name": "check_unknown_key",
+      "role": "admin",
+      "method": "POST",
+      "target": "check",
+      "content_type": "application/json",
+      "body": "inputs/bodies/32.bin",
+      "body_sha256": "bdec12a5dd77a6691816eddf1ea4059866a8ed2a561278795457791d3924e968",
+      "body_bytes": 34,
+      "prediction": {
+        "status": 200,
+        "measurement": "UNMEASURED",
+        "scope": "unknown check key returns empty object"
+      }
+    }
+  ],
+  "exception_policy": {
+    "APIClient_raise_request_exception": false,
+    "literal_response_and_exc_info": "retain response body and complete bounded traceback metadata separately; do not equate framework500 with deployed WSGI/ASGI"
+  },
+  "observations": [
+    "literal status/headers/body bytes and SHA",
+    "all 62 public tables/59 sequences before and after every request, exact schema manifest once",
+    "all Redis DB0..3 key/type/DUMP/value/list bytes/TTL before and after each request",
+    "named settings group/version old/new and owned sentinel continuity",
+    "user/auth history and request_started callback side effects; no blanket refusal-cache-noeffects assumption",
+    "Channels raw frames and unconsumed broker/results",
+    "receiver registrations full tuple slot types/order without invoking callbacks"
+  ],
+  "ownership": {
+    "no_external_IO": true,
+    "network": "internal owned PostgreSQL/Redis only",
+    "startup": "real management-shell marker before django.setup and assert should_skip_initialization; no app method patches",
+    "default_audit": "literal before/after named11 plus full62tables/59sequences, untouched default DB",
+    "cleanup": "begin 90s overall deadline before post-request checks; all child waits/pipes, backend absence, exact project/CID and observed host PID identities",
+    "once": "exact reviewed seal + fresh output and one request sequence, no automatic retry"
+  },
+  "budgets_seconds": {
+    "bootstrap": 180,
+    "capture": 360,
+    "outer": 1200,
+    "cleanup": 90
+  },
+  "excluded": [
+    "stream_settings hash-change locks/rehash tasks",
+    "dvr_settings offset scheduling/fallback",
+    "system_settings writes/log-collector side effects",
+    "network_access writes/developer notifications",
+    "reverse_proxy_auth writes/auth reconfiguration",
+    "proxy_settings writes/process-local worker cache",
+    "Source TCP/Main/deployed renderer parity",
+    "SQLite",
+    "Native outcomes or runtime implementation"
+  ],
+  "prior_unexecuted_definition_seal": "e77b28ca61783860de89294c4e7b76d19f422dbe2cdca8fae0d36d007861b5c5"
+}

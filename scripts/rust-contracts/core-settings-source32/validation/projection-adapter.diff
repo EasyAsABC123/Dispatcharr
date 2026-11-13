@@ -1,0 +1,35 @@
+--- executed Source32 effect validator
++++ public privacy adapter; projection only
+@@ -25,7 +25,7 @@
+         require(exact(actual['user_level'],row['user_level']) and actual['is_active'] is True, 'ActualRoleFields')
+         custom={'allowed_networks':{'UI':row['custom_ui']}} if 'custom_ui' in row else {}
+         require(exact(actual['custom_properties'],custom), 'ActualNetworkRoleShape')
+-        require(type(actual['api_key']) is str and actual['api_key'].startswith('settings32-') and actual['api_key'].endswith('-'+alias), 'GeneratedRoleAPIKey')
++        require(type(actual['api_key']) is dict and actual['api_key'].get('projection')=='credential-or-derivation-field' and set(actual['api_key']['UTF8'])=={'sha256','bytes'} and len(actual['api_key']['UTF8']['sha256'])==64 and type(actual['api_key']['UTF8']['bytes'])is int and actual['api_key']['UTF8']['bytes']>0, 'ProjectedActualRoleAPIKeyEvidence')
+     seq=seed['audit']['sequences']
+     require(exact(seq['public.core_coresettings_id_seq'],{'last_value':1002,'is_called':True}), 'SettingsSeedSequence')
+     require(exact(seq['public.accounts_user_id_seq'],{'last_value':3,'is_called':True}), 'UserSeedSequence')
+@@ -39,7 +39,7 @@
+     require(type(before) is dict and type(after) is dict, 'RawInventoryObjects')
+     require(before['database']==after['database'] and before['complete'] is True and after['complete'] is True, 'ActualCompleteRawDB')
+     require(before['destructive_commands_or_consumption'] is False and after['destructive_commands_or_consumption'] is False, 'NonConsumingRawInventory')
+-    left={row['key_hex']:row for row in before['rows']};right={row['key_hex']:row for row in after['rows']}
++    left={row['key_sha256']:row for row in before['rows']};right={row['key_sha256']:row for row in after['rows']}
+     require(len(left)==len(before['rows']) and len(right)==len(after['rows']) and set(left)==set(right), 'ExactRawKeySet')
+     for key,row in left.items():
+         other=right[key]
+@@ -142,12 +142,12 @@
+         last=after;checks+=1
+     require(exact(aliases,report['aliases']), 'FinalAliasBinding')
+     return {'qualified_requests':checks,'Source_TCP':False,'Native':False,'oracles_predeclared':True,
+-            'raw_cache_preserved_not_normalized':True,'framework_only':True}
++            'raw_cache_content_omitted_to_explicit_evidence':True,'privacy_adapter_not_original_byte_validator':True,'framework_only':True}
+ 
+ 
+ def compare(report, plan):
+     try:
+-        result=validate_capture(report,plan,Path(__file__).resolve().parents[1]/'definition')
++        result=validate_capture(report,plan,Path(__file__).resolve().parents[1]/'executed-executor/definition')
+         return {'passed':True,**result,'raw_recorder_passed_preserved':report.get('passed')}
+     except (ValueError,KeyError,TypeError,AssertionError) as error:
+         return {'passed':False,'error_type':type(error).__name__,'error':str(error),'raw_recorder_passed_preserved':report.get('passed')}
