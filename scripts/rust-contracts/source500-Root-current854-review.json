@@ -1,0 +1,93 @@
+{
+  "passed": true,
+  "base": "46b91d70f2282fdadd14a6fc8b7a2110825d1019",
+  "source_map_sha256": "05a5bb4fb87e58d9acbcf132ef2e5300c4c89c4365718dded6ff4481277e86bf",
+  "Rust_inputs": 854,
+  "coupled_inputs": 5,
+  "selected_paths": 8,
+  "checks": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 2500394,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794599087.9774733,
+      "completed_epoch": 1794599089.9563437,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 2500504,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794599089.9941258,
+      "completed_epoch": 1794599099.3689265,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 2501376,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794599099.4071422,
+      "completed_epoch": 1794599140.4567122,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    },
+    {
+      "stage": "defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 2505300,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794599140.4983466,
+      "completed_epoch": 1794599254.5142856,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    }
+  ],
+  "default_totals": {
+    "passed": 769,
+    "ignored": 739,
+    "blocks": 172
+  },
+  "first_compilation_failure_retained": true,
+  "Root_QA1_actual_exit": 101,
+  "Root_QA1_reason": "New StoreError variant required explicit playback conversion; all old branches preserved",
+  "fresh_Native2_execution": false,
+  "original_Source2_actual_HTTP_witnesses": 2,
+  "Main_activated": false,
+  "legacy_authenticate_None_unchanged": true,
+  "Plugin_retained_REST_helper_adopted": true,
+  "playback_variant_reachability_claimed": false,
+  "performance_claimed": false,
+  "credit": "Original Dispatcharr authors retain all application and algorithm credit."
+}

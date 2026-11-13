@@ -120,6 +120,8 @@ pub enum StoreError {
     PermissionDenied,
     /// Source UI permission raised before the view; render Django generic500.
     UiPermissionFault,
+    /// Source unhandled REST fault; generic Django500, never auth failure401.
+    UnhandledRestFault,
     NotFound,
     Unsupported(&'static str),
     RateLimited(u64),
@@ -153,6 +155,7 @@ impl std::fmt::Display for StoreError {
             Self::Forbidden => formatter.write_str("Forbidden"),
             Self::PermissionDenied => formatter.write_str("Permission denied"),
             Self::UiPermissionFault => formatter.write_str("UI permission failed"),
+            Self::UnhandledRestFault => formatter.write_str("Unhandled REST request"),
             Self::NotFound => formatter.write_str("Not found"),
             Self::XcDenied { status, .. } => {
                 write!(formatter, "XC request denied with status {status}")

@@ -52,10 +52,10 @@ fn invalid_and_null_boolean_refused() {
     }
 }
 #[test]
-fn list_body_is_explicit_native_framework_gap() {
+fn list_body_is_typed_source_rendered_fault() {
     assert!(matches!(
         changes(&json!([])),
-        Err(StoreError::StatusBody(500, _))
+        Err(StoreError::UnhandledRestFault)
     ));
 }
 #[test]

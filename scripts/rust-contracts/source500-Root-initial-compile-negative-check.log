@@ -1,0 +1,42 @@
+    Checking dispatcharr-upstream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/upstream-http)
+    Checking dispatcharr-contracts v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/contracts)
+    Checking dispatcharr-ingest-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/ingest-core)
+    Checking dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/output-store)
+    Checking dispatcharr-coordination v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/coordination)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/store)
+    Checking dispatcharr-clients v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/clients)
+   Compiling dispatcharr-xmltv-parser v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/xmltv-parser)
+    Checking dispatcharr-stream-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/stream-core)
+    Checking dispatcharr-stream-runtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/stream-runtime)
+    Checking dispatcharr-input-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/input-store)
+    Checking dispatcharr-stream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/stream-http)
+    Checking dispatcharr-timeshift-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/timeshift-core)
+    Checking dispatcharr-backups v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/backups)
+    Checking dispatcharr-fmp4-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/fmp4-core)
+    Checking dispatcharr-hls-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/hls-core)
+    Checking dispatcharr-hls-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/hls-http)
+    Checking dispatcharr-fmp4-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/fmp4-http)
+    Checking dispatcharr-ingest-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/root-source500-union854-qa-1/source/rust/crates/ingest-http)
+error[E0004]: non-exhaustive patterns: `StoreError::UnhandledRestFault` not covered
+   --> crates/store/src/playback.rs:428:11
+    |
+428 |     match error {
+    |           ^^^^^ pattern `StoreError::UnhandledRestFault` not covered
+    |
+note: `StoreError` defined here
+   --> crates/store/src/lib.rs:115:10
+    |
+115 | pub enum StoreError {
+    |          ^^^^^^^^^^
+...
+124 |     UnhandledRestFault,
+    |     ------------------ not covered
+    = note: the matched value is of type `StoreError`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+    |
+456 ~         StoreError::StatusBody(status, body) => PlaybackError { status, body },
+457 ~         StoreError::UnhandledRestFault => todo!(),
+    |
+
+For more information about this error, try `rustc --explain E0004`.
+error: could not compile `dispatcharr-store` (lib) due to 1 previous error

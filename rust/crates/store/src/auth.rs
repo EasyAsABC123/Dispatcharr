@@ -769,7 +769,7 @@ async fn logout(
 impl IntoResponse for StoreError {
     fn into_response(self) -> Response {
         let (status, body) = match self {
-            Self::UiPermissionFault => {
+            Self::UiPermissionFault | Self::UnhandledRestFault => {
                 let mut response = (StatusCode::INTERNAL_SERVER_ERROR,
                     [("content-type", "text/html; charset=utf-8"), ("vary", "origin")],
                     "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n").into_response();
@@ -1080,5 +1080,36 @@ mod tests {
             ))
             .await
             .is_err());
+    }
+}
+
+#[cfg(test)]
+mod source_rendered_error_tests {
+    use super::*;
+    use sha2::{Digest, Sha256};
+    #[tokio::test]
+    async fn generic_fault_reuses_source145byte_html_and_leaves_permission_renderer_identical() {
+        for error in [
+            StoreError::UiPermissionFault,
+            StoreError::UnhandledRestFault,
+        ] {
+            let response = error.into_response();
+            assert_eq!(response.status(), StatusCode::INTERNAL_SERVER_ERROR);
+            assert_eq!(
+                response.headers()["content-type"],
+                "text/html; charset=utf-8"
+            );
+            assert_eq!(response.headers()["content-length"], "145");
+            assert_eq!(response.headers()["vary"], "origin");
+            assert!(!response.headers().contains_key("www-authenticate"));
+            let body = axum::body::to_bytes(response.into_body(), 145)
+                .await
+                .unwrap();
+            assert_eq!(body.len(), 145);
+            assert_eq!(
+                format!("{:x}", Sha256::digest(body)),
+                "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+            );
+        }
     }
 }

@@ -1,6 +1,6 @@
 # Image58: immutable application build only
 
-The actual Docker build completed with exit0 from Git `46b91d70f2282fdadd14a6fc8b7a2110825d1019`:854 Rust files,495 unchanged React files and two original-credit files. Root compares all1,351 archived source bytes against that commit, then verifies all114 installed frontend/credit hashes match image57. The isolated read-only/network-none probe runs as UID65532 and its exact container name/ID are absent afterward.
+The actual Docker build completed with exit0 from Git `46b91d70f2282fdadd14a6fc8b7a2110825d1019`: 854 Rust inputs, 495 unchanged React inputs and two original-credit files. Root compares all 1,351 archived source bytes against that commit, then verifies all 114 installed frontend/credit hashes match image57. The isolated read-only/network-none probe runs as UID65532 and its exact container name/ID are absent afterward.
 
 This is build validation only. It includes the newer library Core/REST/plugin components, whose unregistered routes do not become Main acceptance by compilation. No SDK, package-group, Main playback, soak or performance result is transferred from image57. The subsequent Source-derived generic500 correction is not part of this image. The selected functional and measured application checkpoint remains image57.
 

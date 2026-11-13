@@ -1,0 +1,9 @@
+# Source-derived REST HTML error correction
+
+Two fresh Original framework requests return HTTP 500 with `text/html; charset=utf-8` and the same 145-byte generic Django error body: malformed repository PUT input and a duplicated persisted API key. Complete `response.exc_info` identifies AttributeError and MultipleObjectsReturned respectively. The raw recorder stays capture-only; [independent Source review](../scripts/rust-contracts/source500-Original2-independent-review.json) records the actual responses and unchanged default audits. This is framework authority, not an Original TCP experiment.
+
+The Rust correction adds a typed unhandled REST fault using the existing Django HTML renderer. The opt-in bounded reader now propagates duplicate rows before properties decoding or login-failure history. The legacy authentication strategy remains unchanged. Plugin metadata adopts the retained reader using the same original permit, retires the subject before allocating metadata and maps only the observed malformed PUT object boundary to this fault. Unmeasured POST/internal/date errors retain their prior behavior.
+
+Formatting, workspace compilation, strict all-target checks and tests pass on 854 Rust inputs and five coupled inputs: 769 passed, 739 ignored. The [Root review](../scripts/rust-contracts/source500-Root-current854-review.json) preserves the initial exhaustive-match compilation failure and the corrected run. A pure test matches the actual Original body SHA and headers; a distinct ignored two-request peer supports the next fresh Native acceptance run. That run has not yet executed. Historical Native24 results are unchanged and are not relabeled.
+
+Main integration, complete API error parity, physical repository fault tests and performance remain open. Image58 predates this correction. All application and algorithm credit belongs to the original Dispatcharr authors.

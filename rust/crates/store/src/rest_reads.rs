@@ -145,7 +145,10 @@ fn decode_user(
 }
 fn classify_count(count: usize) -> Result<bool, StoreError> {
     match count {
-        0 | 2 => Ok(false),
+        0 => Ok(false),
+        // Fresh Source2: get(api_key) with two rows raises MultipleObjectsReturned.
+        // Propagate before properties or auth failure/history/event handling.
+        2 => Err(StoreError::UnhandledRestFault),
         1 => Ok(true),
         _ => Err(database_unavailable()),
     }

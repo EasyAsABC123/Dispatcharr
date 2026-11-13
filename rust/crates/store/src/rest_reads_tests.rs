@@ -32,7 +32,10 @@ fn sql_null_user_properties_coalesce_but_json_null_is_preserved() {
 #[test]
 fn duplicate_row_count_precedes_property_decode() {
     assert!(!classify_count(0).unwrap());
-    assert!(!classify_count(2).unwrap());
+    assert!(matches!(
+        classify_count(2),
+        Err(StoreError::UnhandledRestFault)
+    ));
     assert!(classify_count(1).unwrap());
     assert!(classify_count(3).is_err());
 }

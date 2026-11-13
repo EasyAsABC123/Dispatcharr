@@ -186,9 +186,9 @@ struct Changes {
 }
 fn changes(value: &Value) -> Result<Changes, StoreError> {
     // Original PUT calls request.data.items() before serializer validation.
-    // Source24's final list body raised a literal framework exception; this
-    // explicit Native JSON500 is NOT claimed as Source HTTP/body parity.
-    let fields = value.as_object().ok_or_else(framework_shape)?;
+    // Fresh Source2 returned exact generic Django500 HTML for this error.
+    // Do not alter unmeasured SQL/date/internal/POST framework_shape paths.
+    let fields = value.as_object().ok_or(StoreError::UnhandledRestFault)?;
     Ok(Changes {
         public_key: fields
             .get("public_key")
@@ -281,11 +281,13 @@ impl PluginRepositories {
             return Err(StoreError::Unauthorized("Invalid authentication header"));
         }
         let policy = crate::auth::request(peer, headers);
-        let user = auth.authenticate(&policy).await?;
-        // Source permission evaluates network for anonymous users too, AFTER
-        // authentication machinery, and BEFORE anonymous/role conjunction.
-        let allowed = auth
-            .source_ui_network_allowed(auth.client_ip(&policy), user.as_ref())
+        // Explicitly opt into the retained/bounded reads using the already
+        // inherited ORIGINAL token; legacy authenticate(None) remains unchanged.
+        let reads = auth.retained_rest_reads(crate::RestReadLimits::default())?;
+        let user = reads.authenticate(&policy).await?;
+        // Same Source auth then network-before-anonymous/role ordering.
+        let allowed = reads
+            .ui_network_allowed(auth.client_ip(&policy), user.as_ref())
             .await?;
         let user = user.ok_or(StoreError::Unauthorized(
             "Authentication credentials were not provided.",
@@ -295,9 +297,13 @@ impl PluginRepositories {
         } else {
             10
         };
-        if !allowed || user.user_level < required {
+        if !allowed || user.user().user_level < required {
             return Err(StoreError::PermissionDenied);
         }
+        // Retire bounded User/JSON before allocating repository DTOs. The
+        // actor/frame still retains the SAME original request token.
+        drop(user);
+        drop(reads);
         let supported = if target.is_some() {
             method == Method::PUT || method == Method::DELETE
         } else {

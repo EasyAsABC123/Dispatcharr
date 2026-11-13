@@ -453,6 +453,8 @@ fn playback_error(error: StoreError) -> PlaybackError {
             status: 500,
             body: serde_json::json!({"detail":"UI permission failed"}),
         },
+        // Type integration only: opt-in REST fault is not a playback authority.
+        StoreError::UnhandledRestFault => PlaybackError::new(500, "Unhandled REST request"),
         StoreError::StatusBody(status, body) => PlaybackError { status, body },
     }
 }
