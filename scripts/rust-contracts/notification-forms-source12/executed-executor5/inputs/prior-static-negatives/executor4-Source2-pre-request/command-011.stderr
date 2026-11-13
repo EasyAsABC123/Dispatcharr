@@ -1,0 +1,39 @@
+2026-11-13 06:37:08,806 INFO core.signals Invalidated notification condition cache due to network access settings update
+2026-11-13 06:37:08,808 INFO core.developer_notifications Added developer notification: network_security_m3u_epg
+2026-11-13 06:37:08,809 INFO core.developer_notifications Developer notification sync complete: 1 added, 0 updated, 0 removed, 0 skipped
+2026-11-13 06:37:08,811 INFO core.signals Re-synced developer notifications after network access settings update
+Traceback (most recent call last):
+  File "/app/manage.py", line 24, in <module>
+    main()
+    ~~~~^^
+  File "/app/manage.py", line 21, in main
+    execute_from_command_line(sys.argv)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/management/__init__.py", line 443, in execute_from_command_line
+    utility.execute()
+    ~~~~~~~~~~~~~~~^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/management/__init__.py", line 437, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/management/base.py", line 420, in run_from_argv
+    self.execute(*args, **cmd_options)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/management/base.py", line 464, in execute
+    output = self.handle(*args, **options)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/management/commands/shell.py", line 261, in handle
+    exec(options["command"], {**globals(), **self.get_namespace(**options)})
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 1, in <module>
+  File "<frozen runpy>", line 294, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/notification-tools/source_fixture.py", line 120, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/notification-tools/source_fixture.py", line 119, in main
+    require(report['capture_valid']is True and(stage=='audit'or report['actual_request_count']==12),'Source12CaptureCompleteNoRetry')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/notification-tools/capture_common.py", line 25, in require
+    if not value:raise ValueError(label)
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Source12CaptureCompleteNoRetry

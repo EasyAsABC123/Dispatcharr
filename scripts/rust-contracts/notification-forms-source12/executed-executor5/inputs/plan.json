@@ -1,0 +1,704 @@
+{
+  "state": "UNEXECUTED_SOURCE12_DEFINITION_REVIEW",
+  "Original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_inputs_sha256": {
+    "LICENSE": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+    "dispatcharr/settings.py": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+    "dispatcharr/utils.py": "740da794553c7c059bff3a2d64a14d0a2448ea8d867e7331568e3cd9d4eecdf6",
+    "dispatcharr/urls.py": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f",
+    "dispatcharr/wsgi.py": "b0beca7f466b812b67dd9b189df58be997f6883513db69f28e7ca135b9949ba5",
+    "dispatcharr/asgi.py": "b0c67894be11f8797e123c974d653c146a5f9d5f2aba862521f68f00a356b1ca",
+    "dispatcharr/app_initialization.py": "ca589b7d22428ea2bd10557218a6e943ebd5665a6d076a1bcf57d41b20799021",
+    "docker/nginx.conf": "c96911de9034e9ea7988e98e5afeec91b756094c34e75a9d58482a8d4846bfd3",
+    "apps/api/urls.py": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6",
+    "core/api_urls.py": "aa780f16f02f7bcffe5fdf26aa3f658a0e91190e84377540c75ec73b1dbce81e",
+    "core/api_views.py": "2600b850ae65f6e160951024a777e51ae6f05ab8573eae23b4109d941989fbb8",
+    "core/models.py": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+    "core/serializers.py": "8f5c68238e2757f34fde5e0548ff5ca86a4e97fadae71ed694507e29c6db5688",
+    "core/utils.py": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+    "core/signals.py": "93b679b154a20e69164495f23efe859a7d60699c878303a3fb8c4dc2ff861bb4",
+    "apps/accounts/models.py": "05cab8c590de411e68ff83b72d9d6256ca43007cbbab5d2a7f96a3a8965a9ded",
+    "apps/accounts/authentication.py": "415d74d68295c9764d46bac3b851878fa6ed48027e4aebd3859b0aaade026fe5",
+    "apps/accounts/permissions.py": "407a0c6cbae122042c722e2bd3792579875a075cb6e6345ff43588250ac6fe6e",
+    "apps/accounts/throttling.py": "819d682914cdf4ae2c3f8260d50a23ea4217bbb7881fd483920972b0407f2ed0",
+    "core/apps.py": "de47309cb6f755fde18bf6299014426189d9ae856c30287936fd77ff60fac79e",
+    "dispatcharr/display_timezone.py": "c65b95d6830f57cb0319db49a33a7340eabe35ff74a6dd5e52ef77ce2f235b56",
+    "core/developer_notifications.py": "15544426ff37998f3e65c9eaffd83898acae1c60d57fa45388ae07881b883490"
+  },
+  "actual_dependencies": [
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/django/contrib/auth/__init__.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/contrib/auth/__init__.py",
+      "sha256": "fcde40c5311b111caf9798177413740ebe5853ef483e86a605e187b4a5e853e1",
+      "bytes": 15308
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/django/contrib/auth/middleware.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/contrib/auth/middleware.py",
+      "sha256": "5c738f24dac92c9b4338959aba7948f1503eaa79bda11477d075a1fbe4cedb13",
+      "bytes": 11950
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/django/middleware/csrf.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/middleware/csrf.py",
+      "sha256": "ae1d82bd6dabbd7f3f67d8294b9f2f2d57a76693fe71edb90f41fd57b6887ebf",
+      "bytes": 19521
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/jwt/__init__.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/jwt/__init__.py",
+      "sha256": "d3a4446591308befe70cbc989428dbfa0dfe7ec7eee5d35a57a22043451c253c",
+      "bytes": 1805
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/jwt/algorithms.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/jwt/algorithms.py",
+      "sha256": "31e174916a77d17f4ed9dbcd3b869e9264a146aaf8d97f02d9b43bf828fe0441",
+      "bytes": 40684
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/jwt/api_jws.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/jwt/api_jws.py",
+      "sha256": "80e83b3a4089f6a19692bb5b2f56784edc3bd65bf74043bad7a230f9c5bdcf12",
+      "bytes": 17913
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/jwt/api_jwt.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/jwt/api_jwt.py",
+      "sha256": "a2af9f3593c8cf9133163cb0b5b08223281b8292d5db5665309bc23c212cac76",
+      "bytes": 22343
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/jwt/exceptions.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/jwt/exceptions.py",
+      "sha256": "3540f48760343221d5e94f933edfc0af4a6b9c01f1c892748ba2c7216cddf154",
+      "bytes": 2375
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/jwt/utils.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/jwt/utils.py",
+      "sha256": "b9d89ca2f37984f3779d6a85029b9acd535fa2a776444ffc32d2211b83853aaf",
+      "bytes": 4076
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework/authentication.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/authentication.py",
+      "sha256": "cf9b669f80cc16c88cb9277883567718638763a2f3170a1b9df598fc8a7206fc",
+      "bytes": 7699
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework/permissions.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/permissions.py",
+      "sha256": "b4c6285334dc756081bc1896606574dd248dad44379ed4b55736a863f70e7e89",
+      "bytes": 9588
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework/request.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/request.py",
+      "sha256": "4d3b8cf78f57a5308d8a11fcdeb902d8d162c5df5dc6be2a85fbbb950c6a7e16",
+      "bytes": 15408
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework/test.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/test.py",
+      "sha256": "900633e8f584ed23f1d79d76e1d25b5f68c8c4a5f66d87c8918458639f57ffa8",
+      "bytes": 14953
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework/views.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py",
+      "sha256": "07d663e11faac813dd0965c337ade1cf3d6596314a37a57a21dd8e30fa56b8be",
+      "bytes": 19629
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework_simplejwt/__init__.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework_simplejwt/__init__.py",
+      "sha256": "ca05e86d0e4576df40508355b6c99f607a4621175bd1a778edcd939794c7b3f0",
+      "bytes": 209
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework_simplejwt/authentication.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py",
+      "sha256": "49f8a4f56193507783aa86bd030248d71f271b82eba2f005f5500bce2b05701b",
+      "bytes": 6398
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework_simplejwt/backends.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework_simplejwt/backends.py",
+      "sha256": "c4ae446b4c77e95426ae5a9c60444be132b7c0db0b147438c86fd16f6b4c97ee",
+      "bytes": 5733
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework_simplejwt/exceptions.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework_simplejwt/exceptions.py",
+      "sha256": "7ce92f9fc3100e65d2e20cd4bdfac3fbf1d45fb5d7a63fa126cfc6a919f8fd69",
+      "bytes": 1300
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework_simplejwt/models.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework_simplejwt/models.py",
+      "sha256": "a296c95f3209afcee3fdb27dd45738f290abe7b4acda2daff12636d95ed4e442",
+      "bytes": 3503
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework_simplejwt/settings.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework_simplejwt/settings.py",
+      "sha256": "866cd0ad5315338755d43a6c52a36a72b45d7b41f59485843f42aefbddd9b035",
+      "bytes": 3409
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework_simplejwt/state.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework_simplejwt/state.py",
+      "sha256": "f2ecdb84235735da1cbd5d0231ce45f62e129663abde102e582c73163521f489",
+      "bytes": 327
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework_simplejwt/tokens.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework_simplejwt/tokens.py",
+      "sha256": "ed6bd22363ce5dc490faa3ed08090232e644b36eb0330952f18847d18902fefc",
+      "bytes": 14303
+    },
+    {
+      "group": "auth23",
+      "path": "inputs/actual-image/rest_framework_simplejwt/utils.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework_simplejwt/utils.py",
+      "sha256": "c14dc4d60c164e688ce7c91bfd9b1532d9e89cefbcfa3e16d465e7bdb1cfe1e0",
+      "bytes": 1135
+    },
+    {
+      "group": "serializer9",
+      "path": "inputs/actual-image/django/db/models/base.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py",
+      "sha256": "3a387fb69469d93a7a1e27e16d93d5258d2e4c5e637bca8dbfb767a851e154ab",
+      "bytes": 97655
+    },
+    {
+      "group": "serializer9",
+      "path": "inputs/actual-image/django/db/models/deletion.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/deletion.py",
+      "sha256": "27d04ac8ec534f337eb0b257d89f6b59ded830b6c3bc752e2030e818380db18a",
+      "bytes": 21015
+    },
+    {
+      "group": "serializer9",
+      "path": "inputs/actual-image/django/db/models/fields/__init__.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/fields/__init__.py",
+      "sha256": "a3e34e9156a619030257c4f99bd9eb984b6225016a0ef93a9263a2488056ebf5",
+      "bytes": 98663
+    },
+    {
+      "group": "serializer9",
+      "path": "inputs/actual-image/rest_framework/fields.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/fields.py",
+      "sha256": "45525c12f86f294efea3ab3bac85f49c5f78f6f51ff2732769b5e7827888d188",
+      "bytes": 72044
+    },
+    {
+      "group": "serializer9",
+      "path": "inputs/actual-image/rest_framework/generics.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/generics.py",
+      "sha256": "7ad3311a1f9aae8e5ce42824c211efd089ae2c555bce2326dca5254b30a8352d",
+      "bytes": 10163
+    },
+    {
+      "group": "serializer9",
+      "path": "inputs/actual-image/rest_framework/mixins.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/mixins.py",
+      "sha256": "701287aa9709e365577b39cb2f651c93f675eced7a41227a0989796640247da7",
+      "bytes": 2936
+    },
+    {
+      "group": "serializer9",
+      "path": "inputs/actual-image/rest_framework/serializers.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/serializers.py",
+      "sha256": "d2ebe00d3b11079cc4de2cd0715ff7f80e6870df3a8b192a6d2a23178a18b9ac",
+      "bytes": 72512
+    },
+    {
+      "group": "serializer9",
+      "path": "inputs/actual-image/rest_framework/utils/field_mapping.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/utils/field_mapping.py",
+      "sha256": "8a6f19588df4aa68dcc28ece264d21141282cab5970762cf5e721c71be6db186",
+      "bytes": 12768
+    },
+    {
+      "group": "serializer9",
+      "path": "inputs/actual-image/rest_framework/validators.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/validators.py",
+      "sha256": "8d24d41c50ba6e2a40cd57d84005518405282429fe84930845e2eb95aa97bd11",
+      "bytes": 16240
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/__init__.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/__init__.py",
+      "sha256": "57294da38f072b796f59499797f05a663c6210195568f31fceef40b512bde8f7",
+      "bytes": 799
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/core/files/base.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/core/files/base.py",
+      "sha256": "1bf9d22c3fbbdb2eca0c61cd6a3b1047608bd76e9a787fe70344ad4a9efbffa2",
+      "bytes": 4845
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/core/files/uploadedfile.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/core/files/uploadedfile.py",
+      "sha256": "d7d655417b66128f3e39276aca422a3295a1bfe75e7e964e3b94d91ebabadba4",
+      "bytes": 4207
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/core/files/uploadhandler.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/core/files/uploadhandler.py",
+      "sha256": "c8d989eef378ad5f28b8b071ea935582e418d3de5908d190b30dcf28bed0d21a",
+      "bytes": 7813
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/core/handlers/base.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/base.py",
+      "sha256": "7e150b989896d5b8c830d1807722a5a1d5a68a48209031d3247695707c2f41ac",
+      "bytes": 14821
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/http/__init__.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/http/__init__.py",
+      "sha256": "b95533d28bfe7a6736f616c3efc40a2a46bf4752f89a90c33e19327e4c788f34",
+      "bytes": 1200
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/http/multipartparser.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/http/multipartparser.py",
+      "sha256": "f5f3ec9cde944ed3da5fff296d368080ed504c522d2cf7c31c025f990e27d2d7",
+      "bytes": 27971
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/http/request.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/http/request.py",
+      "sha256": "6ad362eba6fb2c5b51b7f81944abf2613a9bc9a42b964a28d8271ad124270d0b",
+      "bytes": 29630
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/http/response.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/http/response.py",
+      "sha256": "66363ef520f59a8037a8acf942b1696890861bba578b6f36bbe44983d64008ec",
+      "bytes": 26270
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/test/client.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/test/client.py",
+      "sha256": "dd0eb08101baaa523dbcb4432f153966e857c881e0159930a4a8cf5a339d7ac3",
+      "bytes": 56021
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/utils/datastructures.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/utils/datastructures.py",
+      "sha256": "cfe76fe0e3ed795f44c49366ebf770c9e89baf3038a89283306c5b133d3f9eb1",
+      "bytes": 10863
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/utils/encoding.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/utils/encoding.py",
+      "sha256": "f0e4db3db05e105d527119b140d0b863c7fc668ccc18a5c2c8c7fc6a4509afd5",
+      "bytes": 8792
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/utils/http.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/utils/http.py",
+      "sha256": "c73cc334ef74c5a9eaee7cf1f8056b62058913ab552f430d310dada7787c34fc",
+      "bytes": 13574
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/django/utils/module_loading.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/utils/module_loading.py",
+      "sha256": "a196e7d0511d2357bf4253e9d1c50baca0d183cb24caba94360e9fffa77f2c1f",
+      "bytes": 3820
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/rest_framework/__init__.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/__init__.py",
+      "sha256": "c44e145d9d0daada4d6a0666bc73c3372659c9de58aa345440b4ad40dd0efdb5",
+      "bytes": 821
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/rest_framework/exceptions.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/exceptions.py",
+      "sha256": "935e5ae7264f324e084f615b56620591e0111f5e672043514d7d9be41dcba062",
+      "bytes": 8159
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/rest_framework/negotiation.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/negotiation.py",
+      "sha256": "7a422847e5255886a224f4cceeba67eed653ed269b37a75fbdd7050e190996eb",
+      "bytes": 5938
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/rest_framework/parsers.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/parsers.py",
+      "sha256": "7dfbcc2707bc3182fc51b8bb3c426dcdd8ee82d4a6f090f6059429a208fb7622",
+      "bytes": 8562
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/rest_framework/renderers.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/renderers.py",
+      "sha256": "ded88dfb5dcf205877654ed1daf5e5484ef3d07fa6996d6cc7c1123e5239612f",
+      "bytes": 36921
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/rest_framework/settings.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/settings.py",
+      "sha256": "224f31e20582a0ac5a367a92852042b255521acb3bbc8c15e10b2c8474ebbe17",
+      "bytes": 8104
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/rest_framework/utils/html.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/utils/html.py",
+      "sha256": "e0f4e296468da88fc6701d8b815c195a66f1d08d36854a09ae68a549bd7e6340",
+      "bytes": 2624
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/rest_framework/utils/json.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/utils/json.py",
+      "sha256": "d6a54e3adfc3b9a42a3b878fb9bfa34f6f65646fbdb0d9862c312a5b8d81019d",
+      "bytes": 1027
+    },
+    {
+      "group": "parser23",
+      "path": "inputs/actual-image/rest_framework/utils/mediatypes.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/utils/mediatypes.py",
+      "sha256": "71149fdaa455a14cd388857be4c93eefe9b75ae6755a897d9e0c2013a000d352",
+      "bytes": 3463
+    }
+  ],
+  "requests_executed": 0,
+  "body_definition_sha256": "f6e00debfb0ca777a094e88fc66948034e6fd806118afd26ac026c191236b63c",
+  "roles": [
+    {
+      "alias": "admin",
+      "id": 1,
+      "user_level": 10,
+      "is_active": true,
+      "custom_properties": {}
+    },
+    {
+      "alias": "standard",
+      "id": 2,
+      "user_level": 1,
+      "is_active": true,
+      "custom_properties": {}
+    },
+    {
+      "alias": "admin_denied",
+      "id": 3,
+      "user_level": 10,
+      "is_active": true,
+      "custom_properties": {
+        "allowed_networks": {
+          "UI": "192.0.2.0/24"
+        }
+      }
+    }
+  ],
+  "global_network_settings": {
+    "UI": "127.0.0.0/8"
+  },
+  "seed_notifications": [
+    {
+      "id": 10,
+      "notification_key": "owned.forms.delete",
+      "notification_type": "info",
+      "priority": "normal",
+      "source": "system",
+      "title": "Owned forms 10",
+      "message": "Source12 owned seed only",
+      "action_data": {},
+      "is_active": true,
+      "admin_only": false,
+      "expires_at": null,
+      "created_at": "2020-01-01T00:00:00Z",
+      "updated_at": "2020-01-01T00:00:00Z"
+    },
+    {
+      "id": 11,
+      "notification_key": "owned.forms.foreign",
+      "notification_type": "info",
+      "priority": "normal",
+      "source": "system",
+      "title": "Owned forms 11",
+      "message": "Source12 owned seed only",
+      "action_data": {},
+      "is_active": true,
+      "admin_only": false,
+      "expires_at": null,
+      "created_at": "2020-01-01T00:00:00Z",
+      "updated_at": "2020-01-01T00:00:00Z"
+    }
+  ],
+  "seed_dismissals": [
+    {
+      "id": 1,
+      "notification_id": 10,
+      "user_id": 1,
+      "dismissed_at": "2020-01-01T01:00:00Z",
+      "action_taken": null
+    },
+    {
+      "id": 2,
+      "notification_id": 10,
+      "user_id": 2,
+      "dismissed_at": "2020-01-01T02:00:00Z",
+      "action_taken": "accepted"
+    },
+    {
+      "id": 3,
+      "notification_id": 11,
+      "user_id": 2,
+      "dismissed_at": "2020-01-01T03:00:00Z",
+      "action_taken": null
+    }
+  ],
+  "seed_sequences": {
+    "accounts_user": {
+      "last_value": 3,
+      "is_called": true
+    },
+    "core_systemnotification": {
+      "last_value": 11,
+      "is_called": true
+    },
+    "core_notificationdismissal": {
+      "last_value": 3,
+      "is_called": true
+    }
+  },
+  "seed_aliases": {
+    "aliasDelete": 10,
+    "foreign": 11,
+    "derived_missing": 1000011
+  },
+  "natural_aliases": {
+    "FormA": {
+      "from_actual_response_ordinal": 1,
+      "JSON_field": "id"
+    },
+    "FormB": {
+      "from_actual_response_ordinal": 7,
+      "JSON_field": "id"
+    }
+  },
+  "cases": [
+    {
+      "index": 1,
+      "method": "POST",
+      "target_alias": "collection",
+      "actor": "admin",
+      "body_path": "bodies/01.bin",
+      "body_bytes": 90,
+      "body_sha256": "fdc39e564e61767d2f731ec13a0137a36be3a106489780327961935c41932a24",
+      "content_type": "application/x-www-form-urlencoded",
+      "predicted_status_UNMEASURED": 201
+    },
+    {
+      "index": 2,
+      "method": "PATCH",
+      "target_alias": "FormA",
+      "actor": "admin",
+      "body_path": "bodies/02.bin",
+      "body_bytes": 150,
+      "body_sha256": "a0a5f03ebfad77a48593b99836f3b411680040ab4892b878b423ccba35326600",
+      "content_type": "application/x-www-form-urlencoded",
+      "predicted_status_UNMEASURED": 200
+    },
+    {
+      "index": 3,
+      "method": "PATCH",
+      "target_alias": "FormA",
+      "actor": "admin",
+      "body_path": "bodies/03.bin",
+      "body_bytes": 21,
+      "body_sha256": "16a81c8c05cd2c2412683aaab49559209bc8e8cea8f4b6ca802ef23ac721b84b",
+      "content_type": "application/x-www-form-urlencoded",
+      "predicted_status_UNMEASURED": 400
+    },
+    {
+      "index": 4,
+      "method": "PUT",
+      "target_alias": "FormA",
+      "actor": "admin",
+      "body_path": "bodies/04.bin",
+      "body_bytes": 83,
+      "body_sha256": "b998ae03f386678754b3a510ef2851a25d3095cd0515b4d53ae96c5c59079dcc",
+      "content_type": "application/x-www-form-urlencoded",
+      "predicted_status_UNMEASURED": 200
+    },
+    {
+      "index": 5,
+      "method": "GET",
+      "target_alias": "FormA",
+      "actor": "standard",
+      "body_path": "bodies/05.bin",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": null,
+      "predicted_status_UNMEASURED": 404
+    },
+    {
+      "index": 6,
+      "method": "PATCH",
+      "target_alias": "derived_missing",
+      "actor": "admin",
+      "body_path": "bodies/06.bin",
+      "body_bytes": 21,
+      "body_sha256": "16a81c8c05cd2c2412683aaab49559209bc8e8cea8f4b6ca802ef23ac721b84b",
+      "content_type": "application/x-www-form-urlencoded",
+      "predicted_status_UNMEASURED": 404
+    },
+    {
+      "index": 7,
+      "method": "POST",
+      "target_alias": "collection",
+      "actor": "admin",
+      "body_path": "bodies/07.bin",
+      "body_bytes": 639,
+      "body_sha256": "838ed4c301bcd8702c3325418ec371fc58ac7ff2f02b3005eba92c752f62373a",
+      "content_type": "multipart/form-data; boundary=DispatcharrFormsSource12Boundary7f34",
+      "predicted_status_UNMEASURED": 201
+    },
+    {
+      "index": 8,
+      "method": "PATCH",
+      "target_alias": "FormB",
+      "actor": "admin",
+      "body_path": "bodies/08.bin",
+      "body_bytes": 449,
+      "body_sha256": "435f30c17a517281955f40bc661fdad80a1c10e1564c1f874d172fae07989f68",
+      "content_type": "multipart/form-data; boundary=DispatcharrFormsSource12Boundary7f34",
+      "predicted_status_UNMEASURED": 200
+    },
+    {
+      "index": 9,
+      "method": "PATCH",
+      "target_alias": "FormB",
+      "actor": "admin",
+      "body_path": "bodies/09.bin",
+      "body_bytes": 145,
+      "body_sha256": "3e81a0c484d12c5d16b1ad231da3d28b8eac296257bbb2b6445ed2177139d964",
+      "content_type": "multipart/form-data; boundary=DispatcharrFormsSource12Boundary7f34",
+      "predicted_status_UNMEASURED": 400
+    },
+    {
+      "index": 10,
+      "method": "PATCH",
+      "target_alias": "FormB",
+      "actor": "standard",
+      "body_path": "bodies/10.bin",
+      "body_bytes": 320,
+      "body_sha256": "3139772801898309bb1b0ae6290f6f01f99bda7f56e58ce88b91af3b444b6a9e",
+      "content_type": "multipart/form-data; boundary=DispatcharrFormsSource12Boundary7f34",
+      "predicted_status_UNMEASURED": 403
+    },
+    {
+      "index": 11,
+      "method": "PATCH",
+      "target_alias": "FormB",
+      "actor": "admin",
+      "body_path": "bodies/11.bin",
+      "body_bytes": 38,
+      "body_sha256": "ffa7a97da3d044dfd375393bfef9089ce072792af0c1325329645fb3c11cf0dd",
+      "content_type": "text/plain",
+      "predicted_status_UNMEASURED": 415
+    },
+    {
+      "index": 12,
+      "method": "DELETE",
+      "target_alias": "aliasDelete",
+      "actor": "admin",
+      "body_path": "bodies/12.bin",
+      "body_bytes": 7,
+      "body_sha256": "be302461cda285db3ed2d45fb767b23e08ca8808b35a638009937df22b332d73",
+      "content_type": "text/plain",
+      "predicted_status_UNMEASURED": 204
+    }
+  ],
+  "client_policy": {
+    "normal_APIClient": true,
+    "enforce_csrf_checks": true,
+    "raise_request_exception": false,
+    "force_authentication": false,
+    "accept": "application/json",
+    "REMOTE_ADDR": "127.0.0.1",
+    "auth": "actual per-actor persisted API key only; no JWT or header alternative",
+    "request_body": "raw exact frozen bytes via generic(method,path,data=bytes,content_type=literal); no format= or data re-encoding",
+    "file_observation": "Only after response inspect cached DRF _files/_data state without triggering .data/.FILES on refused/unparsed request. Report field name/file name/size/content_type/class only; no file.read or forced parser access."
+  },
+  "effects_scope": [
+    "full11 rows/sequences",
+    "allusers/events",
+    "rawcache keys/DUMP/TTL",
+    "literalresponse/headers/JSON/frameworkexception",
+    "actualreceiverregistry and before-isolation rows",
+    "seed/target/body alias binding",
+    "ownedmedia directory before/after bounded names/type/size/hash; no external files"
+  ],
+  "bounds": {
+    "requests": 12,
+    "Source_seconds": 240,
+    "outer_seconds": 1200,
+    "cleanup_seconds": 90,
+    "body_bytes": 65536,
+    "report_bytes": 134217728,
+    "cache_bytes": 1048576,
+    "cache_keys": 1000,
+    "audit_rows_per_table": 10000,
+    "audit_total_bytes": 8388608,
+    "media_files": 32,
+    "media_total_bytes": 1048576
+  },
+  "execution_authorized": false,
+  "no_retry_or_status_dependent_request_change": true,
+  "definition_revision": 3,
+  "prior_static_negative": "definition2 seeds had bool actions despite pinned nullable CharField; no app was run"
+}

@@ -1,0 +1,47 @@
+{
+  "scope": "three separately Root-admitted executions, never automatic retries",
+  "attempts": [
+    {
+      "attempt": 1,
+      "execution_sha256": "7df9ad3d673db02dacee5c187c6f9ece9fa3e1114ad9a7cae9f3069523d70c4d",
+      "controller_exit": 1,
+      "actual_counter_field": null,
+      "capture_original_sha256": null,
+      "error_type": "UnboundLocalError",
+      "error_message": "cannot access local variable 'began' where it is not associated with a value",
+      "actual_default_audits": false,
+      "Source_child_started": false,
+      "all_host_children_settled": true,
+      "original_bytes_changed": false
+    },
+    {
+      "attempt": 2,
+      "execution_sha256": "240eb6441a91754ccd6dac08804c5de481046aa688804d31949ac6c0d0d22e07",
+      "controller_exit": 1,
+      "actual_counter_field": 0,
+      "capture_original_sha256": "3f720c90d6fe6ba1cf70e800c6eb56eeafc9e76d6b9afdf175a795c3ffb69c68",
+      "error_type": "CollectionFailure",
+      "error_message": "CommandExit1",
+      "actual_default_audits": true,
+      "Source_child_started": true,
+      "all_host_children_settled": true,
+      "original_bytes_changed": false
+    },
+    {
+      "attempt": 3,
+      "execution_sha256": "41fbb08b87769cb2db76a9327cad5276bedfc1dcf035c2f001efc9f628093a83",
+      "controller_exit": 1,
+      "actual_counter_field": 12,
+      "capture_original_sha256": "b72af1de2683fa9e2345281d24cdaa7418368e1af0404eecba9ba018555a8d84",
+      "error_type": "ValueError",
+      "error_message": "ActualUnknownSmallMemoryFileMetadataNotStoredOrReadByObserver",
+      "actual_default_audits": true,
+      "Source_child_started": true,
+      "all_host_children_settled": true,
+      "original_bytes_changed": false
+    }
+  ],
+  "Source3_original_input_file_payload_bytes": 21,
+  "Source3_executed_expected_size": 20,
+  "Source3_offline_qualification_only": true
+}

@@ -1,0 +1,22 @@
+--- executor2/controller/run.py
++++ executor3/controller/run.py
+@@ -28,7 +28,7 @@
+     validate_definition(PLAN)
+     for group in('auth23','parser23'):
+         proof=json.loads((root/'inputs'/(group+'-proof.json')).read_text());require(proof['passed']is True and proof['state']=='EXACT_NEVER_STARTED_IMAGE_BYTES_CAPTURED'and proof['container_started']is False and proof['container_program_executions']==0 and proof['exact_CID_absent']is True and proof['all_project_containers_absent']is True,'NeverStartedActualByteCapture:'+group);require(proof['created_inspect']['State']['Pid']==proof['final_before_remove']['State']['Pid']==0,'PID0BeforeAfterCopy')
+-    proof=json.loads((root/'inputs/serializer9-proof.json').read_text());require(proof['passed']is True and proof['Source_started']is False and proof['app_imports']is False and proof['all_nine_equal']is True and proof['exact_container_absent']is True,'PriorExactSerializer9Bytes');require(proof['created_inspect']['State']['Pid']==proof['final_before_remove']['State']['Pid']==0,'SerializerPID0')
++    proof=json.loads((root/'inputs/serializer9-proof.json').read_text());require(proof['passed']is True and proof['Source_started']is False and proof['app_imports']is False and proof['all_nine_equal']is True and proof['exact_container_absent']is True,'PriorExactSerializer9Bytes');require(proof['created_inspect']['State']['Pid']==proof['final_before_remove']['Pid']==0 and proof['final_before_remove']['Status']=='created'and proof['final_before_remove']['Running']is False,'SerializerPID0')
+     return value
+ def save(path,value):path.write_text(json.dumps(value,indent=2)+'\n')
+ def proc_start(pid):
+--- executor2/controller/test_lifecycle.py
++++ executor3/controller/test_lifecycle.py
+@@ -28,6 +28,8 @@
+   text=(ROOT/'controller/bounded_stop.py').read_text();self.assertIn('lambda:None',text);self.assertIn("receipt['acknowledged']=False",text)
+  def test_current_host_PID_identity_observed_before_claim(self):
+   text=(ROOT/'controller/run.py').read_text();self.assertIn("'DockerTopPIDHostStartNotObserved'",text);self.assertIn("os.readlink('/proc/self/ns/pid')",text)
++ def test_serializer9_literal_historical_state_shape(self):
++  value=json.loads((ROOT/'inputs/serializer9-proof.json').read_text());self.assertEqual(value['created_inspect']['State']['Pid'],0);self.assertEqual(value['final_before_remove']['Pid'],0);self.assertNotIn('State',value['final_before_remove']);self.assertIn("proof['final_before_remove']['Pid']",(ROOT/'controller/run.py').read_text())
+  def test_original62_helper_is_exact_data_not_imported(self):
+   p=ROOT/'inputs/provenance/backup_fixture.py';self.assertEqual(hashlib.sha256(p.read_bytes()).hexdigest(),'21afad77d557a15ef365c12b0757df8838f69708ef03cfee7b324514b5154d58');self.assertNotIn('import backup_fixture',(ROOT/'controller/source_fixture.py').read_text())
+ if __name__=='__main__':unittest.main(verbosity=2)

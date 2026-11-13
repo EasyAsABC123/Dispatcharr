@@ -1,0 +1,27 @@
+--- EXECUTED_EXECUTOR5/effects.py
++++ OFFLINE_REVIEW1/effects.py
+@@ -59,12 +59,23 @@
+   key=bytes.fromhex(row['key_hex']).decode();require(row['type']=='string'and type(row['value_hex'])is str and len(bytes.fromhex(row['value_hex']))<=65536,'RawStringGETAndDUMP');require(row['pttl']==-1 if key==CACHE_VERSION else 0<row['pttl']<=300000,'PersistentVersionAndFiniteGroupTTLForms')
+  return True
+ 
++def frozen_upload_size():
++ # Read only the immutable request input, never the uploaded request-owned file.
++ plan=json.loads((ROOT/'inputs/plan.json').read_text());case=plan['cases'][6]
++ raw=(ROOT/'inputs'/case['body_path']).read_bytes()
++ require(hashlib.sha256(raw).hexdigest()==case['body_sha256']and len(raw)==case['body_bytes'],'ExactFrozenUploadBody')
++ boundary=b'DispatcharrFormsSource12Boundary7f34'
++ header=b'Content-Disposition: form-data; name="unknown_upload" ; filename="owned-small.txt"\r\nContent-Type: text/plain\r\n\r\n'
++ require(raw.count(header)==1,'ExactSingleFrozenUnknownUploadHeader')
++ payload_tail=raw.split(header,1)[1];ending=b'\r\n--'+boundary+b'--\r\n'
++ require(payload_tail.endswith(ending),'ExactFrozenFinalMultipartPart')
++ return len(payload_tail[:-len(ending)])
+ def metadata_policy(row,number):
+  meta=row['parsed_request_metadata'];require(meta['request_available']is True and meta['forced_parse']is False,'ActualCachedMetadataNoForcedParsing')
+  if number in(5,6,10,11,12):
+   require(all(meta['cached'][k].get('class_value')=='rest_framework.request.Empty'and'fields'not in meta['cached'][k]for k in('_data','_files','_full_data')),'PredictedLookupPermissionUnsupportedOrDeleteBeforeBodyDataLoaded')
+  if number==7:
+-  require(meta['cached']['_files']['fields']==[{'name':'unknown_upload','values':[{'kind':'file_metadata','class':'django.core.files.uploadedfile.InMemoryUploadedFile','name':'owned-small.txt','size':20,'content_type':'text/plain','charset':None,'file_content_read':False}]}],'ActualUnknownSmallMemoryFileMetadataNotStoredOrReadByObserver')
++  require(equal(meta['cached']['_files']['fields'],[{'name':'unknown_upload','values':[{'kind':'file_metadata','class':'django.core.files.uploadedfile.InMemoryUploadedFile','name':'owned-small.txt','size':frozen_upload_size(),'content_type':'text/plain','charset':None,'file_content_read':False}]}]),'ActualUnknownSmallMemoryFileMetadataNotStoredOrReadByObserver')
+  if number==8:
+   title=next(x for x in meta['cached']['_data']['fields']if x['name']=='title');require(title['values']==[{'kind':'literal','value':'first'},{'kind':'literal','value':'second'}],'ActualDuplicateInputOrderRetainedBeforeLastValueSerialization')
+  return True

@@ -1,0 +1,13 @@
+# Notification form Source12 authority
+
+Twelve pinned Original requests captured statuses **201/200/400/200/404/404/201/200/400/403/415/204** using persisted API keys through the real resolver/APIClient. No force authentication, TCP, Native, HTML-renderer or full-endpoint qualification is claimed. Admin and standard actors were exercised; the denied-network admin is seeded context only.
+
+The capture measures URL-encoded and multipart writes, JSONField decoding and validation, last duplicate text value, PUT checkbox omission, readonly/unknown fields, an ignored 21-byte upload, lookup/permission before parsing, unsupported text/plain, and DELETE ignoring its body while cascading only target dismissals. Response bodies, own-request clocks, SQL rows/all59 sequences, raw Redis databases0–3 and unconsumed Channels frames are retained within the declared fixture scope.
+
+**Executed Source3 controller remains exit1.** Its recorder completed all12 requests and exited0; the controller expected an upload size20 although the exact presealed payload `owned unknown upload\n` has21 bytes. A separate offline validator derives the size from those original bytes. All remaining predicates and61 controls passed, independently reviewed by Root. Source1 pre-child and Source2 seed-only harness failures remain unchanged; neither called the API. There was no Source rerun after the completed capture.
+
+Source3 all20 command children/pipes settled; named11 and full62-table/59-sequence default audits are byte-equal, owned SQL backends empty, cleanup12.354s under90, four fresh project/exactCID inventories empty, and recorded PID/start identities absent. The outer tool session settled1; its host controller PID was not observed, so no host PID-absence claim is made.
+
+The [portable packet](../scripts/rust-contracts/notification-forms-source12/README.md) explicitly replaces API-key/header bytes and key-containing SQL text with hash-bound evidence. Dependent projected SQL fingerprints are new reference values, with original opaque fingerprints retained. The original capture SHA and negative controller identity remain strict. The projection was never executed. Read-only verification and local Git reconstruction reproduce all160 executed input hashes, including the omitted pinned Original archive, without app requests.
+
+Original Dispatcharr authors retain AGPL credit; pinned Django/DRF/Channels dependencies retain attribution and licenses. Rust form handling and a Native replay are separate, pending qualification. Main/default activation, general multipart errors/file-valued writable fields, HTML rendering, credential-wide parity and physical cancellation remain open.

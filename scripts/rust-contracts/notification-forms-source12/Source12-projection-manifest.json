@@ -1,0 +1,2112 @@
+{
+  "rules_version": "notification-forms-source12-credential-projection-v1",
+  "original_sha256": "b72af1de2683fa9e2345281d24cdaa7418368e1af0404eecba9ba018555a8d84",
+  "projection_sha256": "1c3f5dcce14ffe9a773cb29833c4caef52ed15c813cf9473f6c397dc34ca240f",
+  "raw_observation_executed": true,
+  "projected_observation_executed": false,
+  "executed_controller_exit": 1,
+  "executed_error_preserved": "ActualUnknownSmallMemoryFileMetadataNotStoredOrReadByObserver",
+  "scope": "API-key-only framework12; original SQL text with credentials replaced, dependent projected SHA/MD5 values are NEW reference fingerprints; opaque original fingerprints retained in changes",
+  "changes": [
+    {
+      "path": "$.requests[0].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "3dea041ea895bfc47e65a83f6fba73d529c08a94472945f5c88ddd3ed1a25eed",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[0].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[0].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[0].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[0].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[0].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[0].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[0].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[0].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "c0e042ae0a0e114ef3bed4bb2c0c188cface0285340bb8e1016893da723fbd3b",
+      "projected_JSON_sha256": "7da8b30a4628ce0b288c015146a16309c267f5cbb42f2fa0468b8456644ccbf1",
+      "original_fingerprint": "2f61ca6a4692f59c30e0e521acfa17639dec999b402355b0d1ca5c830b095dbe",
+      "projected_fingerprint": "ba212b2ad1ab8302ebee48742c06b6b7485a212580b95303d9945d97cdd77f86"
+    },
+    {
+      "path": "$.requests[0].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[0].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[0].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[0].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[0].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[0].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[0].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[0].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[0].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[0].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[0].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[0].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "9842105b49484dcfbb7b974f95d9a04ce86d18c2bcf2202436b389f0ce05a358",
+      "projected_JSON_sha256": "446961b335f3a6d20eff3f4ff7903879ba5acf250854adb115697e31e8b656bb",
+      "original_fingerprint": "87e62a11109648b7a3f27a0ca3667d5cb2c461915dfb5057dac905e59f46e06a",
+      "projected_fingerprint": "28520040bc9b34aa14639348b3c05c20038f89e3e3c2be468580c963afc757b8"
+    },
+    {
+      "path": "$.requests[0].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[0].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[0].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[0].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[1].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "3dea041ea895bfc47e65a83f6fba73d529c08a94472945f5c88ddd3ed1a25eed",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[1].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[1].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[1].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[1].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[1].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[1].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[1].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[1].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "9842105b49484dcfbb7b974f95d9a04ce86d18c2bcf2202436b389f0ce05a358",
+      "projected_JSON_sha256": "446961b335f3a6d20eff3f4ff7903879ba5acf250854adb115697e31e8b656bb",
+      "original_fingerprint": "87e62a11109648b7a3f27a0ca3667d5cb2c461915dfb5057dac905e59f46e06a",
+      "projected_fingerprint": "28520040bc9b34aa14639348b3c05c20038f89e3e3c2be468580c963afc757b8"
+    },
+    {
+      "path": "$.requests[1].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[1].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[1].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[1].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[1].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[1].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[1].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[1].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[1].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[1].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[1].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[1].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "cd221174d79b01486aa87e051f29901b90d2c08585e62fefc96cb05fcc6fc120",
+      "projected_JSON_sha256": "0d7e8d4134d5e6db83dcee6ac2ed85626a9cba6859c132f9410a92bae8dad50f",
+      "original_fingerprint": "9564c939b0b1660fe916a33debdf2009fee747a1bdc108acc61dc356d4dea3be",
+      "projected_fingerprint": "b6d44bcdea5b3f01d848b0d1d629ff18206071a86a256df99f95628e78fa2aea"
+    },
+    {
+      "path": "$.requests[1].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[1].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[1].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[1].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[2].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "3dea041ea895bfc47e65a83f6fba73d529c08a94472945f5c88ddd3ed1a25eed",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[2].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[2].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[2].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[2].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[2].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[2].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[2].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[2].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "cd221174d79b01486aa87e051f29901b90d2c08585e62fefc96cb05fcc6fc120",
+      "projected_JSON_sha256": "0d7e8d4134d5e6db83dcee6ac2ed85626a9cba6859c132f9410a92bae8dad50f",
+      "original_fingerprint": "9564c939b0b1660fe916a33debdf2009fee747a1bdc108acc61dc356d4dea3be",
+      "projected_fingerprint": "b6d44bcdea5b3f01d848b0d1d629ff18206071a86a256df99f95628e78fa2aea"
+    },
+    {
+      "path": "$.requests[2].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[2].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[2].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[2].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[2].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[2].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[2].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[2].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[2].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[2].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[2].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[2].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "cd221174d79b01486aa87e051f29901b90d2c08585e62fefc96cb05fcc6fc120",
+      "projected_JSON_sha256": "0d7e8d4134d5e6db83dcee6ac2ed85626a9cba6859c132f9410a92bae8dad50f",
+      "original_fingerprint": "9564c939b0b1660fe916a33debdf2009fee747a1bdc108acc61dc356d4dea3be",
+      "projected_fingerprint": "b6d44bcdea5b3f01d848b0d1d629ff18206071a86a256df99f95628e78fa2aea"
+    },
+    {
+      "path": "$.requests[2].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[2].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[2].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[2].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[3].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "3dea041ea895bfc47e65a83f6fba73d529c08a94472945f5c88ddd3ed1a25eed",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[3].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[3].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[3].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[3].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[3].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[3].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[3].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[3].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "cd221174d79b01486aa87e051f29901b90d2c08585e62fefc96cb05fcc6fc120",
+      "projected_JSON_sha256": "0d7e8d4134d5e6db83dcee6ac2ed85626a9cba6859c132f9410a92bae8dad50f",
+      "original_fingerprint": "9564c939b0b1660fe916a33debdf2009fee747a1bdc108acc61dc356d4dea3be",
+      "projected_fingerprint": "b6d44bcdea5b3f01d848b0d1d629ff18206071a86a256df99f95628e78fa2aea"
+    },
+    {
+      "path": "$.requests[3].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[3].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[3].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[3].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[3].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[3].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[3].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[3].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[3].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[3].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[3].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[3].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "af36ede9c4afd23190080827793bd050d61c2f776541c513d012e0e35fb98c66",
+      "projected_JSON_sha256": "6748aabc97c14cb2c944e58f579be8765229c49dc78204c49862036aa95ea925",
+      "original_fingerprint": "12d8e00b51880807b51a037de8ddda81cddf48b51ccb089fb3f63633e89b4939",
+      "projected_fingerprint": "06f64cd18039207e7aed36097e18943f9e9abe8d8730a2df7df14a064c5bfc92"
+    },
+    {
+      "path": "$.requests[3].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[3].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[3].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[3].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[4].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "2ae29dd48e97105a00022d52c6e6039182f5cfb677eb2c16547a1b78946abcc4",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[4].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[4].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[4].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[4].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[4].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[4].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[4].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[4].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "af36ede9c4afd23190080827793bd050d61c2f776541c513d012e0e35fb98c66",
+      "projected_JSON_sha256": "6748aabc97c14cb2c944e58f579be8765229c49dc78204c49862036aa95ea925",
+      "original_fingerprint": "12d8e00b51880807b51a037de8ddda81cddf48b51ccb089fb3f63633e89b4939",
+      "projected_fingerprint": "06f64cd18039207e7aed36097e18943f9e9abe8d8730a2df7df14a064c5bfc92"
+    },
+    {
+      "path": "$.requests[4].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[4].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[4].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[4].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[4].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[4].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[4].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[4].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[4].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[4].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[4].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[4].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "af36ede9c4afd23190080827793bd050d61c2f776541c513d012e0e35fb98c66",
+      "projected_JSON_sha256": "6748aabc97c14cb2c944e58f579be8765229c49dc78204c49862036aa95ea925",
+      "original_fingerprint": "12d8e00b51880807b51a037de8ddda81cddf48b51ccb089fb3f63633e89b4939",
+      "projected_fingerprint": "06f64cd18039207e7aed36097e18943f9e9abe8d8730a2df7df14a064c5bfc92"
+    },
+    {
+      "path": "$.requests[4].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[4].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[4].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[4].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[5].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "3dea041ea895bfc47e65a83f6fba73d529c08a94472945f5c88ddd3ed1a25eed",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[5].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[5].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[5].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[5].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[5].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[5].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[5].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[5].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "af36ede9c4afd23190080827793bd050d61c2f776541c513d012e0e35fb98c66",
+      "projected_JSON_sha256": "6748aabc97c14cb2c944e58f579be8765229c49dc78204c49862036aa95ea925",
+      "original_fingerprint": "12d8e00b51880807b51a037de8ddda81cddf48b51ccb089fb3f63633e89b4939",
+      "projected_fingerprint": "06f64cd18039207e7aed36097e18943f9e9abe8d8730a2df7df14a064c5bfc92"
+    },
+    {
+      "path": "$.requests[5].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[5].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[5].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[5].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[5].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[5].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[5].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[5].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[5].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[5].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[5].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[5].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "af36ede9c4afd23190080827793bd050d61c2f776541c513d012e0e35fb98c66",
+      "projected_JSON_sha256": "6748aabc97c14cb2c944e58f579be8765229c49dc78204c49862036aa95ea925",
+      "original_fingerprint": "12d8e00b51880807b51a037de8ddda81cddf48b51ccb089fb3f63633e89b4939",
+      "projected_fingerprint": "06f64cd18039207e7aed36097e18943f9e9abe8d8730a2df7df14a064c5bfc92"
+    },
+    {
+      "path": "$.requests[5].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[5].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[5].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[5].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[6].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "3dea041ea895bfc47e65a83f6fba73d529c08a94472945f5c88ddd3ed1a25eed",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[6].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[6].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[6].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[6].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[6].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[6].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[6].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[6].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "af36ede9c4afd23190080827793bd050d61c2f776541c513d012e0e35fb98c66",
+      "projected_JSON_sha256": "6748aabc97c14cb2c944e58f579be8765229c49dc78204c49862036aa95ea925",
+      "original_fingerprint": "12d8e00b51880807b51a037de8ddda81cddf48b51ccb089fb3f63633e89b4939",
+      "projected_fingerprint": "06f64cd18039207e7aed36097e18943f9e9abe8d8730a2df7df14a064c5bfc92"
+    },
+    {
+      "path": "$.requests[6].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[6].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[6].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[6].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[6].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[6].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[6].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[6].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[6].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[6].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[6].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[6].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "483603d8cd5ba8056ffa1b0493feced5b44dda09a0f7ae83ac253c183dd3ab8b",
+      "projected_JSON_sha256": "43995b1279978b07d29219e61b7bfb493cb5ade2532402c11ae327d1dd653f83",
+      "original_fingerprint": "fc5ea48b848dac4e77ba0c552651633dd2bbc83916ce05761ad7664de9724ede",
+      "projected_fingerprint": "59f219541f4783be148bf336ae8518ba2d3b65973e3c3d910a8daf492e7bdf7d"
+    },
+    {
+      "path": "$.requests[6].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[6].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[6].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[6].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[7].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "3dea041ea895bfc47e65a83f6fba73d529c08a94472945f5c88ddd3ed1a25eed",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[7].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[7].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[7].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[7].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[7].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[7].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[7].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[7].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "483603d8cd5ba8056ffa1b0493feced5b44dda09a0f7ae83ac253c183dd3ab8b",
+      "projected_JSON_sha256": "43995b1279978b07d29219e61b7bfb493cb5ade2532402c11ae327d1dd653f83",
+      "original_fingerprint": "fc5ea48b848dac4e77ba0c552651633dd2bbc83916ce05761ad7664de9724ede",
+      "projected_fingerprint": "59f219541f4783be148bf336ae8518ba2d3b65973e3c3d910a8daf492e7bdf7d"
+    },
+    {
+      "path": "$.requests[7].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[7].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[7].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[7].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[7].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[7].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[7].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[7].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[7].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[7].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[7].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[7].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "9c6fdbe72bf9c43e860387f049f0dddacb1ee4fc24992a5cc75654b96c151254",
+      "projected_JSON_sha256": "abd3fde65e8c7087ba6743694c94e7c0857d39386d06f393b2008f9a324c5518",
+      "original_fingerprint": "98b58bd5dd496d81eadb547b1000296755f9a53dd789d1301ea18cfca82e9aad",
+      "projected_fingerprint": "f693f2b15e3ef558ea95f4f6a607e5f30d216e8dd1c8c557a1a227c8c148e781"
+    },
+    {
+      "path": "$.requests[7].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[7].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[7].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[7].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[8].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "3dea041ea895bfc47e65a83f6fba73d529c08a94472945f5c88ddd3ed1a25eed",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[8].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[8].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[8].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[8].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[8].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[8].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[8].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[8].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "9c6fdbe72bf9c43e860387f049f0dddacb1ee4fc24992a5cc75654b96c151254",
+      "projected_JSON_sha256": "abd3fde65e8c7087ba6743694c94e7c0857d39386d06f393b2008f9a324c5518",
+      "original_fingerprint": "98b58bd5dd496d81eadb547b1000296755f9a53dd789d1301ea18cfca82e9aad",
+      "projected_fingerprint": "f693f2b15e3ef558ea95f4f6a607e5f30d216e8dd1c8c557a1a227c8c148e781"
+    },
+    {
+      "path": "$.requests[8].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[8].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[8].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[8].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[8].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[8].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[8].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[8].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[8].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[8].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[8].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[8].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "9c6fdbe72bf9c43e860387f049f0dddacb1ee4fc24992a5cc75654b96c151254",
+      "projected_JSON_sha256": "abd3fde65e8c7087ba6743694c94e7c0857d39386d06f393b2008f9a324c5518",
+      "original_fingerprint": "98b58bd5dd496d81eadb547b1000296755f9a53dd789d1301ea18cfca82e9aad",
+      "projected_fingerprint": "f693f2b15e3ef558ea95f4f6a607e5f30d216e8dd1c8c557a1a227c8c148e781"
+    },
+    {
+      "path": "$.requests[8].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[8].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[8].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[8].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[9].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "2ae29dd48e97105a00022d52c6e6039182f5cfb677eb2c16547a1b78946abcc4",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[9].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[9].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[9].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[9].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[9].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[9].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[9].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[9].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "9c6fdbe72bf9c43e860387f049f0dddacb1ee4fc24992a5cc75654b96c151254",
+      "projected_JSON_sha256": "abd3fde65e8c7087ba6743694c94e7c0857d39386d06f393b2008f9a324c5518",
+      "original_fingerprint": "98b58bd5dd496d81eadb547b1000296755f9a53dd789d1301ea18cfca82e9aad",
+      "projected_fingerprint": "f693f2b15e3ef558ea95f4f6a607e5f30d216e8dd1c8c557a1a227c8c148e781"
+    },
+    {
+      "path": "$.requests[9].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[9].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[9].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[9].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[9].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[9].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[9].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[9].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[9].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[9].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[9].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[9].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "9c6fdbe72bf9c43e860387f049f0dddacb1ee4fc24992a5cc75654b96c151254",
+      "projected_JSON_sha256": "abd3fde65e8c7087ba6743694c94e7c0857d39386d06f393b2008f9a324c5518",
+      "original_fingerprint": "98b58bd5dd496d81eadb547b1000296755f9a53dd789d1301ea18cfca82e9aad",
+      "projected_fingerprint": "f693f2b15e3ef558ea95f4f6a607e5f30d216e8dd1c8c557a1a227c8c148e781"
+    },
+    {
+      "path": "$.requests[9].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[9].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[9].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[9].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[10].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "3dea041ea895bfc47e65a83f6fba73d529c08a94472945f5c88ddd3ed1a25eed",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[10].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[10].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[10].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[10].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[10].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[10].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[10].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[10].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "9c6fdbe72bf9c43e860387f049f0dddacb1ee4fc24992a5cc75654b96c151254",
+      "projected_JSON_sha256": "abd3fde65e8c7087ba6743694c94e7c0857d39386d06f393b2008f9a324c5518",
+      "original_fingerprint": "98b58bd5dd496d81eadb547b1000296755f9a53dd789d1301ea18cfca82e9aad",
+      "projected_fingerprint": "f693f2b15e3ef558ea95f4f6a607e5f30d216e8dd1c8c557a1a227c8c148e781"
+    },
+    {
+      "path": "$.requests[10].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[10].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[10].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[10].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[10].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[10].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[10].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[10].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[10].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[10].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[10].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[10].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "9c6fdbe72bf9c43e860387f049f0dddacb1ee4fc24992a5cc75654b96c151254",
+      "projected_JSON_sha256": "abd3fde65e8c7087ba6743694c94e7c0857d39386d06f393b2008f9a324c5518",
+      "original_fingerprint": "98b58bd5dd496d81eadb547b1000296755f9a53dd789d1301ea18cfca82e9aad",
+      "projected_fingerprint": "f693f2b15e3ef558ea95f4f6a607e5f30d216e8dd1c8c557a1a227c8c148e781"
+    },
+    {
+      "path": "$.requests[10].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[10].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[10].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[10].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[11].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "authentication header hex -> exact byte hash/length",
+      "original_JSON_sha256": "3dea041ea895bfc47e65a83f6fba73d529c08a94472945f5c88ddd3ed1a25eed",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[11].before.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[11].before.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[11].before.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[11].before.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[11].before.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[11].before.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[11].before.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[11].before.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "9c6fdbe72bf9c43e860387f049f0dddacb1ee4fc24992a5cc75654b96c151254",
+      "projected_JSON_sha256": "abd3fde65e8c7087ba6743694c94e7c0857d39386d06f393b2008f9a324c5518",
+      "original_fingerprint": "98b58bd5dd496d81eadb547b1000296755f9a53dd789d1301ea18cfca82e9aad",
+      "projected_fingerprint": "f693f2b15e3ef558ea95f4f6a607e5f30d216e8dd1c8c557a1a227c8c148e781"
+    },
+    {
+      "path": "$.requests[11].before.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[11].before.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[11].before.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[11].before.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.requests[11].after.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[11].after.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[11].after.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[11].after.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.requests[11].after.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.requests[11].after.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.requests[11].after.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.requests[11].after.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "1fd9767d5f67e5102789bef21a38b78a89f1ca677c1ba9c614e82604e8f83315",
+      "projected_JSON_sha256": "ed67014fef22dbb72fa95550bd664b42c8ec6457bd6ebe6b562de38fc20ec711",
+      "original_fingerprint": "2848f19912ad38b301ccd8a9731a6e9727f9d7d49da71aa820b170ccae8b47df",
+      "projected_fingerprint": "bb91c12fdf2348fd5a527ac34c0258e6ebe9f7716cb77b5fb7d7fdb130f4f5e9"
+    },
+    {
+      "path": "$.requests[11].after.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.requests[11].after.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.requests[11].after.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.requests[11].after.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.seed.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.seed.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.seed.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.seed.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.seed.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.seed.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.seed.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.seed.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "c0e042ae0a0e114ef3bed4bb2c0c188cface0285340bb8e1016893da723fbd3b",
+      "projected_JSON_sha256": "7da8b30a4628ce0b288c015146a16309c267f5cbb42f2fa0468b8456644ccbf1",
+      "original_fingerprint": "2f61ca6a4692f59c30e0e521acfa17639dec999b402355b0d1ca5c830b095dbe",
+      "projected_fingerprint": "ba212b2ad1ab8302ebee48742c06b6b7485a212580b95303d9945d97cdd77f86"
+    },
+    {
+      "path": "$.seed.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.seed.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.seed.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.seed.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.audit.tables.accounts_user.raw_rows[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.audit.tables.accounts_user.raw_rows[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.audit.tables.accounts_user.raw_rows[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.audit.tables.accounts_user.raw_json_text[0]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "7fe0d5289ec4d09d451440ce0bdd3d735a82ae95c4856aea7f1b7baced4aaaaf",
+      "projected_JSON_sha256": "9aaa943d76767f561bbacca5a4d2e678739f389012e4a6d5808ef579f536fa8a"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.audit.tables.accounts_user.raw_json_text[1]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "655a60ac09c0d905e546b58c4bb86f29170e634e2aafcd3a492230364dc50a74",
+      "projected_JSON_sha256": "e2b677d64f68c75ec7cceafa6f633ad54737667ab8bcb504ce9c4dd466373613"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.audit.tables.accounts_user.raw_json_text[2]",
+      "kind": "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes",
+      "original_JSON_sha256": "bf78c5eca657494e0a1073349761dbd8cb454c5940adf30abea6ee8104a9327d",
+      "projected_JSON_sha256": "ca8d79033801317f8b5b5dacf0fcb8cd651b947aad83f147d471de1756eded21"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.audit.tables.accounts_user.sha256",
+      "kind": "dependent SHA recomputed ONLY over newly projected SQL text",
+      "original_JSON_sha256": "1097d7d76999375b58d59cf9955e718104a129c9a65d49eef477eb5c5fbc759b",
+      "projected_JSON_sha256": "85ca6c08c3903eed85f003a6b0cf3f749fc4743f3e4dd45dfdac3da7af565f2f",
+      "original_fingerprint": "5799d6a88a91c9fcda92f0796e256c2c09946c284f820316d97442c84c3222d5",
+      "projected_fingerprint": "9e070f471bd2decbb278c95181f2f0620b2329905c04dd28028553b94a06ccab"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.audit.dataset_sha256",
+      "kind": "dependent dataset SHA recomputed ONLY over projected table records",
+      "original_JSON_sha256": "1fd9767d5f67e5102789bef21a38b78a89f1ca677c1ba9c614e82604e8f83315",
+      "projected_JSON_sha256": "ed67014fef22dbb72fa95550bd664b42c8ec6457bd6ebe6b562de38fc20ec711",
+      "original_fingerprint": "2848f19912ad38b301ccd8a9731a6e9727f9d7d49da71aa820b170ccae8b47df",
+      "projected_fingerprint": "bb91c12fdf2348fd5a527ac34c0258e6ebe9f7716cb77b5fb7d7fdb130f4f5e9"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.users[0].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "85f9aa2c6537b22119c05878150c5167bb3eb2eabee3b32b89886dc99954eaba",
+      "projected_JSON_sha256": "8b9e59d246be301d23cdc9a80971e37a50a8ee1fd53e6a492d7291d72867f173"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.users[1].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "332df269fbd8a605c96456d811a1be70c24c05008a92d6907b20b53651dbee91",
+      "projected_JSON_sha256": "91243c96507ffaebe97a841f1a6d024bf9f730e9ecaa25bd3413f89d64283dbc"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.users[2].api_key",
+      "kind": "persisted API-key bytes -> hash/length",
+      "original_JSON_sha256": "7478cd1694f383a8fa80a134d631c04e3b97b3057a8908337b0a9f5b14790eb1",
+      "projected_JSON_sha256": "8cf45adfe54eedd43cac7cd0d075d0ad00f7998c8345b130c928d598bf6a037a"
+    },
+    {
+      "path": "$.final_before_probe_cleanup.public_manifest.tables.accounts_user.sha_like_md5",
+      "kind": "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence",
+      "original_JSON_sha256": "88759e8a4729e5db54eeb04d0a16d497afaf11915ec036d9ea4ea7303e620cdb",
+      "projected_JSON_sha256": "de53171cac0c7c68fe7490a09d91f673c3752c7e072355f8fc0325bedcbee48c",
+      "original_fingerprint": "bed883cca1951540605633cbc73766a3",
+      "projected_fingerprint": "e23d016e195da983cf8e1c1955ceadcb"
+    }
+  ]
+}

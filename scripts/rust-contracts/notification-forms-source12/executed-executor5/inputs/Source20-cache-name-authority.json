@@ -1,0 +1,70 @@
+{
+  "raw_Source20_sha256": "f02c49f2c1a3b7b876611ab99b2f7976aeef8cedaf471fc263c3223ba86680a0",
+  "state": "read-only derivation from retained Source20, no new requests",
+  "seed_named_keys": [
+    ":1:coresettings:groupver:network_access"
+  ],
+  "observations": [
+    {
+      "ordinal": 1,
+      "name": "jwt-denied-standard-list",
+      "status": 200,
+      "before_named_keys": [
+        ":1:coresettings:groupver:network_access"
+      ],
+      "after_named_keys": [
+        ":1:coresettings:group:system_settings",
+        ":1:coresettings:groupver:network_access"
+      ]
+    },
+    {
+      "ordinal": 6,
+      "name": "key-denied-admin-create",
+      "status": 403,
+      "before_named_keys": [
+        ":1:coresettings:group:system_settings",
+        ":1:coresettings:groupver:network_access"
+      ],
+      "after_named_keys": [
+        ":1:coresettings:group:network_access",
+        ":1:coresettings:group:system_settings",
+        ":1:coresettings:groupver:network_access"
+      ]
+    },
+    {
+      "ordinal": 19,
+      "name": "key-streamer-create-denied",
+      "status": 403,
+      "before_named_keys": [
+        ":1:coresettings:group:network_access",
+        ":1:coresettings:group:system_settings",
+        ":1:coresettings:groupver:network_access",
+        ":1:throttle_api_key_auth_127.0.0.1"
+      ],
+      "after_named_keys": [
+        ":1:coresettings:group:network_access",
+        ":1:coresettings:group:system_settings",
+        ":1:coresettings:groupver:network_access",
+        ":1:throttle_api_key_auth_127.0.0.1"
+      ]
+    },
+    {
+      "ordinal": 20,
+      "name": "jwt-standard-dismiss-all",
+      "status": 200,
+      "before_named_keys": [
+        ":1:coresettings:group:network_access",
+        ":1:coresettings:group:system_settings",
+        ":1:coresettings:groupver:network_access",
+        ":1:throttle_api_key_auth_127.0.0.1"
+      ],
+      "after_named_keys": [
+        ":1:coresettings:group:network_access",
+        ":1:coresettings:group:system_settings",
+        ":1:coresettings:groupver:network_access",
+        ":1:throttle_api_key_auth_127.0.0.1"
+      ]
+    }
+  ],
+  "new_Source12_prediction": "no failed-auth inputs or worker locks; seedversion only, first admin-create warms system/network named groups; all raw GET/DUMP/TTL/history retained, unexpected extra/missing keys remain negative"
+}

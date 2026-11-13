@@ -1,0 +1,193 @@
+{
+  "passed": false,
+  "state": "ACTUAL_EXECUTION_ATTEMPT",
+  "project": "dispatcharr-notifforms-source-99d03eb4dd",
+  "copied_database": "rust_probe_notifforms_99d03eb4dd",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "reviewed_seal_sha256": "c7769015024a596102a6f281de43ce5528f71f08220e6a1dc343a79d6821854a",
+  "Source_only": true,
+  "real_credentials": true,
+  "real_TCP": false,
+  "registered": false,
+  "performance_claimed": false,
+  "web_workers_media_started": false,
+  "Source_process_command_next": 11,
+  "error_type": "CollectionFailure",
+  "error_message": "CommandExit1",
+  "cleanup_started_utc": "2026-11-13T06:37:09.019275+00:00",
+  "cleanup_budget_seconds": 90,
+  "actual_request_count": 0,
+  "effect_validation_negative": {
+    "type": "ValueError",
+    "message": "FiniteRealResolverSource12Capture",
+    "message_bytes": 33,
+    "message_sha256": "a74c1d76bca0c20b6682bcc450c99b1e523407768a8f23a91ad9f4d7326f1cd7",
+    "message_truncated": false
+  },
+  "owned_backends_absent": true,
+  "default_named11_and_full62tables59sequences_unchanged": true,
+  "owned_cleanup_independently_verified": true,
+  "cleanup_elapsed_seconds": 11.946521964971907,
+  "cleanup_within90": true,
+  "controller_exit": 1,
+  "settled_utc": "2026-11-13T06:37:20.965800+00:00",
+  "host_children": [
+    {
+      "pid": 3432773,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3432776,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3432793,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3432811,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3432830,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3432966,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3433050,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3433520,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3433623,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3433698,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3433767,
+      "exit": 1,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3433915,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3433985,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3434156,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3434220,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3434245,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3435552,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3435571,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3435594,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 3435616,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    }
+  ],
+  "Source_process_result": {
+    "argv": [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-notifforms-source-99d03eb4dd",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-forms-source-2/compose.json",
+      "exec",
+      "-T",
+      "-e",
+      "POSTGRES_DB=rust_probe_notifforms_99d03eb4dd",
+      "-e",
+      "NOTIFICATION_FIXTURE_DATABASE=rust_probe_notifforms_99d03eb4dd",
+      "-e",
+      "NOTIFICATION_FIXTURE_STAGE=exercise",
+      "-e",
+      "NOTIFICATION_FORMS_AUTHORITY=owned-source-forms-only",
+      "-e",
+      "REDIS_DB=1",
+      "baseline",
+      "/dispatcharrpy/bin/python",
+      "manage.py",
+      "shell",
+      "-c",
+      "import runpy; runpy.run_path('/notification-tools/source_fixture.py',run_name='__main__')"
+    ],
+    "pid": 3433767,
+    "starttime": "27222271",
+    "began_utc": "2026-11-13T06:37:07.670789+00:00",
+    "completed_utc": "2026-11-13T06:37:09.019125+00:00",
+    "exit": 1,
+    "collection_invalid": null,
+    "physically_settled": true,
+    "pipe_threads_settled": true
+  }
+}

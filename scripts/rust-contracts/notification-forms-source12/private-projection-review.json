@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "exact_field_transformations": 324,
+  "transformation_kinds": {
+    "authentication header hex -> exact byte hash/length": 12,
+    "persisted API-key bytes -> hash/length": 156,
+    "SQL raw text API-key literal -> evidence object; NEW projected text, not original SQL bytes": 78,
+    "dependent SHA recomputed ONLY over newly projected SQL text": 26,
+    "dependent dataset SHA recomputed ONLY over projected table records": 26,
+    "dependent legacy MD5 recomputed ONLY over new projected SQL text; actual original MD5 retained as opaque evidence": 26
+  },
+  "Original_raw_sha256": "b72af1de2683fa9e2345281d24cdaa7418368e1af0404eecba9ba018555a8d84",
+  "projection_sha256": "1c3f5dcce14ffe9a773cb29833c4caef52ed15c813cf9473f6c397dc34ca240f",
+  "private_fixture_keys_scanned": 6,
+  "encodings": [
+    "literal",
+    "hex",
+    "base64"
+  ],
+  "public_files_plus_decompressed_members": 262,
+  "raw_Source_bytes_modified": false,
+  "Source_application_runs": 0
+}

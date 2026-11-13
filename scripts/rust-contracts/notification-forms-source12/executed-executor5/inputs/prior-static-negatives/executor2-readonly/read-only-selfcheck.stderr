@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-forms-source-executor-2/controller/run.py", line 179, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-forms-source-executor-2/controller/run.py", line 42, in main
+    args=parser.parse_args();seal=check_seal(args.seal)
+                                  ~~~~~~~~~~^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-forms-source-executor-2/controller/run.py", line 31, in check_seal
+    proof=json.loads((root/'inputs/serializer9-proof.json').read_text());require(proof['passed']is True and proof['Source_started']is False and proof['app_imports']is False and proof['all_nine_equal']is True and proof['exact_container_absent']is True,'PriorExactSerializer9Bytes');require(proof['created_inspect']['State']['Pid']==proof['final_before_remove']['State']['Pid']==0,'SerializerPID0')
+                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'State'

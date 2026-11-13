@@ -1,0 +1,14 @@
+--- executor4/controller/definition.py
++++ executor5/controller/definition.py
+@@ -1,7 +1,10 @@
+ """Pure exact Source12 definition/binding checks; no application imports."""
+ import hashlib,json,tarfile,ast
+ from pathlib import Path
+-ROOT=Path(__file__).resolve().parent.parent
++def definition_root(module_file):
++ controller=Path(module_file).resolve().parent
++ return Path('/form-root')if controller==Path('/notification-tools')else controller.parent
++ROOT=definition_root(__file__)
+ 
+ def require(ok,label):
+  if not ok:raise ValueError(label)

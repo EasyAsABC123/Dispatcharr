@@ -1,0 +1,142 @@
+{
+  "state": "UNEXECUTED_BODY_DEFINITION_NOT_EXECUTOR",
+  "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "request_count": 12,
+  "case_order_fixed": true,
+  "multipart_boundary": "DispatcharrFormsSource12Boundary7f34",
+  "target_binding": "Resolve natural FormA from case1 and FormB from case7 actual create id; seed aliasDelete and derived_missing must be frozen by future executor before admission. No status-dependent alternate request.",
+  "cases": [
+    {
+      "index": 1,
+      "method": "POST",
+      "target_alias": "collection",
+      "actor": "admin",
+      "body_path": "bodies/01.bin",
+      "body_bytes": 90,
+      "body_sha256": "fdc39e564e61767d2f731ec13a0137a36be3a106489780327961935c41932a24",
+      "content_type": "application/x-www-form-urlencoded",
+      "predicted_status_UNMEASURED": 201
+    },
+    {
+      "index": 2,
+      "method": "PATCH",
+      "target_alias": "FormA",
+      "actor": "admin",
+      "body_path": "bodies/02.bin",
+      "body_bytes": 150,
+      "body_sha256": "a0a5f03ebfad77a48593b99836f3b411680040ab4892b878b423ccba35326600",
+      "content_type": "application/x-www-form-urlencoded",
+      "predicted_status_UNMEASURED": 200
+    },
+    {
+      "index": 3,
+      "method": "PATCH",
+      "target_alias": "FormA",
+      "actor": "admin",
+      "body_path": "bodies/03.bin",
+      "body_bytes": 21,
+      "body_sha256": "16a81c8c05cd2c2412683aaab49559209bc8e8cea8f4b6ca802ef23ac721b84b",
+      "content_type": "application/x-www-form-urlencoded",
+      "predicted_status_UNMEASURED": 400
+    },
+    {
+      "index": 4,
+      "method": "PUT",
+      "target_alias": "FormA",
+      "actor": "admin",
+      "body_path": "bodies/04.bin",
+      "body_bytes": 83,
+      "body_sha256": "b998ae03f386678754b3a510ef2851a25d3095cd0515b4d53ae96c5c59079dcc",
+      "content_type": "application/x-www-form-urlencoded",
+      "predicted_status_UNMEASURED": 200
+    },
+    {
+      "index": 5,
+      "method": "GET",
+      "target_alias": "FormA",
+      "actor": "standard",
+      "body_path": "bodies/05.bin",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": null,
+      "predicted_status_UNMEASURED": 404
+    },
+    {
+      "index": 6,
+      "method": "PATCH",
+      "target_alias": "derived_missing",
+      "actor": "admin",
+      "body_path": "bodies/06.bin",
+      "body_bytes": 21,
+      "body_sha256": "16a81c8c05cd2c2412683aaab49559209bc8e8cea8f4b6ca802ef23ac721b84b",
+      "content_type": "application/x-www-form-urlencoded",
+      "predicted_status_UNMEASURED": 404
+    },
+    {
+      "index": 7,
+      "method": "POST",
+      "target_alias": "collection",
+      "actor": "admin",
+      "body_path": "bodies/07.bin",
+      "body_bytes": 639,
+      "body_sha256": "838ed4c301bcd8702c3325418ec371fc58ac7ff2f02b3005eba92c752f62373a",
+      "content_type": "multipart/form-data; boundary=DispatcharrFormsSource12Boundary7f34",
+      "predicted_status_UNMEASURED": 201
+    },
+    {
+      "index": 8,
+      "method": "PATCH",
+      "target_alias": "FormB",
+      "actor": "admin",
+      "body_path": "bodies/08.bin",
+      "body_bytes": 449,
+      "body_sha256": "435f30c17a517281955f40bc661fdad80a1c10e1564c1f874d172fae07989f68",
+      "content_type": "multipart/form-data; boundary=DispatcharrFormsSource12Boundary7f34",
+      "predicted_status_UNMEASURED": 200
+    },
+    {
+      "index": 9,
+      "method": "PATCH",
+      "target_alias": "FormB",
+      "actor": "admin",
+      "body_path": "bodies/09.bin",
+      "body_bytes": 145,
+      "body_sha256": "3e81a0c484d12c5d16b1ad231da3d28b8eac296257bbb2b6445ed2177139d964",
+      "content_type": "multipart/form-data; boundary=DispatcharrFormsSource12Boundary7f34",
+      "predicted_status_UNMEASURED": 400
+    },
+    {
+      "index": 10,
+      "method": "PATCH",
+      "target_alias": "FormB",
+      "actor": "standard",
+      "body_path": "bodies/10.bin",
+      "body_bytes": 320,
+      "body_sha256": "3139772801898309bb1b0ae6290f6f01f99bda7f56e58ce88b91af3b444b6a9e",
+      "content_type": "multipart/form-data; boundary=DispatcharrFormsSource12Boundary7f34",
+      "predicted_status_UNMEASURED": 403
+    },
+    {
+      "index": 11,
+      "method": "PATCH",
+      "target_alias": "FormB",
+      "actor": "admin",
+      "body_path": "bodies/11.bin",
+      "body_bytes": 38,
+      "body_sha256": "ffa7a97da3d044dfd375393bfef9089ce072792af0c1325329645fb3c11cf0dd",
+      "content_type": "text/plain",
+      "predicted_status_UNMEASURED": 415
+    },
+    {
+      "index": 12,
+      "method": "DELETE",
+      "target_alias": "aliasDelete",
+      "actor": "admin",
+      "body_path": "bodies/12.bin",
+      "body_bytes": 7,
+      "body_sha256": "be302461cda285db3ed2d45fb767b23e08ca8808b35a638009937df22b332d73",
+      "content_type": "text/plain",
+      "predicted_status_UNMEASURED": 204
+    }
+  ]
+}

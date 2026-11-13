@@ -1,0 +1,50 @@
+{
+  "project": "dispatcharr-notifforms-source-4e2c609191",
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notifforms-source-4e2c609191"
+      ],
+      "actual_exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "observed_utc": "2026-11-13T06:32:43.346698+00:00"
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notifforms-source-4e2c609191"
+      ],
+      "actual_exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "observed_utc": "2026-11-13T06:32:43.356476+00:00"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notifforms-source-4e2c609191"
+      ],
+      "actual_exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "observed_utc": "2026-11-13T06:32:43.365961+00:00"
+    }
+  ],
+  "all_exit0_and_empty": true,
+  "exact_CID_not_created": "controller failed before project claim/up; host_children empty",
+  "request_scope": "UNEXECUTED",
+  "Docker_mutations": 0
+}
