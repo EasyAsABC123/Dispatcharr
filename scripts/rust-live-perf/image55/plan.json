@@ -1,73 +1,86 @@
 {
-  "status": "Package28 and Main3 actual passed; BLOCKED pending exact image55 verifier/controller rebind, functional qualification and new quiet cues; no performance execution",
-  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and licenses.",
-  "candidate_revision": "aca6d900ad13700ab86b2898134a61e4dba57bc1",
-  "candidate_image": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
-  "candidate_manifest": "artifacts/rust/candidate-build-union794-image55-1/build.json",
-  "candidate_manifest_sha256": "3e1cb5c613d280c9297d75e1a69998f22c858c8a3d158949d61377cd1ffd3e76",
-  "candidate_source_tree_sha256": "6457d75bad17874f039eaed58941e3a047fb124a841637ff1a28392db2472e5c",
+  "scope": "Historical completed execution-plan projection; not reusable authority",
+  "stages": {
+    "functional": {
+      "private_plan_sha256": "bffb7c97dfc849c574d7319c2f73139c68b51c7d9079a560b2d871e18a1fbb9e",
+      "action": "functional",
+      "candidate_image": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
+      "candidate_revision": "aca6d900ad13700ab86b2898134a61e4dba57bc1",
+      "candidate_runtime_input_count": 794,
+      "candidate_runtime_input_map_sha256": "a65ca5bfb57097b387451a9cea6c0341c670823d64e541704a20f63a4969dc0d",
+      "candidate_source_tree_sha256": "6457d75bad17874f039eaed58941e3a047fb124a841637ff1a28392db2472e5c",
+      "candidate_source_archive_sha256": "8addffe734f0326b99f9faeb7fac0af670129a482ecb591df2a63638446c74af",
+      "candidate_manifest_sha256": "3e1cb5c613d280c9297d75e1a69998f22c858c8a3d158949d61377cd1ffd3e76",
+      "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+      "once_only": true,
+      "preserve_all_failures": true,
+      "inherited_protocol_unmodified": true,
+      "no_historical_gain_transfer": true
+    },
+    "qualify": {
+      "private_plan_sha256": "daaf4a98abd9b3cb4298a80eb07baa957a7f8453dacce68df8bef1330ff363c1",
+      "action": "qualify",
+      "candidate_image": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
+      "candidate_revision": "aca6d900ad13700ab86b2898134a61e4dba57bc1",
+      "candidate_runtime_input_count": 794,
+      "candidate_runtime_input_map_sha256": "a65ca5bfb57097b387451a9cea6c0341c670823d64e541704a20f63a4969dc0d",
+      "candidate_source_tree_sha256": "6457d75bad17874f039eaed58941e3a047fb124a841637ff1a28392db2472e5c",
+      "candidate_source_archive_sha256": "8addffe734f0326b99f9faeb7fac0af670129a482ecb591df2a63638446c74af",
+      "candidate_manifest_sha256": "3e1cb5c613d280c9297d75e1a69998f22c858c8a3d158949d61377cd1ffd3e76",
+      "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+      "once_only": true,
+      "preserve_all_failures": true,
+      "inherited_protocol_unmodified": true,
+      "no_historical_gain_transfer": true
+    },
+    "measure": {
+      "private_plan_sha256": "8b7c0a4ff04a721f60e8fdd14f29c5617f5c813eab1a12c299b7f3f4fae52971",
+      "action": "measure",
+      "candidate_image": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
+      "candidate_revision": "aca6d900ad13700ab86b2898134a61e4dba57bc1",
+      "candidate_runtime_input_count": 794,
+      "candidate_runtime_input_map_sha256": "a65ca5bfb57097b387451a9cea6c0341c670823d64e541704a20f63a4969dc0d",
+      "candidate_source_tree_sha256": "6457d75bad17874f039eaed58941e3a047fb124a841637ff1a28392db2472e5c",
+      "candidate_source_archive_sha256": "8addffe734f0326b99f9faeb7fac0af670129a482ecb591df2a63638446c74af",
+      "candidate_manifest_sha256": "3e1cb5c613d280c9297d75e1a69998f22c858c8a3d158949d61377cd1ffd3e76",
+      "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+      "once_only": true,
+      "preserve_all_failures": true,
+      "inherited_protocol_unmodified": true,
+      "no_historical_gain_transfer": true
+    }
+  },
   "Source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
-  "support_revision": "28122faf28a0acf1c136ca0d0831961e786cb686",
-  "immutable_workload_inputs": {
-    "scripts/rust-live-perf/image52/run.py": "537b5e4028cf2dd633c5bb8ff66995d8c9965f20a6c9bf78da6dd32f19e20903",
-    "scripts/rust-live-perf/image52/workload.py": "09cd8b4e21b5c47b2625b737b9ff1406672d16f2b4b230d3e4e544bac3c8195e",
-    "scripts/rust-live-perf/image52/resources.py": "c1c39f23ac5e3f7972ba875d6fc24df2c0a6e2a7399e13121a7f712c8e9a86cd",
-    "scripts/rust-live-perf/image52/acceptance.py": "a416a0210d3dca9baa8201f18ba8bcb4973128239f554db6c5a90aef1a21c467",
-    "scripts/rust-live-perf/image52/controller_contract.py": "7815741acb982738f67e76fd15e43e236843293b96576ecb03614feddc34acff",
-    "scripts/rust-live-perf/image52/seed.py": "1e27332c6569b8d5cb092d94daa77e66696a384aef9be567f5afa9c6a85f9c23",
-    "scripts/rust-live-perf/image52/protocol.json": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1"
-  },
-  "sequence": [
-    "independently accept image55 exact package28 and separate Main4s, worker-header and normal-Bearer notification gates",
-    "freeze exact historical28122 support archive/workload bytes; bind verifier exclusively to image55, run local controls",
-    "six functional phases at1/10/100 viewers without resource sampling",
-    "quiet Source-only qualification at1/10/100; independent review",
-    "fresh quiet cue; nine fixed alternating Source/native pairs; no adaptive retries",
-    "independent numeric recomputation, media/transcript verification and project cleanup; publish all outcomes"
+  "viewers": [
+    1,
+    10,
+    100
   ],
-  "scope": "Authenticated live HTTP backend plus common PostgreSQL/Redis/origin; workers/browser/driver/Docker daemon and full application graph excluded. No full milestone acceptance.",
-  "matrix": {
-    "viewers": [
-      1,
-      10,
-      100
+  "paired_trials_per_cohort": 3,
+  "pair_orders": [
+    [
+      "source",
+      "candidate"
     ],
-    "pairs_per_cohort": 3,
-    "orders": [
-      [
-        "source",
-        "candidate"
-      ],
-      [
-        "candidate",
-        "source"
-      ],
-      [
-        "source",
-        "candidate"
-      ]
+    [
+      "candidate",
+      "source"
     ],
-    "warmup_seconds": 15,
-    "measure_seconds": 60,
-    "readers": 666
-  },
-  "inherited_protocol_unmodified": true,
-  "execution_authorized_by_this_file": false,
-  "historical_image52_gains_transfer": false,
-  "required_new_cues": "fresh functional ownership cue, then separate quiet Source qualification and fixed nine-pair measurement cues, no prior consumed cue authorizes work",
-  "created_utc": "2026-11-13T04:34:48.602384+00:00",
-  "candidate_archive_sha256": "8addffe734f0326b99f9faeb7fac0af670129a482ecb591df2a63638446c74af",
-  "candidate_Rust_inputs": 794,
-  "candidate_app_inputs": 1291,
-  "no_current_image55_resource_gain": true,
-  "any_historical_image53_or54_gains_transfer": false,
-  "donor_plan_sha256": "d39d2a8f1d73376832f3c2feb0ee40ce50e54beb2dfbcd3d2e8399ada3a6d44b",
-  "current_canonical797_backup_adapter_included": false,
-  "immutable_workload_Git_revision": "aca6d900ad13700ab86b2898134a61e4dba57bc1",
-  "prerequisite_observations": {
-    "package28": "artifacts/rust/image55-packaged-matrix-1/reviews",
-    "Main4s3": "artifacts/rust/root-image55-vod-main4s-actual-review-1/Root-review-corrected-scope.json",
-    "Main_header7": "artifacts/rust/root-image55-worker-header-native-actual-review-1/Root-review-corrected-scope.json",
-    "Main_notification9": "artifacts/rust/root-image55-notification-main-actual-review-1/Root-review.json"
-  }
+    [
+      "source",
+      "candidate"
+    ]
+  ],
+  "functional_phase_seconds": [
+    5,
+    5
+  ],
+  "resource_phase_seconds": [
+    15,
+    60
+  ],
+  "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+  "worker_graph_activation": false,
+  "no_gain_transfer_to_any_other_image_or_source": true,
+  "predeclared_plan_sha256": "33e43951fb2e8968fa72858781b811fea24a0964dbbc30e5af4d8e69c52a3ff7"
 }
