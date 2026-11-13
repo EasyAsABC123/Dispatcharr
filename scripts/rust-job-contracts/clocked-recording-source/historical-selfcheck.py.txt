@@ -1,0 +1,26 @@
+"""Read-only closure checks; never imports Source, opens sockets or dispatches."""
+import argparse,ast,hashlib,json
+from pathlib import Path
+def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+def need(value,label):
+ if value is not True:raise ValueError(label)
+def verify(root,external=True):
+ root=Path(root);inputs=json.loads((root/'proposed-execution-inputs.json').read_text());tools=root/'tools'
+ tree=ast.parse((tools/'run_source.py').read_text());required=next(ast.literal_eval(n.value)for n in tree.body if isinstance(n,ast.Assign)and any(isinstance(t,ast.Name)and t.id=='REQUIRED'for t in n.targets))
+ need(len(required)==17 and set(inputs['tools_sha256'])==required,'ExactHostRequiredSet17')
+ for name,h in inputs['tools_sha256'].items():need(sha(tools/name)==h,'ExactTool:'+name)
+ need(inputs['authorized']is False,'ProposedNotAuthorized')
+ need(inputs['pinned_source_proof_sha256']==sha(root/'pinned-source-proof.json')and inputs['case_plan_sha256']==sha(root/'case-plan.json'),'ExactProofAndPlan')
+ full=json.loads((root/'support-full-inputs.json').read_text());need(sha(root/'support-full-inputs.json')==inputs['support_full_manifest_sha256']and len(full['files'])==full['file_count']==6148,'FullSupport6148')
+ original=json.loads((root/'pinned-source-proof.json').read_text())
+ for name,row in original['modules'].items():need(sha(root/'original'/name)==row['sha256'],'ExactOriginalModule:'+name)
+ for path in tools.glob('*.py'):ast.parse(path.read_text(),filename=str(path))
+ output=Path(inputs['output']);need(not output.exists(),'FreshExactOutput')
+ for suffix in ('-host-preflight.json','-host-signal.json'):need(not output.parent.joinpath(output.name+suffix).exists(),'FreshAuxOutput:'+suffix)
+ if external:
+  for name,h in full['files'].items():need(sha(Path(inputs['support_root'])/name)==h,'ActualFullSupport:'+name)
+  for key in ('Original_image_inspect','tooling_environment_script','compose_executable'):
+   obj=inputs[key];need(sha(obj['path'])==obj['sha256'],'ExternalReceipt:'+key)
+ return {'passed':True,'Source_app_executed':False,'Native_app_executed':False,'tools':len(required),'Original_modules':len(original['modules']),'support_files':len(full['files']),'fresh_output':str(output),'execution_authorized':False,'actual_container_image_inspect_executed_here':False}
+if __name__=='__main__':
+ parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--root',type=Path,default=Path(__file__).resolve().parent);args=parser.parse_args();print(json.dumps(verify(args.root),indent=2))

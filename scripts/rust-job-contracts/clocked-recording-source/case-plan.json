@@ -1,0 +1,61 @@
+{
+  "status": "UNEXECUTED NEW Source3 context; necessary fresh clocked setup, not Source2 relabeled",
+  "scope": "Source-only future-clocked normal Recording; no Native/full graph/Main/performance",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "cases": [
+    {
+      "name": "future-clocked-normal",
+      "lead_seconds": 60,
+      "record_seconds": 30,
+      "input_seconds": 120,
+      "roles_order": [
+        "artwork",
+        "beat",
+        "dvr"
+      ],
+      "artwork_queue": "celery",
+      "recording_queue": "dvr",
+      "actual_Recording_signal_arguments": [
+        "recording.id",
+        "recording.channel_id",
+        "str(recording.start_time)",
+        "str(recording.end_time)"
+      ],
+      "no_manual_recording_task_publication": true,
+      "no_routes_overridden": true,
+      "unknown_frames": "retain/refuse before consumer",
+      "future_Recording_task_id": "actual PeriodicTask name; distinct from observed Celery execution UUID",
+      "input": "owned synthetic MPEG2 video/TS + actual localVODLogo",
+      "context": "Actual static Beat siblings retained unconsumed in default FIFO while only validated natural dvr head is consumed",
+      "static_sibling_tasks": {
+        "scan-files": "core.tasks.scan_and_process_files",
+        "maintain-recurring-recordings": "apps.channels.tasks.maintain_recurring_recordings",
+        "check-version-updates": "core.tasks.check_for_version_update",
+        "check-account-expirations": "apps.m3u.tasks.check_account_expirations"
+      },
+      "disabled_or_outside_context_refusals": [
+        "fetch-channel-statuses",
+        "celery.backend_cleanup",
+        "any unknown/default/frame/options/lineage/provenance mismatch"
+      ],
+      "sibling_queue_diagnostics_bound": {
+        "max_frames": 64,
+        "max_raw_bytes": 1048576
+      },
+      "default_FIFO_after_DVR": "byte/order identical to recorded after-Beat FIFO; no removal/quarantine/default consumers",
+      "necessary_fresh_prefix": "Source2 Recording window is now past; never retime/resign/replay its frame. Fresh model/artwork/Beat context is explicitly necessary to execute normal future recording. Prior outcomes remain failures."
+    }
+  ],
+  "limits": {
+    "guest_seconds": 600,
+    "readiness_seconds": 180,
+    "cleanup_seconds": 90,
+    "artwork_seconds": 35,
+    "beat_seconds": 75,
+    "dvr_seconds": 180,
+    "origin_generation_seconds": 45,
+    "media_command_seconds": 30,
+    "normal_timing_is_not_resource_measurement": true
+  },
+  "temporal_policy": "Keep every raw timestamp. Actual own UTC command/prerun/postrun order and declared relative schedule windows; no blanket timestamp stripping or injected old Source SQL time. NULL thread task IDs/SQLSTATE remain NULL."
+}

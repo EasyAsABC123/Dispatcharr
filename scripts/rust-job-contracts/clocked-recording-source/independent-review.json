@@ -1,0 +1,419 @@
+{
+  "passed": true,
+  "scope": "Independent actual Source3-only normal future-clocked recording evidence; no Native/default graph/Main/performance claim",
+  "Root_actual_session": 86810,
+  "Root_owns_actual_session_poll": true,
+  "raw_Source_sha256": "323c396c00b88fa48459a61a63799c5f2529919554b529778aa3b7a221b0a7b8",
+  "actual_integration_sha256": "649b22b1a7d021a5807f588fc06c09cc68027c6c7660f92b93447c2d57a120c0",
+  "actual_Source_acceptance": {
+    "passed": true,
+    "unconsumed_Beat_sibling_count": 2,
+    "unconsumed_sibling_execution_verified": false,
+    "scope": "One actual Source future-clocked normal recording; raw result/headers/flags/SQL/clock/files retained; no Native/default graph/recovery/error claim",
+    "cases": 1,
+    "checks": 17,
+    "actual_tasks": 2,
+    "raw_time_fields_removed": 0,
+    "metadata_absence_not_invented_as_null_SUCCESS": true
+  },
+  "actual_checks": 17,
+  "actual_tasks": 2,
+  "actual_roles": 3,
+  "actual_mounted_tools": 17,
+  "actual_Original_modules": 14,
+  "default_before_sha256": "191b8b067780ffa1946b441c57a9a4812a5ebec54a08e48b6e949fd39751fbff",
+  "default_after_sha256": "191b8b067780ffa1946b441c57a9a4812a5ebec54a08e48b6e949fd39751fbff",
+  "default_schema": {
+    "columns": 501,
+    "constraints": 198,
+    "indexes": 255,
+    "sequences": 59,
+    "tables": 62
+  },
+  "full_default_bytes_equal": true,
+  "host_commands": 48,
+  "host_all_waits_pipes_settled": true,
+  "actual_retained_media": [
+    {
+      "relative": "retained-recordings/TV_Shows/Owned Parented Artwork/S01E01.mkv",
+      "bytes": 947301,
+      "sha256": "b0a4ed02f41811d7a8497a85cb201ac259f6525be5d5810e09bee6b6088a2476"
+    }
+  ],
+  "actual_origin_input_sha256": "54591f8768fb3d22c94c1c6d3f8f52c974f851dc9bd4b8e7aae571d0d052245f",
+  "actual_video_probe": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "mpeg2video",
+        "codec_long_name": "MPEG-2 video",
+        "profile": "Main",
+        "codec_type": "video",
+        "codec_tag_string": "[0][0][0][0]",
+        "codec_tag": "0x0000",
+        "width": 160,
+        "height": 90,
+        "coded_width": 0,
+        "coded_height": 0,
+        "has_b_frames": 1,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "16:9",
+        "pix_fmt": "yuv420p",
+        "level": 8,
+        "color_range": "tv",
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/1000",
+        "start_pts": 40,
+        "start_time": "0.040000",
+        "extradata_size": 22,
+        "disposition": {
+          "default": 0,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "VARIANT_BITRATE": "0",
+          "DURATION": "00:00:26.480000000"
+        },
+        "side_data_list": [
+          {
+            "side_data_type": "CPB properties",
+            "max_bitrate": 0,
+            "min_bitrate": 0,
+            "avg_bitrate": 0,
+            "buffer_size": 65536,
+            "vbv_delay": -1
+          }
+        ]
+      }
+    ],
+    "format": {
+      "filename": "/evidence/retained-recordings/TV_Shows/Owned Parented Artwork/S01E01.mkv",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "matroska,webm",
+      "format_long_name": "Matroska / WebM",
+      "start_time": "0.040000",
+      "duration": "26.480000",
+      "size": "947301",
+      "bit_rate": "286193",
+      "probe_score": 100,
+      "tags": {
+        "ENCODER": "Lavf63.1.102"
+      }
+    }
+  },
+  "actual_media_command_receipts": [
+    {
+      "argv": [
+        "ffprobe",
+        "-v",
+        "error",
+        "-show_format",
+        "-show_streams",
+        "-of",
+        "json",
+        "/evidence/retained-recordings/TV_Shows/Owned Parented Artwork/S01E01.mkv"
+      ],
+      "pid": 597,
+      "starttime": "30642919",
+      "began_utc": "2026-11-13T16:07:14.153896+00:00",
+      "finished_utc": "2026-11-13T16:07:14.164071+00:00",
+      "actual_exit": 0,
+      "settled": true,
+      "invalid": null,
+      "pipes_settled": true
+    },
+    {
+      "argv": [
+        "ffmpeg",
+        "-nostdin",
+        "-hide_banner",
+        "-v",
+        "error",
+        "-i",
+        "/evidence/retained-recordings/TV_Shows/Owned Parented Artwork/S01E01.mkv",
+        "-map",
+        "0:v:0",
+        "-f",
+        "null",
+        "-"
+      ],
+      "pid": 600,
+      "starttime": "30642923",
+      "began_utc": "2026-11-13T16:07:14.189070+00:00",
+      "finished_utc": "2026-11-13T16:07:14.219379+00:00",
+      "actual_exit": 0,
+      "settled": true,
+      "invalid": null,
+      "pipes_settled": true
+    }
+  ],
+  "actual_DVR_Original_result": {
+    "executed": true,
+    "began_utc": "2026-11-13T16:07:14.063471+00:00",
+    "finished_utc": "2026-11-13T16:07:14.063829+00:00",
+    "value": null,
+    "type": "builtins.NoneType",
+    "actual_state": "SUCCESS",
+    "propagate": false,
+    "timeout_seconds": 2
+  },
+  "queued_static_siblings": {
+    "passed": true,
+    "scope": "Queued unconsumed enabled static Beat siblings only; no execution/default graph/Native claim",
+    "raw_FIFO_base64": [
+      "eyJib2R5IjogIlcxdGRMQ0I3ZlN3Z2V5SmpZV3hzWW1GamEzTWlPaUJ1ZFd4c0xDQWlaWEp5WW1GamEzTWlPaUJ1ZFd4c0xDQWlZMmhoYVc0aU9pQnVkV3hzTENBaVkyaHZjbVFpT2lCdWRXeHNmVjA9IiwgImNvbnRlbnQtZW5jb2RpbmciOiAidXRmLTgiLCAiY29udGVudC10eXBlIjogImFwcGxpY2F0aW9uL2pzb24iLCAiaGVhZGVycyI6IHsibGFuZyI6ICJweSIsICJ0YXNrIjogImNvcmUudGFza3Muc2Nhbl9hbmRfcHJvY2Vzc19maWxlcyIsICJpZCI6ICIwY2M1MGFjMS0yZjA2LTQxMzQtYjFhZS1hMGY1YTg0Zjc3MTgiLCAic2hhZG93IjogbnVsbCwgImV0YSI6IG51bGwsICJleHBpcmVzIjogbnVsbCwgImdyb3VwIjogbnVsbCwgImdyb3VwX2luZGV4IjogbnVsbCwgInJldHJpZXMiOiAwLCAidGltZWxpbWl0IjogW251bGwsIG51bGxdLCAicm9vdF9pZCI6ICIwY2M1MGFjMS0yZjA2LTQxMzQtYjFhZS1hMGY1YTg0Zjc3MTgiLCAicGFyZW50X2lkIjogbnVsbCwgImFyZ3NyZXByIjogIigpIiwgImt3YXJnc3JlcHIiOiAie30iLCAib3JpZ2luIjogImdlbjQzMkAzYTVhNjRiZDIyNjEiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fSwgInBlcmlvZGljX3Rhc2tfbmFtZSI6ICJzY2FuLWZpbGVzIn0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICIwY2M1MGFjMS0yZjA2LTQxMzQtYjFhZS1hMGY1YTg0Zjc3MTgiLCAicmVwbHlfdG8iOiAiMGZiNGI2NGEtMWMyMC0zODNkLWFlYmQtNGIyZTEyYzFjN2ZkIiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogImNlbGVyeSJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogImYyMTAxYTUwLWQxOTgtNDcyZi1hZGE0LTM1OTk5MzQzMGU3YiJ9fQ==",
+      "eyJib2R5IjogIlcxdGRMQ0I3ZlN3Z2V5SmpZV3hzWW1GamEzTWlPaUJ1ZFd4c0xDQWlaWEp5WW1GamEzTWlPaUJ1ZFd4c0xDQWlZMmhoYVc0aU9pQnVkV3hzTENBaVkyaHZjbVFpT2lCdWRXeHNmVjA9IiwgImNvbnRlbnQtZW5jb2RpbmciOiAidXRmLTgiLCAiY29udGVudC10eXBlIjogImFwcGxpY2F0aW9uL2pzb24iLCAiaGVhZGVycyI6IHsibGFuZyI6ICJweSIsICJ0YXNrIjogImNvcmUudGFza3Muc2Nhbl9hbmRfcHJvY2Vzc19maWxlcyIsICJpZCI6ICJmYzIwZTQ2ZC04ZmFlLTQxZDItOGExZC01MDAxMTFjMGU5YzgiLCAic2hhZG93IjogbnVsbCwgImV0YSI6IG51bGwsICJleHBpcmVzIjogbnVsbCwgImdyb3VwIjogbnVsbCwgImdyb3VwX2luZGV4IjogbnVsbCwgInJldHJpZXMiOiAwLCAidGltZWxpbWl0IjogW251bGwsIG51bGxdLCAicm9vdF9pZCI6ICJmYzIwZTQ2ZC04ZmFlLTQxZDItOGExZC01MDAxMTFjMGU5YzgiLCAicGFyZW50X2lkIjogbnVsbCwgImFyZ3NyZXByIjogIigpIiwgImt3YXJnc3JlcHIiOiAie30iLCAib3JpZ2luIjogImdlbjQzMkAzYTVhNjRiZDIyNjEiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fSwgInBlcmlvZGljX3Rhc2tfbmFtZSI6ICJzY2FuLWZpbGVzIn0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICJmYzIwZTQ2ZC04ZmFlLTQxZDItOGExZC01MDAxMTFjMGU5YzgiLCAicmVwbHlfdG8iOiAiMGZiNGI2NGEtMWMyMC0zODNkLWFlYmQtNGIyZTEyYzFjN2ZkIiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogImNlbGVyeSJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogIjNmZGI1NWFhLTIzOGYtNDAwMi1hYWI3LTMxZDQ5YzZmZDJkMiJ9fQ=="
+    ],
+    "actual_FIFO_order_preserved": true,
+    "rows_in_FIFO_order": [
+      {
+        "id": "0cc50ac1-2f06-4134-b1ae-a0f5a84f7718",
+        "task": "core.tasks.scan_and_process_files",
+        "periodic_task_name": "scan-files",
+        "raw_sha256": "f48501283588610426f484fab6598bbcf89165d7a6687bcecc1c6806eb8f2415",
+        "publication_utc": "2026-11-13T16:06:27.426786+00:00",
+        "source_execution_verified": false
+      },
+      {
+        "id": "fc20e46d-8fae-41d2-8a1d-500111c0e9c8",
+        "task": "core.tasks.scan_and_process_files",
+        "periodic_task_name": "scan-files",
+        "raw_sha256": "7f8db6682ebf3f6a554e9f7afb5b3c864a3b385e73d7e82a36846d5e2048407b",
+        "publication_utc": "2026-11-13T16:06:07.434446+00:00",
+        "source_execution_verified": false
+      }
+    ],
+    "ids": [
+      "0cc50ac1-2f06-4134-b1ae-a0f5a84f7718",
+      "fc20e46d-8fae-41d2-8a1d-500111c0e9c8"
+    ],
+    "actual_Beat_pid": 432,
+    "actual_Beat_starttime": "30634109",
+    "actual_Beat_began_utc": "2026-11-13T16:05:46.052956+00:00",
+    "actual_Beat_finished_utc": "2026-11-13T16:06:43.283021+00:00",
+    "all_time_fields_retained": true
+  },
+  "siblings_executed": false,
+  "actual_cleanup_budget": {
+    "budget_seconds": 90,
+    "elapsed_seconds": 1.9205224720062688,
+    "within_budget": true,
+    "scope": "Acceptance deadline only; physical stop/join may finish later but can never qualify then"
+  },
+  "fresh_owned_queries": [
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-b18e3d1ce6",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 1617137,
+      "starttime": "30668817",
+      "actual_exit": 0,
+      "settled": true,
+      "invalid": null,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "empty": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-b18e3d1ce6",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 1617155,
+      "starttime": "30668818",
+      "actual_exit": 0,
+      "settled": true,
+      "invalid": null,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "empty": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-b18e3d1ce6",
+        "--format",
+        "{{.Name}}"
+      ],
+      "pid": 1617173,
+      "starttime": "30668819",
+      "actual_exit": 0,
+      "settled": true,
+      "invalid": null,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "empty": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "inspect",
+        "3a5a64bd226148d3724d93cd01133f18398761ebed8afcb3690ba74dcc74dd25"
+      ],
+      "pid": 1617191,
+      "starttime": "30668820",
+      "actual_exit": 1,
+      "settled": true,
+      "invalid": null,
+      "stdout_hex": "5b5d0a",
+      "stderr_hex": "6572726f723a206e6f2073756368206f626a6563743a20336135613634626432323631343864333732346439336364303131333366313833393837363165626564386166636233363930626137346463633734646432350a",
+      "absent": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "inspect",
+        "459241e95179c852e5f25689145ded8706128174eaf7d32282768c41742dd783"
+      ],
+      "pid": 1617216,
+      "starttime": "30668822",
+      "actual_exit": 1,
+      "settled": true,
+      "invalid": null,
+      "stdout_hex": "5b5d0a",
+      "stderr_hex": "6572726f723a206e6f2073756368206f626a6563743a20343539323431653935313739633835326535663235363839313435646564383730363132383137346561663764333232383237363863343137343264643738330a",
+      "absent": true
+    }
+  ],
+  "fresh_original_PID_absences": [
+    {
+      "CID": "3a5a64bd226148d3724d93cd01133f18398761ebed8afcb3690ba74dcc74dd25",
+      "pid": 1592405,
+      "starttime": "30632260",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    },
+    {
+      "CID": "459241e95179c852e5f25689145ded8706128174eaf7d32282768c41742dd783",
+      "pid": 1592341,
+      "starttime": "30632247",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    },
+    {
+      "CID": "3a5a64bd226148d3724d93cd01133f18398761ebed8afcb3690ba74dcc74dd25",
+      "pid": 1592405,
+      "starttime": "30632260",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    },
+    {
+      "CID": "3a5a64bd226148d3724d93cd01133f18398761ebed8afcb3690ba74dcc74dd25",
+      "pid": 1592844,
+      "starttime": "30632330",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    },
+    {
+      "CID": "3a5a64bd226148d3724d93cd01133f18398761ebed8afcb3690ba74dcc74dd25",
+      "pid": 1592845,
+      "starttime": "30632331",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    },
+    {
+      "CID": "3a5a64bd226148d3724d93cd01133f18398761ebed8afcb3690ba74dcc74dd25",
+      "pid": 1592846,
+      "starttime": "30632331",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    },
+    {
+      "CID": "3a5a64bd226148d3724d93cd01133f18398761ebed8afcb3690ba74dcc74dd25",
+      "pid": 1592849,
+      "starttime": "30632332",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    },
+    {
+      "CID": "3a5a64bd226148d3724d93cd01133f18398761ebed8afcb3690ba74dcc74dd25",
+      "pid": 1592850,
+      "starttime": "30632332",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    },
+    {
+      "CID": "3a5a64bd226148d3724d93cd01133f18398761ebed8afcb3690ba74dcc74dd25",
+      "pid": 1592851,
+      "starttime": "30632332",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    },
+    {
+      "CID": "3a5a64bd226148d3724d93cd01133f18398761ebed8afcb3690ba74dcc74dd25",
+      "pid": 1592880,
+      "starttime": "30632353",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    },
+    {
+      "CID": "459241e95179c852e5f25689145ded8706128174eaf7d32282768c41742dd783",
+      "pid": 1592341,
+      "starttime": "30632247",
+      "after_starttime": null,
+      "original_process_absent": true,
+      "fresh_starttime": null,
+      "fresh_original_absent": true
+    }
+  ],
+  "old_Source1_and_Source2_failures_not_relabelled": true,
+  "application_or_decoder_rerun": false
+}
