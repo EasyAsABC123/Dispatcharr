@@ -1,0 +1,12 @@
+{
+  "Store_source_sha256": "01eca2cfc17b31c0adde5407e444eb12fad83d6c20e9827965f361e114c0f9ac",
+  "schema": "SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN ('dispatcharr_channels_recording'::regclass,'dispatcharr_channels_channel'::regclass,'epg_programdata'::regclass,'vod_movie'::regclass,'vod_vodlogo'::regclass))",
+  "recording_read": "SELECT channel_id::bigint,CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,(custom_properties IS NOT NULL AND octet_length(custom_properties::text)<=8192) FROM dispatcharr_channels_recording WHERE id=$1 LIMIT 2",
+  "movie_read": "SELECT l.id::bigint,CASE WHEN octet_length(l.url)<=1024 THEN l.url ELSE NULL END,(l.url IS NOT NULL AND octet_length(l.url)<=1024) FROM vod_movie m LEFT JOIN vod_vodlogo l ON l.id=m.logo_id WHERE UPPER(m.name::text)=UPPER($1) ORDER BY m.name LIMIT 2",
+  "update": "UPDATE dispatcharr_channels_recording SET custom_properties=$1 WHERE id=$2 AND custom_properties=$3",
+  "known_owned_trigger_error_code": "P0001",
+  "known_owned_trigger_error_message": "owned artwork post-admission fault",
+  "source_failure_parity_claim": false,
+  "gate_hold_seconds": 6.2,
+  "gate_safety_seconds": 20
+}

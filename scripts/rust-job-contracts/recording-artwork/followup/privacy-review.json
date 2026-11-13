@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "scope": "All87 fully inflated captured reports plus selected plaintext; recursive structured credential checks, queued task/value-list base64, pickle string operand inspection and nonfixture URL/JWT/SCRAM scans",
+  "stats": {
+    "uncompressed_evidence": 87,
+    "plaintext_selected": 131,
+    "base64_fields_decoded": 44479,
+    "JSON_containers_visited": 72200,
+    "pickle_string_operands_inspected": 9522,
+    "credential_fields_checked": 256
+  },
+  "findings": [],
+  "inventory_sha256": "dc9073c267998fb0a2602cd52a8768890225560222d3d535cbf35d0851cf281c",
+  "private_scanner_sha256": "fbdf3e766fdb5b2525a885cf5023757cc8078f973e05ec870d4a30c912b47ad9",
+  "privacy_controls": 8,
+  "privacy_controls_receipt_sha256": "38d460e53605d4bcc342ef14ae2576c2a8b04f3a731d16802c323e69ee96693b",
+  "actual_PG_auth_projection_observations": 952,
+  "projection_observation_count_includes_repeated_snapshots": true,
+  "PG_authentication_payloads_projected_before_capture": true,
+  "PG_cancel_secret_projected_before_capture": true,
+  "raw_authentication_wire_replay_verified": false,
+  "known_public_fixture_password": "playback-fixture-only",
+  "task_model_delivery_UUIDs_are_not_account_credentials": true,
+  "limitations": [
+    "Opaque Redis DUMP is not a universal semantic decode. Corresponding raw value/list/queue fields are scanned; primitive pickle string operands are inspected without executing Python globals.",
+    "No Source failure/event-catch/concurrency parity or later source/image performance transfer.",
+    "Captured-report restoration is exact; unrecorded PG authentication payloads cannot be restored."
+  ]
+}

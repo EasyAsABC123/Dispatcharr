@@ -1,0 +1,33 @@
+{
+  "scope": "Static only; no observed application failure or new execution",
+  "source7_store_sha256": "01eca2cfc17b31c0adde5407e444eb12fad83d6c20e9827965f361e114c0f9ac",
+  "physical1_seal_sha256": "e489321c932c012f5730ccbef3ba9abfffd1e34f4dcb715a04e8ed395afc44dd",
+  "normal_actual3_unchanged": true,
+  "runtime_findings": {
+    "preACK_prepare_uses_shared_operation": true,
+    "postACK_execute_uses_shared_operation": true,
+    "one_actual_PgPoolConnection_owned_with_caller": true,
+    "supervised_tokio_task_prevents_observer_abort_detaching_owner": true,
+    "all_observed_success_unsupported_error_paths_rejoin_ping_then_close": true,
+    "error_response_is_preserved_with_original_stage_and_optional_settlement_error": true,
+    "raw_PgPool_fetch_bypass_found": false,
+    "new_production_fence_needed_from_this_audit": false
+  },
+  "source_locations": {
+    "shared_operation": "recording_local_artwork.rs:125",
+    "caller_retention": "recording_local_artwork.rs:131",
+    "actual_connection": "recording_local_artwork.rs:133",
+    "inner_observed_result": "recording_local_artwork.rs:134",
+    "physical_fence": "recording_local_artwork.rs:184",
+    "typed_original_error": "recording_local_artwork.rs:186"
+  },
+  "QA_findings": [
+    {
+      "existing": "Mode3 matches actual UPDATE P0001 ErrorReady under same backend, waits to actual held timestamp+2.2s, queries actual peer Weak caller release/slot availability, then holds until fixed6.2s. This is not an instantaneous-only guest observation.",
+      "gap": "Validator does not enforce recorded poll monotonic distance and there is only one peer poll; strengthen before actual admission.",
+      "proposed_separate_revision": "Two actual same-peer polls>=250ms apart after held Error, both pending/caller_released false/slots0; record raw backend absence and same exact proxy backend/connection and actual error fields; validate clock and missing/false/wrong-backend/short-window negatives. No runtime/case budget change."
+    }
+  ],
+  "immutable_physical1_preserved": true,
+  "future_QA_only_revision_required": true
+}

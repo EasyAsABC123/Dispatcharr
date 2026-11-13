@@ -1,0 +1,114 @@
+[
+  {
+    "label": "materialize-1",
+    "argv": [
+      "python",
+      "artifacts/rust/local-artwork-followup-portable-tree-1/scripts/rust-job-contracts/recording-artwork/followup/materialize.py",
+      "--output",
+      "artifacts/rust/local-artwork-followup-portable-evidence-1"
+    ],
+    "cwd": "/home/justin/github/Dispatcharr",
+    "pid": 4,
+    "starttime": "29611407",
+    "began_epoch": 1794575719.0282738,
+    "ended_epoch": 1794575719.1670015,
+    "actual_wait": 0,
+    "actual_poll": 0,
+    "settled": true
+  },
+  {
+    "label": "review-1",
+    "argv": [
+      "python",
+      "artifacts/rust/local-artwork-followup-portable-tree-1/scripts/rust-job-contracts/recording-artwork/followup/review.py",
+      "--evidence",
+      "artifacts/rust/local-artwork-followup-portable-evidence-1"
+    ],
+    "cwd": "/home/justin/github/Dispatcharr",
+    "pid": 5,
+    "starttime": "29611421",
+    "began_epoch": 1794575719.1676111,
+    "ended_epoch": 1794575720.1108124,
+    "actual_wait": 0,
+    "actual_poll": 0,
+    "settled": true
+  },
+  {
+    "label": "public-controls-1",
+    "argv": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "artifacts/rust/local-artwork-followup-portable-tree-1/scripts/rust-job-contracts/recording-artwork/followup",
+      "-p",
+      "test_public.py"
+    ],
+    "cwd": "/home/justin/github/Dispatcharr",
+    "pid": 18,
+    "starttime": "29611515",
+    "began_epoch": 1794575720.1114192,
+    "ended_epoch": 1794575720.1888468,
+    "actual_wait": 0,
+    "actual_poll": 0,
+    "settled": true
+  },
+  {
+    "label": "portable-physical-controls-1",
+    "argv": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "artifacts/rust/local-artwork-followup-portable-tree-1/scripts/rust-job-contracts/recording-artwork/followup/controllers/physical/local-controls"
+    ],
+    "cwd": "/home/justin/github/Dispatcharr",
+    "pid": 19,
+    "starttime": "29611523",
+    "began_epoch": 1794575720.1894689,
+    "ended_epoch": 1794575720.5686066,
+    "actual_wait": 0,
+    "actual_poll": 0,
+    "settled": true
+  },
+  {
+    "label": "portable-refusal-controls-1",
+    "argv": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "artifacts/rust/local-artwork-followup-portable-tree-1/scripts/rust-job-contracts/recording-artwork/followup/controllers/refusal/local-controls"
+    ],
+    "cwd": "/home/justin/github/Dispatcharr",
+    "pid": 20,
+    "starttime": "29611561",
+    "began_epoch": 1794575720.569156,
+    "ended_epoch": 1794575720.7604456,
+    "actual_wait": 0,
+    "actual_poll": 0,
+    "settled": true
+  },
+  {
+    "label": "portable-correction-controls-1",
+    "argv": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "artifacts/rust/local-artwork-followup-portable-tree-1/scripts/rust-job-contracts/recording-artwork/followup/controllers/correction/local-controls"
+    ],
+    "cwd": "/home/justin/github/Dispatcharr",
+    "pid": 21,
+    "starttime": "29611580",
+    "began_epoch": 1794575720.7610219,
+    "ended_epoch": 1794575720.9541757,
+    "actual_wait": 0,
+    "actual_poll": 0,
+    "settled": true
+  }
+]

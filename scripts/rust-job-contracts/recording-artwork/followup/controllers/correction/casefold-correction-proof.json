@@ -1,0 +1,10 @@
+{
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_path": "apps/vod/models.py",
+  "Original_whole_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+  "actual_pinned_constraint_declaration": "models.UniqueConstraint(\n                fields=['name', 'year', 'language'],\n                condition=models.Q(tmdb_id__isnull=True) & models.Q(imdb_id__isnull=True),\n                name='unique_movie_name_year_language_no_external_id'\n            )",
+  "Native_source_path": "artifacts/rust/recording-local-artwork-native-7/source/rust/crates/store/src/recording_local_artwork.rs",
+  "Native_matching_predicate": "UPPER(m.name::text)=UPPER($1)",
+  "scope": "Owned ASCII title spellings only; no general Unicode/database collation claim",
+  "actual_Postgres_casefold_setup_proof": "Fresh corrected fixture records exact predicate SELECT/parameters/actualtwo rows before Native; UNEXECUTED now"
+}

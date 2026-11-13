@@ -1,0 +1,13 @@
+{
+  "CHANNELS_PUBLISH": "\nfor _,key in ipairs(KEYS) do local t=redis.call('TYPE',key).ok;if t~='none' and t~='zset' then return redis.error_reply('CORRUPT channel type') end end\nlocal dropped=0;for index,key in ipairs(KEYS) do\n redis.call('ZREMRANGEBYSCORE',key,0,tonumber(ARGV[1])-60)\n if redis.call('ZCARD',key)<tonumber(ARGV[2]) then redis.call('ZADD',key,ARGV[1],ARGV[index+2]);redis.call('EXPIRE',key,60) else dropped=dropped+1 end\nend;return dropped\n",
+  "CHANNELS_PUBLISH_sha1": "dc636bb6a59a35eef552c31c01a0448129998548",
+  "result_write_lua": "\nlocal t=redis.call('TYPE',KEYS[1]).ok\nif t~='none'and t~='string'then return -1 end\nif #ARGV[1]>262144 then return -1 end\nif t=='string'then\n if redis.call('STRLEN',KEYS[1])>262144 then return -1 end\n local ok,old=pcall(cjson.decode,redis.call('GET',KEYS[1]))\n if not ok or type(old)~='table'then return -1 end\n if old.status=='SUCCESS'then return 0 end\nend\nredis.call('SETEX',KEYS[1],3600,ARGV[1]);redis.call('PUBLISH',KEYS[1],ARGV[1]);return 1\n",
+  "result_write_lua_sha1": "fce9b39b58ad3c271e70b21db9c428b48e04b169",
+  "Source7_realtime_file_sha256": "1a045ce6b82b8a102c8120daf06a7e05fc8d443c98789e34caa6740eec375513",
+  "Source7_job_transport_file_sha256": "93c71688a8390f1e1f1fcbe43659dcd1ee238a9c65554addce722f9c5c5de7d4",
+  "events_DB": 0,
+  "result_DB": 9,
+  "known_channel_key": "asgispecific.rust_owned_parented!",
+  "Source_failure_result_parity": false,
+  "serial_proxy_scope": "No claim of forwarding later pipelined writes at Redis while the one subject reply is held"
+}
