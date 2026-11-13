@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m8-backup-job-native-qa-2/preflight_source_context.py", line 4, in <module>
+    r=json.loads((Path(__file__).resolve().parent/'inputs/Source16-projection.json').read_text());rows=r['seed_snapshot']['redis'][0]['rows'];assert len(rows)==5,'WithdrawnFiveKeyProposalConflictsWithMeasuredThreeKeyInitialContext'
+                                                                                                                                                     ^^^^^^^^^^^^
+AssertionError: WithdrawnFiveKeyProposalConflictsWithMeasuredThreeKeyInitialContext

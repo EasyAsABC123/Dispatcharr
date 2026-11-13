@@ -1,0 +1,31 @@
+"""Portable semantic corruption controls; no application/Source/Docker execution."""
+import copy,json,unittest
+import portable
+class Controls(unittest.TestCase):
+ def setUp(self):self.raw=json.loads((portable.ROOT/'Native16-projection.json').read_text())
+ def bad(self,change):
+  altered=copy.deepcopy(self.raw);change(altered)
+  with self.assertRaises((ValueError,KeyError,TypeError,AssertionError)):portable.validate(altered)
+ def test_positive(self):self.assertTrue(portable.validate()['passed'])
+ def test_recorder_relabel(self):self.bad(lambda r:r.update(passed=True))
+ def test_capture_incomplete(self):self.bad(lambda r:r.update(capture_complete=False))
+ def test_source_mode(self):self.bad(lambda r:r.update(Source_reference_mode='original-or-projected'))
+ def test_source_hash(self):self.bad(lambda r:r.update(Source_reference_sha256='0'*64))
+ def test_missing_case(self):self.bad(lambda r:r['requests'].pop())
+ def test_role_swap(self):self.bad(lambda r:r['requests'][0].update(auth_selectors={'x_api_key':'admin'}))
+ def test_status(self):self.bad(lambda r:r['requests'][2].update(status=202))
+ def test_task_token_hash(self):self.bad(lambda r:r['requests'][3]['json']['task_token'].update(sha256='0'*64))
+ def test_create_body_hash(self):self.bad(lambda r:r['requests'][3].update(body_sha256='0'*64))
+ def test_download_hash(self):self.bad(lambda r:r['requests'][15].update(body_sha256='0'*64))
+ def test_token_url_hash(self):self.bad(lambda r:r['requests'][7]['path'].update(original_sha256='0'*64))
+ def test_seed_api_key(self):self.bad(lambda r:r['seed']['users'][0]['api_key'].update(sha256='0'*64))
+ def test_auth_header(self):self.bad(lambda r:r['requests'][1]['raw_headers_private']['x-api-key'].update(sha256='0'*64))
+ def test_queue_route(self):self.bad(lambda r:r.update(native_actual_queue='owned-custom-queue'))
+ def test_erase_import(self):self.bad(lambda r:r['Source_cache_context_seed'].update(rows=[]))
+ def test_erase_cache_group(self):self.bad(lambda r:r['requests'][0]['after']['redis'][0]['rows'].pop())
+ def test_http_not_joined(self):self.bad(lambda r:r.update(HTTP_listener_joined=False))
+ def test_not_drained(self):self.bad(lambda r:r.update(backups_shutdown=False))
+ def test_worker_clock_rewind(self):self.bad(lambda r:r.update(worker_completed_utc='2000-01-01T00:00:00+00:00'))
+ def test_family_guard(self):self.bad(lambda r:r['native_only_family_guards'].update(all_UnsupportedTask=False))
+ def test_guard_result_drop(self):self.bad(lambda r:r['native_only_family_guards']['after']['redis'][2].update(rows=[]))
+if __name__=='__main__':unittest.main(verbosity=2)

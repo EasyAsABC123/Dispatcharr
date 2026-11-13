@@ -1,0 +1,16 @@
+from pathlib import Path
+import hashlib,json,subprocess,difflib,shutil
+H=Path(__file__).resolve().parent;S=H/'source';B=H.parent/'m8-backup-job-source-public-handoff-1/selected/scripts/rust-contracts/backup-source16';I=H/'inputs';I.mkdir(exist_ok=True)
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,x):p.write_text(json.dumps(x,indent=2)+'\n')
+for n in('Source16-projection.json','plan.json','archive-proof.json','Source16-projection-manifest.json','Root-actual-review.json'):shutil.copy2(B/n,I/n)
+save(I/'Source-binding.json',{'mode':'projected-backup-source16-reference-v1','Source16_projection_sha256':sha(I/'Source16-projection.json'),'Original_raw_sha256':'daa2835e76df10e6dece88473d4b08d2ce1e4ad82680de3296de99604b54a288','plan_sha256':sha(I/'plan.json'),'original_reference_bytes_consumed':False,'strict_single_mode_no_fallback':True,'new_projected_reference_execution_has_not_occurred':True})
+base=json.loads((H/'base-source-map.json').read_text());actual={str(p.relative_to(S)):sha(p)for p in sorted(S.rglob('*'))if p.is_file()};save(H/'full-source-map.json',actual);save(H/'rust-source-map.json',{k:v for k,v in actual.items()if k.startswith('rust/')});save(H/'coupled5-map.json',{k:v for k,v in actual.items()if not k.startswith('rust/')});rows=[];diff=[]
+for name in sorted(set(base)|set(actual)):
+ if base.get(name)==actual.get(name):continue
+ before=subprocess.run(['git','show','28e1b9f2dfdc84093e0ea5b063421daf9188f957:'+name],stdout=subprocess.PIPE,stderr=subprocess.DEVNULL).stdout if name in base else b''
+ after=(S/name).read_bytes()if name in actual else b'';rows.append({'path':name,'before_sha256':base.get(name),'sha256':actual.get(name),'bytes':len(after),'source':str((S/name).resolve())});diff.extend(difflib.unified_diff(before.decode().splitlines(True),after.decode().splitlines(True),fromfile='a/'+name if name in base else'/dev/null',tofile='b/'+name))
+save(H/'selected-source.json',{'state':'FROZEN_PRIVATE_REQUIRES_COMPILE_REVIEW','baseGit':'28e1b9f2dfdc84093e0ea5b063421daf9188f957','files':rows});(H/'selected-source.diff').write_text(''.join(diff))
+commands=[['cargo','fmt','--all','--check'],['cargo','build','--offline','--locked','-p','dispatcharr-job-transport','--lib'],['cargo','clippy','--offline','--locked','-p','dispatcharr-store','-p','dispatcharr-job-transport','--all-targets','--','-D','warnings'],['cargo','test','--offline','--locked','-p','dispatcharr-store','backup_','--','--nocapture'],['cargo','test','--offline','--locked','-p','dispatcharr-job-transport','backup_application::tests','--','--nocapture']]
+save(H/'compile-plan.json',{'state':'UNEXECUTED_REQUIRES_ROOT_REVIEW','commands':commands,'source_root':str(S.resolve()),'fresh_target':str((H.parent/'target-m8-backup-source16-native-qa4-1').resolve()),'TMPDIR':str((H.parent/'tmp-m8-backup-source16-native-qa4-1').resolve()),'env':{'CARGO_BUILD_JOBS':'2','CARGO_PROFILE_DEV_DEBUG':'0','CARGO_PROFILE_TEST_DEBUG':'0','CARGO_INCREMENTAL':'0'},'copy_ELF_only_after_all_actual_wait_poll0':True,'no_Docker_SQL_Source_Main_or_app_run_authorized':True})
+print(json.dumps({'source_files':len(actual),'Rust':sum(k.startswith('rust/')for k in actual),'coupled5':sum(not k.startswith('rust/')for k in actual),'changed_paths':len(rows),'map_sha256':sha(H/'full-source-map.json'),'selection_sha256':sha(H/'selected-source.json')}))

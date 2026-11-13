@@ -1,5 +1,5 @@
 //! Job-free original backup HTTP/filesystem contracts. Original authors retain AGPL credit.
-//! Accepted job-free routes only; create/restore/status jobs remain explicit501.
+//! Optional explicit create/status adapter; restore remains guarded. No worker starts here.
 use crate::{AuthService, StoreError};
 use axum::{
     body::{Body, Bytes},
@@ -27,6 +27,21 @@ pub struct BackupFiles {
     root: Arc<PathBuf>,
     secret: Arc<Vec<u8>>,
     workers: Arc<Semaphore>,
+    jobs: Option<Arc<dyn BackupJobApi>>,
+}
+/// Explicit adapter avoids a Store -> job-transport dependency cycle. No default
+/// constructor, background worker, restore or scheduling authority is implied.
+pub trait BackupJobApi: Send + Sync {
+    fn create(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<String, StoreError>>;
+    fn status<'a>(
+        &'a self,
+        task_id: &'a str,
+        caller: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'a, Result<Value, StoreError>>;
+    fn shutdown(&self, grace: Duration) -> dispatcharr_contracts::BoxFuture<'_, bool>;
 }
 type Lease = Arc<OwnedSemaphorePermit>;
 fn reply(status: u16, detail: impl Into<String>) -> Response {
@@ -67,7 +82,13 @@ impl BackupFiles {
             root: Arc::new(root),
             secret: Arc::new(signing_key.into_bytes()),
             workers: Arc::new(Semaphore::new(4)),
+            jobs: None,
         })
+    }
+    /// Attach only a prepared, reviewed adapter. This starts no worker.
+    pub fn with_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
+        self.jobs = Some(jobs);
+        self
     }
     pub fn router(self) -> Router {
         Router::new()
@@ -77,6 +98,12 @@ impl BackupFiles {
             .with_state(self)
     }
     pub async fn shutdown(&self, grace: Duration) -> bool {
+        let started = tokio::time::Instant::now();
+        let jobs_drained = match &self.jobs {
+            Some(jobs) => jobs.shutdown(grace).await,
+            None => true,
+        };
+        let grace = grace.saturating_sub(started.elapsed());
         self.workers.close();
         let deadline = tokio::time::Instant::now() + grace;
         while self.workers.available_permits() != 4 {
@@ -85,7 +112,7 @@ impl BackupFiles {
             }
             tokio::time::sleep(Duration::from_millis(5)).await
         }
-        true
+        jobs_drained
     }
     async fn io<T: Send + 'static>(
         &self,
@@ -100,7 +127,65 @@ impl BackupFiles {
         .await
         .map_err(|_| StoreError::Unsupported("backup filesystem worker failed"))
     }
-    async fn serve(&self, peer: SocketAddr, mut request: Request) -> Result<Response, StoreError> {
+    async fn serve(&self, peer: SocketAddr, request: Request) -> Result<Response, StoreError> {
+        // Existing four filesystem/request slots, no new budget or SQL pool.
+        let lease = Arc::new(self.workers.clone().try_acquire_owned().map_err(|_| {
+            StoreError::StatusBody(
+                503,
+                json!({"detail":"Backup filesystem capacity unavailable"}),
+            )
+        })?);
+        let mut scoped = self.clone();
+        scoped.auth = scoped.auth.with_retained_scope(lease.clone());
+        // Caller loss detaches this supervisor; cache operations additionally
+        // retain this same owner through their physical late reply settlement.
+        tokio::spawn(async move { scoped.serve_owned(peer, request, lease).await })
+            .await
+            .map_err(|_| StoreError::Unsupported("Backup request worker failed"))?
+    }
+    async fn load_callback_group(&self, key: &'static str) -> Result<Value, StoreError> {
+        use sqlx::Connection;
+        let mut connection = self.auth.store.pool().acquire().await?;
+        let result =
+            sqlx::query_scalar::<_, Value>("SELECT value FROM core_coresettings WHERE key=$1")
+                .bind(key)
+                .fetch_optional(&mut *connection)
+                .await;
+        // ERROR may arrive before Ready. Keep the actual checked-out existing
+        // connection and outer request owner through Sync and physical close.
+        let settled = connection.ping().await;
+        let closed = connection.close().await;
+        settled?;
+        closed?;
+        let value = result?.unwrap_or(Value::Null);
+        Ok(if value.as_object().is_some_and(|v| !v.is_empty()) {
+            value
+        } else if key == "system_settings" {
+            crate::source_system_settings_defaults()
+        } else {
+            json!({})
+        })
+    }
+    async fn callback_group(&self, key: &'static str) -> Result<Value, StoreError> {
+        match self.auth.notification_cache.as_ref() {
+            Some(cache) => {
+                cache
+                    .settings_group(key, || self.load_callback_group(key))
+                    .await
+            }
+            None => self.load_callback_group(key).await,
+        }
+    }
+    async fn serve_owned(
+        &self,
+        peer: SocketAddr,
+        mut request: Request,
+        lease: Lease,
+    ) -> Result<Response, StoreError> {
+        // Pinned request_started -> refresh_display_zone catches failures. This
+        // reproduces its grouped settings read, not full display/logging parity.
+        let _ = self.callback_group("system_settings").await;
+
         let identity = crate::auth::request(peer, request.headers().clone());
         let user = self.auth.authenticate(&identity).await?;
         let tail = request
@@ -122,15 +207,19 @@ impl BackupFiles {
         };
         let manual = kind == "download" || kind == "status";
         if !manual {
+            // Original Authenticated evaluates network access even when the
+            // identity is anonymous or below the admin level.
+            let policy = self.callback_group("network_access").await?;
+            let ip = self.auth.client_ip(&identity);
+            let network_allowed = crate::xc_auth::system_allowed(&policy, "UI", ip)?
+                && match user.as_ref() {
+                    Some(user) => crate::xc_auth::user_allowed(user, "UI", ip)?,
+                    None => true,
+                };
             let user = user.as_ref().ok_or(StoreError::Unauthorized(
                 "Authentication credentials were not provided.",
             ))?;
-            if user.user_level < 10
-                || !self
-                    .auth
-                    .source_network_allowed(self.auth.client_ip(&identity), "UI", Some(user))
-                    .await?
-            {
+            if !network_allowed || user.user_level < 10 {
                 return Err(StoreError::PermissionDenied);
             }
         }
@@ -175,17 +264,28 @@ impl BackupFiles {
             }
         }
         if kind == "status" || kind == "create" {
-            return Ok(reply(501, "Native durable backup jobs are not migrated"));
+            let Some(jobs) = &self.jobs else {
+                return Ok(reply(501, "Native durable backup jobs are not migrated"));
+            };
+            // Preserve auth -> method -> token/admin ordering above. Create
+            // never parses request data, including malformed JSON.
+            let value = if kind == "create" {
+                let id = jobs.create(lease.clone()).await?;
+                json!({"detail":"Backup started","task_id":id,"task_token":mac(&self.secret,&id)})
+            } else {
+                jobs.status(filename.as_deref().unwrap_or(""), lease.clone())
+                    .await?
+            };
+            let status = if kind == "create" {
+                StatusCode::ACCEPTED
+            } else {
+                StatusCode::OK
+            };
+            return Ok((status, Json(value)).into_response());
         }
         if kind == "schedule" {
             return self.schedule().await;
         }
-        let lease = Arc::new(self.workers.clone().try_acquire_owned().map_err(|_| {
-            StoreError::StatusBody(
-                503,
-                json!({"detail":"Backup filesystem capacity unavailable"}),
-            )
-        })?);
         if kind == "upload" {
             return self.upload(&lease, &mut request).await;
         }

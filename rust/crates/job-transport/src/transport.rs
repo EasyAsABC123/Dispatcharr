@@ -105,6 +105,7 @@ enum Authority {
     Refresh,
     Series,
     DefaultServices,
+    Backup,
 }
 impl Jobs {
     /// Test-only authority: copied DB + isolated loopback RedisDB8/9. There is
@@ -150,6 +151,14 @@ impl Jobs {
             Authority::Fixture,
         )
         .await
+    }
+    /// Explicit create/status-only authority. Starts no consumer; grants no
+    /// restore/index/refresh/default family or implicit Main registration.
+    pub async fn connect_backup(broker: &str, result: &str, config: Config) -> Result<Self, Error> {
+        Self::connect_owned(broker, result, config, String::new(), Authority::Backup).await
+    }
+    pub(crate) fn allows_backup(&self) -> bool {
+        matches!(self.inner.authority, Authority::Fixture | Authority::Backup)
     }
     /// Production connection authority for programme-index tasks only. This
     /// neither starts a consumer nor grants backup/restore publication/execution.
@@ -276,7 +285,7 @@ impl Jobs {
     ) -> Result<Arc<crate::eta::Pool>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -346,7 +355,9 @@ impl Jobs {
         id: Uuid,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
-        if self.inner.authority != Authority::Fixture {
+        if !self.allows_backup()
+            || (self.inner.authority == Authority::Backup && !matches!(task, Task::CreateBackup))
+        {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller)?;
@@ -632,7 +643,7 @@ impl Jobs {
     ) -> Result<Published, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -670,7 +681,7 @@ impl Jobs {
     ) -> Result<Option<crate::index_protocol::IndexResult>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -711,6 +722,39 @@ impl Jobs {
             _ => Err(Error::Corrupt),
         }
     }
+    /// Source accepts opaque task IDs. Read the exact key even when an ID is
+    /// not a UUID; absent values remain PENDING. Existing non-UUID result
+    /// payload grammar is deliberately unsupported rather than fabricated.
+    pub async fn read_backup(
+        &self,
+        id: &str,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Metadata>, Error> {
+        if !self.allows_backup() {
+            return Err(Error::UnsupportedTask);
+        }
+        if id.is_empty() || id.len() > 1024 || id.contains('\0') {
+            return Err(Error::Protocol);
+        }
+        let lease = self.lease(caller)?;
+        let keys = vec![format!("celery-tasks:celery-task-meta-{id}")];
+        let (reply, _lease) = self
+            .inner
+            .result
+            .command_classified::<(i64, Vec<u8>), _>(READ, &keys, &[], lease)
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(None),
+            1 => {
+                let expected = Uuid::parse_str(id).map_err(|_| Error::UnsupportedTask)?;
+                decode::decode(&reply.1, expected)
+                    .map(Some)
+                    .map_err(Error::Decode)
+            }
+            _ => Err(Error::Corrupt),
+        }
+    }
     /// Reserve only captured manual index ETA children. Count/tuple-byte limits
     /// cover the shared Source unacked namespace, including foreign reservations.
     pub async fn peek_index_candidate(
@@ -720,7 +764,7 @@ impl Jobs {
     ) -> Result<Option<crate::eta::Candidate>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -757,7 +801,7 @@ impl Jobs {
     ) -> Result<crate::eta::Reservation, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -781,7 +825,7 @@ impl Jobs {
     ) -> Result<crate::eta::Reservation, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -964,7 +1008,7 @@ impl Jobs {
     ) -> Result<Option<crate::eta::Reservation>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -986,7 +1030,7 @@ impl Jobs {
     ) -> Result<Option<crate::eta::Reservation>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1019,7 +1063,7 @@ impl Jobs {
     ) -> Result<(), Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1058,7 +1102,7 @@ impl Jobs {
     ) -> Result<(), Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1098,7 +1142,7 @@ impl Jobs {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<Uuid>, Error> {
-        if self.inner.authority != Authority::Fixture {
+        if !self.allows_backup() {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller.clone())?;
@@ -1137,7 +1181,7 @@ impl Jobs {
     ) -> Result<Option<crate::index_protocol::IndexMessage>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1183,7 +1227,7 @@ impl Jobs {
     ) -> Result<bool, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1212,7 +1256,7 @@ impl Jobs {
     ) -> Result<bool, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices
+            Authority::Series | Authority::DefaultServices | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }

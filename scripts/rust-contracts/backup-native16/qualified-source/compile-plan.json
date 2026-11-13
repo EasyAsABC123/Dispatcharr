@@ -1,0 +1,67 @@
+{
+  "state": "UNEXECUTED_REQUIRES_ROOT_REVIEW",
+  "commands": [
+    [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    [
+      "cargo",
+      "build",
+      "--offline",
+      "--locked",
+      "-p",
+      "dispatcharr-job-transport",
+      "--lib"
+    ],
+    [
+      "cargo",
+      "clippy",
+      "--offline",
+      "--locked",
+      "-p",
+      "dispatcharr-store",
+      "-p",
+      "dispatcharr-job-transport",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "dispatcharr-store",
+      "backup_",
+      "--",
+      "--nocapture"
+    ],
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "dispatcharr-job-transport",
+      "backup_application::tests",
+      "--",
+      "--nocapture"
+    ]
+  ],
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m8-backup-job-native-qa-4/source",
+  "fresh_target": "/home/justin/github/Dispatcharr/artifacts/rust/target-m8-backup-source16-native-qa4-1",
+  "TMPDIR": "/home/justin/github/Dispatcharr/artifacts/rust/tmp-m8-backup-source16-native-qa4-1",
+  "env": {
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "copy_ELF_only_after_all_actual_wait_poll0": true,
+  "no_Docker_SQL_Source_Main_or_app_run_authorized": true
+}

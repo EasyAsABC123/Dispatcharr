@@ -317,7 +317,7 @@ mod tests {
 
 // Job-free file APIs only; durable backup/restore jobs remain unsupported.
 mod backup_files;
-pub use backup_files::BackupFiles;
+pub use backup_files::{BackupFiles, BackupJobApi};
 
 #[cfg(test)]
 extern crate self as dispatcharr_store;

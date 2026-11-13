@@ -1,0 +1,136 @@
+{
+  "passed": true,
+  "state": "SETTLED",
+  "pid": 2,
+  "starttime": "25593764",
+  "proc_PID_namespace": "pid:[4026533851]",
+  "started_utc": "2026-11-13T02:05:42.661754+00:00",
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m8-backup-job-native-proposal-1/source",
+  "source_files": 802,
+  "source_map_sha256": "41c7ca94ee547060d1aa0aa5a6d3ad71ee4f1a530ec3f5662bc716714a4a568d",
+  "reviewed_seal_sha256": "bb0f1d85e1746d271c8dc3f98ecbf689f5eb0b3cb06245cc9fd702fe312d93aa",
+  "target": "/home/justin/github/Dispatcharr/artifacts/rust/target-m8-backup-source16-native-qa1-1",
+  "TMPDIR": "/home/justin/github/Dispatcharr/artifacts/rust/tmp-m8-backup-source16-native-qa1-1",
+  "environment_overrides": {
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0",
+    "CARGO_TARGET_DIR": "/home/justin/github/Dispatcharr/artifacts/rust/target-m8-backup-source16-native-qa1-1",
+    "TMPDIR": "/home/justin/github/Dispatcharr/artifacts/rust/tmp-m8-backup-source16-native-qa1-1"
+  },
+  "commands": [
+    {
+      "ordinal": 1,
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "started_utc": "2026-11-13T02:05:42.679992+00:00",
+      "source_before_exact": true,
+      "pid": 24,
+      "starttime": "25593776",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "completed_utc": "2026-11-13T02:05:44.436212+00:00",
+      "original_PID_absent": true,
+      "source_after_exact": true
+    },
+    {
+      "ordinal": 2,
+      "argv": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib"
+      ],
+      "started_utc": "2026-11-13T02:05:44.473337+00:00",
+      "source_before_exact": true,
+      "pid": 51,
+      "starttime": "25593955",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "completed_utc": "2026-11-13T02:06:40.150803+00:00",
+      "original_PID_absent": true,
+      "source_after_exact": true
+    },
+    {
+      "ordinal": 3,
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "-p",
+        "dispatcharr-job-transport",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "started_utc": "2026-11-13T02:06:40.187446+00:00",
+      "source_before_exact": true,
+      "pid": 8429,
+      "starttime": "25599527",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "completed_utc": "2026-11-13T02:07:22.597601+00:00",
+      "original_PID_absent": true,
+      "source_after_exact": true
+    },
+    {
+      "ordinal": 4,
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "backup_",
+        "--",
+        "--nocapture"
+      ],
+      "started_utc": "2026-11-13T02:07:22.633578+00:00",
+      "source_before_exact": true,
+      "pid": 14357,
+      "starttime": "25603771",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "completed_utc": "2026-11-13T02:07:59.351827+00:00",
+      "original_PID_absent": true,
+      "source_after_exact": true
+    },
+    {
+      "ordinal": 5,
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "backup_application::tests",
+        "--",
+        "--nocapture"
+      ],
+      "started_utc": "2026-11-13T02:07:59.387399+00:00",
+      "source_before_exact": true,
+      "pid": 15619,
+      "starttime": "25607446",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "completed_utc": "2026-11-13T02:08:26.059419+00:00",
+      "original_PID_absent": true,
+      "source_after_exact": true
+    }
+  ],
+  "completed_utc": "2026-11-13T02:08:26.096226+00:00"
+}

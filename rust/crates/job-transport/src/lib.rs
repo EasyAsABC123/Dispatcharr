@@ -177,3 +177,6 @@ pub mod scanner_m3u_worker;
 
 #[cfg(test)]
 mod scanner_m3u_peer;
+
+// Explicit create/status adapter; no Main/default intake registration.
+pub mod backup_application;

@@ -128,3 +128,11 @@ scripts/rust-contracts/backup-source16/supplementary-licenses/bytes/celery-5.6.3
 
 # Preserve exact historical XC test stdout, including its final blank line.
 scripts/rust-xc-contracts/profile-vod-authority/native-stdout/native-*.txt -text whitespace=-blank-at-eof
+
+# Preserve exact backup Native16 executed and historical patch bytes.
+scripts/rust-contracts/backup-native16/executed-definition/revision1-to2.diff -text -whitespace
+scripts/rust-contracts/backup-native16/historical/m8-backup-job-native-qa-2/selected-source.diff -text -whitespace
+scripts/rust-contracts/backup-native16/qualified-source/QA3-to-QA4.diff -text -whitespace
+scripts/rust-contracts/backup-native16/qualified-source/selected-source.diff -text -whitespace
+scripts/rust-contracts/backup-native16/executed-definition/build/command-4.stdout -text whitespace=-blank-at-eof
+scripts/rust-contracts/backup-native16/executed-definition/build/command-5.stdout -text whitespace=-blank-at-eof

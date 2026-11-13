@@ -1,0 +1,1216 @@
+--- /dev/null
++++ b/rust/crates/job-transport/src/backup_application.rs
+@@ -0,0 +1,223 @@
++//! Explicit Source16 create/status adapter. Original Dispatcharr authors retain
++//! application credit and licensing. No Main assembly, scheduler, restore or
++//! automatic intake; caller must supply qualified archive tools/clock/handler.
++use crate::{
++    decode::{Metadata, State},
++    protocol::Task,
++    transport::{Config, Error, Jobs},
++    worker::{CreateHandler, Run, Worker},
++};
++use dispatcharr_contracts::BoxFuture;
++use dispatcharr_store::{BackupFiles, BackupJobApi, StoreError};
++use serde_json::{json, Value};
++use std::{
++    sync::{
++        atomic::{AtomicBool, Ordering},
++        Arc,
++    },
++    time::Duration,
++};
++use tokio::sync::{OwnedSemaphorePermit, Semaphore};
++use uuid::Uuid;
++
++struct HttpOwner {
++    _slot: OwnedSemaphorePermit,
++}
++struct Inner {
++    jobs: Jobs,
++    worker: Worker,
++    http: Arc<Semaphore>,
++    closed: AtomicBool,
++}
++#[derive(Clone)]
++pub struct BackupApplication {
++    inner: Arc<Inner>,
++}
++impl BackupApplication {
++    /// Prepare narrow backup authority without starting a worker or HTTP route.
++    pub async fn prepare(
++        broker: &str,
++        backend: &str,
++        handler: Arc<dyn CreateHandler>,
++    ) -> Result<Self, Error> {
++        let jobs = Jobs::connect_backup(broker, backend, Config::default()).await?;
++        let worker = Worker::new_backup(jobs.clone(), handler).map_err(|_| Error::Configuration)?;
++        Ok(Self {
++            inner: Arc::new(Inner {
++                jobs,
++                worker,
++                http: Arc::new(Semaphore::new(4)),
++                closed: AtomicBool::new(false),
++            }),
++        })
++    }
++    pub fn attach(&self, files: BackupFiles) -> BackupFiles {
++        files.with_jobs(Arc::new(self.clone()))
++    }
++    /// Explicit one-job poll, preserving the existing retained physical owner
++    /// through early ACK, actual blocking archive work and result publication.
++    /// Unknown shared heads are not consumed. Dropping this caller is not abort.
++    pub async fn run_once(
++        &self,
++        caller: Arc<dyn Send + Sync>,
++    ) -> Result<Run, crate::worker::Error> {
++        if self.inner.closed.load(Ordering::Acquire) {
++            return Err(crate::worker::Error::Closed);
++        }
++        self.inner.worker.run_once(caller).await
++    }
++    fn lease(&self) -> Result<Arc<HttpOwner>, StoreError> {
++        if self.inner.closed.load(Ordering::Acquire) {
++            return Err(policy_error("Backup API closed"));
++        }
++        let slot = self
++            .inner
++            .http
++            .clone()
++            .try_acquire_owned()
++            .map_err(|_| policy_error("Backup API capacity unavailable"))?;
++        if self.inner.closed.load(Ordering::Acquire) {
++            return Err(policy_error("Backup API closed"));
++        }
++        Ok(Arc::new(HttpOwner { _slot: slot }))
++    }
++}
++fn policy_error(detail: &str) -> StoreError {
++    StoreError::StatusBody(503, json!({"detail":detail}))
++}
++fn transport_error(operation: &str, error: Error) -> StoreError {
++    match error {
++        Error::Closed | Error::Capacity => policy_error("Backup transport capacity unavailable"),
++        Error::UnsupportedTask | Error::Protocol | Error::Decode(_) => {
++            StoreError::Unsupported("Unobserved backup result grammar is not migrated")
++        }
++        // These bounded native diagnostics do not claim Source exception text.
++        _ => StoreError::StatusBody(
++            500,
++            json!({"detail":format!("Failed to {operation}: Native backup transport unavailable")}),
++        ),
++    }
++}
++/// Source16 normal absent/SUCCESS projection. Raised Python exceptions and
++/// tagged values retain an explicit gap; no fabricated exception text.
++pub fn project_status(metadata: Option<Metadata>) -> Result<Value, StoreError> {
++    let Some(meta) = metadata else {
++        return Ok(json!({"state":"pending"}));
++    };
++    if !meta.tagged_values.is_empty() {
++        return Err(StoreError::Unsupported(
++            "Tagged backup result grammar is not migrated",
++        ));
++    }
++    match meta.state {
++        State::Pending => Ok(json!({"state":"pending"})),
++        State::Started => Ok(json!({"state":"started"})),
++        State::Retry => Ok(json!({"state":"retry"})),
++        State::Success => {
++            let result = meta.result.as_object().ok_or(StoreError::Unsupported(
++                "Non-object backup result grammar is not migrated",
++            ))?;
++            if result.get("status") == Some(&json!("completed")) {
++                Ok(json!({"state":"completed","result":meta.result}))
++            } else {
++                Ok(
++                    json!({"state":"failed","error":result.get("error").cloned().unwrap_or(json!("Unknown error"))}),
++                )
++            }
++        }
++        State::Failure | State::Revoked => Err(StoreError::Unsupported(
++            "Raised backup task exception grammar is not migrated",
++        )),
++    }
++}
++impl BackupJobApi for BackupApplication {
++    fn create(&self) -> BoxFuture<'_, Result<String, StoreError>> {
++        Box::pin(async move {
++            let owner = self.lease()?;
++            let id = Uuid::new_v4();
++            self.inner
++                .jobs
++                .publish(&Task::CreateBackup, id, owner)
++                .await
++                .map_err(|e| transport_error("start backup", e))?;
++            Ok(id.to_string())
++        })
++    }
++    fn status<'a>(&'a self, task_id: &'a str) -> BoxFuture<'a, Result<Value, StoreError>> {
++        Box::pin(async move {
++            let owner = self.lease()?;
++            let meta = self
++                .inner
++                .jobs
++                .read_backup(task_id, owner)
++                .await
++                .map_err(|e| transport_error("get task status", e))?;
++            project_status(meta)
++        })
++    }
++    fn shutdown(&self, grace: Duration) -> BoxFuture<'_, bool> {
++        Box::pin(async move {
++            self.inner.closed.store(true, Ordering::Release);
++            self.inner.http.close();
++            let deadline = tokio::time::Instant::now() + grace;
++            while self.inner.http.available_permits() != 4 {
++                if tokio::time::Instant::now() >= deadline {
++                    return false;
++                }
++                tokio::time::sleep(Duration::from_millis(5)).await;
++            }
++            let remaining = deadline.saturating_duration_since(tokio::time::Instant::now());
++            if self.inner.worker.shutdown(remaining).await.is_err() {
++                return false;
++            }
++            let remaining = deadline.saturating_duration_since(tokio::time::Instant::now());
++            self.inner.jobs.shutdown(remaining).await.is_ok()
++        })
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    fn vectors() -> Value {
++        serde_json::from_str(include_str!("backup_source16_vectors.json")).unwrap()
++    }
++    #[test]
++    fn actual_source16_absent_and_completed_results_project_without_new_ids_or_clocks() {
++        let v = vectors();
++        assert_eq!(project_status(None).unwrap(), v["actual_pending"]);
++        let raw = serde_json::to_vec(&v["actual_backend"]).unwrap();
++        let id = Uuid::parse_str(v["actual_backend"]["task_id"].as_str().unwrap()).unwrap();
++        let metadata = crate::decode::decode(&raw, id).unwrap();
++        assert_eq!(
++            project_status(Some(metadata)).unwrap(),
++            v["actual_completed"]
++        );
++    }
++    #[test]
++    fn unobserved_nonobject_success_and_tagged_values_keep_explicit_gaps() {
++        let v = vectors();
++        let id = Uuid::parse_str(v["actual_backend"]["task_id"].as_str().unwrap()).unwrap();
++        let mut metadata =
++            crate::decode::decode(&serde_json::to_vec(&v["actual_backend"]).unwrap(), id).unwrap();
++        metadata.result = json!([]);
++        assert!(matches!(
++            project_status(Some(metadata)),
++            Err(StoreError::Unsupported(_))
++        ));
++        let mut metadata =
++            crate::decode::decode(&serde_json::to_vec(&v["actual_backend"]).unwrap(), id).unwrap();
++        metadata.tagged_values.push(crate::decode::TaggedValue {
++            kind: "bytes".to_owned(),
++            encoded_value: json!("x"),
++        });
++        assert!(matches!(
++            project_status(Some(metadata)),
++            Err(StoreError::Unsupported(_))
++        ));
++    }
++}
++
++#[cfg(test)]
++#[path = "backup_source16_peer.rs"]
++mod source16_peer;
+--- /dev/null
++++ b/rust/crates/job-transport/src/backup_source16_peer.rs
+@@ -0,0 +1,594 @@
++//! Actual Native Source16 credential/router/worker/archive capture. No Source app.
++//! Original Dispatcharr contributors retain application credit and licensing.
++use super::*;
++use crate::{
++    transport::Config,
++    worker::{ArchiveHandler, Run},
++};
++use chrono::{Datelike, Timelike, Utc};
++use dispatcharr_backups::{Error as ArchiveError, SourceClock};
++use dispatcharr_store::{
++    initialize_empty_database, AuthConfig, AuthService, NotificationCache, SchemaInitialization,
++    Store,
++};
++use serde_json::{json, Map, Value};
++use sha2::{Digest, Sha256};
++use std::{
++    collections::BTreeMap,
++    net::SocketAddr,
++    path::{Path, PathBuf},
++    sync::Arc,
++    time::{Duration, SystemTime},
++};
++const TABLES: [&str; 11] = [
++    "accounts_user",
++    "m3u_m3uaccount",
++    "m3u_m3uaccountprofile",
++    "vod_movie",
++    "vod_m3umovierelation",
++    "vod_series",
++    "vod_episode",
++    "vod_m3uepisoderelation",
++    "core_coresettings",
++    "core_systemnotification",
++    "core_notificationdismissal",
++];
++fn hex(data: &[u8]) -> String {
++    data.iter().map(|b| format!("{b:02x}")).collect()
++}
++fn hash(data: &[u8]) -> String {
++    format!("{:x}", Sha256::digest(data))
++}
++fn save(path: &Path, value: &Value) {
++    let bytes = serde_json::to_vec_pretty(value).unwrap();
++    assert!(bytes.len() <= 134217728);
++    std::fs::write(path, bytes).unwrap();
++}
++async fn rows(store: &Store, table: &str) -> Value {
++    assert!(TABLES.contains(&table) || table == "core_systemevent");
++    let value: Value = sqlx::query_scalar(&format!(
++        "SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY id),'[]'::jsonb) FROM {table} t"
++    ))
++    .fetch_one(store.pool())
++    .await
++    .unwrap();
++    let a = value.as_array().unwrap();
++    assert!(a.len() <= 10000);
++    assert!(serde_json::to_vec(&value).unwrap().len() <= 8388608);
++    value
++}
++async fn snapshot(store: &Store) -> Value {
++    let mut tables = BTreeMap::new();
++    let mut sequences = BTreeMap::new();
++    for table in TABLES {
++        tables.insert(table, rows(store, table).await);
++        let sequence:Value=sqlx::query_scalar(&format!("SELECT jsonb_build_object('last_value',last_value,'is_called',is_called) FROM {table}_id_seq")).fetch_one(store.pool()).await.unwrap();
++        sequences.insert(table, sequence);
++    }
++    json!({"tables":tables,"sequences":sequences})
++}
++
++async fn redis_snapshot(url: &str, db: u8) -> Value {
++    let client = redis::Client::open(url).unwrap();
++    assert_eq!(client.get_connection_info().redis.db, i64::from(db));
++    let mut connection = client.get_multiplexed_async_connection().await.unwrap();
++    let mut cursor = 0u64;
++    let mut rows = BTreeMap::new();
++    let mut used = 0usize;
++    let mut done = false;
++    for _ in 0..128 {
++        let (next, keys): (u64, Vec<Vec<u8>>) = redis::cmd("SCAN")
++            .arg(cursor)
++            .arg("COUNT")
++            .arg(100)
++            .query_async(&mut connection)
++            .await
++            .unwrap();
++        cursor = next;
++        for key in keys {
++            assert!(key.len() <= 1024 && rows.len() < 1000);
++            let kind: String = redis::cmd("TYPE")
++                .arg(&key)
++                .query_async(&mut connection)
++                .await
++                .unwrap();
++            let dump: Option<Vec<u8>> = redis::cmd("DUMP")
++                .arg(&key)
++                .query_async(&mut connection)
++                .await
++                .unwrap();
++            let ttl: i64 = redis::cmd("PTTL")
++                .arg(&key)
++                .query_async(&mut connection)
++                .await
++                .unwrap();
++            let mut row = json!({"key_hex":hex(&key),"type":kind,"dump_hex":dump.as_ref().map(|v|hex(v)),"pttl":ttl});
++            used += key.len() + dump.as_ref().map_or(0, Vec::len);
++            assert!(used <= 8388608);
++            if kind == "string" {
++                let value: Option<Vec<u8>> = redis::cmd("GET")
++                    .arg(&key)
++                    .query_async(&mut connection)
++                    .await
++                    .unwrap();
++                row["value_hex"] = json!(value.map(|v| hex(&v)));
++            } else if kind == "list" {
++                let count: u64 = redis::cmd("LLEN")
++                    .arg(&key)
++                    .query_async(&mut connection)
++                    .await
++                    .unwrap();
++                assert!(count <= 1000);
++                let values: Vec<Vec<u8>> = redis::cmd("LRANGE")
++                    .arg(&key)
++                    .arg(0)
++                    .arg(-1)
++                    .query_async(&mut connection)
++                    .await
++                    .unwrap();
++                assert!(values.iter().map(Vec::len).sum::<usize>() <= 8388608);
++                row["list_hex"] = json!(values.iter().map(|v| hex(v)).collect::<Vec<_>>());
++            }
++            rows.insert(hex(&key), row);
++        }
++        if cursor == 0 {
++            done = true;
++            break;
++        }
++    }
++    assert!(done);
++    json!({"database":db,"capture_bytes":used,"rows":rows.into_values().collect::<Vec<_>>()})
++}
++async fn state(store: &Store, urls: &[String; 3], root: &Path) -> Value {
++    let mut redis = Vec::new();
++    for (db, url) in urls.iter().enumerate() {
++        redis.push(redis_snapshot(url, (db + 1) as u8).await);
++    }
++    let mut files = Vec::new();
++    if root.exists() {
++        for entry in std::fs::read_dir(root).unwrap() {
++            let p = entry.unwrap().path();
++            assert!(p.is_file() && !p.is_symlink());
++            assert!(p.metadata().unwrap().len() <= 8388608);
++            let bytes = std::fs::read(&p).unwrap();
++            files.push(json!({"name":p.file_name().unwrap().to_str().unwrap(),"bytes":bytes.len(),"sha256":hash(&bytes)}));
++        }
++    }
++    files.sort_by_key(|x| x["name"].as_str().unwrap().to_owned());
++    json!({"SQL":snapshot(store).await,"users":rows(store,"accounts_user").await,"events":rows(store,"core_systemevent").await,"redis":redis,"files":files})
++}
++struct OwnUtcClock;
++impl SourceClock for OwnUtcClock {
++    fn filename_timestamp(&self) -> Result<String, ArchiveError> {
++        Ok(Utc::now().format("%Y.%m.%d.%H.%M.%S").to_string())
++    }
++    fn created_at_utc(&self) -> Result<String, ArchiveError> {
++        Ok(Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Micros, false))
++    }
++    fn zip_timestamp(&self, time: SystemTime) -> Result<zip::DateTime, ArchiveError> {
++        let dt: chrono::DateTime<Utc> = time.into();
++        zip::DateTime::from_date_and_time(
++            dt.year().try_into().map_err(|_| ArchiveError::Metadata)?,
++            dt.month() as u8,
++            dt.day() as u8,
++            dt.hour() as u8,
++            dt.minute() as u8,
++            dt.second() as u8,
++        )
++        .map_err(|_| ArchiveError::Metadata)
++    }
++}
++#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
++#[ignore = "reviewed owned Native Source16 PG/Redis/archive fixture only; no Source/Main"]
++async fn source16_real_credentials_router_and_worker_capture() {
++    assert_eq!(
++        std::env::var("BACKUP_SOURCE16_NATIVE").as_deref(),
++        Ok("owned-native-only")
++    );
++    let database = std::env::var("POSTGRES_DB").unwrap();
++    let nonce = database
++        .strip_prefix("rust_probe_backupjob_native_")
++        .unwrap();
++    assert_eq!(nonce.len(), 10);
++    assert!(nonce
++        .bytes()
++        .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)));
++    let input = PathBuf::from(std::env::var("BACKUP_SOURCE16_INPUTS").unwrap());
++    let output = PathBuf::from(std::env::var("BACKUP_SOURCE16_OUTPUT").unwrap());
++    assert!(output.is_dir());
++    let report_path = output.join("native-source16.json");
++    assert!(!report_path.exists());
++    let source_bytes = std::fs::read(input.join("Source16-projection.json")).unwrap();
++    assert_eq!(
++        hash(&source_bytes),
++        "5f0ce76f0d308da14cce1c0f57899577dd14732e1bc818ee916864d2d1902760"
++    );
++    let source: Value = serde_json::from_slice(&source_bytes).unwrap();
++    let plan: Value =
++        serde_json::from_slice(&std::fs::read(input.join("plan.json")).unwrap()).unwrap();
++    let binding: Value =
++        serde_json::from_slice(&std::fs::read(input.join("Source-binding.json")).unwrap()).unwrap();
++    assert_eq!(binding["mode"], "projected-backup-source16-reference-v1");
++    assert_eq!(
++        binding["Original_raw_sha256"],
++        "daa2835e76df10e6dece88473d4b08d2ce1e4ad82680de3296de99604b54a288"
++    );
++    assert_eq!(binding["Source16_projection_sha256"], hash(&source_bytes));
++    assert_eq!(
++        binding["plan_sha256"],
++        hash(&std::fs::read(input.join("plan.json")).unwrap())
++    );
++    assert_eq!(plan["cases"].as_array().unwrap().len(), 16);
++    let url = std::env::var("DATABASE_URL").unwrap();
++    let guard = Store::connect(&url, 1).await.unwrap();
++    assert_eq!(
++        sqlx::query_scalar::<_, String>("SELECT current_database()")
++            .fetch_one(guard.pool())
++            .await
++            .unwrap(),
++        database
++    );
++    guard.pool().close().await;
++    drop(guard);
++    assert!(matches!(
++        initialize_empty_database(&url).await.unwrap(),
++        SchemaInitialization::Created { .. }
++    ));
++    let store = Store::connect(&url, 4).await.unwrap();
++    let urls: [String; 3] = [
++        std::env::var("BACKUP_CACHE_URL").unwrap(),
++        std::env::var("CELERY_BROKER_URL").unwrap(),
++        std::env::var("CELERY_RESULT_BACKEND").unwrap(),
++    ];
++    for (db, url) in urls.iter().enumerate() {
++        let c = redis::Client::open(url.as_str()).unwrap();
++        let i = c.get_connection_info();
++        assert_eq!(i.redis.db, (db + 1) as i64);
++        assert_eq!(i.redis.password.as_deref(), Some("playback-fixture-only"));
++        assert!(
++            matches!(&i.addr,redis::ConnectionAddr::Tcp(host,port)if host=="127.0.0.1"&&*port==6379)
++        );
++    }
++    let backup_root = PathBuf::from(format!("/data/backups/{database}"));
++    let scratch_root = PathBuf::from(format!("/data/scratch/{database}"));
++    assert!(!backup_root.exists());
++    let mut report = json!({"capture_complete":false,"passed":false,"capture_only_passed_field":true,"Source_application_runs":0,"Main_application_runs":0,"Source_reference_mode":binding["mode"],"Source_reference_sha256":hash(&source_bytes),"Original_Source_raw_sha256":binding["Original_raw_sha256"],"database":database,"actual_request_count":0,"requests":[],"initial":state(&store,&urls,&backup_root).await,"native_actual_queue":"celery","Source_fixture_queue_override":source["before_Celery_configuration"]["owned_queue"],"fixture_UTC_clock_only":true});
++    save(&report_path, &report);
++    sqlx::query("INSERT INTO core_coresettings(key,name,value)VALUES('network_access','Network Access',$1)ON CONFLICT(key)DO UPDATE SET value=EXCLUDED.value").bind(json!({"UI":"127.0.0.0/8"})).execute(store.pool()).await.unwrap();
++    assert_eq!(rows(&store, "accounts_user").await, json!([]));
++    let seed_clock = Utc::now().to_rfc3339();
++    let mut users = BTreeMap::new();
++    for role in plan["roles"].as_array().unwrap() {
++        let alias = role["alias"].as_str().unwrap();
++        let mut user = source["seed_users"]
++            .as_array()
++            .unwrap()
++            .iter()
++            .find(|u| u["id"] == role["id"])
++            .unwrap()
++            .clone();
++        user["username"] = json!(format!("rust-probe-backupjob-native-{nonce}-{alias}"));
++        user["api_key"] = json!(format!("backup-native-{nonce}-{alias}"));
++        user["password"] = json!("!");
++        user["date_joined"] = json!(seed_clock);
++        sqlx::query(
++            "INSERT INTO accounts_user SELECT * FROM jsonb_populate_record(NULL::accounts_user,$1)",
++        )
++        .bind(&user)
++        .execute(store.pool())
++        .await
++        .unwrap();
++        users.insert(alias.to_owned(), user);
++    }
++    sqlx::query("SELECT setval('accounts_user_id_seq',3,true)")
++        .execute(store.pool())
++        .await
++        .unwrap();
++    // Match only the reviewed Source fixture's initial named cache context.
++    // No auth history, event, request effect or arbitrary Source key is reset.
++    let seed_cache = &source["seed_snapshot"]["redis"][0];
++    assert_eq!(seed_cache["database"], 1);
++    let expected_keys = std::collections::BTreeSet::from([
++        ":1:coresettings:group:network_access",
++        ":1:coresettings:group:system_settings",
++        ":1:coresettings:groupver:network_access",
++        "core:version_check_dispatch_lock",
++        "dvr:recover_dispatch_lock",
++    ]);
++    let cache_client = redis::Client::open(urls[0].as_str()).unwrap();
++    let mut seed_connection = cache_client
++        .get_multiplexed_async_connection()
++        .await
++        .unwrap();
++    let initial_cache_keys: u64 = redis::cmd("DBSIZE")
++        .query_async(&mut seed_connection)
++        .await
++        .unwrap();
++    assert_eq!(
++        initial_cache_keys, 0,
++        "FreshOwnedCacheBeforeSourceContextSeed"
++    );
++    let mut actual_keys = std::collections::BTreeSet::new();
++    let mut seed_receipts = Vec::new();
++    for row in seed_cache["rows"].as_array().unwrap() {
++        let key = decode_hex(row["key_hex"].as_str().unwrap());
++        let name = std::str::from_utf8(&key).unwrap().to_owned();
++        assert!(expected_keys.contains(name.as_str()));
++        assert!(actual_keys.insert(name.clone()));
++        assert_eq!(row["type"], "string");
++        let dump = decode_hex(row["dump_hex"].as_str().unwrap());
++        assert!(dump.len() <= 65536);
++        let ttl = row["pttl"].as_i64().unwrap();
++        assert!((1..=3600000).contains(&ttl));
++        let restored: String = redis::cmd("RESTORE")
++            .arg(&key)
++            .arg(ttl)
++            .arg(&dump)
++            .query_async(&mut seed_connection)
++            .await
++            .unwrap();
++        assert_eq!(restored, "OK");
++        let read: Option<Vec<u8>> = redis::cmd("DUMP")
++            .arg(&key)
++            .query_async(&mut seed_connection)
++            .await
++            .unwrap();
++        assert_eq!(read.as_deref(), Some(dump.as_slice()));
++        seed_receipts.push(json!({"key_hex":row["key_hex"],"Source_dump_sha256":hash(&dump),"restored_dump_sha256":hash(read.as_ref().unwrap()),"Source_seed_pttl":ttl,"restored":restored}));
++    }
++    assert_eq!(
++        actual_keys,
++        expected_keys.into_iter().map(str::to_owned).collect()
++    );
++    drop(seed_connection);
++    report["Source_cache_context_seed"] = json!({"before_owned_cache_keys":0,"strict_five_key_allowlist":true,"before_any_request_or_auth_worker":true,"auth_history_or_events_reset":false,"rows":seed_receipts});
++    report["seed"] = state(&store, &urls, &backup_root).await;
++    report["seed_clock"] = json!(seed_clock);
++    save(&report_path, &report);
++    let handler = ArchiveHandler::new_configured(
++        dispatcharr_backups::PgConfig {
++            host: "127.0.0.1".into(),
++            port: 5432,
++            user: "dispatch".into(),
++            database: database.clone(),
++            password: Some("playback-fixture-only".into()),
++            options: BTreeMap::new(),
++        },
++        dispatcharr_backups::Runtime {
++            pg_dump: PathBuf::from("/usr/lib/postgresql/17/bin/pg_dump"),
++            pg_restore: PathBuf::from("/usr/lib/postgresql/17/bin/pg_restore"),
++            psql: PathBuf::from("/usr/bin/psql"),
++        },
++        backup_root.clone(),
++        scratch_root,
++        Arc::new(OwnUtcClock),
++        dispatcharr_backups::Limits {
++            database_bytes: 67108864,
++            archive_bytes: 8388608,
++            command_timeout: Duration::from_secs(90),
++            ..Default::default()
++        },
++    )
++    .unwrap();
++    let app = BackupApplication::prepare(&urls[1], &urls[2], Arc::new(handler))
++        .await
++        .unwrap();
++    let cache = NotificationCache::connect(&urls[0]).await.unwrap();
++    let auth = AuthService::new(
++        store.clone(),
++        AuthConfig::new("backup-job-fixture-only".into()).unwrap(),
++    )
++    .with_notification_cache(cache);
++    let files = app.attach(
++        BackupFiles::new(auth, backup_root.clone(), "backup-job-fixture-only".into()).unwrap(),
++    );
++    let retained_files = files.clone();
++    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
++    let address = listener.local_addr().unwrap();
++    let (stop, stopped) = tokio::sync::oneshot::channel();
++    let server = tokio::spawn(async move {
++        axum::serve(
++            listener,
++            files
++                .router()
++                .into_make_service_with_connect_info::<SocketAddr>(),
++        )
++        .with_graceful_shutdown(async {
++            let _ = stopped.await;
++        })
++        .await
++    });
++    let client = reqwest::Client::builder()
++        .timeout(Duration::from_secs(15))
++        .redirect(reqwest::redirect::Policy::none())
++        .build()
++        .unwrap();
++    let mut created_id = String::new();
++    let mut created_token = String::new();
++    let unknown = format!("never-created-{nonce}");
++    let mut filename = String::new();
++    for spec in plan["cases"].as_array().unwrap() {
++        let ordinal = spec["ordinal"].as_u64().unwrap();
++        if ordinal == 13 {
++            report["worker_began_utc"] = json!(Utc::now().to_rfc3339());
++            save(&report_path, &report);
++            let run = tokio::time::timeout(Duration::from_secs(90), app.run_once(Arc::new(())))
++                .await
++                .unwrap()
++                .unwrap();
++            report["worker_completed_utc"] = json!(Utc::now().to_rfc3339());
++            report["worker_run"] = json!(format!("{run:?}"));
++            assert!(matches!(run, Run::Completed(_)));
++            let jobs = Jobs::connect_backup(&urls[1], &urls[2], Config::default())
++                .await
++                .unwrap();
++            let meta = jobs
++                .read_backup(&created_id, Arc::new(()))
++                .await
++                .unwrap()
++                .unwrap();
++            filename = meta.result["filename"].as_str().unwrap().to_owned();
++            report["actual_result_metadata"] =
++                json!({"task_id":meta.task_id,"result":meta.result,"date_done":meta.date_done});
++            assert!(jobs.shutdown(Duration::from_secs(5)).await.is_ok());
++            save(&report_path, &report);
++        }
++        let mut path = spec["path_template"]
++            .as_str()
++            .unwrap()
++            .replace("{created_task}", &created_id)
++            .replace("{unknown_task}", &unknown)
++            .replace("{completed_filename}", &filename);
++        if let Some(selector) = spec["token_selector"].as_str() {
++            let token = match selector {
++                "created_task_token" => created_token.clone(),
++                "unknown_task_token" => backup_token(&unknown),
++                "invalid_literal" => "invalid-fixture-token".into(),
++                _ => panic!("UnknownFixedTokenSelector"),
++            };
++            path.push_str("?token=");
++            path.push_str(&token);
++        }
++        let mut headers = BTreeMap::new();
++        if let Some(alias) = spec["auth"]["x_api_key"].as_str() {
++            headers.insert(
++                "x-api-key".to_owned(),
++                users[alias]["api_key"].as_str().unwrap().to_owned(),
++            );
++        }
++        if let Some(literal) = spec["auth"]["bearer_literal"].as_str() {
++            headers.insert("authorization".into(), format!("Bearer {literal}"));
++        }
++        let mut row = json!({"ordinal":ordinal,"name":spec["name"],"method":spec["method"],"path":path,"auth_selectors":spec["auth"],"raw_headers_private":headers.iter().map(|(k,v)|(k.clone(),json!(hex(v.as_bytes())))).collect::<Map<_,_>>(),"before":state(&store,&urls,&backup_root).await,"began_utc":Utc::now().to_rfc3339()});
++        report["requests"].as_array_mut().unwrap().push(row.clone());
++        save(&report_path, &report);
++        let mut request = client
++            .request(
++                spec["method"]
++                    .as_str()
++                    .unwrap()
++                    .parse::<reqwest::Method>()
++                    .unwrap(),
++                format!("http://{address}{path}"),
++            )
++            .header("accept", "application/json");
++        for (k, v) in headers {
++            request = request.header(k, v);
++        }
++        if let Some(raw) = spec["raw_body_ascii"].as_str() {
++            request = request
++                .header("content-type", spec["content_type"].as_str().unwrap())
++                .body(raw.to_owned());
++        }
++        let mut response = request.send().await.unwrap();
++        let status = response.status().as_u16();
++        let response_headers = response
++            .headers()
++            .iter()
++            .map(|(k, v)| (k.to_string(), json!(hex(v.as_bytes()))))
++            .collect::<Map<_, _>>();
++        assert!(serde_json::to_vec(&response_headers).unwrap().len() <= 65536);
++        let mut bytes = Vec::new();
++        while let Some(chunk) = response.chunk().await.unwrap() {
++            assert!(bytes.len() + chunk.len() <= if ordinal == 16 { 8388608 } else { 65536 });
++            bytes.extend_from_slice(&chunk);
++        }
++        let parsed: Value = serde_json::from_slice(&bytes).unwrap_or(Value::Null);
++        row["completed_utc"] = json!(Utc::now().to_rfc3339());
++        row["status"] = json!(status);
++        row["headers_hex"] = response_headers.into();
++        row["body_hex"] = json!(hex(&bytes));
++        row["body_bytes"] = json!(bytes.len());
++        row["body_sha256"] = json!(hash(&bytes));
++        row["json"] = parsed.clone();
++        row["after"] = state(&store, &urls, &backup_root).await;
++        *report["requests"]
++            .as_array_mut()
++            .unwrap()
++            .last_mut()
++            .unwrap() = row;
++        report["actual_request_count"] = json!(ordinal);
++        save(&report_path, &report);
++        if ordinal == 4 {
++            created_id = parsed["task_id"]
++                .as_str()
++                .expect("CannotInventTaskIDAfterFailedCreate")
++                .to_owned();
++            created_token = parsed["task_token"].as_str().unwrap().to_owned();
++            assert_eq!(created_token, backup_token(&created_id));
++        }
++    }
++    let before_guards = state(&store, &urls, &backup_root).await;
++    let jobs = &app.inner.jobs;
++    let id = uuid::Uuid::new_v4();
++    assert_eq!(
++        jobs.publish(
++            &crate::protocol::Task::RestoreBackup {
++                filename: "unexecuted.zip".into()
++            },
++            id,
++            Arc::new(())
++        )
++        .await
++        .unwrap_err(),
++        crate::transport::Error::UnsupportedTask
++    );
++    assert_eq!(
++        jobs.publish_index(
++            &crate::index_protocol::IndexTask::Initial { source_id: 1 },
++            id,
++            Arc::new(())
++        )
++        .await
++        .unwrap_err(),
++        crate::transport::Error::UnsupportedTask
++    );
++    assert_eq!(
++        jobs.read_index(id, Arc::new(())).await.unwrap_err(),
++        crate::transport::Error::UnsupportedTask
++    );
++    assert_eq!(
++        jobs.read_refresh(id, 1, Arc::new(())).await.unwrap_err(),
++        crate::transport::Error::UnsupportedTask
++    );
++    assert_eq!(
++        jobs.peek_series(Arc::new(())).await.unwrap_err(),
++        crate::transport::Error::UnsupportedTask
++    );
++    report["native_only_family_guards"] = json!({"controls":5,"all_UnsupportedTask":true,"before":before_guards,"after":state(&store,&urls,&backup_root).await,"new_Source_requests":0});
++    save(&report_path, &report);
++    drop(client);
++    assert!(stop.send(()).is_ok());
++    assert!(tokio::time::timeout(Duration::from_secs(15), server)
++        .await
++        .unwrap()
++        .unwrap()
++        .is_ok());
++    report["HTTP_listener_joined"] = json!(true);
++    report["backups_shutdown"] = json!(retained_files.shutdown(Duration::from_secs(15)).await);
++    report["final"] = state(&store, &urls, &backup_root).await;
++    store.pool().close().await;
++    report["pool_metadata_after_close"] = json!({"size":store.pool().size(),"idle":store.pool().num_idle(),"closed":store.pool().is_closed(),"external_actual_backend_absence_required":true});
++    report["capture_complete"] = json!(true);
++    save(&report_path, &report);
++}
++fn backup_token(id: &str) -> String {
++    let mut block = [0u8; 64];
++    let key = b"backup-job-fixture-only";
++    block[..key.len()].copy_from_slice(key);
++    let mut inner = Sha256::new();
++    inner.update(block.map(|x| x ^ 0x36));
++    inner.update(id.as_bytes());
++    let mut outer = Sha256::new();
++    outer.update(block.map(|x| x ^ 0x5c));
++    outer.update(inner.finalize());
++    format!("{:x}", outer.finalize())[..32].to_owned()
++}
++
++fn decode_hex(raw: &str) -> Vec<u8> {
++    assert!(raw.len() <= 131072 && raw.len() % 2 == 0);
++    raw.as_bytes()
++        .chunks_exact(2)
++        .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).unwrap(), 16).unwrap())
++        .collect()
++}
+--- /dev/null
++++ b/rust/crates/job-transport/src/backup_source16_vectors.json
+@@ -0,0 +1,27 @@
++{
++  "Source_original_raw_sha256": "daa2835e76df10e6dece88473d4b08d2ce1e4ad82680de3296de99604b54a288",
++  "Source_framework_forced_auth": false,
++  "actual_pending": {
++    "state": "pending"
++  },
++  "actual_completed": {
++    "state": "completed",
++    "result": {
++      "status": "completed",
++      "filename": "dispatcharr-backup-2026.11.13.01.24.19.zip",
++      "size": 36960
++    }
++  },
++  "actual_backend": {
++    "status": "SUCCESS",
++    "result": {
++      "status": "completed",
++      "filename": "dispatcharr-backup-2026.11.13.01.24.19.zip",
++      "size": 36960
++    },
++    "traceback": null,
++    "children": [],
++    "date_done": "2026-11-13T01:24:19.597940+00:00",
++    "task_id": "4a375f35-a74f-44ab-9739-5506140feabe"
++  }
++}
+--- a/rust/crates/job-transport/src/lib.rs
++++ b/rust/crates/job-transport/src/lib.rs
+@@ -177,3 +177,6 @@
+ 
+ #[cfg(test)]
+ mod scanner_m3u_peer;
++
++// Explicit create/status adapter; no Main/default intake registration.
++pub mod backup_application;
+--- a/rust/crates/job-transport/src/transport.rs
++++ b/rust/crates/job-transport/src/transport.rs
+@@ -105,6 +105,7 @@
+     Refresh,
+     Series,
+     DefaultServices,
++    Backup,
+ }
+ impl Jobs {
+     /// Test-only authority: copied DB + isolated loopback RedisDB8/9. There is
+@@ -150,6 +151,14 @@
+             Authority::Fixture,
+         )
+         .await
++    }
++    /// Explicit create/status-only authority. Starts no consumer; grants no
++    /// restore/index/refresh/default family or implicit Main registration.
++    pub async fn connect_backup(broker: &str, result: &str, config: Config) -> Result<Self, Error> {
++        Self::connect_owned(broker, result, config, String::new(), Authority::Backup).await
++    }
++    pub(crate) fn allows_backup(&self) -> bool {
++        matches!(self.inner.authority, Authority::Fixture | Authority::Backup)
+     }
+     /// Production connection authority for programme-index tasks only. This
+     /// neither starts a consumer nor grants backup/restore publication/execution.
+@@ -276,7 +285,7 @@
+     ) -> Result<Arc<crate::eta::Pool>, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -346,7 +355,9 @@
+         id: Uuid,
+         caller: Arc<dyn Send + Sync>,
+     ) -> Result<Published, Error> {
+-        if self.inner.authority != Authority::Fixture {
++        if !self.allows_backup()
++            || (self.inner.authority == Authority::Backup && !matches!(task, Task::CreateBackup))
++        {
+             return Err(Error::UnsupportedTask);
+         }
+         let lease = self.lease(caller)?;
+@@ -632,7 +643,7 @@
+     ) -> Result<Published, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -670,7 +681,7 @@
+     ) -> Result<Option<crate::index_protocol::IndexResult>, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -711,6 +722,39 @@
+             _ => Err(Error::Corrupt),
+         }
+     }
++    /// Source accepts opaque task IDs. Read the exact key even when an ID is
++    /// not a UUID; absent values remain PENDING. Existing non-UUID result
++    /// payload grammar is deliberately unsupported rather than fabricated.
++    pub async fn read_backup(
++        &self,
++        id: &str,
++        caller: Arc<dyn Send + Sync>,
++    ) -> Result<Option<Metadata>, Error> {
++        if !self.allows_backup() {
++            return Err(Error::UnsupportedTask);
++        }
++        if id.is_empty() || id.len() > 1024 || id.contains('\0') {
++            return Err(Error::Protocol);
++        }
++        let lease = self.lease(caller)?;
++        let keys = vec![format!("celery-tasks:celery-task-meta-{id}")];
++        let (reply, _lease) = self
++            .inner
++            .result
++            .command_classified::<(i64, Vec<u8>), _>(READ, &keys, &[], lease)
++            .await
++            .map_err(map)?;
++        match reply.0 {
++            0 => Ok(None),
++            1 => {
++                let expected = Uuid::parse_str(id).map_err(|_| Error::UnsupportedTask)?;
++                decode::decode(&reply.1, expected)
++                    .map(Some)
++                    .map_err(Error::Decode)
++            }
++            _ => Err(Error::Corrupt),
++        }
++    }
+     /// Reserve only captured manual index ETA children. Count/tuple-byte limits
+     /// cover the shared Source unacked namespace, including foreign reservations.
+     pub async fn peek_index_candidate(
+@@ -720,7 +764,7 @@
+     ) -> Result<Option<crate::eta::Candidate>, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -757,7 +801,7 @@
+     ) -> Result<crate::eta::Reservation, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -781,7 +825,7 @@
+     ) -> Result<crate::eta::Reservation, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -964,7 +1008,7 @@
+     ) -> Result<Option<crate::eta::Reservation>, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -986,7 +1030,7 @@
+     ) -> Result<Option<crate::eta::Reservation>, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -1019,7 +1063,7 @@
+     ) -> Result<(), Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -1058,7 +1102,7 @@
+     ) -> Result<(), Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -1098,7 +1142,7 @@
+         &self,
+         caller: Arc<dyn Send + Sync>,
+     ) -> Result<Option<Uuid>, Error> {
+-        if self.inner.authority != Authority::Fixture {
++        if !self.allows_backup() {
+             return Err(Error::UnsupportedTask);
+         }
+         let lease = self.lease(caller.clone())?;
+@@ -1137,7 +1181,7 @@
+     ) -> Result<Option<crate::index_protocol::IndexMessage>, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -1183,7 +1227,7 @@
+     ) -> Result<bool, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+@@ -1212,7 +1256,7 @@
+     ) -> Result<bool, Error> {
+         if matches!(
+             self.inner.authority,
+-            Authority::Series | Authority::DefaultServices
++            Authority::Series | Authority::DefaultServices | Authority::Backup
+         ) {
+             return Err(Error::UnsupportedTask);
+         }
+--- a/rust/crates/job-transport/src/worker.rs
++++ b/rust/crates/job-transport/src/worker.rs
+@@ -51,6 +51,36 @@
+     limits: Limits,
+ }
+ impl ArchiveHandler {
++    /// Explicit non-destructive PostgreSQL dump configuration. The caller
++    /// supplies qualified tools, timezone clock and owned runtime lifecycle.
++    /// Source failure-text parity and full packaging are separate gates.
++    pub fn new_configured(
++        config: PgConfig,
++        runtime: Runtime,
++        backup_root: PathBuf,
++        scratch_root: PathBuf,
++        clock: Arc<dyn SourceClock + Send + Sync>,
++        limits: Limits,
++    ) -> Result<Self, Error> {
++        if config.database.is_empty()
++            || config.host.is_empty()
++            || config.user.is_empty()
++            || config.port == 0
++            || !runtime.pg_dump.is_absolute()
++            || !backup_root.is_absolute()
++            || !scratch_root.is_absolute()
++        {
++            return Err(Error::Configuration);
++        }
++        Ok(Self {
++            config,
++            runtime,
++            backup_root,
++            scratch_root,
++            clock,
++            limits,
++        })
++    }
+     pub fn new_fixture(
+         config: PgConfig,
+         runtime: Runtime,
+@@ -131,6 +161,13 @@
+ impl Worker {
+     /// Jobs itself has no production constructor. One physical task at a time;
+     /// unsupported queue heads are retained, never acknowledged or reordered.
++    /// Explicit known-create authority; no automatic polling or Main changes.
++    pub fn new_backup(jobs: Jobs, handler: Arc<dyn CreateHandler>) -> Result<Self, Error> {
++        if !jobs.allows_backup() {
++            return Err(Error::Configuration);
++        }
++        Ok(Self::new_fixture(jobs, handler))
++    }
+     pub fn new_fixture(jobs: Jobs, handler: Arc<dyn CreateHandler>) -> Self {
+         Self {
+             inner: Arc::new(Inner {
+--- a/rust/crates/store/src/backup_files.rs
++++ b/rust/crates/store/src/backup_files.rs
+@@ -1,5 +1,5 @@
+ //! Job-free original backup HTTP/filesystem contracts. Original authors retain AGPL credit.
+-//! Accepted job-free routes only; create/restore/status jobs remain explicit501.
++//! Optional explicit create/status adapter; restore remains guarded. No worker starts here.
+ use crate::{AuthService, StoreError};
+ use axum::{
+     body::{Body, Bytes},
+@@ -27,6 +27,17 @@
+     root: Arc<PathBuf>,
+     secret: Arc<Vec<u8>>,
+     workers: Arc<Semaphore>,
++    jobs: Option<Arc<dyn BackupJobApi>>,
++}
++/// Explicit adapter avoids a Store -> job-transport dependency cycle. No default
++/// constructor, background worker, restore or scheduling authority is implied.
++pub trait BackupJobApi: Send + Sync {
++    fn create(&self) -> dispatcharr_contracts::BoxFuture<'_, Result<String, StoreError>>;
++    fn status<'a>(
++        &'a self,
++        task_id: &'a str,
++    ) -> dispatcharr_contracts::BoxFuture<'a, Result<Value, StoreError>>;
++    fn shutdown(&self, grace: Duration) -> dispatcharr_contracts::BoxFuture<'_, bool>;
+ }
+ type Lease = Arc<OwnedSemaphorePermit>;
+ fn reply(status: u16, detail: impl Into<String>) -> Response {
+@@ -67,7 +78,13 @@
+             root: Arc::new(root),
+             secret: Arc::new(signing_key.into_bytes()),
+             workers: Arc::new(Semaphore::new(4)),
++            jobs: None,
+         })
++    }
++    /// Attach only a prepared, reviewed adapter. This starts no worker.
++    pub fn with_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
++        self.jobs = Some(jobs);
++        self
+     }
+     pub fn router(self) -> Router {
+         Router::new()
+@@ -77,6 +94,12 @@
+             .with_state(self)
+     }
+     pub async fn shutdown(&self, grace: Duration) -> bool {
++        let started = tokio::time::Instant::now();
++        let jobs_drained = match &self.jobs {
++            Some(jobs) => jobs.shutdown(grace).await,
++            None => true,
++        };
++        let grace = grace.saturating_sub(started.elapsed());
+         self.workers.close();
+         let deadline = tokio::time::Instant::now() + grace;
+         while self.workers.available_permits() != 4 {
+@@ -85,7 +108,7 @@
+             }
+             tokio::time::sleep(Duration::from_millis(5)).await
+         }
+-        true
++        jobs_drained
+     }
+     async fn io<T: Send + 'static>(
+         &self,
+@@ -175,7 +198,23 @@
+             }
+         }
+         if kind == "status" || kind == "create" {
+-            return Ok(reply(501, "Native durable backup jobs are not migrated"));
++            let Some(jobs) = &self.jobs else {
++                return Ok(reply(501, "Native durable backup jobs are not migrated"));
++            };
++            // Preserve auth -> method -> token/admin ordering above. Create
++            // never parses request data, including malformed JSON.
++            let value = if kind == "create" {
++                let id = jobs.create().await?;
++                json!({"detail":"Backup started","task_id":id,"task_token":mac(&self.secret,&id)})
++            } else {
++                jobs.status(filename.as_deref().unwrap_or("")).await?
++            };
++            let status = if kind == "create" {
++                StatusCode::ACCEPTED
++            } else {
++                StatusCode::OK
++            };
++            return Ok((status, Json(value)).into_response());
+         }
+         if kind == "schedule" {
+             return self.schedule().await;
+--- a/rust/crates/store/src/lib.rs
++++ b/rust/crates/store/src/lib.rs
+@@ -317,7 +317,7 @@
+ 
+ // Job-free file APIs only; durable backup/restore jobs remain unsupported.
+ mod backup_files;
+-pub use backup_files::BackupFiles;
++pub use backup_files::{BackupFiles, BackupJobApi};
+ 
+ #[cfg(test)]
+ extern crate self as dispatcharr_store;

@@ -51,6 +51,36 @@ pub struct ArchiveHandler {
     limits: Limits,
 }
 impl ArchiveHandler {
+    /// Explicit non-destructive PostgreSQL dump configuration. The caller
+    /// supplies qualified tools, timezone clock and owned runtime lifecycle.
+    /// Source failure-text parity and full packaging are separate gates.
+    pub fn new_configured(
+        config: PgConfig,
+        runtime: Runtime,
+        backup_root: PathBuf,
+        scratch_root: PathBuf,
+        clock: Arc<dyn SourceClock + Send + Sync>,
+        limits: Limits,
+    ) -> Result<Self, Error> {
+        if config.database.is_empty()
+            || config.host.is_empty()
+            || config.user.is_empty()
+            || config.port == 0
+            || !runtime.pg_dump.is_absolute()
+            || !backup_root.is_absolute()
+            || !scratch_root.is_absolute()
+        {
+            return Err(Error::Configuration);
+        }
+        Ok(Self {
+            config,
+            runtime,
+            backup_root,
+            scratch_root,
+            clock,
+            limits,
+        })
+    }
     pub fn new_fixture(
         config: PgConfig,
         runtime: Runtime,
@@ -131,6 +161,13 @@ pub struct Worker {
 impl Worker {
     /// Jobs itself has no production constructor. One physical task at a time;
     /// unsupported queue heads are retained, never acknowledged or reordered.
+    /// Explicit known-create authority; no automatic polling or Main changes.
+    pub fn new_backup(jobs: Jobs, handler: Arc<dyn CreateHandler>) -> Result<Self, Error> {
+        if !jobs.allows_backup() {
+            return Err(Error::Configuration);
+        }
+        Ok(Self::new_fixture(jobs, handler))
+    }
     pub fn new_fixture(jobs: Jobs, handler: Arc<dyn CreateHandler>) -> Self {
         Self {
             inner: Arc::new(Inner {

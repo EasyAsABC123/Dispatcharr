@@ -1,0 +1,272 @@
+--- execution1/controller/run.py
++++ execution2/controller/run.py
+@@ -3,6 +3,8 @@
+ import argparse,datetime,hashlib,json,os,re,subprocess,time,uuid
+ from pathlib import Path
+ from bounded_process import Collected
++from bounded_stop import collect as bounded_stop
++import threading
+ from validate_native import validate
+ ROOT=Path(__file__).resolve().parents[1]
+ IMAGE='ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'
+@@ -17,7 +19,7 @@
+  except FileNotFoundError:return None
+ def check():
+  seal=json.loads((ROOT/'seal.json').read_text());require(seal['state']=='COMPILED_NATIVE16_EXECUTION_REVIEW','CompiledExecutionOnly')
+- paths=[p for d in ('controller','inputs','build')for p in(ROOT/d).rglob('*')if p.is_file()and'__pycache__'not in p.parts]+[ROOT/'outside-peer.json',ROOT/'README.md',ROOT/'execution-plan.json',ROOT/'local-controls.log',ROOT/'ELF-input-copy.json']
++ paths=[p for d in ('controller','inputs','build')for p in(ROOT/d).rglob('*')if p.is_file()and'__pycache__'not in p.parts]+[ROOT/'outside-peer.json',ROOT/'README.md',ROOT/'execution-plan.json',ROOT/'local-controls.log',ROOT/'ELF-input-copy.json',ROOT/'prior-unexecuted-seal.json',ROOT/'ELF-revision2-input-copy.json',ROOT/'revision1-to2.diff']
+  require(set(seal['local_inputs'])=={str(p.relative_to(ROOT))for p in paths},'CompleteLocalSealedInventory')
+  for relative,digest in seal['local_inputs'].items():
+   p=ROOT/relative;require(not p.is_symlink()and p.is_file()and sha(p)==digest,'ExactInput:'+relative)
+@@ -25,12 +27,28 @@
+  build=json.loads((ROOT/'build/build.json').read_text());peer=json.loads((ROOT/'outside-peer.json').read_text());require(build['passed']is True and build['state']=='SETTLED'and len(build['commands'])==5 and all(r['actual_wait']==r['actual_poll']==0 for r in build['commands']),'FiveActualCompileWaitPoll0');require(json.loads((ROOT/'build/source-before.json').read_text())==expected==json.loads((ROOT/'build/source-after.json').read_text()),'Compiled802PrePostExact');require(peer['compiled_source_root']==str(source)and peer['full_source_map_sha256']==sha(ROOT/'inputs/full802-map.json'),'ELFExactSourceBinding');require(sha(ROOT/'inputs/backup-source16-job-tests')==seal['ELF_sha256']==peer['ELF_sha256']and(ROOT/'inputs/backup-source16-job-tests').stat().st_size==peer['ELF_bytes'],'CompletedELFHashSize');require(sha(ROOT/'inputs/Source16-projection.json')=='5f0ce76f0d308da14cce1c0f57899577dd14732e1bc818ee916864d2d1902760','StrictProjectedSource16');require(datetime.datetime.fromisoformat(peer['copied_utc'])>=datetime.datetime.fromisoformat(build['completed_utc']),'ELFCopiedAfterAllCompleted')
+  return seal
+ 
++def cleanup_window(started,observed):
++ import math
++ elapsed=observed-started
++ return {'elapsed_seconds':elapsed,'within_declared_90_seconds':math.isfinite(elapsed)and 0<=elapsed<=90}
++
+ def execute(args,seal):
+  require(args.execute_reviewed_seal==sha(ROOT/'seal.json'),'ExactReviewedSeal');require(args.output is not None,'FreshOutputRequired');out=args.output.resolve();out.mkdir(parents=True,exist_ok=False,mode=0o700);project='dispatcharr-backupjob-native-'+uuid.uuid4().hex[:10];database='rust_probe_backupjob_native_'+uuid.uuid4().hex[:10];require(re.fullmatch('rust_probe_backupjob_native_[a-f0-9]{10}',database)is not None,'OwnedDatabase')
+- env={k:v for k,v in os.environ.items()if not k.startswith(('GIT_','COMPOSE_','DATABASE_','POSTGRES_','REDIS_','CELERY_','DJANGO_'))};source=Path(seal['native_source_root']).resolve();service={'image':IMAGE,'pull_policy':'never','platform':'linux/amd64','working_dir':'/tmp','entrypoint':['bash','/native-tools/start.sh'],'environment':{'DISPATCHARR_ENV':'aio','POSTGRES_DB':'dispatcharr','POSTGRES_USER':'dispatch','POSTGRES_PASSWORD':'playback-fixture-only','POSTGRES_HOST':'/var/run/postgresql','POSTGRES_PORT':'5432','POSTGRES_DIR':'/data/db','REDIS_PASSWORD':'playback-fixture-only','REDISCLI_AUTH':'playback-fixture-only','PUID':'1000','PGID':'1000','PYTHONDONTWRITEBYTECODE':'1','LANG':'C.UTF-8','LC_ALL':'C.UTF-8'},'volumes':[str(ROOT/'controller')+':/native-tools:ro',str(ROOT/'inputs/pg-init')+':/pg-bootstrap:ro',str(ROOT/'inputs')+':/native-inputs:ro',str(ROOT)+':/native-root:ro',str(source)+':/native-source:ro',str(out)+':/evidence'],'tmpfs':['/data:mode=1777,size=2147483648','/tmp:mode=1777,size=536870912'],'cpus':1,'mem_limit':'1536m','pids_limit':256,'networks':['default']};save(out/'compose.json',{'services':{'baseline':service},'networks':{'default':{'internal':True}}});compose=[args.docker,'compose','-p',project,'-f',str(out/'compose.json')];jobs=[];serial=0;claimed=False;container=None;before=None;started=False;cleanup_deadline=None;status=1;pid_records=[];began=time.monotonic();report={'passed':False,'project':project,'database':database,'Native_only':True,'Source_application_runs':0,'Main_runs':0,'resource_sampler':False,'Source16_framework_scope_preserved':True,'seal_sha256':sha(ROOT/'seal.json'),'processes':[]}
++ env={k:v for k,v in os.environ.items()if not k.startswith(('GIT_','COMPOSE_','DATABASE_','POSTGRES_','REDIS_','CELERY_','DJANGO_'))};source=Path(seal['native_source_root']).resolve();service={'image':IMAGE,'pull_policy':'never','platform':'linux/amd64','working_dir':'/tmp','entrypoint':['bash','/native-tools/start.sh'],'environment':{'DISPATCHARR_ENV':'aio','POSTGRES_DB':'dispatcharr','POSTGRES_USER':'dispatch','POSTGRES_PASSWORD':'playback-fixture-only','POSTGRES_HOST':'/var/run/postgresql','POSTGRES_PORT':'5432','POSTGRES_DIR':'/data/db','REDIS_PASSWORD':'playback-fixture-only','REDISCLI_AUTH':'playback-fixture-only','PUID':'1000','PGID':'1000','PYTHONDONTWRITEBYTECODE':'1','LANG':'C.UTF-8','LC_ALL':'C.UTF-8'},'volumes':[str(ROOT/'controller')+':/native-tools:ro',str(ROOT/'inputs/pg-init')+':/pg-bootstrap:ro',str(ROOT/'inputs')+':/native-inputs:ro',str(ROOT)+':/native-root:ro',str(source)+':/native-source:ro',str(out)+':/evidence'],'tmpfs':['/data:mode=1777,size=2147483648','/tmp:mode=1777,size=536870912'],'cpus':1,'mem_limit':'1536m','pids_limit':256,'networks':['default']};save(out/'compose.json',{'services':{'baseline':service},'networks':{'default':{'internal':True}}});compose=[args.docker,'compose','-p',project,'-f',str(out/'compose.json')];jobs=[];serial=0;claimed=False;container=None;before=None;started=False;cleanup_deadline=None;cleanup_started=None;stop_started=False;stop_done=threading.Event();status=1;pid_records=[];began=time.monotonic();report={'passed':False,'project':project,'database':database,'Native_only':True,'Source_application_runs':0,'Main_runs':0,'resource_sampler':False,'Source16_framework_scope_preserved':True,'seal_sha256':sha(ROOT/'seal.json'),'processes':[]}
+  def stop():
++  nonlocal stop_started
+   if not claimed:return
+-  argv=compose+['stop','--timeout','10'];p=subprocess.run(argv,env=env,stdin=subprocess.DEVNULL,capture_output=True,timeout=30);save(out/('owned-stop-'+uuid.uuid4().hex+'.json'),{'argv':argv,'exit':p.returncode,'stdout_hex':p.stdout.hex(),'stderr_hex':p.stderr.hex(),'utc':now()});require(p.returncode==0,'OwnedStopAcknowledged')
++  if stop_started:
++   require(stop_done.wait(35),'ExistingOwnedStopSettlementDeadline');require(report.get('owned_stop_receipt',{}).get('acknowledged')is True,'PriorOwnedStopWasNotAcknowledged');return
++  stop_started=True;receipt={};report['owned_stop_receipt']=receipt
++  try:
++   remaining=15 if cleanup_deadline is None else min(15,max(.01,cleanup_deadline-time.monotonic()))
++   bounded_stop(compose+['stop','--timeout','10'],env,out,receipt,timeout=remaining,save=save)
++  finally:stop_done.set()
++ def begin_cleanup():
++  nonlocal cleanup_started,cleanup_deadline
++  if cleanup_started is None:
++   cleanup_started=time.monotonic();cleanup_deadline=cleanup_started+90;report['cleanup_started_utc']=now();report['cleanup_budget_seconds']=90
+  def command(argv,timeout=120,kind=None):
+   nonlocal serial
+   timeout=min(timeout,max(.01,(cleanup_deadline-time.monotonic())if cleanup_deadline is not None else 1200-(time.monotonic()-began)));serial+=1;tag=f'command-{serial:03d}';job=Collected(argv,env,8388608,stop,stdout_path=out/(tag+'.stdout'),stderr_path=out/(tag+'.stderr'));jobs.append(job);identity=start(job.process.pid);when=now()
+@@ -48,9 +66,11 @@
+   absence=command(compose+['exec','-T','baseline','psql','-XAtq','-h','/var/run/postgresql','-U','dispatch','-d','postgres','-v','ON_ERROR_STOP=1','-c',"SELECT count(*) FROM pg_database WHERE datname='"+database+"'"]);require(absence.strip()=='0','FreshTargetDB');command(compose+['exec','-T','baseline','psql','-Xq','-h','/var/run/postgresql','-U','dispatch','-d','postgres','-v','ON_ERROR_STOP=1','-c','CREATE DATABASE '+database]);command(compose+['exec','-T','baseline','redis-cli','--raw','SET','rust-probe-backup-native-owner',database]);audit('cache','cache-before',database);loader=command(compose+['exec','-T','baseline','ldd','/native-inputs/backup-source16-job-tests'],30);require('not found'not in loader,'ActualELFLoaderClosure');started=True
+   report['Native_process_command_next']=serial+1;save(out/'execution-progress.json',report)
+   command(compose+['exec','-T','-e','RUST_BACKTRACE=1','-e','BACKUP_SOURCE16_NATIVE=owned-native-only','-e','BACKUP_SOURCE16_INPUTS=/native-inputs','-e','BACKUP_SOURCE16_OUTPUT=/evidence','-e','POSTGRES_DB='+database,'-e','DATABASE_URL=postgres://dispatch:playback-fixture-only@127.0.0.1:5432/'+database,'-e','BACKUP_CACHE_URL=redis://:playback-fixture-only@127.0.0.1:6379/1','-e','CELERY_BROKER_URL=redis://:playback-fixture-only@127.0.0.1:6379/2','-e','CELERY_RESULT_BACKEND=redis://:playback-fixture-only@127.0.0.1:6379/3','baseline','/native-inputs/backup-source16-job-tests',TEST,'--exact','--ignored','--nocapture','--test-threads=1'],360,'actual-Native16-capture-once')
++  begin_cleanup()
+   actual=json.loads((out/'native-source16.json').read_text());qualified=validate(actual);save(out/'effect-validation.json',qualified);report['passed']=qualified['passed'];report['actual_request_count']=actual['actual_request_count'];status=0 if qualified['passed']else 1
+  except BaseException as error:report['error']={'type':type(error).__name__,'message':str(error)[:4096],'message_full_bytes':len(str(error).encode()),'message_full_sha256':hashlib.sha256(str(error).encode()).hexdigest()};status=1;report['passed']=False
+  finally:
++  begin_cleanup()
+   capture=out/'native-source16.json'
+   if capture.exists():
+    try:
+@@ -68,7 +88,6 @@
+    try:after=audit('default','default-after','dispatcharr');report['default11_exact']=before==after;require(before==after,'Default11Exact')
+    except BaseException as error:report['default_after_error']=str(error)[:4096];report['passed']=False;status=1
+   if claimed:
+-   cleanup_deadline=time.monotonic()+90
+    try:
+     if container:
+      listing=command([args.docker,'top',container,'-eo','pid,comm,args'],15);save(out/'precleanup-processes.json',{'raw':listing})
+@@ -85,6 +104,8 @@
+    except BaseException as error:report['cleanup_error']=str(error)[:4096];report['passed']=False;status=1
+   report['all_command_processes_settled']=all(j.physically_settled and j.process.poll()is not None and not any(t.is_alive()for t in j.threads)for j in jobs)
+   if not report['all_command_processes_settled']:report['passed']=False;status=1
++  window=cleanup_window(cleanup_started,time.monotonic());report['cleanup_elapsed_seconds']=window['elapsed_seconds'];report['cleanup_within_declared_90_seconds']=window['within_declared_90_seconds']
++  if not report['cleanup_within_declared_90_seconds']:report['passed']=False;status=1
+   report['actual_controller_exit']=status;report['settled_utc']=now();save(out/'execution-report.json',report)
+  return status
+ 
+--- execution1/controller/validate_native.py
++++ execution2/controller/validate_native.py
+@@ -12,6 +12,23 @@
+ def clock(v):
+  d=datetime.datetime.fromisoformat(v.replace('Z','+00:00'));require(d.utcoffset()==datetime.timedelta(0),'UTCClock');return d
+ def token(v):return hmac.new(b'backup-job-fixture-only',v.encode(),hashlib.sha256).hexdigest()[:32]
++def literal_equal(left,right):
++ if type(left)is not type(right):return False
++ if isinstance(left,dict):return set(left)==set(right)and all(literal_equal(left[k],right[k])for k in left)
++ if isinstance(left,list):return len(left)==len(right)and all(literal_equal(a,b)for a,b in zip(left,right))
++ if isinstance(left,float):return left.hex()==right.hex()
++ return left==right
++
++def raw_guard_redis(before,after):
++ for index in(1,2):
++  left,right=before['redis'][index],after['redis'][index]
++  require(set(left)==set(right)and left['database']==right['database']==index+1 and type(left['capture_bytes'])is type(right['capture_bytes'])is int and left['capture_bytes']==right['capture_bytes'],'GuardRawRedisScopeAndByteCount')
++  a={r['key_hex']:r for r in left['rows']};b={r['key_hex']:r for r in right['rows']};require(len(a)==len(left['rows'])and len(b)==len(right['rows'])and set(a)==set(b),'GuardRawRedisExactKeysNoDrop')
++  for key,row in a.items():
++   other=b[key];require(set(row)==set(other)and literal_equal({k:v for k,v in row.items()if k!='pttl'},{k:v for k,v in other.items()if k!='pttl'}),'GuardRawRedisAllTypesDumpValuesListBytes')
++   before_ttl,after_ttl=row['pttl'],other['pttl'];require(type(before_ttl)is type(after_ttl)is int and((before_ttl==after_ttl==-1)or(0<after_ttl<=before_ttl)),'GuardRawRedisPersistentOrMonotonicFiniteTTL')
++ return True
++
+ def safe_cache(raw):
+  require(len(raw)<=65536,'BoundedCacheValue')
+  if re.fullmatch(rb'-?[0-9]+',raw):return int(raw)
+@@ -25,7 +42,7 @@
+  return values,ttls
+ 
+ def check_cache(source,native):
+- expected,_=cache(source);actual,ttls=cache(native);require(actual==expected,'ExactDecodedNamedCacheValuesNoDropOrExtraCredentialBudget')
++ expected,_=cache(source);actual,ttls=cache(native);require(literal_equal(actual,expected),'ExactTypedDecodedNamedCacheValuesNoDropOrExtraCredentialBudget')
+  for key,ttl in ttls.items():
+   require(ttl==-1 if key.endswith('groupver:network_access')else 0<ttl<=300000,'PersistentOrFiniteTTLFormNoExactCrossRunTTL')
+  return True
+@@ -92,7 +109,7 @@
+     require(z.namelist()==['database.dump','metadata.json']and sum(i.file_size for i in z.infolist())<=67108864 and z.read('database.dump')[:5]==b'PGDMP','OwnBoundedActualPGDMPArchive');m=json.loads(z.read('metadata.json'));require(set(m)=={'format','version','database_type','database_file','created_at'}and m['format']=='dispatcharr-backup'and m['version']==2 and m['database_type']=='postgresql'and m['database_file']=='database.dump'and worker_begin<=clock(m['created_at'])<=worker_end,'OwnV2MetadataClock')
+   elif number!=4:require(row['json']==src['json'],'StableSourceJSON')
+   results.append({'ordinal':number,'status':row['status'],'SQL_users_events_cache_body_qualified':True})
+- guards=native['native_only_family_guards'];require(guards['controls']==5 and guards['all_UnsupportedTask']is True and sql(guards['before'])==sql(guards['after'])==seed_sql,'FiveAdditionalNativeOnlyAuthorityRefusals');before_cache,_=cache(guards['before']);after_cache,_=cache(guards['after']);require(before_cache==after_cache and guards['before']['events']==guards['after']['events']==seed['events']and guards['before']['files']==guards['after']['files'],'GuardCacheEventsFilesNoChange');require(native['HTTP_listener_joined']is True and native['backups_shutdown']is True and sql(native['final'])==seed_sql,'NormalCaptureHTTPAndServiceDrain');return {'passed':True,'actual_Native_HTTP_requests':16,'retained_Source_requests':16,'additional_Native_only_family_controls':5,'raw_recorder_passed_false_is_capture_only':True,'request1_cache_keys_before':3,'request1_cache_keys_after':5,'credential_events_and_budget_not_normalized':True,'caller_loss_physical_cancel_Main_packaging_restore_schedule_SQLite_parity':False,'notification_physical2_4_6_negatives_waived':False,'requests':results}
++ guards=native['native_only_family_guards'];require(guards['controls']==5 and guards['all_UnsupportedTask']is True and sql(guards['before'])==sql(guards['after'])==seed_sql,'FiveAdditionalNativeOnlyAuthorityRefusals');before_cache,_=cache(guards['before']);after_cache,_=cache(guards['after']);require(literal_equal(before_cache,after_cache) and guards['before']['events']==guards['after']['events']==seed['events']and guards['before']['files']==guards['after']['files'],'GuardCacheEventsFilesNoChange');raw_guard_redis(native['requests'][-1]['after'],guards['before']);raw_guard_redis(guards['before'],guards['after']);raw_guard_redis(guards['after'],native['final']);require(native['HTTP_listener_joined']is True and native['backups_shutdown']is True and sql(native['final'])==seed_sql,'NormalCaptureHTTPAndServiceDrain');return {'passed':True,'actual_Native_HTTP_requests':16,'retained_Source_requests':16,'additional_Native_only_family_controls':5,'raw_recorder_passed_false_is_capture_only':True,'request1_cache_keys_before':3,'request1_cache_keys_after':5,'credential_events_and_budget_not_normalized':True,'caller_loss_physical_cancel_Main_packaging_restore_schedule_SQLite_parity':False,'notification_physical2_4_6_negatives_waived':False,'requests':results}
+ 
+ def validate(native):
+  binding=json.loads((ROOT/'inputs/Source-binding.json').read_text());path=ROOT/'inputs/Source16-projection.json';require(hashlib.sha256(path.read_bytes()).hexdigest()==binding['Source16_projection_sha256']==SOURCE_SHA and binding['Original_raw_sha256']==ORIGINAL_SHA,'ExactSingleSourceReference');return compare(native,json.loads(path.read_text()),json.loads((ROOT/'inputs/plan.json').read_text()))
+--- execution1/controller/synthetic.py
++++ execution2/controller/synthetic.py
+@@ -12,7 +12,9 @@
+  with zipfile.ZipFile(b,'w')as z:z.writestr('database.dump',b'PGDMP-SYNTHETIC-NOT-A-REAL-DATABASE');z.writestr('metadata.json',json.dumps(metadata))
+  archive=b.getvalue();result={'status':'completed','filename':name,'size':len(archive)};backend={'status':'SUCCESS','result':result,'traceback':None,'children':[],'date_done':stamp(26),'task_id':id};frame={'headers':{'id':id,'task':'apps.backups.tasks.create_backup_task'},'properties':{'delivery_info':{'exchange':'','routing_key':'celery'}},'body':base64.b64encode(b'[[],{},{}]').decode()}
+  def state(src,queue=False,done=False):
+-  scopes=copy.deepcopy(src['redis']);scopes[1]['rows']=([{'key_hex':b'celery'.hex(),'type':'list','dump_hex':'00','pttl':-1,'list_hex':[json.dumps(frame).encode().hex()]}]if queue else []);scopes[2]['rows']=([{'key_hex':('celery-tasks:celery-task-meta-'+id).encode().hex(),'type':'string','dump_hex':'00','pttl':3599000,'value_hex':json.dumps(backend).encode().hex()}]if done else []);return{'SQL':copy.deepcopy(SQL),'users':copy.deepcopy(users),'events':[],'redis':scopes,'files':[{'name':name,'bytes':len(archive),'sha256':hashlib.sha256(archive).hexdigest()}]if done else []}
++  scopes=copy.deepcopy(src['redis']);scopes[1]['rows']=([{'key_hex':b'celery'.hex(),'type':'list','dump_hex':'00','pttl':-1,'list_hex':[json.dumps(frame).encode().hex()]}]if queue else []);
++  if queue or done:scopes[1]['rows'].append({'key_hex':b'_kombu.binding.celery'.hex(),'type':'set','dump_hex':'010203','pttl':-1})
++  scopes[2]['rows']=([{'key_hex':('celery-tasks:celery-task-meta-'+id).encode().hex(),'type':'string','dump_hex':'00','pttl':3599000,'value_hex':json.dumps(backend).encode().hex()}]if done else []);return{'SQL':copy.deepcopy(SQL),'users':copy.deepcopy(users),'events':[],'redis':scopes,'files':[{'name':name,'bytes':len(archive),'sha256':hashlib.sha256(archive).hexdigest()}]if done else []}
+  seed=state(source['seed_snapshot']);native={'capture_complete':True,'passed':False,'capture_only_passed_field':True,'actual_request_count':16,'Source_application_runs':0,'Main_application_runs':0,'Source_reference_mode':'projected-backup-source16-reference-v1','Source_reference_sha256':SOURCE_SHA,'Original_Source_raw_sha256':ORIGINAL_SHA,'database':db,'native_actual_queue':'celery','Source_fixture_queue_override':source['before_Celery_configuration']['owned_queue'],'seed':seed,'seed_clock':stamp(0),'Source_cache_context_seed':{'before_owned_cache_keys':0,'strict_three_key_allowlist':True,'auth_history_or_events_reset':False,'before_any_request_or_auth_worker':True,'rows':[{'key_hex':r['key_hex'],'Source_dump_sha256':hashlib.sha256(bytes.fromhex(r['dump_hex'])).hexdigest(),'restored_dump_sha256':hashlib.sha256(bytes.fromhex(r['dump_hex'])).hexdigest(),'Source_seed_pttl':r['pttl'],'RESTORE_ttl':0 if r['pttl']==-1 else r['pttl'],'actual_readback_pttl':r['pttl']}for r in source['seed_snapshot']['redis'][0]['rows']]},'requests':[],'worker_began_utc':stamp(24),'worker_completed_utc':stamp(26),'actual_result_metadata':{'task_id':id,'result':result,'date_done':stamp(26)},'worker_run':'Completed('+id+')','HTTP_listener_joined':True,'backups_shutdown':True}
+  native['initial']=copy.deepcopy(seed);native['initial']['redis'][0]['rows']=[]
+  aliases={'unknown_task':'never-created-'+nonce};from validate_native import expected_path
+--- execution1/controller/test_controls.py
++++ execution2/controller/test_controls.py
+@@ -1,8 +1,8 @@
+ """Pure synthetic corruption controls; never application observations."""
+-import copy,json,pickle,unittest
++import copy,json,pickle,unittest,sys,os,tempfile
+ from pathlib import Path
+ from synthetic import sample
+-from validate_native import compare,safe_cache,cache
++from validate_native import compare,safe_cache,cache,literal_equal,raw_guard_redis
+ class Controls(unittest.TestCase):
+  def reject(self,mutate):
+   n,s,p=sample();mutate(n)
+@@ -46,4 +46,61 @@
+   with self.assertRaises(ValueError):safe_cache(b'cos\nsystem\n.')
+  def test_pickle_trailing_bytes_forbidden(self):
+   with self.assertRaises(ValueError):safe_cache(pickle.dumps({'a':1})+b'ignored')
++class Revision2Controls(unittest.TestCase):
++ def test_literal_bool_int_distinct(self):self.assertFalse(literal_equal({'nested':[True,False]},{'nested':[1,0]}))
++ def test_nested_cache_bool_to_int_rejected(self):
++  n,s,p=sample();row=next(r for r in n['requests'][0]['after']['redis'][0]['rows']if bytes.fromhex(r['key_hex']).decode()==':1:coresettings:group:system_settings');value=safe_cache(bytes.fromhex(row['value_hex']));key=next(k for k,v in value.items()if type(v)is bool);value[key]=int(value[key]);row['value_hex']=pickle.dumps(value).hex()
++  with self.assertRaises(ValueError):compare(n,s,p)
++ def test_guard_broker_key_drop_rejected(self):
++  n,s,p=sample();n['native_only_family_guards']['after']['redis'][1]['rows']=[]
++  with self.assertRaises(ValueError):compare(n,s,p)
++ def test_guard_backend_value_change_rejected(self):
++  n,s,p=sample();n['native_only_family_guards']['after']['redis'][2]['rows'][0]['value_hex']='7b7d'
++  with self.assertRaises(ValueError):compare(n,s,p)
++ def test_guard_dump_change_rejected(self):
++  n,s,p=sample();n['native_only_family_guards']['after']['redis'][1]['rows'][0]['dump_hex']='04'
++  with self.assertRaises(ValueError):compare(n,s,p)
++ def test_guard_type_change_rejected(self):
++  n,s,p=sample();n['native_only_family_guards']['after']['redis'][1]['rows'][0]['type']='hash'
++  with self.assertRaises(ValueError):compare(n,s,p)
++ def test_guard_finite_ttl_increase_rejected(self):
++  n,s,p=sample();n['native_only_family_guards']['after']['redis'][2]['rows'][0]['pttl']+=1
++  with self.assertRaises(ValueError):compare(n,s,p)
++ def test_guard_persistent_ttl_change_rejected(self):
++  n,s,p=sample();n['native_only_family_guards']['after']['redis'][1]['rows'][0]['pttl']=1000
++  with self.assertRaises(ValueError):compare(n,s,p)
++ def test_guard_clearing_both_sides_still_fails_continuity(self):
++  n,s,p=sample()
++  for side in('before','after'):n['native_only_family_guards'][side]['redis'][1]['rows']=[]
++  with self.assertRaises(ValueError):compare(n,s,p)
++ def test_guard_list_raw_bytes_rejected(self):
++  n,s,p=sample();a=n['native_only_family_guards']['before'];b=copy.deepcopy(a);row={'key_hex':b'foreign'.hex(),'type':'list','dump_hex':'00','list_hex':['6162'],'pttl':-1};a['redis'][1]['rows'].append(row);b['redis'][1]['rows'].append(dict(row,list_hex=['6163']))
++  with self.assertRaises(ValueError):raw_guard_redis(a,b)
++ def test_finite_decreasing_ttl_accepted(self):
++  n,s,p=sample();n['native_only_family_guards']['after']['redis'][2]['rows'][0]['pttl']-=1;n['final']['redis'][2]['rows'][0]['pttl']-=2;self.assertTrue(compare(n,s,p)['passed'])
++ def test_cleanup90_boundary(self):
++  from run import cleanup_window
++  self.assertTrue(cleanup_window(100,190)['within_declared_90_seconds']);self.assertFalse(cleanup_window(100,190.001)['within_declared_90_seconds']);self.assertFalse(cleanup_window(100,99)['within_declared_90_seconds'])
++ def test_cleanup_timer_precedes_all_postwork(self):
++  from pathlib import Path
++  text=(Path(__file__).resolve().parent/'run.py').read_text();start=text.index(" finally:\n  begin_cleanup()\n  capture=");self.assertLess(start,text.index("audit('cache','cache-after'",start));self.assertNotIn('cleanup_deadline=time.monotonic()+90',text)
++ def stop(self,code,limit=1024,timeout=1,save=None):
++  from bounded_stop import collect
++  from pathlib import Path
++  receipt={}
++  with tempfile.TemporaryDirectory(prefix='stop-control-',dir=Path(__file__).resolve().parents[2])as folder:
++   try:collect([sys.executable,'-c',code],dict(os.environ),folder,receipt,limit=limit,timeout=timeout,save=save)
++   except BaseException:return receipt
++  return receipt
++ def test_bounded_stop_success_no_recursion(self):
++  r=self.stop("print('owned stop ack')");self.assertTrue(r['acknowledged']);self.assertFalse(r['recursive_stop_callback']);self.assertTrue(r['pipes_settled'])
++ def test_bounded_stop_overflow_retained_negative(self):
++  r=self.stop("print('x'*2048)",limit=64);self.assertFalse(r['acknowledged']);self.assertFalse(r['capture_complete']);self.assertEqual(r['collection_invalid'],'CollectionCapacity')
++ def test_bounded_stop_timeout_retained_negative(self):
++  r=self.stop("import time;time.sleep(1)",timeout=.02);self.assertFalse(r['acknowledged']);self.assertEqual(r['collection_invalid'],'CollectionDeadline');self.assertIsNotNone(r['actual_exit'])
++ def test_bounded_stop_nonzero_retained(self):
++  r=self.stop('raise SystemExit(7)');self.assertFalse(r['acknowledged']);self.assertEqual(r['actual_exit'],7)
++ def test_bounded_stop_receipt_failure_retained(self):
++  def fail(*args):raise OSError('owned injected receipt failure')
++  r=self.stop("print('ack')",save=fail);self.assertFalse(r['acknowledged']);self.assertIn('receipt_write_failure',r)
+ if __name__=='__main__':unittest.main()
+--- execution1/controller/bounded_stop.py
++++ execution2/controller/bounded_stop.py
+@@ -0,0 +1,29 @@
++"""Bounded owned-stop CLI collection; deliberately no container-stop recursion."""
++import datetime,hashlib,json,time,os
++from pathlib import Path
++from bounded_process import Collected
++class StopCollectionFailure(RuntimeError):pass
++
++def collect(argv,environment,output,receipt,limit=8388608,timeout=15,save=None):
++ output=Path(output);began=time.monotonic();job=None;failure=None
++ try:
++  # A stop-CLI overflow/timeout terminates ONLY this owned CLI. Its neutral
++  # callback cannot recursively start another container stop command.
++  job=Collected(argv,environment,limit,lambda:None,stdout_path=output/'owned-stop.stdout',stderr_path=output/'owned-stop.stderr')
++  try:identity=Path('/proc',str(job.process.pid),'stat').read_text().rsplit(')',1)[1].split()[19]
++  except FileNotFoundError:identity=None
++  receipt.update(argv=argv,pid=job.process.pid,starttime=identity,proc_PID_namespace=os.readlink('/proc/self/ns/pid'),started_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),output_limit=limit,deadline_seconds=timeout,recursive_stop_callback=False)
++  job.wait(timeout)
++ except BaseException as error:
++  failure=error;receipt['failure']={'type':type(error).__name__,'message':str(error)[:4096],'message_bytes':len(str(error).encode()),'message_sha256':hashlib.sha256(str(error).encode()).hexdigest()}
++ finally:
++  receipt.update(elapsed_seconds=time.monotonic()-began,completed_utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
++  if job is not None:receipt.update(actual_exit=job.process.poll(),collection_invalid=job.invalid,physically_settled=job.physically_settled,pipes_settled=not any(t.is_alive()for t in job.threads),capture_complete=job.invalid is None)
++  receipt['acknowledged']=failure is None and receipt.get('actual_exit')==0 and receipt.get('physically_settled')is True and receipt.get('pipes_settled')is True and receipt.get('capture_complete')is True
++  try:
++   if save is None:(output/'owned-stop.json').write_text(json.dumps(receipt,indent=2)+'\n')
++   else:save(output/'owned-stop.json',receipt)
++  except BaseException as error:
++   receipt['acknowledged']=False;receipt['receipt_write_failure']={'type':type(error).__name__,'message':str(error)[:4096]};raise StopCollectionFailure('OwnedStopReceiptWriteFailed')from error
++ if not receipt['acknowledged']:raise StopCollectionFailure('OwnedStopNotAcknowledged')from failure
++ return receipt
+--- execution1/README.md
++++ execution2/README.md
+@@ -17,3 +17,8 @@
+ Capture-only raw recorder deliberately retains passed:false with capture_complete:true when complete; the SEPARATE validator/controller determines qualification and may also fail. Preserve every unexpected/partial record and actual exit. All raw credential/header/token/user/event/cache/SQL/archive observations remain private. Future publication must apply explicit hash-bound projections, not alter executed data or silently accept either checksum.
+ 
+ Budgets: storage bootstrap180s; whole attempt1200s; one exact native test command360s; peer HTTP15s/request, worker90s, request/body64KiB or stream8MiB, decodedZIP64MiB, report128MiB; cleanup90s; CPU1/memory1536m/PIDs256/data2GiB/tmp512MiB. All active command output collection8MiB. Cleanup is attempted even after failure; collection failure stops the exact owned container and remains negative. Original Dispatcharr and dependency contributors retain credit/licenses.
++
++
++CONTROLLER REVISION2, unexecuted: preserve original a583... closure unchanged. No runtime/QA4/ELF/Cargo changes. Bounded stop CLI collection uses a neutral callback, never recursive container stop; cap/timeout/nonzero/pipe/receipt failures remain negative and retained. Stop admission is once-only and its mutable receipt is kept in the final controller report even when receipt-file writing fails. All post-ELF qualification/cache/backend/default/project/PID work starts under ONE cleanup90 clock; it never restarts before teardown, and actual elapsed>90 explicitly forbids acceptance. Physical cleanup is still attempted on failure.
++
++Five-family refusal controls now compare ALL raw broker/result key sets, field/type/DUMP/value/list bytes before/after, with continuity from request16 and through final shutdown; only positive finite TTL may decrease, persistent TTL stays-1. Unexpected key loss or altered values cannot hide behind SQL/cache checks. Decoded named cache equality is recursive and literal (bool differs from int), with nested bool->int corruption coverage.48 pure/synthetic controls include real bounded local stop-collector success/overflow/timeout/nonzero/receipt-failure specimens; they run no Docker/Source/Native application fixture. Normal16 remains unexecuted.
+--- execution1/execution-plan.json
++++ execution2/execution-plan.json
+@@ -19,5 +19,13 @@
+   "fixture_slot_review_required": true,
+   "no_retry": true,
+   "date_joined_pg_quantization_microseconds": 1,
+-  "caller_loss_physical_parity_claim": false
++  "caller_loss_physical_parity_claim": false,
++  "controller_revision": 2,
++  "preserved_unexecuted_seal": "a583f7c925466b1bec02419fccf2f972230b8048c344d6d124d4c7e613ed60d1",
++  "runtime_and_ELF_unchanged": true,
++  "cleanup90_includes_all_postELF_work": true,
++  "elapsed90_required_for_acceptance": true,
++  "raw_guard_broker_result_before_after_continuity": true,
++  "literal_bool_int_cache_comparison": true,
++  "stop_collection": "bounded nonrecursive; every failure retained"
+ }
