@@ -1,0 +1,9 @@
+# Image57 validation in progress
+
+Image57 builds the XC catalogue release repair from immutable commit `d77f25fa94ee128c79ade9176d8eb4a9d23bf498`. Its [build evidence](../scripts/rust-integration/image57-build/build.json) binds839 Rust inputs,495 unchanged React inputs and the original license/attribution:1,336 application files. The image is `sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a`; source tree SHA256 is `bbaa9755b4426e256d1f875f66b5c2feb46a127fa6e5150c470f6f23a6456e9c`. Root verifies114 installed frontend/credit files byte-for-byte against image56, the image UID65532, and fresh probe-container absence. The [source validation](rust-xc-release-lists.md) passes698 tests,732 ignored, and strict all-target linting.
+
+This is a build checkpoint. SDK verification is running; the28 package groups, three established Main groups and new actual Main catalogue requests need fresh execution on this image. Earlier image56 package passes do not transfer. Image55 remains the [selected functional application](rust-image55-checkpoint.md) and [measured live performance checkpoint](rust-image55-live-performance.md). No new CPU/memory gain, whole-application parity or completed milestone is claimed.
+
+A separate ownership audit also leaves a specific M7 fault gate open: existing bounded XC readers finish with protocol flush and implicit pool return. SQLx can expose a backend error before the final ReadyForQuery. Explicit drain/pool-return fencing and delayed-error tests are required before treating that error boundary as physically settled; earlier normal/lock/caller-loss checks do not prove it. The already qualified callback and artwork fences do not transfer to these readers.
+
+All application/model/algorithm credit belongs to the original Dispatcharr authors and contributors. See [ATTRIBUTION.md](../ATTRIBUTION.md) and [LICENSE](../LICENSE).
