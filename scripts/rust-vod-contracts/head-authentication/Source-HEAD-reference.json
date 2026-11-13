@@ -1,0 +1,69 @@
+{
+  "selected_response_projection_only": true,
+  "original_capture_sha256": "e9db2918f98adae5ae1766c4b327349f8b94b30c726a406e336cfbb86f1a2891",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "case": {
+    "id": 1,
+    "name": "invalid_bearer_HEAD_valid_UUID",
+    "method": "HEAD",
+    "path": "/proxy/vod/movie/12345678-1234-5678-1234-567812345678/owned-method-head",
+    "status": 401,
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ],
+      [
+        "WWW-Authenticate",
+        "Bearer realm=\"api\""
+      ],
+      [
+        "Vary",
+        "Accept, origin"
+      ],
+      [
+        "Allow",
+        "OPTIONS, GET"
+      ],
+      [
+        "X-Frame-Options",
+        "DENY"
+      ],
+      [
+        "Content-Length",
+        "172"
+      ],
+      [
+        "X-Content-Type-Options",
+        "nosniff"
+      ],
+      [
+        "Referrer-Policy",
+        "same-origin"
+      ],
+      [
+        "Cross-Origin-Opener-Policy",
+        "same-origin"
+      ],
+      [
+        "Date",
+        "Fri, 13 Nov 2026 19:19:08 GMT"
+      ]
+    ],
+    "body_hex": "",
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "body_bytes": 0,
+    "absolute_observation": {
+      "deadline": 317959.013546615,
+      "completed": 317944.038244661,
+      "timer_joined": true
+    },
+    "physical_close": {
+      "fd_after": -1,
+      "original_inode_absent": true,
+      "timer_joined": true,
+      "request_worker": "calling thread; returned after actual I/O unwind"
+    }
+  },
+  "not_complete_fixture_reconstruction": true
+}

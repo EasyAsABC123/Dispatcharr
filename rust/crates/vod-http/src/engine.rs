@@ -860,13 +860,71 @@ async fn play(
     );
     response
 }
-async fn head() -> Response {
+fn head_not_allowed() -> Response {
     (
         StatusCode::METHOD_NOT_ALLOWED,
         [("allow", "GET, OPTIONS")],
         axum::Json(json!({"detail":"Method \"HEAD\" not allowed."})),
     )
         .into_response()
+}
+async fn head_method_response(resolver: &dyn VodResolver, request: &VodRequest) -> Response {
+    let mut response = match resolver.authenticate_method(request).await {
+        Ok(()) => head_not_allowed(),
+        Err(error) => error_response(error),
+    };
+    response.headers_mut().insert(
+        "allow",
+        axum::http::HeaderValue::from_static("OPTIONS, GET"),
+    );
+    response.headers_mut().insert(
+        axum::http::header::VARY,
+        axum::http::HeaderValue::from_static("Accept, origin"),
+    );
+    response
+}
+fn source_head_route_matches(content_id: &str, profile: Option<&str>) -> bool {
+    // Actual pinned Django UUIDConverter regex and IntConverter/Python limit.
+    // Rust UUID and u64 parsers accept/reject different lexical domains.
+    content_id.len() == 36
+        && content_id.bytes().enumerate().all(|(index, byte)| {
+            if matches!(index, 8 | 13 | 18 | 23) {
+                byte == b'-'
+            } else {
+                byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte)
+            }
+        })
+        && profile.is_none_or(|value| {
+            !value.is_empty() && value.len() <= 4300 && value.bytes().all(|b| b.is_ascii_digit())
+        })
+}
+async fn head(
+    State(engine): State<VodEngine>,
+    Path(path): Path<HashMap<String, String>>,
+    request: Request<Body>,
+) -> Response {
+    let content_id = path.get("content_id").cloned().unwrap_or_default();
+    // Non-UUID and non-integer route fallthrough is a separate SPA boundary.
+    // Preserve its prior response rather than authenticate a Django non-match.
+    if !source_head_route_matches(&content_id, path.get("profile_id").map(String::as_str)) {
+        return head_not_allowed();
+    }
+    let playback = match playback(&request, content_id.clone()) {
+        Ok(playback) => playback,
+        Err(error) => return error_response(error),
+    };
+    head_method_response(
+        engine.inner.resolver.as_ref(),
+        &VodRequest {
+            resolved_client_ip: None,
+            playback,
+            kind: path.get("kind").cloned().unwrap_or_default(),
+            content_id,
+            session_id: path.get("session_id").cloned(),
+            profile_id: path.get("profile_id").and_then(|value| value.parse().ok()),
+        },
+    )
+    .await
 }
 async fn stop_client_route(State(engine): State<VodEngine>, request: Request<Body>) -> Response {
     let mut response = stop_client(State(engine), request).await;
@@ -923,6 +981,156 @@ async fn stop_client(State(engine): State<VodEngine>, request: Request<Body>) ->
 }
 
 #[cfg(test)]
+mod method_auth_tests {
+    use super::*;
+    use dispatcharr_contracts::BoxFuture;
+    use dispatcharr_store::User;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    struct AuthOnly {
+        calls: AtomicUsize,
+        deny: bool,
+    }
+    impl VodResolver for AuthOnly {
+        fn authenticate_method<'a>(
+            &'a self,
+            request: &'a VodRequest,
+        ) -> BoxFuture<'a, Result<(), StoreError>> {
+            Box::pin(async move {
+                self.calls.fetch_add(1, Ordering::SeqCst);
+                assert_eq!(request.playback.parameter("token"), Some("preserved-query"));
+                if self.deny {
+                    Err(StoreError::Unauthorized("owned method authentication"))
+                } else {
+                    Ok(())
+                }
+            })
+        }
+        fn authorize<'a>(
+            &'a self,
+            _: &'a VodRequest,
+        ) -> BoxFuture<'a, Result<Option<User>, StoreError>> {
+            panic!("HEAD must not enter view permission/network logic")
+        }
+        fn resolve<'a>(
+            &'a self,
+            _: &'a VodRequest,
+            _: Option<User>,
+        ) -> BoxFuture<'a, Result<VodSource, StoreError>> {
+            panic!("HEAD must not resolve a provider or media source")
+        }
+        fn default_redirect(&self) -> BoxFuture<'_, Result<bool, StoreError>> {
+            panic!("HEAD must not create or redirect sessions")
+        }
+    }
+    fn request() -> VodRequest {
+        VodRequest {
+            resolved_client_ip: None,
+            playback: PlaybackRequest {
+                channel_id: "12345678-1234-5678-1234-567812345678".into(),
+                headers: vec![("authorization".into(), "Bearer not-a-valid-jwt".into())],
+                query: vec![("token".into(), "preserved-query".into())],
+                peer_ip: "127.0.0.1".parse().unwrap(),
+            },
+            kind: "movie".into(),
+            content_id: "12345678-1234-5678-1234-567812345678".into(),
+            session_id: Some("owned-method-head".into()),
+            profile_id: None,
+        }
+    }
+    #[test]
+    fn django_route_fence_rejects_rust_uuid_extensions_and_plus_profiles() {
+        let canonical = "abcdefab-1234-5678-abcd-123456789abc";
+        assert!(source_head_route_matches(canonical, None));
+        for extended in [
+            canonical.replace('-', ""),
+            canonical.to_uppercase(),
+            format!("urn:uuid:{canonical}"),
+        ] {
+            assert!(uuid::Uuid::parse_str(&extended).is_ok());
+            assert!(!source_head_route_matches(&extended, None));
+        }
+        assert!(!source_head_route_matches(canonical, Some("+1")));
+        assert!(!source_head_route_matches(canonical, Some("")));
+        assert!(!source_head_route_matches(canonical, Some("١")));
+        assert!(source_head_route_matches(canonical, Some("01")));
+    }
+    #[test]
+    fn django_profile_match_does_not_require_machine_integer_representability() {
+        let canonical = "abcdefab-1234-5678-abcd-123456789abc";
+        let above_u64 = "18446744073709551616";
+        assert!(above_u64.parse::<u64>().is_err());
+        assert!(source_head_route_matches(canonical, Some(above_u64)));
+        assert!(source_head_route_matches(
+            canonical,
+            Some(&"0".repeat(4300))
+        ));
+        assert!(!source_head_route_matches(
+            canonical,
+            Some(&"0".repeat(4301))
+        ));
+    }
+    #[tokio::test]
+    async fn authentication_failure_precedes_method_error_without_entering_view() {
+        let resolver = AuthOnly {
+            calls: AtomicUsize::new(0),
+            deny: true,
+        };
+        let response = head_method_response(&resolver, &request()).await;
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+        assert_eq!(
+            response.headers()["www-authenticate"],
+            "Bearer realm=\"api\""
+        );
+        assert_eq!(response.headers()["allow"], "OPTIONS, GET");
+        assert_eq!(response.headers()["vary"], "Accept, origin");
+        assert_eq!(resolver.calls.load(Ordering::SeqCst), 1);
+    }
+    #[tokio::test]
+    async fn successful_method_authentication_still_rejects_head_without_view_work() {
+        let resolver = AuthOnly {
+            calls: AtomicUsize::new(0),
+            deny: false,
+        };
+        let response = head_method_response(&resolver, &request()).await;
+        assert_eq!(response.status(), StatusCode::METHOD_NOT_ALLOWED);
+        assert!(!response.headers().contains_key("www-authenticate"));
+        assert_eq!(resolver.calls.load(Ordering::SeqCst), 1);
+        let body = axum::body::to_bytes(response.into_body(), 1024)
+            .await
+            .unwrap();
+        assert_eq!(
+            serde_json::from_slice::<serde_json::Value>(&body).unwrap(),
+            json!({"detail":"Method \"HEAD\" not allowed."})
+        );
+    }
+    #[tokio::test]
+    async fn actual_sql_resolver_invalid_bearer_matches_source_without_sql() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgres://unused:unused@127.0.0.1:9/not_contacted")
+            .unwrap();
+        let store = Store::from_pool(pool);
+        let auth = AuthService::new(
+            store.clone(),
+            dispatcharr_store::AuthConfig::new("owned-head-method-signing-key".into()).unwrap(),
+        );
+        let resolver = SqlVodResolver::new(store.clone(), auth);
+        let response = head_method_response(&resolver, &request()).await;
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+        assert_eq!(
+            response.headers()["www-authenticate"],
+            "Bearer realm=\"api\""
+        );
+        assert_eq!(response.headers()["allow"], "OPTIONS, GET");
+        let body = axum::body::to_bytes(response.into_body(), 1024)
+            .await
+            .unwrap();
+        assert_eq!(body.len(), 172);
+        assert_eq!(store.pool().size(), 0);
+    }
+}
+
+#[cfg(test)]
 mod header_tests {
     #[tokio::test]
     async fn worker_id_is_only_added_by_success_builder_and_cannot_be_spoofed() {
@@ -960,8 +1168,10 @@ mod header_tests {
                 .headers()
                 .contains_key("x-worker-id"));
         }
-        assert_eq!(super::head().await.status(), 405);
-        assert!(!super::head().await.headers().contains_key("x-worker-id"));
+        assert_eq!(super::head_not_allowed().status(), 405);
+        assert!(!super::head_not_allowed()
+            .headers()
+            .contains_key("x-worker-id"));
         assert!(!super::range_not_satisfiable()
             .headers()
             .contains_key("x-worker-id"));

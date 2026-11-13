@@ -1,0 +1,11 @@
+Diff in /home/justin/github/Dispatcharr/artifacts/rust/root-vod-head-auth-2/source/rust/crates/vod-http/src/engine.rs:1126:
+                 .contains_key("x-worker-id"));
+         }
+         assert_eq!(super::head_not_allowed().status(), 405);
+-        assert!(!super::head_not_allowed().headers().contains_key("x-worker-id"));
++        assert!(!super::head_not_allowed()
++            .headers()
++            .contains_key("x-worker-id"));
+         assert!(!super::range_not_satisfiable()
+             .headers()
+             .contains_key("x-worker-id"));

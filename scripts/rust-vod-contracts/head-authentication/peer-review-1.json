@@ -1,0 +1,54 @@
+{
+  "reviewer": "agent /root/stream_http; read-only static review",
+  "base_Git": "2b0a4db27d99c0824e1ab2ba95e7840ec6703e4a",
+  "reviewed_files": [
+    {
+      "path": "rust/crates/vod-http/src/engine.rs",
+      "Git_preimage_sha256": "8f821c150c08d58ec11e74d5a7a291900cd863fad312a935b8155635793c84e0",
+      "reviewed_sha256": "1e39241c5c654ce591b209ada1928110f9bfb207f832ac10bedc3a6708c18cbb"
+    },
+    {
+      "path": "rust/crates/vod-http/src/resolver.rs",
+      "Git_preimage_sha256": "36c2a594916ee2ceb3ec03fd0c994bd0d093dc5ef8d402fbf26ac5fae6e572ae",
+      "reviewed_sha256": "05f29ce7c426e3c2cd540197a5f55c617e3060aba8b1c31ba0d424f4fc583609"
+    }
+  ],
+  "sound_scoped_behavior": [
+    "Sql method hook delegates only to authenticated, without STREAMS/network/provider/session resolution",
+    "valid measured lowercase UUID + invalid ASCII Bearer returns401 through existing error formatter",
+    "Allow OPTIONS, GET and Vary Accept, origin agree with measured Source HEAD headers",
+    "successful or anonymous method authentication keeps405; no worker success header added",
+    "pure actualSqlResolver invalid-Bearer test keeps SQL pool size0; no Nativewire/Main acceptance transferred"
+  ],
+  "concrete_scope_blocker": {
+    "location": "engine.rs head route pre-auth guard",
+    "cause": "Uuid::parse_str and u64::parse are broader/narrower than Django lexical route converters",
+    "examples": [
+      {
+        "path_value": "12345678-ABCD-5678-1234-567812345678",
+        "issue": "Rust UUID parse accepts uppercase; Django UUID regex excludes it"
+      },
+      {
+        "path_value": "12345678abcd56781234567812345678",
+        "issue": "Rust UUID parse accepts unhyphenated; Django UUID regex excludes it"
+      },
+      {
+        "profile_value": "+1",
+        "issue": "Rust u64 parse accepts plus; Django int route regex excludes it"
+      },
+      {
+        "profile_value": "18446744073709551616",
+        "issue": "Django int accepts this20digit value; u64 parse fails"
+      }
+    ],
+    "recommended_boundary": "Match Source lexical lowercase36-byte hyphenated UUID and ASCII-digit profile route first; numeric representability is unnecessary for auth-only hook; keep unmatched prior response until separate SPA boundary work"
+  },
+  "limitations": [
+    "No Source URL-shape experiment was run; this finding is static converter-language scope",
+    "Source invalid HEAD raw wire body is empty;172 is observed Content-Length, pureNative internal bodylen is not Source decoded-body evidence",
+    "Invalid UUID SPA and malformed/raw-header branches remain separate",
+    "Earlier short Git abbreviation2b0 lookup failed before review; exactcomposition base used thereafter"
+  ],
+  "canonical_or_protected_WIP_edited": false,
+  "Cargo_Docker_application_executed": false
+}

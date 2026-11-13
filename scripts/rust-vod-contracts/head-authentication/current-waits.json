@@ -1,0 +1,69 @@
+[
+  {
+    "stage": "fmt",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "PID": 2646510,
+    "PID_namespace": "actual exec namespace, host only when tool escalated",
+    "began_epoch": 1794601031.234406,
+    "completed_epoch": 1794601033.207529,
+    "actual_exit": 0,
+    "all859source_inputs_unchanged": true
+  },
+  {
+    "stage": "check",
+    "argv": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--offline",
+      "--locked"
+    ],
+    "PID": 2646645,
+    "PID_namespace": "actual exec namespace, host only when tool escalated",
+    "began_epoch": 1794601033.247417,
+    "completed_epoch": 1794601042.5473673,
+    "actual_exit": 0,
+    "all859source_inputs_unchanged": true
+  },
+  {
+    "stage": "strict",
+    "argv": [
+      "cargo",
+      "clippy",
+      "--workspace",
+      "--all-targets",
+      "--offline",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "PID": 2647375,
+    "PID_namespace": "actual exec namespace, host only when tool escalated",
+    "began_epoch": 1794601042.584241,
+    "completed_epoch": 1794601083.3141713,
+    "actual_exit": 0,
+    "all859source_inputs_unchanged": true
+  },
+  {
+    "stage": "defaults",
+    "argv": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--offline",
+      "--locked"
+    ],
+    "PID": 2650639,
+    "PID_namespace": "actual exec namespace, host only when tool escalated",
+    "began_epoch": 1794601083.3504012,
+    "completed_epoch": 1794601196.093248,
+    "actual_exit": 0,
+    "all859source_inputs_unchanged": true
+  }
+]

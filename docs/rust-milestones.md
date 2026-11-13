@@ -21,6 +21,8 @@ The [Core retained-reader and error-body composition](rust-core-rest-owner-valid
 
 The [Source-derived HTML error correction](rust-source500-correction.md) passes the combined 854-input workspace (769 tests, 739 ignored). Its fresh two-request Native acceptance now passes exact HTML status/body/content-type and unchanged SQL/authentication-history checks; earlier historical results are unchanged.
 
+The [VOD HEAD authentication correction](rust-vod-head-authentication.md) passes the current library gates (774 tests, 739 ignored) and peer review. Fresh Native wire/Main comparison and SPA/encoded URL boundaries remain open.
+
 ## Progress ledger
 
 Statuses: **planned**, **in progress**, **blocked**, **passed**. A blocked runtime

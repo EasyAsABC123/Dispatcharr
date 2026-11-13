@@ -77,6 +77,14 @@ pub struct VodSource {
 }
 
 pub trait VodResolver: Send + Sync {
+    /// DRF authenticates before rejecting a method, without entering the view's
+    /// STREAMS/network/provider/session logic. In-memory resolvers may be public.
+    fn authenticate_method<'a>(
+        &'a self,
+        _request: &'a VodRequest,
+    ) -> BoxFuture<'a, Result<(), StoreError>> {
+        Box::pin(async { Ok(()) })
+    }
     fn authorize<'a>(
         &'a self,
         request: &'a VodRequest,
@@ -138,6 +146,12 @@ impl SqlVodResolver {
 }
 
 impl VodResolver for SqlVodResolver {
+    fn authenticate_method<'a>(
+        &'a self,
+        request: &'a VodRequest,
+    ) -> BoxFuture<'a, Result<(), StoreError>> {
+        Box::pin(async move { self.authenticated(request).await.map(|_| ()) })
+    }
     fn client_ip(&self, request: &PlaybackRequest) -> std::net::IpAddr {
         self.auth.client_ip(request)
     }

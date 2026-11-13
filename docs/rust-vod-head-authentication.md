@@ -1,0 +1,9 @@
+# VOD HEAD authentication ordering
+
+A fresh Original request to a valid VOD UUID with an invalid Bearer token returns 401 before method rejection. The prior Native route returned 405 immediately. The Rust handler now calls a separate authentication hook before rejecting HEAD. The SQL resolver uses its existing authentication chain without entering STREAMS policy, resolving providers or creating sessions. The pinned URL routes target the GET-only stream view; its separate unregistered head_vod function is not the authority for these URLs.
+
+The path checks use the captured Django lowercase, hyphenated UUID rule and ASCII integer rule, including the pinned interpreter's 4,300-digit limit. Peer review caught differences in Rust's general UUID/u64 parsers; the corrected checks cover uppercase, hyphenless and URN UUIDs, plus signs and integers above u64. The isolated converter witness configures no Django settings or applications.
+
+All workspace gates pass on 854 Rust inputs plus five coupled inputs: 774 tests passed and 739 remain ignored. Five added tests cover authentication ordering, avoiding view/provider/session work, real SQL-resolver rejection without SQL, and converter boundaries. The [Root packet](../scripts/rust-vod-contracts/head-authentication/Root-review.json) preserves source hashes, actual exits, peer reviews and both earlier preparation failures.
+
+The Source HEAD wire body is empty; its Content-Length is 172. The Native pure test checks the internal 172-byte authentication response before HEAD transport handling. A fresh Native wire/Main comparison has not run yet. Encoded URL resolution, malformed-UUID SPA fallthrough and full M4 remain separate gates. No performance gain is claimed. All application and algorithm credit belongs to the original Dispatcharr authors.

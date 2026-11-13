@@ -1,0 +1,110 @@
+{
+  "passed": true,
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "actual_wait_exit": 0,
+  "argv": [
+    "docker",
+    "run",
+    "--pull=never",
+    "--rm",
+    "--cidfile",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-converter-witness-1/probe.cid",
+    "--name",
+    "dispatcharr-vod-converters-6b4d4441fd",
+    "--network",
+    "none",
+    "--read-only",
+    "--user",
+    "65532",
+    "--cap-drop",
+    "ALL",
+    "--security-opt",
+    "no-new-privileges",
+    "--pids-limit",
+    "32",
+    "--memory",
+    "64m",
+    "--entrypoint",
+    "/dispatcharrpy/bin/python",
+    "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "-c",
+    "import json,sys,re,hashlib,inspect,pathlib\nfrom django.urls.converters import UUIDConverter,IntConverter\nfrom django.conf import settings\nfrom django.apps import apps\nassert not settings.configured and not apps.ready\np=pathlib.Path(inspect.getsourcefile(UUIDConverter));assert p.stat().st_size<65536\nrows=[]\nfor s in ['1','+1','18446744073709551616','0'*4300,'0'*4301]:\n try:v=IntConverter().to_python(s);ok=True\n except ValueError:ok=False\n rows.append({'digits':len(s),'plus':s.startswith('+'),'regex_match':re.fullmatch(IntConverter.regex,s)is not None,'to_python_success':ok})\nprint(json.dumps({'UUID_regex':UUIDConverter.regex,'int_regex':IntConverter.regex,'python_int_max_str_digits':sys.get_int_max_str_digits(),'int_observations':rows,'converters_file_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'Django_settings_configured':settings.configured,'Django_apps_ready':apps.ready,'Source_app_initialized':False}))\n"
+  ],
+  "PID": 2643170,
+  "observed_starttime": "32135451",
+  "bounded_data_only": true,
+  "Source_app_initialized": false,
+  "fresh_exact_cleanup": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=17164ea6d69ac3958f2191361fb03f56148a0331fea9c275e8fd90c093afd270",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "name=^/dispatcharr-vod-converters-6b4d4441fd$",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    }
+  ],
+  "observations": {
+    "UUID_regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+    "int_regex": "[0-9]+",
+    "python_int_max_str_digits": 4300,
+    "int_observations": [
+      {
+        "digits": 1,
+        "plus": false,
+        "regex_match": true,
+        "to_python_success": true
+      },
+      {
+        "digits": 2,
+        "plus": true,
+        "regex_match": false,
+        "to_python_success": true
+      },
+      {
+        "digits": 20,
+        "plus": false,
+        "regex_match": true,
+        "to_python_success": true
+      },
+      {
+        "digits": 4300,
+        "plus": false,
+        "regex_match": true,
+        "to_python_success": true
+      },
+      {
+        "digits": 4301,
+        "plus": false,
+        "regex_match": true,
+        "to_python_success": false
+      }
+    ],
+    "converters_file_sha256": "8437c539d0aa281883857f16975a271d003483ac0444b0f5050a0d8b49525d3e",
+    "Django_settings_configured": false,
+    "Django_apps_ready": false,
+    "Source_app_initialized": false
+  }
+}

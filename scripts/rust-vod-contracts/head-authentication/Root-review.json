@@ -1,0 +1,96 @@
+{
+  "passed": true,
+  "base_runtime_Git": "2b0a4db27d99c0824e1ab2ba95e7840ec6703e4a",
+  "Rust_inputs": 854,
+  "coupled_inputs": 5,
+  "source_map_sha256": "8e98b2ca37e4483a73500f9d06412c9eb18e8f74910fa2d4a9c6eec4de84745e",
+  "changed_paths": [
+    "rust/crates/vod-http/src/engine.rs",
+    "rust/crates/vod-http/src/resolver.rs"
+  ],
+  "checks": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 2646510,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794601031.234406,
+      "completed_epoch": 1794601033.207529,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 2646645,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794601033.247417,
+      "completed_epoch": 1794601042.5473673,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 2647375,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794601042.584241,
+      "completed_epoch": 1794601083.3141713,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    },
+    {
+      "stage": "defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 2650639,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794601083.3504012,
+      "completed_epoch": 1794601196.093248,
+      "actual_exit": 0,
+      "all859source_inputs_unchanged": true
+    }
+  ],
+  "default_totals": {
+    "passed": 774,
+    "ignored": 739,
+    "blocks": 172
+  },
+  "new_focused_tests": 5,
+  "Source_actual_HEAD_wire_bytes": 0,
+  "Source_HEAD_content_length": 172,
+  "Native_internal_auth_error_bytes_in_pure_test": 172,
+  "fresh_Native_HTTP_or_Main_HEAD_run": false,
+  "SQL_resolver_invalid_bearer_test_pool_size": 0,
+  "Django_converter_data_only_witness": true,
+  "encoded_URL_and_SPA_boundary_acceptance": false,
+  "full_M4_or_performance": false,
+  "protected_worktree_paths_changed": false,
+  "credit": "Original Dispatcharr authors retain all application and algorithm credit."
+}
