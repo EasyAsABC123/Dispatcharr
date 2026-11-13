@@ -169,6 +169,10 @@ impl JsonBytes {
             limit,
         })
     }
+    #[cfg(test)]
+    pub(crate) fn maximum(&self) -> usize {
+        self.limit
+    }
     pub(crate) fn finish(self) -> Vec<u8> {
         self.data
     }
@@ -196,7 +200,7 @@ impl JsonBytes {
         self.data.extend_from_slice(value);
         Ok(())
     }
-    fn string(&mut self, value: &str) -> Result<(), StoreError> {
+    pub(crate) fn string(&mut self, value: &str) -> Result<(), StoreError> {
         self.raw(b"\"")?;
         for c in value.chars() {
             match c {

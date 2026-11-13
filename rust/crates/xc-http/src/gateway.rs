@@ -62,6 +62,8 @@ struct Inner {
     memory: Arc<Semaphore>,
     stopped: AtomicBool,
     epg_enabled: AtomicBool,
+    #[cfg(test)]
+    vod_lists_enabled: AtomicBool,
     workers: AtomicUsize,
     done: Notify,
     live: std::sync::OnceLock<LiveDispatcher>,
@@ -79,7 +81,18 @@ impl Drop for Worker {
 }
 struct Payload {
     data: Vec<u8>,
-    _memory: OwnedSemaphorePermit,
+    memory: Option<OwnedSemaphorePermit>,
+    request: Option<Arc<OwnedSemaphorePermit>>,
+    owner: Arc<Inner>,
+}
+impl Drop for Payload {
+    fn drop(&mut self) {
+        // Actual byte allocation ends before its byte/admission grants.
+        drop(std::mem::take(&mut self.data));
+        drop(self.memory.take());
+        drop(self.request.take());
+        self.owner.done.notify_waiters();
+    }
 }
 impl AsRef<[u8]> for Payload {
     fn as_ref(&self) -> &[u8] {
@@ -130,6 +143,8 @@ impl XcGateway {
                 config,
                 stopped: AtomicBool::new(false),
                 epg_enabled: AtomicBool::new(false),
+                #[cfg(test)]
+                vod_lists_enabled: AtomicBool::new(false),
                 workers: AtomicUsize::new(0),
                 done: Notify::new(),
                 live: std::sync::OnceLock::new(),
@@ -150,8 +165,29 @@ impl XcGateway {
         self.inner.epg_enabled.store(true, Ordering::Release);
         self
     }
+    /// Test-peer staging only. No production capability or app/Main hook.
+    #[cfg(test)]
+    fn with_vod_lists_for_test(self) -> Self {
+        self.inner.vod_lists_enabled.store(true, Ordering::Release);
+        self
+    }
+    fn accepts_vod_list(&self, action: &str) -> bool {
+        #[cfg(test)]
+        {
+            self.inner.vod_lists_enabled.load(Ordering::Acquire)
+                && matches!(action, "get_vod_streams" | "get_series")
+        }
+        #[cfg(not(test))]
+        {
+            let _ = action;
+            false
+        }
+    }
     pub fn active_requests(&self) -> usize {
-        self.inner.workers.load(Ordering::Acquire)
+        self.inner
+            .config
+            .max_requests
+            .saturating_sub(self.inner.requests.available_permits())
     }
     pub fn available_memory_bytes(&self) -> usize {
         self.inner.memory.available_permits()
@@ -166,7 +202,12 @@ impl XcGateway {
                 if self.active_requests() == 0 {
                     break;
                 }
-                done.await;
+                // Redis physical-reply guards may return the same request
+                // permit after a logical error without a Worker notification.
+                tokio::select! {
+                    () = done => {},
+                    () = tokio::time::sleep(Duration::from_millis(10)) => {},
+                }
             }
         })
         .await
@@ -189,17 +230,15 @@ impl XcGateway {
         // Client cancellation cannot release admission while auth/SQL/Redis work
         // is running. Redis operations additionally retain an Arc of admission
         // through the actual multiplexed reply, even after this worker deadline.
-        tokio::spawn(async move {
+        let deadline = gateway.inner.config.request_deadline;
+        // The observer times out, not the physical SQL/body owner. Dropping
+        // this JoinHandle on deadline/caller loss detaches the bounded task;
+        // its existing request/memory grants live until actual completion.
+        let physical = tokio::spawn(async move {
             let _worker = worker;
-            tokio::time::timeout(
-                gateway.inner.config.request_deadline,
-                gateway.process(request, permit),
-            )
-            .await
-            .map_err(|_| reader::capacity())?
-        })
-        .await
-        .map_err(|_| reader::capacity())?
+            gateway.process(request, permit).await
+        });
+        observe_physical(deadline, physical).await
     }
     async fn process(
         &self,
@@ -223,9 +262,9 @@ impl XcGateway {
                 .checked_add(name.as_str().len() + value.as_bytes().len() + 4)
                 .ok_or_else(reader::capacity)?;
         }
-        if header_bytes > 64 * 1024 {
-            return Err(reader::capacity());
-        }
+        // The reservation includes two request/body quotes. A smaller custom
+        // body limit cannot retain a larger uncharged header/URI clone.
+        bounded_header_size(header_bytes, config.max_body_bytes)?;
         let method = request.method().clone();
         let panel = request.uri().path() == "/panel_api.php";
         let identity = identity(&request);
@@ -254,16 +293,34 @@ impl XcGateway {
         }
         drop(body);
         // Ordinary Django views: presented DRF credentials are not evaluated.
-        let user = self
-            .inner
-            .auth
-            .authorize_xc(
+        // Scope only this per-request clone. Existing shared cache/event
+        // drivers retain the same admission through any late physical reply.
+        let auth = self.inner.auth.clone().with_retained_scope(permit.clone());
+        let authorized = auth
+            .authorize_xc_bounded(
                 &identity,
                 identity.parameter("username").unwrap_or(""),
                 identity.parameter("password").unwrap_or(""),
                 "XC_API",
+                dispatcharr_store::XcUserReadLimits {
+                    max_raw_bytes: config.max_metadata_bytes.min(64 * 1024),
+                    max_nodes: 4096,
+                    max_depth: 64,
+                    work_bytes: config.max_metadata_bytes,
+                },
             )
             .await?;
+        let auth_retained_bytes = authorized.retained_bytes;
+        let user = authorized.user;
+        // Reserve the SAME grant's auth portion before any reader allocations.
+        // New VOD routes receive this remaining value, never another permit.
+        let available_work_bytes = reservation
+            .checked_sub(auth_retained_bytes)
+            .and_then(|n| n.checked_sub(header_bytes.saturating_mul(2)))
+            .ok_or_else(reader::capacity)?;
+        if available_work_bytes < config.max_response_bytes {
+            return Err(reader::capacity());
+        }
         let action = identity.parameter("action").unwrap_or("");
         let mut out = JsonBytes::new(config.max_response_bytes)?;
         let limits = ReadLimit {
@@ -288,14 +345,14 @@ impl XcGateway {
             let categories = reader::categories(&self.inner.store, &user, &limits).await?;
             out.value(&serde_json::Value::Array(categories))?;
             out.raw(b"}, \"available_channels\": ")?;
-            self.write_live(&identity, &user, &limits, &mut out, true)
+            self.write_live(&identity, &user, &auth, &limits, &mut out, true)
                 .await?;
             out.raw(b"}")?;
         } else if action == "get_live_categories" {
             let categories = reader::categories(&self.inner.store, &user, &limits).await?;
             out.value(&serde_json::Value::Array(categories))?;
         } else if stream {
-            self.write_live(&identity, &user, &limits, &mut out, false)
+            self.write_live(&identity, &user, &auth, &limits, &mut out, false)
                 .await?;
         } else if matches!(action, "get_short_epg" | "get_simple_data_table")
             && self.inner.epg_enabled.load(Ordering::Acquire)
@@ -310,7 +367,7 @@ impl XcGateway {
             let result = crate::epg::write(
                 &crate::epg::Context {
                     store: &self.inner.store,
-                    auth: &self.inner.auth,
+                    auth: &auth,
                     user: &user,
                     request: &identity,
                     short: action == "get_short_epg",
@@ -334,6 +391,53 @@ impl XcGateway {
                     ))
                 }
                 Err(crate::epg::Error::Capacity) => return Err(reader::capacity()),
+            }
+        } else if matches!(action, "get_vod_categories" | "get_series_categories") {
+            crate::vod::write_categories(
+                &self.inner.store,
+                &user,
+                action == "get_series_categories",
+                &limits,
+                &mut out,
+            )
+            .await?;
+        } else if self.accepts_vod_list(action) {
+            #[cfg(test)]
+            {
+                let origin = dispatcharr_output_http::source_output_origin(&auth, &identity);
+                let result = crate::vod_lists::write(
+                    &crate::vod_lists::Context {
+                        store: &self.inner.store,
+                        user: &user,
+                        family: if action == "get_series" {
+                            crate::vod_priority::Family::Series
+                        } else {
+                            crate::vod_priority::Family::Movie
+                        },
+                        origin: &origin,
+                        category: identity.parameter("category_id"),
+                        limits: &limits,
+                        available_work_bytes: available_work_bytes
+                            .checked_sub(origin.capacity())
+                            .ok_or_else(reader::capacity)?,
+                    },
+                    &mut out,
+                )
+                .await;
+                match result {
+                    Ok(()) => {}
+                    Err(crate::vod_lists::Error::Source) => return Ok(django_page(500)),
+                    Err(crate::vod_lists::Error::Unsupported) => {
+                        return Err(StoreError::Unsupported(
+                            "XC VOD list grammar has not completed its Source migration gates",
+                        ))
+                    }
+                    Err(crate::vod_lists::Error::Store(error)) => return Err(error),
+                }
+            }
+            #[cfg(not(test))]
+            {
+                return Err(StoreError::Unsupported("XC VOD list staging is test-only"));
             }
         } else if matches!(
             action,
@@ -362,13 +466,21 @@ impl XcGateway {
                 .await?,
             )?;
         }
+        // Release actual auth/request allocations BEFORE returning their
+        // portion of the one memory reservation. Only response storage escapes.
+        drop(user);
+        drop(auth);
+        drop(identity);
+        drop(parts);
         let data = out.finish();
         let size = data.len();
         let retained = memory.split(data.capacity()).ok_or_else(reader::capacity)?;
         drop(memory);
         let data = Bytes::from_owner(Payload {
             data,
-            _memory: retained,
+            memory: Some(retained),
+            request: Some(permit),
+            owner: self.inner.clone(),
         });
         let mut response = Response::new(if method == Method::HEAD {
             Body::empty()
@@ -387,6 +499,7 @@ impl XcGateway {
         &self,
         request: &PlaybackRequest,
         user: &dispatcharr_store::User,
+        auth: &AuthService,
         limits: &ReadLimit,
         out: &mut JsonBytes,
         as_object: bool,
@@ -404,10 +517,22 @@ impl XcGateway {
             .clone()
             .try_acquire_many_owned(budget as u32)
             .map_err(|_| reader::capacity())?;
-        let mut live = LiveRows::project(&self.inner.auth, request, user, rows, budget).await?;
+        let mut live = LiveRows::project(auth, request, user, rows, budget).await?;
         live.write(&self.inner.store, out, as_object).await
     }
 }
+// This observer never aborts its physical task. Its handle is deliberately
+// detached on observer expiry or cancellation; that task owns its grants.
+async fn observe_physical<T>(
+    deadline: Duration,
+    physical: tokio::task::JoinHandle<Result<T, StoreError>>,
+) -> Result<T, StoreError> {
+    tokio::time::timeout(deadline, physical)
+        .await
+        .map_err(|_| reader::capacity())?
+        .map_err(|_| reader::capacity())?
+}
+
 fn django_page(status: u16) -> Response {
     let body = if status == 404 {
         "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Not Found</title>\n</head>\n<body>\n  <h1>Not Found</h1><p>The requested resource was not found on this server.</p>\n</body>\n</html>\n"
@@ -421,6 +546,14 @@ fn django_page(status: u16) -> Response {
     )
         .into_response()
 }
+fn bounded_header_size(bytes: usize, request_quote: usize) -> Result<(), StoreError> {
+    if bytes > request_quote.min(64 * 1024) {
+        Err(reader::capacity())
+    } else {
+        Ok(())
+    }
+}
+
 fn identity(request: &Request<Body>) -> PlaybackRequest {
     PlaybackRequest {
         channel_id: String::new(),

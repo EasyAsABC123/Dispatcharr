@@ -1,0 +1,469 @@
+serde_json v1.0.154
+├── serde_json feature "alloc"
+│   └── serde_json feature "preserve_order"
+│       ├── dispatcharr-backups v0.1.0 (<SOURCE>/rust/crates/backups)
+│       │   └── dispatcharr-backups feature "default" (command-line)
+│       │       └── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport)
+│       │           └── dispatcharr-job-transport feature "default" (command-line)
+│       │               └── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app)
+│       │                   └── dispatcharr-rs feature "default" (command-line)
+│       ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│       ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store)
+│       │   └── dispatcharr-store feature "default" (command-line)
+│       │       ├── dispatcharr-hdhr-http v0.1.0 (<SOURCE>/rust/crates/hdhr-http)
+│       │       │   └── dispatcharr-hdhr-http feature "default" (command-line)
+│       │       │       └── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│       │       ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg)
+│       │       │   └── dispatcharr-ingest-epg feature "default" (command-line)
+│       │       │       └── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│       │       ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│       │       ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http)
+│       │       │   └── dispatcharr-output-http feature "default" (command-line)
+│       │       │       ├── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│       │       │       ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http)
+│       │       │       │   └── dispatcharr-xc-http feature "default" (command-line)
+│       │       │       │       ├── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│       │       │       │       └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http)
+│       │       │       │           └── dispatcharr-xmltv-http feature "default" (command-line)
+│       │       │       │               └── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│       │       │       └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│       │       ├── dispatcharr-realtime v0.1.0 (<SOURCE>/rust/crates/realtime)
+│       │       │   └── dispatcharr-realtime feature "default" (command-line)
+│       │       │       └── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│       │       │       [dev-dependencies]
+│       │       │       └── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│       │       ├── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│       │       ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http)
+│       │       │   └── dispatcharr-timeshift-http feature "default" (command-line)
+│       │       │       └── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│       │       ├── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http)
+│       │       │   └── dispatcharr-vod-http feature "default" (command-line)
+│       │       │       └── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│       │       ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│       │       └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│       ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│       └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+├── serde_json feature "arbitrary_precision"
+│   ├── dispatcharr-backups v0.1.0 (<SOURCE>/rust/crates/backups) (*)
+│   ├── dispatcharr-ingest-core v0.1.0 (<SOURCE>/rust/crates/ingest-core)
+│   │   └── dispatcharr-ingest-core feature "default" (command-line)
+│   │       ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   │       ├── dispatcharr-ingest-http v0.1.0 (<SOURCE>/rust/crates/ingest-http)
+│   │       │   └── dispatcharr-ingest-http feature "default" (command-line)
+│   │       ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│   │       ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   │       ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │       ├── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │       ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   │       ├── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│   │       └── dispatcharr-xmltv-parser v0.1.0 (<SOURCE>/rust/crates/xmltv-parser)
+│   │           └── dispatcharr-xmltv-parser feature "default" (command-line)
+│   │               └── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│   ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+├── serde_json feature "default"
+│   ├── axum v0.8.9
+│   │   ├── axum feature "default"
+│   │   │   ├── dispatcharr-fmp4-http v0.1.0 (<SOURCE>/rust/crates/fmp4-http)
+│   │   │   │   └── dispatcharr-fmp4-http feature "default" (command-line)
+│   │   │   │       └── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│   │   │   ├── dispatcharr-hdhr-http v0.1.0 (<SOURCE>/rust/crates/hdhr-http) (*)
+│   │   │   ├── dispatcharr-hls-http v0.1.0 (<SOURCE>/rust/crates/hls-http)
+│   │   │   │   └── dispatcharr-hls-http feature "default" (command-line)
+│   │   │   │       └── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│   │   │   ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│   │   │   ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   │   │   ├── dispatcharr-realtime v0.1.0 (<SOURCE>/rust/crates/realtime) (*)
+│   │   │   ├── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│   │   │   ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   │   ├── dispatcharr-stream-http v0.1.0 (<SOURCE>/rust/crates/stream-http)
+│   │   │   │   └── dispatcharr-stream-http feature "default" (command-line)
+│   │   │   │       ├── dispatcharr-fmp4-http v0.1.0 (<SOURCE>/rust/crates/fmp4-http) (*)
+│   │   │   │       ├── dispatcharr-hls-http v0.1.0 (<SOURCE>/rust/crates/hls-http) (*)
+│   │   │   │       └── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│   │   │   ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │   │   ├── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │   │   ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   │   │   └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│   │   │   [dev-dependencies]
+│   │   │   ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   │   │   └── dispatcharr-ingest-http v0.1.0 (<SOURCE>/rust/crates/ingest-http) (*)
+│   │   ├── axum feature "form"
+│   │   │   └── axum feature "default" (*)
+│   │   ├── axum feature "http1"
+│   │   │   └── axum feature "default" (*)
+│   │   ├── axum feature "json"
+│   │   │   └── axum feature "default" (*)
+│   │   ├── axum feature "matched-path"
+│   │   │   └── axum feature "default" (*)
+│   │   ├── axum feature "multipart"
+│   │   │   └── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   ├── axum feature "original-uri"
+│   │   │   └── axum feature "default" (*)
+│   │   ├── axum feature "query"
+│   │   │   └── axum feature "default" (*)
+│   │   ├── axum feature "tokio"
+│   │   │   ├── axum feature "default" (*)
+│   │   │   ├── axum feature "tokio" (*)
+│   │   │   └── axum feature "ws"
+│   │   │       └── dispatcharr-realtime v0.1.0 (<SOURCE>/rust/crates/realtime) (*)
+│   │   ├── axum feature "tower-log"
+│   │   │   └── axum feature "default" (*)
+│   │   ├── axum feature "tracing"
+│   │   │   └── axum feature "default" (*)
+│   │   └── axum feature "ws" (*)
+│   ├── cookie_store v0.22.1
+│   │   ├── cookie_store feature "default"
+│   │   │   └── reqwest v0.12.28
+│   │   │       └── dispatcharr-ingest-http v0.1.0 (<SOURCE>/rust/crates/ingest-http) (*)
+│   │   │       ├── reqwest feature "__rustls"
+│   │   │       │   └── reqwest feature "rustls-tls-webpki-roots-no-provider"
+│   │   │       │       └── reqwest feature "rustls-tls-webpki-roots"
+│   │   │       │           └── reqwest feature "rustls-tls"
+│   │   │       │               ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   │       │               ├── dispatcharr-stream-http v0.1.0 (<SOURCE>/rust/crates/stream-http) (*)
+│   │   │       │               ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │   │       │               ├── dispatcharr-upstream-http v0.1.0 (<SOURCE>/rust/crates/upstream-http)
+│   │   │       │               │   └── dispatcharr-upstream-http feature "default" (command-line)
+│   │   │       │               │       ├── dispatcharr-ingest-http v0.1.0 (<SOURCE>/rust/crates/ingest-http) (*)
+│   │   │       │               │       ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   │       │               │       └── dispatcharr-stream-http v0.1.0 (<SOURCE>/rust/crates/stream-http) (*)
+│   │   │       │               └── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │   │       │               [dev-dependencies]
+│   │   │       │               ├── dispatcharr-hls-http v0.1.0 (<SOURCE>/rust/crates/hls-http) (*)
+│   │   │       │               ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   │   │       │               ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│   │   │       │               ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   │   │       │               └── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │   │       ├── reqwest feature "__rustls-ring"
+│   │   │       │   └── reqwest feature "rustls-tls-webpki-roots" (*)
+│   │   │       ├── reqwest feature "__tls"
+│   │   │       │   └── reqwest feature "__rustls" (*)
+│   │   │       ├── reqwest feature "cookies"
+│   │   │       │   ├── dispatcharr-stream-http v0.1.0 (<SOURCE>/rust/crates/stream-http) (*)
+│   │   │       │   └── dispatcharr-upstream-http v0.1.0 (<SOURCE>/rust/crates/upstream-http) (*)
+│   │   │       ├── reqwest feature "json"
+│   │   │       │   [dev-dependencies]
+│   │   │       │   ├── dispatcharr-hdhr-http v0.1.0 (<SOURCE>/rust/crates/hdhr-http) (*)
+│   │   │       │   ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   │   │       │   ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │   │       │   └── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │   │       ├── reqwest feature "rustls-tls" (*)
+│   │   │       ├── reqwest feature "rustls-tls-webpki-roots" (*)
+│   │   │       ├── reqwest feature "rustls-tls-webpki-roots-no-provider" (*)
+│   │   │       └── reqwest feature "stream"
+│   │   │           ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   │           ├── dispatcharr-stream-http v0.1.0 (<SOURCE>/rust/crates/stream-http) (*)
+│   │   │           ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │   │           ├── dispatcharr-upstream-http v0.1.0 (<SOURCE>/rust/crates/upstream-http) (*)
+│   │   │           └── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │   │           [dev-dependencies]
+│   │   │           ├── dispatcharr-hdhr-http v0.1.0 (<SOURCE>/rust/crates/hdhr-http) (*)
+│   │   │           └── dispatcharr-hls-http v0.1.0 (<SOURCE>/rust/crates/hls-http) (*)
+│   │   ├── cookie_store feature "public_suffix"
+│   │   │   └── cookie_store feature "default" (*)
+│   │   ├── cookie_store feature "serde"
+│   │   │   └── cookie_store feature "serde_json"
+│   │   │       └── cookie_store feature "default" (*)
+│   │   └── cookie_store feature "serde_json" (*)
+│   ├── dispatcharr-backups v0.1.0 (<SOURCE>/rust/crates/backups) (*)
+│   ├── dispatcharr-clients v0.1.0 (<SOURCE>/rust/crates/clients)
+│   │   └── dispatcharr-clients feature "default" (command-line)
+│   │       ├── dispatcharr-fmp4-http v0.1.0 (<SOURCE>/rust/crates/fmp4-http) (*)
+│   │       ├── dispatcharr-hls-http v0.1.0 (<SOURCE>/rust/crates/hls-http) (*)
+│   │       ├── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│   │       ├── dispatcharr-stream-http v0.1.0 (<SOURCE>/rust/crates/stream-http) (*)
+│   │       ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │       └── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   ├── dispatcharr-contracts v0.1.0 (<SOURCE>/rust/crates/contracts)
+│   │   └── dispatcharr-contracts feature "default" (command-line)
+│   │       ├── dispatcharr-clients v0.1.0 (<SOURCE>/rust/crates/clients) (*)
+│   │       ├── dispatcharr-fmp4-http v0.1.0 (<SOURCE>/rust/crates/fmp4-http) (*)
+│   │       ├── dispatcharr-hdhr-http v0.1.0 (<SOURCE>/rust/crates/hdhr-http) (*)
+│   │       ├── dispatcharr-hls-http v0.1.0 (<SOURCE>/rust/crates/hls-http) (*)
+│   │       ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   │       ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│   │       ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   │       ├── dispatcharr-realtime v0.1.0 (<SOURCE>/rust/crates/realtime) (*)
+│   │       ├── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│   │       ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │       ├── dispatcharr-stream-http v0.1.0 (<SOURCE>/rust/crates/stream-http) (*)
+│   │       ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │       ├── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │       ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   │       └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│   ├── dispatcharr-hdhr-http v0.1.0 (<SOURCE>/rust/crates/hdhr-http) (*)
+│   ├── dispatcharr-hls-http v0.1.0 (<SOURCE>/rust/crates/hls-http) (*)
+│   ├── dispatcharr-ingest-core v0.1.0 (<SOURCE>/rust/crates/ingest-core) (*)
+│   ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   ├── dispatcharr-input-store v0.1.0 (<SOURCE>/rust/crates/input-store)
+│   │   └── dispatcharr-input-store feature "default" (command-line)
+│   │       ├── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│   │       └── dispatcharr-stream-http v0.1.0 (<SOURCE>/rust/crates/stream-http) (*)
+│   ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│   ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   ├── dispatcharr-output-store v0.1.0 (<SOURCE>/rust/crates/output-store)
+│   │   └── dispatcharr-output-store feature "default" (command-line)
+│   │       ├── dispatcharr-fmp4-http v0.1.0 (<SOURCE>/rust/crates/fmp4-http) (*)
+│   │       ├── dispatcharr-hls-http v0.1.0 (<SOURCE>/rust/crates/hls-http) (*)
+│   │       ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   │       ├── dispatcharr-input-store v0.1.0 (<SOURCE>/rust/crates/input-store) (*)
+│   │       ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│   │       ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   │       ├── dispatcharr-realtime v0.1.0 (<SOURCE>/rust/crates/realtime) (*)
+│   │       ├── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│   │       ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │       ├── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │       ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   │       └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│   ├── dispatcharr-realtime v0.1.0 (<SOURCE>/rust/crates/realtime) (*)
+│   ├── dispatcharr-rs v0.1.0 (<SOURCE>/rust/crates/app) (*)
+│   ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   ├── dispatcharr-stream-http v0.1.0 (<SOURCE>/rust/crates/stream-http) (*)
+│   ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   ├── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   ├── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│   ├── jsonwebtoken v9.3.1
+│   │   ├── jsonwebtoken feature "default"
+│   │   │   └── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   │   [dev-dependencies]
+│   │   │   ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   │   │   └── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│   │   ├── jsonwebtoken feature "pem"
+│   │   │   └── jsonwebtoken feature "use_pem"
+│   │   │       └── jsonwebtoken feature "default" (*)
+│   │   ├── jsonwebtoken feature "simple_asn1"
+│   │   │   └── jsonwebtoken feature "use_pem" (*)
+│   │   └── jsonwebtoken feature "use_pem" (*)
+│   ├── reqwest v0.12.28 (*)
+│   ├── sqlx-core v0.8.6
+│   │   ├── sqlx-core feature "_rt-tokio"
+│   │   │   ├── sqlx feature "runtime-tokio"
+│   │   │   │   └── sqlx feature "runtime-tokio-rustls"
+│   │   │   │       ├── dispatcharr-hdhr-http v0.1.0 (<SOURCE>/rust/crates/hdhr-http) (*)
+│   │   │   │       ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   │   │   │       ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│   │   │   │       ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   │   │   │       ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   │   │       ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │   │   │       ├── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │   │   │       ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   │   │   │       └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│   │   │   └── sqlx-macros-core feature "_rt-tokio"
+│   │   │       └── sqlx-macros feature "_rt-tokio"
+│   │   │           └── sqlx feature "runtime-tokio" (*)
+│   │   ├── sqlx-core feature "_tls-rustls"
+│   │   │   └── sqlx-core feature "_tls-rustls-ring-webpki"
+│   │   │       ├── sqlx feature "tls-rustls-ring-webpki"
+│   │   │       │   └── sqlx feature "tls-rustls-ring"
+│   │   │       │       └── sqlx feature "runtime-tokio-rustls" (*)
+│   │   │       └── sqlx-macros-core feature "_tls-rustls-ring-webpki"
+│   │   │           └── sqlx-macros feature "_tls-rustls-ring-webpki"
+│   │   │               └── sqlx feature "tls-rustls-ring-webpki" (*)
+│   │   ├── sqlx-core feature "_tls-rustls-ring-webpki" (*)
+│   │   ├── sqlx-core feature "any"
+│   │   │   └── sqlx-macros v0.8.6 (proc-macro)
+│   │   │       ├── sqlx-macros feature "_rt-tokio" (*)
+│   │   │       ├── sqlx-macros feature "_tls-rustls-ring-webpki" (*)
+│   │   │       ├── sqlx-macros feature "chrono"
+│   │   │       │   └── sqlx feature "chrono"
+│   │   │       │       ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   │   │       │       ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   │       │       ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   │   │       │       └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│   │   │       ├── sqlx-macros feature "default"
+│   │   │       │   └── sqlx v0.8.6
+│   │   │       │       ├── sqlx feature "_rt-tokio"
+│   │   │       │       │   └── sqlx feature "runtime-tokio" (*)
+│   │   │       │       ├── sqlx feature "any"
+│   │   │       │       │   └── sqlx feature "default"
+│   │   │       │       │       ├── dispatcharr-hdhr-http v0.1.0 (<SOURCE>/rust/crates/hdhr-http) (*)
+│   │   │       │       │       ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   │   │       │       │       └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│   │   │       │       ├── sqlx feature "chrono" (*)
+│   │   │       │       ├── sqlx feature "default" (*)
+│   │   │       │       ├── sqlx feature "derive"
+│   │   │       │       │   └── sqlx feature "macros"
+│   │   │       │       │       └── sqlx feature "default" (*)
+│   │   │       │       ├── sqlx feature "json"
+│   │   │       │       │   ├── dispatcharr-hdhr-http v0.1.0 (<SOURCE>/rust/crates/hdhr-http) (*)
+│   │   │       │       │   ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   │   │       │       │   ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   │   │       │       │   ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   │       │       │   ├── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │   │       │       │   ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   │   │       │       │   └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│   │   │       │       │   └── sqlx feature "default" (*)
+│   │   │       │       ├── sqlx feature "macros" (*)
+│   │   │       │       ├── sqlx feature "migrate"
+│   │   │       │       │   └── sqlx feature "default" (*)
+│   │   │       │       ├── sqlx feature "postgres"
+│   │   │       │       │   ├── dispatcharr-hdhr-http v0.1.0 (<SOURCE>/rust/crates/hdhr-http) (*)
+│   │   │       │       │   ├── dispatcharr-ingest-epg v0.1.0 (<SOURCE>/rust/crates/ingest-epg) (*)
+│   │   │       │       │   ├── dispatcharr-job-transport v0.1.0 (<SOURCE>/rust/crates/job-transport) (*)
+│   │   │       │       │   ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   │   │       │       │   ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   │       │       │   ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │   │       │       │   ├── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │   │       │       │   ├── dispatcharr-xc-http v0.1.0 (<SOURCE>/rust/crates/xc-http) (*)
+│   │   │       │       │   └── dispatcharr-xmltv-http v0.1.0 (<SOURCE>/rust/crates/xmltv-http) (*)
+│   │   │       │       ├── sqlx feature "runtime-tokio" (*)
+│   │   │       │       ├── sqlx feature "runtime-tokio-rustls" (*)
+│   │   │       │       ├── sqlx feature "sqlx-macros"
+│   │   │       │       │   ├── sqlx feature "derive" (*)
+│   │   │       │       │   └── sqlx feature "macros" (*)
+│   │   │       │       ├── sqlx feature "sqlx-postgres"
+│   │   │       │       │   └── sqlx feature "postgres" (*)
+│   │   │       │       ├── sqlx feature "tls-rustls-ring" (*)
+│   │   │       │       ├── sqlx feature "tls-rustls-ring-webpki" (*)
+│   │   │       │       └── sqlx feature "uuid"
+│   │   │       │           ├── dispatcharr-output-http v0.1.0 (<SOURCE>/rust/crates/output-http) (*)
+│   │   │       │           ├── dispatcharr-store v0.1.0 (<SOURCE>/rust/crates/store) (*)
+│   │   │       │           ├── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   │   │       │           └── dispatcharr-vod-http v0.1.0 (<SOURCE>/rust/crates/vod-http) (*)
+│   │   │       ├── sqlx-macros feature "derive"
+│   │   │       │   └── sqlx feature "derive" (*)
+│   │   │       ├── sqlx-macros feature "json"
+│   │   │       │   └── sqlx feature "json" (*)
+│   │   │       ├── sqlx-macros feature "macros"
+│   │   │       │   └── sqlx feature "macros" (*)
+│   │   │       ├── sqlx-macros feature "migrate"
+│   │   │       │   └── sqlx feature "migrate" (*)
+│   │   │       ├── sqlx-macros feature "postgres"
+│   │   │       │   └── sqlx feature "postgres" (*)
+│   │   │       └── sqlx-macros feature "uuid"
+│   │   │           └── sqlx feature "uuid" (*)
+│   │   │   ├── sqlx feature "any" (*)
+│   │   │   └── sqlx-postgres feature "any"
+│   │   │       └── sqlx feature "any" (*)
+│   │   ├── sqlx-core feature "chrono"
+│   │   │   ├── sqlx feature "chrono" (*)
+│   │   │   ├── sqlx-macros-core feature "chrono"
+│   │   │   │   └── sqlx-macros feature "chrono" (*)
+│   │   │   ├── sqlx-postgres feature "chrono"
+│   │   │   │   └── sqlx-macros-core feature "chrono" (*)
+│   │   │   └── sqlx-postgres feature "chrono"
+│   │   │       └── sqlx feature "chrono" (*)
+│   │   ├── sqlx-core feature "crc"
+│   │   │   └── sqlx-core feature "migrate"
+│   │   │       └── sqlx v0.8.6 (*)
+│   │   │       ├── sqlx feature "migrate" (*)
+│   │   │       ├── sqlx-macros-core feature "migrate"
+│   │   │       │   └── sqlx-macros feature "migrate" (*)
+│   │   │       ├── sqlx-postgres feature "migrate"
+│   │   │       │   └── sqlx-macros-core v0.8.6
+│   │   │       │       ├── sqlx-macros-core feature "_rt-tokio" (*)
+│   │   │       │       ├── sqlx-macros-core feature "_tls-rustls-ring-webpki" (*)
+│   │   │       │       ├── sqlx-macros-core feature "chrono" (*)
+│   │   │       │       ├── sqlx-macros-core feature "default"
+│   │   │       │       │   └── sqlx-macros v0.8.6 (proc-macro) (*)
+│   │   │       │       ├── sqlx-macros-core feature "derive"
+│   │   │       │       │   └── sqlx-macros feature "derive" (*)
+│   │   │       │       ├── sqlx-macros-core feature "json"
+│   │   │       │       │   └── sqlx-macros feature "json" (*)
+│   │   │       │       ├── sqlx-macros-core feature "macros"
+│   │   │       │       │   └── sqlx-macros feature "macros" (*)
+│   │   │       │       ├── sqlx-macros-core feature "migrate" (*)
+│   │   │       │       ├── sqlx-macros-core feature "postgres"
+│   │   │       │       │   └── sqlx-macros feature "postgres" (*)
+│   │   │       │       ├── sqlx-macros-core feature "sqlx-postgres"
+│   │   │       │       │   └── sqlx-macros-core feature "postgres" (*)
+│   │   │       │       ├── sqlx-macros-core feature "tokio"
+│   │   │       │       │   └── sqlx-macros-core feature "_rt-tokio" (*)
+│   │   │       │       └── sqlx-macros-core feature "uuid"
+│   │   │       │           └── sqlx-macros feature "uuid" (*)
+│   │   │       └── sqlx-postgres feature "migrate"
+│   │   │           └── sqlx feature "migrate" (*)
+│   │   ├── sqlx-core feature "default"
+│   │   │   ├── sqlx v0.8.6 (*)
+│   │   │   ├── sqlx-macros v0.8.6 (proc-macro) (*)
+│   │   │   ├── sqlx-macros-core v0.8.6 (*)
+│   │   │   ├── sqlx-postgres v0.8.6
+│   │   │   │   ├── sqlx-postgres feature "any" (*)
+│   │   │   │   ├── sqlx-postgres feature "chrono" (*)
+│   │   │   │   ├── sqlx-postgres feature "default"
+│   │   │   │   │   └── sqlx v0.8.6 (*)
+│   │   │   │   ├── sqlx-postgres feature "json"
+│   │   │   │   │   └── sqlx feature "json" (*)
+│   │   │   │   ├── sqlx-postgres feature "migrate" (*)
+│   │   │   │   └── sqlx-postgres feature "uuid"
+│   │   │   │       └── sqlx feature "uuid" (*)
+│   │   │   └── sqlx-postgres v0.8.6
+│   │   │       ├── sqlx-postgres feature "chrono" (*)
+│   │   │       ├── sqlx-postgres feature "default"
+│   │   │       │   └── sqlx-macros-core v0.8.6 (*)
+│   │   │       ├── sqlx-postgres feature "json"
+│   │   │       │   └── sqlx-macros-core feature "json" (*)
+│   │   │       ├── sqlx-postgres feature "migrate" (*)
+│   │   │       ├── sqlx-postgres feature "offline"
+│   │   │       │   └── sqlx-macros-core v0.8.6 (*)
+│   │   │       └── sqlx-postgres feature "uuid"
+│   │   │           └── sqlx-macros-core feature "uuid" (*)
+│   │   ├── sqlx-core feature "json"
+│   │   │   ├── sqlx-postgres v0.8.6 (*)
+│   │   │   └── sqlx-postgres v0.8.6 (*)
+│   │   │   ├── sqlx feature "json" (*)
+│   │   │   ├── sqlx-macros-core feature "json" (*)
+│   │   │   ├── sqlx-postgres feature "json" (*)
+│   │   │   └── sqlx-postgres feature "json" (*)
+│   │   ├── sqlx-core feature "migrate" (*)
+│   │   ├── sqlx-core feature "offline"
+│   │   │   ├── sqlx v0.8.6 (*)
+│   │   │   └── sqlx-macros-core v0.8.6 (*)
+│   │   │   └── sqlx-postgres feature "offline" (*)
+│   │   ├── sqlx-core feature "rustls"
+│   │   │   ├── sqlx-core feature "_tls-rustls" (*)
+│   │   │   └── sqlx-core feature "_tls-rustls-ring-webpki" (*)
+│   │   ├── sqlx-core feature "serde"
+│   │   │   ├── sqlx-core feature "json" (*)
+│   │   │   └── sqlx-core feature "offline" (*)
+│   │   ├── sqlx-core feature "serde_json"
+│   │   │   └── sqlx-core feature "json" (*)
+│   │   ├── sqlx-core feature "sha2"
+│   │   │   └── sqlx-core feature "migrate" (*)
+│   │   ├── sqlx-core feature "tokio"
+│   │   │   └── sqlx-core feature "_rt-tokio" (*)
+│   │   ├── sqlx-core feature "tokio-stream"
+│   │   │   └── sqlx-core feature "_rt-tokio" (*)
+│   │   ├── sqlx-core feature "uuid"
+│   │   │   ├── sqlx feature "uuid" (*)
+│   │   │   ├── sqlx-macros-core feature "uuid" (*)
+│   │   │   ├── sqlx-postgres feature "uuid" (*)
+│   │   │   └── sqlx-postgres feature "uuid" (*)
+│   │   └── sqlx-core feature "webpki-roots"
+│   │       └── sqlx-core feature "_tls-rustls-ring-webpki" (*)
+│   └── sqlx-postgres v0.8.6 (*)
+│   [dev-dependencies]
+│   ├── dispatcharr-fmp4-core v0.1.0 (<SOURCE>/rust/crates/fmp4-core)
+│   │   └── dispatcharr-fmp4-core feature "default" (command-line)
+│   │       └── dispatcharr-fmp4-http v0.1.0 (<SOURCE>/rust/crates/fmp4-http) (*)
+│   ├── dispatcharr-hls-core v0.1.0 (<SOURCE>/rust/crates/hls-core)
+│   │   └── dispatcharr-hls-core feature "default" (command-line)
+│   │       └── dispatcharr-hls-http v0.1.0 (<SOURCE>/rust/crates/hls-http) (*)
+│   ├── dispatcharr-ingest-http v0.1.0 (<SOURCE>/rust/crates/ingest-http) (*)
+│   ├── dispatcharr-timeshift-core v0.1.0 (<SOURCE>/rust/crates/timeshift-core)
+│   │   └── dispatcharr-timeshift-core feature "default" (command-line)
+│   │       └── dispatcharr-timeshift-http v0.1.0 (<SOURCE>/rust/crates/timeshift-http) (*)
+│   └── dispatcharr-xmltv-parser v0.1.0 (<SOURCE>/rust/crates/xmltv-parser) (*)
+├── serde_json feature "indexmap"
+│   └── serde_json feature "preserve_order" (*)
+├── serde_json feature "preserve_order" (*)
+├── serde_json feature "raw_value"
+│   ├── axum v0.8.9 (*)
+│   ├── sqlx-core v0.8.6 (*)
+│   └── sqlx-postgres v0.8.6 (*)
+└── serde_json feature "std"
+    └── serde_json feature "default" (*)
+
+serde_json v1.0.154
+├── serde_json feature "default"
+│   ├── sqlx-macros-core v0.8.6 (*)
+│   └── sqlx-postgres v0.8.6 (*)
+├── serde_json feature "raw_value"
+│   └── sqlx-postgres v0.8.6 (*)
+└── serde_json feature "std"
+    └── serde_json feature "default" (*)

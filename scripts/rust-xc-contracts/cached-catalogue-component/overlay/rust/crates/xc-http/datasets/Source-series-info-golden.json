@@ -1,0 +1,232 @@
+{
+  "scope": "Retained Source3 Series/episode SQL fields and TCP body; pure DTO golden only",
+  "source_rows_sha256": "4fa91fb47abf356b432e521e6bc6cf0d79da0fc7e6d0ca3729c6c51737f370c0",
+  "source_TCP_sha256": "0357e483f7e3d84c17ce6547c1b640c10bbc52b778f292bc70ebebd3c2fae305",
+  "series": {
+    "id": 1,
+    "uuid": "4046d0ac-fb90-4abb-adcd-268266d3ecfa",
+    "name": "owned-source-capture-f186fa18-Show",
+    "description": null,
+    "year": 1999,
+    "rating": "8.25",
+    "genre": null,
+    "logo_id": null,
+    "tmdb_id": null,
+    "imdb_id": null,
+    "language": "",
+    "custom_properties": {
+      "cast": "Owned cast"
+    },
+    "created_at": "2026-11-13 00:09:22.678049+00:00",
+    "updated_at": "2026-11-13 00:09:22.678053+00:00"
+  },
+  "relation": {
+    "id": 1,
+    "m3u_account_id": 2,
+    "series_id": 1,
+    "category_id": 2,
+    "external_series_id": "2",
+    "custom_properties": {
+      "detailed_info": {
+        "name": "owned-source-capture-f186fa18-Show",
+        "movie_image": "http://origin:8080/series.png"
+      },
+      "detailed_fetched": true,
+      "episodes_fetched": true
+    },
+    "created_at": "2026-11-13 00:09:22.678542+00:00",
+    "updated_at": "2026-11-13 00:09:22.678547+00:00",
+    "last_episode_refresh": "2026-11-13 00:09:22.638980+00:00",
+    "last_seen": "2026-11-13 00:09:22.678451+00:00"
+  },
+  "episodes": [
+    {
+      "id": 1,
+      "uuid": "0a9822df-b534-4c07-8ecb-bed5d7706b81",
+      "name": "owned-source-capture-f186fa18-Episode0",
+      "description": null,
+      "air_date": null,
+      "rating": null,
+      "duration_secs": 120,
+      "series_id": 1,
+      "season_number": 0,
+      "episode_number": 1,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "custom_properties": {
+        "video": {
+          "codec_name": "fallback"
+        },
+        "movie_image": "http://origin:8080/episode.png"
+      },
+      "created_at": "2026-11-13 00:09:22.679829+00:00",
+      "updated_at": "2026-11-13 00:09:22.679833+00:00"
+    },
+    {
+      "id": 2,
+      "uuid": "ea642d75-5d76-4d9b-8edc-bbb1c945a072",
+      "name": "owned-source-capture-f186fa18-Episode1",
+      "description": null,
+      "air_date": null,
+      "rating": null,
+      "duration_secs": 120,
+      "series_id": 1,
+      "season_number": 1,
+      "episode_number": 1,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "custom_properties": {
+        "video": {
+          "codec_name": "fallback"
+        },
+        "movie_image": "http://origin:8080/episode.png"
+      },
+      "created_at": "2026-11-13 00:09:22.680927+00:00",
+      "updated_at": "2026-11-13 00:09:22.680931+00:00"
+    },
+    {
+      "id": 3,
+      "uuid": "8fcc99c2-21d6-4622-b432-503faad94dc1",
+      "name": "owned-source-capture-f186fa18-Episode2",
+      "description": null,
+      "air_date": null,
+      "rating": null,
+      "duration_secs": 120,
+      "series_id": 1,
+      "season_number": 2,
+      "episode_number": 1,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "custom_properties": {
+        "video": {
+          "codec_name": "fallback"
+        },
+        "movie_image": "http://origin:8080/episode.png"
+      },
+      "created_at": "2026-11-13 00:09:22.681896+00:00",
+      "updated_at": "2026-11-13 00:09:22.681900+00:00"
+    }
+  ],
+  "episode_relations": [
+    {
+      "id": 1,
+      "m3u_account_id": 3,
+      "episode_id": 1,
+      "series_relation_id": 2,
+      "stream_id": "e0",
+      "container_extension": "mp4",
+      "custom_properties": {
+        "info": {
+          "info": {
+            "audio": {
+              "codec_name": "aac"
+            },
+            "video": {
+              "codec_name": "h264"
+            },
+            "bitrate": 2345
+          }
+        }
+      },
+      "created_at": "2026-11-13 00:09:22.680385+00:00",
+      "updated_at": "2026-11-13 00:09:22.680389+00:00",
+      "last_seen": "2026-11-13 00:09:22.680304+00:00"
+    },
+    {
+      "id": 2,
+      "m3u_account_id": 2,
+      "episode_id": 2,
+      "series_relation_id": 1,
+      "stream_id": "e1",
+      "container_extension": "mkv",
+      "custom_properties": {
+        "info": {
+          "info": {
+            "audio": {
+              "codec_name": "aac"
+            },
+            "video": {
+              "codec_name": "h264"
+            },
+            "bitrate": 2345
+          }
+        }
+      },
+      "created_at": "2026-11-13 00:09:22.681230+00:00",
+      "updated_at": "2026-11-13 00:09:22.681234+00:00",
+      "last_seen": "2026-11-13 00:09:22.681171+00:00"
+    },
+    {
+      "id": 3,
+      "m3u_account_id": 3,
+      "episode_id": 2,
+      "series_relation_id": 2,
+      "stream_id": "e1",
+      "container_extension": "mp4",
+      "custom_properties": {
+        "info": {
+          "info": {
+            "audio": {
+              "codec_name": "aac"
+            },
+            "video": {
+              "codec_name": "h264"
+            },
+            "bitrate": 2345
+          }
+        }
+      },
+      "created_at": "2026-11-13 00:09:22.681563+00:00",
+      "updated_at": "2026-11-13 00:09:22.681567+00:00",
+      "last_seen": "2026-11-13 00:09:22.681505+00:00"
+    },
+    {
+      "id": 4,
+      "m3u_account_id": 4,
+      "episode_id": 3,
+      "series_relation_id": 3,
+      "stream_id": "e2",
+      "container_extension": "mp4",
+      "custom_properties": {
+        "info": {
+          "info": {
+            "audio": {
+              "codec_name": "aac"
+            },
+            "video": {
+              "codec_name": "h264"
+            },
+            "bitrate": 2345
+          }
+        }
+      },
+      "created_at": "2026-11-13 00:09:22.682185+00:00",
+      "updated_at": "2026-11-13 00:09:22.682189+00:00",
+      "last_seen": "2026-11-13 00:09:22.682127+00:00"
+    }
+  ],
+  "accounts": [
+    {
+      "id": 1,
+      "priority": 0,
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "priority": 20,
+      "is_active": true
+    },
+    {
+      "id": 3,
+      "priority": 1,
+      "is_active": true
+    },
+    {
+      "id": 4,
+      "priority": 50,
+      "is_active": false
+    }
+  ],
+  "expected_body_hex": "7b22736561736f6e73223a205b7b22736561736f6e5f6e756d626572223a20302c20226e616d65223a2022536561736f6e2030227d2c207b22736561736f6e5f6e756d626572223a20312c20226e616d65223a2022536561736f6e2031227d5d2c2022696e666f223a207b226e616d65223a20226f776e65642d736f757263652d636170747572652d66313836666131382d53686f77222c2022636f766572223a2022687474703a2f2f3132372e302e302e313a353635372f6170692f766f642f7365726965732f312f696d6167652f3f6b696e643d6d6f7669655f696d61676526763d3937353935643532222c2022706c6f74223a2022222c202263617374223a20224f776e65642063617374222c20226469726563746f72223a2022222c202267656e7265223a2022222c202272656c656173655f64617465223a202231393939222c202272656c6561736544617465223a202231393939222c20226164646564223a202231373934353238353632222c20226c6173745f6d6f646966696564223a202231373934353238353632222c2022726174696e67223a2022382e3235222c2022726174696e675f356261736564223a2022342e3132222c20226261636b64726f705f70617468223a205b5d2c2022796f75747562655f747261696c6572223a2022222c2022696d6462223a2022222c2022746d6462223a2022222c2022657069736f64655f72756e5f74696d65223a2022222c202263617465676f72795f6964223a202232222c202263617465676f72795f696473223a205b325d7d2c2022657069736f646573223a207b2230223a205b7b226964223a20312c2022736561736f6e223a20302c2022657069736f64655f6e756d223a20312c20227469746c65223a20226f776e65642d736f757263652d636170747572652d66313836666131382d457069736f646530222c2022636f6e7461696e65725f657874656e73696f6e223a20226d7034222c20226164646564223a202231373934353238353632222c2022637573746f6d5f736964223a206e756c6c2c20226469726563745f736f75726365223a2022222c2022696e666f223a207b226964223a20312c20226e616d65223a20226f776e65642d736f757263652d636170747572652d66313836666131382d457069736f646530222c20226f76657276696577223a2022222c202263726577223a2022222c202264697265637465645f6279223a2022222c2022696d64625f6964223a2022222c20226169725f64617465223a2022222c20226261636b64726f705f70617468223a205b5d2c20226d6f7669655f696d616765223a2022687474703a2f2f3132372e302e302e313a353635372f6170692f766f642f657069736f6465732f312f696d6167652f3f6b696e643d6d6f7669655f696d61676526763d3431623066626465222c2022726174696e67223a20302e302c202272656c656173655f64617465223a2022222c20226475726174696f6e5f73656373223a203132302c20226475726174696f6e223a202230303a30323a3030222c2022766964656f223a207b22636f6465635f6e616d65223a202268323634227d2c2022617564696f223a207b22636f6465635f6e616d65223a2022616163227d2c202262697472617465223a20323334357d7d5d2c202231223a205b7b226964223a20322c2022736561736f6e223a20312c2022657069736f64655f6e756d223a20312c20227469746c65223a20226f776e65642d736f757263652d636170747572652d66313836666131382d457069736f646531222c2022636f6e7461696e65725f657874656e73696f6e223a20226d6b76222c20226164646564223a202231373934353238353632222c2022637573746f6d5f736964223a206e756c6c2c20226469726563745f736f75726365223a2022222c2022696e666f223a207b226964223a20322c20226e616d65223a20226f776e65642d736f757263652d636170747572652d66313836666131382d457069736f646531222c20226f76657276696577223a2022222c202263726577223a2022222c202264697265637465645f6279223a2022222c2022696d64625f6964223a2022222c20226169725f64617465223a2022222c20226261636b64726f705f70617468223a205b5d2c20226d6f7669655f696d616765223a2022687474703a2f2f3132372e302e302e313a353635372f6170692f766f642f657069736f6465732f322f696d6167652f3f6b696e643d6d6f7669655f696d61676526763d3431623066626465222c2022726174696e67223a20302e302c202272656c656173655f64617465223a2022222c20226475726174696f6e5f73656373223a203132302c20226475726174696f6e223a202230303a30323a3030222c2022766964656f223a207b22636f6465635f6e616d65223a202268323634227d2c2022617564696f223a207b22636f6465635f6e616d65223a2022616163227d2c202262697472617465223a20323334357d7d5d7d7d",
+  "expected_body_sha256": "11d34e87599c0044dc5a7930d16328906e23ffc2d41349795f124e38e1854c51"
+}

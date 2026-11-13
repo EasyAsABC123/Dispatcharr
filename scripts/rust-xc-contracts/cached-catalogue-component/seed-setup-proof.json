@@ -1,0 +1,519 @@
+{
+  "tables": {
+    "accounts_user": {
+      "rows": 5
+    },
+    "m3u_m3uaccount": {
+      "rows": 4
+    },
+    "vod_vodcategory": {
+      "rows": 2
+    },
+    "vod_movie": {
+      "rows": 3
+    },
+    "vod_series": {
+      "rows": 1
+    },
+    "vod_episode": {
+      "rows": 3
+    },
+    "vod_m3umovierelation": {
+      "rows": 4
+    },
+    "vod_m3useriesrelation": {
+      "rows": 3
+    },
+    "vod_m3uepisoderelation": {
+      "rows": 4
+    },
+    "core_outputprofile": {
+      "rows": 26
+    },
+    "core_coresettings": {
+      "rows": 8
+    }
+  },
+  "dependency_setup": {
+    "complete_retained_FK_schema": {
+      "accounts_user": [],
+      "m3u_m3uaccount": [
+        {
+          "column": "refresh_task_id",
+          "target_table": "django_celery_beat_periodictask",
+          "target_column": "id"
+        },
+        {
+          "column": "server_group_id",
+          "target_table": "m3u_servergroup",
+          "target_column": "id"
+        },
+        {
+          "column": "stream_profile_id",
+          "target_table": "core_streamprofile",
+          "target_column": "id"
+        },
+        {
+          "column": "user_agent_id",
+          "target_table": "core_useragent",
+          "target_column": "id"
+        }
+      ],
+      "vod_movie": [
+        {
+          "column": "logo_id",
+          "target_table": "vod_vodlogo",
+          "target_column": "id"
+        }
+      ],
+      "vod_series": [
+        {
+          "column": "logo_id",
+          "target_table": "vod_vodlogo",
+          "target_column": "id"
+        }
+      ],
+      "vod_episode": [
+        {
+          "column": "series_id",
+          "target_table": "vod_series",
+          "target_column": "id"
+        }
+      ],
+      "vod_vodcategory": [],
+      "vod_m3umovierelation": [
+        {
+          "column": "category_id",
+          "target_table": "vod_vodcategory",
+          "target_column": "id"
+        },
+        {
+          "column": "m3u_account_id",
+          "target_table": "m3u_m3uaccount",
+          "target_column": "id"
+        },
+        {
+          "column": "movie_id",
+          "target_table": "vod_movie",
+          "target_column": "id"
+        }
+      ],
+      "vod_m3useriesrelation": [
+        {
+          "column": "category_id",
+          "target_table": "vod_vodcategory",
+          "target_column": "id"
+        },
+        {
+          "column": "m3u_account_id",
+          "target_table": "m3u_m3uaccount",
+          "target_column": "id"
+        },
+        {
+          "column": "series_id",
+          "target_table": "vod_series",
+          "target_column": "id"
+        }
+      ],
+      "vod_m3uepisoderelation": [
+        {
+          "column": "episode_id",
+          "target_table": "vod_episode",
+          "target_column": "id"
+        },
+        {
+          "column": "m3u_account_id",
+          "target_table": "m3u_m3uaccount",
+          "target_column": "id"
+        },
+        {
+          "column": "series_relation_id",
+          "target_table": "vod_m3useriesrelation",
+          "target_column": "id"
+        }
+      ],
+      "core_outputprofile": [],
+      "core_coresettings": []
+    },
+    "nonnull_references": [
+      {
+        "table": "m3u_m3uaccount",
+        "row_id": 1,
+        "column": "refresh_task_id",
+        "target_table": "django_celery_beat_periodictask",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "m3u_m3uaccount",
+        "row_id": 2,
+        "column": "refresh_task_id",
+        "target_table": "django_celery_beat_periodictask",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "m3u_m3uaccount",
+        "row_id": 3,
+        "column": "refresh_task_id",
+        "target_table": "django_celery_beat_periodictask",
+        "target_column": "id",
+        "value": 3
+      },
+      {
+        "table": "m3u_m3uaccount",
+        "row_id": 4,
+        "column": "refresh_task_id",
+        "target_table": "django_celery_beat_periodictask",
+        "target_column": "id",
+        "value": 4
+      },
+      {
+        "table": "vod_episode",
+        "row_id": 1,
+        "column": "series_id",
+        "target_table": "vod_series",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_episode",
+        "row_id": 2,
+        "column": "series_id",
+        "target_table": "vod_series",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_episode",
+        "row_id": 3,
+        "column": "series_id",
+        "target_table": "vod_series",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 1,
+        "column": "category_id",
+        "target_table": "vod_vodcategory",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 2,
+        "column": "category_id",
+        "target_table": "vod_vodcategory",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 3,
+        "column": "category_id",
+        "target_table": "vod_vodcategory",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 4,
+        "column": "category_id",
+        "target_table": "vod_vodcategory",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 1,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 2,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 3
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 3,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 4,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 4
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 1,
+        "column": "movie_id",
+        "target_table": "vod_movie",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 2,
+        "column": "movie_id",
+        "target_table": "vod_movie",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 3,
+        "column": "movie_id",
+        "target_table": "vod_movie",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3umovierelation",
+        "row_id": 4,
+        "column": "movie_id",
+        "target_table": "vod_movie",
+        "target_column": "id",
+        "value": 3
+      },
+      {
+        "table": "vod_m3useriesrelation",
+        "row_id": 1,
+        "column": "category_id",
+        "target_table": "vod_vodcategory",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3useriesrelation",
+        "row_id": 2,
+        "column": "category_id",
+        "target_table": "vod_vodcategory",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3useriesrelation",
+        "row_id": 3,
+        "column": "category_id",
+        "target_table": "vod_vodcategory",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3useriesrelation",
+        "row_id": 1,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3useriesrelation",
+        "row_id": 2,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 3
+      },
+      {
+        "table": "vod_m3useriesrelation",
+        "row_id": 3,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 4
+      },
+      {
+        "table": "vod_m3useriesrelation",
+        "row_id": 1,
+        "column": "series_id",
+        "target_table": "vod_series",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3useriesrelation",
+        "row_id": 2,
+        "column": "series_id",
+        "target_table": "vod_series",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3useriesrelation",
+        "row_id": 3,
+        "column": "series_id",
+        "target_table": "vod_series",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 1,
+        "column": "episode_id",
+        "target_table": "vod_episode",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 2,
+        "column": "episode_id",
+        "target_table": "vod_episode",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 3,
+        "column": "episode_id",
+        "target_table": "vod_episode",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 4,
+        "column": "episode_id",
+        "target_table": "vod_episode",
+        "target_column": "id",
+        "value": 3
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 1,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 3
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 2,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 3,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 3
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 4,
+        "column": "m3u_account_id",
+        "target_table": "m3u_m3uaccount",
+        "target_column": "id",
+        "value": 4
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 1,
+        "column": "series_relation_id",
+        "target_table": "vod_m3useriesrelation",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 2,
+        "column": "series_relation_id",
+        "target_table": "vod_m3useriesrelation",
+        "target_column": "id",
+        "value": 1
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 3,
+        "column": "series_relation_id",
+        "target_table": "vod_m3useriesrelation",
+        "target_column": "id",
+        "value": 2
+      },
+      {
+        "table": "vod_m3uepisoderelation",
+        "row_id": 4,
+        "column": "series_relation_id",
+        "target_table": "vod_m3useriesrelation",
+        "target_column": "id",
+        "value": 3
+      }
+    ],
+    "existing_task1_exact_unchanged": true,
+    "created_disabled_task_parents": [
+      {
+        "id": 2,
+        "name": "m3u_account-refresh-2",
+        "task": "apps.m3u.tasks.refresh_single_m3u_account",
+        "kwargs": {
+          "account_id": 2
+        },
+        "enabled": false,
+        "interval": {
+          "id": 2,
+          "every": 1,
+          "period": "hours"
+        },
+        "date_changed": "2026-11-13 07:31:18.072148+00:00",
+        "scope": "fresh definition-derived setup, not retained Source task payload"
+      },
+      {
+        "id": 3,
+        "name": "m3u_account-refresh-3",
+        "task": "apps.m3u.tasks.refresh_single_m3u_account",
+        "kwargs": {
+          "account_id": 3
+        },
+        "enabled": false,
+        "interval": {
+          "id": 2,
+          "every": 1,
+          "period": "hours"
+        },
+        "date_changed": "2026-11-13 07:31:18.075620+00:00",
+        "scope": "fresh definition-derived setup, not retained Source task payload"
+      },
+      {
+        "id": 4,
+        "name": "m3u_account-refresh-4",
+        "task": "apps.m3u.tasks.refresh_single_m3u_account",
+        "kwargs": {
+          "account_id": 4
+        },
+        "enabled": false,
+        "interval": {
+          "id": 2,
+          "every": 1,
+          "period": "hours"
+        },
+        "date_changed": "2026-11-13 07:31:18.079237+00:00",
+        "scope": "fresh definition-derived setup, not retained Source task payload"
+      }
+    ],
+    "historical_Source_task_payloads_claimed": false,
+    "no_task_dispatch": true,
+    "no_FK_null_or_remap": true,
+    "task_sequence_forced": false
+  },
+  "setup_only": true,
+  "Source_business_requests": 0,
+  "build_command_calls": 0
+}

@@ -26,7 +26,7 @@ pub(crate) fn capacity() -> StoreError {
         json!({"detail":"XC read resource capacity is unavailable."}),
     )
 }
-fn truthy(value: Option<&Value>) -> bool {
+pub(crate) fn truthy(value: Option<&Value>) -> bool {
     match value {
         None | Some(Value::Null) => false,
         Some(Value::Bool(value)) => *value,

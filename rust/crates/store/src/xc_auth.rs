@@ -224,6 +224,36 @@ impl AuthService {
         password: &str,
         network_key: &str,
     ) -> Result<User, StoreError> {
+        self.authorize_xc_inner(request, username, password, network_key, None)
+            .await
+            .map(|(user, _)| user)
+    }
+    /// Opt-in bounded user load. Limits consume the caller's existing grant;
+    /// capacity/backend errors return before failed-login mutations.
+    pub async fn authorize_xc_bounded(
+        &self,
+        request: &PlaybackRequest,
+        username: &str,
+        password: &str,
+        network_key: &str,
+        limits: crate::XcUserReadLimits,
+    ) -> Result<crate::BoundedXcUser, StoreError> {
+        let limits = limits.validate()?;
+        self.authorize_xc_inner(request, username, password, network_key, Some(limits))
+            .await
+            .map(|(user, retained_bytes)| crate::BoundedXcUser {
+                user,
+                retained_bytes,
+            })
+    }
+    async fn authorize_xc_inner(
+        &self,
+        request: &PlaybackRequest,
+        username: &str,
+        password: &str,
+        network_key: &str,
+        limits: Option<crate::XcUserReadLimits>,
+    ) -> Result<(User, usize), StoreError> {
         let cache = self
             .notification_cache
             .as_ref()
@@ -241,10 +271,18 @@ impl AuthService {
         }
         let user = if username.is_empty() || password.is_empty() {
             None
+        } else if let Some(limits) = limits {
+            self.store
+                .xc_user_by_username_bounded(username, limits)
+                .await?
+                .map(|loaded| (loaded.user, loaded.retained_bytes))
         } else {
-            self.store.user_by_username(username).await?
+            self.store
+                .user_by_username(username)
+                .await?
+                .map(|user| (user, 0))
         };
-        if let Some(user) = user {
+        if let Some((user, retained_bytes)) = user {
             // Source repeats the system check after lookup before user/password.
             let policy = settings(self, cache, "network_access").await?;
             if !system_allowed(&policy, network_key, ip)? || !user_allowed(&user, network_key, ip)?
@@ -252,7 +290,7 @@ impl AuthService {
                 return Err(denied(403, None));
             }
             if password_matches(&user, password)? {
-                return Ok(user);
+                return Ok((user, retained_bytes));
             }
         }
         if record_failure(cache, &key).await? {

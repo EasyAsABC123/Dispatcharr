@@ -1,0 +1,145 @@
+{
+  "Rust_inputs": 824,
+  "all_source_before_after_equal": true,
+  "all_waits_actual_exit_zero": true,
+  "feature_graph": {
+    "baseline_and_new_normalized_graphs_exact": true,
+    "baseline_graph_sha256": "0b18565500245a6acbac572fc586fb4f0ebcba28110ad6c07425cdcf6221c49e",
+    "direct_Cargo_files_byte_identical806": true,
+    "new_graph_sha256": "ed6132ed0b1b30abbcdf7248ec2898b01e120805e8f0182fbd79af0910e4c130",
+    "no_new_shared_feature_or_package": true,
+    "old_absence_wording_retracted": "806 already enables raw_value transitively. The saved21 proof said absent=false; my message said absent incorrectly. 21 ordinary-object assertion failed and is preserved. No newly introduced global grammar claim.",
+    "ordinary_generic_Value_behavior": "Unchanged existing decoder interpretation; bounded XC-only capacity guard retained. This is Native baseline, not new Source authority.",
+    "raw_value_already_in_baseline_via": [
+      "axum 0.8.9",
+      "sqlx-core 0.8.6",
+      "sqlx-postgres 0.8.6"
+    ],
+    "raw_value_lineage_excerpt": "\u251c\u2500\u2500 serde_json feature \"raw_value\"\n\u2502   \u251c\u2500\u2500 axum v0.8.9 (*)\n\u2502   \u251c\u2500\u2500 sqlx-core v0.8.6 (*)\n\u2502   \u2514\u2500\u2500 sqlx-postgres v0.8.6 (*)\n\u2514\u2500\u2500 serde_json feature \"std\""
+  },
+  "five_coupled_unchanged": true,
+  "focused_XC": {
+    "actual_exit": 0,
+    "failed": 0,
+    "ignored": 19,
+    "passed": 58
+  },
+  "full_inputs": 829,
+  "logs": {
+    "check.log": "9ce02d1e419bce74ab936801e58fdaea78c54d51845e0dddd85e75f9e254c41a",
+    "defaults.log": "8b5bfd40f4e71de0312a6a99041de99dff1019118d39918a2213b52fb47916cb",
+    "fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "focused-XC.log": "8075ceda9dbb162f15d0d01c0c89fcf597d6d9b59a443662575a40cc967f083d",
+    "strict.log": "c75cf32e56d4aa57e75dfed537ac45640be19bd52bc4281eb6c5bf3c51601140"
+  },
+  "ordinary_baseline_raw_key_regression": {
+    "actual_present_passed": true,
+    "exact_test_line": "test xc_bounded_user::tests::baseline_raw_decoder_shape_is_unchanged_and_bounded_xc_refuses_amplification ... ok",
+    "meaning": "Existing baseline generic Value interpretation retained; only bounded XC rejects embedded-tree shape as capacity before allocation. Not Source API authority."
+  },
+  "outside_peers": {
+    "native-store-tests": {
+      "bytes": 69121456,
+      "executed_stage": "defaults",
+      "list_actual_exit": 0,
+      "list_sha256": "baa00ea431be2efa96c2461148c9f3b3d63a6636525f1414bdfee0dfb79637b1",
+      "sha256": "12f91b60f141a7a0a92259e428cbeb3d665f5b43ba2dfe401ce2b6bc38d2d290"
+    },
+    "native-xc-focused-tests": {
+      "bytes": 25192808,
+      "executed_stage": "focused-XC",
+      "list_actual_exit": 0,
+      "list_sha256": "15901277c1bc4ab5230adb8d91c3ae094f7952978abf4f3f1ffbda18c5c1af55",
+      "sha256": "73267de4a9b9fb986d64c2448a18b99a9c8d731081dfa87388423f5b1251ae61"
+    },
+    "native-xc-tests": {
+      "bytes": 25472816,
+      "executed_stage": "defaults",
+      "list_actual_exit": 0,
+      "list_sha256": "15901277c1bc4ab5230adb8d91c3ae094f7952978abf4f3f1ffbda18c5c1af55",
+      "sha256": "29df43ea3fe7f59ec2f52129f2dde6cb00516138befead19588e23fc7e7bb407"
+    }
+  },
+  "raw_private_proof_sha256": "b5158383c372dcae5c836829eb1fae1338fa6c353fc2230d819155a6d528704f",
+  "source_map_sha256": "e988182f0877f06f6ed019691a5268a36be05f469730e8d8d82f58267a894d76",
+  "strict_workspace_all_targets_exit": 0,
+  "waits": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "completed_epoch": 1794552192.0642807,
+      "stage": "fmt",
+      "started_epoch": 1794552190.249811
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-xc-http",
+        "--lib",
+        "--offline",
+        "--locked"
+      ],
+      "completed_epoch": 1794552254.4341755,
+      "stage": "focused-XC",
+      "started_epoch": 1794552192.0644464
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "completed_epoch": 1794552290.5291412,
+      "stage": "check",
+      "started_epoch": 1794552254.4343626
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "completed_epoch": 1794552341.625209,
+      "stage": "strict",
+      "started_epoch": 1794552290.5293517
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "completed_epoch": 1794552458.8749282,
+      "stage": "defaults",
+      "started_epoch": 1794552341.625376
+    }
+  ],
+  "wholeworkspace_defaults": {
+    "failed": 0,
+    "ignored": 721,
+    "not_unique_contract_count": true,
+    "passed": 676,
+    "result_blocks": 172
+  }
+}

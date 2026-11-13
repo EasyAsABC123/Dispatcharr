@@ -55,7 +55,9 @@ pub fn source_json_error(raw: &[u8], error: serde_json::Error) -> String {
 }
 
 mod xc_auth;
+mod xc_bounded_user;
 pub use notifications::NotificationCache;
+pub use xc_bounded_user::{BoundedXcUser, XcUserReadLimits};
 mod import_batches;
 mod import_cleanup;
 mod import_groups;
@@ -368,5 +370,68 @@ pub fn source_scanner_epoch_string(value: f64) -> Option<String> {
 
 #[cfg(test)]
 mod json_float_peer;
+
+/// Finite Python JSON float spelling shared by bounded source-derived DTOs.
+/// Parsing, rounding, nonfinite behavior and the caller's DTO contract remain
+/// separate responsibilities. This helper does not accept epoch markers.
+pub fn source_finite_float_string(value: f64) -> Option<String> {
+    value.is_finite().then(|| json_compat::float_string(value))
+}
+
+#[cfg(test)]
+mod finite_float_public_tests {
+    use super::source_finite_float_string;
+    #[test]
+    fn finite_adapter_preserves_qualified_spelling_and_rejects_nonfinite() {
+        for (value, expected) in [
+            (3.75, "3.75"),
+            (4.12, "4.12"),
+            (0.0, "0.0"),
+            (-0.0, "-0.0"),
+            (1e-6, "1e-06"),
+            (1e16, "1e+16"),
+        ] {
+            assert_eq!(source_finite_float_string(value).as_deref(), Some(expected));
+        }
+        for value in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            assert!(source_finite_float_string(value).is_none());
+        }
+    }
+}
+
+/// Source VOD proxy cache version: first eight lowercase MD5 hex characters
+/// over the exact UTF-8 URL bytes, without parsing or normalization. Callers
+/// must bound the input under their existing work/memory budget.
+pub fn source_vod_image_version(value: &str) -> String {
+    use md5::{Digest, Md5};
+    format!("{:x}", Md5::digest(value.as_bytes()))[..8].to_owned()
+}
+
+#[cfg(test)]
+mod vod_image_version_public_tests {
+    use super::source_vod_image_version;
+    #[test]
+    fn actual_source_tcp38_image_version_vectors() {
+        assert_eq!(
+            source_vod_image_version("http://origin:8080/poster.png"),
+            "6169e7b5"
+        );
+        assert_eq!(
+            source_vod_image_version("http://origin:8080/series.png"),
+            "97595d52"
+        );
+    }
+    #[test]
+    fn exact_bytes_are_not_url_normalized() {
+        assert_ne!(
+            source_vod_image_version("http://origin:8080/poster.png"),
+            source_vod_image_version("http://origin:8080/poster.png ")
+        );
+        assert_ne!(
+            source_vod_image_version("http://origin:8080/%E6%9D%B1"),
+            source_vod_image_version("http://origin:8080/東")
+        );
+    }
+}
 
 pub mod recording_schedule;
