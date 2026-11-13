@@ -1,0 +1,11 @@
+# Image59 Native worker header and HEAD401 replay
+
+This is a blocked preparation for seven fixed Native requests, using the immutable image59 candidate built from c0b824e115665a17823ac6511d465f1aaed2a6f1. The candidate has 854 Rust inputs and 1,351 application inputs. The support Git revision remains f0bfc2f200dcfd1f64ae32a9855ea250731ce67f independently; candidate source is never used as support HEAD.
+
+Six routed Source observations remain byte exact in retained-source. A separate single Source HEAD401 reference (raw e9db2918f98adae5ae1766c4b327349f8b94b30c726a406e336cfbb86f1a2891) is added in retained-head. No Source6 or HEAD requests are replayed. The old Native invalid_head_diagnostic case name is retained solely for case identity; it now requires actual 401, empty wire body, Content-Length172, Allow OPTIONS, GET, Vary Accept, origin, JSON type and Bearer challenge. It must have no successful worker header or upstream contact. The actual Source HEAD body was empty; advertised length172 does not prove decoded Source error bytes.
+
+The six other cases, fixed caps, eight-second HTTP deadline, 90-second backend phase, three-second post-close wait, body-prefix size and cleanup remain unchanged. Worker identity comes from this candidate's actual kernel hostname and PID1, checked against UID65532 and raw process records; environment/provider canaries cannot choose it. The current candidate gets no historical execution/performance acceptance.
+
+Malformed UUID and SPA routing are excluded. The older Source500 missing-template diagnostic and the fresh compiled-template-context SourceGET200 observation remain separate; neither changes this VOD header scope. Source HEAD and six Source cases are separate epochs. This is not full M4, body, header, method, counter, timer or performance parity.
+
+launch_once.py is blocked, tools/run.py CLI remains blocked, and no cue, claim, output or execution copy is created here. Root must review the whole new closure, input/credit proofs and local controls, then issue a fresh exact once cue after its preflight. Only launcher flag activation is contemplated. Historical README/PLAN/proof files copied from the donor are named historical in derivation59.json and do not confer image59 authority.

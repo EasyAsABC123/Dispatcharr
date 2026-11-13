@@ -1,0 +1,38 @@
+{
+  "scope": "new additive offline reanalysis only",
+  "retained_input_manifest_sha256": "2de90f0fb7291810a9c0dfab1c40114a0a0ce7d7dc8ca52b987e9afe4b048ed3",
+  "original_failed_Source_run_preserved": true,
+  "result": {
+    "Source_routed_six_header_subscope_offline_valid": true,
+    "actual_routed_cases": [
+      "head405",
+      "invalid_get401",
+      "no_provider503",
+      "full200",
+      "range206",
+      "provider404_to500"
+    ],
+    "actual_routed_statuses": [
+      405,
+      401,
+      503,
+      200,
+      206,
+      500
+    ],
+    "original_Source7_run_passed": false,
+    "original_Source7_qualification_preserved_false": true,
+    "Source_VOD_request_rerun": false,
+    "excluded_unrouted_SPA_diagnostic": {
+      "case": "bad_uuid404",
+      "status": 500,
+      "missing_template": "index.html",
+      "VOD_handler_authority": false,
+      "application_route_parity_claim": false,
+      "Native404_change_authorized": false
+    },
+    "error_body_or_full_header_or_M4_parity": false
+  },
+  "controls": 16,
+  "controls_log_sha256": "5cb12631368cb63d5396574f172771212761143ea46fb46d39eb34a656737931"
+}

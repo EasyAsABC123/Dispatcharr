@@ -1,0 +1,2055 @@
+{
+  "scope": "one literal Source invalid-HEAD observation; no Native or predicted status filter",
+  "cases": [
+    {
+      "id": 1,
+      "name": "invalid_bearer_HEAD_valid_UUID",
+      "method": "HEAD",
+      "path": "/proxy/vod/movie/12345678-1234-5678-1234-567812345678/owned-method-head",
+      "before": {
+        "database": {
+          "projection": "owned derivation identity",
+          "sha256": "f03b6fcaeb38a3a6347c59cebcf769303c989a04354ae096ebc36bb5a5ceb769",
+          "bytes": 29
+        },
+        "tables": {
+          "accounts_user": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "accounts_user_channel_profiles": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "accounts_user_groups": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "accounts_user_user_permissions": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "accounts_userappdata": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "auth_group": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "auth_group_permissions": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "auth_permission": {
+            "rows": 228,
+            "sha256": "34f1c73edbfd67fb73b3597d728dd051374bd37db3bcfaaa68601ba351d4bd31"
+          },
+          "core_coresettings": {
+            "rows": 8,
+            "sha256": "6c87b69b59be085d7c51386c20599356f43eb72f82d83f193dd6aebcb32f9a14"
+          },
+          "core_notificationdismissal": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "core_outputprofile": {
+            "rows": 2,
+            "sha256": "f74241e92911aa9db3dd05f162e6d8a018ad1db6b584e0c8736fb6add7da1a39"
+          },
+          "core_streamprofile": {
+            "rows": 5,
+            "sha256": "b9c4564e43aadbe8daefc0bc44b8477e884305e9e3359de033dab886e974c569"
+          },
+          "core_systemevent": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "core_systemnotification": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "core_useragent": {
+            "rows": 3,
+            "sha256": "12cded19060afd9d7bba0c471ebb6485a608098e685ca05eb60dc1bc94d10bf5"
+          },
+          "dashboard_settings": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channel": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channelgroup": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channelgroupm3uaccount": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channeloverride": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channelprofile": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channelstream": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_logo": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_recording": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_recurringrecordingrule": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_stream": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_connect_deliverylog": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_connect_eventsubscription": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_connect_integration": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_admin_log": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_celery_beat_clockedschedule": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_celery_beat_crontabschedule": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_celery_beat_intervalschedule": {
+            "rows": 1,
+            "sha256": "4cf636475da288f52ea7e41b756b0be1d3b7a307fb16bca2a871dccb49f9f0c4"
+          },
+          "django_celery_beat_periodictask": {
+            "rows": 1,
+            "sha256": "6bd36c80cd2c71d0452ebd533ec766c349a11937602258ad3556d01bae300d11"
+          },
+          "django_celery_beat_periodictasks": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_celery_beat_solarschedule": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_content_type": {
+            "rows": 57,
+            "sha256": "92f9261512947eb8e7ecd3319d21760d6be5527e2ba8577fb911ba0fec2c504d"
+          },
+          "django_migrations": {
+            "rows": 184,
+            "sha256": "be745e8daaa72399808f4031dcd1ceddda8db65d28d507351a33d7e0832f1b68"
+          },
+          "django_session": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_epgdata": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_epgsource": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_epgsourceindex": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_programdata": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_sdprogrammd5": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_sdschedulemd5": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "hdhr_hdhrdevice": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "m3u_m3uaccount": {
+            "rows": 1,
+            "sha256": "1fddd5ef6cc75a835b61e5719bd8b6ff6748778480cfb90fb73d0ed581760876"
+          },
+          "m3u_m3uaccountprofile": {
+            "rows": 1,
+            "sha256": "3c1bbec7e4c3e1047b66de1ba87cbe28ce31a241e445bb1e3c90100c8e18bed1"
+          },
+          "m3u_m3ufilter": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "m3u_servergroup": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "plugins_pluginconfig": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "plugins_pluginrepo": {
+            "rows": 1,
+            "sha256": "323e3a0026d03359590542fc0e89d422f44a4a3dd6559da907ac601f16dd3ac5"
+          },
+          "vod_episode": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_m3uepisoderelation": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_m3umovierelation": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_m3useriesrelation": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_m3uvodcategoryrelation": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_movie": {
+            "rows": 1,
+            "sha256": "53da99afe3828cb6636181ccf901063b9da8feec1e3dcc6fefa658f913d521d9"
+          },
+          "vod_series": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_vodcategory": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_vodlogo": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          }
+        },
+        "sequences": {
+          "accounts_user_channel_profiles_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "accounts_user_groups_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "accounts_user_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "accounts_user_user_permissions_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "accounts_userappdata_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "auth_group_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "auth_group_permissions_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "auth_permission_id_seq": {
+            "last_value": 228,
+            "is_called": true
+          },
+          "core_coresettings_id_seq": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_notificationdismissal_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_outputprofile_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_streamprofile_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "core_systemevent_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_systemnotification_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_useragent_id_seq": {
+            "last_value": 3,
+            "is_called": true
+          },
+          "dashboard_settings_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channel_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channelgroup_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channeloverride_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channelprofile_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channelprofilemembership_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channelstream_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_logo_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_recording_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_recurringrecordingrule_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_stream_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_connect_deliverylog_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_connect_eventsubscription_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_connect_integration_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "django_admin_log_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "django_celery_beat_clockedschedule_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "django_celery_beat_crontabschedule_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "django_celery_beat_intervalschedule_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "django_celery_beat_periodictask_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "django_celery_beat_solarschedule_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "django_content_type_id_seq": {
+            "last_value": 57,
+            "is_called": true
+          },
+          "django_migrations_id_seq": {
+            "last_value": 184,
+            "is_called": true
+          },
+          "epg_epgdata_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "epg_epgsource_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "epg_programdata_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "epg_sdprogrammd5_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "epg_sdschedulemd5_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "hdhr_hdhrdevice_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "m3u_m3uaccount_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3ufilter_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "m3u_servergroup_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "plugins_pluginconfig_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "plugins_pluginrepo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_episode_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3useriesrelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_series_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_vodcategory_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          }
+        }
+      },
+      "began_monotonic": 317944.030210795,
+      "status": 401,
+      "headers": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "172"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ],
+        [
+          "Date",
+          "Fri, 13 Nov 2026 19:19:08 GMT"
+        ]
+      ],
+      "body_hex": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body_bytes": 0,
+      "absolute_observation": {
+        "deadline": 317959.013546615,
+        "completed": 317944.038244661,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_monotonic": 317944.039707763,
+      "after": {
+        "database": {
+          "projection": "owned derivation identity",
+          "sha256": "f03b6fcaeb38a3a6347c59cebcf769303c989a04354ae096ebc36bb5a5ceb769",
+          "bytes": 29
+        },
+        "tables": {
+          "accounts_user": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "accounts_user_channel_profiles": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "accounts_user_groups": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "accounts_user_user_permissions": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "accounts_userappdata": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "auth_group": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "auth_group_permissions": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "auth_permission": {
+            "rows": 228,
+            "sha256": "34f1c73edbfd67fb73b3597d728dd051374bd37db3bcfaaa68601ba351d4bd31"
+          },
+          "core_coresettings": {
+            "rows": 8,
+            "sha256": "6c87b69b59be085d7c51386c20599356f43eb72f82d83f193dd6aebcb32f9a14"
+          },
+          "core_notificationdismissal": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "core_outputprofile": {
+            "rows": 2,
+            "sha256": "f74241e92911aa9db3dd05f162e6d8a018ad1db6b584e0c8736fb6add7da1a39"
+          },
+          "core_streamprofile": {
+            "rows": 5,
+            "sha256": "b9c4564e43aadbe8daefc0bc44b8477e884305e9e3359de033dab886e974c569"
+          },
+          "core_systemevent": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "core_systemnotification": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "core_useragent": {
+            "rows": 3,
+            "sha256": "12cded19060afd9d7bba0c471ebb6485a608098e685ca05eb60dc1bc94d10bf5"
+          },
+          "dashboard_settings": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channel": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channelgroup": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channelgroupm3uaccount": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channeloverride": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channelprofile": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_channelstream": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_logo": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_recording": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_recurringrecordingrule": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_channels_stream": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_connect_deliverylog": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_connect_eventsubscription": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "dispatcharr_connect_integration": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_admin_log": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_celery_beat_clockedschedule": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_celery_beat_crontabschedule": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_celery_beat_intervalschedule": {
+            "rows": 1,
+            "sha256": "4cf636475da288f52ea7e41b756b0be1d3b7a307fb16bca2a871dccb49f9f0c4"
+          },
+          "django_celery_beat_periodictask": {
+            "rows": 1,
+            "sha256": "6bd36c80cd2c71d0452ebd533ec766c349a11937602258ad3556d01bae300d11"
+          },
+          "django_celery_beat_periodictasks": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_celery_beat_solarschedule": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "django_content_type": {
+            "rows": 57,
+            "sha256": "92f9261512947eb8e7ecd3319d21760d6be5527e2ba8577fb911ba0fec2c504d"
+          },
+          "django_migrations": {
+            "rows": 184,
+            "sha256": "be745e8daaa72399808f4031dcd1ceddda8db65d28d507351a33d7e0832f1b68"
+          },
+          "django_session": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_epgdata": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_epgsource": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_epgsourceindex": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_programdata": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_sdprogrammd5": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "epg_sdschedulemd5": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "hdhr_hdhrdevice": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "m3u_m3uaccount": {
+            "rows": 1,
+            "sha256": "1fddd5ef6cc75a835b61e5719bd8b6ff6748778480cfb90fb73d0ed581760876"
+          },
+          "m3u_m3uaccountprofile": {
+            "rows": 1,
+            "sha256": "3c1bbec7e4c3e1047b66de1ba87cbe28ce31a241e445bb1e3c90100c8e18bed1"
+          },
+          "m3u_m3ufilter": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "m3u_servergroup": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "plugins_pluginconfig": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "plugins_pluginrepo": {
+            "rows": 1,
+            "sha256": "323e3a0026d03359590542fc0e89d422f44a4a3dd6559da907ac601f16dd3ac5"
+          },
+          "vod_episode": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_m3uepisoderelation": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_m3umovierelation": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_m3useriesrelation": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_m3uvodcategoryrelation": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_movie": {
+            "rows": 1,
+            "sha256": "53da99afe3828cb6636181ccf901063b9da8feec1e3dcc6fefa658f913d521d9"
+          },
+          "vod_series": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_vodcategory": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "vod_vodlogo": {
+            "rows": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          }
+        },
+        "sequences": {
+          "accounts_user_channel_profiles_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "accounts_user_groups_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "accounts_user_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "accounts_user_user_permissions_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "accounts_userappdata_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "auth_group_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "auth_group_permissions_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "auth_permission_id_seq": {
+            "last_value": 228,
+            "is_called": true
+          },
+          "core_coresettings_id_seq": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_notificationdismissal_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_outputprofile_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_streamprofile_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "core_systemevent_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_systemnotification_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_useragent_id_seq": {
+            "last_value": 3,
+            "is_called": true
+          },
+          "dashboard_settings_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channel_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channelgroup_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channeloverride_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channelprofile_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channelprofilemembership_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_channelstream_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_logo_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_recording_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_recurringrecordingrule_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_channels_stream_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_connect_deliverylog_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_connect_eventsubscription_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "dispatcharr_connect_integration_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "django_admin_log_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "django_celery_beat_clockedschedule_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "django_celery_beat_crontabschedule_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "django_celery_beat_intervalschedule_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "django_celery_beat_periodictask_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "django_celery_beat_solarschedule_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "django_content_type_id_seq": {
+            "last_value": 57,
+            "is_called": true
+          },
+          "django_migrations_id_seq": {
+            "last_value": 184,
+            "is_called": true
+          },
+          "epg_epgdata_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "epg_epgsource_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "epg_programdata_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "epg_sdprogrammd5_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "epg_sdschedulemd5_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "hdhr_hdhrdevice_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "m3u_m3uaccount_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3ufilter_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "m3u_servergroup_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "plugins_pluginconfig_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "plugins_pluginrepo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_episode_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3useriesrelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_series_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_vodcategory_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          }
+        }
+      }
+    }
+  ],
+  "before": {
+    "database": {
+      "projection": "owned derivation identity",
+      "sha256": "f03b6fcaeb38a3a6347c59cebcf769303c989a04354ae096ebc36bb5a5ceb769",
+      "bytes": 29
+    },
+    "tables": {
+      "accounts_user": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "accounts_user_channel_profiles": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "accounts_user_groups": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "accounts_user_user_permissions": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "accounts_userappdata": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "auth_group": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "auth_group_permissions": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "auth_permission": {
+        "rows": 228,
+        "sha256": "34f1c73edbfd67fb73b3597d728dd051374bd37db3bcfaaa68601ba351d4bd31"
+      },
+      "core_coresettings": {
+        "rows": 8,
+        "sha256": "6c87b69b59be085d7c51386c20599356f43eb72f82d83f193dd6aebcb32f9a14"
+      },
+      "core_notificationdismissal": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_outputprofile": {
+        "rows": 2,
+        "sha256": "f74241e92911aa9db3dd05f162e6d8a018ad1db6b584e0c8736fb6add7da1a39"
+      },
+      "core_streamprofile": {
+        "rows": 5,
+        "sha256": "b9c4564e43aadbe8daefc0bc44b8477e884305e9e3359de033dab886e974c569"
+      },
+      "core_systemevent": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_systemnotification": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_useragent": {
+        "rows": 3,
+        "sha256": "12cded19060afd9d7bba0c471ebb6485a608098e685ca05eb60dc1bc94d10bf5"
+      },
+      "dashboard_settings": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channel": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channelgroup": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channelgroupm3uaccount": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channeloverride": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channelprofile": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channelprofilemembership": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channelstream": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_logo": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_recording": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_recurringrecordingrule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_stream": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_connect_deliverylog": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_connect_eventsubscription": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_connect_integration": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_admin_log": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_clockedschedule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_crontabschedule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_intervalschedule": {
+        "rows": 1,
+        "sha256": "4cf636475da288f52ea7e41b756b0be1d3b7a307fb16bca2a871dccb49f9f0c4"
+      },
+      "django_celery_beat_periodictask": {
+        "rows": 1,
+        "sha256": "6bd36c80cd2c71d0452ebd533ec766c349a11937602258ad3556d01bae300d11"
+      },
+      "django_celery_beat_periodictasks": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_solarschedule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_content_type": {
+        "rows": 57,
+        "sha256": "92f9261512947eb8e7ecd3319d21760d6be5527e2ba8577fb911ba0fec2c504d"
+      },
+      "django_migrations": {
+        "rows": 184,
+        "sha256": "be745e8daaa72399808f4031dcd1ceddda8db65d28d507351a33d7e0832f1b68"
+      },
+      "django_session": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_epgdata": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_epgsource": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_epgsourceindex": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_programdata": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_sdprogrammd5": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_sdschedulemd5": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "hdhr_hdhrdevice": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "m3u_m3uaccount": {
+        "rows": 1,
+        "sha256": "1fddd5ef6cc75a835b61e5719bd8b6ff6748778480cfb90fb73d0ed581760876"
+      },
+      "m3u_m3uaccountprofile": {
+        "rows": 1,
+        "sha256": "3c1bbec7e4c3e1047b66de1ba87cbe28ce31a241e445bb1e3c90100c8e18bed1"
+      },
+      "m3u_m3ufilter": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "m3u_servergroup": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plugins_pluginconfig": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plugins_pluginrepo": {
+        "rows": 1,
+        "sha256": "323e3a0026d03359590542fc0e89d422f44a4a3dd6559da907ac601f16dd3ac5"
+      },
+      "vod_episode": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3uepisoderelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3umovierelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3useriesrelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3uvodcategoryrelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_movie": {
+        "rows": 1,
+        "sha256": "53da99afe3828cb6636181ccf901063b9da8feec1e3dcc6fefa658f913d521d9"
+      },
+      "vod_series": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_vodcategory": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_vodlogo": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    "sequences": {
+      "accounts_user_channel_profiles_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "accounts_user_groups_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "accounts_user_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "accounts_user_user_permissions_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "accounts_userappdata_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "auth_group_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "auth_group_permissions_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "auth_permission_id_seq": {
+        "last_value": 228,
+        "is_called": true
+      },
+      "core_coresettings_id_seq": {
+        "last_value": 18,
+        "is_called": true
+      },
+      "core_notificationdismissal_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "core_outputprofile_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "core_streamprofile_id_seq": {
+        "last_value": 5,
+        "is_called": true
+      },
+      "core_systemevent_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "core_systemnotification_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "core_useragent_id_seq": {
+        "last_value": 3,
+        "is_called": true
+      },
+      "dashboard_settings_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channel_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channelgroup_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channeloverride_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channelprofile_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channelprofilemembership_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channelstream_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_logo_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_recording_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_recurringrecordingrule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_stream_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_connect_deliverylog_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_connect_eventsubscription_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_connect_integration_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_admin_log_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_celery_beat_clockedschedule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_celery_beat_crontabschedule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_celery_beat_intervalschedule_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "django_celery_beat_periodictask_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "django_celery_beat_solarschedule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_content_type_id_seq": {
+        "last_value": 57,
+        "is_called": true
+      },
+      "django_migrations_id_seq": {
+        "last_value": 184,
+        "is_called": true
+      },
+      "epg_epgdata_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_epgsource_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_programdata_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_sdprogrammd5_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_sdschedulemd5_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "hdhr_hdhrdevice_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "m3u_m3uaccount_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "m3u_m3uaccountprofile_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "m3u_m3ufilter_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "m3u_servergroup_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "plugins_pluginconfig_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "plugins_pluginrepo_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "vod_episode_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_m3uepisoderelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_m3umovierelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_m3useriesrelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_m3uvodcategoryrelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_movie_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "vod_series_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_vodcategory_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_vodlogo_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      }
+    }
+  },
+  "after": {
+    "database": {
+      "projection": "owned derivation identity",
+      "sha256": "f03b6fcaeb38a3a6347c59cebcf769303c989a04354ae096ebc36bb5a5ceb769",
+      "bytes": 29
+    },
+    "tables": {
+      "accounts_user": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "accounts_user_channel_profiles": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "accounts_user_groups": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "accounts_user_user_permissions": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "accounts_userappdata": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "auth_group": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "auth_group_permissions": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "auth_permission": {
+        "rows": 228,
+        "sha256": "34f1c73edbfd67fb73b3597d728dd051374bd37db3bcfaaa68601ba351d4bd31"
+      },
+      "core_coresettings": {
+        "rows": 8,
+        "sha256": "6c87b69b59be085d7c51386c20599356f43eb72f82d83f193dd6aebcb32f9a14"
+      },
+      "core_notificationdismissal": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_outputprofile": {
+        "rows": 2,
+        "sha256": "f74241e92911aa9db3dd05f162e6d8a018ad1db6b584e0c8736fb6add7da1a39"
+      },
+      "core_streamprofile": {
+        "rows": 5,
+        "sha256": "b9c4564e43aadbe8daefc0bc44b8477e884305e9e3359de033dab886e974c569"
+      },
+      "core_systemevent": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_systemnotification": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_useragent": {
+        "rows": 3,
+        "sha256": "12cded19060afd9d7bba0c471ebb6485a608098e685ca05eb60dc1bc94d10bf5"
+      },
+      "dashboard_settings": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channel": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channelgroup": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channelgroupm3uaccount": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channeloverride": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channelprofile": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channelprofilemembership": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channelstream": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_logo": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_recording": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_recurringrecordingrule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_stream": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_connect_deliverylog": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_connect_eventsubscription": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_connect_integration": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_admin_log": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_clockedschedule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_crontabschedule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_intervalschedule": {
+        "rows": 1,
+        "sha256": "4cf636475da288f52ea7e41b756b0be1d3b7a307fb16bca2a871dccb49f9f0c4"
+      },
+      "django_celery_beat_periodictask": {
+        "rows": 1,
+        "sha256": "6bd36c80cd2c71d0452ebd533ec766c349a11937602258ad3556d01bae300d11"
+      },
+      "django_celery_beat_periodictasks": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_solarschedule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_content_type": {
+        "rows": 57,
+        "sha256": "92f9261512947eb8e7ecd3319d21760d6be5527e2ba8577fb911ba0fec2c504d"
+      },
+      "django_migrations": {
+        "rows": 184,
+        "sha256": "be745e8daaa72399808f4031dcd1ceddda8db65d28d507351a33d7e0832f1b68"
+      },
+      "django_session": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_epgdata": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_epgsource": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_epgsourceindex": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_programdata": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_sdprogrammd5": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_sdschedulemd5": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "hdhr_hdhrdevice": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "m3u_m3uaccount": {
+        "rows": 1,
+        "sha256": "1fddd5ef6cc75a835b61e5719bd8b6ff6748778480cfb90fb73d0ed581760876"
+      },
+      "m3u_m3uaccountprofile": {
+        "rows": 1,
+        "sha256": "3c1bbec7e4c3e1047b66de1ba87cbe28ce31a241e445bb1e3c90100c8e18bed1"
+      },
+      "m3u_m3ufilter": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "m3u_servergroup": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plugins_pluginconfig": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plugins_pluginrepo": {
+        "rows": 1,
+        "sha256": "323e3a0026d03359590542fc0e89d422f44a4a3dd6559da907ac601f16dd3ac5"
+      },
+      "vod_episode": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3uepisoderelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3umovierelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3useriesrelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3uvodcategoryrelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_movie": {
+        "rows": 1,
+        "sha256": "53da99afe3828cb6636181ccf901063b9da8feec1e3dcc6fefa658f913d521d9"
+      },
+      "vod_series": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_vodcategory": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_vodlogo": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    "sequences": {
+      "accounts_user_channel_profiles_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "accounts_user_groups_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "accounts_user_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "accounts_user_user_permissions_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "accounts_userappdata_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "auth_group_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "auth_group_permissions_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "auth_permission_id_seq": {
+        "last_value": 228,
+        "is_called": true
+      },
+      "core_coresettings_id_seq": {
+        "last_value": 18,
+        "is_called": true
+      },
+      "core_notificationdismissal_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "core_outputprofile_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "core_streamprofile_id_seq": {
+        "last_value": 5,
+        "is_called": true
+      },
+      "core_systemevent_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "core_systemnotification_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "core_useragent_id_seq": {
+        "last_value": 3,
+        "is_called": true
+      },
+      "dashboard_settings_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channel_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channelgroup_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channeloverride_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channelprofile_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channelprofilemembership_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channelstream_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_logo_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_recording_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_recurringrecordingrule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_stream_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_connect_deliverylog_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_connect_eventsubscription_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_connect_integration_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_admin_log_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_celery_beat_clockedschedule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_celery_beat_crontabschedule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_celery_beat_intervalschedule_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "django_celery_beat_periodictask_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "django_celery_beat_solarschedule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_content_type_id_seq": {
+        "last_value": 57,
+        "is_called": true
+      },
+      "django_migrations_id_seq": {
+        "last_value": 184,
+        "is_called": true
+      },
+      "epg_epgdata_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_epgsource_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_programdata_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_sdprogrammd5_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_sdschedulemd5_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "hdhr_hdhrdevice_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "m3u_m3uaccount_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "m3u_m3uaccountprofile_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "m3u_m3ufilter_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "m3u_servergroup_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "plugins_pluginconfig_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "plugins_pluginrepo_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "vod_episode_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_m3uepisoderelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_m3umovierelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_m3useriesrelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_m3uvodcategoryrelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_movie_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "vod_series_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_vodcategory_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_vodlogo_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      }
+    }
+  },
+  "began_monotonic": 317944.013480393,
+  "completed_monotonic": 317944.06692454,
+  "Source_functions_replaced": false,
+  "Native_requests": 0,
+  "performance_acceptance": false
+}

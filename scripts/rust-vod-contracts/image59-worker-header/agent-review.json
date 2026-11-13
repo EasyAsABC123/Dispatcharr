@@ -1,0 +1,141 @@
+{
+  "reviewer": "Agent /root/stream_http independent raw and cleanup review; not Root",
+  "raw": {
+    "retained_raw": "artifacts/rust/image59-worker-header-agent-review-1/review-private.json",
+    "sha256": "608a25aa52fedec432508273380ea76406b179b8c3b363251da4d8273d2d5376",
+    "bytes": 16645
+  },
+  "passed": true,
+  "assertions": 71,
+  "seven_responses": [
+    {
+      "case": "head405",
+      "status": 405,
+      "prefix_bytes": null,
+      "prefix_sha256": null,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "headers_sha256": "6710b83f0215bbc49c7bc5fe84e66aab8643b2f7518e70eba16d6f2902bd68ff"
+    },
+    {
+      "case": "invalid_get401",
+      "status": 401,
+      "prefix_bytes": null,
+      "prefix_sha256": null,
+      "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+      "headers_sha256": "eeec7de6c5240e55c82768def6d2d88919b6b1de948a0ef316ac5b92d3f28422"
+    },
+    {
+      "case": "no_provider503",
+      "status": 503,
+      "prefix_bytes": null,
+      "prefix_sha256": null,
+      "body_sha256": "8a734e98fdf672183da1b087d70cb7893f95818aadc601af7921f8f18910d01c",
+      "headers_sha256": "a69284fb63b2e2af424cc3827f34c3ee0f25a1f6f12e51e83821a560ab6b9547"
+    },
+    {
+      "case": "full200",
+      "status": 200,
+      "prefix_bytes": 8192,
+      "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+      "body_sha256": null,
+      "headers_sha256": "86d5e88947c06c6784514ac30700fbd4110fb89d2203d1eeccf2fe56a52fd494"
+    },
+    {
+      "case": "range206",
+      "status": 206,
+      "prefix_bytes": 8192,
+      "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+      "body_sha256": null,
+      "headers_sha256": "a69d53ecd3fdd2bbefa909ca630194e4502a10e015ae664155d5201900fb8d3d"
+    },
+    {
+      "case": "provider404_to500",
+      "status": 500,
+      "prefix_bytes": null,
+      "prefix_sha256": null,
+      "body_sha256": "b33abe12c661e84d3d98ed656917cadda3f53a1836a9cdc09b13971808816521",
+      "headers_sha256": "dcb8bd8449519b9d7075255b941a184453897637fb5e75951f11d256b24387fe"
+    },
+    {
+      "case": "invalid_head_diagnostic",
+      "status": 401,
+      "prefix_bytes": null,
+      "prefix_sha256": null,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "headers_sha256": "64aa02fcc60083fa630fde48eb0b5975bf2347094e07277ad82f466a0bce44bc"
+    }
+  ],
+  "Git": "c0b824e115665a17823ac6511d465f1aaed2a6f1",
+  "actual_image": "sha256:7fed56b01c41c4657c25bad95f2b12eb0b6dc1726c8e874dc9c561afcf06cf27",
+  "tree": "ff08e3f61d8196bb73863ddb4a9df262732fa7b8f76f68f312686aa9af25bdd8",
+  "runtime_count": 854,
+  "app_inputs": 1351,
+  "actual_scope_limits": {
+    "decoder_run": false,
+    "prefixes_only_bytes": 8192,
+    "full_delivery": false,
+    "default_audit_named_tables_sequences": 9,
+    "default_full6259": false,
+    "owned_clone_before_named9_fingerprints_equal": true,
+    "owned_full_after_SQL_audit": "unmeasured; only account/profile cap equality after phase",
+    "per_command_PID_exit_receipts": "not retained;63stderr files only, no inferred PID inventory",
+    "original_full_container_CIDs": "not retained; fresh project-label and derived role-name absence only",
+    "noSDK_package28_performance_or_fullM4": true
+  },
+  "fresh_cleanup": [
+    {
+      "actual_exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pipes_settled": true,
+      "argv_PID_omitted": true
+    },
+    {
+      "actual_exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pipes_settled": true,
+      "argv_PID_omitted": true
+    },
+    {
+      "actual_exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pipes_settled": true,
+      "argv_PID_omitted": true
+    },
+    {
+      "actual_exit": 1,
+      "stdout_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "stderr_sha256": "adc67b6aa86e838e0dbea61a64e13c370a4a5129bd26a43ea909dea39d92b40e",
+      "pipes_settled": true,
+      "argv_PID_omitted": true
+    },
+    {
+      "actual_exit": 1,
+      "stdout_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "stderr_sha256": "0c060c88fd2c461c061f1729a851ff3081f83fd86d4dfc1cf02614327dafa276",
+      "pipes_settled": true,
+      "argv_PID_omitted": true
+    },
+    {
+      "actual_exit": 1,
+      "stdout_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "stderr_sha256": "1a549a0f9fde3ac1abb8fad04106e086b88316fd4d2274df4355b47015f428ef",
+      "pipes_settled": true,
+      "argv_PID_omitted": true
+    }
+  ],
+  "literal_origin": {
+    "literal_coverage_valid": true,
+    "accepted_TCP_total": 19,
+    "actual_open_TCP": 0,
+    "actual_stream_GET_inflight": 0,
+    "media_HEAD_total": 0,
+    "control_total": 16,
+    "transient_TCP_without_request": 0,
+    "TCP_is_not_viewer": true,
+    "client_to_origin_association_inferred": false
+  },
+  "initial_offline_default_name_guard_failure_retained": true
+}

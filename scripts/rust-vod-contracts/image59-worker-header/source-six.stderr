@@ -1,0 +1,37 @@
+2026-11-12 17:47:02,938 WARNING py.warnings /dispatcharrpy/lib/python3.13/site-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 21 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+
+2026-11-12 17:47:02,983 WARNING django.request Method Not Allowed: /proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/fixture-header-healthy
+2026-11-12 17:47:02,986 WARNING django.request Unauthorized: /proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/fixture-header-auth
+2026-11-12 17:47:02,998 ERROR apps.proxy.vod_proxy.views [VOD-ERROR] No available provider with capacity for movie 0a5d9763-b8ee-5aa7-89a4-a8abaa83fd1a
+2026-11-12 17:47:02,998 ERROR django.request Service Unavailable: /proxy/vod/movie/0a5d9763-b8ee-5aa7-89a4-a8abaa83fd1a/fixture-header-missing
+2026-11-12 17:47:03,007 ERROR django.request Internal Server Error: /proxy/vod/movie/not-a-uuid/fixture-header-route
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/base.py", line 221, in _get_response
+    response = response.render()
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/template/loader.py", line 47, in select_template
+    raise TemplateDoesNotExist(", ".join(template_name_list), chain=chain)
+django.template.exceptions.TemplateDoesNotExist: index.html
+2026-11-12 17:47:05,300 ERROR vod_proxy [fixture-header-error] Error establishing connection: 404 Client Error: Not Found for url: http://origin:8080/movie/fixture/fixture/fixture-normal-probe1.mp4
+2026-11-12 17:47:05,300 ERROR vod_proxy [fixture-header-error] Worker 7849e643c0fa-516 - Error in Redis-backed stream_content_with_session: 404 Client Error: Not Found for url: http://origin:8080/movie/fixture/fixture/fixture-normal-probe1.mp4
+Traceback (most recent call last):
+  File "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py", line 1415, in stream_content_with_session
+    upstream_response = redis_connection.get_stream(range_header)
+  File "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py", line 589, in get_stream
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://origin:8080/movie/fixture/fixture/fixture-normal-probe1.mp4
+2026-11-12 17:47:05,322 ERROR django.request Internal Server Error: /proxy/vod/movie/80ce646b-450d-5c44-843f-6799951f6324/fixture-header-error
+2026-11-12 17:47:06,326 WARNING vod_proxy [fixture-header-error] No connection manager provided - cannot decrement profile connections
+2026-11-12 17:47:08,034 WARNING vod_proxy [fixture-header-healthy] No connection manager provided - cannot decrement profile connections

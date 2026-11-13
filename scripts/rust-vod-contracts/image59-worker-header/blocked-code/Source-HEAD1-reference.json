@@ -1,0 +1,72 @@
+{
+  "scope": "actual Source one invalid-Bearer HEAD with valid UUID, separate retained epoch; no Source request rerun",
+  "raw_path": "artifacts/rust/m4-vod-head-source-2/Source-method-private.json",
+  "raw_sha256": "e9db2918f98adae5ae1766c4b327349f8b94b30c726a406e336cfbb86f1a2891",
+  "retained_files": {
+    "retained-head/Source-method-private.json": "e9db2918f98adae5ae1766c4b327349f8b94b30c726a406e336cfbb86f1a2891",
+    "retained-head/agent-independent-review.json": "b763f1ff3e62b3d8ff186c326c9ec5969c9023a2a93bf2af4faea6e7a741d5fd",
+    "retained-head/summary-private.json": "84d4c9aca41b734c17752b33205d471e2c48d27a24bad7feffce67dcdde10b8e"
+  },
+  "observed": {
+    "method": "HEAD",
+    "status": 401,
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ],
+      [
+        "WWW-Authenticate",
+        "Bearer realm=\"api\""
+      ],
+      [
+        "Vary",
+        "Accept, origin"
+      ],
+      [
+        "Allow",
+        "OPTIONS, GET"
+      ],
+      [
+        "X-Frame-Options",
+        "DENY"
+      ],
+      [
+        "Content-Length",
+        "172"
+      ],
+      [
+        "X-Content-Type-Options",
+        "nosniff"
+      ],
+      [
+        "Referrer-Policy",
+        "same-origin"
+      ],
+      [
+        "Cross-Origin-Opener-Policy",
+        "same-origin"
+      ],
+      [
+        "Date",
+        "Fri, 13 Nov 2026 19:19:08 GMT"
+      ]
+    ],
+    "body_hex": "",
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "body_bytes": 0,
+    "absolute_observation": {
+      "deadline": 317959.013546615,
+      "completed": 317944.038244661,
+      "timer_joined": true
+    },
+    "physical_close": {
+      "fd_after": -1,
+      "original_inode_absent": true,
+      "timer_joined": true,
+      "request_worker": "calling thread; returned after actual I/O unwind"
+    },
+    "began_monotonic": 317944.030210795,
+    "completed_monotonic": 317944.039707763
+  }
+}
