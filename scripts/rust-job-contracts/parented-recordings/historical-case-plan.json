@@ -1,0 +1,42 @@
+{
+  "status": "UNEXECUTED_NATIVE_PAIR_CLOSURE_IN_PREPARATION",
+  "cases": [
+    "refresh-created-source",
+    "parented-series-positive",
+    "artwork-two-real-children",
+    "refresh-repeat",
+    "parented-series-repeat"
+  ],
+  "actual_task_order": [
+    "apps.epg.tasks.refresh_epg_data",
+    "apps.channels.tasks.evaluate_series_rules",
+    "apps.channels.tasks.prefetch_recording_artwork",
+    "apps.channels.tasks.prefetch_recording_artwork",
+    "apps.epg.tasks.refresh_epg_data",
+    "apps.channels.tasks.evaluate_series_rules"
+  ],
+  "Native_roles": [
+    "series-positive",
+    "series-repeat"
+  ],
+  "Source_roles": [
+    "refresh-created-source",
+    "artwork-two-real-children",
+    "refresh-repeat"
+  ],
+  "Source_tasks": 4,
+  "Native_tasks": 2,
+  "Source_workers": 3,
+  "Native_processes": 2,
+  "per_process_seconds": 35,
+  "guest_seconds": 600,
+  "readiness_seconds": 180,
+  "cleanup_seconds": 90,
+  "maximum_own_projects": 1,
+  "Source_reference_sha256": "50294172571d8e7fe1434756758381d5102f1b1fc425da6027231d82637e9d14",
+  "comparison_policy_sha256": "1876729d483aab201d5bfbeab5197bcb45ef8c24eff5efe6796f323b5b0ca4b7",
+  "default_children_consumed": false,
+  "Native_artwork_worker": false,
+  "default_graph_Main_enabled": false,
+  "new_source_reference_capture": false
+}

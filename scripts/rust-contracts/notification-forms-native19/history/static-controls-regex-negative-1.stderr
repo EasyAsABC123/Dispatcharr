@@ -1,0 +1,26 @@
+test_all_base806_and_coupled5_present (__main__.Binding.test_all_base806_and_coupled5_present) ... ok
+test_case_counts_and_before_send_counter (__main__.Binding.test_case_counts_and_before_send_counter) ... ok
+test_create_captures_body_rejection_after_auth (__main__.Binding.test_create_captures_body_rejection_after_auth) ... ok
+test_delete_bytes_unchanged (__main__.Binding.test_delete_bytes_unchanged) ... ok
+test_exact_finite_selected_paths (__main__.Binding.test_exact_finite_selected_paths) ... ok
+test_fixed_source7_byte_literal (__main__.Binding.test_fixed_source7_byte_literal) ... ERROR
+test_json_create_inner_extractor_retained (__main__.Binding.test_json_create_inner_extractor_retained) ... ok
+test_no_cache_import_or_reset (__main__.Binding.test_no_cache_import_or_reset) ... ok
+test_no_cargo_lock_or_coupled_changes (__main__.Binding.test_no_cargo_lock_or_coupled_changes) ... ok
+test_source_credentials_overwritten_before_insert (__main__.Binding.test_source_credentials_overwritten_before_insert) ... ok
+test_strict_projection_no_raw_fallback (__main__.Binding.test_strict_projection_no_raw_fallback) ... ok
+test_update_lookup_before_parse (__main__.Binding.test_update_lookup_before_parse) ... ok
+
+======================================================================
+ERROR: test_fixed_source7_byte_literal (__main__.Binding.test_fixed_source7_byte_literal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-forms-native-qa-2/test_static.py", line 27, in test_fixed_source7_byte_literal
+    text=(SOURCE/'rust/crates/store/src/notification_forms.rs').read_text();raw=json.loads(re.search(r'const BODY: &\[u8\] = b("(?:[^"\\]|\\.)*");',text).group(1)).encode();wanted=Path('artifacts/rust/m5-notification-forms-source-executor-5/inputs/bodies/07.bin').read_bytes();self.assertEqual(raw,wanted)
+                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'group'
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.138s
+
+FAILED (errors=1)

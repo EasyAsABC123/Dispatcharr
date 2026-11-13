@@ -1,0 +1,21 @@
+# Once-only actual parented component qualification
+
+Original Dispatcharr, Celery and dependency authors retain all application and algorithm credit. This is a private component fixture, not an application/default-worker enablement.
+
+Use pinned Original image/Git/archive and the exact 31-file support closure. One owned internal Compose project (baseline 1CPU/1GiB/pids256, idle origin) contains copied fixture SQL, Redis broker8/results9/cache0 and owned local XML/PNG files. The exact completed revision4 ELF is mounted read-only. Native runtime source814/build/ELF and historical Source1 raw hash bind the inputs. Output must be fresh `parented-recordings-native-1`; proposed authorization stays false until Root review/slot.
+
+Five phases follow the Source order exactly:
+
+1. Real Original EPGSource post_save produces Refresh; actual Original worker consumes it and publishes Index then parented Series.
+2. The real queued Series frame and completed Refresh backend bytes mint the production opaque single-child capability. The new configured worker executes once. Its normal persistence, lock, event, result writer and inherited-root artwork encoder execute unchanged. Only cfg(test) route controls validate the fixed owned queue/exchange/copied DB then project a validation clone for legacy parsing; CAS retains the original bytes. A fixture-only publisher directs the two real encoded children to the same owned artwork queue used by Source1. All production routes remain unchanged.
+3. One actual Original prefork artwork worker consumes both actual native-generated children, first UPDATE/event then duplicate no-op; actual Original AsyncResult values must be "ok". No native artwork worker is claimed.
+4. The actual unchanged Original repeat producer remains `.apply_async(args=[source.id], task_id=root_b)` with captured list spelling, then an actual Original Refresh worker.
+5. The corresponding new native parented Series worker consumes its exact child, returns scheduled0 and publishes no artwork.
+
+No default descendant is deleted, quarantined or consumed: setup parse and both Index frames stay on celery. The future clocked run_recording row remains unexecuted. There is no Main, default FIFO, provider, general title/rule, fault/physical-ownership or performance acceptance from this normal five-phase run. Prior direct/physical proofs remain separate; failure and held-reply extensions need their own finite plans.
+
+All snapshots and timestamps are retained. COMPARISON-POLICY declares input-anchor correspondence, each backend's actual execution windows, SQL generated-clock changed/unchanged relations, complete SQL row fields, exact metadata field presence/results/children, actual Original get values, owned queues/default preservation, primitive DVR cache values, lease absence, event deltas, raw broker/backend projection and owned-file bytes/stat context. Channels and transport salts/opaque identities remain raw with explicit schema/bindings; generic Redis serialization parity is not claimed. Native Series does not fabricate Source task_prerun/postrun/SQL.
+
+Per-task/process35s, readiness180s, guest600s and cleanup90s remain fixed. Host interruption uses exact service stop plus attempt-all host CLI wait/pipes; guest interruption also attempts actual native child stop/wait. Invalid/uncertain collection never qualifies. The host rechecks pinned Original bytes after the run and audits exact default schema manifests (62 tables/59 sequences/501 columns/198 constraints/255 indexes) before owned project down/inventories/exact CIDs/prior PID checks. Keep every negative; no automatic retry.
+
+Preparation negatives: first Source-self model omitted the actual `__asgi_channel__` routing field, then assumed the retained future PeriodicTask used positional args. Both were corrected from literal Source1 before any Native dispatch (actual repeat task producer remains positional list). A later synthetic model had stale raw broker projection after changing only its modeled origin; synthetic fixture-only consistency was corrected. These are not Native results. Historical Source2/3 test goldens constructed initial tuple calls for repeat and are preserved with their limitation; revision4 parses both exact retained producer frames and supports only those two spellings.

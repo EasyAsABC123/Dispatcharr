@@ -92,10 +92,13 @@ struct Inner {
     policy: Arc<CachedSwapPolicy>,
     service: Arc<Service>,
     family: Family,
+    refresh_child: Option<crate::recording_artwork::RefreshSeriesChild>,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
     #[cfg(test)]
     owned_parent_route: bool,
+    #[cfg(test)]
+    owned_parented_series_route: bool,
 }
 #[derive(Clone)]
 pub struct Worker {
@@ -129,12 +132,30 @@ impl Worker {
                 policy,
                 service,
                 family,
+                refresh_child: None,
                 slots: Arc::new(Semaphore::new(1)),
                 closed: AtomicBool::new(false),
                 #[cfg(test)]
                 owned_parent_route: false,
+                #[cfg(test)]
+                owned_parented_series_route: false,
             }),
         })
+    }
+    /// Inert one-known-child constructor; normal/direct intake stays unchanged.
+    /// Capability binds the child ID/root/parent to a completed Refresh result.
+    pub fn new_refresh_series_child(
+        assembly: Assembly,
+        child: crate::recording_artwork::RefreshSeriesChild,
+    ) -> Result<Self, Error> {
+        if !matches!(assembly.family, Family::Series) {
+            return Err(Error::Configuration);
+        }
+        let mut worker = Self::new(assembly)?;
+        Arc::get_mut(&mut worker.inner)
+            .ok_or(Error::Configuration)?
+            .refresh_child = Some(child);
+        Ok(worker)
     }
     #[cfg(test)]
     pub fn new_parent_route_fixture(assembly: Assembly, queue: &str) -> Result<Self, Error> {
@@ -146,6 +167,21 @@ impl Worker {
         Arc::get_mut(&mut worker.inner)
             .ok_or(Error::Configuration)?
             .owned_parent_route = true;
+        Ok(worker)
+    }
+    #[cfg(test)]
+    pub(crate) fn new_parented_series_fixture(
+        assembly: Assembly,
+        child: crate::recording_artwork::RefreshSeriesChild,
+    ) -> Result<Self, Error> {
+        assembly
+            .jobs
+            .require_parented_fixture("rust-owned-parented-series")
+            .map_err(Error::Transport)?;
+        let mut worker = Self::new_refresh_series_child(assembly, child)?;
+        Arc::get_mut(&mut worker.inner)
+            .ok_or(Error::Configuration)?
+            .owned_parented_series_route = true;
         Ok(worker)
     }
     pub fn available_slots(&self) -> usize {
@@ -196,12 +232,29 @@ enum Claim {
     Recurring(crate::transport::DefaultCandidate),
     #[cfg(test)]
     Owned(crate::transport::ConfiguredParentCandidate),
+    #[cfg(test)]
+    Parented(crate::transport::ParentedSeriesCandidate),
 }
 struct Pending {
     message: Message,
     claim: Claim,
 }
 async fn peek(inner: &Inner, owner: Arc<Owner>) -> Result<Option<Pending>, TransportError> {
+    #[cfg(test)]
+    if inner.owned_parented_series_route {
+        let cap = inner.refresh_child.ok_or(TransportError::Configuration)?;
+        return inner
+            .jobs
+            .peek_parented_series_fixture(cap, owner)
+            .await
+            .map(|candidate| {
+                candidate.map(|candidate| Pending {
+                    message: Message::Series(candidate.message.clone()),
+                    claim: Claim::Parented(candidate),
+                })
+            });
+    }
+
     #[cfg(test)]
     if inner.owned_parent_route {
         return inner
@@ -248,6 +301,8 @@ fn canonical(inner: &Inner, pending: &Pending, task: DirectTask) -> bool {
         Claim::Recurring(candidate) => inner.jobs.configured_candidate_canonical(candidate, task),
         #[cfg(test)]
         Claim::Owned(candidate) => candidate.canonical(task),
+        #[cfg(test)]
+        Claim::Parented(candidate) => candidate.canonical(task),
     }
 }
 async fn claim(
@@ -260,6 +315,8 @@ async fn claim(
         Claim::Recurring(candidate) => inner.jobs.claim_default(candidate).await.map(|_| ()),
         #[cfg(test)]
         Claim::Owned(candidate) => inner.jobs.claim_configured_parent_fixture(candidate).await,
+        #[cfg(test)]
+        Claim::Parented(candidate) => inner.jobs.claim_parented_series_fixture(candidate).await,
     }
 }
 async fn settings(
@@ -301,9 +358,13 @@ async fn series(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {
         Message::Series(v) => v.clone(),
         _ => return Ok(Run::UnsupportedHead),
     };
-    // Configured children/parented rules remain OPEN: refuse before lease/cache,
-    // ACK, revocation or any SQL mutation. Old no-rule worker is untouched.
-    let task = DirectTask::series(&message).ok_or(Error::Unsupported)?;
+    // Check explicit admission before lease/cache/ACK/SQL. The legacy constructor
+    // retains its direct-only authority; configured descendants need a capability.
+    let task = match inner.refresh_child {
+        Some(child) => child.admit(&message),
+        None => DirectTask::series(&message),
+    }
+    .ok_or(Error::Unsupported)?;
     if !canonical(&inner, &pending, task) {
         return Err(Error::Unsupported);
     }

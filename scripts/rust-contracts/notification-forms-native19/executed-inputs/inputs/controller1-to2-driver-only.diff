@@ -1,0 +1,25 @@
+--- EXECUTED_CONTROLLER1/audit.py
++++ UNEXECUTED_CONTROLLER2/audit.py
+@@ -64,17 +64,19 @@
+     return {'rows':sorted({r['key_hex']:r for r in rows}.values(),key=lambda r:r['key_hex']),'capture_bytes':used,'scope':'raw owned Native Redis DUMP/PTTL; credential/cache effects not paired with Source force-auth or normalized away'}
+ def full_public_manifest(database):
+     # Raw driver only: no Django app/setup/import. Same bounded legacy algorithm.
+-    import psycopg2,types
++    import psycopg,types
+     from public_manifest import manifest
+     require(database=='dispatcharr','FullDefaultReadOnlyOnly')
+     expected=json.loads(Path('/native-root/inputs/source-authority/executed-executor5/inputs/schema62-authority.json').read_text())
+-    connection=psycopg2.connect(host='/var/run/postgresql',user='dispatch',dbname=database,connect_timeout=3,options='-c default_transaction_read_only=on -c statement_timeout=5000')
+-    connection.set_session(readonly=True,isolation_level='REPEATABLE READ')
++    connection=psycopg.connect(host='/var/run/postgresql',user='dispatch',dbname=database,connect_timeout=3,options='-c default_transaction_read_only=on -c statement_timeout=5000',autocommit=False)
+     class Adapter:
+         ops=types.SimpleNamespace(quote_name=lambda name:'"'+name.replace('"','""')+'"')
+         def cursor(self):return connection.cursor()
+     try:
+         with connection.cursor()as cursor:
++            cursor.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY')
++            cursor.execute('SHOW transaction_read_only');require(cursor.fetchone()==('on',),'ActualFullDefaultReadOnlyOn')
++            cursor.execute('SHOW transaction_isolation');require(cursor.fetchone()==('repeatable read',),'ActualFullDefaultRepeatableRead')
+             cursor.execute('SELECT current_database()');require(cursor.fetchone()==(database,),'ExactFullDefaultDatabase')
+         return manifest(Adapter(),expected)
+     finally:connection.close()

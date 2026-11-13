@@ -1,0 +1,23 @@
+{
+  "schema": "notification-forms-native19-input-read-privacy-proof-v1",
+  "compiled_SQLpeer_sha256": "a3bb64fec9ee31eee3dba6e3af9efee380d703495889f87785ec406a807a7c02",
+  "program_read_scope": "finite exact compiled ignored-test source, not general information-flow proof",
+  "Source_user_fields_overwritten_before_SQL": [
+    "api_key",
+    "username",
+    "date_joined"
+  ],
+  "source_user_selection": "Source seed.users row selected by role.id; clone overwritten before INSERT jsonb_populate_record",
+  "Source_tokens_read": false,
+  "Source_raw_authentication_headers_read": false,
+  "Source_APIkey_projection_accepted_as_Native_key": false,
+  "Source_generated_date_accepted_as_Native_date_joined": false,
+  "Native_own_dates_retained": "required own seed/request and cross-request clock mappings; no date projection",
+  "Source_fields_consumed": [
+    "seed.users noncredential remaining SQL fields",
+    "seed.audit.tables.core_coresettings.raw_rows key/name/value only"
+  ],
+  "credential_templates": "fresh owned Native nonce and role, never imported Source credentials",
+  "Source_projected_binding": "strict1c3f5dcce14ffe9a773cb29833c4caef52ed15c813cf9473f6c397dc34ca240f with Original rawb72af1...a8d84; no alternate hash fallback",
+  "actual_scope": "APIkey-only Source12 plus seven Native transport diagnostics, no JWT backend introspection"
+}

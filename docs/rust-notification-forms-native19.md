@@ -1,0 +1,9 @@
+# Notification form parsing: bounded Native19 qualification
+
+The three-file notification parser/handler/test change qualifies twelve retained API-key-only Source requests and seven predeclared Native transport regressions. The actual second Native controller and ELF exited0; the raw capture recorder remains `passed:false`. Response, SQL, authentication history and ten generated clock mappings qualify. Full cache parity remains false: the request_started system-settings callback/version gap is retained with natural cold Native cache, not imported Source state.
+
+[The portable packet](../scripts/rust-contracts/notification-forms-native19/README.md) binds exactly140 per-field credential projections to the original raw SHA, preserves both Native attempts and Root's wrong-CWD tooling negative, and reconstructs the exact813 build-source map and266 local inputs from local Git plus the existing Source12 packet. The historical ELF is explicitly omitted and requires its exact hash/size when supplied. Original authors retain credit and React is unchanged.
+
+The first Native attempt failed before ELF/API execution because the raw default auditor imported absent psycopg2; the second changes only that auditor boundary to installed psycopg3. Source12 itself remains executed-controller exit1, with separate independently qualified21-byte input correction and no Source rerun.
+
+This component adds the measured URL-encoded/multipart forms behavior while preserving JSON create rejection classification after authentication. It does not establish full HTML/renderer/file grammar, all media-type error parity, developer conditions, concurrency, caller-loss drain, Main/default activation, SQLite, a new image, performance or full M5 acceptance. The larger current workspace requires its own union qualification.

@@ -1,0 +1,5 @@
+# Separate notification request_started callback gate
+
+Current parsing-only component does not add or import a warmed system_settings group. Actual Source12 global request_started warms that group before auth; current Native notification router does not. Full raw Source/Native caches must remain visible, and only response/SQL/auth-history scopes may qualify now. Do not call it complete Native12/full notification parity. Native seed remains natural empty cache (no Source key/version imports planned).
+
+Follow-on: read exact pinned signal/helper and measured Source12/20 to add narrow notification best-effort system-settings callback before configured auth, retaining existing runtime request owner through SQL Ready/ping/close and late Redis replies without an injected owner/new pool/budget. Require normal own-cache effects plus actual held-SQL/Redis/caller-abort/FD-loss physical gates before full callback qualification. Shared auth, other APIs and Main/default graph stay separately reviewed. Root now owns backup physical6 independent work.

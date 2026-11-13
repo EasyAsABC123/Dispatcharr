@@ -668,16 +668,15 @@ impl Jobs {
         if !self.allows_series() {
             return Err(Error::UnsupportedTask);
         }
-        if crate::recording_artwork::DirectTask::series(message).is_none() {
-            return Err(Error::Protocol);
-        }
-        if result.task_id() != message.task_id {
+        // The opaque report carries the admitted prepared-task lineage; never
+        // upgrade a parsed parented frame alone into configured result authority.
+        if !result.matches(message) {
             return Err(Error::Protocol);
         }
         self.write_result(
             message.task_id,
             result.value(),
-            None,
+            message.parent,
             result.children(),
             caller,
         )
@@ -1578,4 +1577,12 @@ mod configured_parent_fixture;
 #[cfg(test)]
 pub(crate) use configured_parent_fixture::{
     ParentCandidate as ConfiguredParentCandidate, ParentMessage as ConfiguredParentMessage,
+};
+
+#[cfg(test)]
+#[path = "parented_series_fixture.rs"]
+mod parented_series_fixture;
+#[cfg(test)]
+pub(crate) use parented_series_fixture::{
+    parse_frame as parse_parented_series_fixture, Candidate as ParentedSeriesCandidate,
 };

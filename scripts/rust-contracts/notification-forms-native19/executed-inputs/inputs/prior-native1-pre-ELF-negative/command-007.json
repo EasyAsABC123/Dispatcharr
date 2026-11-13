@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "docker",
+    "compose",
+    "-p",
+    "dispatcharr-notifforms-native-bf8cefec24",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-forms-native-sql-1/compose.json",
+    "exec",
+    "-T",
+    "-e",
+    "NOTIFICATION_NATIVE_AUDIT=owned-native-only",
+    "-e",
+    "NOTIFICATION_AUDIT_STAGE=default",
+    "-e",
+    "NOTIFICATION_AUDIT_LABEL=default-before",
+    "-e",
+    "NOTIFICATION_AUDIT_DATABASE=dispatcharr",
+    "baseline",
+    "/dispatcharrpy/bin/python",
+    "/native-tools/audit.py"
+  ],
+  "kind": null,
+  "pid": 3871411,
+  "starttime": "27891304",
+  "actual_exit": 1,
+  "collection_invalid": null,
+  "owned_stop_requested": false,
+  "physically_settled": true,
+  "pipes_settled": true,
+  "began_utc": "2026-11-13T08:28:37.995414+00:00",
+  "completed_utc": "2026-11-13T08:28:38.639382+00:00"
+}

@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "base": "18bf274cda795a0177e78b999fccfd4126d0a791",
+  "Rust_inputs": 829,
+  "coupled_inputs": 5,
+  "source_map_sha256": "338b9d58f9e2d56f709b5c1b64b3d05b4060c58e8f133f2c635d497a901afd39",
+  "waits": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 4168878,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794563750.0577698,
+      "completed_epoch": 1794563751.881456,
+      "actual_exit": 0,
+      "all834source_inputs_unchanged": true
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 4168942,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794563751.9177175,
+      "completed_epoch": 1794563788.434917,
+      "actual_exit": 0,
+      "all834source_inputs_unchanged": true
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 4177612,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794563788.4711597,
+      "completed_epoch": 1794563840.8445244,
+      "actual_exit": 0,
+      "all834source_inputs_unchanged": true
+    },
+    {
+      "stage": "defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 4187058,
+      "PID_namespace": "actual exec namespace, host only when tool escalated",
+      "began_epoch": 1794563840.883674,
+      "completed_epoch": 1794563972.284003,
+      "actual_exit": 0,
+      "all834source_inputs_unchanged": true
+    }
+  ],
+  "test_result_blocks": 172,
+  "default_totals": {
+    "passed": 687,
+    "failed": 0,
+    "ignored": 723
+  },
+  "outside_test_ELFs": {
+    "dispatcharr_job_transport": {
+      "name": "dispatcharr_job_transport-0226930df00138b3",
+      "sha256": "28f5d2bc8446b27f40c0e028e7c2d2a4a7d5b9dba45b9019d2f8c374073e9335",
+      "bytes": 67789472,
+      "copied_after_all_actual_waits_completed": true
+    },
+    "dispatcharr_store": {
+      "name": "dispatcharr_store-9c152325d4ba3b57",
+      "sha256": "b7a3da14cbb055a0dce37362c8be4da7ba7bf2cbd507adfd705523fb1feb5ca1",
+      "bytes": 70074776,
+      "copied_after_all_actual_waits_completed": true
+    }
+  },
+  "combined_workspace_application_or_Docker_acceptance": false,
+  "combined_workspace_performance_acceptance": false,
+  "selected_image": "image55 / aca6d900ad13700ab86b2898134a61e4dba57bc1 / 794 Rust inputs",
+  "Main_default_workers": false,
+  "Original_credit": "Original Dispatcharr authors and contributors; see LICENSE and ATTRIBUTION.md"
+}

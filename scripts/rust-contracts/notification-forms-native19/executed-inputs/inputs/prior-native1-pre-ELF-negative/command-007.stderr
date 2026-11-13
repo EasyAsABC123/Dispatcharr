@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/native-tools/audit.py", line 90, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/native-tools/audit.py", line 85, in main
+    require(database=='dispatcharr','DefaultReadOnlyOnly');value={'named11':audit(database,label),'public62':full_public_manifest(database)}
+                                                                                                             ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/native-tools/audit.py", line 67, in full_public_manifest
+    import psycopg2,types
+ModuleNotFoundError: No module named 'psycopg2'

@@ -1,0 +1,84 @@
+--- PREP1/tools/run_source.py
++++ PREP2/tools/run_source.py
+@@ -17,6 +17,10 @@
+ def proc(pid):
+  try:return Path('/proc',str(pid),'stat').read_text().rsplit(')',1)[1].split()[19]
+  except FileNotFoundError:return None
++def observed_pid_record(cid,pid,starttime):
++ require(type(cid)is str and re.fullmatch('[a-f0-9]{64}',cid)is not None,'ObservedExactCID')
++ require(type(pid)is int and pid>0 and type(starttime)is str and re.fullmatch('[0-9]+',starttime)is not None and int(starttime)>0,'ObservedOriginalHostPIDStartRequired')
++ return {'CID':cid,'pid':pid,'starttime':starttime}
+ def exact_absent_cid(code,stdout,stderr,cid):
+  if type(code)is not int or code!=1 or not re.fullmatch('[a-f0-9]{64}',cid):return False
+  try:text=stderr.decode('utf-8',errors='strict').strip()
+@@ -166,7 +170,7 @@
+     rows=text([docker,'top',owned_cid,'-eo','pid,comm,args'],timeout=15);save(out/('precleanup-processes-'+owned_cid+'.json'),{'CID':owned_cid,'raw':rows})
+     for line in rows.splitlines()[1:]:
+      fields=line.split(None,2)
+-     if fields and fields[0].isdigit():pid=int(fields[0]);owned_pids.append({'CID':owned_cid,'pid':pid,'starttime':proc(pid)})
++     if fields and fields[0].isdigit():pid=int(fields[0]);owned_pids.append(observed_pid_record(owned_cid,pid,proc(pid)))
+    save(out/'precleanup-PIDs.json',owned_pids)
+   except BaseException as error:report.update(passed=False,PID_capture_unknown=type(error).__name__);status=1
+   try:
+--- PREP1/local-controls/test_closure.py
++++ PREP2/local-controls/test_closure.py
+@@ -26,6 +26,15 @@
+   self.assertIn("report.update(passed=True,Source_verified=False,Source_reference_verified=True,Native_verified=True",(ROOT/'tools/run_source.py').read_text())
+  def test_repeat_producer_is_unchanged_captured_positional_list(self):
+   text=(ROOT/'tools/source_configured.py').read_text();self.assertIn('epg_tasks.refresh_epg_data.apply_async(args=[source.id],task_id=root_b)',text);self.assertNotIn('refresh_epg_data.apply_async(kwargs=',text)
++ def test_observed_pid_identity_must_exist_before_capture(self):
++  self.assertEqual(host.observed_pid_record('a'*64,123,'456'),{'CID':'a'*64,'pid':123,'starttime':'456'})
++ def test_missing_original_identity_can_never_be_marked_absent(self):
++  for start in [None,'','not-observed','0']:
++   with self.assertRaisesRegex(ValueError,'ObservedOriginalHostPIDStartRequired'):host.observed_pid_record('a'*64,123,start)
++ def test_pid_and_container_identity_are_typed(self):
++  for pid in [True,None,'123',0,-1]:
++   with self.assertRaises(ValueError):host.observed_pid_record('a'*64,pid,'456')
++  with self.assertRaises(ValueError):host.observed_pid_record('unknown',123,'456')
+  def test_no_native_Source_prerun_or_signal_fabrication(self):
+   text=(ROOT/'tools/source_configured.py').read_text();self.assertIn("'Source_task_prerun_fabricated':False",text);self.assertIn("'source':'actualNativeBrokerQueueSnapshot'",text);self.assertNotIn('before_task_publish.send',text);self.assertNotIn('task_prerun.send',text)
+ if __name__=='__main__':unittest.main()
+--- PREP1/proposed-execution-inputs.json
++++ PREP2/proposed-execution-inputs.json
+@@ -1,5 +1,5 @@
+ {
+-  "status": "UNEXECUTED Source-first actual producer/native parented Series/Original artwork pair; Root seal/slot once required",
++  "status": "UNEXECUTED Native prep2; observed nonNone PID identity required; original prep1 remains unexecuted",
+   "case_plan_sha256": "35384723e1a409f064dc62493332f113971e5f88718a8422b45042ac006c9982",
+   "tools_sha256": {
+     "bounded_process.py": "0ca7491087ae756d667dbb9dc1655dbb0f8b0fd0c32b8bfa6592b1f7a16f9867",
+@@ -12,7 +12,7 @@
+     "reference.json": "c5f9a151bf74ec6b3f59f5abea3d862710bd87391c4fa6a52adf0f133851a665",
+     "roles.py": "634348ff9656e7d02b4791f34dc5d17f186d380fa1568fed34be6834e39fd9af",
+     "row_compare.py": "2ba28133437f81323eacb6fb78ca06504fd18a44ab597dfad25244e382779455",
+-    "run_source.py": "95b80b1c0c0604c22ca215a95637d38f700050bd93775ffabceda86074803033",
++    "run_source.py": "2792a5753ae23fc9dc6bf1298638305393a5a9754b9be6c474a0f50da956062c",
+     "seed_spec.py": "ddab8f3e2cb607bf4e2286f40d957166155f2443f03dd904bd70a730552b4320",
+     "source_configured.py": "97eaa2b364fa5d8791adb524bc6e874592f7c2109962be2ff5b738db878f3491",
+     "support-inputs.json": "674e5ac616f4403abe8f6858193dbbecce8b41fb118df1860b2cfa3ec01f3990",
+--- PREP1/once-plan.json
++++ PREP2/once-plan.json
+@@ -2,7 +2,7 @@
+   "scope": "Exact once ordinary fixture; no execution until Root-reviewed authorization",
+   "argv": [
+     "python",
+-    "/home/justin/github/Dispatcharr/artifacts/rust/parented-recordings-native-prep-1/tools/run_source.py",
++    "/home/justin/github/Dispatcharr/artifacts/rust/parented-recordings-native-prep-2/tools/run_source.py",
+     "--repo",
+     "/home/justin/github/Dispatcharr",
+     "--support-root",
+@@ -10,12 +10,12 @@
+     "--output",
+     "/home/justin/github/Dispatcharr/artifacts/rust/parented-recordings-native-1",
+     "--execution-inputs",
+-    "/home/justin/github/Dispatcharr/artifacts/rust/parented-recordings-native-prep-1/Root-execution-inputs.json"
++    "/home/justin/github/Dispatcharr/artifacts/rust/parented-recordings-native-prep-2/Root-execution-inputs.json"
+   ],
+   "cwd": "/home/justin/github/Dispatcharr",
+   "source_tooling_environment": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/environment.sh",
+   "strip_inherited_GIT": true,
+-  "proposed_inputs_sha256": "19df20c2d1cae66891d97c1528c1701f7091f0a315ebbbb09619328a948fe528",
++  "proposed_inputs_sha256": "b7f6e2ae27c26410a0d6924d0bfac20cac599366d780880de39c6377053a9d53",
+   "maximum_own_projects": 1,
+   "no_retry": true,
+   "resource_measurements": false

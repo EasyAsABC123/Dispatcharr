@@ -190,3 +190,6 @@ pub mod configured_recording_worker;
 
 #[cfg(test)]
 mod configured_recording_peer;
+
+#[cfg(test)]
+mod parented_series_peer;

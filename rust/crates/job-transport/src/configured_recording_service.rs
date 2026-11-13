@@ -53,6 +53,8 @@ pub struct PreparedSeries {
 #[derive(Debug)]
 pub struct SeriesReport {
     task: Uuid,
+    root: Uuid,
+    parent: Option<Uuid>,
     title: String,
     tvg: String,
     created: u32,
@@ -60,6 +62,12 @@ pub struct SeriesReport {
     caught_insert_errors: Vec<String>,
 }
 impl SeriesReport {
+    pub(crate) fn matches(&self, message: &crate::series_protocol::SeriesMessage) -> bool {
+        self.task_id() == message.task_id
+            && self.root == message.root
+            && self.parent == message.parent
+    }
+
     pub(crate) fn task_id(&self) -> Uuid {
         self.task
     }
@@ -454,6 +462,8 @@ impl Service {
             self.event(Some(outcome.created), owner).await?;
             Ok(SeriesReport {
                 task: task.id(),
+                root: task.root(),
+                parent: task.parent(),
                 title: prepared.title,
                 tvg: prepared.tvg,
                 created: outcome.created,
@@ -513,6 +523,8 @@ mod caught_insert_tests {
                 let value = &case["backend"]["result"];
                 let report = SeriesReport {
                     task: Uuid::parse_str(case["backend"]["task_id"].as_str().unwrap()).unwrap(),
+                    root: Uuid::parse_str(case["backend"]["task_id"].as_str().unwrap()).unwrap(),
+                    parent: None,
                     title: "Owned Exact Series".into(),
                     tvg: "rust.owned.configured".into(),
                     created: 0,

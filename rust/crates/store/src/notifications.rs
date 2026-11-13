@@ -619,6 +619,9 @@ fn create_choice(name: &str, value: &Value, allowed: &[&str]) -> Result<Value, S
 }
 /// Pinned SystemNotificationSerializer JSON write fields; readonly/unknown
 /// inputs never become SQL columns. Return field errors for uniqueness to join.
+#[path = "notification_forms.rs"]
+mod forms;
+
 type CreateValidation = (Map<String, Value>, Map<String, Value>);
 fn create_fields(input: &Map<String, Value>) -> Result<CreateValidation, StoreError> {
     let mut fields = Map::new();
@@ -707,12 +710,16 @@ async fn create(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
-    body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
+    body: Result<Bytes, axum::extract::rejection::BytesRejection>,
 ) -> Result<(axum::http::StatusCode, Json<Value>), StoreError> {
     // Source dispatch checks IsAdmin (including UI policy) before request.data.
-    auth.account_user(peer, headers, true).await?;
-    let input = crate::admin_writes::body_object(body)?;
-    let (fields, mut errors) = create_fields(&input)?;
+    auth.account_user(peer, headers.clone(), true).await?;
+    // Capture extraction failures so authorization still precedes the old
+    // generic create JSON/body rejection. Do not reject before this handler.
+    let body = body.map_err(|_| StoreError::InvalidInput(json!({"detail":"JSON parse error"})))?;
+    let input = forms::create_input(&headers, &body).await?;
+    let (mut fields, mut errors) = create_fields(&input.fields)?;
+    input.finish(&mut fields, &mut errors);
     if let Some(key) = fields.get("notification_key").and_then(Value::as_str) {
         let exists: bool = sqlx::query_scalar(
             "SELECT EXISTS(SELECT 1 FROM core_systemnotification WHERE notification_key=$1)",
@@ -793,6 +800,16 @@ fn mutation_input(headers: &HeaderMap, body: &Bytes) -> Result<Map<String, Value
     };
     crate::admin_writes::body_object(Ok(Json(value)))
 }
+async fn write_input(
+    headers: &HeaderMap,
+    body: &Bytes,
+    partial: bool,
+) -> Result<forms::WriteInput, StoreError> {
+    match forms::parse(headers, body, partial).await? {
+        Some(input) => Ok(input),
+        None => mutation_input(headers, body).map(forms::WriteInput::json),
+    }
+}
 async fn mutation_target(
     auth: &AuthService,
     user: &User,
@@ -818,8 +835,10 @@ async fn update(
     let user = auth.account_user(peer, headers.clone(), true).await?;
     let target = mutation_target(&auth, &user, raw).await?;
     let id = target["id"].as_i64().expect("serialized notification id");
-    let input = mutation_input(&headers, &body)?;
-    let (changes, mut errors) = update_fields(&input, method == axum::http::Method::PATCH)?;
+    let partial = method == axum::http::Method::PATCH;
+    let input = write_input(&headers, &body, partial).await?;
+    let (mut changes, mut errors) = update_fields(&input.fields, partial)?;
+    input.finish(&mut changes, &mut errors);
     if let Some(key) = changes.get("notification_key").and_then(Value::as_str) {
         let duplicate: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM core_systemnotification WHERE notification_key=$1 AND id<>$2)")
             .bind(key).bind(id).fetch_one(auth.store.pool()).await?;
@@ -1348,3 +1367,7 @@ mod notification_restart_peer;
 #[cfg(test)]
 #[path = "notifications_credentials_sql_tests.rs"]
 mod credentials_sql_tests;
+
+#[cfg(test)]
+#[path = "notifications_forms_sql_tests.rs"]
+mod forms_sql_tests;
