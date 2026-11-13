@@ -393,6 +393,8 @@ mod tests {
             + properties.as_ref().map_or(0, String::capacity)
             + std::mem::size_of::<InfoRow>();
         let row = InfoRow {
+            relation_id: r["id"].as_i64().unwrap(),
+            account_id: r["m3u_account_id"].as_i64().unwrap(),
             object,
             relation_created: at(&r["created_at"]),
             relation_modified: at(&r["updated_at"]),

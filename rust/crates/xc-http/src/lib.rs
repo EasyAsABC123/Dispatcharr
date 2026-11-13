@@ -49,3 +49,6 @@ mod vod_series_info;
 
 #[cfg(test)]
 mod vod_span;
+
+#[cfg(test)]
+mod vod_info_stage;

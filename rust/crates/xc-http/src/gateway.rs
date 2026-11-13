@@ -62,8 +62,9 @@ struct Inner {
     memory: Arc<Semaphore>,
     stopped: AtomicBool,
     epg_enabled: AtomicBool,
-    #[cfg(test)]
     vod_lists_enabled: AtomicBool,
+    #[cfg(test)]
+    vod_info_clock: std::sync::OnceLock<i64>,
     workers: AtomicUsize,
     done: Notify,
     live: std::sync::OnceLock<LiveDispatcher>,
@@ -143,8 +144,9 @@ impl XcGateway {
                 config,
                 stopped: AtomicBool::new(false),
                 epg_enabled: AtomicBool::new(false),
-                #[cfg(test)]
                 vod_lists_enabled: AtomicBool::new(false),
+                #[cfg(test)]
+                vod_info_clock: std::sync::OnceLock::new(),
                 workers: AtomicUsize::new(0),
                 done: Notify::new(),
                 live: std::sync::OnceLock::new(),
@@ -165,23 +167,40 @@ impl XcGateway {
         self.inner.epg_enabled.store(true, Ordering::Release);
         self
     }
-    /// Test-peer staging only. No production capability or app/Main hook.
-    #[cfg(test)]
-    fn with_vod_lists_for_test(self) -> Self {
+    /// Enable the two bounded VOD catalogue lists using this gateway's existing
+    /// request, SQL and response-memory ownership. Info refresh stays separate.
+    pub fn with_vod_lists(self) -> Self {
         self.inner.vod_lists_enabled.store(true, Ordering::Release);
         self
     }
-    fn accepts_vod_list(&self, action: &str) -> bool {
+    #[cfg(test)]
+    fn with_vod_lists_for_test(self) -> Self {
+        self.with_vod_lists()
+    }
+    /// Fixture-only eligibility clock, never an environment-controlled Main capability.
+    #[cfg(test)]
+    fn with_vod_info_for_test(self, eligibility_micros: i64) -> Self {
+        self.inner
+            .vod_info_clock
+            .set(eligibility_micros)
+            .expect("single fixture clock");
+        self
+    }
+    fn accepts_vod_info(&self, action: &str) -> bool {
         #[cfg(test)]
         {
-            self.inner.vod_lists_enabled.load(Ordering::Acquire)
-                && matches!(action, "get_vod_streams" | "get_series")
+            self.inner.vod_info_clock.get().is_some()
+                && matches!(action, "get_vod_info" | "get_series_info")
         }
         #[cfg(not(test))]
         {
             let _ = action;
             false
         }
+    }
+    fn accepts_vod_list(&self, action: &str) -> bool {
+        self.inner.vod_lists_enabled.load(Ordering::Acquire)
+            && matches!(action, "get_vod_streams" | "get_series")
     }
     pub fn active_requests(&self) -> usize {
         self.inner
@@ -401,6 +420,64 @@ impl XcGateway {
                 &mut out,
             )
             .await?;
+        } else if self.accepts_vod_info(action) {
+            #[cfg(test)]
+            {
+                use crate::vod_info_stage::{Context, Error, Prepared};
+                let origin = dispatcharr_output_http::source_output_origin(&auth, &identity);
+                let family = if action == "get_series_info" {
+                    crate::vod_priority::Family::Series
+                } else {
+                    crate::vod_priority::Family::Movie
+                };
+                let ctx = Context {
+                    store: &self.inner.store,
+                    user: &user,
+                    family,
+                    id: identity.parameter(if action == "get_series_info" {
+                        "series_id"
+                    } else {
+                        "vod_id"
+                    }),
+                    origin: &origin,
+                    limits: &limits,
+                    available_work_bytes: available_work_bytes
+                        .checked_sub(origin.capacity())
+                        .ok_or_else(reader::capacity)?,
+                };
+                let clock = *self
+                    .inner
+                    .vod_info_clock
+                    .get()
+                    .expect("accepted fixture clock");
+                let result = async {
+                    match crate::vod_info_stage::prepare(&ctx, || clock).await? {
+                        Prepared::Fresh(fresh) => {
+                            crate::vod_info_stage::write_cached(&ctx, &fresh, &mut out).await
+                        }
+                        Prepared::RefreshRequired(_) | Prepared::PropertyCheckFailed(_) => {
+                            Err(Error::UnsupportedContext)
+                        }
+                    }
+                }
+                .await;
+                if let Err(error) = result {
+                    match error.separate_backend()? {
+                        Error::NotFound => return Ok(django_page(404)),
+                        Error::MovieInvalidId
+                        | Error::Projection(crate::vod_lists::Error::Source) => {
+                            return Ok(django_page(500))
+                        }
+                        _ => return Err(StoreError::Unsupported(
+                            "XC cached-info staging has not completed its Source migration gates",
+                        )),
+                    }
+                }
+            }
+            #[cfg(not(test))]
+            {
+                return Err(StoreError::Unsupported("XC info staging is test-only"));
+            }
         } else if self.accepts_vod_list(action) {
             #[cfg(test)]
             {

@@ -636,3 +636,188 @@ fn smaller_custom_request_quote_cannot_retain_larger_headers() {
     assert!(bounded_header_size(64 * 1024, 1024 * 1024).is_ok());
     assert!(bounded_header_size(64 * 1024 + 1, 1024 * 1024).is_err());
 }
+
+/// Component HTTP peer: real bounded SQL/Redis authorization, never Main. The
+/// host controller owns all requests, stop, process/PID and SQL audit receipts.
+#[tokio::test]
+#[ignore = "requires reviewed Source12 owned fixture and once cue"]
+async fn source12_bounded_cached_info_http_peer() {
+    use axum::routing::get;
+    let database = std::env::var("DATABASE_TEST_URL").unwrap();
+    assert!(database.contains("playback-fixture-only"));
+    let token = std::env::var("XC_INFO_FIXTURE_TOKEN").unwrap();
+    assert_eq!(token.len(), 32);
+    assert!(token.bytes().all(|b| b.is_ascii_hexdigit()));
+    let redis = std::env::var("REDIS_TEST_URL").unwrap();
+    let store = Store::connect(&database, 4).await.unwrap();
+    let auth = AuthService::new(
+        store.clone(),
+        AuthConfig::new(std::env::var("SECRET_KEY").unwrap()).unwrap(),
+    )
+    .with_notification_cache(NotificationCache::connect(&redis).await.unwrap());
+    let counts = ConnectionCounts::connect(&redis, |value| {
+        dispatcharr_ingest_core::source_float_literal(value).is_some()
+    })
+    .await
+    .unwrap();
+    let gateway = XcGateway::new(store, auth, counts, XcConfig::default())
+        .unwrap()
+        .with_vod_info_for_test(
+            std::env::var("XC_INFO_ELIGIBILITY_MICROS")
+                .unwrap()
+                .parse()
+                .unwrap(),
+        );
+    let stopped = Arc::new(Notify::new());
+    let signal = stopped.clone();
+    let health_token = token.clone();
+    let control = Router::new()
+        .route(&format!("/__owned/{token}/ready"), get(move || { let token=health_token.clone(); async move {
+            axum::Json(json!({"fixture_token":token,"PID":std::process::id(),"peer":"Source12-bounded-cached-info"}))
+        }}))
+        .route(&format!("/__owned/{token}/stop"), get(move || { let signal=signal.clone(); async move {
+            signal.notify_one(); axum::Json(json!({"stop_requested":true}))
+        }}));
+    let listener = tokio::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 5657))
+        .await
+        .unwrap();
+    let server = axum::serve(
+        listener,
+        gateway
+            .router()
+            .merge(control)
+            .into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .with_graceful_shutdown(async move {
+        stopped.notified().await;
+    });
+    tokio::time::timeout(Duration::from_secs(180), server.into_future())
+        .await
+        .expect("finite peer lifetime")
+        .unwrap();
+    assert!(
+        gateway.shutdown().await,
+        "peer must physically settle all work/frames"
+    );
+    assert_eq!(gateway.active_requests(), 0);
+    assert_eq!(
+        gateway.available_memory_bytes(),
+        gateway.inner.config.max_memory_bytes
+    );
+}
+
+// Native definition-bound ownership controls, not new Source interleaving authority.
+async fn cached_info_fixture(series: bool) -> (XcGateway, String) {
+    let (gateway, query) = fixture().await;
+    let clock = std::env::var("XC_INFO_ELIGIBILITY_MICROS")
+        .unwrap()
+        .parse()
+        .unwrap();
+    let gateway = gateway.with_vod_info_for_test(clock);
+    let id: i64 = std::env::var(if series {
+        "XC_INFO_SERIES_ID"
+    } else {
+        "XC_INFO_MOVIE_ID"
+    })
+    .unwrap()
+    .parse()
+    .unwrap();
+    assert!(id > 0);
+    let action = if series {
+        "get_series_info&series_id"
+    } else {
+        "get_vod_info&vod_id"
+    };
+    (gateway, format!("{query}&action={action}={id}"))
+}
+async fn cached_info_sql_physical_owner(series: bool, observer_deadline: bool) {
+    let (gateway, query) = cached_info_fixture(series).await;
+    assert_eq!(
+        gateway.inner.config.request_deadline,
+        Duration::from_secs(15)
+    );
+    let maximum = gateway.available_memory_bytes();
+    let mut locked = gateway.inner.store.pool().begin().await.unwrap();
+    let lock = if series {
+        "LOCK TABLE vod_episode IN ACCESS EXCLUSIVE MODE"
+    } else {
+        "LOCK TABLE vod_movie IN ACCESS EXCLUSIVE MODE"
+    };
+    sqlx::query(lock).execute(&mut *locked).await.unwrap();
+    let worker = gateway.clone();
+    let requested = request(&query, false);
+    let caller = tokio::spawn(async move { worker.handle(requested).await });
+    let prefix = if series {
+        "SELECT id,air_date,duration_secs,%"
+    } else {
+        "SELECT relation_id,account_id,%"
+    };
+    tokio::time::timeout(Duration::from_secs(3), async {
+        loop {
+            let blocked: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND wait_event_type='Lock' AND query LIKE $1)").bind(prefix).fetch_one(gateway.inner.store.pool()).await.unwrap();
+            if blocked { break; }
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    }).await.unwrap();
+    // In the Series case this query is reached only after the separate parent
+    // lookup and cached eligibility preparation. The parent remains charged.
+    if observer_deadline {
+        assert!(tokio::time::timeout(Duration::from_secs(16), caller)
+            .await
+            .unwrap()
+            .unwrap()
+            .is_err());
+    } else {
+        caller.abort();
+        assert!(caller.await.unwrap_err().is_cancelled());
+    }
+    assert_eq!(gateway.active_requests(), 1);
+    assert!(gateway.available_memory_bytes() < maximum);
+    assert!(gateway.handle(request(&query, false)).await.is_err());
+    let closing = gateway.clone();
+    let shutdown = tokio::spawn(async move { closing.shutdown().await });
+    tokio::time::sleep(Duration::from_millis(40)).await;
+    assert!(!shutdown.is_finished());
+    locked.rollback().await.unwrap();
+    assert!(shutdown.await.unwrap());
+    assert_eq!(gateway.active_requests(), 0);
+    assert_eq!(gateway.available_memory_bytes(), maximum);
+}
+#[tokio::test]
+#[ignore = "requires reviewed cached-info PG/Redis fixture and fixed eligibility clock"]
+async fn cached_info_parent_after_deadline_keeps_existing_owners() {
+    cached_info_sql_physical_owner(false, true).await;
+}
+#[tokio::test]
+#[ignore = "requires reviewed cached-info PG/Redis fixture and fixed eligibility clock"]
+async fn cached_info_parent_after_caller_loss_keeps_existing_owners() {
+    cached_info_sql_physical_owner(false, false).await;
+}
+#[tokio::test]
+#[ignore = "requires reviewed cached-info PG/Redis fixture and fixed eligibility clock"]
+async fn cached_info_episode_after_caller_loss_keeps_parent_and_existing_owners() {
+    cached_info_sql_physical_owner(true, false).await;
+}
+#[tokio::test]
+#[ignore = "requires reviewed cached-info PG/Redis fixture and fixed eligibility clock"]
+async fn cached_info_final_frame_keeps_existing_owners_through_shutdown() {
+    let (gateway, query) = cached_info_fixture(true).await;
+    let maximum = gateway.available_memory_bytes();
+    let response = gateway.handle(request(&query, false)).await.unwrap();
+    assert_eq!(response.status(), StatusCode::OK);
+    let mut body = response.into_body();
+    let frame = body.frame().await.unwrap().unwrap().into_data().unwrap();
+    assert!(!frame.is_empty());
+    let held = frame.clone();
+    drop(frame);
+    drop(body);
+    let charged = maximum - gateway.available_memory_bytes();
+    assert!(charged >= held.len());
+    assert!(charged < gateway.inner.config.max_response_bytes);
+    assert!(!gateway.shutdown().await);
+    assert_eq!(gateway.active_requests(), 1);
+    drop(held);
+    assert!(gateway.shutdown().await);
+    assert_eq!(gateway.active_requests(), 0);
+    assert_eq!(gateway.available_memory_bytes(), maximum);
+}

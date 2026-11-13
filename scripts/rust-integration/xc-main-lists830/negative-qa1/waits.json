@@ -1,0 +1,33 @@
+[
+  {
+    "stage": "fmt",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "PID": 102434,
+    "PID_namespace": "actual exec namespace, host only when tool escalated",
+    "began_epoch": 1794565164.256909,
+    "completed_epoch": 1794565166.1946752,
+    "actual_exit": 0,
+    "all835source_inputs_unchanged": true
+  },
+  {
+    "stage": "check",
+    "argv": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--offline",
+      "--locked"
+    ],
+    "PID": 102530,
+    "PID_namespace": "actual exec namespace, host only when tool escalated",
+    "began_epoch": 1794565166.2333894,
+    "completed_epoch": 1794565188.2534804,
+    "actual_exit": 101,
+    "all835source_inputs_unchanged": true
+  }
+]

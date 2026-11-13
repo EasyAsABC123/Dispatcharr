@@ -582,7 +582,8 @@ async fn run() -> Result<(), String> {
                 },
             )
             .map_err(|_| "XC initialization failed (credentials omitted)")?
-            .with_epg(),
+            .with_epg()
+            .with_vod_lists(),
         )
     } else {
         None

@@ -13,6 +13,9 @@ use sqlx::{Connection, Row};
 use std::mem::size_of;
 
 pub(crate) struct InfoRow {
+    /// Source keeps this selected relation/account through synchronous refresh.
+    pub relation_id: i64,
+    pub account_id: i64,
     pub object: ListRow,
     pub relation_created: chrono::DateTime<chrono::Utc>,
     pub relation_modified: chrono::DateTime<chrono::Utc>,
@@ -132,6 +135,8 @@ pub(crate) async fn read(
         return Err(reader::capacity());
     }
     Ok(Some(InfoRow {
+        relation_id: row.try_get("relation_id")?,
+        account_id: row.try_get("account_id")?,
         object,
         relation_created: row.try_get("relation_created")?,
         relation_modified: row.try_get("modified_at")?,
@@ -187,7 +192,7 @@ fn sql(family: Family, adult_filter: bool) -> String {
     } else {
         ""
     };
-    format!("SELECT content_id,category_id,year,adult,created_at,modified_at,relation_created,last_refresh,logo_id,(row_bytes>$2) AS large_metadata,{bounded} FROM (SELECT selected.*,({bytes})::bigint AS row_bytes FROM (SELECT r.{foreign}::bigint AS content_id,r.category_id::bigint AS category_id,{extension} AS extension,o.name,o.language,o.rating,o.description,o.genre,o.year,o.tmdb_id AS tmdb,o.imdb_id AS imdb,{adult} AS adult,o.created_at,r.updated_at AS modified_at,r.created_at AS relation_created,{last} AS last_refresh,o.logo_id::bigint AS logo_id,o.custom_properties::text AS properties,r.custom_properties::text AS relation_properties FROM {relation} r JOIN {object} o ON o.id=r.{foreign} JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id WHERE r.{foreign}=$1 AND a.is_active{visibility} ORDER BY a.priority DESC,r.id LIMIT 1) AS selected) AS bounded")
+    format!("SELECT relation_id,account_id,content_id,category_id,year,adult,created_at,modified_at,relation_created,last_refresh,logo_id,(row_bytes>$2) AS large_metadata,{bounded} FROM (SELECT selected.*,({bytes})::bigint AS row_bytes FROM (SELECT r.id::bigint AS relation_id,r.m3u_account_id::bigint AS account_id,r.{foreign}::bigint AS content_id,r.category_id::bigint AS category_id,{extension} AS extension,o.name,o.language,o.rating,o.description,o.genre,o.year,o.tmdb_id AS tmdb,o.imdb_id AS imdb,{adult} AS adult,o.created_at,r.updated_at AS modified_at,r.created_at AS relation_created,{last} AS last_refresh,o.logo_id::bigint AS logo_id,o.custom_properties::text AS properties,r.custom_properties::text AS relation_properties FROM {relation} r JOIN {object} o ON o.id=r.{foreign} JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id WHERE r.{foreign}=$1 AND a.is_active{visibility} ORDER BY a.priority DESC,r.id LIMIT 1) AS selected) AS bounded")
 }
 
 #[cfg(test)]
@@ -196,6 +201,8 @@ mod tests {
     fn row(properties: &str, last: Option<i64>) -> InfoRow {
         let epoch = chrono::DateTime::from_timestamp(0, 0).unwrap();
         InfoRow {
+            relation_id: 1,
+            account_id: 1,
             object: ListRow {
                 content_id: 1,
                 category: None,
