@@ -1,0 +1,39 @@
+"""Real public tool reconstruction/mutation controls; no Cargo/app/Source."""
+import importlib.util,json,shutil,tempfile,unittest
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent;HERE=ROOT/'selected/scripts/rust-job-contracts/clocked-recording-envelope';REPO=ROOT.parents[2]
+def module(path):
+ spec=importlib.util.spec_from_file_location('portable_clocked_'+str(id(path)),path/'reconstruct.py');v=importlib.util.module_from_spec(spec);spec.loader.exec_module(v);return v
+class Portable(unittest.TestCase):
+ def test_fresh_output_required_preserves_existing(self):
+  with tempfile.TemporaryDirectory(dir=ROOT)as temp:
+   out=Path(temp)/'source';out.mkdir();marker=out/'untouched';marker.write_bytes(b'existing')
+   with self.assertRaises(ValueError):module(HERE).reconstruct(REPO,out)
+   self.assertEqual(marker.read_bytes(),b'existing')
+ def mutated(self,change):
+  with tempfile.TemporaryDirectory(dir=ROOT)as temp:
+   path=Path(temp)/'tools';shutil.copytree(HERE,path);change(path);out=Path(temp)/'source'
+   with self.assertRaises(ValueError):module(path).reconstruct(REPO,out)
+   self.assertFalse(out.exists())
+ def test_corrupt_actual_overlay(self):
+  def change(path):
+   row=next(iter(json.loads((path/'binding.json').read_text())['overlays'].values()));(path/row['payload']).write_bytes(b'corrupt')
+  self.mutated(change)
+ def test_corrupt_qualified_map(self):self.mutated(lambda path:(path/'source-inputs.json').write_text('{}'))
+ def test_wrong_base(self):
+  def change(path):
+   p=path/'binding.json';v=json.loads(p.read_text());v['base']='HEAD';p.write_text(json.dumps(v))
+  self.mutated(change)
+ def test_unselected_path(self):
+  def change(path):
+   p=path/'binding.json';v=json.loads(p.read_text());v['overlays']['../unsafe']=next(iter(v['overlays'].values()));p.write_text(json.dumps(v))
+  self.mutated(change)
+ def test_missing_overlay(self):
+  def change(path):
+   p=path/'binding.json';v=json.loads(p.read_text());v['overlays'].pop(next(iter(v['overlays'])));p.write_text(json.dumps(v))
+  self.mutated(change)
+ def test_absolute_payload(self):
+  def change(path):
+   p=path/'binding.json';v=json.loads(p.read_text());next(iter(v['overlays'].values()))['payload']='/etc/passwd';p.write_text(json.dumps(v))
+  self.mutated(change)
+if __name__=='__main__':unittest.main()

@@ -1,0 +1,136 @@
+{
+  "base": "6fa3c05b61fbbfc63c33ec742424fb8fcf788fb6",
+  "source_map_sha256": "293c25102e2f2e75363e6a29c790d2542c198f30c06d5194e8c924efb2a25429",
+  "source_inputs": 849,
+  "Rust_inputs": 844,
+  "coupled_inputs": 5,
+  "target": "/home/justin/github/Dispatcharr/artifacts/rust/target-clocked-recording-envelope-1",
+  "TMPDIR": "/home/justin/github/Dispatcharr/artifacts/rust/tmp-clocked-recording-envelope-1",
+  "HOME_and_CODEX_HOME_unchanged": true,
+  "format_only_changes": {
+    "rust/crates/job-transport/src/clocked_recording_envelope.rs": {
+      "before": "af0989ac83949b6908aa476582464322874e8bc0f22c993577945c223559e6cf",
+      "after": "958e53eb511044c90aac499c19f130212600fcb3f66453013ae4899903684225"
+    }
+  },
+  "commands": [
+    {
+      "label": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-envelope-parser-2/source/rust",
+      "began_epoch": 1794585394.6263928,
+      "settled": true,
+      "pid": 5,
+      "starttime": "30578967",
+      "exit": 0,
+      "finished_epoch": 1794585396.4805217,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "non-test-check",
+      "argv": [
+        "cargo",
+        "check",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "--offline",
+        "--locked"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-envelope-parser-2/source/rust",
+      "began_epoch": 1794585396.48076,
+      "settled": true,
+      "pid": 32,
+      "starttime": "30579152",
+      "exit": 0,
+      "finished_epoch": 1794585440.1685574,
+      "log_sha256": "c6e7ebaddba6983bd1cc4099ee4e7dc0b35553e5a61cff87024cbd5c77af99dc"
+    },
+    {
+      "label": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "dispatcharr-job-transport",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-envelope-parser-2/source/rust",
+      "began_epoch": 1794585440.168789,
+      "settled": true,
+      "pid": 7767,
+      "starttime": "30583521",
+      "exit": 0,
+      "finished_epoch": 1794585461.5348122,
+      "log_sha256": "31185d723773ed029f942a356a4432ca208faf6fb99729cef3a5961f6f1005e6"
+    },
+    {
+      "label": "source-wire-tests",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "--offline",
+        "--locked",
+        "--message-format=json",
+        "clocked_recording_envelope::tests",
+        "--",
+        "--nocapture"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-envelope-parser-2/source/rust",
+      "began_epoch": 1794585461.5350292,
+      "settled": true,
+      "pid": 12126,
+      "starttime": "30585658",
+      "exit": 0,
+      "finished_epoch": 1794585515.698977,
+      "log_sha256": "ea25d1b9e4fb05851ccd75320533eec0226c4e351b80edd22fc3601997c4fe65"
+    },
+    {
+      "label": "legacy-unknown-head",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "--offline",
+        "--locked",
+        "worker::tests::create_only_shapes_reject_before_ack",
+        "--",
+        "--nocapture"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-envelope-parser-2/source/rust",
+      "began_epoch": 1794585515.6994221,
+      "settled": true,
+      "pid": 14488,
+      "starttime": "30591074",
+      "exit": 0,
+      "finished_epoch": 1794585515.834971,
+      "log_sha256": "a7bac94e4acc5ca573b9b80f42a7b884cc184b9e50352be4cbaea3a2956f6796"
+    }
+  ],
+  "all_waits_zero": true,
+  "app_or_Source_executed": false,
+  "source_unchanged_after_checks": true,
+  "outside_ELF": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-envelope-parser-2/outside-peers/native-job-tests",
+    "sha256": "1b7fdf179915494afc1f31e55e4b5c3763dc84558155626f3357629d615a4f30",
+    "bytes": 69201712,
+    "actual_test_artifact_path": "/home/justin/github/Dispatcharr/artifacts/rust/target-clocked-recording-envelope-1/debug/deps/dispatcharr_job_transport-6a6fc40dec0594b0"
+  },
+  "rustc_version": "rustc 1.90.0 (1159e78c4 2025-09-14)"
+}

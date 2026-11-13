@@ -1,0 +1,30 @@
+{
+  "base": "6fa3c05b61fbbfc63c33ec742424fb8fcf788fb6",
+  "base_archive_sha256": "66b0fcb63a168e0125d100d31b058e8d64ca83a241c66ea5b38b7a55434c7d78",
+  "overlays": {
+    "rust/crates/job-transport/src/lib.rs": {
+      "payload": "overlays/0-lib.rs",
+      "sha256": "8b8aa0389cd8381ca1363b08a0154643ed8ef8260972f6910769a7e870d38513",
+      "preimage_sha256": "1e0aeea8b6e1b573efc60cfeec08b5e7ef67059fd68d771d69fe4e5bff501d71"
+    },
+    "rust/crates/job-transport/src/clocked_recording_envelope.rs": {
+      "payload": "overlays/1-clocked_recording_envelope.rs",
+      "sha256": "958e53eb511044c90aac499c19f130212600fcb3f66453013ae4899903684225",
+      "preimage_sha256": null
+    },
+    "rust/crates/job-transport/datasets/source-clocked-recording-producer.json": {
+      "payload": "overlays/2-source-clocked-recording-producer.json",
+      "sha256": "cfc274d123f22bd4eb1b0e84680a67cf11bd1fc68af40844793970fdeb6b0dd7",
+      "preimage_sha256": null
+    }
+  },
+  "coupled": [
+    "scripts/rust-timeshift-contracts/python-busy-control-vectors.json",
+    "scripts/rust-timeshift-contracts/python-busy-seek-goldens.json",
+    "scripts/rust-timeshift-contracts/python-helper-goldens.json",
+    "scripts/rust-timeshift-contracts/python-range-goldens.json",
+    "scripts/rust-timeshift-contracts/python-session-goldens.json"
+  ],
+  "source_map_sha256": "293c25102e2f2e75363e6a29c790d2542c198f30c06d5194e8c924efb2a25429",
+  "scope": "Pure producer envelope only, no due/task/media/lease/result authority"
+}

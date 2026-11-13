@@ -1,0 +1,117 @@
+{
+  "scope": "Qualified inert producer-envelope parser ONLY; Source2 producer context failed before DVR; no normal recording/media/result/lease/defaultGraph/Main/performance claim",
+  "base": "6fa3c05b61fbbfc63c33ec742424fb8fcf788fb6",
+  "full_source_map_sha256": "293c25102e2f2e75363e6a29c790d2542c198f30c06d5194e8c924efb2a25429",
+  "full_inputs": 849,
+  "Rust_inputs": 844,
+  "coupled_inputs": 5,
+  "actual_commands": [
+    {
+      "label": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "actual_exit": 0,
+      "settled": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "non-test-check",
+      "argv": [
+        "cargo",
+        "check",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "settled": true,
+      "log_sha256": "c6e7ebaddba6983bd1cc4099ee4e7dc0b35553e5a61cff87024cbd5c77af99dc"
+    },
+    {
+      "label": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "dispatcharr-job-transport",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "actual_exit": 0,
+      "settled": true,
+      "log_sha256": "31185d723773ed029f942a356a4432ca208faf6fb99729cef3a5961f6f1005e6"
+    },
+    {
+      "label": "source-wire-tests",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "--offline",
+        "--locked",
+        "--message-format=json",
+        "clocked_recording_envelope::tests",
+        "--",
+        "--nocapture"
+      ],
+      "actual_exit": 0,
+      "settled": true,
+      "log_sha256": "ea25d1b9e4fb05851ccd75320533eec0226c4e351b80edd22fc3601997c4fe65"
+    },
+    {
+      "label": "legacy-unknown-head",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "--offline",
+        "--locked",
+        "worker::tests::create_only_shapes_reject_before_ack",
+        "--",
+        "--nocapture"
+      ],
+      "actual_exit": 0,
+      "settled": true,
+      "log_sha256": "a7bac94e4acc5ca573b9b80f42a7b884cc184b9e50352be4cbaea3a2956f6796"
+    }
+  ],
+  "source_wire_tests_passed": 7,
+  "legacy_refusal_tests_passed": 1,
+  "portable_corruption_freshoutput_controls_passed": 7,
+  "actual_portable_reconstruction": {
+    "passed": true,
+    "base": "6fa3c05b61fbbfc63c33ec742424fb8fcf788fb6",
+    "source_inputs": 849,
+    "Rust_inputs": 844,
+    "coupled_inputs": 5,
+    "source_map_sha256": "293c25102e2f2e75363e6a29c790d2542c198f30c06d5194e8c924efb2a25429",
+    "app_or_Cargo_or_Source_executed": false
+  },
+  "outside_tested_ELF": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-envelope-parser-2/outside-peers/native-job-tests",
+    "sha256": "1b7fdf179915494afc1f31e55e4b5c3763dc84558155626f3357629d615a4f30",
+    "bytes": 69201712,
+    "actual_test_artifact_path": "/home/justin/github/Dispatcharr/artifacts/rust/target-clocked-recording-envelope-1/debug/deps/dispatcharr_job_transport-6a6fc40dec0594b0"
+  },
+  "source_unchanged_after_checks": true,
+  "Source4_modified": false,
+  "Source2_failed_prefixes_and_scanner_frames_preserved": true,
+  "DVR_due_execution_always_UnqualifiedDueExecution": true,
+  "Root_owns_canonical_and_commits": true,
+  "Original_credit": "Dispatcharr/Celery/Kombu authors retain application/protocol credit"
+}

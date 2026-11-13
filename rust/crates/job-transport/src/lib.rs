@@ -200,3 +200,6 @@ pub mod recording_local_artwork_service;
 
 #[cfg(test)]
 mod recording_artwork_peer;
+
+// Producer-envelope data only; no task registry, ACK or execution authority.
+pub mod clocked_recording_envelope;
