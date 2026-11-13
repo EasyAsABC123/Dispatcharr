@@ -1,0 +1,40 @@
+{
+  "state": "UNEXECUTED_REVIEW_REQUIRED",
+  "cases": [
+    {
+      "case": 1,
+      "target": "api_key_error_ready",
+      "observer": "actual direct JoinHandle abort"
+    },
+    {
+      "case": 2,
+      "target": "network_error_ready",
+      "observer": "triggered100ms real helper future timeout"
+    }
+  ],
+  "selector": "rest_reads::physical_tests::real_retained_rest_read_error_ready_case",
+  "database": "rust_probe_rest_reads_<10hex>",
+  "outputs": "m5-rest-read-physical-sql-<case>-<freshpositive>",
+  "budgets": {
+    "controller_s": 1200,
+    "case_s": 90,
+    "reach_s": 15,
+    "hold_s": 25,
+    "cleanup_s": 90,
+    "subject_pool_max": 4,
+    "original_writer_slots": 4,
+    "total_output_bytes": 67108864,
+    "normal_commands": 224,
+    "total_commands": 256
+  },
+  "Source_runs": 0,
+  "Main_runs": 0,
+  "schema": {
+    "tables": 62,
+    "sequences": 59,
+    "named_subset": 11
+  },
+  "raw_cache": "all4DB inventory+DUMP/type/value/list/PTTL; persistent literal one Source existing version, no generated version",
+  "physical_scope": "two opt-in SQL helper stages only",
+  "oldSourceDuplicateRendering": "UNMEASURED"
+}

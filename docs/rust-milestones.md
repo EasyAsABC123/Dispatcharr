@@ -11,6 +11,8 @@ The [current Core settings library validation](rust-core-settings-current-valida
 
 The [bounded REST reader library](rust-rest-read-ownership.md) passes the current 851-input workspace gates (741 tests passed, 737 ignored). Two historical physical read-cancellation cases independently pass; adoption into Core/Main and duplicate-key error compatibility remain open.
 
+The [remaining acceptance work](rust-remaining-acceptance.md) separates the measured packaged checkpoint, newer library checks and the executable gates still needed for full parity.
+
 ## Progress ledger
 
 Statuses: **planned**, **in progress**, **blocked**, **passed**. A blocked runtime

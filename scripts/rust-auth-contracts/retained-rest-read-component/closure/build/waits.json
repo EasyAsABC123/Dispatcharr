@@ -1,0 +1,112 @@
+[
+  {
+    "command": 1,
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "pid": 2242922,
+    "observed_starttime": "31562958",
+    "actual_wait_exit": 0,
+    "actual_poll_exit": 0,
+    "began_epoch": 1794595234.5364327,
+    "completed_epoch": 1794595236.383745,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_map_equal_after_wait": true
+  },
+  {
+    "command": 2,
+    "argv": [
+      "cargo",
+      "check",
+      "--offline",
+      "--locked",
+      "-p",
+      "dispatcharr-store"
+    ],
+    "pid": 2243065,
+    "observed_starttime": "31563146",
+    "actual_wait_exit": 0,
+    "actual_poll_exit": 0,
+    "began_epoch": 1794595236.4221246,
+    "completed_epoch": 1794595241.234865,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "a4215c45951d4bd73102ed81914f4715922660b86c6c865da4bcc139e6f849f6",
+    "source_map_equal_after_wait": true
+  },
+  {
+    "command": 3,
+    "argv": [
+      "cargo",
+      "clippy",
+      "--offline",
+      "--locked",
+      "-p",
+      "dispatcharr-store",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "pid": 2243188,
+    "observed_starttime": "31563631",
+    "actual_wait_exit": 0,
+    "actual_poll_exit": 0,
+    "began_epoch": 1794595241.273655,
+    "completed_epoch": 1794595252.9618857,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "548dd3611817322b4fd6b68d1aad0eb0b338bfacd740b7279796b1fa6a438562",
+    "source_map_equal_after_wait": true
+  },
+  {
+    "command": 4,
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "rest_reads::tests",
+      "--",
+      "--nocapture"
+    ],
+    "pid": 2243833,
+    "observed_starttime": "31564804",
+    "actual_wait_exit": 0,
+    "actual_poll_exit": 0,
+    "began_epoch": 1794595253.0002816,
+    "completed_epoch": 1794595272.4366393,
+    "stdout_sha256": "8247e471f94a870adc7d0b282b9ee5e9ce5271f7cbeaf497500d052f3a91490f",
+    "stderr_sha256": "f7d448396ba43093e477e8b4b3a82f317035c44724acf55cc4e27d159b4d457c",
+    "source_map_equal_after_wait": true
+  },
+  {
+    "command": 5,
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "--no-run",
+      "--message-format=json"
+    ],
+    "pid": 2244680,
+    "observed_starttime": "31566752",
+    "actual_wait_exit": 0,
+    "actual_poll_exit": 0,
+    "began_epoch": 1794595272.4770412,
+    "completed_epoch": 1794595272.6059391,
+    "stdout_sha256": "5ba24c5120bbcf7f4ce905b221b2634a12a4e8680bec650b3655ee06884111ac",
+    "stderr_sha256": "f9006ecc83d038fb20ca047601370a603d7898251659866e789e4f5da89b8dc7",
+    "source_map_equal_after_wait": true
+  }
+]

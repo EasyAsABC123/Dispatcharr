@@ -1,0 +1,40 @@
+--- controller1/controller/validate_physical.py
++++ controller2/controller/validate_physical.py
+@@ -36,6 +36,7 @@
+  require(value['while_ELF_alive_subject_SQL_backends']==[],'WhileELFSubjectBackendsAbsent')
+  final=value['proxy_final'];drained=value['proxy_naturally_drained_before_stop'];require(final['errors']==[]and final['listener_alive']is False and all(r['closed']is True and r['up_joined']is True for r in drained['connections']),'NaturalRelayConnectionDrainBeforeStop')
+  starts=[e for e in final['events']if e['kind']=='ready-held'];ends=[e for e in final['events']if e['kind']=='ready-forwarded'];require(len(starts)==len(ends)==1 and starts[0]['stage']==ends[0]['stage']==stage,'ExactlyOneTargetReadyHeldAndForwarded')
+- duration=ends[0]['monotonic']-starts[0]['monotonic'];require(finite(duration,0,25)and value['actual_target_hold_seconds']==duration,'PredeclaredActualHold25')
++ start_clock=starts[0]['monotonic'];end_clock=ends[0]['monotonic'];require(finite(start_clock,0,float('inf'))and finite(end_clock,0,float('inf'))and end_clock>=start_clock,'TypedFiniteOrderedActualReadyClocks')
++ duration=end_clock-start_clock;sample_span=samples[1]['elapsed_monotonic_seconds']-samples[0]['elapsed_monotonic_seconds'];require(finite(value['actual_target_hold_seconds'],.25,25)and finite(duration,.25,25)and duration>=sample_span and value['actual_target_hold_seconds']==duration,'ActualHoldCoversSustainedSamplesWithin25')
+  process=json.loads((Path(out)/'proxy-process.json').read_text());require(process['forced']is False and type(process['exit'])is type(process['wait'])is int and process['exit']==process['wait']==0 and process['proc_PID_absent_after_wait']is True and process['stdout_reader_joined']is True and type(process['starttime'])is str and process['starttime'].isdigit()and int(process['starttime'])>0,'ActualRelayPIDWaitPipeNoForcedCleanup')
+  return {'passed':True,'case':case,'Source_runs':0,'Main_runs':0,'scope':'two opt-in read stages physical Ready ownership only; duplicate Source rendering and failed-auth SQL remain open'}
+--- controller1/controller/test_controls.py
++++ controller2/controller/test_controls.py
+@@ -56,5 +56,15 @@
+  setattr(Controls,'test_corruption_'+name,test)
+ for name,path,value in [
+  ('incomplete',['capture_complete'],False),('source_run',['Source_runs'],1),('boolean_source_count',['Source_runs'],False),('new_budget',['real_existing_writer_budget'],5),('dummy_owner',['dummy_owner'],True),('changed_SQL',['after','tables','accounts_user'],[{'id':1}]),('changed_sequence',['after','sequences','accounts_user','last_value'],2),('bool_sequence',['after','sequences','accounts_user','is_called'],0),('credential_effect',['credentials_after','events'],[{}]),('cache_drop',['raw_cache_after','raw_DUMP_PTTL'],{}),('wrong_backend',['prepared_actual_backend_pid'],54321),('wrong_held_backend',['held','held','backend_pid'],54321),('wrong_sql',['held','held','sql'],'SELECT 1'),('wrong_binding',['held','held','parameter_hex'],['bad']),('prepare_not_execute',['held','held','sync_seen'],False),('not_error57014',['held','held','errors'],[]),('row_response',['held','held','rows'],1),('sample_weak_lost',['post_loss_or_deadline_held_observations',1,'original_owner_weak_alive'],False),('sample_short',['post_loss_or_deadline_held_observations',1,'elapsed_monotonic_seconds'],.249),('sample_nonfinite',['post_loss_or_deadline_held_observations',1,'elapsed_monotonic_seconds'],float('nan')),('sample_new_slot',['post_loss_or_deadline_held_observations',1,'writer_slots'],4),('sample_backend_gone',['post_loss_or_deadline_held_observations',1,'same_backend_still_exists'],False),('not_retired',['original_owner_weak_after_settlement'],True),('no_poolreuse',['actual_pool_reuse_value'],0),('pool_notclosed',['closed_pool_size'],1),('idle_negative',['closed_pool_idle_diagnostic'],-1),('idle_boolean',['closed_pool_idle_diagnostic'],False),('idle_exceedsmax',['closed_pool_idle_diagnostic'],5),('backend_stillalive',['while_ELF_alive_subject_SQL_backends'],[{'pid':1}]),('relay_error',['proxy_final','errors'],[{}]),('no_relay_drain',['proxy_naturally_drained_before_stop','connections'],[{'closed':False,'up_joined':True}]),('hold_over25',['actual_target_hold_seconds'],26)]:add_negative(name,path,value)
++for name,path,value in [
++ ('heldclock_nan',['proxy_final','events',0,'monotonic'],float('nan')),('heldclock_inf',['proxy_final','events',0,'monotonic'],float('inf')),('heldclock_boolean',['proxy_final','events',0,'monotonic'],True),('forwardclock_nan',['proxy_final','events',1,'monotonic'],float('nan')),('forwardclock_inf',['proxy_final','events',1,'monotonic'],float('inf')),('forwardclock_boolean',['proxy_final','events',1,'monotonic'],False),('forward_before_held',['proxy_final','events',1,'monotonic'],.5),('hold_nan',['actual_target_hold_seconds'],float('nan')),('hold_inf',['actual_target_hold_seconds'],float('inf')),('hold_bool',['actual_target_hold_seconds'],False),('hold_zero',['actual_target_hold_seconds'],0)]:add_negative(name,path,value)
++def causal_negative(self,zero=False):
++ for case in(1,2):
++  value=fixture(case)
++  if zero:value['proxy_final']['events'][0]['monotonic']=value['proxy_final']['events'][1]['monotonic']=0;value['actual_target_hold_seconds']=0
++  else:value['proxy_final']['events'][1]['monotonic']=1.25;value['actual_target_hold_seconds']=.25;value['post_loss_or_deadline_held_observations'][1]['elapsed_monotonic_seconds']=.5
++  with self.assertRaises(ValueError):self.check(value)
++Controls.test_corruption_zero_event_duration_with_sustained_samples=lambda self:causal_negative(self,True)
++Controls.test_corruption_hold_shorter_than_sustained_sample_span=causal_negative
+ add_negative('missing_samples',['post_loss_or_deadline_held_observations'],None,True)
+ if __name__=='__main__':unittest.main()
+--- controller1/README.md
++++ controller2/README.md
+@@ -7,5 +7,7 @@
+ Raw psycopg3 repeatable-read full62tables/59sequences +derivednamed11 default and owned audits, no Django imports. OwnedDB initialized from exact Native schema/default SQL before ELF, explicit fixed raw user seed; no Native model signals claimed. ONE exact Source24 network version key is imported as existing state (persistent literalDUMP/value), no warm group/history reset/fresh versions. Actual new requests do not invoke full request_started callback; this isolates two read stages. Full raw Redis0..3, named11 raw SQL/credentials, no-effect equality. Controller1200, case90, reach15, hold25 (relay safety45), normal224/total256commands, normal56/total64MiB output and cleanup90 unchanged donor bounds. Exact selectors/cases, outputnamespaces, once fresh path, reviewedseal required. No application was run by preparing this packet.
+ 
+ Future reviewed invocation only:
+-`python3 artifacts/rust/m5-bounded-rest-auth-physical-qa-1/controller/run.py --execute-reviewed-seal <SHA256 seal.json> --case 1 --output artifacts/rust/m5-rest-read-physical-sql-1-1`
++`python3 artifacts/rust/m5-bounded-rest-auth-physical-execution-plan-2/controller/run.py --execute-reviewed-seal <SHA256 seal.json> --case 1 --output artifacts/rust/m5-rest-read-physical-sql-1-1`
+ Then case2 once in its separate fresh project only when Root admits. No retries or case reorder/outcome adjustment. Error/partial/forced-cleanup remains negative. Pinned Original Dispatcharr and SQLx authors retain source and algorithm credit; repository LICENSE/ATTRIBUTION are preserved in source Git reconstruction.
++
++Controller2 causal validation correction only: finite non-bool ordered held/forwarded clocks; actual hold typed finite>=250ms and covers the actual two-sample span. QA1 remains preserved/unexecuted. Same compiled source/ELF/warmup/budgets; no app replay.

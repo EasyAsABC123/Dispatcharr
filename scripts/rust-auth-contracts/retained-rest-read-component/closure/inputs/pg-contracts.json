@@ -1,0 +1,28 @@
+{
+  "api_key_error_ready": {
+    "sql": "SELECT id::bigint AS id,username,password,is_active,user_level,stream_limit,octet_length(COALESCE(custom_properties,'{}'::jsonb)::text) AS properties_bytes,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties_text FROM accounts_user WHERE api_key=$1 LIMIT 2",
+    "parameter_hex": [
+      "6f776e65642d726573742d726561642d6b65792d6e6f742d70726f64756374696f6e",
+      "00010000"
+    ],
+    "rows": 0,
+    "command": null,
+    "errors": [
+      "57014"
+    ],
+    "tx": "I"
+  },
+  "network_error_ready": {
+    "sql": "SELECT value IS NULL AS sql_null,octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=$2 THEN value::text END AS raw FROM core_coresettings WHERE key=$1",
+    "parameter_hex": [
+      "6e6574776f726b5f616363657373",
+      "00010000"
+    ],
+    "rows": 0,
+    "command": null,
+    "errors": [
+      "57014"
+    ],
+    "tx": "I"
+  }
+}

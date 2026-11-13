@@ -1,0 +1,44 @@
+{
+  "scope": "Bounded static review + synthetic validator counterexamples ONLY; no actual measurement discrepancy",
+  "seal_sha256": "5d60ade4f4b693adc86cdf6640224363619dc104b3f396b83d14feb359205c30",
+  "same_original_permit_query_ping_return_fence": "no finding in inspected code",
+  "abort_vs_triggered100ms_deadline": "distinct and accurately scoped; no HTTP-FD claim",
+  "mounted_source_ELF_schema_and_stage_bindings": "no finding in inspected code",
+  "blocker": "Require typed finite non-bool held/forwarded event clocks and claimed hold; hold must cover >=250ms sustained sample span",
+  "synthetic_acceptance_counterexamples": [
+    {
+      "case": 1,
+      "synthetic_only": true,
+      "corruption": "zero-duration",
+      "required_sample_span_seconds": 0.25,
+      "claimed_actual_hold_seconds": 0,
+      "validator_accepted": true
+    },
+    {
+      "case": 1,
+      "synthetic_only": true,
+      "corruption": "boolean-event-clocks",
+      "required_sample_span_seconds": 0.25,
+      "claimed_actual_hold_seconds": 0,
+      "validator_accepted": true
+    },
+    {
+      "case": 2,
+      "synthetic_only": true,
+      "corruption": "zero-duration",
+      "required_sample_span_seconds": 0.25,
+      "claimed_actual_hold_seconds": 0,
+      "validator_accepted": true
+    },
+    {
+      "case": 2,
+      "synthetic_only": true,
+      "corruption": "boolean-event-clocks",
+      "required_sample_span_seconds": 0.25,
+      "claimed_actual_hold_seconds": 0,
+      "validator_accepted": true
+    }
+  ],
+  "application_Docker_Cargo_SQL_execution_performed": false,
+  "note": "Optional warm-pool size/idle assertion could improve deterministic setup, but existing actual PID equality prevents false qualification."
+}
