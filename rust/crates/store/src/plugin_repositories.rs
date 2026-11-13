@@ -69,9 +69,14 @@ const LIST_SQL: &str = "WITH bounded AS (SELECT r.* FROM plugins_pluginrepo r OR
 const TARGET_SQL: &str = "WITH payload AS (SELECT to_jsonb(r)::text AS raw FROM plugins_pluginrepo r WHERE id=$1) SELECT octet_length(raw) AS bytes,CASE WHEN octet_length(raw)<=65536 THEN raw END AS raw FROM payload";
 const UPDATE_SQL: &str = "UPDATE plugins_pluginrepo AS r SET public_key=COALESCE($2,public_key),enabled=COALESCE($3,enabled),updated_at=$4 WHERE id=$1 AND octet_length((to_jsonb(r)||jsonb_build_object('public_key',COALESCE($2,public_key),'enabled',COALESCE($3,enabled),'updated_at',$4))::text)<=65536 RETURNING octet_length(to_jsonb(r)::text) AS bytes,CASE WHEN octet_length(to_jsonb(r)::text)<=65536 THEN to_jsonb(r)::text END AS raw";
 
+#[cfg(test)]
+type OriginalWriterObserver =
+    Arc<dyn Fn(std::sync::Weak<tokio::sync::OwnedSemaphorePermit>) + Send + Sync>;
 #[derive(Clone)]
 pub struct PluginRepositories {
     auth: AuthService,
+    #[cfg(test)]
+    original_writer_observer: Option<OriginalWriterObserver>,
 }
 fn capacity() -> StoreError {
     StoreError::StatusBody(
@@ -226,7 +231,16 @@ fn parsed(raw: &[u8]) -> Result<Value, StoreError> {
 }
 impl PluginRepositories {
     pub fn new(auth: AuthService) -> Self {
-        Self { auth }
+        Self {
+            auth,
+            #[cfg(test)]
+            original_writer_observer: None,
+        }
+    }
+    #[cfg(test)]
+    fn observe_original_writer(mut self, observer: OriginalWriterObserver) -> Self {
+        self.original_writer_observer = Some(observer);
+        self
     }
     /// Separate opt-in router only. AuthService::router/Main remain unchanged.
     pub fn router(self) -> Router {
@@ -249,6 +263,10 @@ impl PluginRepositories {
                 .try_acquire_owned()
                 .map_err(|_| capacity())?,
         );
+        #[cfg(test)]
+        if let Some(observer) = &self.original_writer_observer {
+            observer(Arc::downgrade(&permit));
+        }
         let auth = match self.auth.with_request_writer_permit(permit.clone()) {
             Ok(auth) => auth,
             Err(error) => return Ok(retained_response(Err(error), permit).await),
@@ -459,3 +477,7 @@ async fn detail(
 #[cfg(test)]
 #[path = "plugin_repositories_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "plugin_repositories_physical_tests.rs"]
+mod physical_tests;
