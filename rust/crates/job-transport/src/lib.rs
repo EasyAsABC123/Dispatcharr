@@ -193,3 +193,10 @@ mod configured_recording_peer;
 
 #[cfg(test)]
 mod parented_series_peer;
+
+pub mod recording_artwork_protocol;
+pub mod recording_artwork_worker;
+pub mod recording_local_artwork_service;
+
+#[cfg(test)]
+mod recording_artwork_peer;

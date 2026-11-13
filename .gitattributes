@@ -238,3 +238,7 @@ scripts/rust-contracts/core-settings-source32/executed-executor/controller/effec
 scripts/rust-contracts/core-settings-source32/validation/original_effects.py -text -whitespace
 scripts/rust-contracts/core-settings-source32/validation/projected_effects.py -text -whitespace
 scripts/rust-contracts/core-settings-source32/validation/projection-adapter.diff -text -whitespace
+
+# Preserve exact837 Cargo output and historical cfgtest patch bytes.
+scripts/rust-integration/union837/defaults.log -text whitespace=-blank-at-eof
+scripts/rust-job-contracts/recording-artwork/historical-source6-to7-cfgtest-only.diff -text -whitespace

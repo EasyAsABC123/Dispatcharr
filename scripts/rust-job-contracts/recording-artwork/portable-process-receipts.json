@@ -1,0 +1,85 @@
+[
+  {
+    "label": "materialize",
+    "argv": [
+      "python",
+      "artifacts/rust/recording-local-artwork-publication-1/selected/scripts/rust-job-contracts/recording-artwork/materialize.py",
+      "--output",
+      "/home/justin/github/Dispatcharr/artifacts/rust/local-artwork-portable-evidence-1"
+    ],
+    "began_epoch": 1794566547.1840374,
+    "pid": 5,
+    "starttime": "28694222",
+    "exit": 0,
+    "settled": true,
+    "finished_epoch": 1794566547.2316058
+  },
+  {
+    "label": "review",
+    "argv": [
+      "python",
+      "artifacts/rust/recording-local-artwork-publication-1/selected/scripts/rust-job-contracts/recording-artwork/review.py",
+      "--evidence",
+      "/home/justin/github/Dispatcharr/artifacts/rust/local-artwork-portable-evidence-1"
+    ],
+    "began_epoch": 1794566547.231741,
+    "pid": 6,
+    "starttime": "28694227",
+    "exit": 0,
+    "settled": true,
+    "finished_epoch": 1794566547.3451464
+  },
+  {
+    "label": "reconstruct",
+    "argv": [
+      "python",
+      "artifacts/rust/recording-local-artwork-publication-1/selected/scripts/rust-job-contracts/recording-artwork/reconstruct.py",
+      "--repo",
+      "/home/justin/github/Dispatcharr",
+      "--output",
+      "/home/justin/github/Dispatcharr/artifacts/rust/local-artwork-portable-source-1"
+    ],
+    "began_epoch": 1794566547.3452895,
+    "pid": 7,
+    "starttime": "28694239",
+    "exit": 0,
+    "settled": true,
+    "finished_epoch": 1794566547.6698723
+  },
+  {
+    "label": "public-controls",
+    "argv": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "artifacts/rust/recording-local-artwork-publication-1/selected/scripts/rust-job-contracts/recording-artwork",
+      "-p",
+      "test_public.py"
+    ],
+    "began_epoch": 1794566547.6700368,
+    "pid": 9,
+    "starttime": "28694271",
+    "exit": 0,
+    "settled": true,
+    "finished_epoch": 1794566547.8130698
+  },
+  {
+    "label": "controller-controls",
+    "argv": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "artifacts/rust/recording-local-artwork-publication-1/selected/scripts/rust-job-contracts/recording-artwork/local-controls"
+    ],
+    "began_epoch": 1794566547.8132563,
+    "pid": 10,
+    "starttime": "28694285",
+    "exit": 0,
+    "settled": true,
+    "finished_epoch": 1794566548.1961844
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "status": "UNEXECUTED_NATIVE_LOCAL_ARTWORK_ONCE_CLOSURE",
+  "cases": [
+    "refresh-created-source",
+    "parented-series-positive",
+    "artwork-two-real-children",
+    "refresh-repeat",
+    "parented-series-repeat"
+  ],
+  "actual_task_order": [
+    "apps.epg.tasks.refresh_epg_data",
+    "apps.channels.tasks.evaluate_series_rules",
+    "apps.channels.tasks.prefetch_recording_artwork",
+    "apps.channels.tasks.prefetch_recording_artwork",
+    "apps.epg.tasks.refresh_epg_data",
+    "apps.channels.tasks.evaluate_series_rules"
+  ],
+  "Native_roles": [
+    "artwork-child-first",
+    "artwork-child-duplicate"
+  ],
+  "Source_roles": [
+    "refresh-created-source",
+    "parented-series-positive",
+    "refresh-repeat",
+    "parented-series-repeat"
+  ],
+  "Source_tasks": 4,
+  "Native_tasks": 2,
+  "Source_workers": 4,
+  "Native_processes": 2,
+  "per_process_seconds": 35,
+  "guest_seconds": 600,
+  "readiness_seconds": 180,
+  "cleanup_seconds": 90,
+  "maximum_own_projects": 1,
+  "Source_reference_sha256": "50294172571d8e7fe1434756758381d5102f1b1fc425da6027231d82637e9d14",
+  "comparison_policy_sha256": "3d56d2279fa70d9a1a23d8b57fd927fa346c5555da7ea3c267000b27647d4dec",
+  "default_children_consumed": false,
+  "Native_artwork_worker": true,
+  "default_graph_Main_enabled": false,
+  "new_source_reference_capture": false,
+  "Native_source_full_inputs": 839,
+  "artwork_phase_total_seconds": 35,
+  "wire_ETA_wait_max_seconds": 2,
+  "Native_SQL_wire_claim": false,
+  "Native_update_effect_authority": "Actual typed Service.changed from single successful UPDATE rowsAffected1 or no-write path plus full SQL row snapshots; no wire/count observer claim",
+  "Source_updated_first": 1,
+  "Source_updated_duplicate": 0,
+  "Native_expected_changed": [
+    true,
+    false
+  ]
+}

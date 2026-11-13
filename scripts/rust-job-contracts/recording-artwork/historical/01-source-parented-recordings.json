@@ -1,0 +1,1020 @@
+{
+  "scope": "Actual Source Refresh\u2192parented Series\u2192two local-VOD-logo artwork children; owned routing control, default descendants untouched; no Native/Main/defaultFIFO/media claim",
+  "source_sha256": "50294172571d8e7fe1434756758381d5102f1b1fc425da6027231d82637e9d14",
+  "seed": {
+    "anchor_utc": "2026-11-13T07:06:34+00:00",
+    "programme_start": "2026-11-13T11:06:34+00:00",
+    "programme_end": "2026-11-13T12:06:34+00:00",
+    "source_id": 1,
+    "channel_id": 2,
+    "epg_id": 1,
+    "VOD_logo_id": 1,
+    "Movie_id": 1,
+    "settings_MEDIA_ROOT": "/app/media",
+    "uid": 0,
+    "cwd": "/app",
+    "files": [
+      {
+        "path": "/app/media/rust-owned-parented-artwork/guide.xml",
+        "bytes": 396,
+        "sha256": "b527c79cf0a1337cfa5431c998babd07ae79245805355233bc43c242a2f6217d",
+        "mtime_ns": 1794553594455094782,
+        "mode": 33188,
+        "uid": 0,
+        "gid": 0,
+        "readable": true
+      },
+      {
+        "path": "/app/media/rust-owned-parented-artwork/logo.png",
+        "bytes": 68,
+        "sha256": "9f81650ff972f04ecb98e05d93c4cc65f22fb721385b8529d3ae3c00d479f786",
+        "mtime_ns": 1794553594455129493,
+        "mode": 33188,
+        "uid": 0,
+        "gid": 0,
+        "readable": true
+      }
+    ],
+    "actual_VOD_namespace": "vod_vodlogo",
+    "fixture_routing": {
+      "apps.epg.tasks.refresh_epg_data": {
+        "queue": "rust-owned-parented-refresh"
+      },
+      "apps.channels.tasks.evaluate_series_rules": {
+        "queue": "rust-owned-parented-series"
+      },
+      "apps.channels.tasks.prefetch_recording_artwork": {
+        "queue": "rust-owned-parented-artwork"
+      }
+    }
+  },
+  "observations": [
+    {
+      "name": "refresh-created-source",
+      "began_utc": "2026-11-13T07:06:34.519008+00:00",
+      "finished_utc": "2026-11-13T07:06:37.741628+00:00",
+      "tasks": [
+        {
+          "id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+          "backend": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [
+              [
+                [
+                  "0f08d53e-afed-4e73-91bf-d211547ceec4",
+                  null
+                ],
+                null
+              ],
+              [
+                [
+                  "9f7c6077-8205-4e75-883e-098c181747c9",
+                  null
+                ],
+                null
+              ]
+            ],
+            "date_done": "2026-11-13T07:06:36.436298+00:00",
+            "task_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c"
+          },
+          "Original_get_value": null,
+          "prerun": [
+            {
+              "id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "task": "apps.epg.tasks.refresh_epg_data",
+              "args": [
+                1
+              ],
+              "kwargs": {},
+              "pid": 424,
+              "uid": 0,
+              "cwd": "/app",
+              "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "parent_id": null,
+              "delivery": {
+                "exchange": "",
+                "routing_key": "rust-owned-parented-refresh",
+                "priority": 0,
+                "redelivered": false
+              },
+              "attrs": {
+                "acks_late": false,
+                "ignore_result": false,
+                "track_started": false,
+                "reject_on_worker_lost": null
+              },
+              "utc": "2026-11-13T07:06:35.829051+00:00"
+            }
+          ],
+          "postrun": [
+            {
+              "id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "task": "apps.epg.tasks.refresh_epg_data",
+              "result": null,
+              "state": "SUCCESS",
+              "pid": 424,
+              "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "parent_id": null,
+              "utc": "2026-11-13T07:06:36.478825+00:00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "parented-series-positive",
+      "began_utc": "2026-11-13T07:06:37.765438+00:00",
+      "finished_utc": "2026-11-13T07:06:40.812261+00:00",
+      "tasks": [
+        {
+          "id": "9f7c6077-8205-4e75-883e-098c181747c9",
+          "backend": {
+            "status": "SUCCESS",
+            "result": {
+              "scheduled": 1,
+              "details": [
+                {
+                  "tvg_id": "rust.owned.parented.artwork",
+                  "title": "Owned Parented Artwork",
+                  "status": "ok",
+                  "created": 1
+                }
+              ]
+            },
+            "traceback": null,
+            "children": [
+              [
+                [
+                  "89e2fed8-9683-4227-a8d9-c4bb8a975688",
+                  null
+                ],
+                null
+              ],
+              [
+                [
+                  "edf3caeb-952d-4f42-8218-647f1a651f20",
+                  null
+                ],
+                null
+              ]
+            ],
+            "date_done": "2026-11-13T07:06:39.099969+00:00",
+            "parent_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+            "task_id": "9f7c6077-8205-4e75-883e-098c181747c9"
+          },
+          "Original_get_value": {
+            "scheduled": 1,
+            "details": [
+              {
+                "tvg_id": "rust.owned.parented.artwork",
+                "title": "Owned Parented Artwork",
+                "status": "ok",
+                "created": 1
+              }
+            ]
+          },
+          "prerun": [
+            {
+              "id": "9f7c6077-8205-4e75-883e-098c181747c9",
+              "task": "apps.channels.tasks.evaluate_series_rules",
+              "args": [],
+              "kwargs": {},
+              "pid": 502,
+              "uid": 0,
+              "cwd": "/app",
+              "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "parent_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "delivery": {
+                "exchange": "",
+                "routing_key": "rust-owned-parented-series",
+                "priority": 0,
+                "redelivered": false
+              },
+              "attrs": {
+                "acks_late": false,
+                "ignore_result": false,
+                "track_started": false,
+                "reject_on_worker_lost": null
+              },
+              "utc": "2026-11-13T07:06:38.997984+00:00"
+            }
+          ],
+          "postrun": [
+            {
+              "id": "9f7c6077-8205-4e75-883e-098c181747c9",
+              "task": "apps.channels.tasks.evaluate_series_rules",
+              "result": {
+                "scheduled": 1,
+                "details": [
+                  {
+                    "tvg_id": "rust.owned.parented.artwork",
+                    "title": "Owned Parented Artwork",
+                    "status": "ok",
+                    "created": 1
+                  }
+                ]
+              },
+              "state": "SUCCESS",
+              "pid": 502,
+              "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "parent_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "utc": "2026-11-13T07:06:39.101152+00:00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "artwork-two-real-children",
+      "began_utc": "2026-11-13T07:06:40.840282+00:00",
+      "finished_utc": "2026-11-13T07:06:43.929031+00:00",
+      "tasks": [
+        {
+          "id": "89e2fed8-9683-4227-a8d9-c4bb8a975688",
+          "backend": {
+            "status": "SUCCESS",
+            "result": "ok",
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-13T07:06:42.149201+00:00",
+            "parent_id": "9f7c6077-8205-4e75-883e-098c181747c9",
+            "task_id": "89e2fed8-9683-4227-a8d9-c4bb8a975688"
+          },
+          "Original_get_value": "ok",
+          "prerun": [
+            {
+              "id": "89e2fed8-9683-4227-a8d9-c4bb8a975688",
+              "task": "apps.channels.tasks.prefetch_recording_artwork",
+              "args": [
+                1
+              ],
+              "kwargs": {},
+              "pid": 545,
+              "uid": 0,
+              "cwd": "/app",
+              "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "parent_id": "9f7c6077-8205-4e75-883e-098c181747c9",
+              "delivery": {
+                "exchange": "",
+                "routing_key": "rust-owned-parented-artwork",
+                "priority": 0,
+                "redelivered": false
+              },
+              "attrs": {
+                "acks_late": false,
+                "ignore_result": false,
+                "track_started": false,
+                "reject_on_worker_lost": null
+              },
+              "utc": "2026-11-13T07:06:42.083681+00:00"
+            }
+          ],
+          "postrun": [
+            {
+              "id": "89e2fed8-9683-4227-a8d9-c4bb8a975688",
+              "task": "apps.channels.tasks.prefetch_recording_artwork",
+              "result": "ok",
+              "state": "SUCCESS",
+              "pid": 545,
+              "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "parent_id": "9f7c6077-8205-4e75-883e-098c181747c9",
+              "utc": "2026-11-13T07:06:42.150724+00:00"
+            }
+          ]
+        },
+        {
+          "id": "edf3caeb-952d-4f42-8218-647f1a651f20",
+          "backend": {
+            "status": "SUCCESS",
+            "result": "ok",
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-13T07:06:42.165564+00:00",
+            "parent_id": "9f7c6077-8205-4e75-883e-098c181747c9",
+            "task_id": "edf3caeb-952d-4f42-8218-647f1a651f20"
+          },
+          "Original_get_value": "ok",
+          "prerun": [
+            {
+              "id": "edf3caeb-952d-4f42-8218-647f1a651f20",
+              "task": "apps.channels.tasks.prefetch_recording_artwork",
+              "args": [
+                1
+              ],
+              "kwargs": {},
+              "pid": 545,
+              "uid": 0,
+              "cwd": "/app",
+              "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "parent_id": "9f7c6077-8205-4e75-883e-098c181747c9",
+              "delivery": {
+                "exchange": "",
+                "routing_key": "rust-owned-parented-artwork",
+                "priority": 0,
+                "redelivered": false
+              },
+              "attrs": {
+                "acks_late": false,
+                "ignore_result": false,
+                "track_started": false,
+                "reject_on_worker_lost": null
+              },
+              "utc": "2026-11-13T07:06:42.152169+00:00"
+            }
+          ],
+          "postrun": [
+            {
+              "id": "edf3caeb-952d-4f42-8218-647f1a651f20",
+              "task": "apps.channels.tasks.prefetch_recording_artwork",
+              "result": "ok",
+              "state": "SUCCESS",
+              "pid": 545,
+              "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+              "parent_id": "9f7c6077-8205-4e75-883e-098c181747c9",
+              "utc": "2026-11-13T07:06:42.166194+00:00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "refresh-repeat",
+      "began_utc": "2026-11-13T07:06:43.963791+00:00",
+      "finished_utc": "2026-11-13T07:06:47.070619+00:00",
+      "tasks": [
+        {
+          "id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+          "backend": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [
+              [
+                [
+                  "1e96de1a-504d-4e48-910a-28addcc22c0a",
+                  null
+                ],
+                null
+              ],
+              [
+                [
+                  "340a495d-c951-4688-83e6-2d4f371e8724",
+                  null
+                ],
+                null
+              ]
+            ],
+            "date_done": "2026-11-13T07:06:45.772167+00:00",
+            "task_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4"
+          },
+          "Original_get_value": null,
+          "prerun": [
+            {
+              "id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+              "task": "apps.epg.tasks.refresh_epg_data",
+              "args": [
+                1
+              ],
+              "kwargs": {},
+              "pid": 589,
+              "uid": 0,
+              "cwd": "/app",
+              "root_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+              "parent_id": null,
+              "delivery": {
+                "exchange": "",
+                "routing_key": "rust-owned-parented-refresh",
+                "priority": 0,
+                "redelivered": false
+              },
+              "attrs": {
+                "acks_late": false,
+                "ignore_result": false,
+                "track_started": false,
+                "reject_on_worker_lost": null
+              },
+              "utc": "2026-11-13T07:06:45.213219+00:00"
+            }
+          ],
+          "postrun": [
+            {
+              "id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+              "task": "apps.epg.tasks.refresh_epg_data",
+              "result": null,
+              "state": "SUCCESS",
+              "pid": 589,
+              "root_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+              "parent_id": null,
+              "utc": "2026-11-13T07:06:45.812405+00:00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "parented-series-repeat",
+      "began_utc": "2026-11-13T07:06:47.106673+00:00",
+      "finished_utc": "2026-11-13T07:06:50.228220+00:00",
+      "tasks": [
+        {
+          "id": "340a495d-c951-4688-83e6-2d4f371e8724",
+          "backend": {
+            "status": "SUCCESS",
+            "result": {
+              "scheduled": 0,
+              "details": [
+                {
+                  "tvg_id": "rust.owned.parented.artwork",
+                  "title": "Owned Parented Artwork",
+                  "status": "ok",
+                  "created": 0
+                }
+              ]
+            },
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-13T07:06:48.414357+00:00",
+            "parent_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+            "task_id": "340a495d-c951-4688-83e6-2d4f371e8724"
+          },
+          "Original_get_value": {
+            "scheduled": 0,
+            "details": [
+              {
+                "tvg_id": "rust.owned.parented.artwork",
+                "title": "Owned Parented Artwork",
+                "status": "ok",
+                "created": 0
+              }
+            ]
+          },
+          "prerun": [
+            {
+              "id": "340a495d-c951-4688-83e6-2d4f371e8724",
+              "task": "apps.channels.tasks.evaluate_series_rules",
+              "args": [],
+              "kwargs": {},
+              "pid": 666,
+              "uid": 0,
+              "cwd": "/app",
+              "root_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+              "parent_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+              "delivery": {
+                "exchange": "",
+                "routing_key": "rust-owned-parented-series",
+                "priority": 0,
+                "redelivered": false
+              },
+              "attrs": {
+                "acks_late": false,
+                "ignore_result": false,
+                "track_started": false,
+                "reject_on_worker_lost": null
+              },
+              "utc": "2026-11-13T07:06:48.388897+00:00"
+            }
+          ],
+          "postrun": [
+            {
+              "id": "340a495d-c951-4688-83e6-2d4f371e8724",
+              "task": "apps.channels.tasks.evaluate_series_rules",
+              "result": {
+                "scheduled": 0,
+                "details": [
+                  {
+                    "tvg_id": "rust.owned.parented.artwork",
+                    "title": "Owned Parented Artwork",
+                    "status": "ok",
+                    "created": 0
+                  }
+                ]
+              },
+              "state": "SUCCESS",
+              "pid": 666,
+              "root_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+              "parent_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+              "utc": "2026-11-13T07:06:48.415867+00:00"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source_acceptance": {
+    "passed": true,
+    "cases": 5,
+    "actual_tasks": 6,
+    "actual_task_order": [
+      "apps.epg.tasks.refresh_epg_data",
+      "apps.channels.tasks.evaluate_series_rules",
+      "apps.channels.tasks.prefetch_recording_artwork",
+      "apps.channels.tasks.prefetch_recording_artwork",
+      "apps.epg.tasks.refresh_epg_data",
+      "apps.channels.tasks.evaluate_series_rules"
+    ],
+    "observed_lineages": [
+      {
+        "id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "published_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "published_parent": null,
+        "prerun_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "prerun_parent": null,
+        "postrun_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "postrun_parent": null,
+        "metadata_parent_present": false,
+        "metadata_parent": null
+      },
+      {
+        "id": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "published_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "published_parent": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "prerun_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "prerun_parent": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "postrun_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "postrun_parent": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "metadata_parent_present": true,
+        "metadata_parent": "cb78e036-04f3-40d0-a07c-591ed05ef09c"
+      },
+      {
+        "id": "89e2fed8-9683-4227-a8d9-c4bb8a975688",
+        "published_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "published_parent": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "prerun_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "prerun_parent": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "postrun_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "postrun_parent": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "metadata_parent_present": true,
+        "metadata_parent": "9f7c6077-8205-4e75-883e-098c181747c9"
+      },
+      {
+        "id": "edf3caeb-952d-4f42-8218-647f1a651f20",
+        "published_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "published_parent": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "prerun_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "prerun_parent": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "postrun_root": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "postrun_parent": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "metadata_parent_present": true,
+        "metadata_parent": "9f7c6077-8205-4e75-883e-098c181747c9"
+      },
+      {
+        "id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "published_root": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "published_parent": null,
+        "prerun_root": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "prerun_parent": null,
+        "postrun_root": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "postrun_parent": null,
+        "metadata_parent_present": false,
+        "metadata_parent": null
+      },
+      {
+        "id": "340a495d-c951-4688-83e6-2d4f371e8724",
+        "published_root": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "published_parent": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "prerun_root": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "prerun_parent": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "postrun_root": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "postrun_parent": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "metadata_parent_present": true,
+        "metadata_parent": "11839df4-4a1c-4db2-b56e-83e03a0481b4"
+      }
+    ],
+    "default_descendant_tasks": [
+      "apps.epg.tasks.parse_programs_for_tvg_id",
+      "apps.epg.tasks.build_programme_index_task",
+      "apps.epg.tasks.build_programme_index_task"
+    ],
+    "root_inheritance_inferred_or_normalized": false,
+    "Native_verified": false,
+    "full_workflow": false,
+    "artwork_domain": "one exact localVODLogo/title; no provider/HTTP/othertitle authority"
+  },
+  "all_publications": [
+    {
+      "task": "apps.epg.tasks.refresh_epg_data",
+      "headers": {
+        "lang": "py",
+        "task": "apps.epg.tasks.refresh_epg_data",
+        "id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "shadow": null,
+        "eta": null,
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          14400,
+          null
+        ],
+        "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "parent_id": null,
+        "argsrepr": "(1,)",
+        "kwargsrepr": "{}",
+        "origin": "gen347@e2e7bca3ad8e",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [
+          1
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "reply_to": "6cec2a47-4240-3764-8539-d305dace8636"
+      },
+      "exchange": "",
+      "routing_key": "rust-owned-parented-refresh",
+      "pid": 347,
+      "utc": "2026-11-13T07:06:34.481861+00:00"
+    },
+    {
+      "task": "apps.epg.tasks.parse_programs_for_tvg_id",
+      "headers": {
+        "lang": "py",
+        "task": "apps.epg.tasks.parse_programs_for_tvg_id",
+        "id": "8250c9ff-cff4-407e-98f5-83337d7172f7",
+        "shadow": null,
+        "eta": null,
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          3600,
+          3500
+        ],
+        "root_id": "8250c9ff-cff4-407e-98f5-83337d7172f7",
+        "parent_id": null,
+        "argsrepr": "(1,)",
+        "kwargsrepr": "{}",
+        "origin": "gen347@e2e7bca3ad8e",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [
+          1
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "8250c9ff-cff4-407e-98f5-83337d7172f7",
+        "reply_to": "6cec2a47-4240-3764-8539-d305dace8636"
+      },
+      "exchange": "",
+      "routing_key": "celery",
+      "pid": 347,
+      "utc": "2026-11-13T07:06:34.500322+00:00"
+    },
+    {
+      "task": "apps.epg.tasks.build_programme_index_task",
+      "headers": {
+        "lang": "py",
+        "task": "apps.epg.tasks.build_programme_index_task",
+        "id": "0f08d53e-afed-4e73-91bf-d211547ceec4",
+        "shadow": null,
+        "eta": null,
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          null,
+          null
+        ],
+        "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "parent_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "argsrepr": "(1,)",
+        "kwargsrepr": "{}",
+        "origin": "gen424@e2e7bca3ad8e",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [
+          1
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "0f08d53e-afed-4e73-91bf-d211547ceec4",
+        "reply_to": "55649dde-0be3-3ea7-9067-e326bceda7a5"
+      },
+      "exchange": "",
+      "routing_key": "celery",
+      "pid": 424,
+      "utc": "2026-11-13T07:06:36.390010+00:00"
+    },
+    {
+      "task": "apps.channels.tasks.evaluate_series_rules",
+      "headers": {
+        "lang": "py",
+        "task": "apps.channels.tasks.evaluate_series_rules",
+        "id": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "shadow": null,
+        "eta": null,
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          null,
+          null
+        ],
+        "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "parent_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "argsrepr": "()",
+        "kwargsrepr": "{}",
+        "origin": "gen424@e2e7bca3ad8e",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "reply_to": "55649dde-0be3-3ea7-9067-e326bceda7a5"
+      },
+      "exchange": "",
+      "routing_key": "rust-owned-parented-series",
+      "pid": 424,
+      "utc": "2026-11-13T07:06:36.395920+00:00"
+    },
+    {
+      "task": "apps.channels.tasks.prefetch_recording_artwork",
+      "headers": {
+        "lang": "py",
+        "task": "apps.channels.tasks.prefetch_recording_artwork",
+        "id": "89e2fed8-9683-4227-a8d9-c4bb8a975688",
+        "shadow": null,
+        "eta": "2026-11-13T07:06:40.088452+00:00",
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          null,
+          null
+        ],
+        "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "parent_id": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "argsrepr": "[1]",
+        "kwargsrepr": "{}",
+        "origin": "gen502@e2e7bca3ad8e",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [
+          1
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "89e2fed8-9683-4227-a8d9-c4bb8a975688",
+        "reply_to": "04db0369-8437-3171-b863-d3e2cc2c6efb"
+      },
+      "exchange": "",
+      "routing_key": "rust-owned-parented-artwork",
+      "pid": 502,
+      "utc": "2026-11-13T07:06:39.089150+00:00"
+    },
+    {
+      "task": "apps.channels.tasks.prefetch_recording_artwork",
+      "headers": {
+        "lang": "py",
+        "task": "apps.channels.tasks.prefetch_recording_artwork",
+        "id": "edf3caeb-952d-4f42-8218-647f1a651f20",
+        "shadow": null,
+        "eta": "2026-11-13T07:06:40.092309+00:00",
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          null,
+          null
+        ],
+        "root_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c",
+        "parent_id": "9f7c6077-8205-4e75-883e-098c181747c9",
+        "argsrepr": "[1]",
+        "kwargsrepr": "{}",
+        "origin": "gen502@e2e7bca3ad8e",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [
+          1
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "edf3caeb-952d-4f42-8218-647f1a651f20",
+        "reply_to": "04db0369-8437-3171-b863-d3e2cc2c6efb"
+      },
+      "exchange": "",
+      "routing_key": "rust-owned-parented-artwork",
+      "pid": 502,
+      "utc": "2026-11-13T07:06:39.092412+00:00"
+    },
+    {
+      "task": "apps.epg.tasks.refresh_epg_data",
+      "headers": {
+        "lang": "py",
+        "task": "apps.epg.tasks.refresh_epg_data",
+        "id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "shadow": null,
+        "eta": null,
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          14400,
+          null
+        ],
+        "root_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "parent_id": null,
+        "argsrepr": "[1]",
+        "kwargsrepr": "{}",
+        "origin": "gen347@e2e7bca3ad8e",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [
+          1
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "reply_to": "6cec2a47-4240-3764-8539-d305dace8636"
+      },
+      "exchange": "",
+      "routing_key": "rust-owned-parented-refresh",
+      "pid": 347,
+      "utc": "2026-11-13T07:06:43.959141+00:00"
+    },
+    {
+      "task": "apps.epg.tasks.build_programme_index_task",
+      "headers": {
+        "lang": "py",
+        "task": "apps.epg.tasks.build_programme_index_task",
+        "id": "1e96de1a-504d-4e48-910a-28addcc22c0a",
+        "shadow": null,
+        "eta": null,
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          null,
+          null
+        ],
+        "root_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "parent_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "argsrepr": "(1,)",
+        "kwargsrepr": "{}",
+        "origin": "gen589@e2e7bca3ad8e",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [
+          1
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "1e96de1a-504d-4e48-910a-28addcc22c0a",
+        "reply_to": "5c4e322b-7ce4-38ba-893f-cbd57cba8106"
+      },
+      "exchange": "",
+      "routing_key": "celery",
+      "pid": 589,
+      "utc": "2026-11-13T07:06:45.726106+00:00"
+    },
+    {
+      "task": "apps.channels.tasks.evaluate_series_rules",
+      "headers": {
+        "lang": "py",
+        "task": "apps.channels.tasks.evaluate_series_rules",
+        "id": "340a495d-c951-4688-83e6-2d4f371e8724",
+        "shadow": null,
+        "eta": null,
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          null,
+          null
+        ],
+        "root_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "parent_id": "11839df4-4a1c-4db2-b56e-83e03a0481b4",
+        "argsrepr": "()",
+        "kwargsrepr": "{}",
+        "origin": "gen589@e2e7bca3ad8e",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "340a495d-c951-4688-83e6-2d4f371e8724",
+        "reply_to": "5c4e322b-7ce4-38ba-893f-cbd57cba8106"
+      },
+      "exchange": "",
+      "routing_key": "rust-owned-parented-series",
+      "pid": 589,
+      "utc": "2026-11-13T07:06:45.730525+00:00"
+    }
+  ],
+  "refresh_frames_raw_base64": [
+    "eyJib2R5IjogIlcxc3hYU3dnZTMwc0lIc2lZMkZzYkdKaFkydHpJam9nYm5Wc2JDd2dJbVZ5Y21KaFkydHpJam9nYm5Wc2JDd2dJbU5vWVdsdUlqb2diblZzYkN3Z0ltTm9iM0prSWpvZ2JuVnNiSDFkIiwgImNvbnRlbnQtZW5jb2RpbmciOiAidXRmLTgiLCAiY29udGVudC10eXBlIjogImFwcGxpY2F0aW9uL2pzb24iLCAiaGVhZGVycyI6IHsibGFuZyI6ICJweSIsICJ0YXNrIjogImFwcHMuZXBnLnRhc2tzLnJlZnJlc2hfZXBnX2RhdGEiLCAiaWQiOiAiY2I3OGUwMzYtMDRmMy00MGQwLWEwN2MtNTkxZWQwNWVmMDljIiwgInNoYWRvdyI6IG51bGwsICJldGEiOiBudWxsLCAiZXhwaXJlcyI6IG51bGwsICJncm91cCI6IG51bGwsICJncm91cF9pbmRleCI6IG51bGwsICJyZXRyaWVzIjogMCwgInRpbWVsaW1pdCI6IFsxNDQwMCwgbnVsbF0sICJyb290X2lkIjogImNiNzhlMDM2LTA0ZjMtNDBkMC1hMDdjLTU5MWVkMDVlZjA5YyIsICJwYXJlbnRfaWQiOiBudWxsLCAiYXJnc3JlcHIiOiAiKDEsKSIsICJrd2FyZ3NyZXByIjogInt9IiwgIm9yaWdpbiI6ICJnZW4zNDdAZTJlN2JjYTNhZDhlIiwgImlnbm9yZV9yZXN1bHQiOiBmYWxzZSwgInJlcGxhY2VkX3Rhc2tfbmVzdGluZyI6IDAsICJzdGFtcGVkX2hlYWRlcnMiOiBudWxsLCAic3RhbXBzIjoge319LCAicHJvcGVydGllcyI6IHsiY29ycmVsYXRpb25faWQiOiAiY2I3OGUwMzYtMDRmMy00MGQwLWEwN2MtNTkxZWQwNWVmMDljIiwgInJlcGx5X3RvIjogIjZjZWMyYTQ3LTQyNDAtMzc2NC04NTM5LWQzMDVkYWNlODYzNiIsICJkZWxpdmVyeV9tb2RlIjogMiwgImRlbGl2ZXJ5X2luZm8iOiB7ImV4Y2hhbmdlIjogIiIsICJyb3V0aW5nX2tleSI6ICJydXN0LW93bmVkLXBhcmVudGVkLXJlZnJlc2gifSwgInByaW9yaXR5IjogMCwgImJvZHlfZW5jb2RpbmciOiAiYmFzZTY0IiwgImRlbGl2ZXJ5X3RhZyI6ICJmNzNiNDRhNi1mMTk4LTQwYTktODQ4NS1hNzM3ZGUwNmViMTkifX0=",
+    "eyJib2R5IjogIlcxc3hYU3dnZTMwc0lIc2lZMkZzYkdKaFkydHpJam9nYm5Wc2JDd2dJbVZ5Y21KaFkydHpJam9nYm5Wc2JDd2dJbU5vWVdsdUlqb2diblZzYkN3Z0ltTm9iM0prSWpvZ2JuVnNiSDFkIiwgImNvbnRlbnQtZW5jb2RpbmciOiAidXRmLTgiLCAiY29udGVudC10eXBlIjogImFwcGxpY2F0aW9uL2pzb24iLCAiaGVhZGVycyI6IHsibGFuZyI6ICJweSIsICJ0YXNrIjogImFwcHMuZXBnLnRhc2tzLnJlZnJlc2hfZXBnX2RhdGEiLCAiaWQiOiAiMTE4MzlkZjQtNGExYy00ZGIyLWI1NmUtODNlMDNhMDQ4MWI0IiwgInNoYWRvdyI6IG51bGwsICJldGEiOiBudWxsLCAiZXhwaXJlcyI6IG51bGwsICJncm91cCI6IG51bGwsICJncm91cF9pbmRleCI6IG51bGwsICJyZXRyaWVzIjogMCwgInRpbWVsaW1pdCI6IFsxNDQwMCwgbnVsbF0sICJyb290X2lkIjogIjExODM5ZGY0LTRhMWMtNGRiMi1iNTZlLTgzZTAzYTA0ODFiNCIsICJwYXJlbnRfaWQiOiBudWxsLCAiYXJnc3JlcHIiOiAiWzFdIiwgImt3YXJnc3JlcHIiOiAie30iLCAib3JpZ2luIjogImdlbjM0N0BlMmU3YmNhM2FkOGUiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fX0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICIxMTgzOWRmNC00YTFjLTRkYjItYjU2ZS04M2UwM2EwNDgxYjQiLCAicmVwbHlfdG8iOiAiNmNlYzJhNDctNDI0MC0zNzY0LTg1MzktZDMwNWRhY2U4NjM2IiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogInJ1c3Qtb3duZWQtcGFyZW50ZWQtcmVmcmVzaCJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogImY0OGMwYWQ0LWQ5NzMtNGE3Ny1hNjVlLWExZmZlNDQwN2NlOCJ9fQ=="
+  ]
+}

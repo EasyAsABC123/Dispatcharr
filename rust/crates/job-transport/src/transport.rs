@@ -1,5 +1,9 @@
 //! Fixture-authorized publisher/result reader; no consumer or application route.
 //! Original Dispatcharr authors retain application credit and AGPL licensing.
+#[path = "recording_artwork_transport.rs"]
+mod recording_artwork_transport;
+#[cfg(test)]
+pub(crate) use recording_artwork_transport::parse_fixture as parse_local_artwork_fixture;
 #[cfg(test)]
 #[path = "stats_transport.rs"]
 mod stats_transport;
@@ -100,6 +104,9 @@ fn endpoint(raw: &str, db: i64) -> Result<(), Error> {
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Authority {
+    LocalArtwork,
+    #[cfg(test)]
+    LocalArtworkFixture,
     Fixture,
     Index,
     Refresh,
@@ -285,7 +292,10 @@ impl Jobs {
     ) -> Result<Arc<crate::eta::Pool>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -735,7 +745,10 @@ impl Jobs {
     ) -> Result<Published, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -773,7 +786,10 @@ impl Jobs {
     ) -> Result<Option<crate::index_protocol::IndexResult>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -856,7 +872,10 @@ impl Jobs {
     ) -> Result<Option<crate::eta::Candidate>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -893,7 +912,10 @@ impl Jobs {
     ) -> Result<crate::eta::Reservation, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -917,7 +939,10 @@ impl Jobs {
     ) -> Result<crate::eta::Reservation, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1100,7 +1125,10 @@ impl Jobs {
     ) -> Result<Option<crate::eta::Reservation>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1122,7 +1150,10 @@ impl Jobs {
     ) -> Result<Option<crate::eta::Reservation>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1155,7 +1186,10 @@ impl Jobs {
     ) -> Result<(), Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1194,7 +1228,10 @@ impl Jobs {
     ) -> Result<(), Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1273,7 +1310,10 @@ impl Jobs {
     ) -> Result<Option<crate::index_protocol::IndexMessage>, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1319,7 +1359,10 @@ impl Jobs {
     ) -> Result<bool, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }
@@ -1348,7 +1391,10 @@ impl Jobs {
     ) -> Result<bool, Error> {
         if matches!(
             self.inner.authority,
-            Authority::Series | Authority::DefaultServices | Authority::Backup
+            Authority::LocalArtwork
+                | Authority::Series
+                | Authority::DefaultServices
+                | Authority::Backup
         ) {
             return Err(Error::UnsupportedTask);
         }

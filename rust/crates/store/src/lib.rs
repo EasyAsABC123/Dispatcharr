@@ -435,3 +435,5 @@ mod vod_image_version_public_tests {
 }
 
 pub mod recording_schedule;
+
+pub mod recording_local_artwork;

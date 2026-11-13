@@ -1,0 +1,122 @@
+{
+  "source_map_sha256": "bd19f60fa483e23ccb1d8204bbf5e563a7fd24e8fd8f9a8b273de43af149caa5",
+  "target": "/home/justin/github/Dispatcharr/artifacts/rust/target-recording-local-artwork-native-4",
+  "TMPDIR": "/home/justin/github/Dispatcharr/artifacts/rust/tmp-recording-local-artwork-native-7",
+  "HOME_unchanged": true,
+  "commands": [
+    {
+      "label": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/recording-local-artwork-native-7/source/rust",
+      "began_epoch": 1794565249.13029,
+      "settled": true,
+      "pid": 112107,
+      "starttime": "28564417",
+      "exit": 0,
+      "finished_epoch": 1794565250.919374,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/recording-local-artwork-native-7/source/rust",
+      "began_epoch": 1794565250.9401217,
+      "settled": true,
+      "pid": 112205,
+      "starttime": "28564598",
+      "exit": 0,
+      "finished_epoch": 1794565253.700702,
+      "log_sha256": "632f3dec146e76f2fba5898d23b8392fc3a984194e246080cce7ab9c6e4b4d45"
+    },
+    {
+      "label": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/recording-local-artwork-native-7/source/rust",
+      "began_epoch": 1794565253.721736,
+      "settled": true,
+      "pid": 112392,
+      "starttime": "28564876",
+      "exit": 0,
+      "finished_epoch": 1794565261.0212848,
+      "log_sha256": "928ff71601b9612359dcd4c22b32d3a665c0f64a230c7ab56288f8b77f391ac7"
+    },
+    {
+      "label": "job-lib",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "--offline",
+        "--locked",
+        "--message-format=json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/recording-local-artwork-native-7/source/rust",
+      "began_epoch": 1794565261.04458,
+      "settled": true,
+      "pid": 112894,
+      "starttime": "28565609",
+      "exit": 0,
+      "finished_epoch": 1794565272.3612087,
+      "log_sha256": "1b0fa524290ef5fad8a67a5f58e4ac51e05c391e35ae7e2afdaca1def05e044c"
+    },
+    {
+      "label": "store-lib",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--offline",
+        "--locked",
+        "--message-format=json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/recording-local-artwork-native-7/source/rust",
+      "began_epoch": 1794565272.3839352,
+      "settled": true,
+      "pid": 116558,
+      "starttime": "28566742",
+      "exit": 0,
+      "finished_epoch": 1794565274.0813808,
+      "log_sha256": "bf42bb477ef8b4c8bc50eb7e8518d01c01221c3acf02010801de7a9475dac555"
+    }
+  ],
+  "outside_ELFs": {
+    "/home/justin/github/Dispatcharr/artifacts/rust/recording-local-artwork-native-7/outside-peers/native-job-tests": {
+      "source_path": "/home/justin/github/Dispatcharr/artifacts/rust/target-recording-local-artwork-native-4/debug/deps/dispatcharr_job_transport-6fc7d4b8b952688b",
+      "sha256": "9e3b613caad7a7d56c02fe3720ac971f527b276d9e2ea916851469193564e1ce",
+      "bytes": 65315192
+    },
+    "/home/justin/github/Dispatcharr/artifacts/rust/recording-local-artwork-native-7/outside-peers/native-store-tests": {
+      "source_path": "/home/justin/github/Dispatcharr/artifacts/rust/target-recording-local-artwork-native-4/debug/deps/dispatcharr_store-41d5cfe0cddb433e",
+      "sha256": "aca9126e1e03add46081d4b9e8c84b48a7ecbd7a191668db65f4ed04dd66e002",
+      "bytes": 62921160
+    }
+  },
+  "all_waits_zero": true,
+  "source_inputs_after_match": true
+}

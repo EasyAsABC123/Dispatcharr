@@ -1,0 +1,98 @@
+--- source6/rust/crates/job-transport/src/recording_artwork_transport.rs
++++ source7/rust/crates/job-transport/src/recording_artwork_transport.rs
+@@ -10,9 +10,15 @@
+     fn local_artwork_authorized(&self) -> bool {
+         #[cfg(test)]
+         if self.inner.authority == Authority::LocalArtworkFixture {
+-            return self
+-                .require_parented_fixture("rust-owned-parented-artwork")
+-                .is_ok();
++            // Legacy copied_database() intentionally recognizes only Fixture.
++            // This dedicated cfgtest authority keeps the same stored copiedDB,
++            // but must validate it directly rather than reject its own tag.
++            return artwork_fixture_authorized(
++                self.inner.authority,
++                &self.inner.database,
++                std::env::var("POSTGRES_DB").ok().as_deref(),
++                std::env::var("JOB_DISPOSABLE_FIXTURE").ok().as_deref(),
++            );
+         }
+         self.inner.authority == Authority::LocalArtwork
+     }
+@@ -160,8 +166,76 @@
+ }
+ 
+ #[cfg(test)]
++fn artwork_fixture_authorized(
++    authority: Authority,
++    database: &str,
++    actual: Option<&str>,
++    guard: Option<&str>,
++) -> bool {
++    authority == Authority::LocalArtworkFixture
++        && database.starts_with("rust_probe_backup_jobs_")
++        && database.len() <= 63
++        && database
++            .bytes()
++            .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'_')
++        && actual == Some(database)
++        && guard == Some("playback-fixture-only")
++}
++#[cfg(test)]
+ mod route_controls {
+     use super::*;
++    #[test]
++    fn dedicated_fixture_authority_retains_copied_db_without_widening_legacy_fixture() {
++        let db = "rust_probe_backup_jobs_artwork";
++        assert!(artwork_fixture_authorized(
++            Authority::LocalArtworkFixture,
++            db,
++            Some(db),
++            Some("playback-fixture-only")
++        ));
++        for authority in [
++            Authority::Fixture,
++            Authority::LocalArtwork,
++            Authority::Series,
++            Authority::Refresh,
++            Authority::Index,
++            Authority::DefaultServices,
++            Authority::Backup,
++        ] {
++            assert!(!artwork_fixture_authorized(
++                authority,
++                db,
++                Some(db),
++                Some("playback-fixture-only")
++            ));
++        }
++        for (database, actual, guard) in [
++            (
++                "dispatcharr",
++                Some("dispatcharr"),
++                Some("playback-fixture-only"),
++            ),
++            (db, None, Some("playback-fixture-only")),
++            (
++                db,
++                Some("rust_probe_backup_jobs_other"),
++                Some("playback-fixture-only"),
++            ),
++            (db, Some(db), None),
++            (
++                "rust_probe_backup_jobs_BAD",
++                Some("rust_probe_backup_jobs_BAD"),
++                Some("playback-fixture-only"),
++            ),
++        ] {
++            assert!(!artwork_fixture_authorized(
++                Authority::LocalArtworkFixture,
++                database,
++                actual,
++                guard
++            ));
++        }
++    }
+     #[test]
+     fn only_exact_owned_route_projects_validation_and_raw_cas_bytes_remain_separate() {
+         use base64::Engine;
