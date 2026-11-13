@@ -1,0 +1,11 @@
+# Inert bounded callback source union
+
+`source-inputs.json` binds all842 Rust and five coupled inputs to the fresh four checks in `run_checks.py`; recreate the adjacent `source/` from exact delivery-commit Git blobs, verify every digest, and use an independent local Cargo target when repeating. Actual results:709 passed,734 external-fixture tests ignored; formatting, whole-workspace compilation and strict all-target linting pass. Four actual test executables were retained outside the completed dependency cache after all waits0. The cache was reused in place, with no copied dependency cache or transferred earlier results.
+
+The implementation remains opt-in at library boundaries. No Main router/default worker activation is included. `callback-lib.patch` shows the callback additions over the historical pre-backup library; the current union preserves the separately delivered backup test declarations and XC release repair.
+
+`historical-callback-seven-review.json` is a finite hash/count/cleanup receipt for a different, exact840-Rust/five-coupled component:12 Source-scoped notification requests plus7 Native-only transport diagnostics, and six actual fault cases. Root recomputed their typed semantic predicates and default database byte equality, and queried exact owned resources/PIDs after every run; all seven controller exits0, no retries. These physical results do not become current-union, Main or full-endpoint execution. The raw captures/source/controller reconstruction packet remains a separate publication follow-up. The literal capture-only false fields and Source controller's earlier file-size assertion failure remain preserved in that evidence.
+
+The callback case imports the exact persistent Source network-access version as pre-existing fixture state. It does not prove a Native model signal. Decoded cache effects qualify; Django serialization byte parity remains false. IANA catalogue/log-formatter parity, full settings workflows and application performance remain open. The existing four writer permits also govern the callback SQL work; no new pool or parallel allowance is introduced.
+
+Original application and algorithm credit belongs to the original Dispatcharr authors and contributors; see LICENSE and ATTRIBUTION.md.

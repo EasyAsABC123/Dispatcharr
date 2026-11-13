@@ -1,0 +1,11 @@
+# Bounded pre-auth display-timezone callback
+
+The opt-in library callback now reads system settings through the same existing writer permit, with bounded SQL payload metadata and JSON scanning before allocation. It retains actual work ownership through cache work, SQL errors, final protocol drain and awaited pool return. Its5-second debounce follows the qualified pre-try boundary and preserves previous-zone/fallback behavior on operational failures. No Main router, default worker, extra pool or parallel allowance is enabled.
+
+[Fresh current-source validation](../scripts/rust-integration/callback-library842/review.json) binds842 Rust and five coupled inputs. Formatting, workspace compilation, strict all-target linting and **709 tests passed;734 ignored** all pass. The merge preserves the backup test registrations and XC release fix. All847 input hashes remain unchanged; four actual test binaries were copied outside the dependency cache after all checks completed.
+
+A separate historical840-input component passes19 requests (12 retained Source comparisons plus7 Native-only diagnostics) and six actual physical cases: aborted observer, backend-error completion, HTTP caller loss, delayed Redis work, inherited four-writer permits and real debounce/setter behavior. Each run preserves default62-table/59-sequence state and passes independent owned cleanup. The [seven-run receipt](../scripts/rust-integration/callback-library842/historical-callback-seven-review.json) binds exact raw/report hashes. Its full portable execution packet is a follow-up; the historical execution is not transferred to this current source union.
+
+The request test declares an imported existing Source version key. It qualifies decoded cache effects, while cache serialization byte parity remains false; it does not establish Native model-signal behavior. The original capture-only false markers and earlier Source controller failure remain literal. Full timezone catalogue/log formatting, complete endpoint behavior, Main execution and new performance gains remain unverified. Image55 remains the selected measured application.
+
+All application/model/algorithm credit belongs to the original Dispatcharr authors and contributors. See [ATTRIBUTION.md](../ATTRIBUTION.md) and [LICENSE](../LICENSE).

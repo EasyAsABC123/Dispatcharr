@@ -1371,3 +1371,7 @@ mod credentials_sql_tests;
 #[cfg(test)]
 #[path = "notifications_forms_sql_tests.rs"]
 mod forms_sql_tests;
+
+#[cfg(test)]
+#[path = "notifications_callback_sql_tests.rs"]
+mod callback_sql_tests;

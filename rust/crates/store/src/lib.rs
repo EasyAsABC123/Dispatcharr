@@ -20,6 +20,7 @@ mod core_stream_writes;
 mod output_profile_writes;
 pub use output_profile_writes::OutputProfileWrites;
 mod core_utilities;
+mod display_timezone;
 mod django_pickle;
 mod epg_policy;
 mod epg_reads;

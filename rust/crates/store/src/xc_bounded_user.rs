@@ -177,7 +177,7 @@ impl<'de> Visitor<'de> for Seed<'_> {
         Ok(())
     }
 }
-fn checked_properties(
+pub(crate) fn checked_properties(
     raw: &str,
     scalar_bytes: usize,
     limit: XcUserReadLimits,

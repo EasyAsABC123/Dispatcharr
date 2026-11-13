@@ -1,0 +1,10 @@
+--- a/rust/crates/store/src/lib.rs
++++ b/rust/crates/store/src/lib.rs
+@@ -20,6 +20,7 @@
+ mod output_profile_writes;
+ pub use output_profile_writes::OutputProfileWrites;
+ mod core_utilities;
++mod display_timezone;
+ mod django_pickle;
+ mod epg_policy;
+ mod epg_reads;
