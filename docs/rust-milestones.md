@@ -19,7 +19,7 @@ The [Core retained-reader and error-body composition](rust-core-rest-owner-valid
 
 [Image58](rust-image58-build-validation.md) builds the newer 854-input library composition from exact committed source and preserves all114 installed React/credit hashes. This is build-only evidence; selected functional and measured acceptance remains image57.
 
-The [Source-derived HTML error correction](rust-source500-correction.md) passes the combined 854-input workspace (769 tests, 739 ignored). Its fresh two-request Native acceptance remains pending; earlier historical results are unchanged.
+The [Source-derived HTML error correction](rust-source500-correction.md) passes the combined 854-input workspace (769 tests, 739 ignored). Its fresh two-request Native acceptance now passes exact HTML status/body/content-type and unchanged SQL/authentication-history checks; earlier historical results are unchanged.
 
 ## Progress ledger
 
