@@ -1,0 +1,110 @@
+{
+  "status": "SOURCE-ONLY UNEXECUTED prep2; Root review/slot/once required",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "cases": [
+    "refresh-created-source",
+    "parented-series-positive",
+    "artwork-two-real-children",
+    "refresh-repeat",
+    "parented-series-repeat"
+  ],
+  "actual_parent_producer": "EPGSource active+xmltv post_save -> refresh_epg_data; _refresh_epg_data_impl emits Index then evaluate_series_rules",
+  "task_execution_order": [
+    "apps.epg.tasks.refresh_epg_data",
+    "apps.channels.tasks.evaluate_series_rules",
+    "apps.channels.tasks.prefetch_recording_artwork",
+    "apps.channels.tasks.prefetch_recording_artwork",
+    "apps.epg.tasks.refresh_epg_data",
+    "apps.channels.tasks.evaluate_series_rules"
+  ],
+  "expected_worker_instances": 5,
+  "expected_tasks": 6,
+  "expected_guest_checks": 24,
+  "queues": {
+    "refresh": "rust-owned-parented-refresh",
+    "series": "rust-owned-parented-series",
+    "artwork": "rust-owned-parented-artwork"
+  },
+  "routing_control": "Exact three Source task_routes only; no default/wildcard. A Source component control, NOT default FIFO/application proof.",
+  "root_identity_policy": "Capture raw publication and queued headers, prerun/postrun root+parent and metadata field presence independently. Do not normalize NULL or infer DirectTask root=self.",
+  "child_identity_policy": "Actual model-produced first Refresh ID; actual Refresh-produced Series IDs; actual signal+Series two artwork IDs and countdown1 ETA. Capture all publications/queues before assertions. No fabricated child IDs or sorting after diff.",
+  "seed": {
+    "source_type": "xmltv",
+    "source_active": true,
+    "source_url": null,
+    "programme_title": "Owned Parented Artwork",
+    "channel_name": "Owned Parented Channel",
+    "channel_logo_id": null,
+    "programme_start": "actual fixture UTC anchor floor-second +4hours",
+    "programme_end": "start+1hour",
+    "season_episode_xmltv_ns": "0.0.",
+    "VOD_logo_namespace": "vod_vodlogo",
+    "one_matching_Movie": true,
+    "logo_url": "owned local path, never requested",
+    "owned_file_prefix": "settings.MEDIA_ROOT/rust-owned-parented-artwork",
+    "allowed_MEDIA_ROOT_resolved": [
+      "/app/media",
+      "/data"
+    ]
+  },
+  "network_policy": "Dormant requests.Session.request guard installed before Source app/model loading; every call logged with URL query names/hash only and rejected BEFORE forwarding; successful corpus requires ZERO attempts. Empty API keys are not treated as provider prevention.",
+  "effect_contract": {
+    "Series_positive_Recordings": 1,
+    "Series_positive_artwork_children": 2,
+    "artwork_values": [
+      "ok",
+      "ok"
+    ],
+    "first_artwork_Recording_updates": 1,
+    "second_artwork_Recording_updates": 0,
+    "recording_updated_events": 1,
+    "repeat_Series_scheduled": 0,
+    "repeat_artwork_children": 0,
+    "future_clocked_recording": 1,
+    "run_recording_executions": 0,
+    "default_descendants_preserved_in_publication_order": [
+      "apps.epg.tasks.parse_programs_for_tvg_id",
+      "apps.epg.tasks.build_programme_index_task",
+      "apps.epg.tasks.build_programme_index_task"
+    ]
+  },
+  "default_audit": {
+    "tables": 62,
+    "sequences": 59,
+    "columns": 501,
+    "constraints": 198,
+    "indexes": 255,
+    "before_after_manifest_file_bytes_equal": true
+  },
+  "capture": "All bounded owned SQL rows/params/errors; task/request/child/result identities; Original AsyncResult raw key/metadata/TTL; full broker/cache DUMP/type/value/list/zset/TTL; all four raw queues plus all result-backend keys; Channels raw+decoded; file bytesSHA/mtime_ns/mode/UID/readability; actual PIDs/argv/waits/pipes/trap/finally receipts. Diagnostic SCAN/SQL caps are not strict production wire or DB CPU bounds.",
+  "budgets": {
+    "Source_task_wait_seconds": 35,
+    "Source_worker_graceful_wait_seconds": 12,
+    "Source_worker_forced_wait_seconds": 5,
+    "Source_worker_pipe_join_seconds": 10,
+    "Source_worker_log_bytes": 1048576,
+    "Source_guest_seconds": 600,
+    "host_cleanup_seconds": 90,
+    "host_command_pipe_bytes": 1048576,
+    "baseline_CPUs": 1,
+    "baseline_memory_bytes": 1073741824,
+    "baseline_pids": 256
+  },
+  "no_retry": true,
+  "Native_verified": false,
+  "default_graph_enabled": false,
+  "performance_experiment": false,
+  "unqualified": [
+    "Native behavior",
+    "arbitrary rules/title/timezone/offset/Date domains",
+    "provider/artwork HTTP branches",
+    "Clocked Beat execution/run_recording/media",
+    "default-queue all-family readiness",
+    "full artwork family or full M6 acceptance",
+    "universal prerun-before-ACK ordering"
+  ],
+  "host_signal_policy": "Real SIGTERM/SIGINT handler records exact host signal/PID/starttime. Active docker-exec interruption first stops the exact owned service, then retains wait/pipes before raising. Guest handler reaches attempt-all worker/Redis/SQL finally. No SIGKILL settlement promise.",
+  "cleanup_clock": "Fixed90seconds starts on FIRST owned service-stop/abort action, or immediately on guest command completion before post-guest module/contract/audit work; idempotent, never reset. Failure cannot waive budget.",
+  "eager_mode": "Explicit task_always_eager isFalse before any model-seed mutation; actual producer/broker/prefork executions only"
+}

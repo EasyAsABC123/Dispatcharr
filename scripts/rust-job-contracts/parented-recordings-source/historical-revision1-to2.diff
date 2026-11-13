@@ -1,0 +1,115 @@
+--- prep1/tools/contract.py
++++ prep2/tools/contract.py
+@@ -37,7 +37,7 @@
+  need(r.get('Native_verified')is False and r.get('performance_verified')is False,'SourceOnly')
+  need(r.get('application_task_model_signal_methods_replaced')is False and r.get('HTTP_dependency_guard_installed')is True,'ActualTasksUnmodifiedHTTPGuardDeclared')
+  need(same(r['fixture_routes'],ROUTES),'ExactThreeOwnedRoutes')
+- need(r.get('finally_errors')==[],'AllFinallyResourcesSettled')
++ need(r.get('finally_errors')==[],'AllFinallyResourcesSettled');need(r.get('task_always_eager')is False,'ActualBrokerWorkerMode')
+  need(type(r.get('actual_database'))is str and r['actual_database'].startswith('rust_probe_backup_jobs_'),'ActualCopiedDatabaseRecorded')
+  need(all(v.get('actual_database')==r['actual_database']and v.get('ownership_refused')is not True for v in r['all_sql']),'EveryObservedWorkerSQLBoundToCopiedDatabase')
+  cases=r['cases'];need([c['name']for c in cases]==CASES,'ExactFivePhaseOrder')
+--- prep1/tools/run_source.py
++++ prep2/tools/run_source.py
+@@ -25,6 +25,31 @@
+ def cleanup_budget_status(started,finished,seconds=90):
+  elapsed=finished-started
+  return {'budget_seconds':seconds,'elapsed_seconds':elapsed,'within_budget':type(seconds)is int and seconds==90 and 0<=elapsed<=seconds,'scope':'Acceptance deadline only; physical stop/join may finish later but can never qualify then'}
++def settle_interrupted_collection(job,reason):
++ """Attempt actual host CLI wait/pipes even if exact service stop fails.
++ Original invalid/settlement flags stay unchanged. Host CLI exit never proves
++ the container child stopped; outer finally must still down/audit the project.
++ """
++ receipt={'reason':reason,'abort_error':None,'actual_cli_wait_completed':False,'actual_cli_exit':None,'host_cli_forced_kill':False}
++ try:job.abort(reason)
++ except BaseException as error:receipt['abort_error']=type(error).__name__+':'+str(error)[:512]
++ try:
++  if job.process.poll()is None:job.process.terminate()
++  try:code=job.process.wait(timeout=10)
++  except subprocess.TimeoutExpired:
++   receipt['host_cli_forced_kill']=True;job.process.kill();code=job.process.wait(timeout=5)
++  receipt.update(actual_cli_wait_completed=True,actual_cli_exit=code)
++ except BaseException as error:receipt['actual_cli_wait_error']=type(error).__name__
++ deadline=time.monotonic()+10
++ for thread in job.threads+([job.writer]if job.writer else[]):
++  try:thread.join(max(0,deadline-time.monotonic()))
++  except BaseException as error:receipt.setdefault('pipe_join_errors',[]).append(type(error).__name__)
++ pipes_settled=not any(t.is_alive()for t in job.threads)and not(job.writer and job.writer.is_alive());receipt['actual_cli_capture_files_closed']=False
++ if pipes_settled:
++  try:job._close_files();receipt['actual_cli_capture_files_closed']=True
++  except BaseException as error:receipt['actual_cli_capture_close_error']=type(error).__name__
++ receipt.update(actual_cli_pipes_settled=pipes_settled,original_collector_invalid=job.invalid,original_collector_physically_settled=job.physically_settled,exact_service_stop_acknowledged=job.stopped and receipt['abort_error']is None,container_child_absence_proven_by_cli_collection=False)
++ return receipt
+ def environment():
+  denied=('GIT_','COMPOSE_','DATABASE_','POSTGRES_','REDIS_','DJANGO_','CELERY_','BASELINE_','BENCHMARK_','FIXTURE_')
+  return{k:v for k,v in os.environ.items()if not k.startswith(denied)and k!='ENABLE_VOD_FIXTURE'}
+@@ -55,9 +80,8 @@
+   job=Collected(argv,env,65536,lambda:None);began=datetime.datetime.now(datetime.timezone.utc).isoformat()
+   try:job.wait(15)
+   except BaseException:
+-   job.abort('PreflightInterrupted')
+-   try:job.wait(15)
+-   except BaseException:pass
++   if job.physically_settled and job.invalid is None:raise
++   interrupted=settle_interrupted_collection(job,'PreflightInterrupted');save(out.parent/(out.name+'-preflight-interrupted.json'),interrupted)
+    raise
+   finally:
+    preflight.append({'argv':argv,'began_utc':began,'exit':job.poll(),'stdout_hex':bytes(job.output['stdout']).hex(),'stderr_hex':bytes(job.output['stderr']).hex(),'settled':job.physically_settled,'pipes_settled':not any(t.is_alive()for t in job.threads)});save(preflight_path,preflight)
+@@ -67,10 +91,14 @@
+  sys.path.insert(0,str(frozen/'scripts/rust-integration'));from fixture_ports import write_port_overlay
+  project='dispatcharr-configured-source-'+uuid.uuid4().hex[:10];database='rust_probe_backup_jobs_'+uuid.uuid4().hex[:10];source=out/'source';source.mkdir();env.update(BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(out),DISPATCHARR_ENV='aio')
+  overlay=out/'source.yml';save(overlay,{'services':{'baseline':{'volumes':[str(mounted)+':/job-tools:ro',str(frozen/'scripts/rust-integration')+':/backup-tools:ro'],'cpus':1,'mem_limit':'1g','pids_limit':256},'origin':{'entrypoint':['/dispatcharrpy/bin/python','-c','import time;time.sleep(3600)'],'cpus':.1,'mem_limit':'128m','pids_limit':32}},'networks':{'default':{'internal':True}}});ports=out/'ports.yml';write_port_overlay(ports,{'baseline':[5656],'origin':[8080]});compose=[docker,'compose','-p',project,'-f',str(frozen/'docker/compose.rust-playback.yml'),'-f',str(overlay),'-f',str(ports)]
+- report={'passed':False,'Source_verified':False,'Native_verified':False,'performance_verified':False,'project':project,'database':database,'scope':'Actual Source Refresh→parented Series→two local-VOD-logo artwork children; explicit owned queues, default descendants remain intact; no Native/Main/fullgraph claim','execution_inputs_sha256':sha(a.execution_inputs),'Original_revision':BASE,'Original_archive_sha256':ARCHIVE,'processes':[]};serial=0;before=None;cid=None;claimed=False;status=1;cleanup_deadline=None;owned_pids=[];owned_containers=[]
++ report={'passed':False,'Source_verified':False,'Native_verified':False,'performance_verified':False,'project':project,'database':database,'scope':'Actual Source Refresh→parented Series→two local-VOD-logo artwork children; explicit owned queues, default descendants remain intact; no Native/Main/fullgraph claim','execution_inputs_sha256':sha(a.execution_inputs),'Original_revision':BASE,'Original_archive_sha256':ARCHIVE,'processes':[]};serial=0;before=None;cid=None;claimed=False;status=1;cleanup_deadline=None;cleanup_started=None;owned_pids=[];owned_containers=[]
+  def flush():save(out/'integration.json',report)
++ def begin_cleanup():
++  nonlocal cleanup_started,cleanup_deadline
++  if cleanup_started is None:cleanup_started=time.monotonic();cleanup_deadline=cleanup_started+90
+  def stop_owned():
+   if not claimed:return
++  begin_cleanup()
+   # Independent bounded collector avoids recursively invoking this callback.
+   stem=out/('owned-stop-'+uuid.uuid4().hex);job=Collected(compose+['stop','--timeout','10'],env,65536,lambda:None,stdout_path=str(stem)+'.stdout',stderr_path=str(stem)+'.stderr')
+   try:job.wait(30)
+@@ -85,13 +113,13 @@
+   record.update(pid=job.process.pid,starttime=proc(job.process.pid),spawn_state='actual_child_started');save(out/(tag+'.started.json'),record)
+   try:job.wait(timeout)
+   except RuntimeError:
++   if not job.physically_settled:
++    interrupted=settle_interrupted_collection(job,'CollectionFailureTail');save(out/(tag+'.failed-collection-tail.json'),interrupted)
+    if not(allow_nonzero and job.physically_settled and job.invalid is None):raise
+   except BaseException:
+    # A host signal cannot orphan docker-exec's actual container child.
+    # Stop the exact service first, then retain host wait/pipes even on failure.
+-   job.abort('HostInterrupted')
+-   try:job.wait(15)
+-   except BaseException:pass
++   interrupted=settle_interrupted_collection(job,'HostInterrupted');save(out/(tag+'.interrupted-collection.json'),interrupted)
+    raise
+   finally:
+    record.update(exit=job.poll(),completed_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),collection_invalid=job.invalid,physically_settled=job.physically_settled,pipes_settled=not any(t.is_alive()for t in job.threads),owned_stop_requested=job.stopped);save(out/(tag+'.json'),record);report['processes'].append(record);flush()
+@@ -118,11 +146,11 @@
+   argv=compose+['exec','-T','-e','POSTGRES_DB='+database,'-e','JOB_DISPOSABLE_FIXTURE=playback-fixture-only','-e','DATABASE_URL=postgres://dispatch:playback-fixture-only@localhost:5432/'+database,'-e','CELERY_BROKER_URL=redis://:playback-fixture-only@localhost:6379/8','-e','CELERY_RESULT_BACKEND=redis://:playback-fixture-only@localhost:6379/9','baseline','/dispatcharrpy/bin/python','/job-tools/source_configured.py'];report['controller_argv']=argv;flush()
+   try:text(argv,timeout=600)
+   finally:
+-   last=report['processes'][-1]if report['processes']else{};matched=last.get('argv')==argv;report['actual_controller_exit']=last.get('exit')if matched else None;report['actual_controller_settled']=last.get('physically_settled')if matched else False;flush()
++   begin_cleanup();last=report['processes'][-1]if report['processes']else{};matched=last.get('argv')==argv;report['actual_controller_exit']=last.get('exit')if matched else None;report['actual_controller_settled']=last.get('physically_settled')if matched else False;flush()
+   require(all(sha(source/name)==row['sha256']for name,row in pinned['modules'].items()),'PinnedSourceModulesAfterApp');actual=json.loads((out/'source-parented-recordings-private.json').read_text());report['Source_raw_report_sha256']=sha(out/'source-parented-recordings-private.json');spec=importlib.util.spec_from_file_location('_configured_contract_only',tools/'contract.py');contract=importlib.util.module_from_spec(spec);spec.loader.exec_module(contract);report['source_acceptance']=contract.validate_source_capture(0,actual);report.update(passed=True,Source_verified=True,cases=5,checks=len(actual['checks']));status=0
+  except BaseException as error:report.update(passed=False,error_type=type(error).__name__,error=str(error)[:4096]);status=1
+  finally:
+-  cleanup_started=time.monotonic();cleanup_deadline=cleanup_started+90
++  begin_cleanup()
+   if before is not None:
+    try:after=manifest('dispatcharr','baseline_manifest');save(out/'default-after-private.json',after);require(before==after and (out/'default-before-private.json').read_bytes()==(out/'default-after-private.json').read_bytes(),'ActualDefault62Tables59SequencesExact');report['default_database_unchanged']=True;report['default_audit_scope']={key:len(value)for key,value in before['manifest'].items()};require(report['default_audit_scope']=={'columns':501,'constraints':198,'indexes':255,'sequences':59,'tables':62},'PinnedActualDefaultSchemaScope')
+    except BaseException as error:report.update(passed=False,default_audit_unknown=type(error).__name__);status=1
+--- prep1/tools/source_configured.py
++++ prep2/tools/source_configured.py
+@@ -137,6 +137,8 @@
+  report['signal_received']=signum;report['passed']=False;write_report();raise SystemExit(128+signum)
+ for sig in(signal.SIGTERM,signal.SIGINT):signal.signal(sig,trap)
+ try:
++ if app.conf.task_always_eager is not False:raise ValueError('ActualBrokerWorkerModeRequiredBeforeModelSeed')
++ report['task_always_eager']=app.conf.task_always_eager
+  for key in ['dvr:recover_dispatch_lock','core:version_check_dispatch_lock']:cache.set(key,'1',ex=3600)
+  app.loader.import_default_modules();CoreSettings.set_system_time_zone('UTC');RecurringRecordingRule.objects.all().update(enabled=False)
+  if app.conf.task_routes!=ROUTES:raise ValueError('ExactFixtureRoutes')

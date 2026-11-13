@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "Source_verified": true,
+  "Native_verified": false,
+  "performance_verified": false,
+  "scope": "Five sequential Source phases, six actual tasks, actual Refresh\u2192parented Series\u2192two local VODLogo artwork children and repeat; owned route control only",
+  "actual_host_exit": 0,
+  "actual_guest_exit": 0,
+  "actual_tasks": 6,
+  "actual_workers": 5,
+  "actual_checks": 24,
+  "default_schema": {
+    "tables": 62,
+    "sequences": 59,
+    "columns": 501,
+    "constraints": 198,
+    "indexes": 255
+  },
+  "default_manifest_bytes_equal": true,
+  "provider_HTTP_attempts": 0,
+  "default_descendant_tasks_preserved": [
+    "apps.epg.tasks.parse_programs_for_tvg_id",
+    "apps.epg.tasks.build_programme_index_task",
+    "apps.epg.tasks.build_programme_index_task"
+  ],
+  "run_recording_consumed": false,
+  "Original_authors_credit": "Original Dispatcharr and dependency authors retain all application/algorithm/license credit",
+  "source_sha256": "50294172571d8e7fe1434756758381d5102f1b1fc425da6027231d82637e9d14",
+  "limitations": [
+    "One exact local Movie/title/VODLogo and generated guide only; no provider/network/other title authority",
+    "Source UID0 and /app/media path observed; no packaged UID65532 claim",
+    "Owned routing control, not default FIFO or full worker readiness",
+    "Captured request/publication/root/parent/metadata field-presence values retained without normalization",
+    "Future clocked run_recording row retained but not consumed",
+    "Historical actual executor bytes preserved; new portable application replay not executed"
+  ]
+}

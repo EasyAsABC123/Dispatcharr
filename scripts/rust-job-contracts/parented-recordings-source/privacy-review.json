@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "scope": "All22 restored original evidence files, JSON credential keys, explicit data-only base64/hex payloads and SCRAM/JWT/private-key patterns; no pickle imports",
+  "restored_file_count": 22,
+  "files_sha256": {
+    "Root-independent-review.json": "98a8fe37aaf52055ee039544c3ef282e0c4f37c88b8a827346de73d598106732",
+    "cleanup-PID-absence.json": "606748c3b5139c67c878c7bd78985f84048183db3413b363040c27d568cfeaeb",
+    "configured-roles-before.json": "fb178b8ff7db91f532eade99ba00b7718fd1b1d4dc0aaa8bd0f8f5d6324d89fb",
+    "default-after-private.json": "e8d9a4fb7d3acb76a9720dbd087151d76145d0accc4b545e8720b51ec25dbf6f",
+    "default-before-private.json": "e8d9a4fb7d3acb76a9720dbd087151d76145d0accc4b545e8720b51ec25dbf6f",
+    "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d",
+    "execution-inputs.json": "69b7ea0c5d717653634243ef7b03e8696e3f175c687955ceda9d3a84a78f3eb6",
+    "independent-cleanup.json": "b605cc86b8bf252cc68c9767ad37d8105841c78c74aae5e9f274b2ae69944019",
+    "integration.json": "bda3741cfcdc7b62ed81275fb78481876330220815ddb4b361e19ab72c7c3882",
+    "seed.json": "b81216b966bdfa0be270b6aba85a731082cbe4cb807a6afbcbdab113a4afff54",
+    "source-parented-recordings-private.json": "50294172571d8e7fe1434756758381d5102f1b1fc425da6027231d82637e9d14",
+    "web-stop.json": "c1b61ca9eac9399c0a2559cf9bb036a0cf2adec935f180c1e15f502f06f07638",
+    "worker-artwork-two-real-children-stderr.log": "fb41b33aa5fae8160a38d85d19fbc07283565b7d83cdd6ef6aa952e27f0558bb",
+    "worker-artwork-two-real-children-stdout.log": "d2e91ecf870065641c488405f3a2ad4937649b6ee496f21557f47dd96ef39b48",
+    "worker-parented-series-positive-stderr.log": "aad1a60de35c757644144502a0153a974aeb3d397efb34d366a7be5d487d3f7a",
+    "worker-parented-series-positive-stdout.log": "8f6eb18e659f74a0e3e3f410bb578ebd63d90b034a04acafcb2de19d5b1790ac",
+    "worker-parented-series-repeat-stderr.log": "590a41e140418da391c3c0c57fb0fbc0734842454e417e7aa0f87eea751075af",
+    "worker-parented-series-repeat-stdout.log": "56e7287e27c487ac548e20804b3324b4976292b23a6ed90782383851286cd904",
+    "worker-refresh-created-source-stderr.log": "02ef195f283a4a487b209119fc28e48636311ba237a81c98683e42e36141d0a9",
+    "worker-refresh-created-source-stdout.log": "ab3503abed7f747311da8a79c3381cc7ea1b197161fc74e3e33f4ed1db94d34a",
+    "worker-refresh-repeat-stderr.log": "2e1b2f1ca2deebdd94b2f9014625a152bbb59b4caf600c3b6852b41890947ceb",
+    "worker-refresh-repeat-stdout.log": "8fa5a06b73959069f84d30db9ce3b5d649d2735a6a8d5731a7f4cd57d675d143"
+  },
+  "sensitive_key_occurrences": {
+    "username": 12,
+    "password": 12
+  },
+  "nonnull_credential_fields": [],
+  "decoded_fields": 1084,
+  "findings": [],
+  "Original_raw_auth_wire_captured": false,
+  "declared_public_fixture_password_label": "playback-fixture-only",
+  "application_credential_fields_empty": true,
+  "task_ids_lease_ids_are_not_auth_credentials": true,
+  "limitations": [
+    "No general entropy-based secret claim",
+    "DUMP binary decoded as bytes only, never unpickled",
+    "Pinned Original code contains environment-variable names and exception bodies, not captured provider credentials",
+    "Source snapshot username/password were explicit NULL, retained without projection"
+  ]
+}

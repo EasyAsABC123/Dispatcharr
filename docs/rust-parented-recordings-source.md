@@ -1,0 +1,7 @@
+# Parented recording Source reference
+
+Pinned Original Dispatcharr passes five phases/six tasks in five real Celery workers: model-produced Refresh, parented Series, two artwork children and a repeat pair. All24 checks pass, with zero provider HTTP attempts. First artwork updates the future Recording from its matching local Movie/VODLogo and emits one event; the second returns `ok` without another update/event. Series and artwork retain the observed inherited Refresh root and immediate parent.
+
+Root independently verifies all22 published evidence files against the actual retained bytes, all11 executed collectors, eleven immutable Original Git modules, eight portable controls, exact default62-table/59-sequence manifests and fresh owned-resource/process absence. The [portable packet](../scripts/rust-job-contracts/parented-recordings-source/README.md) restores the evidence offline with strict compressed/uncompressed hashes and limits. Original Dispatcharr, Celery and other dependency authors retain all application, algorithm and license credit.
+
+This captures one owned local-logo/title domain on Source UID0, with three default descendants retained and the future recording task unconsumed. Rust inherited-lineage and local-artwork implementation, packaged UID65532, default graph, recording media, broader artwork/providers, physical fault gates and M6 performance remain pending. No Native or full-milestone acceptance is added.

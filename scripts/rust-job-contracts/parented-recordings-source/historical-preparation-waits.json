@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "Source_or_Docker_or_Cargo_or_application_executed": false,
+  "commands": [
+    {
+      "label": "controls",
+      "argv": [
+        "/usr/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/home/justin/github/Dispatcharr/artifacts/rust/parented-recordings-source-prep-2/local-controls",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "began_epoch": 1794553501.7937582,
+      "actual_wait_completed": true,
+      "pid": 5,
+      "starttime": "27389683",
+      "actual_exit": 0,
+      "actual_poll_exit": 0,
+      "finished_epoch": 1794553501.914118
+    },
+    {
+      "label": "closure",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/parented-recordings-source-prep-2/verify_prep.py"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "began_epoch": 1794553501.9141364,
+      "actual_wait_completed": true,
+      "pid": 6,
+      "starttime": "27389695",
+      "actual_exit": 0,
+      "actual_poll_exit": 0,
+      "finished_epoch": 1794553502.0183969
+    }
+  ]
+}
