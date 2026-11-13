@@ -1,0 +1,114 @@
+"""Pure corruption controls; synthetic evidence never application qualification."""
+import copy,hashlib,importlib.util,json,math,unittest
+from pathlib import Path
+import validate_physical as V
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('proxy',ROOT/'controller/owned_pg_proxy.py');P=importlib.util.module_from_spec(spec);spec.loader.exec_module(P)
+C=json.loads((ROOT/'inputs/pg-contracts.json').read_text())
+def held(stage='update_ready'):
+ w=C[stage];return dict(stage=stage,backend_pid=123,sql=w['sql'],rows=w['rows'],errors=w['errors'],tx=w['tx'],commands=[]if w['command']is None else[w['command']],parameter_hex=['0000000000000321',b'owned-physical-update'.hex(),None,'0000000000000000']if stage=='update_ready'else w['parameter_hex'],sync_seen=True)
+def samples(h):return[dict(elapsed_monotonic_seconds=n,original_weak_alive=[True],writer_slots=3,actual_held=copy.deepcopy(h))for n in[.01,.27]]
+class Controls(unittest.TestCase):
+ def test_wire_baseline(self):V.wire(held(),C['update_ready'],'update_ready',123)
+ def test_finite_span_baseline(self):V.sample_pair(samples(held()),held(),.3)
+ def test_duration_baseline(self):self.assertAlmostEqual(V.duration([dict(kind='ready-held',stage='x',monotonic=1.),dict(kind='ready-forwarded',stage='x',monotonic=1.3)],'x'),.3)
+ def test_timestamp_binary_only_wildcard(self):self.assertTrue(P.parameters_match(held()['parameter_hex'],C['update_ready']['parameter_hex']))
+ def test_proxy_prepare_ready_refuses(self):
+  h=held();h['execute']=False;self.assertFalse(P.ready_match(C['update_ready'],h,'I'))
+ def test_no_raw_capture_synthetic_acceptance(self):
+  with self.assertRaises((ValueError,KeyError)):V.validate({'case':1,'_synthetic_only':True,'capture_complete':True,'passed':True,'Main':False,'Source_requests':0},1,ROOT)
+ def test_source_seed_wrong_id(self):
+  s=json.loads((ROOT/'inputs/Source24-private.json').read_text());before={'tables':{n:[]for n in V.NAMES},'sequences':{}};before['tables']['plugins_pluginrepo']=copy.deepcopy(s['seed']['repos']);before['tables']['plugins_pluginrepo'][0]['id']=999
+  with self.assertRaises(ValueError):V.imported_seed(before,s)
+ def test_dynamic_bind_only_timestamp(self):
+  a=held()['parameter_hex'];a[0]='0000000000000322';self.assertFalse(P.parameters_match(a,C['update_ready']['parameter_hex']))
+ def test_no_bool_timestamp_policy(self):self.assertFalse(P.parameters_match(['0000000000000000'],[{'timestamptz_binary8':1}]))
+ def test_ttl_monotonic(self):V.dumps({'raw_DUMP_PTTL':{'aa':{'dump_hex':'11','pttl':100}}},{'raw_DUMP_PTTL':{'aa':{'dump_hex':'11','pttl':90}}},False)
+def corrupt(name,fun):
+ def check(self):
+  with self.assertRaises((ValueError,TypeError,KeyError)):fun()
+ setattr(Controls,'test_negative_'+name,check)
+for name,field,value in [('wrong_backend','backend_pid',124),('wrong_sql','sql','SELECT 1'),('rowsbool','rows',True),('missingSync','sync_seen',False),('wrongTag','commands',['UPDATE 0']),('wrongTx','tx','T'),('wrongParameter','parameter_hex',['00',None,None,'00'])]:
+ def action(field=field,value=value):
+  h=held();h[field]=value;V.wire(h,C['update_ready'],'update_ready',123)
+ corrupt(name,action)
+for name,value in [('nan',float('nan')),('inf',float('inf')),('bool',True),('negative',-.1)]:
+ def action(value=value):
+  s=samples(held());s[0]['elapsed_monotonic_seconds']=value;V.sample_pair(s,held(),.3)
+ corrupt('sample_'+name,action)
+for name,value in [('zero',0),('short',.1),('shorter_than_samples',.255),('over25',26),('bool',True)]:corrupt('hold_'+name,lambda value=value:V.sample_pair(samples(held()),held(),value)if value>=.25 else V.duration([dict(kind='ready-held',stage='x',monotonic=1.),dict(kind='ready-forwarded',stage='x',monotonic=1.+value)],'x'))
+for name,field,value in [('droppedOwner','original_weak_alive',[False]),('slotReturnedEarly','writer_slots',4),('boolSlot','writer_slots',True)]:
+ def action(field=field,value=value):
+  s=samples(held());s[0][field]=value;V.sample_pair(s,held(),.3)
+ corrupt(name,action)
+for name,size,idle in [('size1',1,0),('negativeIdle',0,-1),('overMaxIdle',0,5),('boolSize',False,0),('boolIdle',0,True)]:corrupt(name,lambda size=size,idle=idle:V.pool(dict(closed_pool_size=size,closed_pool_idle_diagnostic=idle,pool_max_connections=4,actual_pool_reuse_value=424242)))
+corrupt('TTLreset',lambda:V.dumps({'raw_DUMP_PTTL':{'aa':{'dump_hex':'11','pttl':90}}},{'raw_DUMP_PTTL':{'aa':{'dump_hex':'11','pttl':100}}},False))
+corrupt('fifthNewKey',lambda:V.dumps({'raw_DUMP_PTTL':{}},{'raw_DUMP_PTTL':{'bb':{'dump_hex':'11','pttl':100}}},False))
+
+# Additional raw-observer corruptions; synthetic imports never execute a fixture.
+class ExternalControls(unittest.TestCase):
+ def fixture(self):
+  import validate_external as E
+  self.E=E;s=json.loads((ROOT/'inputs/Source24-private.json').read_text());before=copy.deepcopy(s['seed']);after=copy.deepcopy(before);after['raw_Redis']=copy.deepcopy(s['requests'][2]['after']['raw_Redis']);tables={n:[]for n in V.NAMES}
+  for k,n in {'repos':'plugins_pluginrepo','configs':'plugins_pluginconfig','settings':'core_coresettings','users':'accounts_user','system_notifications':'core_systemnotification','notification_dismissals':'core_notificationdismissal'}.items():tables[n]=copy.deepcopy(after[k])
+  return s,before,after,{'after':{'tables':tables}}
+ def test_full_external_baseline(self):s,b,a,r=self.fixture();self.assertTrue(self.E.qualify(s,b,a,4,r)['passed'])
+ def test_changed_full_sequence(self):
+  s,b,a,r=self.fixture();a['public_manifest']['sequences']['plugins_pluginrepo_id_seq'][0]+=1
+  with self.assertRaises(ValueError):self.E.qualify(s,b,a,4,r)
+ def test_changed_raw_auth_history(self):
+  s,b,a,r=self.fixture();a['events'].append({})
+  with self.assertRaises(ValueError):self.E.qualify(s,b,a,4,r)
+ def test_wrong_imported_api_key(self):
+  s,b,a,r=self.fixture();b['users'][0]['api_key']='wrong-key'
+  with self.assertRaises(ValueError):self.E.qualify(s,b,a,4,r)
+ def test_unrelated_full_table_changed(self):
+  s,b,a,r=self.fixture();a['public_manifest']['tables']['dispatcharr_channels_recording']['count']+=1
+  with self.assertRaises(ValueError):self.E.qualify(s,b,a,4,r)
+ def test_cache_version_replaced(self):
+  s,b,a,r=self.fixture();row=next(row for db in a['raw_Redis']if db['database']==1 for row in db['rows']if bytes.fromhex(row['key_hex'])==b':1:coresettings:groupver:system_settings');row['value_hex']='3132'
+  with self.assertRaises(ValueError):self.E.qualify(s,b,a,4,r)
+
+
+class FrameReceiptControls(unittest.TestCase):
+ def fixture(self):
+  import tempfile
+  self.temp=tempfile.TemporaryDirectory(prefix='pluginrepo-frame-control-');self.addCleanup(self.temp.cleanup);out=Path(self.temp.name)
+  source=json.loads((ROOT/'inputs/Source24-private.json').read_text());tables={n:[]for n in V.NAMES}
+  for k,n in {'repos':'plugins_pluginrepo','configs':'plugins_pluginconfig','settings':'core_coresettings','users':'accounts_user','system_notifications':'core_systemnotification','notification_dismissals':'core_notificationdismissal'}.items():tables[n]=copy.deepcopy(source['seed'][k])
+  before={'tables':tables,'sequences':{n:dict(last_value=source['seed']['public_manifest']['sequences'][n+'_id_seq'][0],is_called=source['seed']['public_manifest']['sequences'][n+'_id_seq'][1])for n in V.NAMES}}
+  events=[]
+  for index,status in enumerate([200,200,401,401]):
+   raw=b'[]'if status==200 else b'{"detail":"synthetic auth control"}'
+   h=hashlib.sha256(raw).hexdigest();events.append(dict(request=index+1,status=status,actual_frame_bytes=len(raw),actual_frame_hex=raw.hex(),actual_frame_sha256=h,original_weak=[True]*(index+1),available_slots=3-index));(out/f'actual-response-frame-{index+1}.json').write_text(json.dumps(dict(capture_complete=True,frame_observed=True,status=status,frame_bytes=len(raw),frame_hex=raw.hex(),frame_sha256=h)))
+  sixth=b'[]';sixth_sha=hashlib.sha256(sixth).hexdigest();(out/'actual-response-frame-6.json').write_text(json.dumps(dict(status=200,frame_hex=sixth.hex(),frame_sha256=sixth_sha)))
+  fifth=b'{"detail":"Plugin repository metadata capacity unavailable."}';(out/'actual-response-fifth-refusal.json').write_text(json.dumps(dict(status=503,body_hex=fifth.hex(),body_bytes=len(fifth),body_sha256=hashlib.sha256(fifth).hexdigest())))
+  v=dict(case=4,capture_complete=True,passed=True,Main=False,Source_requests=0,before=before,after=copy.deepcopy(before),credentials_before={'users':source['seed']['users']},credentials_after={'users':copy.deepcopy(source['seed']['users'])},writer_slots_after_settlement=4,original_weak_after_settlement=[False]*5,pool=dict(closed_pool_size=0,closed_pool_idle_diagnostic=4,pool_max_connections=4,actual_pool_reuse_value=424242),while_ELF_alive_subject_backends=[],actual_statuses=[200,200,401,401,503,200],actual_first_four=events,fifth_SQL_before=before,fifth_SQL_after=copy.deepcopy(before),fifth_credentials_before={},fifth_credentials_after={},fifth_original_weak=[True]*4,fifth_slots=0,sixth_original_weak=[False,True,True,True,True],sixth_slots=0,sixth_actual_frame_hex=sixth.hex(),sixth_actual_frame_sha256=sixth_sha,fifth_actual_body_hex=fifth.hex(),fifth_raw_cache_before={'raw_DUMP_PTTL':{}},fifth_raw_cache_after={'raw_DUMP_PTTL':{}})
+  return v,out
+ def test_full_synthetic_frame_predicates(self):v,out=self.fixture();self.assertTrue(V.validate(v,4,out)['passed'])
+ def test_synthetic_flag_rejected_for_application(self):
+  v,out=self.fixture();v['_synthetic_only']=True
+  with self.assertRaises(ValueError):V.validate(v,4,out)
+ def test_missing_actual_frame_receipt(self):
+  v,out=self.fixture();(out/'actual-response-frame-4.json').unlink()
+  with self.assertRaises(FileNotFoundError):V.validate(v,4,out)
+ def test_fifth_auth_history_changed(self):
+  v,out=self.fixture();v['fifth_credentials_after']['event']='changed'
+  with self.assertRaises(ValueError):V.validate(v,4,out)
+ def test_fifth_new_owner(self):
+  v,out=self.fixture();v['fifth_original_weak'].append(True)
+  with self.assertRaises(ValueError):V.validate(v,4,out)
+ def test_auth_error_frame_released_early(self):
+  v,out=self.fixture();v['actual_first_four'][3]['original_weak'][-1]=False
+  with self.assertRaises(ValueError):V.validate(v,4,out)
+ def test_frame_receipt_hash_mutation(self):
+  v,out=self.fixture();p=out/'actual-response-frame-3.json';x=json.loads(p.read_text());x['frame_sha256']='0'*64;p.write_text(json.dumps(x))
+  with self.assertRaises(ValueError):V.validate(v,4,out)
+ def test_sixth_frame_wrong_bytes(self):
+  v,out=self.fixture();v['sixth_actual_frame_hex']='00'
+  with self.assertRaises(ValueError):V.validate(v,4,out)
+ def test_false_pool_close(self):
+  v,out=self.fixture();v['pool']['closed_pool_size']=1
+  with self.assertRaises(ValueError):V.validate(v,4,out)
+
+if __name__=='__main__':unittest.main()

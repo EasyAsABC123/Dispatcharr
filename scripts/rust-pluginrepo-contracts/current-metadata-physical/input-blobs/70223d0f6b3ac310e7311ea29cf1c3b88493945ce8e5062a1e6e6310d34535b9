@@ -1,0 +1,51 @@
+"""Pure narrow SQL-clock import corrections; no fixture or business replay."""
+import copy,json,unittest
+from pathlib import Path
+import validate_physical as V
+ROOT=Path(__file__).resolve().parents[1]
+S=json.loads((ROOT/'inputs/Source24-private.json').read_text());RAW=json.loads((ROOT/'inputs/retained-metadata-physical-private.json').read_text())
+class SQLClockCorrection(unittest.TestCase):
+ def test_original_raw_host1_and_Rust0_preserved(self):
+  x=json.loads((ROOT/'inputs/retained-execution-report.json').read_text());self.assertEqual(x['actual_controller_exit'],1);self.assertEqual(x['actual_ELF_exit'],0);self.assertEqual(x['error']['message'],'ExactImportedSourceSeed:plugins_pluginconfig');self.assertIs(RAW['passed'],True)
+ def test_exact_config902_trailing_zero_same_instant(self):
+  rows=V.imported_seed(RAW['before'],S);self.assertEqual(rows,[dict(table='plugins_pluginconfig',id=902,column='updated_at',Source_literal='2026-11-13T16:10:00.146410+00:00',Native_literal='2026-11-13T16:10:00.14641+00:00',same_UTC_microsecond_instant=True)])
+ def test_no_normalization_when_literals_match(self):
+  rows=copy.deepcopy(S['seed']['configs']);self.assertEqual(V.imported_rows('plugins_pluginconfig',S['seed']['configs'],rows,S['seed']['public_manifest']['columns']),[])
+ def test_child_nonreturning_wire_tag_comes_from_Source2children(self):
+  contracts=json.loads((ROOT/'inputs/pg-contracts.json').read_text());self.assertEqual(contracts['child_ready']['rows'],0);self.assertEqual(contracts['child_ready']['command'],'UPDATE 2')
+ def test_base_import_guard_before_any_peer(self):
+  from validate_external import validate_import
+  v=json.loads((ROOT/'inputs/retained-imported-state-before-peer.json').read_text());self.assertTrue(validate_import(S,v)['before_any_Native_peer'])
+ def test_base_import_guard_wrong_stable_field(self):
+  from validate_external import validate_import
+  v=json.loads((ROOT/'inputs/retained-imported-state-before-peer.json').read_text());v['configs'][1]['key']='wrong'
+  with self.assertRaises(ValueError):validate_import(S,v)
+ def test_both_source_owned_children_detach(self):
+  b=copy.deepcopy(RAW['before']);a=copy.deepcopy(b);a['tables']['plugins_pluginrepo']=[r for r in a['tables']['plugins_pluginrepo']if r['id']!=801]
+  for r in a['tables']['plugins_pluginconfig']:r['source_repo_id']=None
+  V.delta(b,a,2)
+ def test_missing_child_refused(self):
+  b=copy.deepcopy(RAW['before']);b['tables']['plugins_pluginconfig'].pop()
+  with self.assertRaises(ValueError):V.imported_seed(b,S)
+ def test_reordered_children_refused(self):
+  b=copy.deepcopy(RAW['before']);b['tables']['plugins_pluginconfig'].reverse()
+  with self.assertRaises(ValueError):V.imported_seed(b,S)
+ def test_one_child_left_attached_refused(self):
+  b=copy.deepcopy(RAW['before']);a=copy.deepcopy(b);a['tables']['plugins_pluginrepo']=[r for r in a['tables']['plugins_pluginrepo']if r['id']!=801];a['tables']['plugins_pluginconfig'][0]['source_repo_id']=None
+  with self.assertRaises(ValueError):V.delta(b,a,2)
+ def test_foreign_stable_field_refused(self):
+  b=copy.deepcopy(RAW['before']);b['tables']['plugins_pluginconfig'][1]['key']='wrong'
+  with self.assertRaises(ValueError):V.imported_seed(b,S)
+ def test_JSON_datetime_string_not_SQL_timestamp(self):
+  a=[dict(id=1,settings={'created_at':'2026-11-13T16:10:00.146410+00:00'})];b=[dict(id=1,settings={'created_at':'2026-11-13T16:10:00.14641+00:00'})]
+  with self.assertRaises(ValueError):V.imported_rows('plugins_pluginconfig',a,b,S['seed']['public_manifest']['columns'])
+ def test_no_row_id_bool_coercion(self):
+  b=copy.deepcopy(RAW['before']);b['tables']['plugins_pluginconfig'][1]['id']=True
+  with self.assertRaises(ValueError):V.imported_seed(b,S)
+def negative(name,value):
+ def check(self):
+  b=copy.deepcopy(RAW['before']);b['tables']['plugins_pluginconfig'][1]['updated_at']=value
+  with self.assertRaises((ValueError,TypeError)):V.imported_seed(b,S)
+ setattr(SQLClockCorrection,'test_negative_'+name,check)
+for name,value in [('wrong_microsecond','2026-11-13T16:10:00.146411+00:00'),('naive','2026-11-13T16:10:00.14641'),('wrong_type',True),('null',None),('greater_than_micro_precision','2026-11-13T16:10:00.1464101+00:00'),('nonUTC_offset','2026-11-13T17:10:00.146410+01:00'),('whitespace',' 2026-11-13T16:10:00.14641+00:00')]:negative(name,value)
+if __name__=='__main__':unittest.main()

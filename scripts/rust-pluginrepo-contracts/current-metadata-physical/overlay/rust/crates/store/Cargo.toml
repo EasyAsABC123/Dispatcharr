@@ -1,0 +1,46 @@
+[package]
+name = "dispatcharr-store"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+dispatcharr-contracts = { path = "../contracts" }
+dispatcharr-upstream-http = {path="../upstream-http"}
+futures-util = "0.3"
+dispatcharr-ingest-core = {path="../ingest-core"}
+axum = {version="0.8",features=["multipart"]}
+async-stream = "0.3"
+bytes = "1"
+httpdate = "1"
+mime_guess = "2"
+multer = "3.1"
+reqwest = {version="0.12",default-features=false,features=["rustls-tls","stream"]}
+tokio-util = {version="0.7",features=["io"]}
+base64 = "0.22"
+chrono-tz = "0.10"
+chrono = { version = "0.4", features = ["serde"] }
+ipnet = "2"
+jsonwebtoken = "9"
+md-5 = "0.10"
+num-bigint = "0.4"
+pbkdf2 = "0.12"
+rand = "0.8"
+regex = "1.13"
+redis = {version="0.32",features=["tokio-comp","connection-manager"]}
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["arbitrary_precision", "preserve_order"] }
+sha1 = "0.10"
+sha2 = "0.10"
+scrypt = "0.11"
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres", "json", "chrono", "uuid"] }
+subtle = "2"
+tokio = { version = "1", features = ["rt", "sync", "time", "fs", "io-util"] }
+tracing = "0.1"
+url = "2"
+uuid = { version = "1", features = ["v4", "serde"] }
+unicode-normalization = "0.1"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "time", "test-util"] }
+tower = { version = "0.5", features = ["util"] }

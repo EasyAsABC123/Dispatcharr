@@ -1,0 +1,60 @@
+{
+  "update_ready": {
+    "sql": "UPDATE plugins_pluginrepo AS r SET public_key=COALESCE($2,public_key),enabled=COALESCE($3,enabled),updated_at=$4 WHERE id=$1 AND octet_length((to_jsonb(r)||jsonb_build_object('public_key',COALESCE($2,public_key),'enabled',COALESCE($3,enabled),'updated_at',$4))::text)<=65536 RETURNING octet_length(to_jsonb(r)::text) AS bytes,CASE WHEN octet_length(to_jsonb(r)::text)<=65536 THEN to_jsonb(r)::text END AS raw",
+    "sql_sha256": "2de0655d124170c60d46d8b9c2cfaeb4875eeafd94b2bffa513b3b7965e7d176",
+    "rows": 1,
+    "command": "UPDATE 1",
+    "errors": [],
+    "tx": "I",
+    "parameter_hex": [
+      "0000000000000321",
+      "6f776e65642d706879736963616c2d757064617465",
+      null,
+      {
+        "timestamptz_binary8": true
+      }
+    ]
+  },
+  "child_ready": {
+    "sql": "UPDATE plugins_pluginconfig SET source_repo_id=NULL WHERE source_repo_id=$1",
+    "sql_sha256": "d1a59d209db65a0b51cd916aa28612b3c9c77325fd32b27847348f022371657e",
+    "rows": 0,
+    "command": "UPDATE 2",
+    "errors": [],
+    "tx": "T",
+    "parameter_hex": [
+      "0000000000000321"
+    ]
+  },
+  "commit_ready": {
+    "sql": "COMMIT",
+    "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+    "rows": 0,
+    "command": "COMMIT",
+    "errors": [],
+    "tx": "I",
+    "parameter_hex": []
+  },
+  "parent_error_ready": {
+    "sql": "DELETE FROM plugins_pluginrepo WHERE id=$1",
+    "sql_sha256": "a0884a05915d26dd1f379d8c68f0f610ea2b95519f7e97c5afa4be26ed68a7a2",
+    "rows": 0,
+    "command": null,
+    "errors": [
+      "57014"
+    ],
+    "tx": "E",
+    "parameter_hex": [
+      "0000000000000321"
+    ]
+  },
+  "rollback_ready": {
+    "sql": "ROLLBACK",
+    "sql_sha256": "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710",
+    "rows": 0,
+    "command": "ROLLBACK",
+    "errors": [],
+    "tx": "I",
+    "parameter_hex": []
+  }
+}

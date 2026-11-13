@@ -1,0 +1,1006 @@
+{
+  "passed": true,
+  "scope": "ONLY actual fresh physical2/3/4; original case1 HOST1/Rust0 separate offline limited13+credentials/DB1 and missing full owned-after/all4cache-after remain unexecuted",
+  "cases": [
+    {
+      "case": 2,
+      "passed": true,
+      "actual_host_exit": 0,
+      "actual_Rust_exit": 0,
+      "actual_CLI_waits": 25,
+      "known_former_host_identities": 33,
+      "fresh_host_absence": [
+        {
+          "pid": 3036899,
+          "observed_starttime": "32748696",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3036918,
+          "observed_starttime": "32748697",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3036935,
+          "observed_starttime": "32748698",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3036954,
+          "observed_starttime": "32748699",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037079,
+          "observed_starttime": "32748733",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037170,
+          "observed_starttime": "32748739",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037262,
+          "observed_starttime": "32748821",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037335,
+          "observed_starttime": "32748843",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037482,
+          "observed_starttime": "32748878",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037552,
+          "observed_starttime": "32748890",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037625,
+          "observed_starttime": "32748908",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037697,
+          "observed_starttime": "32748935",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037773,
+          "observed_starttime": "32748963",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037849,
+          "observed_starttime": "32748972",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037920,
+          "observed_starttime": "32748979",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037945,
+          "observed_starttime": "32748981",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038852,
+          "observed_starttime": "32749351",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038990,
+          "observed_starttime": "32749381",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039142,
+          "observed_starttime": "32749390",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039369,
+          "observed_starttime": "32749413",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039429,
+          "observed_starttime": "32749418",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041882,
+          "observed_starttime": "32750442",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041900,
+          "observed_starttime": "32750443",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041918,
+          "observed_starttime": "32750444",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041936,
+          "observed_starttime": "32750445",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037060,
+          "observed_starttime": "32748728",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037218,
+          "observed_starttime": "32748778",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037220,
+          "observed_starttime": "32748783",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037221,
+          "observed_starttime": "32748783",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037223,
+          "observed_starttime": "32748783",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037224,
+          "observed_starttime": "32748783",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037225,
+          "observed_starttime": "32748783",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3037254,
+          "observed_starttime": "32748802",
+          "current_starttime": null,
+          "original_absent": true
+        }
+      ],
+      "fresh4owned_queries": [
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-e1ee22fc01",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-e1ee22fc01",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-e1ee22fc01",
+            "--format",
+            "{{.Name}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "id=e2d507957969a616d42133070e1d76caf7eb696fe8ea79270ce4e2af87d40aba",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "physical": {
+        "passed": true,
+        "case": 2,
+        "imported_SQL_timestamp_lexical_differences_same_UTC_instant": [
+          {
+            "table": "plugins_pluginconfig",
+            "id": 902,
+            "column": "updated_at",
+            "Source_literal": "2026-11-13T16:10:00.146410+00:00",
+            "Native_literal": "2026-11-13T16:10:00.14641+00:00",
+            "same_UTC_microsecond_instant": true
+          }
+        ],
+        "scope": "optin actual metadata SQL physical Ready ownership; no Main/Source SQL injected-error authority"
+      },
+      "external": {
+        "passed": true,
+        "actual_case": 2,
+        "full_default_audit_scope": "separately executed full62/59 +named11",
+        "owned_full62_59_foreign_and_all_sequences_unchanged": true,
+        "exact_imported_existing_Source5_keys": true,
+        "request_induced_decoded_group_and_unrelated_Redis_scope": true,
+        "cache_serialization_byte_equal": false,
+        "Main_or_Source_replay": false
+      },
+      "raw_evidence": {
+        "actual_track_activity_query_size": "1kB",
+        "actual_track_activity_query_size_bytes": 1024,
+        "prepared_actual_backend_pid": 194,
+        "full_warm_SQL_fingerprints": [
+          "148d3a2479894292e462c5b95fbd2db0f64cd580b62d15a6dbee802739b86af0",
+          "2de0655d124170c60d46d8b9c2cfaeb4875eeafd94b2bffa513b3b7965e7d176",
+          "d1a59d209db65a0b51cd916aa28612b3c9c77325fd32b27847348f022371657e",
+          "a0884a05915d26dd1f379d8c68f0f610ea2b95519f7e97c5afa4be26ed68a7a2",
+          "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+          "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710"
+        ],
+        "all_wire_parameters_and_Ready_events_recomputed": true,
+        "actual_HTTP_fate": {
+          "accepted": 1,
+          "handler_started": 1,
+          "handler_cancelled": 1,
+          "response_statuses": [],
+          "bytes_read": 144,
+          "bytes_written": 0,
+          "read_eof": true,
+          "write_errors": [],
+          "socket_dropped": true,
+          "capacity_exceeded": false
+        },
+        "FDloss_does_not_infer_handler_abort_or_write_failure": true
+      },
+      "raw_SHA256": "384e07cbb7859974b4cb204f2f8f8df18f4d1aa2b9147d1cd6c71b95138916cf",
+      "execution_SHA256": "a22c0d879c1683a3634f1ec03296ac61237c1909b371f45ce7482fcee89f8b00",
+      "pool": {
+        "actual_pool_reuse_value": 424242,
+        "closed_pool_size": 0,
+        "closed_pool_idle_diagnostic": 0,
+        "pool_max_connections": 4,
+        "after_ELF_backend_observer": "external controller; not this while-alive counter"
+      },
+      "ELF_PID_scope": "container namespace only; actual wait then namespace disposal, no host numeric comparison"
+    },
+    {
+      "case": 3,
+      "passed": true,
+      "actual_host_exit": 0,
+      "actual_Rust_exit": 0,
+      "actual_CLI_waits": 25,
+      "known_former_host_identities": 33,
+      "fresh_host_absence": [
+        {
+          "pid": 3038058,
+          "observed_starttime": "32749148",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038076,
+          "observed_starttime": "32749149",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038095,
+          "observed_starttime": "32749150",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038113,
+          "observed_starttime": "32749151",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038244,
+          "observed_starttime": "32749181",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038325,
+          "observed_starttime": "32749186",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038420,
+          "observed_starttime": "32749268",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038531,
+          "observed_starttime": "32749291",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038634,
+          "observed_starttime": "32749301",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038706,
+          "observed_starttime": "32749311",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038778,
+          "observed_starttime": "32749328",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038902,
+          "observed_starttime": "32749355",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039020,
+          "observed_starttime": "32749383",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039134,
+          "observed_starttime": "32749390",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039270,
+          "observed_starttime": "32749397",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039295,
+          "observed_starttime": "32749399",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040790,
+          "observed_starttime": "32749766",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041015,
+          "observed_starttime": "32749794",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041089,
+          "observed_starttime": "32749804",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041164,
+          "observed_starttime": "32749826",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041219,
+          "observed_starttime": "32749832",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3042127,
+          "observed_starttime": "32750856",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3042145,
+          "observed_starttime": "32750857",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3042163,
+          "observed_starttime": "32750858",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3042181,
+          "observed_starttime": "32750859",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038226,
+          "observed_starttime": "32749176",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038376,
+          "observed_starttime": "32749226",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038377,
+          "observed_starttime": "32749228",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038378,
+          "observed_starttime": "32749228",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038380,
+          "observed_starttime": "32749228",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038381,
+          "observed_starttime": "32749228",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038382,
+          "observed_starttime": "32749228",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3038412,
+          "observed_starttime": "32749251",
+          "current_starttime": null,
+          "original_absent": true
+        }
+      ],
+      "fresh4owned_queries": [
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-6960949f11",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-6960949f11",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-6960949f11",
+            "--format",
+            "{{.Name}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "id=1bcb62db728a514f42eaa7151a200462a004151f81d8fb8216bacdf536168a2a",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "physical": {
+        "passed": true,
+        "case": 3,
+        "imported_SQL_timestamp_lexical_differences_same_UTC_instant": [
+          {
+            "table": "plugins_pluginconfig",
+            "id": 902,
+            "column": "updated_at",
+            "Source_literal": "2026-11-13T16:10:00.146410+00:00",
+            "Native_literal": "2026-11-13T16:10:00.14641+00:00",
+            "same_UTC_microsecond_instant": true
+          }
+        ],
+        "scope": "optin actual metadata SQL physical Ready ownership; no Main/Source SQL injected-error authority"
+      },
+      "external": {
+        "passed": true,
+        "actual_case": 3,
+        "full_default_audit_scope": "separately executed full62/59 +named11",
+        "owned_full62_59_foreign_and_all_sequences_unchanged": true,
+        "exact_imported_existing_Source5_keys": true,
+        "request_induced_decoded_group_and_unrelated_Redis_scope": true,
+        "cache_serialization_byte_equal": false,
+        "Main_or_Source_replay": false
+      },
+      "raw_evidence": {
+        "actual_track_activity_query_size": "1kB",
+        "actual_track_activity_query_size_bytes": 1024,
+        "prepared_actual_backend_pid": 194,
+        "full_warm_SQL_fingerprints": [
+          "148d3a2479894292e462c5b95fbd2db0f64cd580b62d15a6dbee802739b86af0",
+          "2de0655d124170c60d46d8b9c2cfaeb4875eeafd94b2bffa513b3b7965e7d176",
+          "d1a59d209db65a0b51cd916aa28612b3c9c77325fd32b27847348f022371657e",
+          "a0884a05915d26dd1f379d8c68f0f610ea2b95519f7e97c5afa4be26ed68a7a2",
+          "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+          "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710"
+        ],
+        "all_wire_parameters_and_Ready_events_recomputed": true,
+        "actual_parent_lock": {
+          "rows": [
+            {
+              "pid": 194,
+              "query": "DELETE FROM plugins_pluginrepo WHERE id=$1",
+              "state": "active",
+              "wait_event": "transactionid",
+              "wait_event_type": "Lock"
+            }
+          ],
+          "known_SQL_prefix": "DELETE FROM plugins_pluginrepo WHERE id=$1",
+          "known_prefix_bytes": 42,
+          "full_SQL_sha256": "a0884a05915d26dd1f379d8c68f0f610ea2b95519f7e97c5afa4be26ed68a7a2",
+          "actual_setting": "1kB"
+        },
+        "native_injected_error_HTTP_scope": {
+          "status": 503,
+          "body_hex": "7b226572726f72223a22446174616261736520756e617661696c61626c65227d",
+          "sha256": "a9d00c86e1f99c72c8cf8622f081b7659802204cb9feb05fccb81e598fbfa74d",
+          "Source_injected_error_HTTP_authority": false
+        }
+      },
+      "raw_SHA256": "8a8417773a8081da25bec10d8c816f77defa1220510b2f23f3625ebc1128bdff",
+      "execution_SHA256": "35cd4a6f2dee533c9233a55622b00884c99d7fb70d590528372476e688a95f43",
+      "pool": {
+        "actual_pool_reuse_value": 424242,
+        "closed_pool_size": 0,
+        "closed_pool_idle_diagnostic": 0,
+        "pool_max_connections": 4,
+        "after_ELF_backend_observer": "external controller; not this while-alive counter"
+      },
+      "ELF_PID_scope": "container namespace only; actual wait then namespace disposal, no host numeric comparison"
+    },
+    {
+      "case": 4,
+      "passed": true,
+      "actual_host_exit": 0,
+      "actual_Rust_exit": 0,
+      "actual_CLI_waits": 25,
+      "known_former_host_identities": 33,
+      "fresh_host_absence": [
+        {
+          "pid": 3039716,
+          "observed_starttime": "32749523",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039734,
+          "observed_starttime": "32749524",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039753,
+          "observed_starttime": "32749525",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039771,
+          "observed_starttime": "32749526",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039885,
+          "observed_starttime": "32749551",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039975,
+          "observed_starttime": "32749556",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040067,
+          "observed_starttime": "32749639",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040168,
+          "observed_starttime": "32749662",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040293,
+          "observed_starttime": "32749671",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040362,
+          "observed_starttime": "32749681",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040436,
+          "observed_starttime": "32749699",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040575,
+          "observed_starttime": "32749727",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040670,
+          "observed_starttime": "32749757",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040770,
+          "observed_starttime": "32749765",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040913,
+          "observed_starttime": "32749773",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040938,
+          "observed_starttime": "32749775",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041288,
+          "observed_starttime": "32749851",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041383,
+          "observed_starttime": "32749880",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041459,
+          "observed_starttime": "32749889",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041537,
+          "observed_starttime": "32749912",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3041597,
+          "observed_starttime": "32749917",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3042229,
+          "observed_starttime": "32750939",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3042247,
+          "observed_starttime": "32750941",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3042265,
+          "observed_starttime": "32750943",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3042284,
+          "observed_starttime": "32750944",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3039868,
+          "observed_starttime": "32749546",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040024,
+          "observed_starttime": "32749596",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040025,
+          "observed_starttime": "32749598",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040026,
+          "observed_starttime": "32749598",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040028,
+          "observed_starttime": "32749598",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040029,
+          "observed_starttime": "32749598",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040030,
+          "observed_starttime": "32749598",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3040059,
+          "observed_starttime": "32749621",
+          "current_starttime": null,
+          "original_absent": true
+        }
+      ],
+      "fresh4owned_queries": [
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-75e8b8eed3",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-75e8b8eed3",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-75e8b8eed3",
+            "--format",
+            "{{.Name}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "id=6d354efb9fb40a31548a98b59152e86f5ba366ee2567e3f93f89fa7e161283b0",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "physical": {
+        "passed": true,
+        "case": 4,
+        "imported_SQL_timestamp_lexical_differences_same_UTC_instant": [
+          {
+            "table": "plugins_pluginconfig",
+            "id": 902,
+            "column": "updated_at",
+            "Source_literal": "2026-11-13T16:10:00.146410+00:00",
+            "Native_literal": "2026-11-13T16:10:00.14641+00:00",
+            "same_UTC_microsecond_instant": true
+          }
+        ],
+        "scope": "actual original success/error frames +preauth refusal and reuse; inprocess Router not Main/TCP"
+      },
+      "external": {
+        "passed": true,
+        "actual_case": 4,
+        "full_default_audit_scope": "separately executed full62/59 +named11",
+        "owned_full62_59_foreign_and_all_sequences_unchanged": true,
+        "exact_imported_existing_Source5_keys": true,
+        "request_induced_decoded_group_and_unrelated_Redis_scope": true,
+        "cache_serialization_byte_equal": false,
+        "Main_or_Source_replay": false
+      },
+      "raw_evidence": {
+        "actual_statuses": [
+          200,
+          200,
+          401,
+          401,
+          503,
+          200
+        ],
+        "actual_four_frame_SHA256": [
+          "4ab38ff03d1ff5dee8f003576b3e8a0d45e3409fe76b47f6ce30d5a6eafd60a3",
+          "4ab38ff03d1ff5dee8f003576b3e8a0d45e3409fe76b47f6ce30d5a6eafd60a3",
+          "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "776f3aed9154fded60f7c40d5f6945bde6d6e50056a602586f2c7f99bc2c364c"
+        ],
+        "fifth_preauth_source_credential_history_unchanged": true,
+        "actual_sixth_reuse_SHA256": "4ab38ff03d1ff5dee8f003576b3e8a0d45e3409fe76b47f6ce30d5a6eafd60a3"
+      },
+      "raw_SHA256": "b0edc47cf4db572a18084ab9b08d9fde530746d60c6af9d0096ab54b70c7a237",
+      "execution_SHA256": "b77e74c9636e4e7bb4992801531dc4b6ff2d1a42fc462a4b2c3c886d94eeeb37",
+      "pool": {
+        "actual_pool_reuse_value": 424242,
+        "closed_pool_size": 0,
+        "closed_pool_idle_diagnostic": 0,
+        "pool_max_connections": 4,
+        "after_ELF_backend_observer": "external controller; not this while-alive counter"
+      },
+      "ELF_PID_scope": "container namespace only; actual wait then namespace disposal, no host numeric comparison"
+    }
+  ],
+  "new_app_runs": 0,
+  "Source_replay": false,
+  "Main": false,
+  "RootScope_claim": false,
+  "reviewed_UTC": "2026-11-13T22:03:44.721924+00:00"
+}

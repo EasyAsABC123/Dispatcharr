@@ -1,0 +1,25 @@
+"""Synthetic prefix regressions only; no new Source/Native business requests."""
+from pathlib import Path
+import copy,json,unittest
+import validate_native as V
+ROOT=Path(__file__).resolve().parents[1]
+S=json.loads((ROOT/'inputs/Source24-private.json').read_text())
+OLD=ROOT/'inputs/historical-Native24-private.json'
+def fixture():
+ v=copy.deepcopy(json.loads(OLD.read_text()));v.update(_synthetic_only=True,actual_request_count=23,completed_capture_count=23,Source24_first23_only=True,Source_case24_requested=False);v['requests']=v['requests'][:23];return v
+class Prefix(unittest.TestCase):
+ def test_original_reference24_new_requests23_positive(self):self.assertEqual(S['actual_request_count'],24);self.assertEqual(len(S['requests']),24);self.assertTrue(V.validate(S,fixture())['passed'])
+ def test_collector_explicit_prefix_not_fake_Sourcecount(self):
+  code=(ROOT/'controller/native_http.py').read_text();self.assertIn("source['actual_request_count']==24",code);self.assertIn("source['requests'][:23]",code);self.assertIn("plan['cases'][:23]",code);self.assertIn("==23,'Exactly23NoExtraHTTPReadiness'",code)
+ def test_sha_is_unchanged_Original_source(self):
+  import hashlib
+  authority=json.loads((ROOT/'inputs/authority.json').read_text());self.assertEqual(hashlib.sha256((ROOT/'inputs/Source24-private.json').read_bytes()).hexdigest(),authority['source_raw_sha256']);self.assertEqual(authority['selection_indices'],list(range(1,24)))
+def negative(name,path,value):
+ def test(self):
+  v=fixture();d=v
+  for k in path[:-1]:d=d[k]
+  d[path[-1]]=value
+  with self.assertRaises((ValueError,TypeError,KeyError)):V.validate(S,v)
+ setattr(Prefix,'test_negative_'+name,test)
+for name,path,value in[('fake_count24',['actual_request_count'],24),('request24_flag',['Source_case24_requested'],True),('not_complete',['capture_complete'],False),('wrong_prefix_index',['requests',22,'index'],24),('wrong_path',['requests',0,'path'],'/api/plugins/repos/1/'),('auth_status',['requests',0,'status'],200),('wrong_role',['requests',1,'actor'],'admin'),('body_hash',['requests',8,'response_body_sha256'],'0'*64),('unsettled_fd',['requests',0,'physical_close','fd_after'],1),('no_timer_join',['requests',0,'physical_close','timer_joined'],False),('failure_event',['requests',1,'after','events'],[{}]),('sequence_changed',['requests',20,'after','public_manifest','sequences','accounts_user_id_seq'],[999,True]),('private_user_bool_type',['requests',0,'after','users',0,'user_level'],True),('Mainclaim',['Main_or_fullM8'],True)]:negative(name,path,value)
+if __name__=='__main__':unittest.main()

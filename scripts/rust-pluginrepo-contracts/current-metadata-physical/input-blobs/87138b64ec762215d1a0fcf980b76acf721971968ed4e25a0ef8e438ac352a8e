@@ -1,0 +1,22 @@
+"""Default offline retained Case1 qualification; never starts an app/fixture."""
+from pathlib import Path
+import hashlib,json,argparse
+from validate_physical import validate,need
+from validate_external import qualify
+ROOT=Path(__file__).resolve().parents[1]
+def read(p):return json.loads(Path(p).read_bytes())
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def main():
+ seal=read(ROOT/'seal.json')
+ for name,h in seal['local_inputs'].items():need(sha(ROOT/name)==h,'ExactOfflineCorrectionInput:'+name)
+ original=Path('/home/justin/github/Dispatcharr/artifacts/rust/m8-pluginrepo-metadata-physical-sql-1-1');source=read(ROOT/'inputs/Source24-private.json');need(sha(ROOT/'inputs/Source24-private.json')=='74d69f0a794b8113df17568452840689798d6e33c8695dd8e525943d24331add','ExactOriginalSource24SHA')
+ execution=read(ROOT/'inputs/retained-execution-report.json');actual=read(ROOT/'inputs/retained-metadata-physical-private.json');need(type(execution['actual_controller_exit'])is int and execution['actual_controller_exit']==1 and execution['actual_ELF_exit']==0 and actual['passed']is True,'OriginalHost1Rust0Literal')
+ physical=validate(actual,1,ROOT/'inputs');before=read(ROOT/'inputs/retained-imported-state-before-peer.json')
+ # Derive a readonly post-state from actual retained Rust raw rows. This is NOT
+ # a newly executed independent raw-PG audit; the failed original controller
+ # stopped before its post-ELF state driver. Keep that external boundary OPEN.
+ need((ROOT/'inputs/retained-default-before.json').read_bytes()==(ROOT/'inputs/retained-default-after.json').read_bytes(),'OriginalLiteralDefault6259Equality')
+ result={'passed':True,'scope':'Separate offline physical Case1 predicates+lossless explicitSQL timestamp seed guard. External post-state raw driver was NOT executed by original failed controller; no invented independent post-state.','original_host_exit':1,'original_Rust_exit':0,'original_raw_passed':actual['passed'],'no_app_replay':True,'new_Source_runs':0,'physical':physical,'Source24_reference_sha256':sha(ROOT/'inputs/Source24-private.json'),'actual_raw_sha256':sha(ROOT/'inputs/retained-metadata-physical-private.json'),'original_execution_sha256':sha(ROOT/'inputs/retained-execution-report.json'),'post_ELF_owned_state_driver':'UNEXECUTED due original seed guard failure; external current23 proof not transferred','default_original_literal_equal':True,'all_raw_literals_preserved':True,'RootScope_claim':False};args=argparse.ArgumentParser();args.add_argument('--report',type=Path);options=args.parse_args();
+ if options.report:options.report.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
+ print(json.dumps({'passed':True,'original_host_exit_preserved':1,'original_Rust_exit':0,'clock_lexemes':physical['imported_SQL_timestamp_lexical_differences_same_UTC_instant']}))
+if __name__=='__main__':main()

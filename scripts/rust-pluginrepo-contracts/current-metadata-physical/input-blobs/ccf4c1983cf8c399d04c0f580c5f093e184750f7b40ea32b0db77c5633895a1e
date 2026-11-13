@@ -1,0 +1,21 @@
+"""Real filesystem mode guards only; never execute a test binary."""
+import os,tempfile,unittest
+from pathlib import Path
+from run import check_elf_mode
+class ELFMode(unittest.TestCase):
+ def file(self,mode):
+  d=tempfile.TemporaryDirectory(prefix='metadata-mode-');self.addCleanup(d.cleanup);p=Path(d.name)/'elf';p.write_bytes(b'not executed');p.chmod(mode);return p
+ def test_exact0555_accept(self):self.assertTrue(check_elf_mode(self.file(0o555))['passed'])
+ def test_readonly0444_refused(self):
+  with self.assertRaises(ValueError):check_elf_mode(self.file(0o444))
+ def test_copyfile0644_refused(self):
+  with self.assertRaises(ValueError):check_elf_mode(self.file(0o644))
+ def test_writable0777_refused(self):
+  with self.assertRaises(ValueError):check_elf_mode(self.file(0o777))
+ def test_symlink_refused(self):
+  p=self.file(0o555);q=p.with_name('link');q.symlink_to(p)
+  with self.assertRaises(ValueError):check_elf_mode(q)
+ def test_directory_refused(self):
+  p=self.file(0o555)
+  with self.assertRaises(ValueError):check_elf_mode(p.parent)
+if __name__=='__main__':unittest.main()

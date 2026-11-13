@@ -1,0 +1,95 @@
+[
+  {
+    "stage": "fmt",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "PID": 2882592,
+    "observed_starttime": "32498617",
+    "began_epoch": 1794604591.133641,
+    "completed_epoch": 1794604593.1232998,
+    "actual_exit": 0,
+    "all860source_inputs_unchanged": true
+  },
+  {
+    "stage": "check",
+    "argv": [
+      "cargo",
+      "check",
+      "-p",
+      "dispatcharr-store",
+      "--all-targets",
+      "--offline",
+      "--locked"
+    ],
+    "PID": 2882759,
+    "observed_starttime": "32498820",
+    "began_epoch": 1794604593.1616726,
+    "completed_epoch": 1794604603.15862,
+    "actual_exit": 0,
+    "all860source_inputs_unchanged": true
+  },
+  {
+    "stage": "strict",
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "dispatcharr-store",
+      "--all-targets",
+      "--offline",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "PID": 2883556,
+    "observed_starttime": "32499824",
+    "began_epoch": 1794604603.1967714,
+    "completed_epoch": 1794604616.4437945,
+    "actual_exit": 0,
+    "all860source_inputs_unchanged": true
+  },
+  {
+    "stage": "focused",
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "plugin_repositories",
+      "--offline",
+      "--locked"
+    ],
+    "PID": 2884485,
+    "observed_starttime": "32501152",
+    "began_epoch": 1794604616.4833794,
+    "completed_epoch": 1794604647.251675,
+    "actual_exit": 0,
+    "all860source_inputs_unchanged": true
+  },
+  {
+    "stage": "artifact",
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "--no-run",
+      "--offline",
+      "--locked",
+      "--message-format=json"
+    ],
+    "PID": 2886270,
+    "observed_starttime": "32504233",
+    "began_epoch": 1794604647.2892325,
+    "completed_epoch": 1794604647.4512386,
+    "actual_exit": 0,
+    "all860source_inputs_unchanged": true
+  }
+]

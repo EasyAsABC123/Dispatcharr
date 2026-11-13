@@ -1,0 +1,109 @@
+{
+  "outside_path": "/home/justin/github/Dispatcharr/artifacts/rust/root-plugin-current23-physical4-qa-2/outside-native-store-tests",
+  "compiled_path": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_store-b0079cb6cdfb6c96",
+  "sha256": "9d0ff09736173061e9905fb2832e3562c9780dc2261b651bf887d3d4093fe58a",
+  "bytes": 69763144,
+  "copied_epoch": 1794604647.617625,
+  "actual_five_waits0_before_copy": true,
+  "source_map_sha256": "765354f36164c92e3165dc5a0df407a84043b51ef57f43c9323ceaaa41b39e57",
+  "source_inputs": 860,
+  "Rust_inputs": 855,
+  "coupled_inputs": 5,
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/root-plugin-current23-physical4-qa-2/source",
+  "commands": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 2882592,
+      "observed_starttime": "32498617",
+      "began_epoch": 1794604591.133641,
+      "completed_epoch": 1794604593.1232998,
+      "actual_exit": 0,
+      "all860source_inputs_unchanged": true
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "-p",
+        "dispatcharr-store",
+        "--all-targets",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 2882759,
+      "observed_starttime": "32498820",
+      "began_epoch": 1794604593.1616726,
+      "completed_epoch": 1794604603.15862,
+      "actual_exit": 0,
+      "all860source_inputs_unchanged": true
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "dispatcharr-store",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 2883556,
+      "observed_starttime": "32499824",
+      "began_epoch": 1794604603.1967714,
+      "completed_epoch": 1794604616.4437945,
+      "actual_exit": 0,
+      "all860source_inputs_unchanged": true
+    },
+    {
+      "stage": "focused",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "plugin_repositories",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 2884485,
+      "observed_starttime": "32501152",
+      "began_epoch": 1794604616.4833794,
+      "completed_epoch": 1794604647.251675,
+      "actual_exit": 0,
+      "all860source_inputs_unchanged": true
+    },
+    {
+      "stage": "artifact",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--no-run",
+        "--offline",
+        "--locked",
+        "--message-format=json"
+      ],
+      "PID": 2886270,
+      "observed_starttime": "32504233",
+      "began_epoch": 1794604647.2892325,
+      "completed_epoch": 1794604647.4512386,
+      "actual_exit": 0,
+      "all860source_inputs_unchanged": true
+    }
+  ],
+  "whole_workspace_test_claim": false
+}

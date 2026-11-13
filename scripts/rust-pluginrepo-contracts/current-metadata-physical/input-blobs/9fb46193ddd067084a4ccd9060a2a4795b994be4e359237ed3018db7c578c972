@@ -1,0 +1,112 @@
+--- OriginalController1/controller/validate_physical.py
++++ OfflineCorrection/controller/validate_physical.py
+@@ -1,5 +1,5 @@
+ """Predeclared actual PluginRepo metadata4 gates; no Source/Main transfer."""
+-import copy,datetime,hashlib,json,math,struct
++import copy,datetime,hashlib,json,math,struct,re
+ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[1]
+ NAMES={'accounts_user','m3u_m3uaccount','m3u_m3uaccountprofile','vod_movie','vod_m3umovierelation','vod_series','vod_episode','vod_m3uepisoderelation','core_coresettings','core_systemnotification','core_notificationdismissal','plugins_pluginrepo','plugins_pluginconfig'}
+@@ -23,7 +23,7 @@
+   row=keyrow(expected,'plugins_pluginrepo',801);changed=keyrow(after,'plugins_pluginrepo',801);need(clock(row['updated_at'])!=clock(changed['updated_at']),'RealUpdateClockEvenSameValue');row.update(public_key='owned-physical-update',updated_at=changed['updated_at'])
+  elif case==2:
+   need(len([r for r in expected['tables']['plugins_pluginrepo']if r['id']==801])==1,'DeleteTargetPresentBefore');expected['tables']['plugins_pluginrepo']=[r for r in expected['tables']['plugins_pluginrepo']if r['id']!=801]
+-  children=[r for r in expected['tables']['plugins_pluginconfig']if r['source_repo_id']==801];need(len(children)==1,'ExactSourceOwnedChild')
++  children=[r for r in expected['tables']['plugins_pluginconfig']if r['source_repo_id']==801];source=json.loads((ROOT/'inputs/Source24-private.json').read_text());source_children=[r['id']for r in source['seed']['configs']if type(r['source_repo_id'])is int and r['source_repo_id']==801];need(exact([r['id']for r in children],source_children),'ExactlyBothSourceDerivedOwnedChildren901902')
+   for row in children:row['source_repo_id']=None
+  need(exact(expected,after),'OnlyIntendedMetadataRowsAll13SeqUnchanged')
+ def dumps(before,after,allow_group_fills):
+@@ -54,16 +54,34 @@
+  span=rows[1]['elapsed_monotonic_seconds']-rows[0]['elapsed_monotonic_seconds'];need(finite(span,.25,25)and hold>=span,'ActualHoldCoversSamples')
+ def pool(v):
+  need(integer(v['closed_pool_size'],0,0)and integer(v['closed_pool_idle_diagnostic'],0,4)and integer(v['pool_max_connections'],4,4)and integer(v['actual_pool_reuse_value'],424242,424242),'ActualFirstCloseSize0Max4IdleDiagnosticAndPoolReuse')
++def existing_sql_instant(value):
++ need(type(value)is str and re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6})?(?:Z|\+00:00)',value)is not None,'PinnedSQLTimestampUTCStringMaxSixFractionDigits')
++ return clock(value)
++def imported_rows(table,expected,actual,columns):
++ need(type(expected)is list and type(actual)is list and len(expected)==len(actual),'ExactImportedRowCount:'+table)
++ timestamp_columns={row[1]for row in columns if row[0]==table and row[2]=='timestamp with time zone'}
++ ledger=[]
++ for source_row,actual_row in zip(expected,actual):
++  need(type(source_row)is dict and type(actual_row)is dict and set(source_row)==set(actual_row),'ExactImportedFieldSet:'+table)
++  for key,left in source_row.items():
++   right=actual_row[key]
++   if key in timestamp_columns and left is not None:
++    need(existing_sql_instant(left)==existing_sql_instant(right),'ExactImportedExistingTimestampInstant:'+table+'.'+key)
++    if left!=right:ledger.append({'table':table,'id':source_row['id'],'column':key,'Source_literal':left,'Native_literal':right,'same_UTC_microsecond_instant':True})
++   else:need(exact(left,right),'ExactImportedStableFieldTypeValue:'+table+'.'+key)
++ return ledger
+ def imported_seed(before,source):
+  need(source['actual_request_count']==24 and source['force_authenticate_used']is False,'UntouchedSource24ReferenceOnly');seed=source['seed'];mapping={'repos':'plugins_pluginrepo','configs':'plugins_pluginconfig','settings':'core_coresettings','users':'accounts_user','events':'core_systemevent','system_notifications':'core_systemnotification','notification_dismissals':'core_notificationdismissal'}
++ ledger=[]
+  for key,table in mapping.items():
+-  if table in NAMES:need(exact(before['tables'][table],seed[key]),'ExactImportedSourceSeed:'+table)
+- for table in NAMES-set(mapping.values()):need(before['tables'][table]==[],'NoForeignUnseededRows')
++  if table in NAMES:ledger+=imported_rows(table,seed[key],before['tables'][table],seed['public_manifest']['columns'])
++ for table in NAMES-set(mapping.values()):need(exact(before['tables'][table],[]),'NoForeignUnseededRows')
+  for table,row in before['sequences'].items():need(exact([row['last_value'],row['is_called']],seed['public_manifest']['sequences'][table+'_id_seq']),'SourceInitialSequence:'+table)
++ return ledger
+ 
+ def validate(v,case,out):
+  need(integer(case,1,4)and type(v['case'])is int and v['case']==case and v.get('_synthetic_only')is not True and v['capture_complete']is True and v['passed']is True and v['Main']is False and integer(v['Source_requests'],0,0),'ActualFixedCaseOnlyNoSourceOrMain')
+- imported_seed(v['before'],json.loads((ROOT/'inputs/Source24-private.json').read_text()))
++ imported_clock_lexemes=imported_seed(v['before'],json.loads((ROOT/'inputs/Source24-private.json').read_text()))
+  delta(v['before'],v['after'],case);need(exact(v['credentials_before'],v['credentials_after']),'ExactCredentialHistoryNoEffects');need(integer(v['writer_slots_after_settlement'],4,4),'ActualFourSlotsReturned');need(exact(v['original_weak_after_settlement'],[False]*(5 if case==4 else 1)),'OriginalActualWeakRetired');pool(v['pool']);need(exact(v['while_ELF_alive_subject_backends'],[]),'WhileELFSubjectBackendObserverEmpty')
+  if case==4:
+   need(exact(v['actual_statuses'],[200,200,401,401,503,200]),'ActualFrameStatuses');need(len(v['actual_first_four'])==4,'FourActualFrames')
+@@ -79,7 +97,7 @@
+   observed=json.loads((Path(out)/'actual-response-frame-6.json').read_text());need(observed['status']==200 and observed['frame_hex']==v['sixth_actual_frame_hex']and observed['frame_sha256']==v['sixth_actual_frame_sha256'],'ActualSixthFrameReceipt')
+   refusal=json.loads((Path(out)/'actual-response-fifth-refusal.json').read_text());raw=bytes.fromhex(v['fifth_actual_body_hex']);need(refusal['status']==503 and refusal['body_hex']==v['fifth_actual_body_hex']and refusal['body_bytes']==len(raw)and refusal['body_sha256']==hashlib.sha256(raw).hexdigest(),'ActualPreauthFifthRawResponseReceipt')
+   dumps(v['fifth_raw_cache_before'],v['fifth_raw_cache_after'],False)
+-  return {'passed':True,'case':case,'scope':'actual original success/error frames +preauth refusal and reuse; inprocess Router not Main/TCP'}
++  return {'passed':True,'case':case,'imported_SQL_timestamp_lexical_differences_same_UTC_instant':imported_clock_lexemes,'scope':'actual original success/error frames +preauth refusal and reuse; inprocess Router not Main/TCP'}
+  contracts=json.loads((ROOT/'inputs/pg-contracts.json').read_text());warm=v['actual_warm_and_pg_setting'];need(warm['observed_before_any_hold']is True and integer(warm['actual_backend_pid'],1,2**31-1)and integer(warm['track_activity_query_size_bytes'],100,1048576),'ActualSettingBeforeHold');need(exact(warm['warm_before'],warm['warm_after'])and exact(warm['warm_before'],v['before']),'MissingPKWarmNoEffects')
+  need(len(warm['same_connection_exact_warm_SQL'])==len(warm['full_warm_SQL_sha256'])==6,'ExactWarmStatements');need(all(hashlib.sha256(s.encode()).hexdigest()==h for s,h in zip(warm['same_connection_exact_warm_SQL'],warm['full_warm_SQL_sha256'])),'ActualFullWarmFingerprint');need(len(set(warm['same_connection_exact_warm_SQL']))==6,'DistinctRealWarmStatements')
+  stats=v['actual_relay_terminal'];need(stats['errors']==[]and stats['listener_alive']is False,'RealRelaySettledNoErrors');drain=v['relay_naturally_drained_before_stop'];need(all(c['closed']is True and c['up_joined']is True for c in drain['connections'])and len(drain['connections'])>0,'NaturalConnectionDrainBeforeStop')
+@@ -100,4 +118,4 @@
+   target=v['actual_parent_lock_before_cancel'];sql=contracts['parent_error_ready']['sql'];prefix=sql[:min(len(sql),warm['track_activity_query_size_bytes']-1)];need(target['known_SQL_prefix']==prefix and target['known_prefix_bytes']==len(prefix)and target['full_SQL_sha256']==hashlib.sha256(sql.encode()).hexdigest(),'KnownPrefixFromActualSettingNotFullQueryAssumption');rows=target['rows'];need(len(rows)==1 and rows[0]['pid']==warm['actual_backend_pid']and rows[0]['wait_event_type']=='Lock','SameActualTargetLockCancel');need(integer(v['actual_error_response']['status'],503,503)and v['actual_error_response']['Source_injected_error_HTTP_authority']is False,'NativeDBFaultPredictionScope')
+  dumps(v['cache_before'],v['cache_after'],True)
+  process=json.loads((Path(out)/'proxy-process.json').read_text());need(process['forced']is False and integer(process['exit'],0,0)and integer(process['wait'],0,0)and process['proc_PID_absent_after_wait']is True and process['stdout_reader_joined']is True and type(process['starttime'])is str and process['starttime'].isdigit()and int(process['starttime'])>0,'ActualProxyWaitPIDPipeSettlement')
+- return {'passed':True,'case':case,'scope':'optin actual metadata SQL physical Ready ownership; no Main/Source SQL injected-error authority'}
++ return {'passed':True,'case':case,'imported_SQL_timestamp_lexical_differences_same_UTC_instant':imported_clock_lexemes,'scope':'optin actual metadata SQL physical Ready ownership; no Main/Source SQL injected-error authority'}
+--- OriginalController1/controller/validate_external.py
++++ OfflineCorrection/controller/validate_external.py
+@@ -1,6 +1,6 @@
+ """Full independent raw-PG/Redis before/after, source-existing seed context."""
+ import copy
+-from validate_physical import need,exact
++from validate_physical import need,exact,imported_rows
+ from validate_reference import own_cache,cache
+ FIELDS=['repos','configs','settings','users','events','system_notifications','notification_dismissals']
+ def qualify(source,before,after,case,rust):
+@@ -12,9 +12,18 @@
+   if case==2:expected['tables']['plugins_pluginconfig']=b['tables']['plugins_pluginconfig']
+  need(exact(expected,b),'AllFullManifestFieldsForeignTablesAnd59SequencesUnchanged')
+  for field in FIELDS:
+-  need(exact(before[field],source['seed'][field]),'ExactImportedSourceFields:'+field)
++  source_table={'repos':'plugins_pluginrepo','configs':'plugins_pluginconfig','settings':'core_coresettings','users':'accounts_user','events':'core_systemevent','system_notifications':'core_systemnotification','notification_dismissals':'core_notificationdismissal'}[field];imported_rows(source_table,source['seed'][field],before[field],source['seed']['public_manifest']['columns'])
+   table={'repos':'plugins_pluginrepo','configs':'plugins_pluginconfig','settings':'core_coresettings','users':'accounts_user','system_notifications':'core_systemnotification','notification_dismissals':'core_notificationdismissal'}.get(field)
+   if table:need(exact(after[field],rust['after']['tables'][table]),'IndependentRawPGSameAsActualRustSnapshot:'+field)
+   if field not in('repos','configs'):need(exact(before[field],after[field]),'NoAuthHistoryOrForeignRowEffect:'+field)
+  own_cache(before['raw_Redis'],after['raw_Redis']);cache(source['seed']['raw_Redis'],before['raw_Redis']);serialized=cache(source['requests'][2]['after']['raw_Redis'],after['raw_Redis'])
+  return {'passed':True,'actual_case':case,'full_default_audit_scope':'separately executed full62/59 +named11','owned_full62_59_foreign_and_all_sequences_unchanged':True,'exact_imported_existing_Source5_keys':True,'request_induced_decoded_group_and_unrelated_Redis_scope':True,'cache_serialization_byte_equal':serialized,'Main_or_Source_replay':False}
++
++def validate_import(source,state):
++ """Before ANY Native peer: exact imported Source rows/59 sequences/5 keys."""
++ need(source['actual_request_count']==24 and len(source['requests'])==24,'UntouchedCapturedSource24')
++ mapping={'repos':'plugins_pluginrepo','configs':'plugins_pluginconfig','settings':'core_coresettings','users':'accounts_user','events':'core_systemevent','system_notifications':'core_systemnotification','notification_dismissals':'core_notificationdismissal'};ledger=[]
++ for field,table in mapping.items():ledger+=imported_rows(table,source['seed'][field],state[field],source['seed']['public_manifest']['columns'])
++ need(exact(state['public_manifest']['sequences'],source['seed']['public_manifest']['sequences'])and len(state['public_manifest']['sequences'])==59,'ExactlyImportedAll59SequenceStates')
++ cache(source['seed']['raw_Redis'],state['raw_Redis'])
++ return {'passed':True,'before_any_Native_peer':True,'physical_seed_overlays':False,'source_row_fields_and_all59seq_and_existing5Redis_keys_qualified':True,'SQL_timestamp_lexical_differences_same_UTC_instant':ledger}
+--- OriginalController1/inputs/pg-contracts.json
++++ OfflineCorrection/inputs/pg-contracts.json
+@@ -19,7 +19,7 @@
+     "sql": "UPDATE plugins_pluginconfig SET source_repo_id=NULL WHERE source_repo_id=$1",
+     "sql_sha256": "d1a59d209db65a0b51cd916aa28612b3c9c77325fd32b27847348f022371657e",
+     "rows": 0,
+-    "command": "UPDATE 1",
++    "command": "UPDATE 2",
+     "errors": [],
+     "tx": "T",
+     "parameter_hex": [

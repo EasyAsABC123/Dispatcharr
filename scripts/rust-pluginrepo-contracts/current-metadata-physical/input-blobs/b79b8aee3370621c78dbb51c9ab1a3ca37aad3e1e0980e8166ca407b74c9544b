@@ -1,0 +1,25 @@
+"""One actual compiled Rust peer process, bounded raw pipes, actual container PID."""
+import hashlib,json,os,sys,time
+from pathlib import Path
+from bounded_process import Collected
+OUT=Path('/evidence')
+def identity(pid):
+ try:return Path('/proc',str(pid),'stat').read_text().rsplit(')',1)[1].split()[19]
+ except FileNotFoundError:return None
+def save(v):(OUT/'actual-ELF-process.json').write_text(json.dumps(v,indent=2,allow_nan=False)+'\n')
+def main():
+ if os.environ.get('PLUGIN_REPO_PHYSICAL')!='owned-metadata-four-only':raise ValueError('ExplicitActualMetadataELF')
+ argv=['/native-inputs/native-store-tests','plugin_repositories::physical_tests::metadata_physical_exact_one_case','--exact','--ignored','--nocapture','--test-threads=1'];record={'argv':argv,'PID_namespace':os.readlink('/proc/self/ns/pid'),'scope':'actual container namespace PID; not a host-PID absence claim','began_epoch':time.time()};box={}
+ def stop():
+  job=box.get('job')
+  if job is not None and job.process.poll()is None:job.process.kill();record['forced_kill']=True
+ env={k:v for k,v in os.environ.items()if not k.startswith('GIT_')};job=Collected(argv,env,8388608,stop,stdout_path=OUT/'actual-ELF.stdout',stderr_path=OUT/'actual-ELF.stderr');box['job']=job;pid=job.process.pid;start=identity(pid);record.update(pid=pid,observed_starttime=start,forced_kill=False);save(record)
+ try:
+  if type(start)is not str or not start.isdecimal()or int(start)<=0:raise ValueError('ActualELFPIDIdentity')
+  job.wait(100)
+ finally:
+  if job.process.poll()is None:stop();job.wait(5)
+  record.update(actual_exit=job.process.poll(),collection_invalid=job.invalid,stopped=job.stopped,physical_settlement=job.physically_settled,readers_settled=not any(t.is_alive()for t in job.threads),writer_settled=job.writer is None or not job.writer.is_alive(),original_container_PID_absent=identity(pid)!=start,completed_epoch=time.time());save(record)
+ if record['actual_exit']!=0 or record['collection_invalid']is not None or record['forced_kill']or not all(record[k]for k in['physical_settlement','readers_settled','writer_settled','original_container_PID_absent']):return 1
+ return 0
+if __name__=='__main__':raise SystemExit(main())

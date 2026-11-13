@@ -1,0 +1,789 @@
+{
+  "passed_cleanup_only": true,
+  "fixture_acceptance": false,
+  "cases": [
+    {
+      "case": 2,
+      "original_host_exit": 1,
+      "actual_Rust_or_API_execution": false,
+      "physical_predicates": "UNMEASURED",
+      "default_literal6259_equal": true,
+      "all_host_commands": 23,
+      "former_known_host_identities": 31,
+      "fresh_original_PID_absence": [
+        {
+          "pid": 2998117,
+          "observed_starttime": "32688866",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998134,
+          "observed_starttime": "32688869",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998153,
+          "observed_starttime": "32688871",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998171,
+          "observed_starttime": "32688873",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998324,
+          "observed_starttime": "32688908",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998427,
+          "observed_starttime": "32688915",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998746,
+          "observed_starttime": "32689017",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998852,
+          "observed_starttime": "32689047",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998980,
+          "observed_starttime": "32689059",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2999124,
+          "observed_starttime": "32689073",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2999207,
+          "observed_starttime": "32689094",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2999308,
+          "observed_starttime": "32689132",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2999419,
+          "observed_starttime": "32689169",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2999501,
+          "observed_starttime": "32689178",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2999527,
+          "observed_starttime": "32689181",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2999633,
+          "observed_starttime": "32689193",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2999706,
+          "observed_starttime": "32689205",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2999789,
+          "observed_starttime": "32689233",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2999867,
+          "observed_starttime": "32689239",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002876,
+          "observed_starttime": "32690270",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002900,
+          "observed_starttime": "32690272",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002917,
+          "observed_starttime": "32690274",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002934,
+          "observed_starttime": "32690276",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998302,
+          "observed_starttime": "32688903",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998652,
+          "observed_starttime": "32688967",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998653,
+          "observed_starttime": "32688971",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998655,
+          "observed_starttime": "32688971",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998657,
+          "observed_starttime": "32688972",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998658,
+          "observed_starttime": "32688972",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998659,
+          "observed_starttime": "32688972",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 2998710,
+          "observed_starttime": "32688993",
+          "current_starttime": null,
+          "original_absent": true
+        }
+      ],
+      "fresh4cleanup_queries": [
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-f5c5ecaa45",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-f5c5ecaa45",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-f5c5ecaa45",
+            "--format",
+            "{{.Name}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "id=3f2ab3cb9225239ea9e5b6bf9e06897feed8ef526239e6d45d097b04e4948f2f",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "original_execution_sha256": "42ca0ecc2b8f95ab1e239989ab50dc7a96ae769a246b186ed2344bf688347edb"
+    },
+    {
+      "case": 3,
+      "original_host_exit": 1,
+      "actual_Rust_or_API_execution": false,
+      "physical_predicates": "UNMEASURED",
+      "default_literal6259_equal": true,
+      "all_host_commands": 23,
+      "former_known_host_identities": 31,
+      "fresh_original_PID_absence": [
+        {
+          "pid": 3000144,
+          "observed_starttime": "32689411",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000167,
+          "observed_starttime": "32689413",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000186,
+          "observed_starttime": "32689415",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000208,
+          "observed_starttime": "32689417",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000347,
+          "observed_starttime": "32689447",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000441,
+          "observed_starttime": "32689453",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000622,
+          "observed_starttime": "32689545",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000745,
+          "observed_starttime": "32689571",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000817,
+          "observed_starttime": "32689583",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000891,
+          "observed_starttime": "32689595",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000964,
+          "observed_starttime": "32689617",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3001058,
+          "observed_starttime": "32689651",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3001176,
+          "observed_starttime": "32689687",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3001259,
+          "observed_starttime": "32689698",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3001294,
+          "observed_starttime": "32689701",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3001366,
+          "observed_starttime": "32689713",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3001436,
+          "observed_starttime": "32689723",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3001513,
+          "observed_starttime": "32689750",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3001569,
+          "observed_starttime": "32689757",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3004074,
+          "observed_starttime": "32690784",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3004092,
+          "observed_starttime": "32690785",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3004110,
+          "observed_starttime": "32690787",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3004127,
+          "observed_starttime": "32690789",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000328,
+          "observed_starttime": "32689441",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000528,
+          "observed_starttime": "32689498",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000530,
+          "observed_starttime": "32689500",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000531,
+          "observed_starttime": "32689500",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000533,
+          "observed_starttime": "32689500",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000534,
+          "observed_starttime": "32689500",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000535,
+          "observed_starttime": "32689500",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3000588,
+          "observed_starttime": "32689524",
+          "current_starttime": null,
+          "original_absent": true
+        }
+      ],
+      "fresh4cleanup_queries": [
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-b79db71daf",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-b79db71daf",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-b79db71daf",
+            "--format",
+            "{{.Name}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "id=cdf5d57db2daece2dd3c2a8f5465a4604464b0bb263d9067e664ac1a71536c74",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "original_execution_sha256": "6cf7b562f2198cafa546870f196795b8e79c58b76c2eb9ea6629f5f259d499bc"
+    },
+    {
+      "case": 4,
+      "original_host_exit": 1,
+      "actual_Rust_or_API_execution": false,
+      "physical_predicates": "UNMEASURED",
+      "default_literal6259_equal": true,
+      "all_host_commands": 23,
+      "former_known_host_identities": 31,
+      "fresh_original_PID_absence": [
+        {
+          "pid": 3002007,
+          "observed_starttime": "32690071",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002025,
+          "observed_starttime": "32690073",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002048,
+          "observed_starttime": "32690075",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002066,
+          "observed_starttime": "32690077",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002216,
+          "observed_starttime": "32690110",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002324,
+          "observed_starttime": "32690116",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002526,
+          "observed_starttime": "32690208",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002624,
+          "observed_starttime": "32690237",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002712,
+          "observed_starttime": "32690249",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002806,
+          "observed_starttime": "32690262",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002953,
+          "observed_starttime": "32690285",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3003054,
+          "observed_starttime": "32690317",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3003154,
+          "observed_starttime": "32690350",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3003237,
+          "observed_starttime": "32690358",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3003268,
+          "observed_starttime": "32690361",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3003349,
+          "observed_starttime": "32690374",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3003429,
+          "observed_starttime": "32690384",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3003511,
+          "observed_starttime": "32690410",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3003565,
+          "observed_starttime": "32690416",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3004381,
+          "observed_starttime": "32691439",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3004399,
+          "observed_starttime": "32691440",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3004417,
+          "observed_starttime": "32691441",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3004435,
+          "observed_starttime": "32691442",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002191,
+          "observed_starttime": "32690104",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002392,
+          "observed_starttime": "32690160",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002423,
+          "observed_starttime": "32690165",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002424,
+          "observed_starttime": "32690165",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002426,
+          "observed_starttime": "32690165",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002427,
+          "observed_starttime": "32690165",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002428,
+          "observed_starttime": "32690165",
+          "current_starttime": null,
+          "original_absent": true
+        },
+        {
+          "pid": 3002501,
+          "observed_starttime": "32690188",
+          "current_starttime": null,
+          "original_absent": true
+        }
+      ],
+      "fresh4cleanup_queries": [
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-60eee3d288",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-60eee3d288",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pluginrepo-physical-60eee3d288",
+            "--format",
+            "{{.Name}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--no-trunc",
+            "--filter",
+            "id=8bc562ddde4fb987a580af79b3cbca7b9e61458c8651326fca1b64f7a8b057da",
+            "--format",
+            "{{.ID}}"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "original_execution_sha256": "ee591a560a5113374de489116e4a0ec97e5a5f2c380133850a6f2e61f8022502"
+    }
+  ],
+  "new_app_runs": 0,
+  "RootScope_claim": false,
+  "reviewed_UTC": "2026-11-13T21:55:44.867003+00:00"
+}
