@@ -1,0 +1,100 @@
+{
+  "accounts_user": [],
+  "core_coresettings": [],
+  "core_outputprofile": [],
+  "m3u_m3uaccount": [
+    {
+      "column": "refresh_task_id",
+      "target_column": "id",
+      "target_table": "django_celery_beat_periodictask"
+    },
+    {
+      "column": "server_group_id",
+      "target_column": "id",
+      "target_table": "m3u_servergroup"
+    },
+    {
+      "column": "stream_profile_id",
+      "target_column": "id",
+      "target_table": "core_streamprofile"
+    },
+    {
+      "column": "user_agent_id",
+      "target_column": "id",
+      "target_table": "core_useragent"
+    }
+  ],
+  "vod_episode": [
+    {
+      "column": "series_id",
+      "target_column": "id",
+      "target_table": "vod_series"
+    }
+  ],
+  "vod_m3uepisoderelation": [
+    {
+      "column": "episode_id",
+      "target_column": "id",
+      "target_table": "vod_episode"
+    },
+    {
+      "column": "m3u_account_id",
+      "target_column": "id",
+      "target_table": "m3u_m3uaccount"
+    },
+    {
+      "column": "series_relation_id",
+      "target_column": "id",
+      "target_table": "vod_m3useriesrelation"
+    }
+  ],
+  "vod_m3umovierelation": [
+    {
+      "column": "category_id",
+      "target_column": "id",
+      "target_table": "vod_vodcategory"
+    },
+    {
+      "column": "m3u_account_id",
+      "target_column": "id",
+      "target_table": "m3u_m3uaccount"
+    },
+    {
+      "column": "movie_id",
+      "target_column": "id",
+      "target_table": "vod_movie"
+    }
+  ],
+  "vod_m3useriesrelation": [
+    {
+      "column": "category_id",
+      "target_column": "id",
+      "target_table": "vod_vodcategory"
+    },
+    {
+      "column": "m3u_account_id",
+      "target_column": "id",
+      "target_table": "m3u_m3uaccount"
+    },
+    {
+      "column": "series_id",
+      "target_column": "id",
+      "target_table": "vod_series"
+    }
+  ],
+  "vod_movie": [
+    {
+      "column": "logo_id",
+      "target_column": "id",
+      "target_table": "vod_vodlogo"
+    }
+  ],
+  "vod_series": [
+    {
+      "column": "logo_id",
+      "target_column": "id",
+      "target_table": "vod_vodlogo"
+    }
+  ],
+  "vod_vodcategory": []
+}

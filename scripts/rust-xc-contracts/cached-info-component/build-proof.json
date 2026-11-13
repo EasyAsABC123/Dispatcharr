@@ -1,0 +1,67 @@
+{
+  "Rust_inputs": 825,
+  "all_source_before_after_equal": true,
+  "focused_XC": {
+    "failed": 0,
+    "ignored": 24,
+    "passed": 61
+  },
+  "full_inputs": 830,
+  "outside_peer": {
+    "bytes": 25630288,
+    "list_actual_exit": 0,
+    "list_sha256": "26be307749af75c5714a380ba4ece6a9cb73017af7958618214901cf80fe2602",
+    "sha256": "9cb85ef17c041a4a076a64e452b27cb3ea90979246a234d77807bbaa03654e66"
+  },
+  "raw_private_proof_sha256": "589905592beab430878b7185e3c6799b19cfe73ddf2aae4fe6a836db59e50d1d",
+  "scoped_build_only": true,
+  "source_map_sha256": "a7703d616e6e50f336da6fa0baf759aa232b4e574228a236482e0b15f6964b1f",
+  "waits": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "completed_epoch": 1794558725.4360204,
+      "stage": "fmt",
+      "started_epoch": 1794558723.642655
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "dispatcharr-xc-http",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "completed_epoch": 1794558775.7371624,
+      "stage": "strict-XC",
+      "started_epoch": 1794558725.4361765
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-xc-http",
+        "--lib",
+        "--offline",
+        "--locked"
+      ],
+      "completed_epoch": 1794558813.920286,
+      "stage": "defaults-XC",
+      "started_epoch": 1794558775.7373745
+    }
+  ],
+  "wholeworkspace_execution_transferred": false
+}
