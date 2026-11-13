@@ -1,0 +1,1365 @@
+{
+  "schema": "backup-source16-projection-v1",
+  "Original_raw_sha256": "daa2835e76df10e6dece88473d4b08d2ce1e4ad82680de3296de99604b54a288",
+  "projected_sha256": "5f0ce76f0d308da14cce1c0f57899577dd14732e1bc818ee916864d2d1902760",
+  "rules_version": 1,
+  "changes": [
+    {
+      "path": "$.requests[0].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[0].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[0].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[0].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[0].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[0].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[0].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[0].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[0].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[0].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[0].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[0].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[1].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "raw authentication header hex -> byte hash/length",
+      "original_JSON_sha256": "caadf7583e425b0cfcc393c9fd70e57f762ddbb0ad4af9aedda7c73798699724",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[1].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[1].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[1].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[1].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[1].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[1].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[1].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[1].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[1].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[1].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[1].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[1].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[2].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "raw authentication header hex -> byte hash/length",
+      "original_JSON_sha256": "a268044b1afcc675f2adc207eaa72838056cced81cf9c7cf6064a69654ec01d9",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[2].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[2].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[2].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[2].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[2].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[2].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[2].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[2].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[2].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[2].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[2].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[2].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[3].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "raw authentication header hex -> byte hash/length",
+      "original_JSON_sha256": "5acd1977f7e408f9fef1be14253d26e123c58bd5d130851bc068ede900aa85d9",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[3].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[3].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[3].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[3].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[3].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[3].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[3].body_hex",
+      "kind": "case4 task-token JSON body / case16 credential-bearing PG archive -> exact byte hash/length",
+      "original_JSON_sha256": "1f1bbb9ffd21ca60364fdc5820c96d7a9b7296a8a32076891130b7e8aaf196a3",
+      "projected_JSON_sha256": "8eccf5ddbf5ce799621901b97336221d27a8b4b705b6ae4cc528faae6687e17f"
+    },
+    {
+      "path": "$.requests[3].json.task_token",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "94f1a0c6125d2a18025e42bdac46242ccd84eca4aa1f366d8abd3764e6c4077c",
+      "projected_JSON_sha256": "150dc8ed779cc88cae6311decd0439a8d9b068416384e492d35c8f92cf453077"
+    },
+    {
+      "path": "$.requests[3].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[3].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[3].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[3].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[3].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[3].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[4].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[4].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[4].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[4].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[4].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[4].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[4].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[4].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[4].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[4].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[4].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[4].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[5].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "raw authentication header hex -> byte hash/length",
+      "original_JSON_sha256": "caadf7583e425b0cfcc393c9fd70e57f762ddbb0ad4af9aedda7c73798699724",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[5].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[5].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[5].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[5].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[5].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[5].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[5].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[5].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[5].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[5].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[5].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[5].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[6].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "raw authentication header hex -> byte hash/length",
+      "original_JSON_sha256": "a268044b1afcc675f2adc207eaa72838056cced81cf9c7cf6064a69654ec01d9",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[6].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[6].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[6].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[6].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[6].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[6].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[6].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[6].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[6].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[6].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[6].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[6].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[7].path",
+      "kind": "task-token query URL -> route template/hash/length",
+      "original_JSON_sha256": "150e3b0fce0723b74db2677a01999f9f9eaef8bba7dfefe199a2ae65e12551af",
+      "projected_JSON_sha256": "bc058bb02d4a7a000b409cdf8a513e4fe682db3b2c768f76c3e783fcfdb8cde2"
+    },
+    {
+      "path": "$.requests[7].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[7].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[7].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[7].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[7].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[7].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[7].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[7].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[7].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[7].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[7].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[7].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[8].path",
+      "kind": "task-token query URL -> route template/hash/length",
+      "original_JSON_sha256": "b9f690d141468d9dfcfe5c18c7657f37d55106c58674a5135a3669750805f178",
+      "projected_JSON_sha256": "7a1acdcc056c8bf6b26e3ed8e3597c9225e9cfd11351984addbd9b2ea1eeeb7d"
+    },
+    {
+      "path": "$.requests[8].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[8].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[8].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[8].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[8].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[8].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[8].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[8].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[8].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[8].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[8].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[8].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[9].path",
+      "kind": "task-token query URL -> route template/hash/length",
+      "original_JSON_sha256": "150e3b0fce0723b74db2677a01999f9f9eaef8bba7dfefe199a2ae65e12551af",
+      "projected_JSON_sha256": "bc058bb02d4a7a000b409cdf8a513e4fe682db3b2c768f76c3e783fcfdb8cde2"
+    },
+    {
+      "path": "$.requests[9].raw_headers_private.HTTP_AUTHORIZATION",
+      "kind": "raw authentication header hex -> byte hash/length",
+      "original_JSON_sha256": "a0b1a06d3711017c84edc8d7f1faed897de9215e9771dfe0c8ec2c658339bff4",
+      "projected_JSON_sha256": "eadf65e5ecff488858c143f3f87b66aff765bda700517a2878cca2fb2a329672"
+    },
+    {
+      "path": "$.requests[9].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[9].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[9].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[9].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[9].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[9].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[9].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[9].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[9].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[9].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[9].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[9].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[10].path",
+      "kind": "task-token query URL -> route template/hash/length",
+      "original_JSON_sha256": "b9f690d141468d9dfcfe5c18c7657f37d55106c58674a5135a3669750805f178",
+      "projected_JSON_sha256": "7a1acdcc056c8bf6b26e3ed8e3597c9225e9cfd11351984addbd9b2ea1eeeb7d"
+    },
+    {
+      "path": "$.requests[10].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "raw authentication header hex -> byte hash/length",
+      "original_JSON_sha256": "5acd1977f7e408f9fef1be14253d26e123c58bd5d130851bc068ede900aa85d9",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[10].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[10].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[10].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[10].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[10].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[10].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[10].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[10].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[10].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[10].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[10].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[10].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[11].path",
+      "kind": "task-token query URL -> route template/hash/length",
+      "original_JSON_sha256": "4d7c644a2dd7b139585c72bebda1195b38585e39b933064703315a6c7dfc250a",
+      "projected_JSON_sha256": "7ee59adbc841414d29d602df21225d48efe5cd01c807d2b005acca6434de93a9"
+    },
+    {
+      "path": "$.requests[11].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[11].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[11].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[11].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[11].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[11].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[11].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[11].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[11].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[11].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[11].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[11].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[12].path",
+      "kind": "task-token query URL -> route template/hash/length",
+      "original_JSON_sha256": "150e3b0fce0723b74db2677a01999f9f9eaef8bba7dfefe199a2ae65e12551af",
+      "projected_JSON_sha256": "bc058bb02d4a7a000b409cdf8a513e4fe682db3b2c768f76c3e783fcfdb8cde2"
+    },
+    {
+      "path": "$.requests[12].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[12].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[12].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[12].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[12].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[12].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[12].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[12].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[12].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[12].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[12].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[12].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[13].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "raw authentication header hex -> byte hash/length",
+      "original_JSON_sha256": "5acd1977f7e408f9fef1be14253d26e123c58bd5d130851bc068ede900aa85d9",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[13].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[13].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[13].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[13].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[13].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[13].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[13].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[13].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[13].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[13].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[13].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[13].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[14].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "raw authentication header hex -> byte hash/length",
+      "original_JSON_sha256": "5acd1977f7e408f9fef1be14253d26e123c58bd5d130851bc068ede900aa85d9",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[14].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[14].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[14].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[14].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[14].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[14].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[14].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[14].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[14].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[14].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[14].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[14].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[15].raw_headers_private.HTTP_X_API_KEY",
+      "kind": "raw authentication header hex -> byte hash/length",
+      "original_JSON_sha256": "5acd1977f7e408f9fef1be14253d26e123c58bd5d130851bc068ede900aa85d9",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[15].before.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[15].before.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[15].before.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[15].before.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[15].before.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[15].before.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.requests[15].body_hex",
+      "kind": "case4 task-token JSON body / case16 credential-bearing PG archive -> exact byte hash/length",
+      "original_JSON_sha256": "56c69e8e3b691277abe7952594fc1eb91c3f9125d97e5c288c07c961856dc154",
+      "projected_JSON_sha256": "46560af1dd9136a9bf1a5319e09734d0a071b2d35c4009a11babc4270a57b23a"
+    },
+    {
+      "path": "$.requests[15].after.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[15].after.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.requests[15].after.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[15].after.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.requests[15].after.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.requests[15].after.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.aliases.unknown_task_token",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "ebfec695563a4e464e47f97551068e65829d9f8b994774624cda75733857801e",
+      "projected_JSON_sha256": "3874c3b2a2bb7a8cb6243e16cbae275ac12291eb0160c1e396aa31794652e3ee"
+    },
+    {
+      "path": "$.aliases.created_task_token",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "94f1a0c6125d2a18025e42bdac46242ccd84eca4aa1f366d8abd3764e6c4077c",
+      "projected_JSON_sha256": "150dc8ed779cc88cae6311decd0439a8d9b068416384e492d35c8f92cf453077"
+    },
+    {
+      "path": "$.seed_users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.seed_users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.seed_users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.seed_users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.seed_users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.seed_users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    },
+    {
+      "path": "$.seed_snapshot.users[0].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.seed_snapshot.users[0].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a306f6f5471fe520725a68134701fbf7745988022c1ed31a081822badb3ca5f4",
+      "projected_JSON_sha256": "47d7549ca63a5f10b133f64f28610e04e090151df97bcef9d4b44647d30ef2eb"
+    },
+    {
+      "path": "$.seed_snapshot.users[1].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.seed_snapshot.users[1].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "f0e146234760ab7b9946a078509bea7872a9f6fa8136afde7a3e0154dfe18b81",
+      "projected_JSON_sha256": "e9bac5a919582c589e3540377b8f223682e46220073ec03ff84a0c4ec563da52"
+    },
+    {
+      "path": "$.seed_snapshot.users[2].password",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+      "projected_JSON_sha256": "afaf73f57f8a4ee7d21b6daa4786ed7f09f350e8ac19c3740f5c932443b82d0c"
+    },
+    {
+      "path": "$.seed_snapshot.users[2].api_key",
+      "kind": "credential/task-token scalar -> byte hash/length",
+      "original_JSON_sha256": "a54f393a66b3a08578a1bdbb60d82bb86a4a8fa494f1ca313562127a508c1f6b",
+      "projected_JSON_sha256": "de1f51908f0bc0aa5d99dcc5f09ca8dc9663dec6e537906fafa47fd8d48c9c0c"
+    }
+  ],
+  "executed_original_bytes": false,
+  "retained_private_original_qualification": {
+    "controller_exit": 0,
+    "requests": 16,
+    "effect_checks": 144
+  },
+  "projection_does_not_reconstruct_original_archive": true
+}

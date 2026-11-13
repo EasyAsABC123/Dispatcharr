@@ -1,0 +1,7 @@
+# Backup create/status Source authority
+
+The single pinned Original framework/worker fixture qualified16 requests and144 private effects: normal credentials and role/network refusals, malformed-body-ignored create202, manual status401 without an invented challenge, token precedence and bad-JWT precedence, signed unknown non-UUID pending, one real task, completed status/list and actual archive download. Controller/host/worker exited0; default11 and all target SQL/users/events remained unchanged and exact owned cleanup was independently verified.
+
+[Portable definition/evidence](../scripts/rust-contracts/backup-source16/README.md) closes all108 original executable inputs through pinned Git reconstruction and retains38 original pure controls plus17 portable corruption controls. Original report SHA and the distinct projected reference SHA are explicit. Task tokens, API keys/password fields, raw auth headers and the credential-bearing raw PG archive are withheld with exact projection rules, hashes and sizes. Derived archive receipts and Root's private144 review remain evidence; public checks do not re-decode the withheld archive.
+
+This is Source APIClient/owned-worker authority, with explicit management startup skips, owned route and startup-lock scope. It establishes no Source TCP, Native, default startup/routing, restore/schedule, SQLite or full M8 claim. Native create/status migration and pg_dump packaging are separate gates. Original Dispatcharr and dependency contributors retain credit/licenses.

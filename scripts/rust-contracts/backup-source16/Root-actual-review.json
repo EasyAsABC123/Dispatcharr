@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "scope": "Actual Original16 framework credential requests and one owned backup task only; no Source TCP, Native, full startup/default routing, restore/scheduling or performance acceptance",
+  "actual_host_wait_exit": 0,
+  "requests": 16,
+  "statuses": [
+    401,
+    403,
+    403,
+    202,
+    401,
+    401,
+    200,
+    200,
+    403,
+    401,
+    403,
+    200,
+    200,
+    200,
+    200,
+    200
+  ],
+  "pure_effect_checks": 144,
+  "real_worker_tasks": 1,
+  "worker_actual_exit0_wait_pipes": true,
+  "actual_PGDMP_ZIP_stream_validated": true,
+  "request_SQL11_users_events_and_default11_bytes_exact": true,
+  "owned_SQL_backends_absent_after_worker": true,
+  "all_host_children_actual0_settled": true,
+  "independent_project_CID_and_host_PIDs_absent": true,
+  "host_PID_identities_checked": 33,
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-backupjob-source-16555322a4"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-backupjob-source-16555322a4"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-backupjob-source-16555322a4"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "-q",
+        "--filter",
+        "id=2240c3937728c38cade2af2a93945010c5db244dca87e61edde644e68e7d51b9"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "state": "UNEXECUTED_EXECUTABLE_PROPOSAL",
+  "definition_sha256": "1cdffe74d6fc1c706c526f2fb1e5490fa645d5ae428d6237bee2c6a0dea3a101",
+  "fixed_requests": 16,
+  "phases": [
+    {
+      "name": "default bootstrap/migrate/audit/owned clone",
+      "application_requests": 0
+    },
+    {
+      "name": "before worker",
+      "requests": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "name": "real worker own queue and external result bytes",
+      "extra_HTTP_requests": 0
+    },
+    {
+      "name": "after terminal result",
+      "requests": [
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "name": "exact worker TERM/wait; default after audit; owned project cleanup"
+    }
+  ],
+  "caps_exact_reviewed_definition": {
+    "bootstrap_seconds": 180,
+    "worker_ready_seconds": 30,
+    "job_completion_seconds": 90,
+    "worker_stop_seconds": 30,
+    "overall_seconds": 1200,
+    "cleanup_seconds": 90,
+    "command_bytes": 8388608,
+    "response_bytes": 65536,
+    "stream_archive_bytes": 8388608,
+    "ZIP_uncompressed_total_bytes": 67108864,
+    "report_bytes": 134217728,
+    "CPU": 1,
+    "memory": "1536m",
+    "PIDs": 256,
+    "storage_tmpfs": "2g",
+    "tmp_tmpfs": "512m"
+  },
+  "passive_observers": [
+    "worker_ready",
+    "task_prerun",
+    "task_postrun"
+  ],
+  "Source_methods_patched": false,
+  "default_routing_fullstartup_claim": false,
+  "Source_TCP_Native": false,
+  "actual_Source_application_runs": 0,
+  "actual_Source_requests": 0,
+  "global_fixture_slot_required": true,
+  "future_once_output": "artifacts/rust/m8-backup-job-source-1",
+  "no_retries": true
+}

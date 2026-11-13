@@ -117,3 +117,11 @@ scripts/rust-contracts/sqlx-close-dependency-experiment/executed-definition/Carg
 scripts/rust-contracts/sqlx-close-dependency-experiment/executed-definition/baseline-to-candidate.diff -text -whitespace
 scripts/rust-contracts/sqlx-close-dependency-experiment/executed-definition/build/baseline/03-existing-pure-notifications.stdout -text whitespace=-blank-at-eof
 scripts/rust-contracts/sqlx-close-dependency-experiment/executed-definition/build/candidate/00-existing-pure-notifications.stdout -text whitespace=-blank-at-eof
+
+# Preserve exact Source16 executed helpers and Original source EOF bytes.
+scripts/rust-contracts/backup-source16/executed-definition/controller/capture_common.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/core/apps.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/core/tasks.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/dispatcharr/celery.py -text whitespace=-blank-at-eof
+# Preserve the exact Celery BSD license heading underline.
+scripts/rust-contracts/backup-source16/supplementary-licenses/bytes/celery-5.6.3.dist-info/licenses/LICENSE conflict-marker-size=32

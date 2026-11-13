@@ -37,6 +37,9 @@ bound to the measured image/workload.
   write checks. The separate [SQLx experiment](rust-sqlx-close-dependency-experiment.md)
   reproduces a baseline first-close failure and passes three max1 cases with a
   private candidate; wider shutdown, other API and operational gaps stay open.
+  The [Original backup Source16](rust-backup-source16.md) passes16 requests/144
+  effects and a real owned task/archive; Native create/status and application
+  wiring remain separate gates.
 - **Ingestion:** the M3U candidate passes affected-crate checks and all 189
   eight-domain guest comparisons. Its host cleanup-parser failure remains
   recorded. Three lease controls and the corrected remaining two physical cases21
