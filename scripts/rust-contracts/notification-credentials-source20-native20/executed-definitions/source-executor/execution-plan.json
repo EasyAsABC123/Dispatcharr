@@ -1,0 +1,71 @@
+{
+  "state": "SEALED_UNEXECUTED_REQUIRES_ROOT_REVIEW",
+  "fixed_definition_seal": "d28907e7d9910d0b96e7079666e7531c17068401a78d39e4473860f2ccee280d",
+  "requests": 20,
+  "request_order": "exact inputs/plan.json; never retry or reorder",
+  "transport": "real resolver/APIClient with CSRF and real middleware/JWT/APIkey; no TCP/Main/Native",
+  "force_authenticate": false,
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "archive_recipe": [
+    "git -C <pinned-Original-repository> archive --format=tar 1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430 > original-source.tar"
+  ],
+  "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "archive_bytes": 16609280,
+  "actual_dependency_capture": {
+    "files": 23,
+    "bytes": 239569,
+    "never_started": true,
+    "program_executions": 0,
+    "PID_before_after": 0,
+    "exact_cleanup_proof": "dependency-capture/proof.json"
+  },
+  "startup": "real manage.py shell; should_skip_initialization True; no application method patch",
+  "seed": "exact six actors/two notices/zero dismissals/natural sequences from definition; preserve initial rows before owned isolation",
+  "default_audit": {
+    "tables": 11,
+    "sequences": 11,
+    "both": true,
+    "read_only": true,
+    "unchanged_required": true
+  },
+  "budgets_seconds": {
+    "bootstrap": 180,
+    "Source_exercise_process": 240,
+    "default_audit_each": 120,
+    "ordinary_command_default": 180,
+    "owned_cleanup_overall": 60,
+    "stop_acknowledgment": 30
+  },
+  "resource_limits": {
+    "cpu": 1,
+    "memory": "1g",
+    "pids": 256,
+    "PG_storage_tmpfs_bytes": 2147483648,
+    "tmp_tmpfs_bytes": 536870912,
+    "media_tmpfs_bytes": 67108864
+  },
+  "capacities": {
+    "command_combined_output_bytes": 1048576,
+    "raw_body_bytes": 65536,
+    "raw_header_bytes": 65536,
+    "exception_message_bytes": 4096,
+    "exception_trace_bytes": 65536,
+    "report_bytes": 134217728,
+    "audit_total_bytes": 8388608,
+    "model_rows": 10000,
+    "model_row_bytes": 131072,
+    "model_total_bytes": 8388608,
+    "cache_keys": 1000,
+    "cache_key_bytes": 1024,
+    "cache_value_bytes": 65536,
+    "cache_total_bytes": 1048576,
+    "cache_scan_iterations": 128
+  },
+  "exception_policy": "APIClient.raise_request_exception=False; literal framework exception and outer catch distinct; original full byte counts/hashes plus explicit truncation/complete status; truncated exception fails capture",
+  "credential_effect_policy": "retain raw users/events/cache and actual decoded failed-key history; no reset or normalization",
+  "cleanup": "exact all-project container --all/network/volume inventory; former CID and PID/start identities; raw commands before assertions; no case-sensitive diagnostic inference",
+  "predictions_measured": false,
+  "actual_Source_requests": 0,
+  "actual_Native_requests": 0,
+  "registration": false
+}

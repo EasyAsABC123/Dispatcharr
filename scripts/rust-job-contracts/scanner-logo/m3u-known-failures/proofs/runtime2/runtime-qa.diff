@@ -1,0 +1,1078 @@
+--- 044f/rust/crates/coordination/src/task_locks.rs
++++ revision2/rust/crates/coordination/src/task_locks.rs
+@@ -337,6 +337,42 @@
+     Ok(removed == 1)
+ }
+ impl TaskLease {
++    /// Preserve only a failed scanner M3U-groups lease for its existing TTL.
++    /// This deliberately stops renewal rather than copying Source's leaked daemon.
++    /// No DEL/EXPIRE occurs; a replaced or uncertain owner cannot authorize a result.
++    /// Physical commands retain the original lease/caller after waiter cancellation.
++    pub async fn preserve_failed_m3u_groups_until_expiry(
++        self,
++    ) -> Result<bool, TaskLockDetailedError> {
++        let suffix = self
++            .inner
++            .key
++            .strip_prefix("task_lock_refresh_m3u_account_groups_");
++        if !suffix.is_some_and(|v| {
++            v.parse::<i32>()
++                .is_ok_and(|id| id > 0 && id.to_string() == v)
++        }) || self.inner.locks.config.ttl != Duration::from_secs(300)
++            || self.inner.locks.config.renewal_interval != Duration::from_secs(120)
++        {
++            return Err(TaskLockError::Invalid.into());
++        }
++        if self.inner.releasing.swap(true, Ordering::AcqRel) {
++            return Ok(false);
++        }
++        self.inner.stop.send_replace(true);
++        let held = self.inner.clone();
++        tokio::spawn(async move {
++            let _command = held.locks.commands.acquire().await
++                .map_err(|_| TaskLockDetailedError::Operational(TaskLockError::RedisUnavailable))?;
++            let mut connection = held.locks.connection.clone();
++            // Bound GET before allocation and confirm owner+finite TTL atomically.
++            const CONFIRM: &str = "if redis.call('TYPE',KEYS[1]).ok~='string' then return 0 end;if redis.call('STRLEN',KEYS[1])~=#ARGV[1] then return 0 end;if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end;local t=redis.call('TTL',KEYS[1]);if t>0 and t<=300 then return 1 else return 0 end";
++            let confirmed: i64 = Script::new(CONFIRM).key(&held.key).arg(&held.token)
++                .invoke_async(&mut connection).await
++                .map_err(|e| TaskLockDetailedError::Redis(TaskLockRedisCause::capture(&e)))?;
++            Ok(confirmed == 1)
++        }).await.map_err(|_| TaskLockDetailedError::Operational(TaskLockError::RedisUnavailable))?
++    }
+     pub fn key(&self) -> &str {
+         &self.inner.key
+     }
+--- 044f/rust/crates/coordination/tests/task_lock_detailed.rs
++++ revision2/rust/crates/coordination/tests/task_lock_detailed.rs
+@@ -316,3 +316,136 @@
+     assert_eq!(dropped.load(Ordering::SeqCst), 2);
+     let _: () = redis.del(key).await.unwrap();
+ }
++
++#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
++#[ignore = "requires disposable actual Redis; short-window residual M3U lease contract"]
++async fn failed_m3u_groups_retains_key_without_drop_delete_and_preserves_foreign_owner() {
++    let mut redis = raw().await;
++    let locks = TaskLocks::connect(&std::env::var("REDIS_TEST_URL").unwrap(), config())
++        .await
++        .unwrap();
++    let id = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000 + 1) as i64;
++    let key = format!("task_lock_refresh_m3u_account_groups_{id}");
++    assert!(!redis.exists::<_, bool>(&key).await.unwrap());
++    let dropped = Arc::new(AtomicUsize::new(0));
++    let lease = locks
++        .acquire_retained_detailed(
++            "refresh_m3u_account_groups",
++            id,
++            Arc::new(Owner(dropped.clone())),
++        )
++        .await
++        .unwrap();
++    let token: String = redis.get(&key).await.unwrap();
++    assert_ne!(token, "locked"); // Explicit Source raw-token difference, not normalized parity.
++    assert!(lease
++        .preserve_failed_m3u_groups_until_expiry()
++        .await
++        .unwrap());
++    wait(async || locks.available_leases() == 1).await;
++    assert_eq!(dropped.load(Ordering::SeqCst), 1);
++    assert_eq!(redis.get::<_, String>(&key).await.unwrap(), token);
++    let ttl: i64 = redis.ttl(&key).await.unwrap();
++    assert!((1..=300).contains(&ttl));
++    assert!(matches!(
++        locks
++            .acquire_detailed("refresh_m3u_account_groups", id)
++            .await,
++        Err(TaskLockDetailedError::Operational(TaskLockError::Held))
++    ));
++    let _: usize = redis.del(&key).await.unwrap();
++    let lease = locks
++        .acquire_detailed("refresh_m3u_account_groups", id)
++        .await
++        .unwrap();
++    let _: () = redis.set_ex(&key, "owned-replacement", 300).await.unwrap();
++    assert!(!lease
++        .preserve_failed_m3u_groups_until_expiry()
++        .await
++        .unwrap());
++    assert_eq!(
++        redis.get::<_, String>(&key).await.unwrap(),
++        "owned-replacement"
++    );
++    let _: usize = redis.del(&key).await.unwrap();
++    let lease = locks
++        .acquire_detailed("refresh_m3u_account_groups", id)
++        .await
++        .unwrap();
++    let _: usize = redis.del(&key).await.unwrap();
++    let _: usize = redis.lpush(&key, "owned-wrong-type").await.unwrap();
++    assert!(!lease
++        .preserve_failed_m3u_groups_until_expiry()
++        .await
++        .unwrap());
++    assert_eq!(
++        redis.lrange::<_, Vec<String>>(&key, 0, 0).await.unwrap(),
++        vec!["owned-wrong-type".to_owned()]
++    );
++    let _: usize = redis.del(&key).await.unwrap();
++}
++
++#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
++#[ignore = "requires owned actual Redis and held real confirmation reply"]
++async fn cancelled_m3u_residual_confirmation_keeps_caller_and_lease_until_actual_reply() {
++    let mut redis = raw().await;
++    let proxy = proxy().await;
++    let locks = TaskLocks::connect(&proxy.url, config()).await.unwrap();
++    let id = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000 + 1) as i64;
++    let key = format!("task_lock_refresh_m3u_account_groups_{id}");
++    // Warm the exact read-only script before enabling the gate; do not hold NOSCRIPT.
++    let warm = locks
++        .acquire_detailed("refresh_m3u_account_groups", id)
++        .await
++        .unwrap();
++    assert!(warm
++        .preserve_failed_m3u_groups_until_expiry()
++        .await
++        .unwrap());
++    let _: usize = redis.del(&key).await.unwrap();
++    let dropped = Arc::new(AtomicUsize::new(0));
++    let lease = locks
++        .acquire_retained_detailed(
++            "refresh_m3u_account_groups",
++            id,
++            Arc::new(Owner(dropped.clone())),
++        )
++        .await
++        .unwrap();
++    let token: String = redis.get(&key).await.unwrap();
++    let before = proxy.replies.load(Ordering::SeqCst);
++    proxy.hold.send_replace(true);
++    let pending =
++        tokio::spawn(async move { lease.preserve_failed_m3u_groups_until_expiry().await });
++    wait(async || proxy.replies.load(Ordering::SeqCst) > before).await;
++    assert!(!pending.is_finished());
++    pending.abort();
++    let _ = pending.await;
++    assert_eq!(dropped.load(Ordering::SeqCst), 0);
++    assert_eq!(locks.available_leases(), 0);
++    assert_eq!(redis.get::<_, String>(&key).await.unwrap(), token);
++    proxy.hold.send_replace(false);
++    wait(async || locks.available_leases() == 1).await;
++    assert_eq!(dropped.load(Ordering::SeqCst), 1);
++    assert_eq!(redis.get::<_, String>(&key).await.unwrap(), token);
++    let _: usize = redis.del(&key).await.unwrap();
++}
++
++#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
++#[ignore = "requires disposable actual Redis for wrong-kind capability refusal"]
++async fn non_m3u_groups_cannot_gain_no_delete_disposition() {
++    let mut redis = raw().await;
++    let locks = TaskLocks::connect(&std::env::var("REDIS_TEST_URL").unwrap(), config())
++        .await
++        .unwrap();
++    let task = format!("residual_refusal_{}", uuid::Uuid::new_v4().simple());
++    let key = format!("task_lock_{task}_1");
++    let lease = locks.acquire_detailed(&task, 1).await.unwrap();
++    assert!(matches!(
++        lease.preserve_failed_m3u_groups_until_expiry().await,
++        Err(TaskLockDetailedError::Operational(TaskLockError::Invalid))
++    ));
++    wait(async || !redis.exists::<_, bool>(&key).await.unwrap()).await;
++    wait(async || locks.available_leases() == 1).await;
++    assert_eq!(locks.available_leases(), 1);
++}
+--- /dev/null
++++ revision2/rust/crates/job-transport/datasets/source-m3u-known-failures.json
+@@ -0,0 +1,42 @@
++{
++  "scope": "Exact selected published actual Source4 backend metadata; no new execution or Python frames synthesized",
++  "cases": [
++    {
++      "name": "m3u-missing-local-file",
++      "metadata": {
++        "status": "FAILURE",
++        "result": {
++          "exc_type": "FileNotFoundError",
++          "exc_message": [
++            2,
++            "No such file or directory"
++          ],
++          "exc_module": "builtins"
++        },
++        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 1916, in refresh_m3u_groups\n    with _open_m3u_text_source(source) as m3u_file:\n         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 189, in _open_m3u_text_source\n    return open(source_path, \"r\", encoding=\"utf-8\", errors=\"ignore\")\nFileNotFoundError: [Errno 2] No such file or directory: '/data/m3us/rust-owned-children-m3u-missing-local-file.m3u'\n",
++        "children": [],
++        "date_done": "2026-11-12T05:28:48.553332+00:00",
++        "parent_id": "31427c9d-fa3c-49d7-af37-1c290803f48d",
++        "task_id": "4026cda3-030e-454e-b225-13c38053606d"
++      }
++    },
++    {
++      "name": "m3u-group-SQL-P0001",
++      "metadata": {
++        "status": "FAILURE",
++        "result": {
++          "exc_type": "ProgrammingError",
++          "exc_message": [
++            "rust-owned M3U worker failure\nCONTEXT:  PL/pgSQL function rust_owned_m3u_worker_fail() line 1 at RAISE"
++          ],
++          "exc_module": "django.db.utils"
++        },
++        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.RaiseException: rust-owned M3U worker failure\nCONTEXT:  PL/pgSQL function rust_owned_m3u_worker_fail() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 1971, in refresh_m3u_groups\n    process_groups(account, groups, scan_start_time)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/local.py\", line 182, in __call__\n    return self._get_current_object()(*a, **kw)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 859, in __protected_call__\n    return orig(self, *args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/task.py\", line 430, in __call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 786, in process_groups\n    ChannelGroup.objects.bulk_create_provider_groups(\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        group.name for group in groups_to_create\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/app/apps/channels/models.py\", line 61, in bulk_create_provider_groups\n    self.bulk_create(\n    ~~~~~~~~~~~~~~~~^\n        [\n        ^\n    ...<2 lines>...\n        ]\n        ^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 833, in bulk_create\n    returned_columns = self._batched_insert(\n        objs_without_pk,\n    ...<4 lines>...\n        unique_fields=unique_fields,\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1956, in _batched_insert\n    self._insert(\n    ~~~~~~~~~~~~^\n        item,\n        ^^^^^\n    ...<5 lines>...\n        returning_fields=returning_fields,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1918, in _insert\n    return query.get_compiler(using=using).execute_sql(returning_fields)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1925, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/pair-tools/periodic_worker_observer.py\", line 42, in observed\n    try:return execute(sql,params,many,context)\n               ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: rust-owned M3U worker failure\nCONTEXT:  PL/pgSQL function rust_owned_m3u_worker_fail() line 1 at RAISE\n",
++        "children": [],
++        "date_done": "2026-11-12T05:29:06.241814+00:00",
++        "parent_id": "b29f51c6-37f9-45f0-8d35-3840e3610f8c",
++        "task_id": "6281aa95-b45e-4abc-a158-07c9eed29be1"
++      }
++    }
++  ]
++}
+--- 044f/rust/crates/job-transport/src/decode.rs
++++ revision2/rust/crates/job-transport/src/decode.rs
+@@ -181,6 +181,13 @@
+         } else {
+             match (module, class) {
+                 ("builtins", "ValueError" | "KeyError") => true,
++                ("builtins", "FileNotFoundError") => {
++                    state == State::Failure
++                        && object.len() == 3
++                        && arguments.len() == 2
++                        && arguments[0].as_i64() == Some(2)
++                        && arguments[1].as_str() == Some("No such file or directory")
++                }
+                 ("builtins", "IsADirectoryError") => {
+                     arguments.len() == 2
+                         && arguments[0].as_i64() == Some(21)
+@@ -228,6 +235,42 @@
+ #[cfg(test)]
+ mod tests {
+     use super::*;
++    #[test]
++    fn actual_missing_file_descriptor_is_data_only_and_not_generic_oserror() {
++        let id = Uuid::new_v4();
++        let value = serde_json::json!({"task_id":id,"status":"FAILURE","result":{"exc_module":"builtins","exc_type":"FileNotFoundError","exc_message":[2,"No such file or directory"]},"children":[],"date_done":"2026-11-12T05:00:00.000000+00:00","traceback":"Native opaque diagnostic"});
++        assert_eq!(
++            decode(&serde_json::to_vec(&value).unwrap(), id)
++                .unwrap()
++                .state,
++            State::Failure
++        );
++        for args in [
++            serde_json::json!([13, "No such file or directory"]),
++            serde_json::json!([2, "other"]),
++            serde_json::json!(["2", "No such file or directory"]),
++            serde_json::json!([2, "No such file or directory", "extra"]),
++        ] {
++            let mut bad = value.clone();
++            bad["result"]["exc_message"] = args;
++            assert_eq!(
++                decode(&serde_json::to_vec(&bad).unwrap(), id).unwrap_err(),
++                DecodeError::UnsupportedException
++            );
++        }
++        let mut retry = value.clone();
++        retry["status"] = serde_json::json!("RETRY");
++        assert_eq!(
++            decode(&serde_json::to_vec(&retry).unwrap(), id).unwrap_err(),
++            DecodeError::UnsupportedException
++        );
++        let mut bad = value.clone();
++        bad["result"]["exc_type"] = serde_json::json!("OSError");
++        assert_eq!(
++            decode(&serde_json::to_vec(&bad).unwrap(), id).unwrap_err(),
++            DecodeError::UnsupportedException
++        );
++    }
+     #[test]
+     fn observed_index_failure_metadata_is_read_without_importing_exception_classes() {
+         let corpus: Value = serde_json::from_str(include_str!(
+--- 044f/rust/crates/job-transport/src/scanner_m3u.rs
++++ revision2/rust/crates/job-transport/src/scanner_m3u.rs
+@@ -11,7 +11,7 @@
+ use dispatcharr_ingest_core::{project_entry, stream_hash, ProjectionContext, StreamIdentity};
+ use dispatcharr_store::{
+     AuthService, BoundedM3uBatchError, GroupCleanupAccount, ImportedGroup, ImportedStream,
+-    ScannerM3uLookupCap, Store,
++    M3uGroupImportFailure, M3uGroupImportStage, ScannerM3uLookupCap, Store, StoreError,
+ };
+ use serde_json::{json, Value};
+ use sqlx::{Connection, Row};
+@@ -36,6 +36,96 @@
+     Operational,
+     DrainTimeout,
+ }
++/// Only two observed raised M3U Groups failures, after actual operation and
++/// ownership settlement. Unknown errors never construct this type.
++#[derive(Clone, Debug)]
++pub(crate) struct KnownFailure {
++    class: &'static str,
++    module: &'static str,
++    arguments: Vec<Value>,
++    diagnostic: String,
++}
++impl KnownFailure {
++    fn missing(error: &std::io::Error) -> Result<Self, Error> {
++        if error.raw_os_error() != Some(2) {
++            return Err(Error::Operational);
++        }
++        Ok(Self { class: "FileNotFoundError", module: "builtins",
++            arguments: vec![json!(2), json!("No such file or directory")],
++            diagnostic: "Native Dispatcharr M3U groups diagnostic [owned_std_open]: actual ENOENT; filesystem work completed; owner-confirmed groups key retained until its existing TTL, native renewal stopped. No Python frames executed.".into() })
++    }
++    fn group_create(failure: &M3uGroupImportFailure) -> Result<Self, Error> {
++        let StoreError::Database(error) = &failure.source else {
++            return Err(Error::Operational);
++        };
++        let Some(pg) = error
++            .as_database_error()
++            .and_then(|e| e.try_downcast_ref::<sqlx::postgres::PgDatabaseError>())
++        else {
++            return Err(Error::Operational);
++        };
++        Self::programming(
++            failure.stage,
++            pg.severity(),
++            crate::pg_failure_format::Fields {
++                sqlstate: pg.code(),
++                message: pg.message(),
++                detail: pg.detail(),
++                hint: pg.hint(),
++                context: pg.r#where(),
++                has_position: pg.position().is_some(),
++            },
++        )
++    }
++    fn programming(
++        stage: M3uGroupImportStage,
++        severity: sqlx::postgres::PgSeverity,
++        fields: crate::pg_failure_format::Fields<'_>,
++    ) -> Result<Self, Error> {
++        if stage != M3uGroupImportStage::CreateGroups
++            || severity != sqlx::postgres::PgSeverity::Error
++        {
++            return Err(Error::Operational);
++        }
++        let message = crate::pg_failure_format::render(fields).map_err(|_| Error::Operational)?;
++        Ok(Self { class: "ProgrammingError", module: "django.db.utils", arguments: vec![json!(message)],
++            diagnostic: "Native Dispatcharr M3U groups diagnostic [create_groups]: actual PostgreSQL ERROR P0001; ReadyForQuery and dedicated connection close settled; parsed cache retained; owner-confirmed groups key retained until its existing TTL, native renewal stopped. No Python frames executed.".into() })
++    }
++    pub(crate) fn metadata(
++        &self,
++        message: &crate::scanner_m3u_protocol::Message,
++        date: &str,
++    ) -> Result<Vec<u8>, crate::transport::Error> {
++        if self
++            .arguments
++            .iter()
++            .filter_map(Value::as_str)
++            .any(|v| v.len() > 8192)
++            || self.diagnostic.len() > 16384
++            || date.len() > 40
++            || chrono::DateTime::parse_from_rfc3339(date).is_err()
++        {
++            return Err(crate::transport::Error::Protocol);
++        }
++        let bytes = serde_json::to_vec(&json!({"status":"FAILURE","result":{"exc_type":self.class,"exc_module":self.module,"exc_message":self.arguments},"traceback":self.diagnostic,"children":[],"date_done":date,"task_id":message.id.to_string(),"parent_id":message.parent.to_string()})).map_err(|_| crate::transport::Error::Protocol)?;
++        crate::decode::decode(&bytes, message.id).map_err(|_| crate::transport::Error::Protocol)?;
++        Ok(bytes)
++    }
++}
++pub(crate) enum Terminal {
++    Normal(Value),
++    Raised(KnownFailure),
++}
++enum GroupsError {
++    Operational(Error),
++    Missing(std::io::Error),
++    Import(M3uGroupImportFailure),
++}
++impl From<Error> for GroupsError {
++    fn from(error: Error) -> Self {
++        Self::Operational(error)
++    }
++}
+ // Only these observed audit statements may produce a caught normal return.
+ // The owned error is constructed into this type only after Ready/close settles.
+ #[derive(Clone, Copy)]
+@@ -105,6 +195,7 @@
+     hash_mode: HashMode,
+     account: Account,
+     input: Option<Catalog>,
++    missing_input: bool,
+     cached: Option<Catalog>,
+     owner: Arc<Operation>,
+     done: tokio::sync::oneshot::Receiver<()>,
+@@ -270,6 +361,7 @@
+             hash_mode,
+             account,
+             input: None,
++            missing_input: false,
+             cached: None,
+             owner,
+             done,
+@@ -280,13 +372,31 @@
+             let retained = prepared.owner.clone();
+             let (input, cached) = tokio::task::spawn_blocking(move || {
+                 let _retained = retained;
+-                Ok::<_, Error>((files::input(&path)?, files::cached(&cache)?))
++                Ok::<_, Error>((files::probe_input(&path)?, files::cached(&cache)?))
+             })
+             .await
+             .map_err(|_| Error::Operational)??;
+-            prepared.input = Some(input);
++            match input {
++                files::InputProbe::Present(catalog) => prepared.input = Some(catalog),
++                files::InputProbe::Missing => prepared.missing_input = true,
++            }
+             prepared.cached = cached;
+         } else if kind == Kind::Single {
++            return Err(Error::Unsupported);
++        }
++        if kind == Kind::Single
++            && prepared.missing_input
++            && !prepared
++                .cached
++                .as_ref()
++                .is_some_and(|v| !v.entries.is_empty())
++            && !self
++                .inner
++                .ports
++                .groups_lock_present(id, prepared.owner.clone())
++                .await
++                .map_err(|_| Error::Operational)?
++        {
+             return Err(Error::Unsupported);
+         }
+         // Bounded conservative superset from both owned catalogs. This is
+@@ -639,21 +749,32 @@
+         full: bool,
+         status: &str,
+         message: Option<&str>,
+-    ) -> Result<Value, Error> {
++    ) -> Result<Terminal, Error> {
+         let account = &prepared.account;
+         let owner: Owner = prepared.owner.clone();
+         let Some(lease) = self.lease(Kind::Groups, account.id, owner.clone()).await? else {
+-            return Ok(json!([
++            return Ok(Terminal::Normal(json!([
+                 format!("Task already running for account_id={}.", account.id),
+                 null
+-            ]));
+-        };
+-        let body = async {
++            ])));
++        };
++        let body: Result<Value, GroupsError> = async {
+             if !account.active {
+                 return Ok(json!([
+                     format!("M3UAccount with ID={} not found or inactive.", account.id),
+                     null
+                 ]));
++            }
++            if prepared.missing_input {
++                let path = account.path.clone();
++                let retained = owner.clone();
++                let missing = tokio::task::spawn_blocking(move || {
++                    let _retained = retained;
++                    files::confirm_missing_open(&path)
++                })
++                .await
++                .map_err(|_| Error::Operational)??;
++                return Err(GroupsError::Missing(missing));
+             }
+             let catalog = prepared.input.as_ref().ok_or(Error::Operational)?;
+             let raw = catalog.raw.clone();
+@@ -685,15 +806,53 @@
+                 .collect();
+             self.inner
+                 .store
+-                .import_m3u_groups(account.id, &json!({}), groups, self.now())
++                .import_m3u_groups_report(account.id, &json!({}), groups, self.now())
+                 .await
+-                .map_err(|_| Error::Operational)?;
++                .map_err(GroupsError::Import)?;
+             Ok(files::result(catalog))
+         }
+         .await;
+-        let released = self.release(lease).await;
+-        released?;
+-        let result = body?;
++        let result = match body {
++            Ok(value) => {
++                self.release(lease).await?;
++                value
++            }
++            Err(GroupsError::Operational(error)) => {
++                self.release(lease).await?;
++                return Err(error);
++            }
++            Err(GroupsError::Missing(error)) => {
++                self.settle().await?;
++                let failure = KnownFailure::missing(&error)?;
++                if !lease
++                    .preserve_failed_m3u_groups_until_expiry()
++                    .await
++                    .map_err(|_| Error::Operational)?
++                {
++                    return Err(Error::Operational);
++                }
++                return Ok(Terminal::Raised(failure));
++            }
++            Err(GroupsError::Import(error)) => {
++                // Classify only after the failed operation's actual Ready/close.
++                self.settle().await?;
++                let failure = match KnownFailure::group_create(&error) {
++                    Ok(failure) => failure,
++                    Err(error) => {
++                        self.release(lease).await?;
++                        return Err(error);
++                    }
++                };
++                if !lease
++                    .preserve_failed_m3u_groups_until_expiry()
++                    .await
++                    .map_err(|_| Error::Operational)?
++                {
++                    return Err(Error::Operational);
++                }
++                return Ok(Terminal::Raised(failure));
++            }
++        };
+         if account.active && !full {
+             let text = "M3U groups loaded. Please select groups or refresh M3U to complete setup.";
+             self.update(account, "pending_setup", Some(text), false)
+@@ -709,9 +868,13 @@
+             )
+             .await?;
+         }
+-        Ok(result)
+-    }
+-    pub(crate) async fn execute(&self, kind: Kind, prepared: Prepared) -> Result<Value, Error> {
++        Ok(Terminal::Normal(result))
++    }
++    pub(crate) async fn execute_terminal(
++        &self,
++        kind: Kind,
++        prepared: Prepared,
++    ) -> Result<Terminal, Error> {
+         let result = if kind == Kind::Groups {
+             self.groups(
+                 &prepared,
+@@ -721,7 +884,7 @@
+             )
+             .await
+         } else {
+-            self.single(&prepared).await
++            self.single(&prepared).await.map(Terminal::Normal)
+         };
+         // Also fence raw SQL on every execution error (including a late
+         // pending-setup/audit ErrorResponse) before waiting retained receipts.
+@@ -764,9 +927,13 @@
+         let catalog = if let Some(cached) = cached {
+             cached
+         } else {
+-            let groups = self
++            let groups = match self
+                 .groups(p, true, "fetching", Some("Refresh in progress..."))
+-                .await?;
++                .await?
++            {
++                Terminal::Normal(value) => value,
++                Terminal::Raised(_) => return Err(Error::Operational),
++            };
+             if groups[1].is_null() {
+                 let message = groups[0]
+                     .as_str()
+@@ -1000,3 +1167,168 @@
+         }
+     }
+ }
++
++#[cfg(test)]
++mod known_failure_tests {
++    use super::*;
++    fn message(metadata: &Value) -> crate::scanner_m3u_protocol::Message {
++        let parent = uuid::Uuid::parse_str(metadata["parent_id"].as_str().unwrap()).unwrap();
++        crate::scanner_m3u_protocol::Message {
++            id: uuid::Uuid::parse_str(metadata["task_id"].as_str().unwrap()).unwrap(),
++            root: parent,
++            parent,
++            account: 1,
++            kind: Kind::Groups,
++        }
++    }
++    #[test]
++    fn actual_two_source_failure_descriptors_and_owned_metadata_without_python_frames() {
++        let source: Value =
++            serde_json::from_str(include_str!("../datasets/source-m3u-known-failures.json"))
++                .unwrap();
++        for row in source["cases"].as_array().unwrap() {
++            let original = &row["metadata"];
++            let failure = if row["name"] == "m3u-missing-local-file" {
++                KnownFailure::missing(&std::io::Error::from_raw_os_error(2)).unwrap()
++            } else {
++                KnownFailure::programming(
++                    M3uGroupImportStage::CreateGroups,
++                    sqlx::postgres::PgSeverity::Error,
++                    crate::pg_failure_format::Fields {
++                        sqlstate: "P0001",
++                        message: "rust-owned M3U worker failure",
++                        detail: None,
++                        hint: None,
++                        context: Some(
++                            "PL/pgSQL function rust_owned_m3u_worker_fail() line 1 at RAISE",
++                        ),
++                        has_position: false,
++                    },
++                )
++                .unwrap()
++            };
++            let raw = failure
++                .metadata(&message(original), original["date_done"].as_str().unwrap())
++                .unwrap();
++            let actual: Value = serde_json::from_slice(&raw).unwrap();
++            for key in [
++                "status",
++                "result",
++                "task_id",
++                "parent_id",
++                "children",
++                "date_done",
++            ] {
++                assert_eq!(actual.get(key), original.get(key), "{}:{key}", row["name"]);
++            }
++            assert!(actual["traceback"]
++                .as_str()
++                .unwrap()
++                .starts_with("Native Dispatcharr M3U groups diagnostic"));
++            assert!(!actual["traceback"]
++                .as_str()
++                .unwrap()
++                .contains("Traceback (most recent call last)"));
++            assert_ne!(actual["traceback"], original["traceback"]);
++            assert_eq!(
++                crate::decode::decode(&raw, message(original).id)
++                    .unwrap()
++                    .state,
++                crate::decode::State::Failure
++            );
++        }
++    }
++    #[test]
++    fn unrelated_fs_error_or_sql_stage_severity_code_position_never_becomes_known_failure() {
++        for code in [1, 5, 13, 20, 21, 28] {
++            assert!(KnownFailure::missing(&std::io::Error::from_raw_os_error(code)).is_err());
++        }
++        let fields = crate::pg_failure_format::Fields {
++            sqlstate: "P0001",
++            message: "owned",
++            detail: None,
++            hint: None,
++            context: None,
++            has_position: false,
++        };
++        for stage in [
++            M3uGroupImportStage::Validation,
++            M3uGroupImportStage::ReadGroups,
++            M3uGroupImportStage::ReadCreatedGroups,
++            M3uGroupImportStage::ReadRelationBytes,
++            M3uGroupImportStage::ReadRelations,
++            M3uGroupImportStage::CreateRelations,
++            M3uGroupImportStage::UpdateRelations,
++            M3uGroupImportStage::Decode,
++        ] {
++            assert!(
++                KnownFailure::programming(stage, sqlx::postgres::PgSeverity::Error, fields)
++                    .is_err()
++            );
++        }
++        for severity in [
++            sqlx::postgres::PgSeverity::Fatal,
++            sqlx::postgres::PgSeverity::Panic,
++        ] {
++            assert!(
++                KnownFailure::programming(M3uGroupImportStage::CreateGroups, severity, fields)
++                    .is_err()
++            );
++        }
++        for code in ["P0002", "23505", "08006"] {
++            assert!(KnownFailure::programming(
++                M3uGroupImportStage::CreateGroups,
++                sqlx::postgres::PgSeverity::Error,
++                crate::pg_failure_format::Fields {
++                    sqlstate: code,
++                    ..fields
++                }
++            )
++            .is_err());
++        }
++        assert!(KnownFailure::programming(
++            M3uGroupImportStage::CreateGroups,
++            sqlx::postgres::PgSeverity::Error,
++            crate::pg_failure_format::Fields {
++                has_position: true,
++                ..fields
++            }
++        )
++        .is_err());
++        let large = "x".repeat(8193);
++        assert!(KnownFailure::programming(
++            M3uGroupImportStage::CreateGroups,
++            sqlx::postgres::PgSeverity::Error,
++            crate::pg_failure_format::Fields {
++                message: &large,
++                ..fields
++            }
++        )
++        .is_err());
++    }
++    #[test]
++    fn create_stage_alone_does_not_classify_io_protocol_or_input_failure() {
++        for source in [
++            StoreError::Database(sqlx::Error::Io(std::io::Error::from_raw_os_error(5))),
++            StoreError::Database(sqlx::Error::Protocol("owned".into())),
++            StoreError::InvalidInput(json!({"detail":"owned"})),
++        ] {
++            let report = M3uGroupImportFailure {
++                stage: M3uGroupImportStage::CreateGroups,
++                source,
++            };
++            assert!(KnownFailure::group_create(&report).is_err());
++        }
++    }
++    #[test]
++    fn invalid_date_or_oversized_diagnostic_cannot_reach_writer() {
++        let id = uuid::Uuid::new_v4();
++        let metadata = json!({"parent_id":id,"task_id":uuid::Uuid::new_v4()});
++        let mut failure = KnownFailure::missing(&std::io::Error::from_raw_os_error(2)).unwrap();
++        assert!(failure.metadata(&message(&metadata), "not-a-date").is_err());
++        failure.diagnostic = "x".repeat(16385);
++        assert!(failure
++            .metadata(&message(&metadata), "2026-11-12T05:00:00.000000+00:00")
++            .is_err());
++    }
++}
+--- 044f/rust/crates/job-transport/src/scanner_m3u_files.rs
++++ revision2/rust/crates/job-transport/src/scanner_m3u_files.rs
+@@ -100,6 +100,38 @@
+         return Err(Error::Operational);
+     }
+     Ok(f)
++}
++pub(crate) enum InputProbe {
++    Present(Catalog),
++    Missing,
++}
++/// Only ENOENT for an exact absent leaf under an existing owned directory.
++/// No bytes are read from an unexpectedly appearing/replaced path. General
++/// concurrent filesystem mutation remains outside the admitted local domain.
++pub(crate) fn confirm_missing_open(path: &Path) -> Result<std::io::Error, Error> {
++    let parent = fs::symlink_metadata(path.parent().ok_or(Error::Unsupported)?)
++        .map_err(|_| Error::Unsupported)?;
++    if !parent.is_dir() || parent.file_type().is_symlink() {
++        return Err(Error::Unsupported);
++    }
++    match fs::symlink_metadata(path) {
++        Err(error) if error.raw_os_error() == Some(2) => {}
++        _ => return Err(Error::Operational),
++    }
++    match fs::File::open(path) {
++        Err(error) if error.raw_os_error() == Some(2) => Ok(error),
++        _ => Err(Error::Operational),
++    }
++}
++pub(crate) fn probe_input(path: &Path) -> Result<InputProbe, Error> {
++    match fs::symlink_metadata(path) {
++        Err(error) if error.raw_os_error() == Some(2) => {
++            confirm_missing_open(path)?;
++            Ok(InputProbe::Missing)
++        }
++        Err(_) => Err(Error::Operational),
++        Ok(_) => input(path).map(InputProbe::Present),
++    }
+ }
+ pub(crate) fn input(path: &Path) -> Result<Catalog, Error> {
+     let file = regular(path, INPUT_BYTES)?;
+@@ -267,6 +299,24 @@
+ #[cfg(test)]
+ mod tests {
+     use super::*;
++    #[test]
++    fn missing_owned_leaf_is_distinct_from_missing_root_present_file_and_symlink() {
++        let root =
++            std::env::temp_dir().join(format!("rust-owned-m3u-missing-{}", uuid::Uuid::new_v4()));
++        fs::create_dir(&root).unwrap();
++        let path = root.join("absent.m3u");
++        assert!(matches!(probe_input(&path), Ok(InputProbe::Missing)));
++        assert_eq!(confirm_missing_open(&path).unwrap().raw_os_error(), Some(2));
++        fs::write(&path, "#EXTM3U\n").unwrap();
++        assert!(confirm_missing_open(&path).is_err());
++        assert!(matches!(probe_input(&path), Ok(InputProbe::Present(_))));
++        fs::remove_file(&path).unwrap();
++        std::os::unix::fs::symlink(root.join("missing-target"), &path).unwrap();
++        assert!(confirm_missing_open(&path).is_err());
++        assert!(probe_input(&path).is_err());
++        fs::remove_dir_all(&root).unwrap();
++        assert!(probe_input(&path).is_err());
++    }
+     #[test]
+     fn one_entry_exact_source_cache_bytes_and_domain_negatives() {
+         let root =
+--- 044f/rust/crates/job-transport/src/scanner_m3u_io.rs
++++ revision2/rust/crates/job-transport/src/scanner_m3u_io.rs
+@@ -136,15 +136,43 @@
+             Err(e) => Err(map(e)),
+         }
+     }
+-    pub(crate) async fn write(
++    pub(crate) async fn write_terminal(
+         &self,
+         m: &Message,
+-        result: Value,
++        terminal: crate::scanner_m3u::Terminal,
+         owner: Arc<dyn Send + Sync>,
+     ) -> Result<bool, Error> {
+-        self.jobs
+-            .write_result(m.id, result, Some(m.parent), Vec::new(), owner)
+-            .await
++        match terminal {
++            crate::scanner_m3u::Terminal::Normal(result) => {
++                self.jobs
++                    .write_result(m.id, result, Some(m.parent), Vec::new(), owner)
++                    .await
++            }
++            crate::scanner_m3u::Terminal::Raised(failure) => {
++                let date = chrono::Utc::now()
++                    .format("%Y-%m-%dT%H:%M:%S%.6f+00:00")
++                    .to_string();
++                self.jobs
++                    .write_metadata(m.id, failure.metadata(m, &date)?, owner)
++                    .await
++            }
++        }
++    }
++    pub(crate) async fn groups_lock_present(
++        &self,
++        account: i64,
++        owner: Arc<dyn Send + Sync>,
++    ) -> Result<bool, Error> {
++        if account <= 0 || account > i64::from(i32::MAX) {
++            return Err(Error::Protocol);
++        }
++        let key = format!("task_lock_refresh_m3u_account_groups_{account}");
++        let (present, _) = self
++            .cache
++            .command_classified::<i64, _>("return redis.call('EXISTS',KEYS[1])", &[key], &[], owner)
++            .await
++            .map_err(map)?;
++        Ok(present == 1)
+     }
+     pub(crate) async fn cache_preflight(&self, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
+         let (n, _) = self
+--- 044f/rust/crates/job-transport/src/scanner_m3u_worker.rs
++++ revision2/rust/crates/job-transport/src/scanner_m3u_worker.rs
+@@ -108,12 +108,12 @@
+                 .map_err(Error::Transport)?;
+             let value = inner
+                 .service
+-                .execute(message.kind, prepared)
++                .execute_terminal(message.kind, prepared)
+                 .await
+                 .map_err(Error::Domain)?;
+             let written = inner
+                 .ports
+-                .write(&message, value, owner)
++                .write_terminal(&message, value, owner)
+                 .await
+                 .map_err(Error::Transport)?;
+             Ok(if written {
+--- 044f/rust/crates/store/src/import_groups.rs
++++ revision2/rust/crates/store/src/import_groups.rs
+@@ -22,6 +22,45 @@
+     pub created_relationships: usize,
+     pub updated_relationships: usize,
+ }
++/// Exact operation provenance; only separately qualified stages may classify an error.
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub enum M3uGroupImportStage {
++    Validation,
++    ReadGroups,
++    CreateGroups,
++    ReadCreatedGroups,
++    ReadRelationBytes,
++    ReadRelations,
++    CreateRelations,
++    UpdateRelations,
++    Decode,
++}
++#[derive(Debug)]
++pub struct M3uGroupImportFailure {
++    pub stage: M3uGroupImportStage,
++    pub source: StoreError,
++}
++impl M3uGroupImportFailure {
++    fn sql(stage: M3uGroupImportStage, source: sqlx::Error) -> Self {
++        Self {
++            stage,
++            source: StoreError::Database(source),
++        }
++    }
++}
++impl From<StoreError> for M3uGroupImportFailure {
++    fn from(source: StoreError) -> Self {
++        Self {
++            stage: M3uGroupImportStage::Validation,
++            source,
++        }
++    }
++}
++impl From<sqlx::Error> for M3uGroupImportFailure {
++    fn from(source: sqlx::Error) -> Self {
++        Self::sql(M3uGroupImportStage::Decode, source)
++    }
++}
+ struct Budget(usize);
+ impl Write for Budget {
+     fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+@@ -89,14 +128,27 @@
+         groups: Vec<ImportedGroup>,
+         scan_time: DateTime<Utc>,
+     ) -> Result<GroupImportCounts, StoreError> {
++        self.import_m3u_groups_report(account_id, account_properties, groups, scan_time)
++            .await
++            .map_err(|failure| failure.source)
++    }
++    /// Same mutation engine as the legacy public API; this additive result only
++    /// preserves statement provenance. It introduces no retry or transaction.
++    pub async fn import_m3u_groups_report(
++        &self,
++        account_id: i64,
++        account_properties: &Value,
++        groups: Vec<ImportedGroup>,
++        scan_time: DateTime<Utc>,
++    ) -> Result<GroupImportCounts, M3uGroupImportFailure> {
+         if groups.len() > MAX_IMPORT_GROUPS {
+-            return Err(invalid());
++            return Err(invalid().into());
+         }
+         serde_json::to_writer(&mut Budget(MAX_IMPORT_GROUP_BYTES), &groups)
+             .map_err(|_| invalid())?;
+         let mut seen = HashSet::new();
+         if groups.iter().any(|group| !seen.insert(group.name.as_str())) {
+-            return Err(invalid());
++            return Err(invalid().into());
+         }
+         if groups.is_empty() {
+             return Ok(GroupImportCounts::default());
+@@ -106,7 +158,7 @@
+             .map(|group| group.name.as_str())
+             .collect::<Vec<_>>();
+         let existing=sqlx::query("SELECT id::bigint AS id,name FROM dispatcharr_channels_channelgroup WHERE name=ANY($1)")
+-            .bind(&names).fetch_all(&self.pool).await?;
++            .bind(&names).fetch_all(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadGroups, e))?;
+         let mut all = existing
+             .into_iter()
+             .map(|row| {
+@@ -131,21 +183,21 @@
+         };
+         if !missing.is_empty() {
+             sqlx::query("INSERT INTO dispatcharr_channels_channelgroup(name) SELECT value FROM jsonb_array_elements_text($1) AS names(value)")
+-                .bind(json!(missing)).execute(&self.pool).await?;
++                .bind(json!(missing)).execute(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::CreateGroups, e))?;
+             let created=sqlx::query("SELECT id::bigint AS id,name FROM dispatcharr_channels_channelgroup WHERE name=ANY($1)")
+-                .bind(&missing).fetch_all(&self.pool).await?;
++                .bind(&missing).fetch_all(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadCreatedGroups, e))?;
+             for row in created {
+                 all.push((row.try_get("id")?, row.try_get("name")?));
+             }
+         }
+         let ids = all.iter().map(|(id, _)| *id).collect::<Vec<_>>();
+         let existing_bytes:i64=sqlx::query_scalar("SELECT COALESCE(sum(octet_length(custom_properties::text)),0)::bigint FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND channel_group_id=ANY($2)")
+-            .bind(account_id).bind(&ids).fetch_one(&self.pool).await?;
++            .bind(account_id).bind(&ids).fetch_one(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadRelationBytes, e))?;
+         if existing_bytes > MAX_IMPORT_GROUP_BYTES as i64 {
+-            return Err(invalid());
++            return Err(invalid().into());
+         }
+         let existing=sqlx::query("SELECT id::bigint AS id,channel_group_id::bigint AS channel_group_id,custom_properties FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND channel_group_id=ANY($2)")
+-            .bind(account_id).bind(&ids).fetch_all(&self.pool).await?;
++            .bind(account_id).bind(&ids).fetch_all(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadRelations, e))?;
+         let existing = existing
+             .into_iter()
+             .map(|row| Ok((row.try_get::<i64, _>("channel_group_id")?, row)))
+@@ -179,11 +231,11 @@
+         counts.updated_relationships = updates.len();
+         if !creates.is_empty() {
+             sqlx::query("INSERT INTO dispatcharr_channels_channelgroupm3uaccount(channel_group_id,m3u_account_id,custom_properties,enabled,auto_channel_sync,last_seen,is_stale) SELECT channel_group_id,m3u_account_id,custom_properties,enabled,auto_channel_sync,last_seen,is_stale FROM jsonb_populate_recordset(NULL::dispatcharr_channels_channelgroupm3uaccount,$1) ON CONFLICT DO NOTHING")
+-            .bind(json!(creates)).execute(&self.pool).await?;
++            .bind(json!(creates)).execute(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::CreateRelations, e))?;
+         }
+         if !updates.is_empty() {
+             sqlx::query("UPDATE dispatcharr_channels_channelgroupm3uaccount AS target SET custom_properties=incoming.custom_properties,last_seen=incoming.last_seen,is_stale=false FROM jsonb_populate_recordset(NULL::dispatcharr_channels_channelgroupm3uaccount,$1) AS incoming WHERE target.id=incoming.id")
+-            .bind(json!(updates)).execute(&self.pool).await?;
++            .bind(json!(updates)).execute(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::UpdateRelations, e))?;
+         }
+         Ok(counts)
+     }
+@@ -191,6 +243,49 @@
+ #[cfg(test)]
+ mod tests {
+     use super::*;
++    #[tokio::test]
++    async fn legacy_and_tagged_group_apis_share_validation_and_empty_noop() {
++        let pool = sqlx::postgres::PgPoolOptions::new()
++            .connect_lazy("postgresql://owned:owned@127.0.0.1:9/owned_no_connection")
++            .unwrap();
++        let store = Store::from_pool(pool);
++        let duplicate = vec![
++            ImportedGroup {
++                name: "same".into(),
++                custom_properties: Map::new()
++            };
++            2
++        ];
++        let now = Utc::now();
++        let legacy = store
++            .import_m3u_groups(1, &json!({}), duplicate.clone(), now)
++            .await
++            .unwrap_err();
++        let detailed = store
++            .import_m3u_groups_report(1, &json!({}), duplicate, now)
++            .await
++            .unwrap_err();
++        assert_eq!(detailed.stage, M3uGroupImportStage::Validation);
++        match (legacy, detailed.source) {
++            (StoreError::InvalidInput(a), StoreError::InvalidInput(b)) => assert_eq!(a, b),
++            _ => panic!("same validation error required"),
++        }
++        assert_eq!(
++            store
++                .import_m3u_groups(1, &json!({}), vec![], now)
++                .await
++                .unwrap(),
++            GroupImportCounts::default()
++        );
++        assert_eq!(
++            store
++                .import_m3u_groups_report(1, &json!({}), vec![], now)
++                .await
++                .unwrap(),
++            GroupImportCounts::default()
++        );
++        store.pool.close().await;
++    }
+     #[test]
+     fn preserves_python_numeric_equality_legacy_strings_and_nonobject_unchanged_values() {
+         let props = serde_json::from_value::<Map<String, Value>>(json!({"xc_id":1})).unwrap();
+--- 044f/rust/crates/store/src/lib.rs
++++ revision2/rust/crates/store/src/lib.rs
+@@ -62,7 +62,8 @@
+ mod import_pipeline;
+ pub use import_cleanup::{GroupCleanupAccount, GroupCleanupCounts, StreamCleanupCounts};
+ pub use import_groups::{
+-    GroupImportCounts, ImportedGroup, MAX_IMPORT_GROUPS, MAX_IMPORT_GROUP_BYTES,
++    GroupImportCounts, ImportedGroup, M3uGroupImportFailure, M3uGroupImportStage,
++    MAX_IMPORT_GROUPS, MAX_IMPORT_GROUP_BYTES,
+ };
+ pub use import_pipeline::{CacheBatchCounts, CacheBatchRequest};
+ mod json_compat;

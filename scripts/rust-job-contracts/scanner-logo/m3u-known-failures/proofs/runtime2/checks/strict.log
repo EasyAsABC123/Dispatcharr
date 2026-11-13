@@ -1,0 +1,56 @@
+    Checking tokio v1.54.1
+   Compiling getrandom v0.3.4
+    Checking rand_core v0.9.5
+    Checking rand_chacha v0.9.0
+    Checking rand v0.9.5
+    Checking data-encoding v2.11.1
+    Checking tungstenite v0.29.0
+    Checking dispatcharr-ingest-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/ingest-core)
+    Checking dispatcharr-contracts v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/contracts)
+   Compiling dispatcharr-xmltv-parser v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/xmltv-parser)
+    Checking tokio-util v0.7.20
+    Checking combine v4.6.9
+    Checking redis v0.32.7
+    Checking hyper v1.12.0
+    Checking hyper-util v0.1.21
+    Checking tower v0.5.3
+    Checking tokio-stream v0.1.19
+    Checking tokio-rustls v0.26.6
+    Checking hyper-rustls v0.27.10
+    Checking sqlx-core v0.8.6
+    Checking tower-http v0.6.11
+    Checking reqwest v0.12.28
+    Checking sqlx-postgres v0.8.6
+    Checking tokio-tungstenite v0.29.0
+    Checking axum v0.8.9
+    Checking sqlx v0.8.6
+    Checking dispatcharr-upstream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/upstream-http)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/store)
+    Checking dispatcharr-coordination v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/coordination)
+    Checking dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/output-store)
+    Checking dispatcharr-backups v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/backups)
+    Checking dispatcharr-ingest-epg v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/ingest-epg)
+    Checking dispatcharr-realtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/realtime)
+    Checking dispatcharr-job-transport v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust/crates/job-transport)
+error: this boolean expression can be simplified
+   --> crates/job-transport/src/scanner_m3u.rs:389:16
+    |
+389 |               && !prepared
+    |  ________________^
+390 | |                 .cached
+391 | |                 .as_ref()
+392 | |                 .is_some_and(|v| !v.entries.is_empty())
+    | |_______________________________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#nonminimal_bool
+    = note: `-D clippy::nonminimal-bool` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::nonminimal_bool)]`
+help: try
+    |
+389 ~             && prepared
+390 +                 .cached
+391 +                 .as_ref().is_none_or(|v| v.entries.is_empty())
+    |
+
+error: could not compile `dispatcharr-job-transport` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

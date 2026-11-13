@@ -1,0 +1,128 @@
+{
+  "state": "SETTLED",
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-credential-native-qa-1/source",
+  "target": "/tmp/dispatcharr-notification-credential-native-qa1-target-1",
+  "source_count": 798,
+  "jobs": 2,
+  "debug": 0,
+  "incremental": false,
+  "Cargo_network": "offline",
+  "format_note": "cargo fmt performs no dependency resolution; offline env applies; build/clippy/test commands explicitly --offline --locked",
+  "commands": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "started_utc": "2026-11-12T23:11:47.465360+00:00",
+      "state": "SETTLED",
+      "pid": 3,
+      "starttime": "24550251",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-12T23:11:49.181667+00:00"
+    },
+    {
+      "name": "non-test-store",
+      "argv": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib"
+      ],
+      "started_utc": "2026-11-12T23:11:49.181859+00:00",
+      "state": "SETTLED",
+      "pid": 30,
+      "starttime": "24550422",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-12T23:12:37.768060+00:00"
+    },
+    {
+      "name": "strict-alltargets",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "started_utc": "2026-11-12T23:12:37.768292+00:00",
+      "state": "SETTLED",
+      "pid": 4156,
+      "starttime": "24555281",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-12T23:13:06.826309+00:00"
+    },
+    {
+      "name": "existing-pure-notifications",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "notifications::tests::"
+      ],
+      "started_utc": "2026-11-12T23:13:06.826542+00:00",
+      "state": "SETTLED",
+      "pid": 5780,
+      "starttime": "24558187",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-12T23:13:34.279901+00:00"
+    },
+    {
+      "name": "credentials-lib-ELF-no-run",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "notifications::credentials_sql_tests",
+        "--no-run"
+      ],
+      "started_utc": "2026-11-12T23:13:34.280186+00:00",
+      "state": "SETTLED",
+      "pid": 6082,
+      "starttime": "24560932",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-12T23:13:34.444593+00:00"
+    }
+  ],
+  "started_utc": "2026-11-12T23:11:47.465290+00:00",
+  "wrapper_pid": 2,
+  "source_bytes_unchanged": true,
+  "completed_utc": "2026-11-12T23:13:34.482914+00:00",
+  "passed": true,
+  "all_started_commands_settled": true,
+  "actual_wrapper_exit": 0
+}

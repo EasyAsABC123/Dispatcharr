@@ -27,16 +27,20 @@ bound to the measured image/workload.
 ## Current executable queues
 
 - **Streaming/integration:** image54 package/Main evidence is qualified. Capture
-  bounded Original profile and Xtream action behavior, then implement and verify
-  confirmed remaining format/profile/output gaps.
+  bounded Original profile and Xtream observations are now captured (24 model,
+  38 framework and 38 TCP cases, with failed predecessors retained). Implement and
+  verify the remaining format/profile/output and physical SQL ownership gaps.
 - **API/operations:** physical notification cases preserve connection-drain
   failures in cases 2, 4 and 6; the composite remains negative. The new 20-request
-  Original JWT/API-key capture passes. Implement and compare the observed personal
-  notification permissions, preserving separate administrative write checks.
+  Original JWT/API-key capture and matching Native20 effects pass. The personal
+  permission fix is in the qualified source union; preserve separate administrative
+  write checks and finish the dependency shutdown/other API and operational gaps.
 - **Ingestion:** the M3U candidate passes affected-crate checks and all 189
   eight-domain guest comparisons. Its host cleanup-parser failure remains
-  recorded. Finish the distinct lease and corrected result-denial controls;
-  configured Series/recurring jobs and clocked scheduling remain separate work.
+  recorded. Three lease controls and the corrected remaining two physical cases21
+  pass. Configured Series/recurring Source11 observations are captured with an
+  explicit missing-SQLSTATE instrumentation field; Native implementation, clocked
+  scheduling and complete child execution remain separate work.
 - **Primary agent:** review/integrate the three tracks, finish Source-contract
   assignments, keep evidence and milestone status current, and commit/push scoped
   completed work with receiving-ref verification.

@@ -1,0 +1,167 @@
+{
+  "scope": "Actual corrected final2 physical phases21checks only; predecessor negatives/coreproof remain separate",
+  "actual_host_guest_exit": 0,
+  "checks": 21,
+  "cases": 2,
+  "phase_names": [
+    "result-denied",
+    "old-SUCCESS"
+  ],
+  "all_named_checks_pass": true,
+  "installed_version": "8.10.3",
+  "all_Default_bytes_equal": true,
+  "actual_Native_and_Source_and_proxy_settlement": {
+    "Source": [
+      {
+        "pid": 399,
+        "actual_exit": 0,
+        "process_settled": true,
+        "finished_utc": "2026-11-12T23:41:45.358941+00:00"
+      },
+      {
+        "pid": 467,
+        "actual_exit": 0,
+        "process_settled": true,
+        "finished_utc": "2026-11-12T23:41:49.128360+00:00"
+      }
+    ],
+    "Native": [
+      {
+        "actual_exit": 0,
+        "process_settled": true,
+        "commands": [
+          {
+            "action": "configure",
+            "began_utc": "2026-11-12T23:41:45.419462+00:00",
+            "finished_utc": "2026-11-12T23:41:45.476191+00:00",
+            "reply": {
+              "prepared": true
+            }
+          },
+          {
+            "action": "run",
+            "began_utc": "2026-11-12T23:41:45.476209+00:00",
+            "finished_utc": "2026-11-12T23:41:45.537664+00:00",
+            "reply": {
+              "run": "Err(Transport(Corrupt))",
+              "slots": 1
+            }
+          },
+          {
+            "action": "shutdown",
+            "began_utc": "2026-11-12T23:41:45.547091+00:00",
+            "finished_utc": "2026-11-12T23:41:45.547173+00:00",
+            "reply": {
+              "drained": true
+            }
+          }
+        ]
+      },
+      {
+        "actual_exit": 0,
+        "process_settled": true,
+        "commands": [
+          {
+            "action": "configure",
+            "began_utc": "2026-11-12T23:41:49.137085+00:00",
+            "finished_utc": "2026-11-12T23:41:49.191081+00:00",
+            "reply": {
+              "prepared": true
+            }
+          },
+          {
+            "action": "run",
+            "began_utc": "2026-11-12T23:41:49.191096+00:00",
+            "finished_utc": "2026-11-12T23:41:49.247423+00:00",
+            "reply": {
+              "run": "Ok(ResultAlreadySucceeded(a97b99c3-f1d3-4ebe-b507-a94c6f5802da))",
+              "slots": 1
+            }
+          },
+          {
+            "action": "shutdown",
+            "began_utc": "2026-11-12T23:41:49.259634+00:00",
+            "finished_utc": "2026-11-12T23:41:49.259695+00:00",
+            "reply": {
+              "drained": true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "project": "dispatcharr-scanner-children-c44f76a2e7",
+  "CID": "2642fb1291e30412b6a288afff7e19495dde83ee952039c6052e229aea93e498",
+  "fresh_independent_cleanup": [
+    {
+      "kind": "exact_CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=2642fb1291e30412b6a288afff7e19495dde83ee952039c6052e229aea93e498"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794526976.4275646,
+      "finished_epoch": 1794526976.4371364,
+      "empty": true
+    },
+    {
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-c44f76a2e7"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794526976.4371388,
+      "finished_epoch": 1794526976.4465773,
+      "empty": true
+    },
+    {
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-c44f76a2e7"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794526976.4465795,
+      "finished_epoch": 1794526976.455571,
+      "empty": true
+    },
+    {
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-c44f76a2e7"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794526976.4555724,
+      "finished_epoch": 1794526976.4646726,
+      "empty": true
+    }
+  ],
+  "all_owned_absent": true,
+  "source_report_sha256": "2e69393241b5c1b97d227823b15ad41e5088ff6fdc385453a6374929dcc1b901",
+  "integration_sha256": "9ca0264243c17cedd77e4c85444146d9875a85fe13b296dc7f847f3a5d3b9432"
+}

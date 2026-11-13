@@ -1,0 +1,15 @@
+--- frozen2/rust/crates/job-transport/src/scanner_m3u.rs
++++ candidate3/rust/crates/job-transport/src/scanner_m3u.rs
+@@ -386,10 +386,10 @@
+         }
+         if kind == Kind::Single
+             && prepared.missing_input
+-            && !prepared
++            && prepared
+                 .cached
+                 .as_ref()
+-                .is_some_and(|v| !v.entries.is_empty())
++                .is_none_or(|v| v.entries.is_empty())
+             && !self
+                 .inner
+                 .ports

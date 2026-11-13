@@ -1,0 +1,145 @@
+{
+  "passed": true,
+  "scope": "Two exact-source no-run test-harness builds and outside preservation, no tests/fixtures executed",
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-3/source",
+  "source_map_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-3/source-inputs.json",
+  "source_map_sha256": "e7e743ad86044f7a76f7cacc79dbd456c01325ccae8d76d8fe45139827aac5e4",
+  "source_inputs": 798,
+  "compiler_record_sha256": "d70ec1ba1cbabd958b9e0a71e00099579bee97994f0be35c1315ad9963b9261b",
+  "environment_record_sha256": "0ed3e90ed75ec64cce8a2d49839100b28b32d1202395745c439231f854ed3221",
+  "phases": [
+    {
+      "name": "job-library",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--no-run",
+        "--message-format=json",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-3/source/rust",
+      "began_epoch": 1794520550.616854,
+      "process_settled": true,
+      "actual_exit": 0,
+      "source_map_sha256": "e7e743ad86044f7a76f7cacc79dbd456c01325ccae8d76d8fe45139827aac5e4",
+      "pid": 15,
+      "finished_epoch": 1794520613.8373208,
+      "stdout_sha256": "086976f6321da364987f77806b3a7eb3ce5f0dcaa9f5e588725127d601b73d36",
+      "stderr_sha256": "253c9b7132773809ce4e745fb83481d389b70a64f781d7f9ff6e50815145da41",
+      "source_unchanged_after_wait": true
+    },
+    {
+      "name": "coordination-residual",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--no-run",
+        "--message-format=json",
+        "-p",
+        "dispatcharr-coordination",
+        "--test",
+        "task_lock_detailed"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-3/source/rust",
+      "began_epoch": 1794520613.9087126,
+      "process_settled": true,
+      "actual_exit": 0,
+      "source_map_sha256": "e7e743ad86044f7a76f7cacc79dbd456c01325ccae8d76d8fe45139827aac5e4",
+      "pid": 8543,
+      "finished_epoch": 1794520622.2794406,
+      "stdout_sha256": "8c2efffc6083aba61230e23f3a59f0e405cc0ed8fe6bbf3d000f982f63f43baf",
+      "stderr_sha256": "ec4071d74f17216b194dc1b4cccec17620a71969cb08c6554f9d4d6434226d04",
+      "source_unchanged_after_wait": true
+    }
+  ],
+  "outside_peers": [
+    {
+      "name": "job-library",
+      "compiled_path": "/home/justin/github/Dispatcharr/artifacts/rust/target-m3u-failure-qa-elf-1/debug/deps/dispatcharr_job_transport-6fc7d4b8b952688b",
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-qa-elf-build-1/outside-peers/job-library",
+      "bytes": 62524160,
+      "sha256": "746286ecda2c293099713e48a19abba7e6e0b5ad9c3c1318f027b4a78716ca72",
+      "compiler_artifact": {
+        "reason": "compiler-artifact",
+        "package_id": "path+file:///home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-3/source/rust/crates/job-transport#dispatcharr-job-transport@0.1.0",
+        "manifest_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-3/source/rust/crates/job-transport/Cargo.toml",
+        "target": {
+          "kind": [
+            "lib"
+          ],
+          "crate_types": [
+            "lib"
+          ],
+          "name": "dispatcharr_job_transport",
+          "src_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-3/source/rust/crates/job-transport/src/lib.rs",
+          "edition": "2021",
+          "doc": true,
+          "doctest": true,
+          "test": true
+        },
+        "profile": {
+          "opt_level": "0",
+          "debuginfo": 0,
+          "debug_assertions": true,
+          "overflow_checks": true,
+          "test": true
+        },
+        "features": [],
+        "filenames": [
+          "/home/justin/github/Dispatcharr/artifacts/rust/target-m3u-failure-qa-elf-1/debug/deps/dispatcharr_job_transport-6fc7d4b8b952688b"
+        ],
+        "executable": "/home/justin/github/Dispatcharr/artifacts/rust/target-m3u-failure-qa-elf-1/debug/deps/dispatcharr_job_transport-6fc7d4b8b952688b",
+        "fresh": false
+      },
+      "copied_after_all_actual_waits0": true
+    },
+    {
+      "name": "coordination-residual",
+      "compiled_path": "/home/justin/github/Dispatcharr/artifacts/rust/target-m3u-failure-qa-elf-1/debug/deps/task_lock_detailed-66204c8e9735d347",
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-qa-elf-build-1/outside-peers/coordination-residual",
+      "bytes": 7049416,
+      "sha256": "f0787e4bd426457523aa262536063bfdd5c211059d85d536f4a27f7913407510",
+      "compiler_artifact": {
+        "reason": "compiler-artifact",
+        "package_id": "path+file:///home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-3/source/rust/crates/coordination#dispatcharr-coordination@0.1.0",
+        "manifest_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-3/source/rust/crates/coordination/Cargo.toml",
+        "target": {
+          "kind": [
+            "test"
+          ],
+          "crate_types": [
+            "bin"
+          ],
+          "name": "task_lock_detailed",
+          "src_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-3/source/rust/crates/coordination/tests/task_lock_detailed.rs",
+          "edition": "2021",
+          "doc": false,
+          "doctest": false,
+          "test": true
+        },
+        "profile": {
+          "opt_level": "0",
+          "debuginfo": 0,
+          "debug_assertions": true,
+          "overflow_checks": true,
+          "test": true
+        },
+        "features": [],
+        "filenames": [
+          "/home/justin/github/Dispatcharr/artifacts/rust/target-m3u-failure-qa-elf-1/debug/deps/task_lock_detailed-66204c8e9735d347"
+        ],
+        "executable": "/home/justin/github/Dispatcharr/artifacts/rust/target-m3u-failure-qa-elf-1/debug/deps/task_lock_detailed-66204c8e9735d347",
+        "fresh": false
+      },
+      "copied_after_all_actual_waits0": true
+    }
+  ],
+  "all_source_unchanged": true,
+  "no_test_or_fixture_execution": true
+}

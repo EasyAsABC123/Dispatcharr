@@ -22,6 +22,45 @@ pub struct GroupImportCounts {
     pub created_relationships: usize,
     pub updated_relationships: usize,
 }
+/// Exact operation provenance; only separately qualified stages may classify an error.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum M3uGroupImportStage {
+    Validation,
+    ReadGroups,
+    CreateGroups,
+    ReadCreatedGroups,
+    ReadRelationBytes,
+    ReadRelations,
+    CreateRelations,
+    UpdateRelations,
+    Decode,
+}
+#[derive(Debug)]
+pub struct M3uGroupImportFailure {
+    pub stage: M3uGroupImportStage,
+    pub source: StoreError,
+}
+impl M3uGroupImportFailure {
+    fn sql(stage: M3uGroupImportStage, source: sqlx::Error) -> Self {
+        Self {
+            stage,
+            source: StoreError::Database(source),
+        }
+    }
+}
+impl From<StoreError> for M3uGroupImportFailure {
+    fn from(source: StoreError) -> Self {
+        Self {
+            stage: M3uGroupImportStage::Validation,
+            source,
+        }
+    }
+}
+impl From<sqlx::Error> for M3uGroupImportFailure {
+    fn from(source: sqlx::Error) -> Self {
+        Self::sql(M3uGroupImportStage::Decode, source)
+    }
+}
 struct Budget(usize);
 impl Write for Budget {
     fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
@@ -89,14 +128,27 @@ impl Store {
         groups: Vec<ImportedGroup>,
         scan_time: DateTime<Utc>,
     ) -> Result<GroupImportCounts, StoreError> {
+        self.import_m3u_groups_report(account_id, account_properties, groups, scan_time)
+            .await
+            .map_err(|failure| failure.source)
+    }
+    /// Same mutation engine as the legacy public API; this additive result only
+    /// preserves statement provenance. It introduces no retry or transaction.
+    pub async fn import_m3u_groups_report(
+        &self,
+        account_id: i64,
+        account_properties: &Value,
+        groups: Vec<ImportedGroup>,
+        scan_time: DateTime<Utc>,
+    ) -> Result<GroupImportCounts, M3uGroupImportFailure> {
         if groups.len() > MAX_IMPORT_GROUPS {
-            return Err(invalid());
+            return Err(invalid().into());
         }
         serde_json::to_writer(&mut Budget(MAX_IMPORT_GROUP_BYTES), &groups)
             .map_err(|_| invalid())?;
         let mut seen = HashSet::new();
         if groups.iter().any(|group| !seen.insert(group.name.as_str())) {
-            return Err(invalid());
+            return Err(invalid().into());
         }
         if groups.is_empty() {
             return Ok(GroupImportCounts::default());
@@ -106,7 +158,7 @@ impl Store {
             .map(|group| group.name.as_str())
             .collect::<Vec<_>>();
         let existing=sqlx::query("SELECT id::bigint AS id,name FROM dispatcharr_channels_channelgroup WHERE name=ANY($1)")
-            .bind(&names).fetch_all(&self.pool).await?;
+            .bind(&names).fetch_all(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadGroups, e))?;
         let mut all = existing
             .into_iter()
             .map(|row| {
@@ -131,21 +183,21 @@ impl Store {
         };
         if !missing.is_empty() {
             sqlx::query("INSERT INTO dispatcharr_channels_channelgroup(name) SELECT value FROM jsonb_array_elements_text($1) AS names(value)")
-                .bind(json!(missing)).execute(&self.pool).await?;
+                .bind(json!(missing)).execute(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::CreateGroups, e))?;
             let created=sqlx::query("SELECT id::bigint AS id,name FROM dispatcharr_channels_channelgroup WHERE name=ANY($1)")
-                .bind(&missing).fetch_all(&self.pool).await?;
+                .bind(&missing).fetch_all(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadCreatedGroups, e))?;
             for row in created {
                 all.push((row.try_get("id")?, row.try_get("name")?));
             }
         }
         let ids = all.iter().map(|(id, _)| *id).collect::<Vec<_>>();
         let existing_bytes:i64=sqlx::query_scalar("SELECT COALESCE(sum(octet_length(custom_properties::text)),0)::bigint FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND channel_group_id=ANY($2)")
-            .bind(account_id).bind(&ids).fetch_one(&self.pool).await?;
+            .bind(account_id).bind(&ids).fetch_one(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadRelationBytes, e))?;
         if existing_bytes > MAX_IMPORT_GROUP_BYTES as i64 {
-            return Err(invalid());
+            return Err(invalid().into());
         }
         let existing=sqlx::query("SELECT id::bigint AS id,channel_group_id::bigint AS channel_group_id,custom_properties FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND channel_group_id=ANY($2)")
-            .bind(account_id).bind(&ids).fetch_all(&self.pool).await?;
+            .bind(account_id).bind(&ids).fetch_all(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadRelations, e))?;
         let existing = existing
             .into_iter()
             .map(|row| Ok((row.try_get::<i64, _>("channel_group_id")?, row)))
@@ -179,11 +231,11 @@ impl Store {
         counts.updated_relationships = updates.len();
         if !creates.is_empty() {
             sqlx::query("INSERT INTO dispatcharr_channels_channelgroupm3uaccount(channel_group_id,m3u_account_id,custom_properties,enabled,auto_channel_sync,last_seen,is_stale) SELECT channel_group_id,m3u_account_id,custom_properties,enabled,auto_channel_sync,last_seen,is_stale FROM jsonb_populate_recordset(NULL::dispatcharr_channels_channelgroupm3uaccount,$1) ON CONFLICT DO NOTHING")
-            .bind(json!(creates)).execute(&self.pool).await?;
+            .bind(json!(creates)).execute(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::CreateRelations, e))?;
         }
         if !updates.is_empty() {
             sqlx::query("UPDATE dispatcharr_channels_channelgroupm3uaccount AS target SET custom_properties=incoming.custom_properties,last_seen=incoming.last_seen,is_stale=false FROM jsonb_populate_recordset(NULL::dispatcharr_channels_channelgroupm3uaccount,$1) AS incoming WHERE target.id=incoming.id")
-            .bind(json!(updates)).execute(&self.pool).await?;
+            .bind(json!(updates)).execute(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::UpdateRelations, e))?;
         }
         Ok(counts)
     }
@@ -191,6 +243,49 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn legacy_and_tagged_group_apis_share_validation_and_empty_noop() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://owned:owned@127.0.0.1:9/owned_no_connection")
+            .unwrap();
+        let store = Store::from_pool(pool);
+        let duplicate = vec![
+            ImportedGroup {
+                name: "same".into(),
+                custom_properties: Map::new()
+            };
+            2
+        ];
+        let now = Utc::now();
+        let legacy = store
+            .import_m3u_groups(1, &json!({}), duplicate.clone(), now)
+            .await
+            .unwrap_err();
+        let detailed = store
+            .import_m3u_groups_report(1, &json!({}), duplicate, now)
+            .await
+            .unwrap_err();
+        assert_eq!(detailed.stage, M3uGroupImportStage::Validation);
+        match (legacy, detailed.source) {
+            (StoreError::InvalidInput(a), StoreError::InvalidInput(b)) => assert_eq!(a, b),
+            _ => panic!("same validation error required"),
+        }
+        assert_eq!(
+            store
+                .import_m3u_groups(1, &json!({}), vec![], now)
+                .await
+                .unwrap(),
+            GroupImportCounts::default()
+        );
+        assert_eq!(
+            store
+                .import_m3u_groups_report(1, &json!({}), vec![], now)
+                .await
+                .unwrap(),
+            GroupImportCounts::default()
+        );
+        store.pool.close().await;
+    }
     #[test]
     fn preserves_python_numeric_equality_legacy_strings_and_nonobject_unchanged_values() {
         let props = serde_json::from_value::<Map<String, Value>>(json!({"xc_id":1})).unwrap();

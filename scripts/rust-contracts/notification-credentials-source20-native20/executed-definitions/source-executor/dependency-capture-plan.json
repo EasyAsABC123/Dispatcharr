@@ -1,0 +1,49 @@
+{
+  "state": "PROPOSED_NEVER_STARTED_DEPENDENCY_BYTES_ONLY_NO_DOCKER_EXECUTION",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "container_mode": {
+    "network": "none",
+    "read_only": true,
+    "entrypoint": "/bin/true",
+    "start_calls": 0,
+    "app_imports": 0,
+    "mounts": []
+  },
+  "site_packages": "/dispatcharrpy/lib/python3.13/site-packages",
+  "files": [
+    "rest_framework/authentication.py",
+    "rest_framework/request.py",
+    "rest_framework/views.py",
+    "rest_framework/permissions.py",
+    "rest_framework/test.py",
+    "rest_framework_simplejwt/__init__.py",
+    "rest_framework_simplejwt/authentication.py",
+    "rest_framework_simplejwt/backends.py",
+    "rest_framework_simplejwt/exceptions.py",
+    "rest_framework_simplejwt/settings.py",
+    "rest_framework_simplejwt/tokens.py",
+    "rest_framework_simplejwt/utils.py",
+    "rest_framework_simplejwt/models.py",
+    "rest_framework_simplejwt/state.py",
+    "jwt/__init__.py",
+    "jwt/api_jwt.py",
+    "jwt/api_jws.py",
+    "jwt/algorithms.py",
+    "jwt/exceptions.py",
+    "jwt/utils.py",
+    "django/contrib/auth/middleware.py",
+    "django/contrib/auth/__init__.py",
+    "django/middleware/csrf.py"
+  ],
+  "max_files": 23,
+  "max_single_bytes": 2097152,
+  "max_total_bytes": 8388608,
+  "before_and_after_copy_state_must_be": {
+    "Status": "created",
+    "Pid": 0,
+    "Running": false
+  },
+  "cleanup": "exactownedCID remove; raw all-project --all/exactCID absence; no case-sensitive missing-object inference",
+  "version_authority": "copy actual SimpleJWT/PyJWT __init__ version bytes; actual installed versions captured by later reviewed Source process, never assumed from unpinned pyproject",
+  "Source_or_Native_requests": 0
+}

@@ -1,0 +1,81 @@
+{
+  "scope": "Independent actual cleanup/default review of failed physical1; no relabel/retry",
+  "guest_and_host_exit": 1,
+  "checks_retained": 107,
+  "phase9_failed": "result-denied",
+  "phase10": "UNEXECUTED",
+  "project": "dispatcharr-scanner-children-94d92414a6",
+  "CID": "4d3d575e3bc0a030307f76546451d9a26e57c9ebe8b5c139f8ae35c64789eb67",
+  "default_bytes_equal": true,
+  "fresh_independent_cleanup": [
+    {
+      "kind": "exact_CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=4d3d575e3bc0a030307f76546451d9a26e57c9ebe8b5c139f8ae35c64789eb67"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524641.00718,
+      "finished_epoch": 1794524641.0174196,
+      "empty": true
+    },
+    {
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-94d92414a6"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524641.0174212,
+      "finished_epoch": 1794524641.0268402,
+      "empty": true
+    },
+    {
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-94d92414a6"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524641.026842,
+      "finished_epoch": 1794524641.0361447,
+      "empty": true
+    },
+    {
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-94d92414a6"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524641.0361464,
+      "finished_epoch": 1794524641.046042,
+      "empty": true
+    }
+  ],
+  "all_owned_absent": true,
+  "integration_sha256": "23e5e4464775baa2be7b350d86f3255f369ce4470299347cca535f8332d970eb"
+}

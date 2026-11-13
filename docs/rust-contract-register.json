@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "07c87ddd466d2d590ee48b08c21f83f05416085d0634fab251fe5ea75f8527f2",
+    "scripts/rust-contracts/executable-source-inputs.json": "d7282a27953ad98b14f2167fee2c69dc7f16efc53f0856deeeab1622c50b6c9b",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -21,11 +21,12 @@
     "scripts/rust-contracts/proxy-plugin/bindings.json": "0696cc54bd3aeee53dfc058358b52f67bad8b3244ec38c0067607ed8e5407f2c",
     "scripts/rust-contracts/notification-source-bindings.json": "6ed240f9cbb97e1ba29b5895bc56c170af2c593e27a7ee4aa056f8dd0d2d1e16",
     "scripts/rust-contracts/notification-mutation-bindings.json": "1f249987370590687e7e53fd968e8bf380ffad234e39a8ab7cf7d441b9d213c4",
-    "scripts/rust-contracts/schema-cache/bindings.json": "4aad9d445c30bdec179be818b8cf362c92bfb47df9a1b1c564d5c8b137f5048e"
+    "scripts/rust-contracts/schema-cache/bindings.json": "4aad9d445c30bdec179be818b8cf362c92bfb47df9a1b1c564d5c8b137f5048e",
+    "scripts/rust-contracts/notification-credential-bindings.json": "59a07abade4db937b78b3532ab162227564f7dd9f63fb2d0ee72853a58fb6c34"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 121,
+    "operations": 124,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -86,6 +87,11 @@
         "path": "scripts/rust-contracts/schema-cache/bindings.json",
         "sha256": "4aad9d445c30bdec179be818b8cf362c92bfb47df9a1b1c564d5c8b137f5048e",
         "kind": "pinned_original_schema_cache_tests"
+      },
+      {
+        "path": "scripts/rust-contracts/notification-credential-bindings.json",
+        "sha256": "59a07abade4db937b78b3532ab162227564f7dd9f63fb2d0ee72853a58fb6c34",
+        "kind": "retained_original_notification_Source20_real_credentials_framework"
       }
     ],
     "fully_verified_added": 0
@@ -66942,15 +66948,951 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_framework_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "standard": {
+                "seed_role": {
+                  "alias": "standard",
+                  "id": 2,
+                  "user_level": 1,
+                  "is_active": true,
+                  "custom_properties": {}
+                },
+                "transport": "Original APIClient normal realJWT/CSRF middleware",
+                "force_authenticate": false,
+                "actual_authenticated_user_id": 2,
+                "observed_backend": "rest_framework_simplejwt.authentication.JWTAuthentication"
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-notification-real-credentials20",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "roles": [
+              {
+                "alias": "admin",
+                "id": 1,
+                "user_level": 10,
+                "is_active": true,
+                "custom_properties": {}
+              },
+              {
+                "alias": "standard",
+                "id": 2,
+                "user_level": 1,
+                "is_active": true,
+                "custom_properties": {}
+              },
+              {
+                "alias": "admin_denied",
+                "id": 3,
+                "user_level": 10,
+                "is_active": true,
+                "custom_properties": {
+                  "allowed_networks": {
+                    "UI": "192.0.2.0/24"
+                  }
+                }
+              },
+              {
+                "alias": "standard_denied",
+                "id": 4,
+                "user_level": 1,
+                "is_active": true,
+                "custom_properties": {
+                  "allowed_networks": {
+                    "UI": "192.0.2.0/24"
+                  }
+                }
+              },
+              {
+                "alias": "inactive",
+                "id": 5,
+                "user_level": 1,
+                "is_active": false,
+                "custom_properties": {}
+              },
+              {
+                "alias": "streamer",
+                "id": 6,
+                "user_level": 0,
+                "is_active": true,
+                "custom_properties": {}
+              }
+            ],
+            "scope": "Actual Original resolver/APIClient normal JWT/API-key/CSRF middleware; no forceauth, TCP, Native or whole role matrix",
+            "setup": {
+              "fixed_plan": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/plan.json",
+                "sha256": "0df9520f9f52932cca499951e79acd967839eaf28cfe286933a5bc26f4b11b8a"
+              },
+              "fixture_executor_seal_sha256": "9c09896c7cc71d57ff152bb3fc4c93d5bd158179da7b136c0e23c96c38e4c9fc",
+              "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+              "new_replay_requires_fresh_owned_fixture": true,
+              "sequential_context": "All20 requests in fixed order; selected operations are not independent captures"
+            },
+            "assertions": {
+              "Source_validator": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/validate_source_projection.py",
+                "sha256": "ba03eafcff188225d1ba0eda1096106f3c1755c3f9de6b8a463936cb545012dc"
+              },
+              "Source_seed_validator": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/source_seed_projection.py",
+                "sha256": "1133b79a4345684f75aed5f323b08dec078e5d4cf176b6d58a30085e2b7974a3"
+              },
+              "shared_effect_qualification": {
+                "passed": true,
+                "actual_Source_requests": 20,
+                "setup_actors": 6,
+                "real_auth_framework_only": true,
+                "Source_TCP_or_Native_acceptance": false,
+                "requests_without_budget_reset": true,
+                "new_notice_id_observed": 3,
+                "role_or_network_full_endpoint_coverage": false
+              }
+            },
+            "result": {
+              "Source_shell_and_controller_exit": 0,
+              "Root_review": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/Source20-Root-review.json",
+                "sha256": "4022ba3da4c326a4fb2e513f2837cc0e0ec358cdcd3f94b6b2b2ef6f222b4801"
+              },
+              "actual_Source_requests": 20,
+              "new_Source_runs_this_mapping": 0
+            },
+            "projection": {
+              "reference": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/reference.json",
+                "sha256": "5580b295a254aee3bcef2b218521ff6d3d300a037cee4ac166f3ae230e01a75f"
+              },
+              "original_raw_sha256": "f02c49f2c1a3b7b876611ab99b2f7976aeef8cedaf471fc263c3223ba86680a0",
+              "observed_projection": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/Source20-projection.json",
+                "sha256": "ee65bdd1b940e0fafc761ca7a9ac900fe76e83ca11e6dbc119999f19caea8dce"
+              },
+              "policy": "Explicit credential hashes/lengths preserve secret fields; projected bytes were not executed; original identity remains separate"
+            }
+          },
+          "assertions": [
+            "Exact actual resolver/method/action/target, credential headers and successful authenticator are checked",
+            "Exact response JSON and raw body hash, own request clocks, all11 SQL/sequence fingerprints and user/event/cache effects use the unchanged Source20 validator",
+            "Preserve the whole20 fixed sequential setup and real failed-key history; three selected cases are not20 new executions each",
+            "Public credential projections retain original hashes/lengths and original capture identity; no Source TCP or Native result is inferred"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_Source20_real_credentials_framework_passed",
+            "historical_captured_cases": 1,
+            "whole_fixture_observations": 20,
+            "Source_shell_exit": 0,
+            "Source_controller_exit": 0,
+            "new_Source_cases_this_task": 0,
+            "new_Source_runs_this_mapping": 0,
+            "complete_role_matrix": false,
+            "Native_or_TCP_acceptance": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-867117da1350f792b651:POST",
+            "pattern_exact": "api/core/^notifications/dismiss-all/$",
+            "source_handler": "core.api_views.SystemNotificationViewSet",
+            "method": "POST",
+            "source_action": "dismiss_all",
+            "owning_milestone": "M5",
+            "fixture_id": "retained-Original-notification-real-credentials20",
+            "observed_roles": [
+              "standard"
+            ],
+            "source_role_specs": {
+              "standard": {
+                "seed_role": {
+                  "alias": "standard",
+                  "id": 2,
+                  "user_level": 1,
+                  "is_active": true,
+                  "custom_properties": {}
+                },
+                "transport": "Original APIClient normal realJWT/CSRF middleware",
+                "force_authenticate": false,
+                "actual_authenticated_user_id": 2,
+                "observed_backend": "rest_framework_simplejwt.authentication.JWTAuthentication"
+              }
+            },
+            "cases": [
+              {
+                "source_ordinal": 20,
+                "label": "jwt-standard-dismiss-all",
+                "whole_source_fixture_observations": 20,
+                "observation_projection": {
+                  "ordinal": 20,
+                  "name": "jwt-standard-dismiss-all",
+                  "method": "POST",
+                  "path": "/api/core/notifications/dismiss-all/",
+                  "auth_selectors": {
+                    "bearer": "standard"
+                  },
+                  "raw_headers_private": {
+                    "HTTP_AUTHORIZATION": {
+                      "sha256": "487cae9636525b8163e4bca7a0810ae4590bc4ede76b62b025629756a0b96948",
+                      "bytes": 238
+                    }
+                  },
+                  "request_payload": {},
+                  "resolver": {
+                    "class": "core.api_views.SystemNotificationViewSet",
+                    "action": "dismiss_all",
+                    "actions": {
+                      "post": "dismiss_all"
+                    },
+                    "url_name": "systemnotification-dismiss-all",
+                    "kwargs": {}
+                  },
+                  "before_audit": {
+                    "database": "rust_probe_notifcred_db6158c8ef",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 6,
+                        "sha256": "9e25d482d383ee3b06e37e1ede931e41b7156b4b614df7f9615af8106776fc55"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "1e020fb3722064ea889963ed424dfb70700a5cc10380b231fa1f3af9d0c9afa0"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "6baead4f8d8d58f993e74ca250a981a7d892451602effd2f22dad0eacc49db22"
+                      },
+                      "core_systemnotification": {
+                        "rows": 3,
+                        "sha256": "521848bb728d422a2d16d053ef840d378a519e00dda38a9cd1286eb712aaff7d"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 2,
+                        "sha256": "ccc98cac8a97e5147204fd2b6bdecc0aade7b2c4a07aca637a0d2eee85ee13f8"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 6,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 3,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "a123e3fcbaa665418f991dba7250dc7d294fd669c5b21ec731bfa041759188c2",
+                    "capture_bytes": 5991,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "before_notifications": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "credential.A",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 1",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-01T00:00:00+00:00",
+                        "updated_at": "2026-11-12T23:01:08.612935+00:00"
+                      },
+                      {
+                        "id": 2,
+                        "notification_key": "credential.B",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 2",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-02T00:00:00+00:00",
+                        "updated_at": "2020-01-02T00:00:00+00:00"
+                      },
+                      {
+                        "id": 3,
+                        "notification_key": "credential.created",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T23:01:08.594262+00:00",
+                        "updated_at": "2026-11-12T23:01:08.594267+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 4,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T23:01:08.524930+00:00",
+                        "action_taken": null
+                      },
+                      {
+                        "id": 2,
+                        "user_id": 6,
+                        "notification_id": 2,
+                        "dismissed_at": "2026-11-12T23:01:08.752078+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "before_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "002280049517000000000000007d948c025549948c0b3132372e302e302e302f3894732e0f00fca2ce648f9fdd9b",
+                        "pttl": 299770
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299698
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75707665723a6e6574776f726b5f616363657373",
+                        "dump_hex": "0013313739343532343436383238303930313236320f00bdceac671281dd06",
+                        "pttl": -1
+                      },
+                      {
+                        "key_hex": "3a313a7468726f74746c655f6170695f6b65795f617574685f3132372e302e302e31",
+                        "dump_hex": "00c31d2204800495170080000b5d94284741dabd914d2dc95e8008042cce75652e0f008dfd149a7a8a8e44",
+                        "pttl": 59934
+                      }
+                    ],
+                    "capture_bytes": 387,
+                    "api_key_failed_auth_history": [
+                      1794524468.7154155,
+                      1794524468.7001011
+                    ],
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_users": [
+                    {
+                      "id": 1,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.291637+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "f47b50a9cae56b8e6a604c85d1c07945dbc42b5cea8e64bd25f3c7bd112bc457",
+                        "bytes": 28
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 2,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292106+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "3c1cb66e8b9749c4e56a319a38d3f67baf37e6b6c2a85a6dcceefddf727aa453",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 3,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292363+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "b4d8b9a076745ad1525bb7a95aca3948dac7792adc9281f179a8459baa57330c",
+                        "bytes": 35
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 4,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292614+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "7816fbaf946027d47d845312b3e4839d1b3917d7bf33cbf077575b8c0fb4ff11",
+                        "bytes": 38
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 5,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-inactive",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": false,
+                      "date_joined": "2026-11-12T23:01:08.292852+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "5ab32f64d0dd6fa4db2f1f8f6f2ad36ec979c75c06c7b0142bcb58a09e65affd",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 6,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-streamer",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.293072+00:00",
+                      "avatar_config": {},
+                      "user_level": 0,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "76eabc25d8be6b7cac24acc1fd017f0db0a59e8682860ef9f1d7e963ae5d55c1",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    }
+                  ],
+                  "before_events": [],
+                  "began_utc": "2026-11-12T23:01:08.785673+00:00",
+                  "actual_auth_observation": {
+                    "user_id": 2,
+                    "is_authenticated": true,
+                    "backend_class": "rest_framework_simplejwt.authentication.JWTAuthentication"
+                  },
+                  "transport": "http_response",
+                  "status": 200,
+                  "headers": {
+                    "Content-Type": "application/json",
+                    "Vary": "Accept, origin",
+                    "Allow": "POST, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "36",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_hex": "7b2273756363657373223a747275652c226469736d69737365645f636f756e74223a337d",
+                  "body_sha256": "9131774f2fffd55f348823b2c2cf3af577b2145ca1a8c93b581d02d07a1429d8",
+                  "body_bytes": 36,
+                  "json": {
+                    "success": true,
+                    "dismissed_count": 3
+                  },
+                  "framework_exception": null,
+                  "completed_utc": "2026-11-12T23:01:08.788814+00:00",
+                  "after_audit": {
+                    "database": "rust_probe_notifcred_db6158c8ef",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 6,
+                        "sha256": "9e25d482d383ee3b06e37e1ede931e41b7156b4b614df7f9615af8106776fc55"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "1e020fb3722064ea889963ed424dfb70700a5cc10380b231fa1f3af9d0c9afa0"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "6baead4f8d8d58f993e74ca250a981a7d892451602effd2f22dad0eacc49db22"
+                      },
+                      "core_systemnotification": {
+                        "rows": 3,
+                        "sha256": "521848bb728d422a2d16d053ef840d378a519e00dda38a9cd1286eb712aaff7d"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 5,
+                        "sha256": "70815efcc52000d17ed224b692f026a2aaed8a6c11e8a719d4d185a541881184"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 6,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 3,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 5,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "8cf1b549dbd35cad37f51178ea40ed7dc0967916e072bb9658ab396c4e9dbe91",
+                    "capture_bytes": 6348,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_notifications": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "credential.A",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 1",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-01T00:00:00+00:00",
+                        "updated_at": "2026-11-12T23:01:08.612935+00:00"
+                      },
+                      {
+                        "id": 2,
+                        "notification_key": "credential.B",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 2",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-02T00:00:00+00:00",
+                        "updated_at": "2020-01-02T00:00:00+00:00"
+                      },
+                      {
+                        "id": 3,
+                        "notification_key": "credential.created",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T23:01:08.594262+00:00",
+                        "updated_at": "2026-11-12T23:01:08.594267+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 4,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T23:01:08.524930+00:00",
+                        "action_taken": null
+                      },
+                      {
+                        "id": 2,
+                        "user_id": 6,
+                        "notification_id": 2,
+                        "dismissed_at": "2026-11-12T23:01:08.752078+00:00",
+                        "action_taken": null
+                      },
+                      {
+                        "id": 3,
+                        "user_id": 2,
+                        "notification_id": 3,
+                        "dismissed_at": "2026-11-12T23:01:08.787991+00:00",
+                        "action_taken": null
+                      },
+                      {
+                        "id": 4,
+                        "user_id": 2,
+                        "notification_id": 2,
+                        "dismissed_at": "2026-11-12T23:01:08.787996+00:00",
+                        "action_taken": null
+                      },
+                      {
+                        "id": 5,
+                        "user_id": 2,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T23:01:08.787999+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "after_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "002280049517000000000000007d948c025549948c0b3132372e302e302e302f3894732e0f00fca2ce648f9fdd9b",
+                        "pttl": 299759
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299688
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75707665723a6e6574776f726b5f616363657373",
+                        "dump_hex": "0013313739343532343436383238303930313236320f00bdceac671281dd06",
+                        "pttl": -1
+                      },
+                      {
+                        "key_hex": "3a313a7468726f74746c655f6170695f6b65795f617574685f3132372e302e302e31",
+                        "dump_hex": "00c31d2204800495170080000b5d94284741dabd914d2dc95e8008042cce75652e0f008dfd149a7a8a8e44",
+                        "pttl": 59923
+                      }
+                    ],
+                    "capture_bytes": 387,
+                    "api_key_failed_auth_history": [
+                      1794524468.7154155,
+                      1794524468.7001011
+                    ],
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_users": [
+                    {
+                      "id": 1,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.291637+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "f47b50a9cae56b8e6a604c85d1c07945dbc42b5cea8e64bd25f3c7bd112bc457",
+                        "bytes": 28
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 2,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292106+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "3c1cb66e8b9749c4e56a319a38d3f67baf37e6b6c2a85a6dcceefddf727aa453",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 3,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292363+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "b4d8b9a076745ad1525bb7a95aca3948dac7792adc9281f179a8459baa57330c",
+                        "bytes": 35
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 4,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292614+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "7816fbaf946027d47d845312b3e4839d1b3917d7bf33cbf077575b8c0fb4ff11",
+                        "bytes": 38
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 5,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-inactive",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": false,
+                      "date_joined": "2026-11-12T23:01:08.292852+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "5ab32f64d0dd6fa4db2f1f8f6f2ad36ec979c75c06c7b0142bcb58a09e65affd",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 6,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-streamer",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.293072+00:00",
+                      "avatar_config": {},
+                      "user_level": 0,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "76eabc25d8be6b7cac24acc1fd017f0db0a59e8682860ef9f1d7e963ae5d55c1",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    }
+                  ],
+                  "after_events": [],
+                  "capture_complete": true
+                },
+                "original_raw_sha256": "f02c49f2c1a3b7b876611ab99b2f7976aeef8cedaf471fc263c3223ba86680a0",
+                "json_pointer": "/requests/19",
+                "full_role_matrix": false
+              }
+            ],
+            "assertions": [
+              "Exact actual resolver/method/action/target, credential headers and successful authenticator are checked",
+              "Exact response JSON and raw body hash, own request clocks, all11 SQL/sequence fingerprints and user/event/cache effects use the unchanged Source20 validator",
+              "Preserve the whole20 fixed sequential setup and real failed-key history; three selected cases are not20 new executions each",
+              "Public credential projections retain original hashes/lengths and original capture identity; no Source TCP or Native result is inferred"
+            ],
+            "result": {
+              "state": "retained_Original_Source20_real_credentials_framework_passed",
+              "historical_captured_cases": 1,
+              "whole_fixture_observations": 20,
+              "Source_shell_exit": 0,
+              "Source_controller_exit": 0,
+              "new_Source_cases_this_task": 0,
+              "new_Source_runs_this_mapping": 0,
+              "complete_role_matrix": false,
+              "Native_or_TCP_acceptance": false
+            },
+            "remaining": [
+              "Only this observed role/request/context is assigned",
+              "No alias/renderer/serializer/credential grammar or concurrency completion",
+              "No Native, performance or formal milestone promotion"
+            ],
+            "fully_verified": false
+          }
         }
       ]
     },
@@ -67060,15 +68002,852 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_framework_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "standard_denied": {
+                "seed_role": {
+                  "alias": "standard_denied",
+                  "id": 4,
+                  "user_level": 1,
+                  "is_active": true,
+                  "custom_properties": {
+                    "allowed_networks": {
+                      "UI": "192.0.2.0/24"
+                    }
+                  }
+                },
+                "transport": "Original APIClient normal realJWT/CSRF middleware",
+                "force_authenticate": false,
+                "actual_authenticated_user_id": 4,
+                "observed_backend": "rest_framework_simplejwt.authentication.JWTAuthentication"
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "standard_denied"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-notification-real-credentials20",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "roles": [
+              {
+                "alias": "admin",
+                "id": 1,
+                "user_level": 10,
+                "is_active": true,
+                "custom_properties": {}
+              },
+              {
+                "alias": "standard",
+                "id": 2,
+                "user_level": 1,
+                "is_active": true,
+                "custom_properties": {}
+              },
+              {
+                "alias": "admin_denied",
+                "id": 3,
+                "user_level": 10,
+                "is_active": true,
+                "custom_properties": {
+                  "allowed_networks": {
+                    "UI": "192.0.2.0/24"
+                  }
+                }
+              },
+              {
+                "alias": "standard_denied",
+                "id": 4,
+                "user_level": 1,
+                "is_active": true,
+                "custom_properties": {
+                  "allowed_networks": {
+                    "UI": "192.0.2.0/24"
+                  }
+                }
+              },
+              {
+                "alias": "inactive",
+                "id": 5,
+                "user_level": 1,
+                "is_active": false,
+                "custom_properties": {}
+              },
+              {
+                "alias": "streamer",
+                "id": 6,
+                "user_level": 0,
+                "is_active": true,
+                "custom_properties": {}
+              }
+            ],
+            "scope": "Actual Original resolver/APIClient normal JWT/API-key/CSRF middleware; no forceauth, TCP, Native or whole role matrix",
+            "setup": {
+              "fixed_plan": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/plan.json",
+                "sha256": "0df9520f9f52932cca499951e79acd967839eaf28cfe286933a5bc26f4b11b8a"
+              },
+              "fixture_executor_seal_sha256": "9c09896c7cc71d57ff152bb3fc4c93d5bd158179da7b136c0e23c96c38e4c9fc",
+              "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+              "new_replay_requires_fresh_owned_fixture": true,
+              "sequential_context": "All20 requests in fixed order; selected operations are not independent captures"
+            },
+            "assertions": {
+              "Source_validator": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/validate_source_projection.py",
+                "sha256": "ba03eafcff188225d1ba0eda1096106f3c1755c3f9de6b8a463936cb545012dc"
+              },
+              "Source_seed_validator": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/source_seed_projection.py",
+                "sha256": "1133b79a4345684f75aed5f323b08dec078e5d4cf176b6d58a30085e2b7974a3"
+              },
+              "shared_effect_qualification": {
+                "passed": true,
+                "actual_Source_requests": 20,
+                "setup_actors": 6,
+                "real_auth_framework_only": true,
+                "Source_TCP_or_Native_acceptance": false,
+                "requests_without_budget_reset": true,
+                "new_notice_id_observed": 3,
+                "role_or_network_full_endpoint_coverage": false
+              }
+            },
+            "result": {
+              "Source_shell_and_controller_exit": 0,
+              "Root_review": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/Source20-Root-review.json",
+                "sha256": "4022ba3da4c326a4fb2e513f2837cc0e0ec358cdcd3f94b6b2b2ef6f222b4801"
+              },
+              "actual_Source_requests": 20,
+              "new_Source_runs_this_mapping": 0
+            },
+            "projection": {
+              "reference": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/reference.json",
+                "sha256": "5580b295a254aee3bcef2b218521ff6d3d300a037cee4ac166f3ae230e01a75f"
+              },
+              "original_raw_sha256": "f02c49f2c1a3b7b876611ab99b2f7976aeef8cedaf471fc263c3223ba86680a0",
+              "observed_projection": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/Source20-projection.json",
+                "sha256": "ee65bdd1b940e0fafc761ca7a9ac900fe76e83ca11e6dbc119999f19caea8dce"
+              },
+              "policy": "Explicit credential hashes/lengths preserve secret fields; projected bytes were not executed; original identity remains separate"
+            }
+          },
+          "assertions": [
+            "Exact actual resolver/method/action/target, credential headers and successful authenticator are checked",
+            "Exact response JSON and raw body hash, own request clocks, all11 SQL/sequence fingerprints and user/event/cache effects use the unchanged Source20 validator",
+            "Preserve the whole20 fixed sequential setup and real failed-key history; three selected cases are not20 new executions each",
+            "Public credential projections retain original hashes/lengths and original capture identity; no Source TCP or Native result is inferred"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_Source20_real_credentials_framework_passed",
+            "historical_captured_cases": 1,
+            "whole_fixture_observations": 20,
+            "Source_shell_exit": 0,
+            "Source_controller_exit": 0,
+            "new_Source_cases_this_task": 0,
+            "new_Source_runs_this_mapping": 0,
+            "complete_role_matrix": false,
+            "Native_or_TCP_acceptance": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-1fa68c983b2e31923427:GET",
+            "pattern_exact": "api/core/^notifications/count/$",
+            "source_handler": "core.api_views.SystemNotificationViewSet",
+            "method": "GET",
+            "source_action": "unread_count",
+            "owning_milestone": "M5",
+            "fixture_id": "retained-Original-notification-real-credentials20",
+            "observed_roles": [
+              "standard_denied"
+            ],
+            "source_role_specs": {
+              "standard_denied": {
+                "seed_role": {
+                  "alias": "standard_denied",
+                  "id": 4,
+                  "user_level": 1,
+                  "is_active": true,
+                  "custom_properties": {
+                    "allowed_networks": {
+                      "UI": "192.0.2.0/24"
+                    }
+                  }
+                },
+                "transport": "Original APIClient normal realJWT/CSRF middleware",
+                "force_authenticate": false,
+                "actual_authenticated_user_id": 4,
+                "observed_backend": "rest_framework_simplejwt.authentication.JWTAuthentication"
+              }
+            },
+            "cases": [
+              {
+                "source_ordinal": 3,
+                "label": "jwt-denied-standard-count",
+                "whole_source_fixture_observations": 20,
+                "observation_projection": {
+                  "ordinal": 3,
+                  "name": "jwt-denied-standard-count",
+                  "method": "GET",
+                  "path": "/api/core/notifications/count/",
+                  "auth_selectors": {
+                    "bearer": "standard_denied"
+                  },
+                  "raw_headers_private": {
+                    "HTTP_AUTHORIZATION": {
+                      "sha256": "6f4dca3f5f47e54c62bf5bb84c3e5f4b647128a562584ef4d82f7b593bee2c2f",
+                      "bytes": 238
+                    }
+                  },
+                  "request_payload": null,
+                  "resolver": {
+                    "class": "core.api_views.SystemNotificationViewSet",
+                    "action": "unread_count",
+                    "actions": {
+                      "get": "unread_count",
+                      "head": "unread_count"
+                    },
+                    "url_name": "systemnotification-unread-count",
+                    "kwargs": {}
+                  },
+                  "before_audit": {
+                    "database": "rust_probe_notifcred_db6158c8ef",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 6,
+                        "sha256": "9e25d482d383ee3b06e37e1ede931e41b7156b4b614df7f9615af8106776fc55"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "1e020fb3722064ea889963ed424dfb70700a5cc10380b231fa1f3af9d0c9afa0"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "6baead4f8d8d58f993e74ca250a981a7d892451602effd2f22dad0eacc49db22"
+                      },
+                      "core_systemnotification": {
+                        "rows": 2,
+                        "sha256": "22687568d20ba7f0847df754acbf51e78e4f5128f223c8fbae79efd5e52d0fcb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 6,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "fc31b57bbbefb54888540b076f60dde7fe37f51a6bef48295cf556b84e0ee4d0",
+                    "capture_bytes": 5408,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "before_notifications": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "credential.A",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 1",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-01T00:00:00+00:00",
+                        "updated_at": "2020-01-01T00:00:00+00:00"
+                      },
+                      {
+                        "id": 2,
+                        "notification_key": "credential.B",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 2",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-02T00:00:00+00:00",
+                        "updated_at": "2020-01-02T00:00:00+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "before_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299972
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75707665723a6e6574776f726b5f616363657373",
+                        "dump_hex": "0013313739343532343436383238303930313236320f00bdceac671281dd06",
+                        "pttl": -1
+                      }
+                    ],
+                    "capture_bytes": 228,
+                    "api_key_failed_auth_history": null,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_users": [
+                    {
+                      "id": 1,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.291637+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "f47b50a9cae56b8e6a604c85d1c07945dbc42b5cea8e64bd25f3c7bd112bc457",
+                        "bytes": 28
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 2,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292106+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "3c1cb66e8b9749c4e56a319a38d3f67baf37e6b6c2a85a6dcceefddf727aa453",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 3,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292363+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "b4d8b9a076745ad1525bb7a95aca3948dac7792adc9281f179a8459baa57330c",
+                        "bytes": 35
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 4,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292614+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "7816fbaf946027d47d845312b3e4839d1b3917d7bf33cbf077575b8c0fb4ff11",
+                        "bytes": 38
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 5,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-inactive",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": false,
+                      "date_joined": "2026-11-12T23:01:08.292852+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "5ab32f64d0dd6fa4db2f1f8f6f2ad36ec979c75c06c7b0142bcb58a09e65affd",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 6,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-streamer",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.293072+00:00",
+                      "avatar_config": {},
+                      "user_level": 0,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "76eabc25d8be6b7cac24acc1fd017f0db0a59e8682860ef9f1d7e963ae5d55c1",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    }
+                  ],
+                  "before_events": [],
+                  "began_utc": "2026-11-12T23:01:08.509904+00:00",
+                  "actual_auth_observation": {
+                    "user_id": 4,
+                    "is_authenticated": true,
+                    "backend_class": "rest_framework_simplejwt.authentication.JWTAuthentication"
+                  },
+                  "transport": "http_response",
+                  "status": 200,
+                  "headers": {
+                    "Content-Type": "application/json",
+                    "Vary": "Accept, origin",
+                    "Allow": "GET, HEAD, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "18",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_hex": "7b22756e726561645f636f756e74223a327d",
+                  "body_sha256": "115435738bb61d7239653a39d36be405e3046c35466bedd6b65c94d82e5f9a96",
+                  "body_bytes": 18,
+                  "json": {
+                    "unread_count": 2
+                  },
+                  "framework_exception": null,
+                  "completed_utc": "2026-11-12T23:01:08.511932+00:00",
+                  "after_audit": {
+                    "database": "rust_probe_notifcred_db6158c8ef",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 6,
+                        "sha256": "9e25d482d383ee3b06e37e1ede931e41b7156b4b614df7f9615af8106776fc55"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "1e020fb3722064ea889963ed424dfb70700a5cc10380b231fa1f3af9d0c9afa0"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "6baead4f8d8d58f993e74ca250a981a7d892451602effd2f22dad0eacc49db22"
+                      },
+                      "core_systemnotification": {
+                        "rows": 2,
+                        "sha256": "22687568d20ba7f0847df754acbf51e78e4f5128f223c8fbae79efd5e52d0fcb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 6,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "fc31b57bbbefb54888540b076f60dde7fe37f51a6bef48295cf556b84e0ee4d0",
+                    "capture_bytes": 5408,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_notifications": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "credential.A",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 1",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-01T00:00:00+00:00",
+                        "updated_at": "2020-01-01T00:00:00+00:00"
+                      },
+                      {
+                        "id": 2,
+                        "notification_key": "credential.B",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 2",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-02T00:00:00+00:00",
+                        "updated_at": "2020-01-02T00:00:00+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "after_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299965
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75707665723a6e6574776f726b5f616363657373",
+                        "dump_hex": "0013313739343532343436383238303930313236320f00bdceac671281dd06",
+                        "pttl": -1
+                      }
+                    ],
+                    "capture_bytes": 228,
+                    "api_key_failed_auth_history": null,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_users": [
+                    {
+                      "id": 1,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.291637+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "f47b50a9cae56b8e6a604c85d1c07945dbc42b5cea8e64bd25f3c7bd112bc457",
+                        "bytes": 28
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 2,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292106+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "3c1cb66e8b9749c4e56a319a38d3f67baf37e6b6c2a85a6dcceefddf727aa453",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 3,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292363+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "b4d8b9a076745ad1525bb7a95aca3948dac7792adc9281f179a8459baa57330c",
+                        "bytes": 35
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 4,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292614+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "7816fbaf946027d47d845312b3e4839d1b3917d7bf33cbf077575b8c0fb4ff11",
+                        "bytes": 38
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 5,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-inactive",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": false,
+                      "date_joined": "2026-11-12T23:01:08.292852+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "5ab32f64d0dd6fa4db2f1f8f6f2ad36ec979c75c06c7b0142bcb58a09e65affd",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 6,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-streamer",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.293072+00:00",
+                      "avatar_config": {},
+                      "user_level": 0,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "76eabc25d8be6b7cac24acc1fd017f0db0a59e8682860ef9f1d7e963ae5d55c1",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    }
+                  ],
+                  "after_events": [],
+                  "capture_complete": true
+                },
+                "original_raw_sha256": "f02c49f2c1a3b7b876611ab99b2f7976aeef8cedaf471fc263c3223ba86680a0",
+                "json_pointer": "/requests/2",
+                "full_role_matrix": false
+              }
+            ],
+            "assertions": [
+              "Exact actual resolver/method/action/target, credential headers and successful authenticator are checked",
+              "Exact response JSON and raw body hash, own request clocks, all11 SQL/sequence fingerprints and user/event/cache effects use the unchanged Source20 validator",
+              "Preserve the whole20 fixed sequential setup and real failed-key history; three selected cases are not20 new executions each",
+              "Public credential projections retain original hashes/lengths and original capture identity; no Source TCP or Native result is inferred"
+            ],
+            "result": {
+              "state": "retained_Original_Source20_real_credentials_framework_passed",
+              "historical_captured_cases": 1,
+              "whole_fixture_observations": 20,
+              "Source_shell_exit": 0,
+              "Source_controller_exit": 0,
+              "new_Source_cases_this_task": 0,
+              "new_Source_runs_this_mapping": 0,
+              "complete_role_matrix": false,
+              "Native_or_TCP_acceptance": false
+            },
+            "remaining": [
+              "Only this observed role/request/context is assigned",
+              "No alias/renderer/serializer/credential grammar or concurrency completion",
+              "No Native, performance or formal milestone promotion"
+            ],
+            "fully_verified": false
+          }
         }
       ]
     },
@@ -74051,15 +75830,869 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_framework_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "standard_denied": {
+                "seed_role": {
+                  "alias": "standard_denied",
+                  "id": 4,
+                  "user_level": 1,
+                  "is_active": true,
+                  "custom_properties": {
+                    "allowed_networks": {
+                      "UI": "192.0.2.0/24"
+                    }
+                  }
+                },
+                "transport": "Original APIClient normal realJWT/CSRF middleware",
+                "force_authenticate": false,
+                "actual_authenticated_user_id": 4,
+                "observed_backend": "rest_framework_simplejwt.authentication.JWTAuthentication"
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "standard_denied"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-notification-real-credentials20",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "roles": [
+              {
+                "alias": "admin",
+                "id": 1,
+                "user_level": 10,
+                "is_active": true,
+                "custom_properties": {}
+              },
+              {
+                "alias": "standard",
+                "id": 2,
+                "user_level": 1,
+                "is_active": true,
+                "custom_properties": {}
+              },
+              {
+                "alias": "admin_denied",
+                "id": 3,
+                "user_level": 10,
+                "is_active": true,
+                "custom_properties": {
+                  "allowed_networks": {
+                    "UI": "192.0.2.0/24"
+                  }
+                }
+              },
+              {
+                "alias": "standard_denied",
+                "id": 4,
+                "user_level": 1,
+                "is_active": true,
+                "custom_properties": {
+                  "allowed_networks": {
+                    "UI": "192.0.2.0/24"
+                  }
+                }
+              },
+              {
+                "alias": "inactive",
+                "id": 5,
+                "user_level": 1,
+                "is_active": false,
+                "custom_properties": {}
+              },
+              {
+                "alias": "streamer",
+                "id": 6,
+                "user_level": 0,
+                "is_active": true,
+                "custom_properties": {}
+              }
+            ],
+            "scope": "Actual Original resolver/APIClient normal JWT/API-key/CSRF middleware; no forceauth, TCP, Native or whole role matrix",
+            "setup": {
+              "fixed_plan": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/plan.json",
+                "sha256": "0df9520f9f52932cca499951e79acd967839eaf28cfe286933a5bc26f4b11b8a"
+              },
+              "fixture_executor_seal_sha256": "9c09896c7cc71d57ff152bb3fc4c93d5bd158179da7b136c0e23c96c38e4c9fc",
+              "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+              "new_replay_requires_fresh_owned_fixture": true,
+              "sequential_context": "All20 requests in fixed order; selected operations are not independent captures"
+            },
+            "assertions": {
+              "Source_validator": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/validate_source_projection.py",
+                "sha256": "ba03eafcff188225d1ba0eda1096106f3c1755c3f9de6b8a463936cb545012dc"
+              },
+              "Source_seed_validator": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/source_seed_projection.py",
+                "sha256": "1133b79a4345684f75aed5f323b08dec078e5d4cf176b6d58a30085e2b7974a3"
+              },
+              "shared_effect_qualification": {
+                "passed": true,
+                "actual_Source_requests": 20,
+                "setup_actors": 6,
+                "real_auth_framework_only": true,
+                "Source_TCP_or_Native_acceptance": false,
+                "requests_without_budget_reset": true,
+                "new_notice_id_observed": 3,
+                "role_or_network_full_endpoint_coverage": false
+              }
+            },
+            "result": {
+              "Source_shell_and_controller_exit": 0,
+              "Root_review": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/Source20-Root-review.json",
+                "sha256": "4022ba3da4c326a4fb2e513f2837cc0e0ec358cdcd3f94b6b2b2ef6f222b4801"
+              },
+              "actual_Source_requests": 20,
+              "new_Source_runs_this_mapping": 0
+            },
+            "projection": {
+              "reference": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/reference.json",
+                "sha256": "5580b295a254aee3bcef2b218521ff6d3d300a037cee4ac166f3ae230e01a75f"
+              },
+              "original_raw_sha256": "f02c49f2c1a3b7b876611ab99b2f7976aeef8cedaf471fc263c3223ba86680a0",
+              "observed_projection": {
+                "path": "scripts/rust-contracts/notification-credentials-source20-native20/Source20-projection.json",
+                "sha256": "ee65bdd1b940e0fafc761ca7a9ac900fe76e83ca11e6dbc119999f19caea8dce"
+              },
+              "policy": "Explicit credential hashes/lengths preserve secret fields; projected bytes were not executed; original identity remains separate"
+            }
+          },
+          "assertions": [
+            "Exact actual resolver/method/action/target, credential headers and successful authenticator are checked",
+            "Exact response JSON and raw body hash, own request clocks, all11 SQL/sequence fingerprints and user/event/cache effects use the unchanged Source20 validator",
+            "Preserve the whole20 fixed sequential setup and real failed-key history; three selected cases are not20 new executions each",
+            "Public credential projections retain original hashes/lengths and original capture identity; no Source TCP or Native result is inferred"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_Source20_real_credentials_framework_passed",
+            "historical_captured_cases": 1,
+            "whole_fixture_observations": 20,
+            "Source_shell_exit": 0,
+            "Source_controller_exit": 0,
+            "new_Source_cases_this_task": 0,
+            "new_Source_runs_this_mapping": 0,
+            "complete_role_matrix": false,
+            "Native_or_TCP_acceptance": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-06ad6f49ab1bfa0a7ea3:GET",
+            "pattern_exact": "api/core/^notifications/(?P<pk>[^/.]+)/$",
+            "source_handler": "core.api_views.SystemNotificationViewSet",
+            "method": "GET",
+            "source_action": "retrieve",
+            "owning_milestone": "M5",
+            "fixture_id": "retained-Original-notification-real-credentials20",
+            "observed_roles": [
+              "standard_denied"
+            ],
+            "source_role_specs": {
+              "standard_denied": {
+                "seed_role": {
+                  "alias": "standard_denied",
+                  "id": 4,
+                  "user_level": 1,
+                  "is_active": true,
+                  "custom_properties": {
+                    "allowed_networks": {
+                      "UI": "192.0.2.0/24"
+                    }
+                  }
+                },
+                "transport": "Original APIClient normal realJWT/CSRF middleware",
+                "force_authenticate": false,
+                "actual_authenticated_user_id": 4,
+                "observed_backend": "rest_framework_simplejwt.authentication.JWTAuthentication"
+              }
+            },
+            "cases": [
+              {
+                "source_ordinal": 2,
+                "label": "jwt-denied-standard-retrieve",
+                "whole_source_fixture_observations": 20,
+                "observation_projection": {
+                  "ordinal": 2,
+                  "name": "jwt-denied-standard-retrieve",
+                  "method": "GET",
+                  "path": "/api/core/notifications/1/",
+                  "auth_selectors": {
+                    "bearer": "standard_denied"
+                  },
+                  "raw_headers_private": {
+                    "HTTP_AUTHORIZATION": {
+                      "sha256": "6f4dca3f5f47e54c62bf5bb84c3e5f4b647128a562584ef4d82f7b593bee2c2f",
+                      "bytes": 238
+                    }
+                  },
+                  "request_payload": null,
+                  "resolver": {
+                    "class": "core.api_views.SystemNotificationViewSet",
+                    "action": "retrieve",
+                    "actions": {
+                      "get": "retrieve",
+                      "put": "update",
+                      "patch": "partial_update",
+                      "delete": "destroy",
+                      "head": "retrieve"
+                    },
+                    "url_name": "systemnotification-detail",
+                    "kwargs": {
+                      "pk": "1"
+                    }
+                  },
+                  "before_audit": {
+                    "database": "rust_probe_notifcred_db6158c8ef",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 6,
+                        "sha256": "9e25d482d383ee3b06e37e1ede931e41b7156b4b614df7f9615af8106776fc55"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "1e020fb3722064ea889963ed424dfb70700a5cc10380b231fa1f3af9d0c9afa0"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "6baead4f8d8d58f993e74ca250a981a7d892451602effd2f22dad0eacc49db22"
+                      },
+                      "core_systemnotification": {
+                        "rows": 2,
+                        "sha256": "22687568d20ba7f0847df754acbf51e78e4f5128f223c8fbae79efd5e52d0fcb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 6,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "fc31b57bbbefb54888540b076f60dde7fe37f51a6bef48295cf556b84e0ee4d0",
+                    "capture_bytes": 5408,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "before_notifications": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "credential.A",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 1",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-01T00:00:00+00:00",
+                        "updated_at": "2020-01-01T00:00:00+00:00"
+                      },
+                      {
+                        "id": 2,
+                        "notification_key": "credential.B",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 2",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-02T00:00:00+00:00",
+                        "updated_at": "2020-01-02T00:00:00+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "before_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299985
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75707665723a6e6574776f726b5f616363657373",
+                        "dump_hex": "0013313739343532343436383238303930313236320f00bdceac671281dd06",
+                        "pttl": -1
+                      }
+                    ],
+                    "capture_bytes": 228,
+                    "api_key_failed_auth_history": null,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_users": [
+                    {
+                      "id": 1,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.291637+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "f47b50a9cae56b8e6a604c85d1c07945dbc42b5cea8e64bd25f3c7bd112bc457",
+                        "bytes": 28
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 2,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292106+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "3c1cb66e8b9749c4e56a319a38d3f67baf37e6b6c2a85a6dcceefddf727aa453",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 3,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292363+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "b4d8b9a076745ad1525bb7a95aca3948dac7792adc9281f179a8459baa57330c",
+                        "bytes": 35
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 4,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292614+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "7816fbaf946027d47d845312b3e4839d1b3917d7bf33cbf077575b8c0fb4ff11",
+                        "bytes": 38
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 5,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-inactive",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": false,
+                      "date_joined": "2026-11-12T23:01:08.292852+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "5ab32f64d0dd6fa4db2f1f8f6f2ad36ec979c75c06c7b0142bcb58a09e65affd",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 6,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-streamer",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.293072+00:00",
+                      "avatar_config": {},
+                      "user_level": 0,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "76eabc25d8be6b7cac24acc1fd017f0db0a59e8682860ef9f1d7e963ae5d55c1",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    }
+                  ],
+                  "before_events": [],
+                  "began_utc": "2026-11-12T23:01:08.497120+00:00",
+                  "actual_auth_observation": {
+                    "user_id": 4,
+                    "is_authenticated": true,
+                    "backend_class": "rest_framework_simplejwt.authentication.JWTAuthentication"
+                  },
+                  "transport": "http_response",
+                  "status": 200,
+                  "headers": {
+                    "Content-Type": "application/json",
+                    "Vary": "Accept, origin",
+                    "Allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "296",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_hex": "7b226964223a312c226e6f74696669636174696f6e5f6b6579223a2263726564656e7469616c2e41222c226e6f74696669636174696f6e5f74797065223a22696e666f222c227072696f72697479223a226e6f726d616c222c227469746c65223a2243726564656e7469616c206e6f746963652031222c226d657373616765223a224f776e65642066697874757265206f6e6c79222c22616374696f6e5f64617461223a7b7d2c2269735f616374697665223a747275652c2261646d696e5f6f6e6c79223a66616c73652c22657870697265735f6174223a6e756c6c2c22637265617465645f6174223a22323032302d30312d30315430303a30303a30305a222c2269735f6469736d6973736564223a66616c73652c22736f75726365223a2273797374656d227d",
+                  "body_sha256": "0aa3182d1089c54240c3bb16ce90e9405ce69f0d4ba353a5b1cc94ed1054cbda",
+                  "body_bytes": 296,
+                  "json": {
+                    "id": 1,
+                    "notification_key": "credential.A",
+                    "notification_type": "info",
+                    "priority": "normal",
+                    "title": "Credential notice 1",
+                    "message": "Owned fixture only",
+                    "action_data": {},
+                    "is_active": true,
+                    "admin_only": false,
+                    "expires_at": null,
+                    "created_at": "2020-01-01T00:00:00Z",
+                    "is_dismissed": false,
+                    "source": "system"
+                  },
+                  "framework_exception": null,
+                  "completed_utc": "2026-11-12T23:01:08.499748+00:00",
+                  "after_audit": {
+                    "database": "rust_probe_notifcred_db6158c8ef",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 6,
+                        "sha256": "9e25d482d383ee3b06e37e1ede931e41b7156b4b614df7f9615af8106776fc55"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "1e020fb3722064ea889963ed424dfb70700a5cc10380b231fa1f3af9d0c9afa0"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "6baead4f8d8d58f993e74ca250a981a7d892451602effd2f22dad0eacc49db22"
+                      },
+                      "core_systemnotification": {
+                        "rows": 2,
+                        "sha256": "22687568d20ba7f0847df754acbf51e78e4f5128f223c8fbae79efd5e52d0fcb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 6,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "fc31b57bbbefb54888540b076f60dde7fe37f51a6bef48295cf556b84e0ee4d0",
+                    "capture_bytes": 5408,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_notifications": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "credential.A",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 1",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-01T00:00:00+00:00",
+                        "updated_at": "2020-01-01T00:00:00+00:00"
+                      },
+                      {
+                        "id": 2,
+                        "notification_key": "credential.B",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Credential notice 2",
+                        "message": "Owned fixture only",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2020-01-02T00:00:00+00:00",
+                        "updated_at": "2020-01-02T00:00:00+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "after_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299977
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75707665723a6e6574776f726b5f616363657373",
+                        "dump_hex": "0013313739343532343436383238303930313236320f00bdceac671281dd06",
+                        "pttl": -1
+                      }
+                    ],
+                    "capture_bytes": 228,
+                    "api_key_failed_auth_history": null,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_users": [
+                    {
+                      "id": 1,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.291637+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "f47b50a9cae56b8e6a604c85d1c07945dbc42b5cea8e64bd25f3c7bd112bc457",
+                        "bytes": 28
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 2,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292106+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "3c1cb66e8b9749c4e56a319a38d3f67baf37e6b6c2a85a6dcceefddf727aa453",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 3,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-admin_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292363+00:00",
+                      "avatar_config": {},
+                      "user_level": 10,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "b4d8b9a076745ad1525bb7a95aca3948dac7792adc9281f179a8459baa57330c",
+                        "bytes": 35
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 4,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-standard_denied",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.292614+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {
+                        "allowed_networks": {
+                          "UI": "192.0.2.0/24"
+                        }
+                      },
+                      "api_key": {
+                        "sha256": "7816fbaf946027d47d845312b3e4839d1b3917d7bf33cbf077575b8c0fb4ff11",
+                        "bytes": 38
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 5,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-inactive",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": false,
+                      "date_joined": "2026-11-12T23:01:08.292852+00:00",
+                      "avatar_config": {},
+                      "user_level": 1,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "5ab32f64d0dd6fa4db2f1f8f6f2ad36ec979c75c06c7b0142bcb58a09e65affd",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    },
+                    {
+                      "id": 6,
+                      "password": "!",
+                      "last_login": null,
+                      "is_superuser": false,
+                      "username": "rust-probe-notifcred-db6158c8ef-streamer",
+                      "first_name": "",
+                      "last_name": "",
+                      "email": "",
+                      "is_staff": false,
+                      "is_active": true,
+                      "date_joined": "2026-11-12T23:01:08.293072+00:00",
+                      "avatar_config": {},
+                      "user_level": 0,
+                      "custom_properties": {},
+                      "api_key": {
+                        "sha256": "76eabc25d8be6b7cac24acc1fd017f0db0a59e8682860ef9f1d7e963ae5d55c1",
+                        "bytes": 31
+                      },
+                      "stream_limit": 0
+                    }
+                  ],
+                  "after_events": [],
+                  "capture_complete": true
+                },
+                "original_raw_sha256": "f02c49f2c1a3b7b876611ab99b2f7976aeef8cedaf471fc263c3223ba86680a0",
+                "json_pointer": "/requests/1",
+                "full_role_matrix": false
+              }
+            ],
+            "assertions": [
+              "Exact actual resolver/method/action/target, credential headers and successful authenticator are checked",
+              "Exact response JSON and raw body hash, own request clocks, all11 SQL/sequence fingerprints and user/event/cache effects use the unchanged Source20 validator",
+              "Preserve the whole20 fixed sequential setup and real failed-key history; three selected cases are not20 new executions each",
+              "Public credential projections retain original hashes/lengths and original capture identity; no Source TCP or Native result is inferred"
+            ],
+            "result": {
+              "state": "retained_Original_Source20_real_credentials_framework_passed",
+              "historical_captured_cases": 1,
+              "whole_fixture_observations": 20,
+              "Source_shell_exit": 0,
+              "Source_controller_exit": 0,
+              "new_Source_cases_this_task": 0,
+              "new_Source_runs_this_mapping": 0,
+              "complete_role_matrix": false,
+              "Native_or_TCP_acceptance": false
+            },
+            "remaining": [
+              "Only this observed role/request/context is assigned",
+              "No alias/renderer/serializer/credential grammar or concurrency completion",
+              "No Native, performance or formal milestone promotion"
+            ],
+            "fully_verified": false
+          }
         },
         {
           "contract_id": "route-06ad6f49ab1bfa0a7ea3:PATCH",

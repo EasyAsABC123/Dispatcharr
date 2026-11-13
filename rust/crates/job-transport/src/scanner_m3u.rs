@@ -11,7 +11,7 @@ use dispatcharr_coordination::{TaskLease, TaskLockDetailedError, TaskLockError, 
 use dispatcharr_ingest_core::{project_entry, stream_hash, ProjectionContext, StreamIdentity};
 use dispatcharr_store::{
     AuthService, BoundedM3uBatchError, GroupCleanupAccount, ImportedGroup, ImportedStream,
-    ScannerM3uLookupCap, Store,
+    M3uGroupImportFailure, M3uGroupImportStage, ScannerM3uLookupCap, Store, StoreError,
 };
 use serde_json::{json, Value};
 use sqlx::{Connection, Row};
@@ -35,6 +35,96 @@ pub enum Error {
     Unsupported,
     Operational,
     DrainTimeout,
+}
+/// Only two observed raised M3U Groups failures, after actual operation and
+/// ownership settlement. Unknown errors never construct this type.
+#[derive(Clone, Debug)]
+pub(crate) struct KnownFailure {
+    class: &'static str,
+    module: &'static str,
+    arguments: Vec<Value>,
+    diagnostic: String,
+}
+impl KnownFailure {
+    fn missing(error: &std::io::Error) -> Result<Self, Error> {
+        if error.raw_os_error() != Some(2) {
+            return Err(Error::Operational);
+        }
+        Ok(Self { class: "FileNotFoundError", module: "builtins",
+            arguments: vec![json!(2), json!("No such file or directory")],
+            diagnostic: "Native Dispatcharr M3U groups diagnostic [owned_std_open]: actual ENOENT; filesystem work completed; owner-confirmed groups key retained until its existing TTL, native renewal stopped. No Python frames executed.".into() })
+    }
+    fn group_create(failure: &M3uGroupImportFailure) -> Result<Self, Error> {
+        let StoreError::Database(error) = &failure.source else {
+            return Err(Error::Operational);
+        };
+        let Some(pg) = error
+            .as_database_error()
+            .and_then(|e| e.try_downcast_ref::<sqlx::postgres::PgDatabaseError>())
+        else {
+            return Err(Error::Operational);
+        };
+        Self::programming(
+            failure.stage,
+            pg.severity(),
+            crate::pg_failure_format::Fields {
+                sqlstate: pg.code(),
+                message: pg.message(),
+                detail: pg.detail(),
+                hint: pg.hint(),
+                context: pg.r#where(),
+                has_position: pg.position().is_some(),
+            },
+        )
+    }
+    fn programming(
+        stage: M3uGroupImportStage,
+        severity: sqlx::postgres::PgSeverity,
+        fields: crate::pg_failure_format::Fields<'_>,
+    ) -> Result<Self, Error> {
+        if stage != M3uGroupImportStage::CreateGroups
+            || severity != sqlx::postgres::PgSeverity::Error
+        {
+            return Err(Error::Operational);
+        }
+        let message = crate::pg_failure_format::render(fields).map_err(|_| Error::Operational)?;
+        Ok(Self { class: "ProgrammingError", module: "django.db.utils", arguments: vec![json!(message)],
+            diagnostic: "Native Dispatcharr M3U groups diagnostic [create_groups]: actual PostgreSQL ERROR P0001; ReadyForQuery and dedicated connection close settled; parsed cache retained; owner-confirmed groups key retained until its existing TTL, native renewal stopped. No Python frames executed.".into() })
+    }
+    pub(crate) fn metadata(
+        &self,
+        message: &crate::scanner_m3u_protocol::Message,
+        date: &str,
+    ) -> Result<Vec<u8>, crate::transport::Error> {
+        if self
+            .arguments
+            .iter()
+            .filter_map(Value::as_str)
+            .any(|v| v.len() > 8192)
+            || self.diagnostic.len() > 16384
+            || date.len() > 40
+            || chrono::DateTime::parse_from_rfc3339(date).is_err()
+        {
+            return Err(crate::transport::Error::Protocol);
+        }
+        let bytes = serde_json::to_vec(&json!({"status":"FAILURE","result":{"exc_type":self.class,"exc_module":self.module,"exc_message":self.arguments},"traceback":self.diagnostic,"children":[],"date_done":date,"task_id":message.id.to_string(),"parent_id":message.parent.to_string()})).map_err(|_| crate::transport::Error::Protocol)?;
+        crate::decode::decode(&bytes, message.id).map_err(|_| crate::transport::Error::Protocol)?;
+        Ok(bytes)
+    }
+}
+pub(crate) enum Terminal {
+    Normal(Value),
+    Raised(KnownFailure),
+}
+enum GroupsError {
+    Operational(Error),
+    Missing(std::io::Error),
+    Import(M3uGroupImportFailure),
+}
+impl From<Error> for GroupsError {
+    fn from(error: Error) -> Self {
+        Self::Operational(error)
+    }
 }
 // Only these observed audit statements may produce a caught normal return.
 // The owned error is constructed into this type only after Ready/close settles.
@@ -105,6 +195,7 @@ pub(crate) struct Prepared {
     hash_mode: HashMode,
     account: Account,
     input: Option<Catalog>,
+    missing_input: bool,
     cached: Option<Catalog>,
     owner: Arc<Operation>,
     done: tokio::sync::oneshot::Receiver<()>,
@@ -270,6 +361,7 @@ impl Service {
             hash_mode,
             account,
             input: None,
+            missing_input: false,
             cached: None,
             owner,
             done,
@@ -280,13 +372,31 @@ impl Service {
             let retained = prepared.owner.clone();
             let (input, cached) = tokio::task::spawn_blocking(move || {
                 let _retained = retained;
-                Ok::<_, Error>((files::input(&path)?, files::cached(&cache)?))
+                Ok::<_, Error>((files::probe_input(&path)?, files::cached(&cache)?))
             })
             .await
             .map_err(|_| Error::Operational)??;
-            prepared.input = Some(input);
+            match input {
+                files::InputProbe::Present(catalog) => prepared.input = Some(catalog),
+                files::InputProbe::Missing => prepared.missing_input = true,
+            }
             prepared.cached = cached;
         } else if kind == Kind::Single {
+            return Err(Error::Unsupported);
+        }
+        if kind == Kind::Single
+            && prepared.missing_input
+            && prepared
+                .cached
+                .as_ref()
+                .is_none_or(|v| v.entries.is_empty())
+            && !self
+                .inner
+                .ports
+                .groups_lock_present(id, prepared.owner.clone())
+                .await
+                .map_err(|_| Error::Operational)?
+        {
             return Err(Error::Unsupported);
         }
         // Bounded conservative superset from both owned catalogs. This is
@@ -639,21 +749,32 @@ impl Service {
         full: bool,
         status: &str,
         message: Option<&str>,
-    ) -> Result<Value, Error> {
+    ) -> Result<Terminal, Error> {
         let account = &prepared.account;
         let owner: Owner = prepared.owner.clone();
         let Some(lease) = self.lease(Kind::Groups, account.id, owner.clone()).await? else {
-            return Ok(json!([
+            return Ok(Terminal::Normal(json!([
                 format!("Task already running for account_id={}.", account.id),
                 null
-            ]));
+            ])));
         };
-        let body = async {
+        let body: Result<Value, GroupsError> = async {
             if !account.active {
                 return Ok(json!([
                     format!("M3UAccount with ID={} not found or inactive.", account.id),
                     null
                 ]));
+            }
+            if prepared.missing_input {
+                let path = account.path.clone();
+                let retained = owner.clone();
+                let missing = tokio::task::spawn_blocking(move || {
+                    let _retained = retained;
+                    files::confirm_missing_open(&path)
+                })
+                .await
+                .map_err(|_| Error::Operational)??;
+                return Err(GroupsError::Missing(missing));
             }
             let catalog = prepared.input.as_ref().ok_or(Error::Operational)?;
             let raw = catalog.raw.clone();
@@ -685,15 +806,53 @@ impl Service {
                 .collect();
             self.inner
                 .store
-                .import_m3u_groups(account.id, &json!({}), groups, self.now())
+                .import_m3u_groups_report(account.id, &json!({}), groups, self.now())
                 .await
-                .map_err(|_| Error::Operational)?;
+                .map_err(GroupsError::Import)?;
             Ok(files::result(catalog))
         }
         .await;
-        let released = self.release(lease).await;
-        released?;
-        let result = body?;
+        let result = match body {
+            Ok(value) => {
+                self.release(lease).await?;
+                value
+            }
+            Err(GroupsError::Operational(error)) => {
+                self.release(lease).await?;
+                return Err(error);
+            }
+            Err(GroupsError::Missing(error)) => {
+                self.settle().await?;
+                let failure = KnownFailure::missing(&error)?;
+                if !lease
+                    .preserve_failed_m3u_groups_until_expiry()
+                    .await
+                    .map_err(|_| Error::Operational)?
+                {
+                    return Err(Error::Operational);
+                }
+                return Ok(Terminal::Raised(failure));
+            }
+            Err(GroupsError::Import(error)) => {
+                // Classify only after the failed operation's actual Ready/close.
+                self.settle().await?;
+                let failure = match KnownFailure::group_create(&error) {
+                    Ok(failure) => failure,
+                    Err(error) => {
+                        self.release(lease).await?;
+                        return Err(error);
+                    }
+                };
+                if !lease
+                    .preserve_failed_m3u_groups_until_expiry()
+                    .await
+                    .map_err(|_| Error::Operational)?
+                {
+                    return Err(Error::Operational);
+                }
+                return Ok(Terminal::Raised(failure));
+            }
+        };
         if account.active && !full {
             let text = "M3U groups loaded. Please select groups or refresh M3U to complete setup.";
             self.update(account, "pending_setup", Some(text), false)
@@ -709,9 +868,13 @@ impl Service {
             )
             .await?;
         }
-        Ok(result)
+        Ok(Terminal::Normal(result))
     }
-    pub(crate) async fn execute(&self, kind: Kind, prepared: Prepared) -> Result<Value, Error> {
+    pub(crate) async fn execute_terminal(
+        &self,
+        kind: Kind,
+        prepared: Prepared,
+    ) -> Result<Terminal, Error> {
         let result = if kind == Kind::Groups {
             self.groups(
                 &prepared,
@@ -721,7 +884,7 @@ impl Service {
             )
             .await
         } else {
-            self.single(&prepared).await
+            self.single(&prepared).await.map(Terminal::Normal)
         };
         // Also fence raw SQL on every execution error (including a late
         // pending-setup/audit ErrorResponse) before waiting retained receipts.
@@ -764,9 +927,13 @@ impl Service {
         let catalog = if let Some(cached) = cached {
             cached
         } else {
-            let groups = self
+            let groups = match self
                 .groups(p, true, "fetching", Some("Refresh in progress..."))
-                .await?;
+                .await?
+            {
+                Terminal::Normal(value) => value,
+                Terminal::Raised(_) => return Err(Error::Operational),
+            };
             if groups[1].is_null() {
                 let message = groups[0]
                     .as_str()
@@ -998,5 +1165,170 @@ mod boundary_tests {
         ] {
             assert_eq!(audit_limit(&v), Err(Error::Unsupported));
         }
+    }
+}
+
+#[cfg(test)]
+mod known_failure_tests {
+    use super::*;
+    fn message(metadata: &Value) -> crate::scanner_m3u_protocol::Message {
+        let parent = uuid::Uuid::parse_str(metadata["parent_id"].as_str().unwrap()).unwrap();
+        crate::scanner_m3u_protocol::Message {
+            id: uuid::Uuid::parse_str(metadata["task_id"].as_str().unwrap()).unwrap(),
+            root: parent,
+            parent,
+            account: 1,
+            kind: Kind::Groups,
+        }
+    }
+    #[test]
+    fn actual_two_source_failure_descriptors_and_owned_metadata_without_python_frames() {
+        let source: Value =
+            serde_json::from_str(include_str!("../datasets/source-m3u-known-failures.json"))
+                .unwrap();
+        for row in source["cases"].as_array().unwrap() {
+            let original = &row["metadata"];
+            let failure = if row["name"] == "m3u-missing-local-file" {
+                KnownFailure::missing(&std::io::Error::from_raw_os_error(2)).unwrap()
+            } else {
+                KnownFailure::programming(
+                    M3uGroupImportStage::CreateGroups,
+                    sqlx::postgres::PgSeverity::Error,
+                    crate::pg_failure_format::Fields {
+                        sqlstate: "P0001",
+                        message: "rust-owned M3U worker failure",
+                        detail: None,
+                        hint: None,
+                        context: Some(
+                            "PL/pgSQL function rust_owned_m3u_worker_fail() line 1 at RAISE",
+                        ),
+                        has_position: false,
+                    },
+                )
+                .unwrap()
+            };
+            let raw = failure
+                .metadata(&message(original), original["date_done"].as_str().unwrap())
+                .unwrap();
+            let actual: Value = serde_json::from_slice(&raw).unwrap();
+            for key in [
+                "status",
+                "result",
+                "task_id",
+                "parent_id",
+                "children",
+                "date_done",
+            ] {
+                assert_eq!(actual.get(key), original.get(key), "{}:{key}", row["name"]);
+            }
+            assert!(actual["traceback"]
+                .as_str()
+                .unwrap()
+                .starts_with("Native Dispatcharr M3U groups diagnostic"));
+            assert!(!actual["traceback"]
+                .as_str()
+                .unwrap()
+                .contains("Traceback (most recent call last)"));
+            assert_ne!(actual["traceback"], original["traceback"]);
+            assert_eq!(
+                crate::decode::decode(&raw, message(original).id)
+                    .unwrap()
+                    .state,
+                crate::decode::State::Failure
+            );
+        }
+    }
+    #[test]
+    fn unrelated_fs_error_or_sql_stage_severity_code_position_never_becomes_known_failure() {
+        for code in [1, 5, 13, 20, 21, 28] {
+            assert!(KnownFailure::missing(&std::io::Error::from_raw_os_error(code)).is_err());
+        }
+        let fields = crate::pg_failure_format::Fields {
+            sqlstate: "P0001",
+            message: "owned",
+            detail: None,
+            hint: None,
+            context: None,
+            has_position: false,
+        };
+        for stage in [
+            M3uGroupImportStage::Validation,
+            M3uGroupImportStage::ReadGroups,
+            M3uGroupImportStage::ReadCreatedGroups,
+            M3uGroupImportStage::ReadRelationBytes,
+            M3uGroupImportStage::ReadRelations,
+            M3uGroupImportStage::CreateRelations,
+            M3uGroupImportStage::UpdateRelations,
+            M3uGroupImportStage::Decode,
+        ] {
+            assert!(
+                KnownFailure::programming(stage, sqlx::postgres::PgSeverity::Error, fields)
+                    .is_err()
+            );
+        }
+        for severity in [
+            sqlx::postgres::PgSeverity::Fatal,
+            sqlx::postgres::PgSeverity::Panic,
+        ] {
+            assert!(
+                KnownFailure::programming(M3uGroupImportStage::CreateGroups, severity, fields)
+                    .is_err()
+            );
+        }
+        for code in ["P0002", "23505", "08006"] {
+            assert!(KnownFailure::programming(
+                M3uGroupImportStage::CreateGroups,
+                sqlx::postgres::PgSeverity::Error,
+                crate::pg_failure_format::Fields {
+                    sqlstate: code,
+                    ..fields
+                }
+            )
+            .is_err());
+        }
+        assert!(KnownFailure::programming(
+            M3uGroupImportStage::CreateGroups,
+            sqlx::postgres::PgSeverity::Error,
+            crate::pg_failure_format::Fields {
+                has_position: true,
+                ..fields
+            }
+        )
+        .is_err());
+        let large = "x".repeat(8193);
+        assert!(KnownFailure::programming(
+            M3uGroupImportStage::CreateGroups,
+            sqlx::postgres::PgSeverity::Error,
+            crate::pg_failure_format::Fields {
+                message: &large,
+                ..fields
+            }
+        )
+        .is_err());
+    }
+    #[test]
+    fn create_stage_alone_does_not_classify_io_protocol_or_input_failure() {
+        for source in [
+            StoreError::Database(sqlx::Error::Io(std::io::Error::from_raw_os_error(5))),
+            StoreError::Database(sqlx::Error::Protocol("owned".into())),
+            StoreError::InvalidInput(json!({"detail":"owned"})),
+        ] {
+            let report = M3uGroupImportFailure {
+                stage: M3uGroupImportStage::CreateGroups,
+                source,
+            };
+            assert!(KnownFailure::group_create(&report).is_err());
+        }
+    }
+    #[test]
+    fn invalid_date_or_oversized_diagnostic_cannot_reach_writer() {
+        let id = uuid::Uuid::new_v4();
+        let metadata = json!({"parent_id":id,"task_id":uuid::Uuid::new_v4()});
+        let mut failure = KnownFailure::missing(&std::io::Error::from_raw_os_error(2)).unwrap();
+        assert!(failure.metadata(&message(&metadata), "not-a-date").is_err());
+        failure.diagnostic = "x".repeat(16385);
+        assert!(failure
+            .metadata(&message(&metadata), "2026-11-12T05:00:00.000000+00:00")
+            .is_err());
     }
 }

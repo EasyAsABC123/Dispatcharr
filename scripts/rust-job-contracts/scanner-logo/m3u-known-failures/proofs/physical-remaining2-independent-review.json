@@ -1,0 +1,173 @@
+{
+  "scope": "Separate cleanup and retained stage review; executed guest/host1 stays1; no unexecuted-tail/oldSUCCESS qualification",
+  "host_guest_exit": 1,
+  "installed_redis": {
+    "argv": [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-scanner-children-9d263e105c",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-physical-remaining-2/support/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-physical-remaining-2/pair.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-physical-remaining-2/ports.yml",
+      "exec",
+      "-T",
+      "baseline",
+      "redis-cli",
+      "--no-auth-warning",
+      "-a",
+      "playback-fixture-only",
+      "INFO",
+      "server"
+    ],
+    "actual_exit": 0,
+    "process_settled": true,
+    "began_epoch": 1794526026.2503107,
+    "finished_epoch": 1794526026.350846,
+    "redis_version": "8.10.3",
+    "raw_sha256": "48d6d9a6121f9b0340e23ec849e589904a5c0125f12fb977d598a0cfe3f663b7",
+    "before_any_Source_fixture_task": true
+  },
+  "checks": [
+    {
+      "name": "08-result-denied-preflight-owned-ACL-profile",
+      "passed": true
+    },
+    {
+      "name": "08-result-denied-preflight-SETEX-denied-without-write",
+      "passed": true
+    },
+    {
+      "name": "08-result-denied-preflight-PUBLISH-allowed-without-write",
+      "passed": true
+    },
+    {
+      "name": "08-result-denied-preflight-dryrun-no-task-metadata-or-channel-mutation",
+      "passed": true
+    },
+    {
+      "name": "08-result-denied-denied-is-operational-with-no-fake-metadata",
+      "passed": true
+    },
+    {
+      "name": "08-result-denied-Redis-actual-close",
+      "passed": true
+    },
+    {
+      "name": "08-result-denied-actual-write-attempt-one-permission-error",
+      "passed": false
+    }
+  ],
+  "native_run": {
+    "run": "Err(Transport(Corrupt))",
+    "slots": 1
+  },
+  "backend_before_assert": {
+    "raw_base64": null,
+    "metadata": null,
+    "ttl": -2
+  },
+  "actual_server_reply_receipts": [
+    {
+      "epoch": 1794526034.9816694,
+      "verb": "EVALSHA",
+      "script_sha1": "fce9b39b58ad3c271e70b21db9c428b48e04b169",
+      "reply_sha256": "ec7e6a799a79baab7a10f175d78f4a5157b1bb7be3e95e7b20d95367c7d00299",
+      "reply_bytes": 48,
+      "raw_base64": "LU5PU0NSSVBUIE5vIG1hdGNoaW5nIHNjcmlwdC4gUGxlYXNlIHVzZSBFVkFMLg0K",
+      "actual_server_reply_observed": true,
+      "script_cache_miss": true,
+      "mode": "result-denied"
+    },
+    {
+      "epoch": 1794526034.982051,
+      "verb": "EVALSHA",
+      "script_sha1": "fce9b39b58ad3c271e70b21db9c428b48e04b169",
+      "reply_sha256": "4debc3cda1080a6a2cb40e5b26625718317741e32a72bffc8ac664c8086a36bf",
+      "reply_bytes": 170,
+      "raw_base64": "LUVSUiBBQ0wgZmFpbHVyZSBpbiBzY3JpcHQ6IFVzZXIgb3duZWRfbTN1X2ZhaWx1cmVfMyBoYXMgbm8gcGVybWlzc2lvbnMgdG8gcnVuIHRoZSAnc2V0ZXgnIGNvbW1hbmQgc2NyaXB0OiBmY2U5YjM5YjU4YWQzYzI3MWU3MGIyMWRiOWM0MjhiNDhlMDRiMTY5LCBvbiBAdXNlcl9zY3JpcHQ6MTEuDQo=",
+      "actual_server_reply_observed": true,
+      "script_cache_miss": false,
+      "mode": "result-denied"
+    }
+  ],
+  "Single_tail": "UNEXECUTED",
+  "oldSUCCESS": "UNEXECUTED",
+  "project": "dispatcharr-scanner-children-9d263e105c",
+  "CID": "8f74ba50231f9a2e81ab4bed8b8fabc56e87e1a276e4d5e474c595a58ef8d26f",
+  "default_bytes_equal": true,
+  "fresh_independent_cleanup": [
+    {
+      "kind": "exact_CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=8f74ba50231f9a2e81ab4bed8b8fabc56e87e1a276e4d5e474c595a58ef8d26f"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794526160.5814588,
+      "finished_epoch": 1794526160.5916345,
+      "empty": true
+    },
+    {
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-9d263e105c"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794526160.5916364,
+      "finished_epoch": 1794526160.6013155,
+      "empty": true
+    },
+    {
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-9d263e105c"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794526160.6013176,
+      "finished_epoch": 1794526160.6107128,
+      "empty": true
+    },
+    {
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-9d263e105c"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794526160.6107144,
+      "finished_epoch": 1794526160.6201446,
+      "empty": true
+    }
+  ],
+  "all_owned_absent": true,
+  "source_report_sha256": "9f691f5e2b7d5036be073d1738dc5c72be803d7d858c4e89069f0bdf9f98c317"
+}

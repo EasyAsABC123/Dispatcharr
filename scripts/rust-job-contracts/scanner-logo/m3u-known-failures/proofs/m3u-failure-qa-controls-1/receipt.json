@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "scope": "Actual socket-free Python model/parser/validator controls and read-only exact input verification only",
+  "actual_controls_argv": [
+    "python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "artifacts/rust/m3u-failure-qa-private-1/local-controls",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "actual_controls_exit_observed": 0,
+  "actual_control_methods": 27,
+  "controls_log_sha256": "ceef2fddb10cad53b12ea62fda03612e35e031fdab22891032fd787d761ea72b",
+  "actual_closure_argv": [
+    "python",
+    "artifacts/rust/m3u-failure-qa-private-1/verify_closure.py",
+    "--runtime-source",
+    "artifacts/rust/m3u-failure-runtime-private-3/source",
+    "--support-root",
+    "scripts/rust-core-perf/support"
+  ],
+  "actual_closure_exit_observed": 0,
+  "closure_log_sha256": "3dc9a2d2a2621feaa81c086309ae90f99f539951384d223b640462305060558d",
+  "QA_original_seal_sha256": "a880b2f4d121f4b14b9949b58b9d25ac5c50a264654a8a2ab8c97583ef7693e4",
+  "QA_original_selected_files_sha256": "84d18964a52bdfe595ae319b73b39b624efae0f6eda82dfb0050b2491277fed0",
+  "all28_selected_QA_bytes_unchanged_after_controls": true,
+  "generated_Python_cache_files": "unselected generated outputs only; excluded from sealed28source selection",
+  "no_Docker_app_Source_Redis_Cargo_execution_in_controls": true,
+  "closure": {
+    "passed": true,
+    "scope": "Read-only closure and syntax only; no fixture code imported, tests/builds/apps executed",
+    "QA_files": 28,
+    "runtime_inputs": 798
+  }
+}

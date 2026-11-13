@@ -1,0 +1,60 @@
+{
+  "passed": false,
+  "phases": [
+    {
+      "phase": "non-test",
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-coordination",
+        "-p",
+        "dispatcharr-store",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust",
+      "source_map_sha256": "0d078b9576a48b93aea8e9028451225a4d290ec19754ffad1479b5b3d04d007b",
+      "began_epoch": 1794516265.9053488,
+      "returncode": 0,
+      "process_settled": true,
+      "pid": 808419,
+      "finished_epoch": 1794516308.3185956,
+      "log_sha256": "27ef41e58794fbf2c3bf554f6958b12a7cc1b202cd68ae277dde764b1984591c",
+      "source_unchanged_after_wait": true
+    },
+    {
+      "phase": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-coordination",
+        "-p",
+        "dispatcharr-store",
+        "-p",
+        "dispatcharr-job-transport",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-runtime-private-2/source/rust",
+      "source_map_sha256": "0d078b9576a48b93aea8e9028451225a4d290ec19754ffad1479b5b3d04d007b",
+      "began_epoch": 1794516308.3917878,
+      "returncode": 101,
+      "process_settled": true,
+      "pid": 817769,
+      "finished_epoch": 1794516333.754988,
+      "log_sha256": "d31217394e44c9b9fe0677d9f7940a09e94792c78a2c5662ccf4e6cf34069718",
+      "source_unchanged_after_wait": true
+    }
+  ],
+  "no_ELFs_copied": true,
+  "Docker_app_Source_Redis_qa_executed": false
+}

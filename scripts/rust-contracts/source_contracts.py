@@ -138,6 +138,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_notification_mutations_Source48_framework_capture':
             import notification_mutation_contracts
             notification_mutation_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_notification_Source20_real_credentials_framework':
+            import notification_credential_contracts
+            notification_credential_contracts.validate(root, value, bindings)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
         for contract in value['contracts']:
@@ -158,7 +161,7 @@ def apply(root, rows, bindings):
             if reference['kind'] in ['pinned_original_framework_tests', 'pinned_original_account_settings_tests', 'pinned_original_channel_guide_tests', 'pinned_original_dvr_import_tests', 'pinned_original_provider_output_consumer_tests', 'pinned_original_admin_rest_tests', 'pinned_original_proxy_plugin_tests', 'pinned_original_schema_cache_tests']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_test_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
-            if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture']:
+            if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture', 'retained_original_notification_Source20_real_credentials_framework']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'

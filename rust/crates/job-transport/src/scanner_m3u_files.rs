@@ -101,6 +101,38 @@ fn regular(path: &Path, limit: u64) -> Result<fs::File, Error> {
     }
     Ok(f)
 }
+pub(crate) enum InputProbe {
+    Present(Catalog),
+    Missing,
+}
+/// Only ENOENT for an exact absent leaf under an existing owned directory.
+/// No bytes are read from an unexpectedly appearing/replaced path. General
+/// concurrent filesystem mutation remains outside the admitted local domain.
+pub(crate) fn confirm_missing_open(path: &Path) -> Result<std::io::Error, Error> {
+    let parent = fs::symlink_metadata(path.parent().ok_or(Error::Unsupported)?)
+        .map_err(|_| Error::Unsupported)?;
+    if !parent.is_dir() || parent.file_type().is_symlink() {
+        return Err(Error::Unsupported);
+    }
+    match fs::symlink_metadata(path) {
+        Err(error) if error.raw_os_error() == Some(2) => {}
+        _ => return Err(Error::Operational),
+    }
+    match fs::File::open(path) {
+        Err(error) if error.raw_os_error() == Some(2) => Ok(error),
+        _ => Err(Error::Operational),
+    }
+}
+pub(crate) fn probe_input(path: &Path) -> Result<InputProbe, Error> {
+    match fs::symlink_metadata(path) {
+        Err(error) if error.raw_os_error() == Some(2) => {
+            confirm_missing_open(path)?;
+            Ok(InputProbe::Missing)
+        }
+        Err(_) => Err(Error::Operational),
+        Ok(_) => input(path).map(InputProbe::Present),
+    }
+}
 pub(crate) fn input(path: &Path) -> Result<Catalog, Error> {
     let file = regular(path, INPUT_BYTES)?;
     let mut bytes = Vec::new();
@@ -267,6 +299,24 @@ pub(crate) fn result(catalog: &Catalog) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn missing_owned_leaf_is_distinct_from_missing_root_present_file_and_symlink() {
+        let root =
+            std::env::temp_dir().join(format!("rust-owned-m3u-missing-{}", uuid::Uuid::new_v4()));
+        fs::create_dir(&root).unwrap();
+        let path = root.join("absent.m3u");
+        assert!(matches!(probe_input(&path), Ok(InputProbe::Missing)));
+        assert_eq!(confirm_missing_open(&path).unwrap().raw_os_error(), Some(2));
+        fs::write(&path, "#EXTM3U\n").unwrap();
+        assert!(confirm_missing_open(&path).is_err());
+        assert!(matches!(probe_input(&path), Ok(InputProbe::Present(_))));
+        fs::remove_file(&path).unwrap();
+        std::os::unix::fs::symlink(root.join("missing-target"), &path).unwrap();
+        assert!(confirm_missing_open(&path).is_err());
+        assert!(probe_input(&path).is_err());
+        fs::remove_dir_all(&root).unwrap();
+        assert!(probe_input(&path).is_err());
+    }
     #[test]
     fn one_entry_exact_source_cache_bytes_and_domain_negatives() {
         let root =

@@ -1,0 +1,204 @@
+{
+  "scope": "Separate cleanup/actual wire review; failed preflight guest/host1 unchanged",
+  "actual_host_guest_exit": 1,
+  "Native_children_executed": 0,
+  "Source_parent_executed": 1,
+  "oldSUCCESS": "UNEXECUTED",
+  "checks": [
+    {
+      "name": "08-result-denied-preflight-owned-ACL-profile",
+      "passed": true
+    },
+    {
+      "name": "08-result-denied-preflight-SETEX-denied-without-write",
+      "passed": false
+    }
+  ],
+  "actual_ACL_preflight": {
+    "owned_profile_exact": true,
+    "setex_denied": false,
+    "publish_allowed": true,
+    "nonmutating": true,
+    "wire": [
+      {
+        "label": "AUTH-response-only",
+        "actual_raw_reply_base64": "K09LDQo=",
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f",
+        "parsed": {
+          "raw_base64": "T0s="
+        },
+        "began_epoch": 1794525646.6261914,
+        "finished_epoch": 1794525646.6262453
+      },
+      {
+        "label": "SELECT9",
+        "actual_raw_reply_base64": "K09LDQo=",
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f",
+        "parsed": {
+          "raw_base64": "T0s="
+        },
+        "began_epoch": 1794525646.6262472,
+        "finished_epoch": 1794525646.6262774
+      },
+      {
+        "label": "GET-before",
+        "actual_raw_reply_base64": "JC0xDQo=",
+        "reply_sha256": "8b731f85850fac625747bb8f9e4d99f93a230f8ba98898830ade3698b666fc6b",
+        "parsed": null,
+        "began_epoch": 1794525646.6262784,
+        "finished_epoch": 1794525646.6263046
+      },
+      {
+        "label": "ACL-GETUSER",
+        "actual_raw_reply_base64": "KjEyDQokNQ0KZmxhZ3MNCioyDQokMg0Kb24NCiQxNg0Kc2FuaXRpemUtcGF5bG9hZA0KJDkNCnBhc3N3b3Jkcw0KKjENCiQ2NA0KZDAxMmI1Njk2N2JkODY4OGE4Yjg0YjlkNGJkMzZmM2Q5OTQ1MzZiYTVhNDc2ZTBjYTAwYTQ4ZDBmZjgwNWQyZQ0KJDgNCmNvbW1hbmRzDQokMTINCitAYWxsIC1zZXRleA0KJDQNCmtleXMNCiQyDQp+Kg0KJDgNCmNoYW5uZWxzDQokMg0KJioNCiQ5DQpzZWxlY3RvcnMNCiowDQo=",
+        "reply_sha256": "8842c727f1f2ada0118cd92ab9ccd8d8f4696f41b0d4c22348cbea22429ce7d7",
+        "parsed": [
+          {
+            "raw_base64": "ZmxhZ3M="
+          },
+          [
+            {
+              "raw_base64": "b24="
+            },
+            {
+              "raw_base64": "c2FuaXRpemUtcGF5bG9hZA=="
+            }
+          ],
+          {
+            "raw_base64": "cGFzc3dvcmRz"
+          },
+          [
+            {
+              "raw_base64": "ZDAxMmI1Njk2N2JkODY4OGE4Yjg0YjlkNGJkMzZmM2Q5OTQ1MzZiYTVhNDc2ZTBjYTAwYTQ4ZDBmZjgwNWQyZQ=="
+            }
+          ],
+          {
+            "raw_base64": "Y29tbWFuZHM="
+          },
+          {
+            "raw_base64": "K0BhbGwgLXNldGV4"
+          },
+          {
+            "raw_base64": "a2V5cw=="
+          },
+          {
+            "raw_base64": "fio="
+          },
+          {
+            "raw_base64": "Y2hhbm5lbHM="
+          },
+          {
+            "raw_base64": "Jio="
+          },
+          {
+            "raw_base64": "c2VsZWN0b3Jz"
+          },
+          []
+        ],
+        "began_epoch": 1794525646.6263058,
+        "finished_epoch": 1794525646.626376
+      },
+      {
+        "label": "ACL-DRYRUN-SETEX",
+        "actual_raw_reply_base64": "JDcwDQpVc2VyIG93bmVkX20zdV9mYWlsdXJlXzMgaGFzIG5vIHBlcm1pc3Npb25zIHRvIHJ1biB0aGUgJ3NldGV4JyBjb21tYW5kDQo=",
+        "reply_sha256": "334c25232f5c464e2f2ccd763537122619d984bbfcf7c3122593fbb1cb9a0fb2",
+        "parsed": {
+          "raw_base64": "VXNlciBvd25lZF9tM3VfZmFpbHVyZV8zIGhhcyBubyBwZXJtaXNzaW9ucyB0byBydW4gdGhlICdzZXRleCcgY29tbWFuZA=="
+        },
+        "began_epoch": 1794525646.6263826,
+        "finished_epoch": 1794525646.6264195
+      },
+      {
+        "label": "ACL-DRYRUN-PUBLISH",
+        "actual_raw_reply_base64": "K09LDQo=",
+        "reply_sha256": "4fe64db76d55e725725c37bcdb91df3266f059510ec44c342a31c426fdd01c5f",
+        "parsed": {
+          "raw_base64": "T0s="
+        },
+        "began_epoch": 1794525646.6264212,
+        "finished_epoch": 1794525646.626449
+      },
+      {
+        "label": "GET-after",
+        "actual_raw_reply_base64": "JC0xDQo=",
+        "reply_sha256": "8b731f85850fac625747bb8f9e4d99f93a230f8ba98898830ade3698b666fc6b",
+        "parsed": null,
+        "began_epoch": 1794525646.6264505,
+        "finished_epoch": 1794525646.6264725
+      }
+    ]
+  },
+  "project": "dispatcharr-scanner-children-80e7bc1172",
+  "CID": "f246aaa83189b16f9ade62ce5ee4ee8d945ffbdaebfe265e0895d896f56f7bf3",
+  "default_bytes_equal": true,
+  "fresh_independent_cleanup": [
+    {
+      "kind": "exact_CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=f246aaa83189b16f9ade62ce5ee4ee8d945ffbdaebfe265e0895d896f56f7bf3"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794525747.2253644,
+      "finished_epoch": 1794525747.2353532,
+      "empty": true
+    },
+    {
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-80e7bc1172"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794525747.2353554,
+      "finished_epoch": 1794525747.2447896,
+      "empty": true
+    },
+    {
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-80e7bc1172"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794525747.2447913,
+      "finished_epoch": 1794525747.2538538,
+      "empty": true
+    },
+    {
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-80e7bc1172"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794525747.253855,
+      "finished_epoch": 1794525747.262739,
+      "empty": true
+    }
+  ],
+  "all_owned_absent": true
+}

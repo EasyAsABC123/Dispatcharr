@@ -108,12 +108,12 @@ impl Worker {
                 .map_err(Error::Transport)?;
             let value = inner
                 .service
-                .execute(message.kind, prepared)
+                .execute_terminal(message.kind, prepared)
                 .await
                 .map_err(Error::Domain)?;
             let written = inner
                 .ports
-                .write(&message, value, owner)
+                .write_terminal(&message, value, owner)
                 .await
                 .map_err(Error::Transport)?;
             Ok(if written {

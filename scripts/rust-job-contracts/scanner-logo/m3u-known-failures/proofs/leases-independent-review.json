@@ -1,0 +1,178 @@
+{
+  "scope": "Actual3 coordination residual lease methods only, no Original handler parity",
+  "passed": true,
+  "actual_host_exit": 0,
+  "methods": 3,
+  "method_receipts": [
+    {
+      "name": "failed_m3u_groups_retains_key_without_drop_delete_and_preserves_foreign_owner",
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-scanner-children-3958ee3ef0",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-leases-1/support/docker/compose.rust-playback.yml",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-leases-1/pair.yml",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-leases-1/ports.yml",
+        "exec",
+        "-T",
+        "-e",
+        "JOB_DISPOSABLE_FIXTURE=playback-fixture-only",
+        "-e",
+        "REDIS_TEST_URL=redis://:playback-fixture-only@127.0.0.1:6379/0",
+        "baseline",
+        "/native-coordination-peer",
+        "--exact",
+        "failed_m3u_groups_retains_key_without_drop_delete_and_preserves_foreign_owner",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "actual_exit": 0,
+      "began_epoch": 1794524653.3994362,
+      "finished_epoch": 1794524653.5011425,
+      "process_settled": true
+    },
+    {
+      "name": "cancelled_m3u_residual_confirmation_keeps_caller_and_lease_until_actual_reply",
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-scanner-children-3958ee3ef0",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-leases-1/support/docker/compose.rust-playback.yml",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-leases-1/pair.yml",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-leases-1/ports.yml",
+        "exec",
+        "-T",
+        "-e",
+        "JOB_DISPOSABLE_FIXTURE=playback-fixture-only",
+        "-e",
+        "REDIS_TEST_URL=redis://:playback-fixture-only@127.0.0.1:6379/0",
+        "baseline",
+        "/native-coordination-peer",
+        "--exact",
+        "cancelled_m3u_residual_confirmation_keeps_caller_and_lease_until_actual_reply",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "actual_exit": 0,
+      "began_epoch": 1794524653.5011494,
+      "finished_epoch": 1794524653.5847728,
+      "process_settled": true
+    },
+    {
+      "name": "non_m3u_groups_cannot_gain_no_delete_disposition",
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-scanner-children-3958ee3ef0",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-leases-1/support/docker/compose.rust-playback.yml",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-leases-1/pair.yml",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3u-failure-native-leases-1/ports.yml",
+        "exec",
+        "-T",
+        "-e",
+        "JOB_DISPOSABLE_FIXTURE=playback-fixture-only",
+        "-e",
+        "REDIS_TEST_URL=redis://:playback-fixture-only@127.0.0.1:6379/0",
+        "baseline",
+        "/native-coordination-peer",
+        "--exact",
+        "non_m3u_groups_cannot_gain_no_delete_disposition",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "actual_exit": 0,
+      "began_epoch": 1794524653.5847793,
+      "finished_epoch": 1794524653.6641674,
+      "process_settled": true
+    }
+  ],
+  "project": "dispatcharr-scanner-children-3958ee3ef0",
+  "CID": "bd9b75bdd894d8d947ce2a2f9d7e6a0eec4eec05466875d7dd4f7c4f425b8f14",
+  "default_bytes_equal": true,
+  "independent_cleanup": [
+    {
+      "kind": "exact_CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=bd9b75bdd894d8d947ce2a2f9d7e6a0eec4eec05466875d7dd4f7c4f425b8f14"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524797.3013067,
+      "finished_epoch": 1794524797.3113744,
+      "empty": true
+    },
+    {
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-3958ee3ef0"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524797.3113763,
+      "finished_epoch": 1794524797.3204854,
+      "empty": true
+    },
+    {
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-3958ee3ef0"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524797.3204873,
+      "finished_epoch": 1794524797.3298826,
+      "empty": true
+    },
+    {
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-3958ee3ef0"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524797.329884,
+      "finished_epoch": 1794524797.3393486,
+      "empty": true
+    }
+  ],
+  "all_owned_absent": true,
+  "integration_sha256": "909058fab3cdd5e466463e5fb46389dbaa37d603d81de73af73d909098fd9848"
+}

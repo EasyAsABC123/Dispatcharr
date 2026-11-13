@@ -1,0 +1,22 @@
+{
+  "schema": "finite-native-Source-reference-reads-v1",
+  "qualified_Rust_file_sha256": "e6db32f4139ee769a09f7e6e431ba95097bac256d496f716a390c7450b514aac",
+  "direct_source_fields_read": [
+    "actual_request_count",
+    "capture_valid",
+    "seed_notifications",
+    "seed_users"
+  ],
+  "Source_tokens_or_headers_read": false,
+  "before_user_SQL_bind_overwritten_fields": [
+    "username",
+    "api_key",
+    "date_joined"
+  ],
+  "all_other_seed_user_fields_preserved": true,
+  "bounded_read_fragment": "let mut user = source[\"seed_users\"]\n            .as_array()\n            .unwrap()\n            .iter()\n            .find(|u| u[\"id\"] == role[\"id\"])\n            .unwrap()\n            .clone();\n        user[\"username\"] = json!(format!(\"rust-probe-notifcred-{nonce}-{alias}\"));\n        user[\"api_key\"] = json!(format!(\"fixture-key-{nonce}-{alias}\"));\n        user[\"date_joined\"] = json!(seed);\n        sqlx::query(\n            \"INSERT INTO accounts_user SELECT * FROM jsonb_populate_record(NULL::accounts_user,$1)\",\n        )\n        ",
+  "original_Input_was_executed": true,
+  "projected_Input_was_executed": false,
+  "original_Source_sha256": "f02c49f2c1a3b7b876611ab99b2f7976aeef8cedaf471fc263c3223ba86680a0",
+  "projected_Source_sha256": "ee65bdd1b940e0fafc761ca7a9ac900fe76e83ca11e6dbc119999f19caea8dce"
+}

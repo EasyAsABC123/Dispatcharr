@@ -181,6 +181,13 @@ pub fn decode(raw: &[u8], expected: Uuid) -> Result<Metadata, DecodeError> {
         } else {
             match (module, class) {
                 ("builtins", "ValueError" | "KeyError") => true,
+                ("builtins", "FileNotFoundError") => {
+                    state == State::Failure
+                        && object.len() == 3
+                        && arguments.len() == 2
+                        && arguments[0].as_i64() == Some(2)
+                        && arguments[1].as_str() == Some("No such file or directory")
+                }
                 ("builtins", "IsADirectoryError") => {
                     arguments.len() == 2
                         && arguments[0].as_i64() == Some(21)
@@ -228,6 +235,42 @@ pub fn decode(raw: &[u8], expected: Uuid) -> Result<Metadata, DecodeError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn actual_missing_file_descriptor_is_data_only_and_not_generic_oserror() {
+        let id = Uuid::new_v4();
+        let value = serde_json::json!({"task_id":id,"status":"FAILURE","result":{"exc_module":"builtins","exc_type":"FileNotFoundError","exc_message":[2,"No such file or directory"]},"children":[],"date_done":"2026-11-12T05:00:00.000000+00:00","traceback":"Native opaque diagnostic"});
+        assert_eq!(
+            decode(&serde_json::to_vec(&value).unwrap(), id)
+                .unwrap()
+                .state,
+            State::Failure
+        );
+        for args in [
+            serde_json::json!([13, "No such file or directory"]),
+            serde_json::json!([2, "other"]),
+            serde_json::json!(["2", "No such file or directory"]),
+            serde_json::json!([2, "No such file or directory", "extra"]),
+        ] {
+            let mut bad = value.clone();
+            bad["result"]["exc_message"] = args;
+            assert_eq!(
+                decode(&serde_json::to_vec(&bad).unwrap(), id).unwrap_err(),
+                DecodeError::UnsupportedException
+            );
+        }
+        let mut retry = value.clone();
+        retry["status"] = serde_json::json!("RETRY");
+        assert_eq!(
+            decode(&serde_json::to_vec(&retry).unwrap(), id).unwrap_err(),
+            DecodeError::UnsupportedException
+        );
+        let mut bad = value.clone();
+        bad["result"]["exc_type"] = serde_json::json!("OSError");
+        assert_eq!(
+            decode(&serde_json::to_vec(&bad).unwrap(), id).unwrap_err(),
+            DecodeError::UnsupportedException
+        );
+    }
     #[test]
     fn observed_index_failure_metadata_is_read_without_importing_exception_classes() {
         let corpus: Value = serde_json::from_str(include_str!(

@@ -1,0 +1,86 @@
+{
+  "scope": "Separate independent paired semantic/raw/default/actual cleanup review; original host exit1/failed cleanup parser remains unchanged",
+  "project": "dispatcharr-scanner-children-da97045c66",
+  "CID": "3c76c78631fb4e17759796169e889538d3a2e4fe9842b811949bf27916e8d60f",
+  "actual_guest_exit": 0,
+  "guest_passed": true,
+  "guest_checks": 189,
+  "guest_cases": 8,
+  "guest_native_children": 15,
+  "host_exit_preserved": 1,
+  "literal_original_absence_stderr": "error: no such object: 3c76c78631fb4e17759796169e889538d3a2e4fe9842b811949bf27916e8d60f\n",
+  "parser_only_reason": "Known lowercase exact no-such-object response was conservatively rejected by uppercase substring check; no project/container remained",
+  "default_database_bytes_equal": true,
+  "fresh_independent_cleanup": [
+    {
+      "kind": "exact_CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=3c76c78631fb4e17759796169e889538d3a2e4fe9842b811949bf27916e8d60f"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524228.8250077,
+      "finished_epoch": 1794524228.8354654,
+      "empty": true
+    },
+    {
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-da97045c66"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524228.8354678,
+      "finished_epoch": 1794524228.8455222,
+      "empty": true
+    },
+    {
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-da97045c66"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524228.8455243,
+      "finished_epoch": 1794524228.8542955,
+      "empty": true
+    },
+    {
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-scanner-children-da97045c66"
+      ],
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "began_epoch": 1794524228.8542972,
+      "finished_epoch": 1794524228.8634505,
+      "empty": true
+    }
+  ],
+  "all_exact_owned_absent": true,
+  "source_report_sha256": "895b660323bf2f38b7c13b09030cdf06eb6430192b600537f08d44431ede88d6",
+  "integration_sha256": "38e650fcebe0d946bfe13338d3b8208dc94ecb3848db8cf10f8f1b1753a1fc6c"
+}

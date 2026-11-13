@@ -1,0 +1,79 @@
+{
+  "state": "SETTLED",
+  "started_utc": "2026-11-12T23:47:22.742648+00:00",
+  "full_inputs": 799,
+  "Rust_inputs": 794,
+  "commands": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/union794-credential-m3u-1/source/rust",
+      "started_utc": "2026-11-12T23:47:22.742738+00:00",
+      "state": "SETTLED",
+      "pid": 1540156,
+      "starttime": "24763778",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "completed_utc": "2026-11-12T23:47:24.458812+00:00",
+      "stdio": "regular files; no pipe readers"
+    },
+    {
+      "name": "strict-workspace",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/union794-credential-m3u-1/source/rust",
+      "started_utc": "2026-11-12T23:47:24.459023+00:00",
+      "state": "SETTLED",
+      "pid": 1540272,
+      "starttime": "24763950",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "completed_utc": "2026-11-12T23:48:51.757515+00:00",
+      "stdio": "regular files; no pipe readers"
+    },
+    {
+      "name": "default-workspace",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--workspace"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/union794-credential-m3u-1/source/rust",
+      "started_utc": "2026-11-12T23:48:51.757766+00:00",
+      "state": "SETTLED",
+      "pid": 1554259,
+      "starttime": "24772680",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "completed_utc": "2026-11-12T23:51:07.280929+00:00",
+      "stdio": "regular files; no pipe readers"
+    }
+  ],
+  "source_before_exact": true,
+  "private_fresh_target": "/tmp/dispatcharr-union794-credential-m3u-target-1",
+  "actual_wrapper_exit": 0,
+  "source_after_exact": true,
+  "completed_utc": "2026-11-12T23:51:07.321227+00:00",
+  "passed": true,
+  "actual_default_passed": 591,
+  "actual_default_ignored": 710,
+  "actual_result_blocks": 172,
+  "scope": "Exact combined private source checks only; no SDK/image/Main/default graph or performance transfer",
+  "credit": "Original Dispatcharr authors and dependency contributors retain application, algorithm and licensing credit."
+}

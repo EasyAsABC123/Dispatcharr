@@ -395,13 +395,36 @@ fn missing() -> StoreError {
         json!({"detail":"No SystemNotification matches the given query."}),
     )
 }
+/// Original notification read/personal actions use DRF IsAuthenticated directly.
+/// Their real-credential Source20 observations do not apply the UI network
+/// predicate used by administrative notification writes. Shared authentication
+/// still owns JWT/API-key precedence, active-user checks and failed-key budget.
+async fn authenticated_user(
+    auth: &AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+) -> Result<User, StoreError> {
+    if ["authorization", "x-api-key"].iter().any(|name| {
+        headers
+            .get(*name)
+            .is_some_and(|value| value.to_str().is_err())
+    }) {
+        return Err(StoreError::Unauthorized("Invalid authentication header"));
+    }
+    auth.authenticate(&crate::auth::request(peer, headers))
+        .await?
+        .ok_or(StoreError::Unauthorized(
+            "Authentication credentials were not provided.",
+        ))
+}
+
 async fn list(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     RawQuery(raw): RawQuery,
 ) -> Result<Json<Value>, StoreError> {
-    let user = auth.account_user(peer, headers, false).await?;
+    let user = authenticated_user(&auth, peer, headers).await?;
     let include = url::form_urlencoded::parse(raw.as_deref().unwrap_or("").as_bytes())
         .filter(|(key, _)| key == "include_dismissed")
         .last()
@@ -421,7 +444,7 @@ async fn detail(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
 ) -> Result<Json<Value>, StoreError> {
-    let user = auth.account_user(peer, headers, false).await?;
+    let user = authenticated_user(&auth, peer, headers).await?;
     let id = key(raw)?;
     Ok(Json(
         visible(&auth, &user, Some(id))
@@ -435,7 +458,7 @@ async fn count(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
 ) -> Result<Json<Value>, StoreError> {
-    let user = auth.account_user(peer, headers, false).await?;
+    let user = authenticated_user(&auth, peer, headers).await?;
     let count = visible(&auth, &user, None)
         .await?
         .iter()
@@ -464,7 +487,7 @@ async fn dismiss(
     headers: HeaderMap,
     body: Bytes,
 ) -> Result<Json<Value>, StoreError> {
-    let user = auth.account_user(peer, headers.clone(), false).await?;
+    let user = authenticated_user(&auth, peer, headers.clone()).await?;
     let id = key(raw)?;
     let value = visible(&auth, &user, Some(id))
         .await?
@@ -537,7 +560,7 @@ async fn dismiss_all(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
 ) -> Result<Json<Value>, StoreError> {
-    let user = auth.account_user(peer, headers, false).await?;
+    let user = authenticated_user(&auth, peer, headers).await?;
     let ids: Vec<i64> = visible(&auth, &user, None)
         .await?
         .into_iter()
@@ -1320,3 +1343,8 @@ mod tests {
 #[cfg(test)]
 #[path = "notification_restart_peer.rs"]
 mod notification_restart_peer;
+
+// Private credential SQL QA overlay only; no production startup change.
+#[cfg(test)]
+#[path = "notifications_credentials_sql_tests.rs"]
+mod credentials_sql_tests;

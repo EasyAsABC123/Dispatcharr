@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "docker",
+    "image",
+    "inspect",
+    "--format",
+    "{\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}},\"Architecture\":{{json .Architecture}},\"Os\":{{json .Os}}}",
+    "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+  ],
+  "actual_exit": 0,
+  "process_settled": true,
+  "began_epoch": 1794521956.4910681,
+  "finished_epoch": 1794521956.5144038,
+  "Docker_host": "unix:///tmp/dispatcharr-docker.sock",
+  "docker_executable": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+  "docker_executable_sha256": "3ac6daa3aff1afd1c0c673fa216fb592743c75ea406daa4ade413d933bc06f92",
+  "stdout_sha256": "6731292367a8e18c6779e2c063519033986ba0bcda59d2f6df52682a77f7d394",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "image": {
+    "Id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "RepoDigests": [
+      "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+    ],
+    "Architecture": "amd64",
+    "Os": "linux"
+  },
+  "scope": "Read-only immutable Original image local config ID binding only; no container/app/network dispatch"
+}

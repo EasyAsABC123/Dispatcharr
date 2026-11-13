@@ -316,3 +316,136 @@ async fn detailed_release_keeps_server_cause_and_never_deletes_replacement() {
     assert_eq!(dropped.load(Ordering::SeqCst), 2);
     let _: () = redis.del(key).await.unwrap();
 }
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires disposable actual Redis; short-window residual M3U lease contract"]
+async fn failed_m3u_groups_retains_key_without_drop_delete_and_preserves_foreign_owner() {
+    let mut redis = raw().await;
+    let locks = TaskLocks::connect(&std::env::var("REDIS_TEST_URL").unwrap(), config())
+        .await
+        .unwrap();
+    let id = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000 + 1) as i64;
+    let key = format!("task_lock_refresh_m3u_account_groups_{id}");
+    assert!(!redis.exists::<_, bool>(&key).await.unwrap());
+    let dropped = Arc::new(AtomicUsize::new(0));
+    let lease = locks
+        .acquire_retained_detailed(
+            "refresh_m3u_account_groups",
+            id,
+            Arc::new(Owner(dropped.clone())),
+        )
+        .await
+        .unwrap();
+    let token: String = redis.get(&key).await.unwrap();
+    assert_ne!(token, "locked"); // Explicit Source raw-token difference, not normalized parity.
+    assert!(lease
+        .preserve_failed_m3u_groups_until_expiry()
+        .await
+        .unwrap());
+    wait(async || locks.available_leases() == 1).await;
+    assert_eq!(dropped.load(Ordering::SeqCst), 1);
+    assert_eq!(redis.get::<_, String>(&key).await.unwrap(), token);
+    let ttl: i64 = redis.ttl(&key).await.unwrap();
+    assert!((1..=300).contains(&ttl));
+    assert!(matches!(
+        locks
+            .acquire_detailed("refresh_m3u_account_groups", id)
+            .await,
+        Err(TaskLockDetailedError::Operational(TaskLockError::Held))
+    ));
+    let _: usize = redis.del(&key).await.unwrap();
+    let lease = locks
+        .acquire_detailed("refresh_m3u_account_groups", id)
+        .await
+        .unwrap();
+    let _: () = redis.set_ex(&key, "owned-replacement", 300).await.unwrap();
+    assert!(!lease
+        .preserve_failed_m3u_groups_until_expiry()
+        .await
+        .unwrap());
+    assert_eq!(
+        redis.get::<_, String>(&key).await.unwrap(),
+        "owned-replacement"
+    );
+    let _: usize = redis.del(&key).await.unwrap();
+    let lease = locks
+        .acquire_detailed("refresh_m3u_account_groups", id)
+        .await
+        .unwrap();
+    let _: usize = redis.del(&key).await.unwrap();
+    let _: usize = redis.lpush(&key, "owned-wrong-type").await.unwrap();
+    assert!(!lease
+        .preserve_failed_m3u_groups_until_expiry()
+        .await
+        .unwrap());
+    assert_eq!(
+        redis.lrange::<_, Vec<String>>(&key, 0, 0).await.unwrap(),
+        vec!["owned-wrong-type".to_owned()]
+    );
+    let _: usize = redis.del(&key).await.unwrap();
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires owned actual Redis and held real confirmation reply"]
+async fn cancelled_m3u_residual_confirmation_keeps_caller_and_lease_until_actual_reply() {
+    let mut redis = raw().await;
+    let proxy = proxy().await;
+    let locks = TaskLocks::connect(&proxy.url, config()).await.unwrap();
+    let id = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000 + 1) as i64;
+    let key = format!("task_lock_refresh_m3u_account_groups_{id}");
+    // Warm the exact read-only script before enabling the gate; do not hold NOSCRIPT.
+    let warm = locks
+        .acquire_detailed("refresh_m3u_account_groups", id)
+        .await
+        .unwrap();
+    assert!(warm
+        .preserve_failed_m3u_groups_until_expiry()
+        .await
+        .unwrap());
+    let _: usize = redis.del(&key).await.unwrap();
+    let dropped = Arc::new(AtomicUsize::new(0));
+    let lease = locks
+        .acquire_retained_detailed(
+            "refresh_m3u_account_groups",
+            id,
+            Arc::new(Owner(dropped.clone())),
+        )
+        .await
+        .unwrap();
+    let token: String = redis.get(&key).await.unwrap();
+    let before = proxy.replies.load(Ordering::SeqCst);
+    proxy.hold.send_replace(true);
+    let pending =
+        tokio::spawn(async move { lease.preserve_failed_m3u_groups_until_expiry().await });
+    wait(async || proxy.replies.load(Ordering::SeqCst) > before).await;
+    assert!(!pending.is_finished());
+    pending.abort();
+    let _ = pending.await;
+    assert_eq!(dropped.load(Ordering::SeqCst), 0);
+    assert_eq!(locks.available_leases(), 0);
+    assert_eq!(redis.get::<_, String>(&key).await.unwrap(), token);
+    proxy.hold.send_replace(false);
+    wait(async || locks.available_leases() == 1).await;
+    assert_eq!(dropped.load(Ordering::SeqCst), 1);
+    assert_eq!(redis.get::<_, String>(&key).await.unwrap(), token);
+    let _: usize = redis.del(&key).await.unwrap();
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires disposable actual Redis for wrong-kind capability refusal"]
+async fn non_m3u_groups_cannot_gain_no_delete_disposition() {
+    let mut redis = raw().await;
+    let locks = TaskLocks::connect(&std::env::var("REDIS_TEST_URL").unwrap(), config())
+        .await
+        .unwrap();
+    let task = format!("residual_refusal_{}", uuid::Uuid::new_v4().simple());
+    let key = format!("task_lock_{task}_1");
+    let lease = locks.acquire_detailed(&task, 1).await.unwrap();
+    assert!(matches!(
+        lease.preserve_failed_m3u_groups_until_expiry().await,
+        Err(TaskLockDetailedError::Operational(TaskLockError::Invalid))
+    ));
+    wait(async || !redis.exists::<_, bool>(&key).await.unwrap()).await;
+    wait(async || locks.available_leases() == 1).await;
+    assert_eq!(locks.available_leases(), 1);
+}

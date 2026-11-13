@@ -337,6 +337,42 @@ async fn release_detailed(held: Arc<Held>) -> Result<bool, TaskLockDetailedError
     Ok(removed == 1)
 }
 impl TaskLease {
+    /// Preserve only a failed scanner M3U-groups lease for its existing TTL.
+    /// This deliberately stops renewal rather than copying Source's leaked daemon.
+    /// No DEL/EXPIRE occurs; a replaced or uncertain owner cannot authorize a result.
+    /// Physical commands retain the original lease/caller after waiter cancellation.
+    pub async fn preserve_failed_m3u_groups_until_expiry(
+        self,
+    ) -> Result<bool, TaskLockDetailedError> {
+        let suffix = self
+            .inner
+            .key
+            .strip_prefix("task_lock_refresh_m3u_account_groups_");
+        if !suffix.is_some_and(|v| {
+            v.parse::<i32>()
+                .is_ok_and(|id| id > 0 && id.to_string() == v)
+        }) || self.inner.locks.config.ttl != Duration::from_secs(300)
+            || self.inner.locks.config.renewal_interval != Duration::from_secs(120)
+        {
+            return Err(TaskLockError::Invalid.into());
+        }
+        if self.inner.releasing.swap(true, Ordering::AcqRel) {
+            return Ok(false);
+        }
+        self.inner.stop.send_replace(true);
+        let held = self.inner.clone();
+        tokio::spawn(async move {
+            let _command = held.locks.commands.acquire().await
+                .map_err(|_| TaskLockDetailedError::Operational(TaskLockError::RedisUnavailable))?;
+            let mut connection = held.locks.connection.clone();
+            // Bound GET before allocation and confirm owner+finite TTL atomically.
+            const CONFIRM: &str = "if redis.call('TYPE',KEYS[1]).ok~='string' then return 0 end;if redis.call('STRLEN',KEYS[1])~=#ARGV[1] then return 0 end;if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end;local t=redis.call('TTL',KEYS[1]);if t>0 and t<=300 then return 1 else return 0 end";
+            let confirmed: i64 = Script::new(CONFIRM).key(&held.key).arg(&held.token)
+                .invoke_async(&mut connection).await
+                .map_err(|e| TaskLockDetailedError::Redis(TaskLockRedisCause::capture(&e)))?;
+            Ok(confirmed == 1)
+        }).await.map_err(|_| TaskLockDetailedError::Operational(TaskLockError::RedisUnavailable))?
+    }
     pub fn key(&self) -> &str {
         &self.inner.key
     }

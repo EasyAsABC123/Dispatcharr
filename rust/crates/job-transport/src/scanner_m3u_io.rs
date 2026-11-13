@@ -136,15 +136,43 @@ impl M3uPorts {
             Err(e) => Err(map(e)),
         }
     }
-    pub(crate) async fn write(
+    pub(crate) async fn write_terminal(
         &self,
         m: &Message,
-        result: Value,
+        terminal: crate::scanner_m3u::Terminal,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        self.jobs
-            .write_result(m.id, result, Some(m.parent), Vec::new(), owner)
+        match terminal {
+            crate::scanner_m3u::Terminal::Normal(result) => {
+                self.jobs
+                    .write_result(m.id, result, Some(m.parent), Vec::new(), owner)
+                    .await
+            }
+            crate::scanner_m3u::Terminal::Raised(failure) => {
+                let date = chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.6f+00:00")
+                    .to_string();
+                self.jobs
+                    .write_metadata(m.id, failure.metadata(m, &date)?, owner)
+                    .await
+            }
+        }
+    }
+    pub(crate) async fn groups_lock_present(
+        &self,
+        account: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if account <= 0 || account > i64::from(i32::MAX) {
+            return Err(Error::Protocol);
+        }
+        let key = format!("task_lock_refresh_m3u_account_groups_{account}");
+        let (present, _) = self
+            .cache
+            .command_classified::<i64, _>("return redis.call('EXISTS',KEYS[1])", &[key], &[], owner)
             .await
+            .map_err(map)?;
+        Ok(present == 1)
     }
     pub(crate) async fn cache_preflight(&self, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
         let (n, _) = self

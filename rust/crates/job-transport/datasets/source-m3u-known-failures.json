@@ -1,0 +1,42 @@
+{
+  "scope": "Exact selected published actual Source4 backend metadata; no new execution or Python frames synthesized",
+  "cases": [
+    {
+      "name": "m3u-missing-local-file",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "FileNotFoundError",
+          "exc_message": [
+            2,
+            "No such file or directory"
+          ],
+          "exc_module": "builtins"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 1916, in refresh_m3u_groups\n    with _open_m3u_text_source(source) as m3u_file:\n         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 189, in _open_m3u_text_source\n    return open(source_path, \"r\", encoding=\"utf-8\", errors=\"ignore\")\nFileNotFoundError: [Errno 2] No such file or directory: '/data/m3us/rust-owned-children-m3u-missing-local-file.m3u'\n",
+        "children": [],
+        "date_done": "2026-11-12T05:28:48.553332+00:00",
+        "parent_id": "31427c9d-fa3c-49d7-af37-1c290803f48d",
+        "task_id": "4026cda3-030e-454e-b225-13c38053606d"
+      }
+    },
+    {
+      "name": "m3u-group-SQL-P0001",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "ProgrammingError",
+          "exc_message": [
+            "rust-owned M3U worker failure\nCONTEXT:  PL/pgSQL function rust_owned_m3u_worker_fail() line 1 at RAISE"
+          ],
+          "exc_module": "django.db.utils"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.RaiseException: rust-owned M3U worker failure\nCONTEXT:  PL/pgSQL function rust_owned_m3u_worker_fail() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 1971, in refresh_m3u_groups\n    process_groups(account, groups, scan_start_time)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/local.py\", line 182, in __call__\n    return self._get_current_object()(*a, **kw)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 859, in __protected_call__\n    return orig(self, *args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/task.py\", line 430, in __call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 786, in process_groups\n    ChannelGroup.objects.bulk_create_provider_groups(\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        group.name for group in groups_to_create\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/app/apps/channels/models.py\", line 61, in bulk_create_provider_groups\n    self.bulk_create(\n    ~~~~~~~~~~~~~~~~^\n        [\n        ^\n    ...<2 lines>...\n        ]\n        ^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 833, in bulk_create\n    returned_columns = self._batched_insert(\n        objs_without_pk,\n    ...<4 lines>...\n        unique_fields=unique_fields,\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1956, in _batched_insert\n    self._insert(\n    ~~~~~~~~~~~~^\n        item,\n        ^^^^^\n    ...<5 lines>...\n        returning_fields=returning_fields,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1918, in _insert\n    return query.get_compiler(using=using).execute_sql(returning_fields)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1925, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/pair-tools/periodic_worker_observer.py\", line 42, in observed\n    try:return execute(sql,params,many,context)\n               ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: rust-owned M3U worker failure\nCONTEXT:  PL/pgSQL function rust_owned_m3u_worker_fail() line 1 at RAISE\n",
+        "children": [],
+        "date_done": "2026-11-12T05:29:06.241814+00:00",
+        "parent_id": "b29f51c6-37f9-45f0-8d35-3840e3610f8c",
+        "task_id": "6281aa95-b45e-4abc-a158-07c9eed29be1"
+      }
+    }
+  ]
+}

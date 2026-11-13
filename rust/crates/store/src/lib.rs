@@ -62,7 +62,8 @@ mod import_groups;
 mod import_pipeline;
 pub use import_cleanup::{GroupCleanupAccount, GroupCleanupCounts, StreamCleanupCounts};
 pub use import_groups::{
-    GroupImportCounts, ImportedGroup, MAX_IMPORT_GROUPS, MAX_IMPORT_GROUP_BYTES,
+    GroupImportCounts, ImportedGroup, M3uGroupImportFailure, M3uGroupImportStage,
+    MAX_IMPORT_GROUPS, MAX_IMPORT_GROUP_BYTES,
 };
 pub use import_pipeline::{CacheBatchCounts, CacheBatchRequest};
 mod json_compat;
