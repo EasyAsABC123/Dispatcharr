@@ -41,7 +41,7 @@ fn mapping(value: &Value) -> Result<Option<&Map<String, Value>>, StoreError> {
         value.as_object().map(Some).ok_or_else(failed)
     }
 }
-fn network(raw: &str, strict: bool) -> Result<IpNet, StoreError> {
+pub(crate) fn network(raw: &str, strict: bool) -> Result<IpNet, StoreError> {
     if raw.trim() != raw || raw.is_empty() {
         return Err(failed());
     }

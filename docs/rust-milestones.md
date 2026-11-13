@@ -7,6 +7,8 @@ A milestone passes only when its implementation, contract tests, container run,
 and performance evidence all pass. A scaffold, unit test, or fast synthetic buffer
 alone does not establish application parity or an application performance gain.
 
+The [current Core settings library validation](rust-core-settings-current-validation.md) passes whole-workspace formatting, compilation, strict checks and 725 default tests (736 ignored). Its historical component qualifies 32 requests and seven finite ownership predicates; Main integration and full M5 remain open.
+
 ## Progress ledger
 
 Statuses: **planned**, **in progress**, **blocked**, **passed**. A blocked runtime

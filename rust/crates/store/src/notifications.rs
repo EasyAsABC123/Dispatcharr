@@ -166,6 +166,53 @@ impl NotificationCache {
         }
         Ok(())
     }
+    pub(crate) async fn invalidate_settings_group(
+        &self,
+        key: &str,
+        version: &str,
+    ) -> Result<(), StoreError> {
+        if key.len() > 1020
+            || version.len() > 32
+            || version.is_empty()
+            || !version.bytes().all(|b| b.is_ascii_digit())
+        {
+            return Err(unavailable());
+        }
+        // CoreSettings signals ignore connectivity/timeout errors, but do not
+        // swallow authentication, permission or server command failures.
+        let permit = self.admit().await.map_err(|_| unavailable())?;
+        let mut delete = redis::cmd("DEL");
+        delete.arg(format!(":1:coresettings:group:{key}"));
+        let mut bump = redis::cmd("SET");
+        bump.arg(format!(":1:coresettings:groupver:{key}"))
+            .arg(version);
+        for command in [delete, bump] {
+            // Both original logical attempts share one operation slot. Each
+            // physical command retains a clone, so a late first response does
+            // not release admission while the second command is still queued.
+            match self
+                .query_admitted::<redis::Value>(command, permit.clone())
+                .await
+            {
+                Ok(_) => {}
+                Err(CacheOperationError::Timeout | CacheOperationError::Admission) => {
+                    tracing::warn!("CoreSettings group cache invalidation timed out")
+                }
+                Err(CacheOperationError::Redis(error))
+                    if error.is_io_error() || error.is_timeout() =>
+                {
+                    tracing::warn!("CoreSettings group cache invalidation backend unavailable")
+                }
+                Err(_) => {
+                    return Err(StoreError::StatusBody(
+                        500,
+                        json!({"detail":"CoreSettings group cache invalidation failed."}),
+                    ))
+                }
+            }
+        }
+        Ok(())
+    }
     async fn set(&self, key: &str, value: &Value) -> Result<(), StoreError> {
         self.set_for(key, value, 300).await
     }

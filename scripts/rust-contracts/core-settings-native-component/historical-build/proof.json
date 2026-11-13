@@ -1,0 +1,104 @@
+{
+  "source_map_sha256": "e698ea8365c0ff8c1ab326fbd2782405b50b2d3a77c6f7e7a3f93e20bf12dbd5",
+  "Rust_inputs": 841,
+  "full_inputs": 846,
+  "all_source_before_after_equal": true,
+  "actual_waits": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 13,
+      "started_epoch": 1794576724.9922924,
+      "completed_epoch": 1794576726.8061588,
+      "actual_exit": 0
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 40,
+      "started_epoch": 1794576726.8063266,
+      "completed_epoch": 1794576731.939537,
+      "actual_exit": 0
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "dispatcharr-store",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 78,
+      "started_epoch": 1794576731.9397159,
+      "completed_epoch": 1794576743.201881,
+      "actual_exit": 0
+    },
+    {
+      "stage": "callback",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "display_timezone::tests::",
+        "--offline",
+        "--locked",
+        "--",
+        "--nocapture"
+      ],
+      "PID": 288,
+      "started_epoch": 1794576743.2020366,
+      "completed_epoch": 1794576762.5386822,
+      "actual_exit": 0
+    },
+    {
+      "stage": "focused",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "core_settings_writes::tests::",
+        "--offline",
+        "--locked",
+        "--",
+        "--nocapture"
+      ],
+      "PID": 403,
+      "started_epoch": 1794576762.5388613,
+      "completed_epoch": 1794576767.6689038,
+      "actual_exit": 0
+    }
+  ],
+  "Core4_all_production_bytes_equal": true,
+  "only_Core_module_delta": "trailing cfg(test) physical peer registration",
+  "new_test_only_file": "rust/crates/store/src/core_settings_physical_tests.rs",
+  "outside_ELF_sha256": "73c1b56a8d0a520c114bef7d7565fd0d7d3f785f42c08ffaf37449b67724ff50",
+  "outside_ELF_bytes": 65511848,
+  "target_reused_in_place": true,
+  "callback_tests": 11,
+  "Core_tests": 9,
+  "actual_SQL_HTTP_runs": 0,
+  "source_or_application_parity_acceptance": false
+}

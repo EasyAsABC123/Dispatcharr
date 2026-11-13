@@ -1,0 +1,88 @@
+[
+  {
+    "stage": "fmt",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "PID": 13,
+    "started_epoch": 1794576724.9922924,
+    "completed_epoch": 1794576726.8061588,
+    "actual_exit": 0
+  },
+  {
+    "stage": "check",
+    "argv": [
+      "cargo",
+      "check",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "--offline",
+      "--locked"
+    ],
+    "PID": 40,
+    "started_epoch": 1794576726.8063266,
+    "completed_epoch": 1794576731.939537,
+    "actual_exit": 0
+  },
+  {
+    "stage": "strict",
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "dispatcharr-store",
+      "--all-targets",
+      "--offline",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "PID": 78,
+    "started_epoch": 1794576731.9397159,
+    "completed_epoch": 1794576743.201881,
+    "actual_exit": 0
+  },
+  {
+    "stage": "callback",
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "display_timezone::tests::",
+      "--offline",
+      "--locked",
+      "--",
+      "--nocapture"
+    ],
+    "PID": 288,
+    "started_epoch": 1794576743.2020366,
+    "completed_epoch": 1794576762.5386822,
+    "actual_exit": 0
+  },
+  {
+    "stage": "focused",
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "core_settings_writes::tests::",
+      "--offline",
+      "--locked",
+      "--",
+      "--nocapture"
+    ],
+    "PID": 403,
+    "started_epoch": 1794576762.5388613,
+    "completed_epoch": 1794576767.6689038,
+    "actual_exit": 0
+  }
+]
