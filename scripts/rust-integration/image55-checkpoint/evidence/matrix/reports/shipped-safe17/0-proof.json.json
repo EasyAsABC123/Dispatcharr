@@ -1,0 +1,3572 @@
+{
+  "passed": true,
+  "scope": "Private packaged native safe CLI on official owned PostgreSQL/Redis; Original Python container is read/fixture/Channels observer only, no Original command/runtime service",
+  "image_id": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
+  "source_tree_sha256": "6457d75bad17874f039eaed58941e3a047fb124a841637ff1a28392db2472e5c",
+  "build_manifest_sha256": "3e1cb5c613d280c9297d75e1a69998f22c858c8a3d158949d61377cd1ffd3e76",
+  "source_cases_sha256": "e3e38caa351d2d5f6c15017e08df07e4ae0ede1be1f47ebc5826db2f312da3ee",
+  "tool_sha256": {
+    "observer.py": "4382da6c618d2696877785ced6eb810b3cd1e55b51a06f835423d99be3d8cf6f",
+    "run.py": "f3c1df6e99f9c82b459448cf88a8835801d570dd8a998e67fc3e88497d7885b3",
+    "operator_compare.py": "4b51ac9d2387ceb729b966ea7a4853b1b65e4cac271f871165939c6a34a6d917"
+  },
+  "schema_sha256": "35d78338081e2d6fe3149c58d9a041e8d8570a410fa7f49aad36e4b9f858e9a9",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "project": "dispatcharr-operator-package-45fd60f029",
+  "cases": [
+    {
+      "id": "reset_network_access-help",
+      "arguments": [
+        "reset_network_access",
+        "--help"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:02.345689+00:00",
+        "end": "2026-11-13T04:08:02.449522+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "Native safe operator: reset_network_access\nDjango global flags and help formatting are not emulated.\n",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_actual_execution_window": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "actual_packaged_exit": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          1,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:08:02.418647+00:00",
+            "updated_at": "2026-11-13 04:08:02.418647+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542605952005157,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": null
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": -2
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "reset_user_network-help",
+      "arguments": [
+        "reset_user_network",
+        "--help"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:02.761367+00:00",
+        "end": "2026-11-13T04:08:02.862055+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "Native safe operator: reset_user_network\nDjango global flags and help formatting are not emulated.\n",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "actual_packaged_exit": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          1,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:02.831267+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542605952005157,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": null
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": -2
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unknown-flag",
+      "arguments": [
+        "reset_user_network",
+        "--owned-unknown"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:03.171587+00:00",
+        "end": "2026-11-13T04:08:03.272713+00:00"
+      },
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "Unsupported operator arguments\n",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          1,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:03.241643+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542605952005157,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": null
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": -2
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "network-object",
+      "arguments": [
+        "reset_network_access"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:03.583331+00:00",
+        "end": "2026-11-13T04:08:03.685365+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_group_version_integer_bumped": true,
+        "cache_group_version_persistent": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          3,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:03.659821+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542883659557309,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "network-array",
+      "arguments": [
+        "reset_network_access"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:03.996244+00:00",
+        "end": "2026-11-13T04:08:04.095126+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_group_version_integer_bumped": true,
+        "cache_group_version_persistent": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          4,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:04.070150+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542884069901977,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "network-scalar",
+      "arguments": [
+        "reset_network_access"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:04.406154+00:00",
+        "end": "2026-11-13T04:08:04.506680+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_group_version_integer_bumped": true,
+        "cache_group_version_persistent": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          5,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:04.480174+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542884479949808,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "network-null",
+      "arguments": [
+        "reset_network_access"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:04.817741+00:00",
+        "end": "2026-11-13T04:08:04.918829+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_group_version_integer_bumped": true,
+        "cache_group_version_persistent": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:04.893770+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542884893483118,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "network-missing",
+      "arguments": [
+        "reset_network_access"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:05.229552+00:00",
+        "end": "2026-11-13T04:08:05.330723+00:00"
+      },
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Network access setting does not exist\n",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:05.300018+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-target",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-a"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:05.641119+00:00",
+        "end": "2026-11-13T04:08:05.741448+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 1 user(s).\n",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:05.710468+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-already-clear",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-a"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:06.052015+00:00",
+        "end": "2026-11-13T04:08:06.153694+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 0 user(s).\n",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:06.122402+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-null",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-null"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:06.464121+00:00",
+        "end": "2026-11-13T04:08:06.564956+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 0 user(s).\n",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:06.534541+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-empty",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-empty"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:06.875579+00:00",
+        "end": "2026-11-13T04:08:06.980128+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 0 user(s).\n",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:06.949030+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-missing",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-missing"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:07.291614+00:00",
+        "end": "2026-11-13T04:08:07.389751+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 0 user(s).\n",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:07.359484+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "users-all",
+      "arguments": [
+        "reset_user_network"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:07.699315+00:00",
+        "end": "2026-11-13T04:08:07.802187+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 2 user(s).\n",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": "a"
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:07.769814+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "users-empty-filter",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        ""
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:08.113213+00:00",
+        "end": "2026-11-13T04:08:08.216426+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 1 user(s).\n",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": "a"
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:08.184396+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-array-no-match",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-a"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:08.526741+00:00",
+        "end": "2026-11-13T04:08:08.627037+00:00"
+      },
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 0 user(s).\n",
+      "stderr": "",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": [
+              "other"
+            ]
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:08.596229+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-array-match",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-a"
+      ],
+      "execution_window": {
+        "start": "2026-11-13T04:08:08.937732+00:00",
+        "end": "2026-11-13T04:08:09.039223+00:00"
+      },
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Invalid allowed_networks container: list\n",
+      "checks": {
+        "network_rows": true,
+        "network_PK_identity": true,
+        "user_properties": true,
+        "user_dates_preserved": true,
+        "notification_sequence_exact": true,
+        "actual_Channels_envelopes_order_count": true,
+        "cache_coresettings:group:network_access": true,
+        "cache_ttl_class_coresettings:group:network_access": true,
+        "cache_coresettings:groupver:network_access": true,
+        "cache_ttl_class_coresettings:groupver:network_access": true,
+        "cache_dev_notif_condition_owned_operator": true,
+        "cache_ttl_class_dev_notif_condition_owned_operator": true,
+        "cache_operator_owned_unrelated": true,
+        "cache_ttl_class_operator_owned_unrelated": true,
+        "notification_keys_exact": true,
+        "notification_network_security_m3u_epg_id": true,
+        "notification_network_security_m3u_epg_notification_key": true,
+        "notification_network_security_m3u_epg_notification_type": true,
+        "notification_network_security_m3u_epg_priority": true,
+        "notification_network_security_m3u_epg_source": true,
+        "notification_network_security_m3u_epg_title": true,
+        "notification_network_security_m3u_epg_message": true,
+        "notification_network_security_m3u_epg_action_data": true,
+        "notification_network_security_m3u_epg_is_active": true,
+        "notification_network_security_m3u_epg_admin_only": true,
+        "notification_network_security_m3u_epg_expires_at": true,
+        "notification_network_security_m3u_epg_created_at_preserved": true,
+        "notification_network_security_m3u_epg_updated_at_actual_execution_window": true,
+        "notification_owned_operator_system_id": true,
+        "notification_owned_operator_system_notification_key": true,
+        "notification_owned_operator_system_notification_type": true,
+        "notification_owned_operator_system_priority": true,
+        "notification_owned_operator_system_source": true,
+        "notification_owned_operator_system_title": true,
+        "notification_owned_operator_system_message": true,
+        "notification_owned_operator_system_action_data": true,
+        "notification_owned_operator_system_is_active": true,
+        "notification_owned_operator_system_admin_only": true,
+        "notification_owned_operator_system_expires_at": true,
+        "notification_owned_operator_system_created_at_preserved": true,
+        "notification_owned_operator_system_updated_at_preserved": true,
+        "actual_packaged_exit": true,
+        "stdout_exact": true
+      },
+      "passed": true,
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": [
+              "allowed_networks"
+            ]
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:08:09.007077+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    }
+  ],
+  "native_help_and_stderr_exact": false,
+  "full_django_cli_verified": false,
+  "cleanup_passed": true
+}

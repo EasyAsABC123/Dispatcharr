@@ -1,0 +1,5577 @@
+{
+  "phase_started": 263816.684491995,
+  "cases": [
+    {
+      "started": 263816.729570468,
+      "began_utc": "2026-11-13T04:17:01.684065+00:00",
+      "status": 201,
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "content-length",
+          "307"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": "7b226964223a322c226e6f74696669636174696f6e5f6b6579223a226f776e65642e4d61696e2e6634316664383563393361373433313239323062363732393437343665303135222c226e6f74696669636174696f6e5f74797065223a22696e666f222c227072696f72697479223a226e6f726d616c222c227469746c65223a2248656c6c6f222c226d657373616765223a22576f726c64222c22736f75726365223a2273797374656d222c2269735f616374697665223a747275652c2261646d696e5f6f6e6c79223a66616c73652c22616374696f6e5f64617461223a7b7d2c22637265617465645f6174223a22323032362d31312d31335430343a31373a30312e3638353037375a222c22657870697265735f6174223a6e756c6c2c2269735f6469736d6973736564223a66616c73657d",
+      "body_sha256": "12d81331ba2599a4233e57e1b7173e8958c1d831bf35cfa86ba2b8e8561deca5",
+      "absolute_observation": {
+        "deadline": 263824.729483645,
+        "completed": 263816.734422656,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.688970+00:00",
+      "completed": 263816.734487397,
+      "name": "admin-create",
+      "method": "POST",
+      "role": "admin",
+      "before": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            }
+          ],
+          "core_notificationdismissal": []
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": false
+          }
+        }
+      },
+      "after": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": []
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": false
+          }
+        }
+      }
+    },
+    {
+      "started": 263816.747714064,
+      "began_utc": "2026-11-13T04:17:01.702208+00:00",
+      "status": 200,
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "content-length",
+          "116"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a224e6f74696669636174696f6e206469736d6973736564222c226e6f74696669636174696f6e5f6b6579223a226f776e65642e4d61696e2e6634316664383563393361373433313239323062363732393437343665303135227d",
+      "body_sha256": "d2338ca3fd3ca311e645d76ddaee5c90784a8aedabf39cb26f03b283068a859b",
+      "absolute_observation": {
+        "deadline": 263824.747641242,
+        "completed": 263816.750226745,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.704761+00:00",
+      "completed": 263816.750274017,
+      "name": "standard-dismiss",
+      "method": "POST",
+      "role": "standard",
+      "before": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": []
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": false
+          }
+        }
+      },
+      "after": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": null
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      }
+    },
+    {
+      "started": 263816.762997259,
+      "began_utc": "2026-11-13T04:17:01.717491+00:00",
+      "status": 200,
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "content-length",
+          "116"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a224e6f74696669636174696f6e206469736d6973736564222c226e6f74696669636174696f6e5f6b6579223a226f776e65642e4d61696e2e6634316664383563393361373433313239323062363732393437343665303135227d",
+      "body_sha256": "d2338ca3fd3ca311e645d76ddaee5c90784a8aedabf39cb26f03b283068a859b",
+      "absolute_observation": {
+        "deadline": 263824.762930097,
+        "completed": 263816.763924895,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.718449+00:00",
+      "completed": 263816.763960876,
+      "name": "standard-empty-repeat",
+      "method": "POST",
+      "role": "standard",
+      "before": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": null
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": null
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      }
+    },
+    {
+      "started": 263816.775673449,
+      "began_utc": "2026-11-13T04:17:01.730167+00:00",
+      "status": 200,
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "content-length",
+          "116"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a224e6f74696669636174696f6e206469736d6973736564222c226e6f74696669636174696f6e5f6b6579223a226f776e65642e4d61696e2e6634316664383563393361373433313239323062363732393437343665303135227d",
+      "body_sha256": "d2338ca3fd3ca311e645d76ddaee5c90784a8aedabf39cb26f03b283068a859b",
+      "absolute_observation": {
+        "deadline": 263824.775608207,
+        "completed": 263816.777287705,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.731818+00:00",
+      "completed": 263816.777330536,
+      "name": "standard-truthy-repeat",
+      "method": "POST",
+      "role": "standard",
+      "before": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": null
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": "accepted"
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      }
+    },
+    {
+      "started": 263816.789992616,
+      "began_utc": "2026-11-13T04:17:01.744487+00:00",
+      "status": 400,
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "content-length",
+          "87"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": "7b226e6f74696669636174696f6e5f6b6579223a5b2273797374656d206e6f74696669636174696f6e20776974682074686973206e6f74696669636174696f6e206b657920616c7265616479206578697374732e225d7d",
+      "body_sha256": "e4d3bcc0d63be7da2575d99caf3c5a05b7df73524f15c194882ccfd52fea7ecc",
+      "absolute_observation": {
+        "deadline": 263824.789931495,
+        "completed": 263816.790706367,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.745232+00:00",
+      "completed": 263816.790744458,
+      "name": "duplicate-create",
+      "method": "POST",
+      "role": "admin",
+      "before": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": "accepted"
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": "accepted"
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      }
+    },
+    {
+      "started": 263816.801618387,
+      "began_utc": "2026-11-13T04:17:01.756112+00:00",
+      "status": 403,
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "content-length",
+          "63"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": "7b2264657461696c223a22596f7520646f206e6f742068617665207065726d697373696f6e20746f20706572666f726d207468697320616374696f6e2e227d",
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "absolute_observation": {
+        "deadline": 263824.801551635,
+        "completed": 263816.802083361,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.756608+00:00",
+      "completed": 263816.802121002,
+      "name": "standard-create-denied",
+      "method": "POST",
+      "role": "standard",
+      "before": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": "accepted"
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": "accepted"
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      }
+    },
+    {
+      "started": 263816.813142405,
+      "began_utc": "2026-11-13T04:17:01.767636+00:00",
+      "status": 400,
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "content-length",
+          "122"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": "7b226e6f74696669636174696f6e5f6b6579223a5b2254686973206669656c642069732072657175697265642e225d2c227469746c65223a5b2254686973206669656c642069732072657175697265642e225d2c226d657373616765223a5b2254686973206669656c642069732072657175697265642e225d7d",
+      "body_sha256": "71fb325ac4b59bb7615a71b2c1e5e314a8044496e5d9a02224d7335bb2d06653",
+      "absolute_observation": {
+        "deadline": 263824.813081603,
+        "completed": 263816.813870936,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.768396+00:00",
+      "completed": 263816.813908377,
+      "name": "required-put",
+      "method": "PUT",
+      "role": "admin",
+      "before": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": "accepted"
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": "accepted"
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      }
+    },
+    {
+      "started": 263816.824878289,
+      "began_utc": "2026-11-13T04:17:01.779372+00:00",
+      "status": 200,
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "content-length",
+          "307"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": "7b226964223a322c226e6f74696669636174696f6e5f6b6579223a226f776e65642e4d61696e2e6634316664383563393361373433313239323062363732393437343665303135222c226e6f74696669636174696f6e5f74797065223a22696e666f222c227072696f72697479223a226e6f726d616c222c227469746c65223a2248656c6c6f222c226d657373616765223a22576f726c64222c22736f75726365223a2273797374656d222c2269735f616374697665223a747275652c2261646d696e5f6f6e6c79223a66616c73652c22616374696f6e5f64617461223a7b7d2c22637265617465645f6174223a22323032362d31312d31335430343a31373a30312e3638353037375a222c22657870697265735f6174223a6e756c6c2c2269735f6469736d6973736564223a66616c73657d",
+      "body_sha256": "12d81331ba2599a4233e57e1b7173e8958c1d831bf35cfa86ba2b8e8561deca5",
+      "absolute_observation": {
+        "deadline": 263824.824817327,
+        "completed": 263816.825879318,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.780404+00:00",
+      "completed": 263816.825916079,
+      "name": "empty-patch",
+      "method": "PATCH",
+      "role": "admin",
+      "before": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.685077+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": "accepted"
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.779906+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": "accepted"
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      }
+    },
+    {
+      "started": 263816.838356552,
+      "began_utc": "2026-11-13T04:17:01.792850+00:00",
+      "status": 204,
+      "headers": [
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "absolute_observation": {
+        "deadline": 263824.838296921,
+        "completed": 263816.839516475,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.794037+00:00",
+      "completed": 263816.839548146,
+      "name": "cascade-delete",
+      "method": "DELETE",
+      "role": "admin",
+      "before": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            },
+            {
+              "id": 2,
+              "notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Hello",
+              "message": "World",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:17:01.685077+00:00",
+              "updated_at": "2026-11-13 04:17:01.779906+00:00"
+            }
+          ],
+          "core_notificationdismissal": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "notification_id": 2,
+              "dismissed_at": "2026-11-13 04:17:01.704054+00:00",
+              "action_taken": "accepted"
+            }
+          ]
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "tables": {
+          "accounts_user": [
+            {
+              "id": 1,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": true,
+              "username": "owned-notification-admin-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": true,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.597636+00:00",
+              "avatar_config": {},
+              "user_level": 10,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            },
+            {
+              "id": 2,
+              "password": {
+                "private_value_sha256": "19d9457176393d4f09549620a78e1ec8a62aa469a0b538648af36c8b4483dde0",
+                "excluded": "private credential or once-only identity"
+              },
+              "last_login": null,
+              "is_superuser": false,
+              "username": "owned-notification-standard-f41fd85c93a74312920b67294746e015",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "is_staff": false,
+              "is_active": true,
+              "date_joined": "2026-11-13 04:16:59.602440+00:00",
+              "avatar_config": {},
+              "user_level": 1,
+              "custom_properties": {},
+              "api_key": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "stream_limit": 0
+            }
+          ],
+          "m3u_m3uaccount": [
+            {
+              "id": 1,
+              "name": "custom",
+              "server_url": null,
+              "file_path": null,
+              "server_group_id": null,
+              "max_streams": 0,
+              "is_active": true,
+              "created_at": "2026-11-13 04:16:56.271480+00:00",
+              "updated_at": "2026-11-13 04:16:56.271486+00:00",
+              "status": "idle",
+              "last_message": null,
+              "user_agent_id": null,
+              "locked": true,
+              "stream_profile_id": null,
+              "account_type": "STD",
+              "username": null,
+              "password": {
+                "private_value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                "excluded": "private credential or once-only identity"
+              },
+              "custom_properties": null,
+              "refresh_interval": 24,
+              "refresh_task_id": 1,
+              "stale_stream_days": 7,
+              "priority": 0
+            }
+          ],
+          "m3u_m3uaccountprofile": [
+            {
+              "id": 1,
+              "m3u_account_id": 1,
+              "name": "custom Default",
+              "is_default": true,
+              "max_streams": 0,
+              "is_active": true,
+              "search_pattern": "^(.*)$",
+              "replace_pattern": "$1",
+              "current_viewers": 0,
+              "custom_properties": {},
+              "exp_date": null
+            }
+          ],
+          "vod_movie": [],
+          "vod_m3umovierelation": [],
+          "vod_series": [],
+          "vod_episode": [],
+          "vod_m3uepisoderelation": [],
+          "core_coresettings": [
+            {
+              "id": 6,
+              "key": "network_access",
+              "name": "Network Access",
+              "value": {}
+            },
+            {
+              "id": 7,
+              "key": "proxy_settings",
+              "name": "Proxy Settings",
+              "value": {
+                "buffering_speed": 1.0,
+                "redis_chunk_ttl": 60,
+                "buffering_timeout": 15,
+                "channel_shutdown_delay": 0,
+                "channel_init_grace_period": 60,
+                "channel_client_wait_period": 5
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Stream Settings",
+              "value": {
+                "m3u_hash_key": "url",
+                "default_user_agent": 1,
+                "default_stream_profile": 1
+              }
+            },
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "DVR Settings",
+              "value": {
+                "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+                "series_rules": [],
+                "movie_template": "Movies/{title} ({year}).mkv",
+                "comskip_enabled": false,
+                "tv_fallback_dir": "TV_Shows",
+                "pre_offset_minutes": 0,
+                "comskip_custom_path": "",
+                "post_offset_minutes": 0,
+                "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+                "movie_fallback_template": "Movies/{start}.mkv"
+              }
+            },
+            {
+              "id": 15,
+              "key": "backup_settings",
+              "name": "Backup Settings",
+              "value": {
+                "schedule_time": "03:00",
+                "retention_count": 3,
+                "schedule_enabled": true,
+                "schedule_frequency": "daily",
+                "schedule_day_of_week": 0,
+                "schedule_cron_expression": ""
+              }
+            },
+            {
+              "id": 16,
+              "key": "system_settings",
+              "name": "System Settings",
+              "value": {
+                "time_zone": "UTC",
+                "preferred_region": "us",
+                "max_system_events": 100,
+                "auto_import_mapped_files": true
+              }
+            },
+            {
+              "id": 17,
+              "key": "user_limit_settings",
+              "name": "User Limit Settings",
+              "value": {}
+            },
+            {
+              "id": 18,
+              "key": "reverse_proxy_auth",
+              "name": "Reverse Proxy Auth",
+              "value": {
+                "header": "",
+                "enabled": false
+              }
+            }
+          ],
+          "core_systemnotification": [
+            {
+              "id": 1,
+              "notification_key": "owned.preexisting.f41fd85c93a74312920b67294746e015",
+              "notification_type": "info",
+              "priority": "normal",
+              "source": "system",
+              "title": "Preexisting",
+              "message": "Exact retention",
+              "action_data": {},
+              "is_active": true,
+              "admin_only": false,
+              "expires_at": null,
+              "created_at": "2026-11-13 04:16:59.603153+00:00",
+              "updated_at": "2026-11-13 04:16:59.603158+00:00"
+            }
+          ],
+          "core_notificationdismissal": []
+        },
+        "sequences": {
+          "accounts_user": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "m3u_m3uaccount": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "m3u_m3uaccountprofile": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "vod_movie": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3umovierelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_series": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_episode": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "vod_m3uepisoderelation": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "core_coresettings": {
+            "last_value": 18,
+            "is_called": true
+          },
+          "core_systemnotification": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "core_notificationdismissal": {
+            "last_value": 1,
+            "is_called": true
+          }
+        }
+      }
+    }
+  ],
+  "owned_notification_key": "owned.Main.f41fd85c93a74312920b67294746e015",
+  "admin_user_id": 1,
+  "standard_user_id": 2,
+  "actual_SQL_Bearer_roles_verified": true,
+  "actual_auth_requests": {
+    "admin": {
+      "started": 263816.684687531,
+      "began_utc": "2026-11-13T04:17:01.639183+00:00",
+      "status": 200,
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "content-length",
+          "331"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": {
+        "private_value_sha256": "c53de4df4a5123857f2f940b1493673664eba3a4d3bd4976817fbc575a1ff159",
+        "excluded": "opaque serialized DTO containing private fields"
+      },
+      "body_sha256": "1da597671bc5820b023423dbf2d52e1c6d53935a40d02ffe4355b4aff62ad870",
+      "absolute_observation": {
+        "deadline": 263824.684521136,
+        "completed": 263816.687037087,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.666581+00:00",
+      "completed": 263816.71209499,
+      "identity_projection": {
+        "id": 1,
+        "user_level": 10,
+        "stream_limit": 0
+      },
+      "private_full_body_sha256": "1da597671bc5820b023423dbf2d52e1c6d53935a40d02ffe4355b4aff62ad870"
+    },
+    "standard": {
+      "started": 263816.712341167,
+      "began_utc": "2026-11-13T04:17:01.666835+00:00",
+      "status": 200,
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "content-length",
+          "335"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 04:17:01 GMT"
+        ]
+      ],
+      "body_hex": {
+        "private_value_sha256": "683f5298eb90006de093c4ed5e109a59b7b441c74483eb9ee5bb93c006b74333",
+        "excluded": "opaque serialized DTO containing private fields"
+      },
+      "body_sha256": "0a9f8963dc9d8db740f80c9ab443ab79ddfc12eda610f9277ba2fdc0e87f36c7",
+      "absolute_observation": {
+        "deadline": 263824.712254335,
+        "completed": 263816.713221342,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_utc": "2026-11-13T04:17:01.667747+00:00",
+      "completed": 263816.713258844,
+      "identity_projection": {
+        "id": 2,
+        "user_level": 1,
+        "stream_limit": 0
+      },
+      "private_full_body_sha256": "0a9f8963dc9d8db740f80c9ab443ab79ddfc12eda610f9277ba2fdc0e87f36c7"
+    }
+  },
+  "phase_completed": 263816.846650778,
+  "qualification": {
+    "normal_Bearer_Main_notification_slice_qualified": true,
+    "Source8_framework_not_TCP": true,
+    "Native_definition_extra_cases": true,
+    "Source48_bounded_JSON_mutation_rules": true,
+    "Source_credential_TCP_parity": false,
+    "physical_SQL_concurrency_cancel_qualified": false,
+    "full_endpoint_or_Source48_parity": false,
+    "performance_acceptance": false
+  }
+}

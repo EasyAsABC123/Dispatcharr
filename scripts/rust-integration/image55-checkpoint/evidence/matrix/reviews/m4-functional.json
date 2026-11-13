@@ -1,0 +1,79 @@
+{
+  "name": "m4-functional",
+  "controller_result_sha256": "995e799b8dd9ad624d5a287b622253f10f4f569a2a5c4620be4ff0dc0fbc12d2",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image55-packaged-matrix-1/m4-functional/result.json",
+      "sha256": "d0f3711aae0fc7c413e01e07196875e5bd3d229e7fa796dc37dd2bb0e66d3a68"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Four owned playback/decoder/WebSocket functional phases; no total default audit or resource measurements.",
+  "observed_counts_and_candidate_Source_scope": {
+    "functional_phases": 4,
+    "media": [
+      {
+        "backend": "source",
+        "protocol": "vod",
+        "frames": 200,
+        "prefix_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+        "actual_WebSocket_kinds": {
+          "vod_started": 2,
+          "vod_stats": 4,
+          "vod_stopped": 2
+        }
+      },
+      {
+        "backend": "candidate",
+        "protocol": "vod",
+        "frames": 200,
+        "prefix_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+        "actual_WebSocket_kinds": {
+          "vod_started": 2,
+          "vod_stats": 4,
+          "vod_stopped": 2
+        }
+      },
+      {
+        "backend": "source",
+        "protocol": "timeshift",
+        "frames": 199,
+        "prefix_sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+        "actual_WebSocket_kinds": {
+          "timeshift_stats": 4
+        }
+      },
+      {
+        "backend": "candidate",
+        "protocol": "timeshift",
+        "frames": 199,
+        "prefix_sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+        "actual_WebSocket_kinds": {
+          "timeshift_stats": 4
+        }
+      }
+    ],
+    "resource_measurements": false,
+    "full_M4_parity": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-m4-perf-026b1664c3"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image55-packaged-matrix-1/reviews/m4-functional-cleanup.json",
+      "sha256": "8d22f32dd707b25557ba6462370ce7e977253b8d68d0bb25fd29cf393931ecde"
+    }
+  }
+}

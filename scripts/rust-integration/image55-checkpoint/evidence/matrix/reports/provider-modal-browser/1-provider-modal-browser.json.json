@@ -1,0 +1,1272 @@
+{
+  "passed": true,
+  "scope": "Actual unchanged React movie/series modals, provider selection, decoded proxied artwork; no resource claim",
+  "no_Accept_override": true,
+  "normal_login_count": 2,
+  "observations": {
+    "Original": {
+      "passed": true,
+      "scope": "Actual unchanged React normal login, both modal provider switches, provider-specific episodes and actual proxied SVG decoding; no playback/remote refresh",
+      "results": [
+        {
+          "kind": "movie",
+          "id": 28,
+          "provider_order": [
+            29,
+            30
+          ],
+          "initial_default_account": 2,
+          "UI_initial_provider": 29,
+          "observations": [
+            {
+              "relation_id": 29,
+              "account_id": 3,
+              "request": {
+                "path": "/api/vod/movies/28/provider-info/",
+                "query": "?relation_id=29",
+                "status": 200
+              },
+              "episode_names": [],
+              "decoded_images": [
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Movie",
+                  "path": "/api/vod/movies/28/image/",
+                  "query": "?kind=movie_image&m3u_account_id=3&v=8bd5660a",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                }
+              ]
+            },
+            {
+              "relation_id": 30,
+              "account_id": 2,
+              "request": {
+                "path": "/api/vod/movies/28/provider-info/",
+                "query": "?relation_id=30",
+                "status": 200
+              },
+              "episode_names": [],
+              "decoded_images": [
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Movie",
+                  "path": "/api/vod/movies/28/image/",
+                  "query": "?kind=movie_image&m3u_account_id=2&v=012872bc",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "series",
+          "id": 5,
+          "provider_order": [
+            5,
+            6
+          ],
+          "initial_default_account": 2,
+          "UI_initial_provider": 5,
+          "observations": [
+            {
+              "relation_id": 5,
+              "account_id": 3,
+              "request": {
+                "path": "/api/vod/series/5/provider-info/",
+                "query": "?include_episodes=true&relation_id=5",
+                "status": 200
+              },
+              "episode_names": [
+                "rust-probe-vod-rest-00 Modal Episode 1",
+                "rust-probe-vod-rest-00 Modal Episode 2"
+              ],
+              "decoded_images": [
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Series",
+                  "path": "/api/vod/series/5/image/",
+                  "query": "?kind=movie_image&m3u_account_id=3&v=8bd5660a",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                },
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Episode 1",
+                  "path": "/api/vod/episodes/13/image/",
+                  "query": "?kind=movie_image&m3u_account_id=3&v=11c6f2b4",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                }
+              ]
+            },
+            {
+              "relation_id": 6,
+              "account_id": 2,
+              "request": {
+                "path": "/api/vod/series/5/provider-info/",
+                "query": "?include_episodes=true&relation_id=6",
+                "status": 200
+              },
+              "episode_names": [
+                "rust-probe-vod-rest-00 Modal Episode 2",
+                "rust-probe-vod-rest-00 Modal Episode 3"
+              ],
+              "decoded_images": [
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Series",
+                  "path": "/api/vod/series/5/image/",
+                  "query": "?kind=movie_image&m3u_account_id=2&v=012872bc",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                },
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Episode 2",
+                  "path": "/api/vod/episodes/14/image/",
+                  "query": "?kind=movie_image&m3u_account_id=2&v=2d84dbf4",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "VOD_HTTP_failures": [],
+      "forbidden_requests": [],
+      "uncaught_exceptions": 0,
+      "API_responses": [
+        {
+          "path": "/api/accounts/initialize-superuser/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.7",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/auth/proxy-login/",
+          "query": "",
+          "status": 401,
+          "request_id": "2657240.8",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/auth/logout/",
+          "query": "",
+          "status": 401,
+          "request_id": "2657240.11",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/version/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.15",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/token/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.18",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/users/me/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.19",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/settings/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.20",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/settings/env/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.21",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/groups/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.22",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/profiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.23",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/epg/epgdata/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.26",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/epg/sources/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.25",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/outputprofiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.28",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/useragents/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.29",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/streamprofiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.27",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/m3u/server-groups/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.30",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/m3u/accounts/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.24",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/channels/ids/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.31",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/notifications/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.35",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/initialize-superuser/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.44",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/token/refresh/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.45",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/users/me/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.48",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/version/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.49",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/settings/env/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.51",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/settings/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.50",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/groups/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.52",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/profiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.53",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/epg/sources/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.55",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/outputprofiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.58",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/epg/epgdata/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.56",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/streamprofiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.57",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/useragents/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.59",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/m3u/accounts/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.54",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/m3u/server-groups/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.60",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/channels/ids/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.61",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/notifications/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.68",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/vod/all/",
+          "query": "?page=1&page_size=24",
+          "status": 200,
+          "request_id": "2657240.70",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/vod/categories/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.69",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/vod/all/",
+          "query": "?page=1&page_size=24&search=rust-probe-vod-rest-00+Modal",
+          "status": 200,
+          "request_id": "2657240.74",
+          "stage": "movie-open"
+        },
+        {
+          "path": "/api/vod/movies/28/provider-info/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.75",
+          "stage": "movie-open"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.76",
+          "stage": "movie-open"
+        },
+        {
+          "path": "/api/vod/movies/28/image/",
+          "query": "?kind=movie_image&m3u_account_id=2&v=012872bc",
+          "status": 200,
+          "request_id": "2657240.77",
+          "stage": "movie-open"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.78",
+          "stage": "movie-open"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.79",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.80",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/provider-info/",
+          "query": "?relation_id=30",
+          "status": 200,
+          "request_id": "2657240.81",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.82",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.83",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/provider-info/",
+          "query": "?relation_id=29",
+          "status": 200,
+          "request_id": "2657240.84",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.85",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/image/",
+          "query": "?kind=movie_image&m3u_account_id=3&v=8bd5660a",
+          "status": 200,
+          "request_id": "2657240.86",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.87",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/provider-info/",
+          "query": "?relation_id=30",
+          "status": 200,
+          "request_id": "2657240.88",
+          "stage": "movie-provider-30"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.89",
+          "stage": "movie-provider-30"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.91",
+          "stage": "movie-provider-30"
+        },
+        {
+          "path": "/api/vod/series/5/provider-info/",
+          "query": "?include_episodes=true",
+          "status": 200,
+          "request_id": "2657240.92",
+          "stage": "series-open"
+        },
+        {
+          "path": "/api/vod/series/5/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657240.93",
+          "stage": "series-open"
+        },
+        {
+          "path": "/api/vod/series/5/image/",
+          "query": "?kind=movie_image&m3u_account_id=2&v=012872bc",
+          "status": 200,
+          "request_id": "2657240.94",
+          "stage": "series-open"
+        },
+        {
+          "path": "/api/vod/series/5/provider-info/",
+          "query": "?include_episodes=true&relation_id=6",
+          "status": 200,
+          "request_id": "2657240.95",
+          "stage": "series-provider-5"
+        },
+        {
+          "path": "/api/vod/series/5/provider-info/",
+          "query": "?include_episodes=true&relation_id=5",
+          "status": 200,
+          "request_id": "2657240.96",
+          "stage": "series-provider-5"
+        },
+        {
+          "path": "/api/vod/series/5/image/",
+          "query": "?kind=movie_image&m3u_account_id=3&v=8bd5660a",
+          "status": 200,
+          "request_id": "2657240.97",
+          "stage": "series-provider-5"
+        },
+        {
+          "path": "/api/vod/episodes/13/image/",
+          "query": "?kind=movie_image&m3u_account_id=3&v=11c6f2b4",
+          "status": 200,
+          "request_id": "2657240.98",
+          "stage": "series-provider-5"
+        },
+        {
+          "path": "/api/vod/series/5/provider-info/",
+          "query": "?include_episodes=true&relation_id=6",
+          "status": 200,
+          "request_id": "2657240.99",
+          "stage": "series-provider-6"
+        },
+        {
+          "path": "/api/vod/episodes/14/image/",
+          "query": "?kind=movie_image&m3u_account_id=2&v=2d84dbf4",
+          "status": 200,
+          "request_id": "2657240.103",
+          "stage": "series-provider-6"
+        }
+      ]
+    },
+    "native": {
+      "passed": true,
+      "scope": "Actual unchanged React normal login, both modal provider switches, provider-specific episodes and actual proxied SVG decoding; no playback/remote refresh",
+      "results": [
+        {
+          "kind": "movie",
+          "id": 28,
+          "provider_order": [
+            29,
+            30
+          ],
+          "initial_default_account": 2,
+          "UI_initial_provider": 29,
+          "observations": [
+            {
+              "relation_id": 29,
+              "account_id": 3,
+              "request": {
+                "path": "/api/vod/movies/28/provider-info/",
+                "query": "?relation_id=29",
+                "status": 200
+              },
+              "episode_names": [],
+              "decoded_images": [
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Movie",
+                  "path": "/api/vod/movies/28/image/",
+                  "query": "?kind=movie_image&m3u_account_id=3&v=8bd5660a",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                }
+              ]
+            },
+            {
+              "relation_id": 30,
+              "account_id": 2,
+              "request": {
+                "path": "/api/vod/movies/28/provider-info/",
+                "query": "?relation_id=30",
+                "status": 200
+              },
+              "episode_names": [],
+              "decoded_images": [
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Movie",
+                  "path": "/api/vod/movies/28/image/",
+                  "query": "?kind=movie_image&m3u_account_id=2&v=012872bc",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "series",
+          "id": 5,
+          "provider_order": [
+            5,
+            6
+          ],
+          "initial_default_account": 2,
+          "UI_initial_provider": 5,
+          "observations": [
+            {
+              "relation_id": 5,
+              "account_id": 3,
+              "request": {
+                "path": "/api/vod/series/5/provider-info/",
+                "query": "?include_episodes=true&relation_id=5",
+                "status": 200
+              },
+              "episode_names": [
+                "rust-probe-vod-rest-00 Modal Episode 1",
+                "rust-probe-vod-rest-00 Modal Episode 2"
+              ],
+              "decoded_images": [
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Series",
+                  "path": "/api/vod/series/5/image/",
+                  "query": "?kind=movie_image&m3u_account_id=3&v=8bd5660a",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                },
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Episode 1",
+                  "path": "/api/vod/episodes/13/image/",
+                  "query": "?kind=movie_image&m3u_account_id=3&v=11c6f2b4",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                }
+              ]
+            },
+            {
+              "relation_id": 6,
+              "account_id": 2,
+              "request": {
+                "path": "/api/vod/series/5/provider-info/",
+                "query": "?include_episodes=true&relation_id=6",
+                "status": 200
+              },
+              "episode_names": [
+                "rust-probe-vod-rest-00 Modal Episode 2",
+                "rust-probe-vod-rest-00 Modal Episode 3"
+              ],
+              "decoded_images": [
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Series",
+                  "path": "/api/vod/series/5/image/",
+                  "query": "?kind=movie_image&m3u_account_id=2&v=012872bc",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                },
+                {
+                  "alt": "rust-probe-vod-rest-00 Modal Episode 2",
+                  "path": "/api/vod/episodes/14/image/",
+                  "query": "?kind=movie_image&m3u_account_id=2&v=2d84dbf4",
+                  "complete": true,
+                  "width": 2,
+                  "height": 3
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "VOD_HTTP_failures": [],
+      "forbidden_requests": [],
+      "uncaught_exceptions": 0,
+      "API_responses": [
+        {
+          "path": "/api/accounts/auth/proxy-login/",
+          "query": "",
+          "status": 401,
+          "request_id": "2657593.8",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/initialize-superuser/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.7",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/auth/logout/",
+          "query": "",
+          "status": 401,
+          "request_id": "2657593.12",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/version/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.17",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/token/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.20",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/users/me/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.21",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/settings/env/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.23",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/settings/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.22",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/groups/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.24",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/profiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.25",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/epg/epgdata/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.28",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/outputprofiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.30",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/m3u/server-groups/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.32",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/streamprofiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.29",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/useragents/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.31",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/m3u/accounts/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.26",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/epg/sources/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.27",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/channels/ids/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.33",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/notifications/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.37",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/initialize-superuser/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.45",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/token/refresh/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.46",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/accounts/users/me/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.48",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/version/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.49",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/settings/env/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.51",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/settings/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.50",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/groups/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.52",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/profiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.53",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/epg/epgdata/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.56",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/streamprofiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.57",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/outputprofiles/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.58",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/m3u/server-groups/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.60",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/epg/sources/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.55",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/useragents/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.59",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/m3u/accounts/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.54",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/channels/channels/ids/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.61",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/core/notifications/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.68",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/vod/all/",
+          "query": "?page=1&page_size=24",
+          "status": 200,
+          "request_id": "2657593.70",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/vod/categories/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.69",
+          "stage": "normal-login"
+        },
+        {
+          "path": "/api/vod/all/",
+          "query": "?page=1&page_size=24&search=rust-probe-vod-rest-00+Modal",
+          "status": 200,
+          "request_id": "2657593.75",
+          "stage": "movie-open"
+        },
+        {
+          "path": "/api/vod/movies/28/provider-info/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.76",
+          "stage": "movie-open"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.77",
+          "stage": "movie-open"
+        },
+        {
+          "path": "/api/vod/movies/28/image/",
+          "query": "?kind=movie_image&m3u_account_id=2&v=012872bc",
+          "status": 200,
+          "request_id": "2657593.78",
+          "stage": "movie-open"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.79",
+          "stage": "movie-open"
+        },
+        {
+          "path": "/api/vod/movies/28/provider-info/",
+          "query": "?relation_id=30",
+          "status": 200,
+          "request_id": "2657593.80",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.81",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.82",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/provider-info/",
+          "query": "?relation_id=29",
+          "status": 200,
+          "request_id": "2657593.83",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.84",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/image/",
+          "query": "?kind=movie_image&m3u_account_id=3&v=8bd5660a",
+          "status": 200,
+          "request_id": "2657593.85",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.86",
+          "stage": "movie-provider-29"
+        },
+        {
+          "path": "/api/vod/movies/28/provider-info/",
+          "query": "?relation_id=30",
+          "status": 200,
+          "request_id": "2657593.87",
+          "stage": "movie-provider-30"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.88",
+          "stage": "movie-provider-30"
+        },
+        {
+          "path": "/api/vod/movies/28/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.90",
+          "stage": "movie-provider-30"
+        },
+        {
+          "path": "/api/vod/series/5/provider-info/",
+          "query": "?include_episodes=true",
+          "status": 200,
+          "request_id": "2657593.91",
+          "stage": "series-open"
+        },
+        {
+          "path": "/api/vod/series/5/providers/",
+          "query": "",
+          "status": 200,
+          "request_id": "2657593.92",
+          "stage": "series-open"
+        },
+        {
+          "path": "/api/vod/series/5/image/",
+          "query": "?kind=movie_image&m3u_account_id=2&v=012872bc",
+          "status": 200,
+          "request_id": "2657593.93",
+          "stage": "series-open"
+        },
+        {
+          "path": "/api/vod/series/5/provider-info/",
+          "query": "?include_episodes=true&relation_id=6",
+          "status": 200,
+          "request_id": "2657593.94",
+          "stage": "series-provider-5"
+        },
+        {
+          "path": "/api/vod/series/5/provider-info/",
+          "query": "?include_episodes=true&relation_id=5",
+          "status": 200,
+          "request_id": "2657593.95",
+          "stage": "series-provider-5"
+        },
+        {
+          "path": "/api/vod/series/5/image/",
+          "query": "?kind=movie_image&m3u_account_id=3&v=8bd5660a",
+          "status": 200,
+          "request_id": "2657593.96",
+          "stage": "series-provider-5"
+        },
+        {
+          "path": "/api/vod/episodes/13/image/",
+          "query": "?kind=movie_image&m3u_account_id=3&v=11c6f2b4",
+          "status": 200,
+          "request_id": "2657593.97",
+          "stage": "series-provider-5"
+        },
+        {
+          "path": "/api/vod/series/5/provider-info/",
+          "query": "?include_episodes=true&relation_id=6",
+          "status": 200,
+          "request_id": "2657593.98",
+          "stage": "series-provider-6"
+        },
+        {
+          "path": "/api/vod/episodes/14/image/",
+          "query": "?kind=movie_image&m3u_account_id=2&v=2d84dbf4",
+          "status": 200,
+          "request_id": "2657593.100",
+          "stage": "series-provider-6"
+        }
+      ]
+    }
+  },
+  "fixture": {
+    "prepared": true,
+    "username": "rust-probe-vod-rest-standard",
+    "movie": {
+      "id": 28,
+      "name": "rust-probe-vod-rest-00 Modal Movie"
+    },
+    "series": {
+      "id": 5,
+      "name": "rust-probe-vod-rest-00 Modal Series"
+    },
+    "episodes": [
+      {
+        "id": 13,
+        "name": "rust-probe-vod-rest-00 Modal Episode 1"
+      },
+      {
+        "id": 14,
+        "name": "rust-probe-vod-rest-00 Modal Episode 2"
+      },
+      {
+        "id": 15,
+        "name": "rust-probe-vod-rest-00 Modal Episode 3"
+      }
+    ],
+    "origin": "http://172.18.0.3:18881",
+    "freshness": "Both provider caches stamped now; never force_refresh",
+    "provider_ids": {
+      "movie": [
+        29,
+        30
+      ],
+      "series": [
+        5,
+        6
+      ]
+    }
+  },
+  "exact_ordered_modal_observations": true,
+  "restoration": {
+    "restored": true,
+    "seven_model_row_fingerprints_exact": true,
+    "user_full_microsecond_row_exact": true,
+    "origin_requests": [
+      {
+        "method": "GET",
+        "path": "/poster-b.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/poster-a.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/poster-b.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/poster-a.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/episode-a.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/episode-b.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/poster-b.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/poster-a.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/poster-b.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/poster-a.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/episode-a.svg",
+        "allowed": true
+      },
+      {
+        "method": "GET",
+        "path": "/episode-b.svg",
+        "allowed": true
+      }
+    ],
+    "no_provider_contact": true,
+    "scope": "Login audit events and sequence advancement remain genuine fixture effects; owned project must be destroyed."
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "passed": true,
+  "actual_host_session": 96412,
+  "actual_host_exit": 0,
+  "cases_recomputed": [
+    {
+      "case": "success",
+      "passed": true,
+      "hold_observations": [
+        {
+          "mode": "source",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000779828988016,
+          "overshoot_seconds": 0.0007798289880156517,
+          "control_seconds": 2.017211585014593
+        },
+        {
+          "mode": "native",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000591562013142,
+          "overshoot_seconds": 0.0005915620131418109,
+          "control_seconds": 2.0138528260285966
+        }
+      ],
+      "scope": "same status/error body only",
+      "full_counter_or_inner_generator_parity_accepted": false
+    },
+    {
+      "case": "busy",
+      "passed": true,
+      "hold_observations": [
+        {
+          "mode": "source",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.0008387439884245,
+          "overshoot_seconds": 0.0008387439884245396,
+          "control_seconds": 2.018701324996073
+        },
+        {
+          "mode": "native",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000696654024068,
+          "overshoot_seconds": 0.0006966540240682662,
+          "control_seconds": 2.0127369160181843
+        }
+      ],
+      "scope": "same status/error body only",
+      "full_counter_or_inner_generator_parity_accepted": false
+    },
+    {
+      "case": "clientloss",
+      "passed": true,
+      "hold_observations": [
+        {
+          "mode": "source",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.0007825549691916,
+          "overshoot_seconds": 0.0007825549691915512,
+          "control_seconds": 2.0175552960135974
+        },
+        {
+          "mode": "native",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000674432958476,
+          "overshoot_seconds": 0.0006744329584762454,
+          "control_seconds": 2.014385512971785
+        }
+      ],
+      "scope": "real client FD/read-thread closure with no pre-close HTTP outcome; no server-handler cancellation or counter equality inference",
+      "full_counter_or_inner_generator_parity_accepted": false
+    }
+  ],
+  "default11_each_clone_controller_audit_exact": true,
+  "retained_container_namespace_process_records": [
+    {
+      "case": "success",
+      "role": "source-redis",
+      "container_namespace_pid": 300,
+      "record_sha256": "d21e54dfbbf5f2885d98377897a3ef9bdbf0f6449a29608798c8d3e837fb24f6",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "success",
+      "role": "native-redis",
+      "container_namespace_pid": 302,
+      "record_sha256": "f9cc48273cb1c31be38cb9290386d1f7154647c8179f0acae4b334f5d8bce541",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "success",
+      "role": "source-gate",
+      "container_namespace_pid": 340,
+      "record_sha256": "8a70ca7bc48214c9226daf583721df1ea7aaff55e2adbd9777c13b426965c9f0",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "success",
+      "role": "gate",
+      "container_namespace_pid": 341,
+      "record_sha256": "173c74b1d01fdebd1db15d06d2d69592926ca35be2fed10ea2518f648dd78e90",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "success",
+      "role": "source-web",
+      "container_namespace_pid": 380,
+      "record_sha256": "10caec567a9c1eff24a205223af17ef5e5ced3b4bf47245c395c10166cbdc105",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "busy",
+      "role": "native-redis",
+      "container_namespace_pid": 302,
+      "record_sha256": "49c3036a854066309034df55813ec50a665e0e80e41ce567e33f14ed2f8902af",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "busy",
+      "role": "source-redis",
+      "container_namespace_pid": 300,
+      "record_sha256": "95fa2bbe8cca792a0e0d5d384c9046d63df113f4e9fe5a8a65e7b82aba08ef2b",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "busy",
+      "role": "source-gate",
+      "container_namespace_pid": 341,
+      "record_sha256": "25193759a7568417924e0b7a5c756ce40a04a4539e99ea2754a82ed64838fb54",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "busy",
+      "role": "gate",
+      "container_namespace_pid": 340,
+      "record_sha256": "6fae474bf07561bf2be09cda931342fcf8e78d02618e35ca718d2908d42e6d06",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "busy",
+      "role": "source-web",
+      "container_namespace_pid": 379,
+      "record_sha256": "6715c2e56c39c9046290d981956a0c01ee597fe0f7a7b8915f415c6054ed7442",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "clientloss",
+      "role": "native-redis",
+      "container_namespace_pid": 301,
+      "record_sha256": "d001049701fe1e713e3592ef831d120783c6a941a9a4c0fe0ea1ae4469c5a013",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "clientloss",
+      "role": "source-redis",
+      "container_namespace_pid": 300,
+      "record_sha256": "9141bf1cc09effec93263ade7728d3c92284be5c4af4fef5ec9a46341f9a7168",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "clientloss",
+      "role": "gate",
+      "container_namespace_pid": 341,
+      "record_sha256": "3c70f1e7f75bf3532d788e9b7aec50805ba0ddd4102e7d915ec51edc8d220028",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "clientloss",
+      "role": "source-gate",
+      "container_namespace_pid": 340,
+      "record_sha256": "ce9d46a3230126c930487fce0a69a9aa81d0460dd0be35d9450b3c3a9336ad66",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    },
+    {
+      "case": "clientloss",
+      "role": "source-web",
+      "container_namespace_pid": 378,
+      "record_sha256": "39073438d50bef03cc39b59224ff985c775ce3ac358a784f49090e7a85760da9",
+      "scope": "controller-owned container PID identity, not a host PID; owned namespace disposal verified by fresh project inventory below"
+    }
+  ],
+  "independent_all_owned_project_inventories_empty": true,
+  "raw_summary_sha256": "3201a1758eedbdf4f73e3878123d90d1d8774baab3febcece255f9ad2b0f920e",
+  "full_M4_or_performance_acceptance": false
+}

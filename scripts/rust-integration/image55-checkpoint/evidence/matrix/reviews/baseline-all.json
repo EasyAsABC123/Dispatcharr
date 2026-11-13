@@ -1,0 +1,59 @@
+{
+  "name": "baseline-all",
+  "controller_result_sha256": "d63abe1d1a9f6f884879eb64ba26f78eba8544f883640979a3233872ac2cc487",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image55-packaged-matrix-1/baseline-all/integration.json",
+      "sha256": "e9456b74f58dcd2579a3775f0b766602d282d44a3d76d367f2b3acd7bbcfe792"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "No named default-database audit exposed by this generic node; disposable seeded fixture and individual SQL assertions only.",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 1024,
+    "all_checks_passed": true,
+    "contract_suites": [
+      "accounts",
+      "account_crud",
+      "app_data",
+      "core",
+      "profiles",
+      "memberships",
+      "channel_reads",
+      "channel_crud",
+      "groups",
+      "channel_stops",
+      "group_cleanup",
+      "streams",
+      "provider_reads",
+      "server_group_crud",
+      "filter_crud",
+      "core_utilities",
+      "core_stream_crud",
+      "notifications"
+    ],
+    "actual_decoder_frames": 75,
+    "actual_image_and_Source_archive_bound": true,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-rust-probe-2e1dec719e"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image55-packaged-matrix-1/reviews/baseline-all-cleanup.json",
+      "sha256": "cbf283cf41e77db7e87486e6efde687ce5429008e6b3906a1928b6aed9981be4"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "scope": "normal packaged Main credential and notification creation/sequential mutation slice; not new Source TCP parity",
+  "candidate_runtime_inputs": 794,
+  "execution_authorized": false,
+  "cases": [
+    {
+      "name": "admin-create",
+      "status": 201,
+      "authority": "Source8 framework admin-create-positive; own ids/key/clock SQL-bound"
+    },
+    {
+      "name": "standard-dismiss",
+      "status": 200,
+      "authority": "Source8 standard-dismiss framework"
+    },
+    {
+      "name": "standard-empty-repeat",
+      "status": 200,
+      "authority": "Source8 standard-dismiss-repeat payload{} framework; exact state retention"
+    },
+    {
+      "name": "standard-truthy-repeat",
+      "status": 200,
+      "authority": "Native definition-derived extra; pinned Source action_taken branch; not measured Source8"
+    },
+    {
+      "name": "duplicate-create",
+      "status": 400,
+      "authority": "Native definition-derived extra; pinned unique model+ModelSerializer; not measured Source8"
+    },
+    {
+      "name": "standard-create-denied",
+      "status": 403,
+      "authority": "Source8 framework standard-create-denied"
+    },
+    {
+      "name": "required-put",
+      "status": 400,
+      "authority": "Source48 required-field PUT validation + Native67 legacy PUT400; own target/real Main credentials"
+    },
+    {
+      "name": "empty-patch",
+      "status": 200,
+      "authority": "Source48 empty PATCH touch/save + Native67 legacy PATCH200; own updated_at bound to Main request clock"
+    },
+    {
+      "name": "cascade-delete",
+      "status": 204,
+      "authority": "Source48 target DELETE cascade + Native67 legacy DELETE204; exact target dismissal children and all sequences"
+    }
+  ],
+  "HTTP_absolute_seconds": 8,
+  "phase_seconds": 90,
+  "response_header_max_bytes": 65536,
+  "response_body_max_bytes": 65536,
+  "default_audit_named_models": 11,
+  "default_audit_sequences_expected": 11,
+  "sequential_repeat_preserves_exact_rows_and_sequences": true,
+  "truthy_repeat_changes_only_action_taken": true,
+  "no_sequence_reset_between_requests": true,
+  "no_Source_case_dispatch": true,
+  "Source8_is_credential_TCP_authority": false,
+  "Source48_mutation_scope_inherited": "Only measured JSON mutation rules; no Source credential/TCP or full endpoint parity",
+  "full_M4_or_notifications_or_performance_acceptance": false
+}

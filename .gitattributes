@@ -136,3 +136,12 @@ scripts/rust-contracts/backup-native16/qualified-source/QA3-to-QA4.diff -text -w
 scripts/rust-contracts/backup-native16/qualified-source/selected-source.diff -text -whitespace
 scripts/rust-contracts/backup-native16/executed-definition/build/command-4.stdout -text whitespace=-blank-at-eof
 scripts/rust-contracts/backup-native16/executed-definition/build/command-5.stdout -text whitespace=-blank-at-eof
+
+# Preserve exact image55 historical/blocked-controller patch bytes.
+scripts/rust-integration/image55-checkpoint/tooling-negatives/image55-vod-main4s-prep-1/binding.diff -text -whitespace
+scripts/rust-integration/image55-checkpoint/tooling-negatives/image55-worker-header-native-prep-1/binding.diff -text -whitespace
+scripts/rust-integration/image55-checkpoint/tools/notifications/blocked/image54-to55.diff -text -whitespace
+# Exact original attribution uses seven-character license-heading underlines.
+scripts/rust-integration/image55-checkpoint/Application-ATTRIBUTION.md conflict-marker-size=32
+scripts/rust-integration/image55-checkpoint/tools/notifications/blocked/reference/core/api_views.py -text whitespace=-blank-at-eof
+scripts/rust-integration/image55-checkpoint/tools/notifications/blocked/reference/core/apps.py -text whitespace=-blank-at-eof

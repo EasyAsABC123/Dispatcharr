@@ -1,0 +1,124 @@
+{
+  "passed": true,
+  "scope": "Portable retained-evidence integrity plus scoped Main derivation; no workload rerun",
+  "matrix": {
+    "nodes": 28,
+    "actual_controller_attempts": 28,
+    "application_fixture_children": 27,
+    "offline_controller_children": 1,
+    "tooling_history_separately_reported_without_raw_receipt": true,
+    "observed_maximum_package_children": 2,
+    "three_heavy_nodes_solo_within_package_trace": true
+  },
+  "notifications_Main9": {
+    "normal_Bearer_Main_notification_slice_qualified": true,
+    "Source8_framework_not_TCP": true,
+    "Native_definition_extra_cases": true,
+    "Source48_bounded_JSON_mutation_rules": true,
+    "Source_credential_TCP_parity": false,
+    "physical_SQL_concurrency_cancel_qualified": false,
+    "full_endpoint_or_Source48_parity": false,
+    "performance_acceptance": false
+  },
+  "Main4s": {
+    "passed": true,
+    "actual_exit_code": 0,
+    "cases": [
+      {
+        "case": "success",
+        "phases": {
+          "source": {
+            "status": 200,
+            "hold_seconds": 4.000779828988016,
+            "control_seconds": 2.017211585014593,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": true
+          },
+          "native": {
+            "status": 200,
+            "hold_seconds": 4.000591562013142,
+            "control_seconds": 2.0138528260285966,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": true
+          }
+        },
+        "Source_signal_rows": 6,
+        "clones_equal": true,
+        "default9tables9sequences_equal": true,
+        "owned_project_empty": true
+      },
+      {
+        "case": "busy",
+        "phases": {
+          "source": {
+            "status": 429,
+            "hold_seconds": 4.0008387439884245,
+            "control_seconds": 2.018701324996073,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": true
+          },
+          "native": {
+            "status": 429,
+            "hold_seconds": 4.000696654024068,
+            "control_seconds": 2.0127369160181843,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": true
+          }
+        },
+        "Source_signal_rows": 8,
+        "clones_equal": true,
+        "default9tables9sequences_equal": true,
+        "owned_project_empty": true
+      },
+      {
+        "case": "clientloss",
+        "phases": {
+          "source": {
+            "status": null,
+            "hold_seconds": 4.0007825549691916,
+            "control_seconds": 2.0175552960135974,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": false
+          },
+          "native": {
+            "status": null,
+            "hold_seconds": 4.000674432958476,
+            "control_seconds": 2.014385512971785,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": false
+          }
+        },
+        "Source_signal_rows": 6,
+        "clones_equal": true,
+        "default9tables9sequences_equal": true,
+        "owned_project_empty": true
+      }
+    ],
+    "all3_observation_and_scoped_parity_passed": true,
+    "response_header_maps_retained": 4,
+    "header_redactions": 0,
+    "control_timestamp_limit": "Only elapsed control duration retained, not separate absolute control_done timestamp; physical hold clocks are independently retained in proxy traces.",
+    "Source_signal_scope": "request_finished after resource-closer attempts, not guaranteed generator-finally/providerEOF/TCP or server cancellation",
+    "full_M4_acceptance": false,
+    "performance_claim": false,
+    "application_rerun": false,
+    "default_recovery_enabled": false
+  },
+  "worker_header_Native7": {
+    "capture_valid": true,
+    "worker_header_branch_scope_qualified": true,
+    "full_header_or_M4_parity": false,
+    "Source_invalid_HEAD_observed": false,
+    "Native_invalid_HEAD": 405,
+    "invalid_HEAD_compatibility_open": true,
+    "resource_acceptance": false
+  },
+  "default_audit_table_counts": {
+    "Main4s": 9,
+    "header": 9,
+    "notifications": 11
+  },
+  "image": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
+  "performance_claim": false,
+  "full_milestone_acceptance": false
+}

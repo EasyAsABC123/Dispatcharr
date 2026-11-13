@@ -1,0 +1,32 @@
+{
+  "name": "retention100",
+  "controller_result_sha256": "dd2c6403b4516e03a966939f0ccc51b590ca094b321b973dd5421c0673ca753d",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image55-packaged-matrix-1/retention100/retention.json",
+      "sha256": "6f4763b9f283055f9cce3345863365383e0f79eae2883321ae8779bbcc02c696"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Fixed100 readers/10channels/45-second history, 100 actual1.5MB reader transcripts and historical64KiB prefixes,10 retained media files independently hashed and decoded, local4MiB and authoritative16MiB bounds. Sequential retention snapshots are not comparative CPU/memory measurements.",
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-retention-5daacc421c25"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image55-packaged-matrix-1/reviews/retention100-cleanup.json",
+      "sha256": "9cf84223a0cec408e58a2ddbb1a55618b8386dfc2ef2fcb342858e687e74d482"
+    }
+  }
+}

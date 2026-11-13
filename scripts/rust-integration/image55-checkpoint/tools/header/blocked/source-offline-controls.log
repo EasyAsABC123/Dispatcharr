@@ -1,0 +1,33 @@
+test_body_prefix (test_source_reference.SourceReference.test_body_prefix) ... ok
+test_exact_retained_six_valid_without_rewriting_failure (test_source_reference.SourceReference.test_exact_retained_six_valid_without_rewriting_failure) ... ok
+test_excluded_diagnostic_does_not_waive_physical_ownership (test_source_reference.SourceReference.test_excluded_diagnostic_does_not_waive_physical_ownership) ... ok
+test_missing_provider_canary (test_source_reference.SourceReference.test_missing_provider_canary) ... FAIL
+test_missing_source_row (test_source_reference.SourceReference.test_missing_source_row) ... ok
+test_native_excludes_unrouted_branch_and_never_dispatches_source (test_source_reference.SourceReference.test_native_excludes_unrouted_branch_and_never_dispatches_source) ... ok
+test_old_derived_failure_cannot_be_rewritten (test_source_reference.SourceReference.test_old_derived_failure_cannot_be_rewritten) ... ok
+test_original_exit_cannot_be_promoted (test_source_reference.SourceReference.test_original_exit_cannot_be_promoted) ... ok
+test_original_private_raw_bindings_still_exact (test_source_reference.SourceReference.test_original_private_raw_bindings_still_exact) ... ok
+test_other_status_must_not_be_waived (test_source_reference.SourceReference.test_other_status_must_not_be_waived) ... ok
+test_source_cleanup_must_be_complete (test_source_reference.SourceReference.test_source_cleanup_must_be_complete) ... ok
+test_source_default_audit_required (test_source_reference.SourceReference.test_source_default_audit_required) ... ok
+test_success_header_on_error (test_source_reference.SourceReference.test_success_header_on_error) ... ok
+test_template_evidence_required (test_source_reference.SourceReference.test_template_evidence_required) ... ok
+test_wrong_auth_ID (test_source_reference.SourceReference.test_wrong_auth_ID) ... ok
+test_wrong_source_identity (test_source_reference.SourceReference.test_wrong_source_identity) ... ok
+
+======================================================================
+FAIL: test_missing_provider_canary (test_source_reference.SourceReference.test_missing_provider_canary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-worker-header-native-prep-2/tests/test_source_reference.py", line 26, in test_missing_provider_canary
+    def test_missing_provider_canary(self):self.reject(lambda s,m,a:s['cases'][4]['origin_after']['requests'][-1].update(response_headers={}))
+                                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-worker-header-native-prep-2/tests/test_source_reference.py", line 17, in reject
+    with self.assertRaises((ValueError,KeyError,TypeError)):validate(s,m,a,e,p)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'KeyError'>, <class 'TypeError'>) not raised
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.051s
+
+FAILED (failures=1)

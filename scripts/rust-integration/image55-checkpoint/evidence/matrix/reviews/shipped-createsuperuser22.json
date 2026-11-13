@@ -1,0 +1,41 @@
+{
+  "name": "shipped-createsuperuser22",
+  "controller_result_sha256": "70a0b42783747e84173c94b70e569da2e5c5588f6e06a171cbf3005557928273",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image55-packaged-matrix-1/create22/integration.json",
+      "sha256": "abb4bae62b83a62544a2fa6fb67e97dc20fd80da1ca4c04ebab049cb54d2e93e"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image55-packaged-matrix-1/create22/operator-cli-source.json",
+      "sha256": "6fd467aae69c73267f4560847e3820878d30a69fc451dbe638e47e2ac81be7e7"
+    }
+  ],
+  "observed_default_audits": [
+    {
+      "scope": "controller retained literal default unchanged check",
+      "passed": true
+    }
+  ],
+  "audit_scope": "Exact actual operator stdout/stderr hashes, SQL/cache/events capture and owned copied-database cleanup; Source17 reference only or shipped createsuperuser22 finite contract, no full CLI/performance claim.",
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-operator-cli-source-89a0508261"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image55-packaged-matrix-1/reviews/shipped-createsuperuser22-cleanup.json",
+      "sha256": "690bb37bc72dc16961d76845f54b92a70f3a04919aae880afab575b01c3c65a0"
+    }
+  }
+}

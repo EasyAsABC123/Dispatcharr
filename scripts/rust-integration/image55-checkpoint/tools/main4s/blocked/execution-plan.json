@@ -1,0 +1,48 @@
+{
+  "scope": "BLOCKED exact image55 Source-first success/busy/clientloss physical4s functional characterization; no resource/performance/default enable",
+  "fixture_execution_authorized": false,
+  "Root_activation_required": true,
+  "cases": [
+    "success",
+    "busy",
+    "clientloss"
+  ],
+  "new_output": "artifacts/rust/m4-vod-four-second-main-image55-1",
+  "cue_path": "artifacts/rust/image55-vod-main4s-prep-1/Root-once-quiet-cue.json",
+  "Root_quiet_preflight": "artifacts/rust/image55-vod-main4s-prep-1/Root-quiet-preflight.json",
+  "argv_after_Root_flag_only_activation": [
+    "python3",
+    "artifacts/rust/image55-vod-main4s-prep-1/controller/launch_once.py",
+    "--repo",
+    "/home/justin/github/Dispatcharr"
+  ],
+  "cwd": "/home/justin/github/Dispatcharr",
+  "environment_prelude": "source artifacts/rust/tooling/environment.sh",
+  "sealed_file_count": 26,
+  "maximum_cue_seconds": 1800,
+  "no_retry": true,
+  "capture_failure_and_physical_cleanup": true,
+  "Source_reference": "Fresh Original eachcase, independent clones; no historical Source request reused",
+  "protocol_limits_unchanged": {
+    "gate_hold_seconds": 4,
+    "maximum_hold_seconds": 4.35,
+    "control_work_deadline_seconds": 3.1,
+    "post_close_seconds": [
+      1.5,
+      3,
+      6,
+      15
+    ],
+    "phase_seconds": 90
+  },
+  "output_before_launch_must_be_absent": true,
+  "source_or_Coordinator_business_changes": false,
+  "normal_recovery_default": "OFF; explicit fixture opt-in only",
+  "actual_execution": false,
+  "Git_context": {
+    "GIT_DIR": "/home/justin/github/Dispatcharr/.git",
+    "GIT_WORK_TREE": "/home/justin/github/Dispatcharr",
+    "GIT_OPTIONAL_LOCKS": "0"
+  },
+  "Git_binding_reason": "explicit pinned Original and support archives; no inherited package-support worktree or implicit application HEAD"
+}

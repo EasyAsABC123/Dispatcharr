@@ -1,0 +1,1119 @@
+{
+  "passed": true,
+  "observation_valid": true,
+  "parity_passed": true,
+  "case": "clientloss",
+  "project": "dispatcharr-pending-main-b67fce885c",
+  "performance_verified": false,
+  "scope": "separate fixed4s Main SQL/Bearer physical-reply observation; validity is not parity",
+  "origin_preflight": {
+    "passed": true,
+    "scope": "owned origin readiness and one direct bounded Range preflight, not Source/native playback",
+    "fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+    "fixture_bytes": 4299455,
+    "status": 206,
+    "prefix_bytes": 8192,
+    "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+    "preflight_origin_GET_requests": 1
+  },
+  "default_database_before": {
+    "database": "dispatcharr",
+    "tables": {
+      "accounts_user": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "m3u_m3uaccount": {
+        "rows": 1,
+        "sha256": "c8f2358c93e8b0ad5a36ca2f938d0fa8195de5054b6bc0c1859c7888160833fe"
+      },
+      "m3u_m3uaccountprofile": {
+        "rows": 1,
+        "sha256": "7ec5643d009b5bec09a7e0fc33724139979033f2e22e8dc56c3ec4393b8ba9c7"
+      },
+      "vod_movie": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3umovierelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_series": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_episode": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3uepisoderelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_coresettings": {
+        "rows": 8,
+        "sha256": "16f7da03c033c5fe0dae629dd4940aa4dea4f5095d357177a7b38ebdc2ccdb96"
+      }
+    },
+    "sequences": {
+      "public.accounts_user_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.m3u_m3uaccount_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.m3u_m3uaccountprofile_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.vod_movie_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.vod_m3umovierelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.vod_series_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.vod_episode_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.vod_m3uepisoderelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.core_coresettings_id_seq": {
+        "last_value": 18,
+        "is_called": true
+      }
+    },
+    "dataset_sha256": "7572cc7583ee0c67c2a543108a21f2b71d352411809146756f52747c1dbc5834"
+  },
+  "template_fingerprint": {
+    "database": "rust_pending_1246063a72_template",
+    "tables": {
+      "accounts_user": {
+        "rows": 3,
+        "sha256": "18aa257d777720ec50a3389ef46f3933da05c3bedf344e6f9d693053f29ba5b5"
+      },
+      "m3u_m3uaccount": {
+        "rows": 2,
+        "sha256": "d5528c0b552843be85a4ce36ccbed756915297de701189327dd9f1ae2153f7f1"
+      },
+      "m3u_m3uaccountprofile": {
+        "rows": 2,
+        "sha256": "716c094b26b44bf9c8434b7b2797f598ae70decccc6bf53a815e0415ccc66809"
+      },
+      "vod_movie": {
+        "rows": 2,
+        "sha256": "5539c1af79c58fa6d0e356a2336cb44fd179bb16d40cb6afa2a3a8a5bfd3798e"
+      },
+      "vod_m3umovierelation": {
+        "rows": 2,
+        "sha256": "6621210ce2c6e301fd42fbc0bb8f9a9173966577d60d1b53581954b944590186"
+      },
+      "vod_series": {
+        "rows": 1,
+        "sha256": "7dfeb51538490585e8a51e262d566b1c5929272952839f6ab8e682f89fc7dc68"
+      },
+      "vod_episode": {
+        "rows": 1,
+        "sha256": "24a9e78d7cfd8cc385700eb716ab9fa125d0c9031cfc3af29cf5ee8d06fa53d8"
+      },
+      "vod_m3uepisoderelation": {
+        "rows": 1,
+        "sha256": "29cb8f757f7012c9845104ae3468ddeb87253803664705d3896d85f7ed971a8f"
+      },
+      "core_coresettings": {
+        "rows": 8,
+        "sha256": "cd6cfa39b8529962c16a2b78220f514ee7cf483731b404235ba2e1f75989ba60"
+      }
+    },
+    "sequences": {
+      "public.accounts_user_id_seq": {
+        "last_value": 3,
+        "is_called": true
+      },
+      "public.m3u_m3uaccount_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.m3u_m3uaccountprofile_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.vod_movie_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.vod_m3umovierelation_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.vod_series_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.vod_episode_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.vod_m3uepisoderelation_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.core_coresettings_id_seq": {
+        "last_value": 18,
+        "is_called": true
+      }
+    },
+    "dataset_sha256": "a3e0c98029b47240491f7d1f64acdc7c9e2d477161b8c2524a09e4c4367e2739"
+  },
+  "DB_clone_binding": {
+    "independent_names": true,
+    "named_tables_and_sequences_equal": true,
+    "dataset_sha256": "a3e0c98029b47240491f7d1f64acdc7c9e2d477161b8c2524a09e4c4367e2739",
+    "full_database_hash_claimed": false
+  },
+  "independent_DB_clones_verified": true,
+  "Source_actual_client_config": {
+    "socket_timeout": 60,
+    "connect_timeout": 5,
+    "retry_on_timeout": true,
+    "proxy_port": 6383,
+    "settings_socket_timeout": 60,
+    "method_replaced": false,
+    "scope": "actual Original Source WSGI client configuration"
+  },
+  "source_before": {
+    "database": "rust_pending_1246063a72_source",
+    "tables": {
+      "accounts_user": {
+        "rows": 3,
+        "sha256": "18aa257d777720ec50a3389ef46f3933da05c3bedf344e6f9d693053f29ba5b5"
+      },
+      "m3u_m3uaccount": {
+        "rows": 2,
+        "sha256": "d5528c0b552843be85a4ce36ccbed756915297de701189327dd9f1ae2153f7f1"
+      },
+      "m3u_m3uaccountprofile": {
+        "rows": 2,
+        "sha256": "716c094b26b44bf9c8434b7b2797f598ae70decccc6bf53a815e0415ccc66809"
+      },
+      "vod_movie": {
+        "rows": 2,
+        "sha256": "5539c1af79c58fa6d0e356a2336cb44fd179bb16d40cb6afa2a3a8a5bfd3798e"
+      },
+      "vod_m3umovierelation": {
+        "rows": 2,
+        "sha256": "6621210ce2c6e301fd42fbc0bb8f9a9173966577d60d1b53581954b944590186"
+      },
+      "vod_series": {
+        "rows": 1,
+        "sha256": "7dfeb51538490585e8a51e262d566b1c5929272952839f6ab8e682f89fc7dc68"
+      },
+      "vod_episode": {
+        "rows": 1,
+        "sha256": "24a9e78d7cfd8cc385700eb716ab9fa125d0c9031cfc3af29cf5ee8d06fa53d8"
+      },
+      "vod_m3uepisoderelation": {
+        "rows": 1,
+        "sha256": "29cb8f757f7012c9845104ae3468ddeb87253803664705d3896d85f7ed971a8f"
+      },
+      "core_coresettings": {
+        "rows": 8,
+        "sha256": "cd6cfa39b8529962c16a2b78220f514ee7cf483731b404235ba2e1f75989ba60"
+      }
+    },
+    "sequences": {
+      "public.accounts_user_id_seq": {
+        "last_value": 3,
+        "is_called": true
+      },
+      "public.m3u_m3uaccount_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.m3u_m3uaccountprofile_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.vod_movie_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.vod_m3umovierelation_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.vod_series_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.vod_episode_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.vod_m3uepisoderelation_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.core_coresettings_id_seq": {
+        "last_value": 18,
+        "is_called": true
+      }
+    },
+    "dataset_sha256": "a3e0c98029b47240491f7d1f64acdc7c9e2d477161b8c2524a09e4c4367e2739"
+  },
+  "source": {
+    "observation_valid": true,
+    "parity_passed": null,
+    "scope": "Separate fixed4s HTTP/SQL/auth observation; validity and parity distinct; no full metadata/latebody/performance claim",
+    "backend": "source",
+    "case": "clientloss",
+    "observations": [],
+    "source_control": "actual Original Redis INCR reply held",
+    "actual_SQL_Bearer_user_verified": true,
+    "client_closes": [
+      {
+        "role": "initial",
+        "close_begin": 264309.469378977,
+        "socket_observed": true,
+        "server_cancellation_inferred": false,
+        "fd_before": 12,
+        "local_shutdown": true,
+        "fd_after": -1,
+        "close_complete": 264309.469451319
+      },
+      {
+        "role": "target",
+        "close_begin": 264313.503398035,
+        "socket_observed": true,
+        "fd_before": 14,
+        "inode_before": 68671563,
+        "server_cancellation_inferred": false,
+        "local_shutdown": true,
+        "close_complete": 264313.503417415,
+        "fd_immediately_after_shutdown": 14,
+        "physical_close_pending_until_reader_join": true,
+        "fd_after": -1,
+        "reader_joined_monotonic": 264313.503795176,
+        "reader_joined": true,
+        "original_descriptor_identity_absent": true
+      },
+      {
+        "role": "follower",
+        "close_begin": 264315.487783156,
+        "socket_observed": true,
+        "server_cancellation_inferred": false,
+        "fd_before": 15,
+        "local_shutdown": true,
+        "fd_after": -1,
+        "close_complete": 264315.487829708
+      }
+    ],
+    "idle": {
+      "began_monotonic": 264311.477192877,
+      "completed_monotonic": 264311.477397423,
+      "atomic": false,
+      "metadata": {
+        "user_id": "3",
+        "active_streams": "0",
+        "request_count": "1",
+        "created_at": "1794543912.4200604",
+        "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+        "m3u_profile_id": "2"
+      },
+      "provider": "0",
+      "stop": null
+    },
+    "held_boundary_monotonic": 264311.48624229,
+    "checkpoints": [
+      {
+        "label": "actual_reply_held",
+        "state": {
+          "began_monotonic": 264311.489210043,
+          "completed_monotonic": 264311.489496891,
+          "atomic": false,
+          "metadata": {
+            "user_id": "3",
+            "active_streams": "1",
+            "request_count": "1",
+            "created_at": "1794543912.4200604",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "m3u_profile_id": "2"
+          },
+          "provider": "1",
+          "stop": null
+        },
+        "target_headers_already_observed": false
+      },
+      {
+        "label": "absolute_3_1s",
+        "state": {
+          "began_monotonic": 264314.586315884,
+          "completed_monotonic": 264314.586644794,
+          "atomic": false,
+          "metadata": {
+            "user_id": "3",
+            "active_streams": "2",
+            "request_count": "2",
+            "created_at": "1794543912.4200604",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "m3u_profile_id": "2"
+          },
+          "provider": "1",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "immediately_before_release",
+        "state": {
+          "began_monotonic": 264315.486319045,
+          "completed_monotonic": 264315.486662055,
+          "atomic": false,
+          "metadata": {
+            "user_id": "3",
+            "active_streams": "2",
+            "request_count": "2",
+            "created_at": "1794543912.4200604",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "m3u_profile_id": "2"
+          },
+          "provider": "1",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "immediately_after_release",
+        "state": {
+          "began_monotonic": 264315.48755134,
+          "completed_monotonic": 264315.487757686,
+          "atomic": false,
+          "metadata": {
+            "user_id": "3",
+            "active_streams": "2",
+            "request_count": "2",
+            "created_at": "1794543912.4200604",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "m3u_profile_id": "2"
+          },
+          "provider": "1",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "post_close_1.5",
+        "state": {
+          "began_monotonic": 264316.987914283,
+          "completed_monotonic": 264316.988268673,
+          "atomic": false,
+          "metadata": {
+            "user_id": "3",
+            "active_streams": "1",
+            "request_count": "3",
+            "created_at": "1794543912.4200604",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "m3u_profile_id": "2"
+          },
+          "provider": "1",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "post_close_3",
+        "state": {
+          "began_monotonic": 264318.487906598,
+          "completed_monotonic": 264318.488185515,
+          "atomic": false,
+          "metadata": {
+            "user_id": "3",
+            "active_streams": "0",
+            "request_count": "3",
+            "created_at": "1794543912.4200604",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "m3u_profile_id": "2"
+          },
+          "provider": "0",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "post_close_6",
+        "state": {
+          "began_monotonic": 264321.487898982,
+          "completed_monotonic": 264321.4881742,
+          "atomic": false,
+          "metadata": {
+            "user_id": null,
+            "active_streams": null,
+            "request_count": null,
+            "created_at": null,
+            "content_uuid": null,
+            "m3u_profile_id": null
+          },
+          "provider": "0",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "post_close_15",
+        "state": {
+          "began_monotonic": 264330.487906186,
+          "completed_monotonic": 264330.488263576,
+          "atomic": false,
+          "metadata": {
+            "user_id": null,
+            "active_streams": null,
+            "request_count": null,
+            "created_at": null,
+            "content_uuid": null,
+            "m3u_profile_id": null
+          },
+          "provider": "0",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      }
+    ],
+    "admin_stop": {
+      "status": 200,
+      "body": "{\"message\": \"VOD client stop signal sent\", \"client_id\": \"fixture-pending-main-clientloss\", \"stop_key\": \"vod_proxy:client:fixture-pending-main-clientloss:stop\"}"
+    },
+    "early_follower_valid": true,
+    "follower": {
+      "status": 200,
+      "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+      "prefix_bytes": 8192,
+      "state": {
+        "began_monotonic": 264313.503101956,
+        "completed_monotonic": 264313.503386284,
+        "atomic": false,
+        "metadata": {
+          "user_id": "3",
+          "active_streams": "2",
+          "request_count": "2",
+          "created_at": "1794543912.4200604",
+          "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "m3u_profile_id": "2"
+        },
+        "provider": "1",
+        "stop": "true"
+      }
+    },
+    "target_client_loss": {
+      "role": "target",
+      "close_begin": 264313.503398035,
+      "socket_observed": true,
+      "fd_before": 14,
+      "inode_before": 68671563,
+      "server_cancellation_inferred": false,
+      "local_shutdown": true,
+      "close_complete": 264313.503417415,
+      "fd_immediately_after_shutdown": 14,
+      "physical_close_pending_until_reader_join": true,
+      "fd_after": -1,
+      "reader_joined_monotonic": 264313.503795176,
+      "reader_joined": true,
+      "original_descriptor_identity_absent": true
+    },
+    "checkpoint_3_1_timing": {
+      "offset_seconds": 3.1,
+      "actual_offset_seconds": 3.1000735940178856
+    },
+    "hold_observation": {
+      "target_seconds": 4,
+      "maximum_seconds": 4.35,
+      "actual_seconds": 4.0007825549691916,
+      "overshoot_seconds": 0.0007825549691915512,
+      "control_seconds": 2.0175552960135974
+    },
+    "target_outcome": {
+      "outcome_kind": "client_transport_error",
+      "request_started": 264311.478155534,
+      "transport_error": "RemoteDisconnected",
+      "completed": 264313.503467896,
+      "state_at_outcome": {
+        "began_monotonic": 264313.503468437,
+        "completed_monotonic": 264313.503744404,
+        "atomic": false,
+        "metadata": {
+          "user_id": "3",
+          "active_streams": "2",
+          "request_count": "2",
+          "created_at": "1794543912.4200604",
+          "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "m3u_profile_id": "2"
+        },
+        "provider": "1",
+        "stop": "true"
+      }
+    },
+    "client_loss_contract": {
+      "matched": true,
+      "scope": "owned consumer TCP shutdown/read-thread join before release; no server cancellation inference"
+    },
+    "Source_expected_reference_outcome_matched": true,
+    "consumer_close_boundary": 264315.487830968
+  },
+  "Source_signal_status": {
+    "invalid": [],
+    "rows": 6,
+    "bytes": 1047,
+    "maximum_rows": 256,
+    "maximum_bytes": 1048576
+  },
+  "Source_signal_coverage": {
+    "valid": true,
+    "started": 3,
+    "finished": 3,
+    "roles": [
+      "follower",
+      "initial",
+      "target"
+    ],
+    "scope": "Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion"
+  },
+  "actual_Main_image_id": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
+  "native_before": {
+    "database": "rust_pending_1246063a72_native",
+    "tables": {
+      "accounts_user": {
+        "rows": 3,
+        "sha256": "18aa257d777720ec50a3389ef46f3933da05c3bedf344e6f9d693053f29ba5b5"
+      },
+      "m3u_m3uaccount": {
+        "rows": 2,
+        "sha256": "d5528c0b552843be85a4ce36ccbed756915297de701189327dd9f1ae2153f7f1"
+      },
+      "m3u_m3uaccountprofile": {
+        "rows": 2,
+        "sha256": "716c094b26b44bf9c8434b7b2797f598ae70decccc6bf53a815e0415ccc66809"
+      },
+      "vod_movie": {
+        "rows": 2,
+        "sha256": "5539c1af79c58fa6d0e356a2336cb44fd179bb16d40cb6afa2a3a8a5bfd3798e"
+      },
+      "vod_m3umovierelation": {
+        "rows": 2,
+        "sha256": "6621210ce2c6e301fd42fbc0bb8f9a9173966577d60d1b53581954b944590186"
+      },
+      "vod_series": {
+        "rows": 1,
+        "sha256": "7dfeb51538490585e8a51e262d566b1c5929272952839f6ab8e682f89fc7dc68"
+      },
+      "vod_episode": {
+        "rows": 1,
+        "sha256": "24a9e78d7cfd8cc385700eb716ab9fa125d0c9031cfc3af29cf5ee8d06fa53d8"
+      },
+      "vod_m3uepisoderelation": {
+        "rows": 1,
+        "sha256": "29cb8f757f7012c9845104ae3468ddeb87253803664705d3896d85f7ed971a8f"
+      },
+      "core_coresettings": {
+        "rows": 8,
+        "sha256": "cd6cfa39b8529962c16a2b78220f514ee7cf483731b404235ba2e1f75989ba60"
+      }
+    },
+    "sequences": {
+      "public.accounts_user_id_seq": {
+        "last_value": 3,
+        "is_called": true
+      },
+      "public.m3u_m3uaccount_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.m3u_m3uaccountprofile_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.vod_movie_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.vod_m3umovierelation_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "public.vod_series_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.vod_episode_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.vod_m3uepisoderelation_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.core_coresettings_id_seq": {
+        "last_value": 18,
+        "is_called": true
+      }
+    },
+    "dataset_sha256": "a3e0c98029b47240491f7d1f64acdc7c9e2d477161b8c2524a09e4c4367e2739"
+  },
+  "native": {
+    "observation_valid": true,
+    "parity_passed": null,
+    "scope": "Separate fixed4s HTTP/SQL/auth observation; validity and parity distinct; no full metadata/latebody/performance claim",
+    "backend": "native",
+    "case": "clientloss",
+    "observations": [],
+    "source_control": "actual Redis executed provider reply held",
+    "actual_SQL_Bearer_user_verified": true,
+    "client_closes": [
+      {
+        "role": "initial",
+        "close_begin": 264335.439708799,
+        "socket_observed": true,
+        "server_cancellation_inferred": false,
+        "fd_before": 12,
+        "local_shutdown": true,
+        "fd_after": -1,
+        "close_complete": 264335.43976678
+      },
+      {
+        "role": "target",
+        "close_begin": 264337.472446485,
+        "socket_observed": true,
+        "fd_before": 14,
+        "inode_before": 68649694,
+        "server_cancellation_inferred": false,
+        "local_shutdown": true,
+        "close_complete": 264337.472476286,
+        "fd_immediately_after_shutdown": 14,
+        "physical_close_pending_until_reader_join": true,
+        "fd_after": -1,
+        "reader_joined_monotonic": 264337.472863716,
+        "reader_joined": true,
+        "original_descriptor_identity_absent": true
+      },
+      {
+        "role": "follower",
+        "close_begin": 264339.460106624,
+        "socket_observed": true,
+        "server_cancellation_inferred": false,
+        "fd_before": 15,
+        "local_shutdown": true,
+        "fd_after": -1,
+        "close_complete": 264339.460169156
+      }
+    ],
+    "idle": {
+      "began_monotonic": 264335.454295557,
+      "completed_monotonic": 264335.454607375,
+      "atomic": false,
+      "metadata": {
+        "user_id": "3",
+        "active_streams": "0",
+        "request_count": "1",
+        "created_at": "1794543938.390923",
+        "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+        "m3u_profile_id": "2"
+      },
+      "provider": "0",
+      "stop": null
+    },
+    "held_boundary_monotonic": 264335.458481224,
+    "checkpoints": [
+      {
+        "label": "actual_reply_held",
+        "state": {
+          "began_monotonic": 264335.466167238,
+          "completed_monotonic": 264335.466431366,
+          "atomic": false,
+          "metadata": {
+            "user_id": "3",
+            "active_streams": "1",
+            "request_count": "1",
+            "created_at": "1794543938.390923",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "m3u_profile_id": "2"
+          },
+          "provider": "1",
+          "stop": null
+        },
+        "target_headers_already_observed": false
+      },
+      {
+        "label": "absolute_3_1s",
+        "state": {
+          "began_monotonic": 264338.558543413,
+          "completed_monotonic": 264338.558836921,
+          "atomic": false,
+          "metadata": {
+            "user_id": "3",
+            "active_streams": "2",
+            "request_count": "2",
+            "created_at": "1794543938.390923",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "m3u_profile_id": "2"
+          },
+          "provider": "1",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "immediately_before_release",
+        "state": {
+          "began_monotonic": 264339.45854219,
+          "completed_monotonic": 264339.458826548,
+          "atomic": false,
+          "metadata": {
+            "user_id": "3",
+            "active_streams": "2",
+            "request_count": "2",
+            "created_at": "1794543938.390923",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "m3u_profile_id": "2"
+          },
+          "provider": "1",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "immediately_after_release",
+        "state": {
+          "began_monotonic": 264339.459802295,
+          "completed_monotonic": 264339.460078723,
+          "atomic": false,
+          "metadata": {
+            "user_id": "3",
+            "active_streams": "2",
+            "request_count": "2",
+            "created_at": "1794543938.390923",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "m3u_profile_id": "2"
+          },
+          "provider": "1",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "post_close_1.5",
+        "state": {
+          "began_monotonic": 264340.960217677,
+          "completed_monotonic": 264340.960512475,
+          "atomic": false,
+          "metadata": {
+            "user_id": null,
+            "active_streams": null,
+            "request_count": null,
+            "created_at": null,
+            "content_uuid": null,
+            "m3u_profile_id": null
+          },
+          "provider": "0",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "post_close_3",
+        "state": {
+          "began_monotonic": 264342.460242069,
+          "completed_monotonic": 264342.460513746,
+          "atomic": false,
+          "metadata": {
+            "user_id": null,
+            "active_streams": null,
+            "request_count": null,
+            "created_at": null,
+            "content_uuid": null,
+            "m3u_profile_id": null
+          },
+          "provider": "0",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "post_close_6",
+        "state": {
+          "began_monotonic": 264345.460239687,
+          "completed_monotonic": 264345.460518564,
+          "atomic": false,
+          "metadata": {
+            "user_id": null,
+            "active_streams": null,
+            "request_count": null,
+            "created_at": null,
+            "content_uuid": null,
+            "m3u_profile_id": null
+          },
+          "provider": "0",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      },
+      {
+        "label": "post_close_15",
+        "state": {
+          "began_monotonic": 264354.460239549,
+          "completed_monotonic": 264354.460507876,
+          "atomic": false,
+          "metadata": {
+            "user_id": null,
+            "active_streams": null,
+            "request_count": null,
+            "created_at": null,
+            "content_uuid": null,
+            "m3u_profile_id": null
+          },
+          "provider": "0",
+          "stop": "true"
+        },
+        "target_headers_already_observed": true
+      }
+    ],
+    "admin_stop": {
+      "status": 200,
+      "body": "{\"message\":\"VOD client stop signal sent\",\"client_id\":\"fixture-pending-main-clientloss\",\"stop_key\":\"vod_proxy:client:fixture-pending-main-clientloss:stop\"}"
+    },
+    "early_follower_valid": true,
+    "follower": {
+      "status": 200,
+      "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+      "prefix_bytes": 8192,
+      "state": {
+        "began_monotonic": 264337.472091965,
+        "completed_monotonic": 264337.472433004,
+        "atomic": false,
+        "metadata": {
+          "user_id": "3",
+          "active_streams": "2",
+          "request_count": "2",
+          "created_at": "1794543938.390923",
+          "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "m3u_profile_id": "2"
+        },
+        "provider": "1",
+        "stop": "true"
+      }
+    },
+    "target_client_loss": {
+      "role": "target",
+      "close_begin": 264337.472446485,
+      "socket_observed": true,
+      "fd_before": 14,
+      "inode_before": 68649694,
+      "server_cancellation_inferred": false,
+      "local_shutdown": true,
+      "close_complete": 264337.472476286,
+      "fd_immediately_after_shutdown": 14,
+      "physical_close_pending_until_reader_join": true,
+      "fd_after": -1,
+      "reader_joined_monotonic": 264337.472863716,
+      "reader_joined": true,
+      "original_descriptor_identity_absent": true
+    },
+    "checkpoint_3_1_timing": {
+      "offset_seconds": 3.1,
+      "actual_offset_seconds": 3.1000621889834292
+    },
+    "hold_observation": {
+      "target_seconds": 4,
+      "maximum_seconds": 4.35,
+      "actual_seconds": 4.000674432958476,
+      "overshoot_seconds": 0.0006744329584762454,
+      "control_seconds": 2.014385512971785
+    },
+    "target_outcome": {
+      "outcome_kind": "client_transport_error",
+      "request_started": 264335.455318385,
+      "transport_error": "RemoteDisconnected",
+      "completed": 264337.472544058,
+      "state_at_outcome": {
+        "began_monotonic": 264337.472544538,
+        "completed_monotonic": 264337.472809815,
+        "atomic": false,
+        "metadata": {
+          "user_id": "3",
+          "active_streams": "2",
+          "request_count": "2",
+          "created_at": "1794543938.390923",
+          "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "m3u_profile_id": "2"
+        },
+        "provider": "1",
+        "stop": "true"
+      }
+    },
+    "client_loss_contract": {
+      "matched": true,
+      "scope": "owned consumer TCP shutdown/read-thread join before release; no server cancellation inference"
+    },
+    "Source_expected_reference_outcome_matched": null,
+    "consumer_close_boundary": 264339.460170676
+  },
+  "comparison": {
+    "observation_valid": true,
+    "parity_passed": true,
+    "scope": "real client FD/read-thread closure with no pre-close HTTP outcome; no server-handler cancellation or counter equality inference",
+    "full_M4_claim": false
+  },
+  "Source_reference_expectation_matched": true,
+  "full_parity_accepted": false,
+  "Source_signal_terminal_coverage": {
+    "valid": true,
+    "started": 3,
+    "finished": 3,
+    "roles": [
+      "follower",
+      "initial",
+      "target"
+    ],
+    "scope": "Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion"
+  },
+  "Source_signal_terminal_status": {
+    "invalid": [],
+    "rows": 6,
+    "bytes": 1047,
+    "maximum_rows": 256,
+    "maximum_bytes": 1048576
+  },
+  "Source_signal_terminal_valid": true,
+  "default_database_after": {
+    "database": "dispatcharr",
+    "tables": {
+      "accounts_user": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "m3u_m3uaccount": {
+        "rows": 1,
+        "sha256": "c8f2358c93e8b0ad5a36ca2f938d0fa8195de5054b6bc0c1859c7888160833fe"
+      },
+      "m3u_m3uaccountprofile": {
+        "rows": 1,
+        "sha256": "7ec5643d009b5bec09a7e0fc33724139979033f2e22e8dc56c3ec4393b8ba9c7"
+      },
+      "vod_movie": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3umovierelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_series": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_episode": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_m3uepisoderelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_coresettings": {
+        "rows": 8,
+        "sha256": "16f7da03c033c5fe0dae629dd4940aa4dea4f5095d357177a7b38ebdc2ccdb96"
+      }
+    },
+    "sequences": {
+      "public.accounts_user_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.m3u_m3uaccount_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.m3u_m3uaccountprofile_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "public.vod_movie_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.vod_m3umovierelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.vod_series_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.vod_episode_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.vod_m3uepisoderelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "public.core_coresettings_id_seq": {
+        "last_value": 18,
+        "is_called": true
+      }
+    },
+    "dataset_sha256": "7572cc7583ee0c67c2a543108a21f2b71d352411809146756f52747c1dbc5834"
+  },
+  "default_named_tables_sequences_unchanged": true,
+  "Source_proxy_terminal": {
+    "armed": false,
+    "seen": 1,
+    "connections": 0,
+    "invalid": [],
+    "rows": [
+      {
+        "kind": "backend-target-reply-read-held",
+        "monotonic": 264311.48624229,
+        "seen": 1
+      },
+      {
+        "kind": "backend-target-reply-released",
+        "monotonic": 264315.487024845,
+        "seen": 1
+      }
+    ],
+    "witness": "actual Original Redis INCR reply held",
+    "expected_reply": 1
+  },
+  "proxy_terminal": {
+    "armed": false,
+    "seen": 1,
+    "connections": 0,
+    "invalid": [],
+    "rows": [
+      {
+        "kind": "backend-target-reply-read-held",
+        "monotonic": 264335.458481224,
+        "seen": 1
+      },
+      {
+        "kind": "backend-target-reply-released",
+        "monotonic": 264339.459155657,
+        "seen": 1
+      }
+    ]
+  },
+  "remaining": {
+    "containers": "",
+    "networks": "",
+    "volumes": ""
+  }
+}

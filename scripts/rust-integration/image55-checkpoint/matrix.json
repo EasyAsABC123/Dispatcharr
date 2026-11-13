@@ -1,0 +1,299 @@
+{
+  "required_nodes": 28,
+  "actual_children": 28,
+  "actual_exit0_children": 28,
+  "Root_independent_pernode_semantic_cleanup_reviews": true,
+  "historical_final_state_projection": "evidence/matrix/historical-final-scheduler-state.json",
+  "rows": [
+    {
+      "required_node": "baseline-all",
+      "controller": "evidence/matrix/controllers/baseline-all.json",
+      "review": "evidence/matrix/reviews/baseline-all.json",
+      "reports": [
+        "evidence/matrix/reports/baseline-all/0-integration.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/baseline-all.json"
+    },
+    {
+      "required_node": "proxy-auth",
+      "controller": "evidence/matrix/controllers/proxy-auth.json",
+      "review": "evidence/matrix/reviews/proxy-auth.json",
+      "reports": [
+        "evidence/matrix/reports/proxy-auth/0-integration.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/proxy-auth.json"
+    },
+    {
+      "required_node": "auth-hash",
+      "controller": "evidence/matrix/controllers/auth-hash.json",
+      "review": "evidence/matrix/reviews/auth-hash.json",
+      "reports": [
+        "evidence/matrix/reports/auth-hash/0-integration.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/auth-hash.json"
+    },
+    {
+      "required_node": "live-react-stats",
+      "controller": "evidence/matrix/controllers/live-react-stats.json",
+      "review": "evidence/matrix/reviews/live-react-stats.json",
+      "reports": [
+        "evidence/matrix/reports/live-react-stats/0-integration.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/live-react-stats.json"
+    },
+    {
+      "required_node": "user-agent",
+      "controller": "evidence/matrix/controllers/user-agent.json",
+      "review": "evidence/matrix/reviews/user-agent.json",
+      "reports": [
+        "evidence/matrix/reports/user-agent/0-integration.json.json",
+        "evidence/matrix/reports/user-agent/1-packaged-checks.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/user-agent.json"
+    },
+    {
+      "required_node": "output-profile",
+      "controller": "evidence/matrix/controllers/output-profile.json",
+      "review": "evidence/matrix/reviews/output-profile.json",
+      "reports": [
+        "evidence/matrix/reports/output-profile/0-integration.json.json",
+        "evidence/matrix/reports/output-profile/1-packaged-checks.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/output-profile.json"
+    },
+    {
+      "required_node": "profile-restart",
+      "controller": "evidence/matrix/controllers/profile-restart.json",
+      "review": "evidence/matrix/reviews/profile-restart.json",
+      "reports": [
+        "evidence/matrix/reports/profile-restart/0-integration.json.json",
+        "evidence/matrix/reports/profile-restart/1-output-profile-restart.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/profile-restart.json"
+    },
+    {
+      "required_node": "guide-grid-packaged",
+      "controller": "evidence/matrix/controllers/guide-grid-packaged.json",
+      "review": "evidence/matrix/reviews/guide-grid-packaged.json",
+      "reports": [
+        "evidence/matrix/reports/guide-grid-packaged/0-integration.json.json",
+        "evidence/matrix/reports/guide-grid-packaged/1-packaged-grid.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/guide-grid-packaged.json"
+    },
+    {
+      "required_node": "current-packaged",
+      "controller": "evidence/matrix/controllers/current-packaged.json",
+      "review": "evidence/matrix/reviews/current-packaged.json",
+      "reports": [
+        "evidence/matrix/reports/current-packaged/0-integration.json.json",
+        "evidence/matrix/reports/current-packaged/1-packaged-current.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/current-packaged.json"
+    },
+    {
+      "required_node": "m4-functional",
+      "controller": "evidence/matrix/controllers/m4-functional.json",
+      "review": "evidence/matrix/reviews/m4-functional.json",
+      "reports": [
+        "evidence/matrix/reports/m4-functional/0-result.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/m4-functional.json"
+    },
+    {
+      "required_node": "clean-install",
+      "controller": "evidence/matrix/controllers/clean-install.json",
+      "review": "evidence/matrix/reviews/clean-install.json",
+      "reports": [
+        "evidence/matrix/reports/clean-install/0-integration.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/clean-install.json"
+    },
+    {
+      "required_node": "category-browser",
+      "controller": "evidence/matrix/controllers/category-browser.json",
+      "review": "evidence/matrix/reviews/category-browser.json",
+      "reports": [
+        "evidence/matrix/reports/category-browser/0-source-run.json.json",
+        "evidence/matrix/reports/category-browser/1-packaged-http.json.json",
+        "evidence/matrix/reports/category-browser/2-packaged-category-http.json.json",
+        "evidence/matrix/reports/category-browser/3-packaged-category-defaults-wire.json.json",
+        "evidence/matrix/reports/category-browser/4-packaged-category-browser.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/category-browser.json"
+    },
+    {
+      "required_node": "unified-HTML-browser",
+      "controller": "evidence/matrix/controllers/unified-HTML-browser.json",
+      "review": "evidence/matrix/reviews/unified-HTML-browser.json",
+      "reports": [
+        "evidence/matrix/reports/unified-HTML-browser/0-source-run.json.json",
+        "evidence/matrix/reports/unified-HTML-browser/1-packaged-http.json.json",
+        "evidence/matrix/reports/unified-HTML-browser/2-packaged-unified-http.json.json",
+        "evidence/matrix/reports/unified-HTML-browser/3-packaged-HTML.json.json",
+        "evidence/matrix/reports/unified-HTML-browser/4-packaged-unified-browser.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/unified-HTML-browser.json"
+    },
+    {
+      "required_node": "complete-refresh-original",
+      "controller": "evidence/matrix/controllers/complete-refresh-original.json",
+      "review": "evidence/matrix/reviews/complete-refresh-original.json",
+      "reports": [
+        "evidence/matrix/reports/complete-refresh-original/0-integration.json.json",
+        "evidence/matrix/reports/complete-refresh-original/1-source-refresh-workflow-private.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/complete-refresh-original.json"
+    },
+    {
+      "required_node": "complete-refresh",
+      "controller": "evidence/matrix/controllers/complete-refresh.json",
+      "review": "evidence/matrix/reviews/complete-refresh.json",
+      "reports": [
+        "evidence/matrix/reports/complete-refresh/0-integration.json.json",
+        "evidence/matrix/reports/complete-refresh/1-source-refresh-workflow-private.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/complete-refresh.json"
+    },
+    {
+      "required_node": "static-Chrome-HTML-browser",
+      "controller": "evidence/matrix/controllers/static-Chrome-HTML-browser.json",
+      "review": "evidence/matrix/reviews/static-Chrome-HTML-browser.json",
+      "reports": [
+        "evidence/matrix/reports/static-Chrome-HTML-browser/0-source-run.json.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/1-packaged-http.json.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/2-packaged-unified-http.json.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/3-packaged-HTML.json.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/4-packaged-unified-browser.json.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/5-packaged-static.json.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/6-packaged-Chrome-HTML.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/static-Chrome-HTML-browser.json"
+    },
+    {
+      "required_node": "packaged-provider-actions",
+      "controller": "evidence/matrix/controllers/packaged-provider-actions.json",
+      "review": "evidence/matrix/reviews/packaged-provider-actions.json",
+      "reports": [
+        "evidence/matrix/reports/packaged-provider-actions/0-source-run.json.json",
+        "evidence/matrix/reports/packaged-provider-actions/1-packaged-http.json.json",
+        "evidence/matrix/reports/packaged-provider-actions/2-packaged-provider-actions.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/packaged-provider-actions.json"
+    },
+    {
+      "required_node": "packaged-cached-provider-info",
+      "controller": "evidence/matrix/controllers/packaged-cached-provider-info.json",
+      "review": "evidence/matrix/reviews/packaged-cached-provider-info.json",
+      "reports": [
+        "evidence/matrix/reports/packaged-cached-provider-info/0-source-run.json.json",
+        "evidence/matrix/reports/packaged-cached-provider-info/1-packaged-http.json.json",
+        "evidence/matrix/reports/packaged-cached-provider-info/2-packaged-cached-info.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/packaged-cached-provider-info.json"
+    },
+    {
+      "required_node": "channel-logos",
+      "controller": "evidence/matrix/controllers/channel-logos.json",
+      "review": "evidence/matrix/reviews/channel-logos.json",
+      "reports": [
+        "evidence/matrix/reports/channel-logos/0-integration.json.json",
+        "evidence/matrix/reports/channel-logos/1-packaged-checks.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/channel-logos.json"
+    },
+    {
+      "required_node": "packaged-vod-images",
+      "controller": "evidence/matrix/controllers/packaged-vod-images.json",
+      "review": "evidence/matrix/reviews/packaged-vod-images.json",
+      "reports": [
+        "evidence/matrix/reports/packaged-vod-images/0-source-run.json.json",
+        "evidence/matrix/reports/packaged-vod-images/1-packaged-http.json.json",
+        "evidence/matrix/reports/packaged-vod-images/2-packaged-vod-images.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/packaged-vod-images.json"
+    },
+    {
+      "required_node": "provider-modal-browser",
+      "controller": "evidence/matrix/controllers/provider-modal-browser.json",
+      "review": "evidence/matrix/reviews/provider-modal-browser.json",
+      "reports": [
+        "evidence/matrix/reports/provider-modal-browser/0-integration.json.json",
+        "evidence/matrix/reports/provider-modal-browser/1-provider-modal-browser.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/provider-modal-browser.json"
+    },
+    {
+      "required_node": "fresh-Original17capture",
+      "controller": "evidence/matrix/controllers/fresh-Original17capture.json",
+      "review": "evidence/matrix/reviews/fresh-Original17capture.json",
+      "reports": [
+        "evidence/matrix/reports/fresh-Original17capture/0-integration.json.json",
+        "evidence/matrix/reports/fresh-Original17capture/1-operator-cli-source.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/fresh-Original17capture.json"
+    },
+    {
+      "required_node": "shipped-safe17",
+      "controller": "evidence/matrix/controllers/shipped-safe17.json",
+      "review": "evidence/matrix/reviews/shipped-safe17.json",
+      "reports": [
+        "evidence/matrix/reports/shipped-safe17/0-proof.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/shipped-safe17.json"
+    },
+    {
+      "required_node": "shipped-createsuperuser22",
+      "controller": "evidence/matrix/controllers/shipped-createsuperuser22.json",
+      "review": "evidence/matrix/reviews/shipped-createsuperuser22.json",
+      "reports": [
+        "evidence/matrix/reports/shipped-createsuperuser22/0-integration.json.json",
+        "evidence/matrix/reports/shipped-createsuperuser22/1-operator-cli-source.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/shipped-createsuperuser22.json"
+    },
+    {
+      "required_node": "strict-typed154",
+      "controller": "evidence/matrix/controllers/strict-typed154.json",
+      "review": "evidence/matrix/reviews/strict-typed154.json",
+      "reports": [
+        "evidence/matrix/reports/strict-typed154/0-strict-typed154.stdout.log.json"
+      ],
+      "cleanup": null
+    },
+    {
+      "required_node": "sharedTS18",
+      "controller": "evidence/matrix/controllers/sharedTS18.json",
+      "review": "evidence/matrix/reviews/sharedTS18.json",
+      "reports": [
+        "evidence/matrix/reports/sharedTS18/0-shared-ts.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/sharedTS18.json"
+    },
+    {
+      "required_node": "sharedTS6-all-down",
+      "controller": "evidence/matrix/controllers/sharedTS6-all-down.json",
+      "review": "evidence/matrix/reviews/sharedTS6-all-down.json",
+      "reports": [
+        "evidence/matrix/reports/sharedTS6-all-down/0-shared-ts.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/sharedTS6-all-down.json"
+    },
+    {
+      "required_node": "retention100",
+      "controller": "evidence/matrix/controllers/retention100.json",
+      "review": "evidence/matrix/reviews/retention100.json",
+      "reports": [
+        "evidence/matrix/reports/retention100/0-retention.json.json"
+      ],
+      "cleanup": "evidence/matrix/cleanup/retention100.json"
+    }
+  ],
+  "worker_graph_activation": false,
+  "Source_counts_not_summed": true,
+  "performance_claim": false,
+  "earlier_image54_negative_cohort": "historical image54 checkpoint, unchanged; not image55 attempts",
+  "actual_controller_attempts": 28,
+  "application_fixture_children": 27,
+  "offline_controller_children": 1
+}

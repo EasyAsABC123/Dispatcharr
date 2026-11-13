@@ -1,0 +1,1 @@
+Unexecuted draft generation used an overly broad decimal replacement that also altered the historical support hash substring792. Static review caught it before controls/dispatch. Corrected generation replaces count tokens outside hex identities; old draft metadata retained. No cue, claim, application request or Source execution.

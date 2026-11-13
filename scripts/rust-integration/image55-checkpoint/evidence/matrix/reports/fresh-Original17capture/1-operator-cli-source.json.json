@@ -1,0 +1,5256 @@
+{
+  "passed": true,
+  "scope": "Original actual manage.py subprocesses on owned copied PostgreSQL",
+  "native_verified": false,
+  "performance_verified": false,
+  "cases": [
+    {
+      "id": "reset_network_access-help",
+      "arguments": [
+        "reset_network_access",
+        "--help"
+      ],
+      "exit_code": 0,
+      "stdout": "usage: manage.py reset_network_access [-h] [--version] [-v {0,1,2,3}]\n                                      [--settings SETTINGS]\n                                      [--pythonpath PYTHONPATH] [--traceback]\n                                      [--no-color] [--force-color]\n                                      [--skip-checks]\n\nReset network access settings\n\noptions:\n  -h, --help            show this help message and exit\n  --version             Show program's version number and exit.\n  -v, --verbosity {0,1,2,3}\n                        Verbosity level; 0=minimal output, 1=normal output,\n                        2=verbose output, 3=very verbose output\n  --settings SETTINGS   The Python path to a settings module, e.g.\n                        \"myproject.settings.main\". If this isn't provided, the\n                        DJANGO_SETTINGS_MODULE environment variable will be\n                        used.\n  --pythonpath PYTHONPATH\n                        A directory to add to the Python path, e.g.\n                        \"/home/djangoprojects/myproject\".\n  --traceback           Display a full stack trace on CommandError exceptions.\n  --no-color            Don't colorize the command output.\n  --force-color         Force colorization of the command output.\n  --skip-checks         Skip system checks.\n",
+      "stderr": "",
+      "stdout_sha256": "6d76853b447688135be8c88908a9dc5a88fe9a51c6af48d116c18c408b78225c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "before": {
+        "notification_sequence": [
+          1,
+          false
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542605952005157,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": null
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": -2
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          1,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:33.549369+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542605952005157,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": null
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": -2
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "reset_user_network-help",
+      "arguments": [
+        "reset_user_network",
+        "--help"
+      ],
+      "exit_code": 0,
+      "stdout": "usage: manage.py reset_user_network [-h] [--user USER] [--version]\n                                    [-v {0,1,2,3}] [--settings SETTINGS]\n                                    [--pythonpath PYTHONPATH] [--traceback]\n                                    [--no-color] [--force-color]\n                                    [--skip-checks]\n\nReset per-user network access restrictions\n\noptions:\n  -h, --help            show this help message and exit\n  --user USER           Username to reset (omit to reset all users)\n  --version             Show program's version number and exit.\n  -v, --verbosity {0,1,2,3}\n                        Verbosity level; 0=minimal output, 1=normal output,\n                        2=verbose output, 3=very verbose output\n  --settings SETTINGS   The Python path to a settings module, e.g.\n                        \"myproject.settings.main\". If this isn't provided, the\n                        DJANGO_SETTINGS_MODULE environment variable will be\n                        used.\n  --pythonpath PYTHONPATH\n                        A directory to add to the Python path, e.g.\n                        \"/home/djangoprojects/myproject\".\n  --traceback           Display a full stack trace on CommandError exceptions.\n  --no-color            Don't colorize the command output.\n  --force-color         Force colorization of the command output.\n  --skip-checks         Skip system checks.\n",
+      "stderr": "",
+      "stdout_sha256": "f06e75f325ad167cdfbfc9459b4e7c11ed2d7080ac66b1a5acd70118036e042b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "before": {
+        "notification_sequence": [
+          1,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:33.549369+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542605952005157,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": null
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": -2
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          1,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:34.549586+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542605952005157,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": null
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": -2
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unknown-flag",
+      "arguments": [
+        "reset_user_network",
+        "--owned-unknown"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: manage.py reset_user_network [-h] [--user USER] [--version]\n                                    [-v {0,1,2,3}] [--settings SETTINGS]\n                                    [--pythonpath PYTHONPATH] [--traceback]\n                                    [--no-color] [--force-color]\n                                    [--skip-checks]\nmanage.py reset_user_network: error: unrecognized arguments: --owned-unknown\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "4b557b482f65d87a7557b756c2c6eefa92acf22599edd2466a263f89135aa978",
+      "before": {
+        "notification_sequence": [
+          1,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:34.549586+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542605952005157,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": null
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": -2
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          1,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Network Access",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:35.554039+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542605952005157,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": null
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": -2
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "network-object",
+      "arguments": [
+        "reset_network_access"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          3,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": {
+              "keep": true,
+              "allowed": [
+                "192.0.2.0/24"
+              ]
+            }
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Owned stale title",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": false,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:35.871094+00:00"
+          },
+          {
+            "id": 2,
+            "notification_key": "owned_operator_obsolete",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "developer",
+            "title": "Owned obsolete",
+            "message": "remove only copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.875838+00:00",
+            "updated_at": "2026-11-13 04:03:35.875844+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": {
+            "owned_stale": true
+          },
+          "coresettings:groupver:network_access": 1794542615866970459,
+          "dev_notif_condition_owned_operator": {
+            "owned": true
+          },
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": 300,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": 300,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          3,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:37.034995+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542617034093979,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 299
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "network-array",
+      "arguments": [
+        "reset_network_access"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          4,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": [
+              1,
+              "value"
+            ]
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Owned stale title",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": false,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:37.352640+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          },
+          {
+            "id": 4,
+            "notification_key": "owned_operator_obsolete",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "developer",
+            "title": "Owned obsolete",
+            "message": "remove only copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:37.357289+00:00",
+            "updated_at": "2026-11-13 04:03:37.357296+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": {
+            "owned_stale": true
+          },
+          "coresettings:groupver:network_access": 1794542617351697489,
+          "dev_notif_condition_owned_operator": {
+            "owned": true
+          },
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": 300,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": 300,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          4,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:38.629461+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542618628464616,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 298
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "network-scalar",
+      "arguments": [
+        "reset_network_access"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          5,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": "text"
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Owned stale title",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": false,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:39.021692+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          },
+          {
+            "id": 5,
+            "notification_key": "owned_operator_obsolete",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "developer",
+            "title": "Owned obsolete",
+            "message": "remove only copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:39.025693+00:00",
+            "updated_at": "2026-11-13 04:03:39.025699+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": {
+            "owned_stale": true
+          },
+          "coresettings:groupver:network_access": 1794542619020758126,
+          "dev_notif_condition_owned_operator": {
+            "owned": true
+          },
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": 300,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": 300,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          5,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:40.281368+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542620280398465,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 299
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "network-null",
+      "arguments": [
+        "reset_network_access"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": null
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Owned stale title",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": false,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:40.635853+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          },
+          {
+            "id": 6,
+            "notification_key": "owned_operator_obsolete",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "developer",
+            "title": "Owned obsolete",
+            "message": "remove only copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:40.639671+00:00",
+            "updated_at": "2026-11-13 04:03:40.639677+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": {
+            "owned_stale": true
+          },
+          "coresettings:groupver:network_access": 1794542620635049010,
+          "dev_notif_condition_owned_operator": {
+            "owned": true
+          },
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": 300,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": 300,
+          "operator_owned_unrelated": 300
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [
+          {
+            "id": 6,
+            "key": "network_access"
+          }
+        ],
+        "network": [
+          {
+            "key": "network_access",
+            "name": "Owned network setting",
+            "value": {}
+          }
+        ],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:41.854106+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542621852992839,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 299
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "network-missing",
+      "arguments": [
+        "reset_network_access"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\nTraceback (most recent call last):\n  File \"/app/manage.py\", line 24, in <module>\n    main()\n    ~~~~^^\n  File \"/app/manage.py\", line 21, in main\n    execute_from_command_line(sys.argv)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/core/management/__init__.py\", line 443, in execute_from_command_line\n    utility.execute()\n    ~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/core/management/__init__.py\", line 437, in execute\n    self.fetch_command(subcommand).run_from_argv(self.argv)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/core/management/base.py\", line 420, in run_from_argv\n    self.execute(*args, **cmd_options)\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/core/management/base.py\", line 464, in execute\n    output = self.handle(*args, **options)\n  File \"/app/core/management/commands/reset_network_access.py\", line 11, in handle\n    setting = CoreSettings.objects.get(key=NETWORK_ACCESS_KEY)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 639, in get\n    raise self.model.DoesNotExist(\n        \"%s matching query does not exist.\" % self.model._meta.object_name\n    )\ncore.models.CoreSettings.DoesNotExist: CoreSettings matching query does not exist.\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "7ee54cb234dfa09f5f5c4c3f5d0b42d5783ec3337afbd22d131db6265f4d32c5",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:41.854106+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 298
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:42.922805+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 297
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-target",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-a"
+      ],
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 1 user(s).\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "5dc791c335f331fadd6746f3a993178ba130ec07d95b13de30ac563bb4936806",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              },
+              "allowed_networks": [
+                "192.0.2.0/24"
+              ]
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:42.922805+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 297
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:44.585995+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 295
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-already-clear",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-a"
+      ],
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 0 user(s).\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "a97721c72707dc72bec9f82225aca38b27908f57a1c3b56867f432ca9dbe634b",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:44.585995+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 295
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:46.184129+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 294
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-null",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-null"
+      ],
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 0 user(s).\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "a97721c72707dc72bec9f82225aca38b27908f57a1c3b56867f432ca9dbe634b",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:46.184129+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 293
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:47.757343+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 292
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-empty",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-empty"
+      ],
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 0 user(s).\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "a97721c72707dc72bec9f82225aca38b27908f57a1c3b56867f432ca9dbe634b",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:47.757343+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 292
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:49.343508+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 291
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-missing",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-missing"
+      ],
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 0 user(s).\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "a97721c72707dc72bec9f82225aca38b27908f57a1c3b56867f432ca9dbe634b",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:49.343508+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 290
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": {
+                "typed": [
+                  1,
+                  true,
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:50.933145+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 289
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "users-all",
+      "arguments": [
+        "reset_user_network"
+      ],
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 2 user(s).\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "f14b416d5251bf6c74a001a9b39a4a59ad1ee6c46ad6edf7383756938505139b",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": "a",
+              "allowed_networks": []
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b",
+              "allowed_networks": []
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:50.933145+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 289
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": "a"
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:52.550284+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 287
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "users-empty-filter",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        ""
+      ],
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 1 user(s).\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "5dc791c335f331fadd6746f3a993178ba130ec07d95b13de30ac563bb4936806",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": "a",
+              "allowed_networks": "192.0.2.1"
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:52.550284+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 287
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": {
+              "keep": "a"
+            }
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:54.151819+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 286
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-array-no-match",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-a"
+      ],
+      "exit_code": 0,
+      "stdout": "Reset allowed_networks for 0 user(s).\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "stdout_sha256": "a97721c72707dc72bec9f82225aca38b27908f57a1c3b56867f432ca9dbe634b",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": [
+              "other"
+            ]
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:54.151819+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 285
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": [
+              "other"
+            ]
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:55.798073+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 284
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-array-match",
+      "arguments": [
+        "reset_user_network",
+        "--user",
+        "rust-operator-owned-a"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\nTraceback (most recent call last):\n  File \"/app/manage.py\", line 24, in <module>\n    main()\n    ~~~~^^\n  File \"/app/manage.py\", line 21, in main\n    execute_from_command_line(sys.argv)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/core/management/__init__.py\", line 443, in execute_from_command_line\n    utility.execute()\n    ~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/core/management/__init__.py\", line 437, in execute\n    self.fetch_command(subcommand).run_from_argv(self.argv)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/core/management/base.py\", line 420, in run_from_argv\n    self.execute(*args, **cmd_options)\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/core/management/base.py\", line 464, in execute\n    output = self.handle(*args, **options)\n  File \"/app/core/management/commands/reset_user_network.py\", line 18, in handle\n    del props['allowed_networks']\n        ~~~~~^^^^^^^^^^^^^^^^^^^^\nTypeError: list indices must be integers or slices, not str\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "78e2ee8a7762673eb58d3f4ea567722743007397c196887f93b303f87175c347",
+      "before": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": [
+              "allowed_networks"
+            ]
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:55.798073+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 284
+        }
+      },
+      "after": {
+        "notification_sequence": [
+          6,
+          true
+        ],
+        "network_identity": [],
+        "network": [],
+        "users": [
+          {
+            "username": "rust-probe-backup-admin",
+            "custom_properties": {}
+          },
+          {
+            "username": "rust-probe-backup-viewer",
+            "custom_properties": {
+              "nested": [
+                1,
+                1.0,
+                "1",
+                true,
+                null
+              ],
+              "unicode": "caf\u00e9"
+            }
+          },
+          {
+            "username": "rust-operator-owned-a",
+            "custom_properties": [
+              "allowed_networks"
+            ]
+          },
+          {
+            "username": "rust-operator-owned-b",
+            "custom_properties": {
+              "keep": "b"
+            }
+          },
+          {
+            "username": "rust-operator-owned-null",
+            "custom_properties": null
+          },
+          {
+            "username": "rust-operator-owned-empty",
+            "custom_properties": {}
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:33.549363+00:00",
+            "updated_at": "2026-11-13 04:03:57.390386+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "owned_operator_system",
+            "notification_type": "info",
+            "priority": "normal",
+            "source": "system",
+            "title": "Owned system",
+            "message": "preserve copied row",
+            "action_data": {},
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2026-11-13 04:03:35.876603+00:00",
+            "updated_at": "2026-11-13 04:03:35.876608+00:00"
+          }
+        ],
+        "user_timestamps": [
+          {
+            "id": 1,
+            "date_joined": "2026-11-13 04:03:31.743752+00:00",
+            "last_login": null
+          },
+          {
+            "id": 2,
+            "date_joined": "2026-11-13 04:03:31.880447+00:00",
+            "last_login": null
+          },
+          {
+            "id": 3,
+            "date_joined": "2026-11-13 04:03:32.835231+00:00",
+            "last_login": null
+          },
+          {
+            "id": 4,
+            "date_joined": "2026-11-13 04:03:32.836261+00:00",
+            "last_login": null
+          },
+          {
+            "id": 5,
+            "date_joined": "2026-11-13 04:03:32.836619+00:00",
+            "last_login": null
+          },
+          {
+            "id": 6,
+            "date_joined": "2026-11-13 04:03:32.836904+00:00",
+            "last_login": null
+          }
+        ],
+        "cache": {
+          "coresettings:group:network_access": null,
+          "coresettings:groupver:network_access": 1794542622191875945,
+          "dev_notif_condition_owned_operator": null,
+          "operator_owned_unrelated": {
+            "preserve": true
+          }
+        },
+        "cache_ttls": {
+          "coresettings:group:network_access": -2,
+          "coresettings:groupver:network_access": -1,
+          "dev_notif_condition_owned_operator": -2,
+          "operator_owned_unrelated": 283
+        }
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    }
+  ],
+  "commands": [
+    "reset_network_access",
+    "reset_user_network"
+  ],
+  "destructive_commands_executed": false
+}
