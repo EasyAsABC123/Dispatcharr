@@ -1,0 +1,9 @@
+# Image57 source SDK qualification
+
+The unchanged `docker/compose.rust.yml`, `rust/Dockerfile` and `scripts/verify-rust-compose.py` execute once from committed `d77f25fa94ee128c79ade9176d8eb4a9d23bf498`. Reproduce in a separate clean checkout of that exact commit with `python3 scripts/verify-rust-compose.py --project dispatcharr-sdk-replay --evidence-dir /tmp/dispatcharr-sdk-replay`; the verifier controls its own timeout and cleanup. The runtime has networking disabled. This is source SDK validation, separate from the application image and Main routes.
+
+`manifest.json` binds every retained payload, its stored digest and decompressed byte count/digest; large payloads use deterministic gzip. No credential or response-body projection is applied. Full source and exact Docker COPY maps are preserved. Root independently confirms 12,176 frozen Git files,10,957 verifier-selected files,3,015 in-image COPY files and two separate host controls. The detached Git context uses a private index/object directory and read-only canonical object lookup; the parent ref may advance without changing this frozen input.
+
+698 Rust tests passed,732 ignored;361 Python checks passed with one optional skip;1,806 helper cases match exactly. Original host wait, Compose exits and five independent owned cleanup queries pass. The original offline report has a stale donor identity in its descriptive scope string; its strict ref is already d77f. A separate corrected-label report changes that wording only, preserving the original and all predicates. No workload was repeated.
+
+The log includes the standard SDK helper timing artifacts; these establish no new application resource gain, whole-backend parity or completed milestone. Full application credit remains with the original Dispatcharr authors and contributors; see LICENSE and ATTRIBUTION.md.

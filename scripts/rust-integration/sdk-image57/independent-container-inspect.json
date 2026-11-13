@@ -1,0 +1,32 @@
+{
+  "container_id": "d38f25080027c7b8f14441ab7328255638a391ac1cb3295441cba5279f120309",
+  "image_id": "sha256:64c0c075f21e76674bc638fc2510443a116ba463ab3e3aec862aadec32dd6fe5",
+  "network_mode": "none",
+  "command": [
+    "sh",
+    "scripts/rust-verify.sh"
+  ],
+  "state": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 843155,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-13T12:59:18.511651916Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "mounts": [
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-d77f-qualified-1/evidence",
+      "Destination": "/evidence",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": "rprivate"
+    }
+  ]
+}
