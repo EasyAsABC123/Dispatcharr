@@ -1,0 +1,58 @@
+{
+  "name": "complete-refresh",
+  "controller_result_sha256": "fa4040d3fe62420952fbea4ca1063b82fd146ab85946dacab897c55a02b6fb08",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/complete-refresh/integration.json",
+      "sha256": "8aa6c0e63a63b56d821ab15b671c5082a99e7f4b0dfaa5dcd31cf1b469525e95"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/complete-refresh/source-refresh-workflow-private.json",
+      "sha256": "d707222e897ef369b3fee21c20bce50d2649c16ef039e6d0f48d706fb093a562"
+    }
+  ],
+  "observed_default_audits": [
+    {
+      "report": "integration.json",
+      "field": "default_database_unchanged",
+      "observed": true
+    }
+  ],
+  "audit_scope": "Literal controller default-database audit plus scoped copied-database jobs; no all-backend/default-worker acceptance.",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 40,
+    "imports": 2,
+    "task_results": 6,
+    "all_three_families_per_import_SUCCESS": true,
+    "queue_and_results_after_cleanup": [
+      0,
+      0
+    ],
+    "fixture_clock": "2026-11-13T15:24:55+00:00",
+    "native_jobs_verified_legacy_field_literal": false,
+    "native_worker_execution_verified_literal": true,
+    "Series_scope": "zero scheduled recordings",
+    "no_default_graph_or_performance_acceptance": true,
+    "Root_recomputed_both_raw_workflow_projections_exact": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-refresh-workflow-original-7b77887ea8"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/reviews/complete-refresh-cleanup.json",
+      "sha256": "ef14292aeb26f6aee111966cfb2cec12f5c4db6c900e0af0accd699b8c96f798"
+    }
+  }
+}

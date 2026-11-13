@@ -1,0 +1,201 @@
+{
+  "passed": true,
+  "actual_host_session": 54808,
+  "actual_host_exit": 0,
+  "summary_sha256": "9e7f3edfdb93b80f6a81b21b8211ccaaa5b6c0b5b9dd91f617aa21f303034f51",
+  "cases": [
+    {
+      "case": "success",
+      "recomputed_passed": true,
+      "holds": [
+        {
+          "backend": "source",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000807531992905,
+          "overshoot_seconds": 0.0008075319929048419,
+          "control_seconds": 2.015906118962448
+        },
+        {
+          "backend": "native",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000709318963345,
+          "overshoot_seconds": 0.0007093189633451402,
+          "control_seconds": 2.013521776010748
+        }
+      ],
+      "default_named9_tables9sequences_structural_equality": true
+    },
+    {
+      "case": "busy",
+      "recomputed_passed": true,
+      "holds": [
+        {
+          "backend": "source",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000809032004327,
+          "overshoot_seconds": 0.000809032004326582,
+          "control_seconds": 2.017530560027808
+        },
+        {
+          "backend": "native",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.00076517299749,
+          "overshoot_seconds": 0.0007651729974895716,
+          "control_seconds": 2.0129566360265017
+        }
+      ],
+      "default_named9_tables9sequences_structural_equality": true
+    },
+    {
+      "case": "clientloss",
+      "recomputed_passed": true,
+      "holds": [
+        {
+          "backend": "source",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000713535002433,
+          "overshoot_seconds": 0.0007135350024327636,
+          "control_seconds": 2.0176100800163113
+        },
+        {
+          "backend": "native",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.00064152298728,
+          "overshoot_seconds": 0.000641522987280041,
+          "control_seconds": 2.0142963670077734
+        }
+      ],
+      "default_named9_tables9sequences_structural_equality": true
+    }
+  ],
+  "fresh_owned_cleanup_queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pending-main-00db1d8790",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pending-main-00db1d8790",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pending-main-00db1d8790",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pending-main-46dd6cefc6",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pending-main-46dd6cefc6",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pending-main-46dd6cefc6",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pending-main-4725780458",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pending-main-4725780458",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pending-main-4725780458",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    }
+  ],
+  "new_application_runs_by_review": 0,
+  "full_M4_or_performance_acceptance": false
+}

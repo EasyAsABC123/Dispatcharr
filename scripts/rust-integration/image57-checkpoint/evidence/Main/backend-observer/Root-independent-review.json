@@ -1,0 +1,118 @@
+{
+  "passed": true,
+  "actual_host_session": 87303,
+  "actual_host_exit": 0,
+  "single_anonymous_SQL_health_read_recomputed": true,
+  "normal_Main_shutdown_exit0": true,
+  "owned_SQL_backend_absence_measured_after_Main_exit": true,
+  "while_alive_backend_or_request_ownership_not_inferred": true,
+  "owned_and_default_full6259_equality": true,
+  "fresh_owned_cleanup_queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-main57-observer-64ae51f49b48",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-main57-observer-64ae51f49b48",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-main57-observer-64ae51f49b48",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=09840be21b064655b4e52ada17a13fd59f9ad9ad45504df89d5ad8f56ae27c1a",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=b8b16a7f64409abd2f967679544fb83258773eb8aa107e80fc91a7856268daaf",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=d259834fb2923c04e4574631cec02dd609664d147bf40132d92165505bb5c409",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=e65dda94af03b10fcc7e6556b1c2f23c6338b0b4013ab8f3372a9260ddd44a8a",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    }
+  ],
+  "all_original_host_PID_absent": true,
+  "raw_sha256": "d51f6477ebe7f97e89802bd5244afca4dd47e70d3abb0ba4034e6ed893fcbe76",
+  "summary_sha256": "69825155ae38552386d28c58de40f023844e760ee5731673167d07db0cf7fe86",
+  "original_catalogue26_host1_or_unmeasured_observer_unchanged": true,
+  "new_app_requests_by_review": 0
+}

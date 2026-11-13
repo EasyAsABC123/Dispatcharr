@@ -1,0 +1,4308 @@
+{
+  "scope": "original-stored-EPG-read-oracle",
+  "cases": [
+    {
+      "path": "/api/epg/sources/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 3,
+            "name": "rust-probe-epg-reads-dummy",
+            "source_type": "dummy",
+            "url": null,
+            "username": null,
+            "is_active": true,
+            "file_path": "/data/fixture-missing.xml",
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514279Z",
+            "updated_at": null,
+            "custom_properties": null,
+            "epg_data_count": 1,
+            "has_channels": false
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-epg-reads-inactive",
+            "source_type": "xmltv",
+            "url": null,
+            "username": null,
+            "is_active": false,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "disabled",
+            "last_message": "Fixture disabled",
+            "created_at": "2026-11-13T14:00:12.514277Z",
+            "updated_at": null,
+            "custom_properties": {},
+            "epg_data_count": 3,
+            "has_channels": false
+          },
+          {
+            "id": 1,
+            "name": "rust-probe-epg-reads-xmltv",
+            "source_type": "xmltv",
+            "url": "https://fixture.invalid/guide.xml",
+            "username": "fixture-user",
+            "is_active": true,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "5 1,13 * * 1-5",
+            "priority": 7,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514272Z",
+            "updated_at": "2026-11-09T12:00:00Z",
+            "custom_properties": {
+              "fixture": [
+                "\u65e5\u672c\u8a9e",
+                "\u00e9",
+                null
+              ]
+            },
+            "epg_data_count": 3,
+            "has_channels": true
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/sources/?page=2&page_size=1",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 3,
+            "name": "rust-probe-epg-reads-dummy",
+            "source_type": "dummy",
+            "url": null,
+            "username": null,
+            "is_active": true,
+            "file_path": "/data/fixture-missing.xml",
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514279Z",
+            "updated_at": null,
+            "custom_properties": null,
+            "epg_data_count": 1,
+            "has_channels": false
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-epg-reads-inactive",
+            "source_type": "xmltv",
+            "url": null,
+            "username": null,
+            "is_active": false,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "disabled",
+            "last_message": "Fixture disabled",
+            "created_at": "2026-11-13T14:00:12.514277Z",
+            "updated_at": null,
+            "custom_properties": {},
+            "epg_data_count": 3,
+            "has_channels": false
+          },
+          {
+            "id": 1,
+            "name": "rust-probe-epg-reads-xmltv",
+            "source_type": "xmltv",
+            "url": "https://fixture.invalid/guide.xml",
+            "username": "fixture-user",
+            "is_active": true,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "5 1,13 * * 1-5",
+            "priority": 7,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514272Z",
+            "updated_at": "2026-11-09T12:00:00Z",
+            "custom_properties": {
+              "fixture": [
+                "\u65e5\u672c\u8a9e",
+                "\u00e9",
+                null
+              ]
+            },
+            "epg_data_count": 3,
+            "has_channels": true
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/sources/?search=missing",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 3,
+            "name": "rust-probe-epg-reads-dummy",
+            "source_type": "dummy",
+            "url": null,
+            "username": null,
+            "is_active": true,
+            "file_path": "/data/fixture-missing.xml",
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514279Z",
+            "updated_at": null,
+            "custom_properties": null,
+            "epg_data_count": 1,
+            "has_channels": false
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-epg-reads-inactive",
+            "source_type": "xmltv",
+            "url": null,
+            "username": null,
+            "is_active": false,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "disabled",
+            "last_message": "Fixture disabled",
+            "created_at": "2026-11-13T14:00:12.514277Z",
+            "updated_at": null,
+            "custom_properties": {},
+            "epg_data_count": 3,
+            "has_channels": false
+          },
+          {
+            "id": 1,
+            "name": "rust-probe-epg-reads-xmltv",
+            "source_type": "xmltv",
+            "url": "https://fixture.invalid/guide.xml",
+            "username": "fixture-user",
+            "is_active": true,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "5 1,13 * * 1-5",
+            "priority": 7,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514272Z",
+            "updated_at": "2026-11-09T12:00:00Z",
+            "custom_properties": {
+              "fixture": [
+                "\u65e5\u672c\u8a9e",
+                "\u00e9",
+                null
+              ]
+            },
+            "epg_data_count": 3,
+            "has_channels": true
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/sources/?ordering=-id",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 3,
+            "name": "rust-probe-epg-reads-dummy",
+            "source_type": "dummy",
+            "url": null,
+            "username": null,
+            "is_active": true,
+            "file_path": "/data/fixture-missing.xml",
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514279Z",
+            "updated_at": null,
+            "custom_properties": null,
+            "epg_data_count": 1,
+            "has_channels": false
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-epg-reads-inactive",
+            "source_type": "xmltv",
+            "url": null,
+            "username": null,
+            "is_active": false,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "disabled",
+            "last_message": "Fixture disabled",
+            "created_at": "2026-11-13T14:00:12.514277Z",
+            "updated_at": null,
+            "custom_properties": {},
+            "epg_data_count": 3,
+            "has_channels": false
+          },
+          {
+            "id": 1,
+            "name": "rust-probe-epg-reads-xmltv",
+            "source_type": "xmltv",
+            "url": "https://fixture.invalid/guide.xml",
+            "username": "fixture-user",
+            "is_active": true,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "5 1,13 * * 1-5",
+            "priority": 7,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514272Z",
+            "updated_at": "2026-11-09T12:00:00Z",
+            "custom_properties": {
+              "fixture": [
+                "\u65e5\u672c\u8a9e",
+                "\u00e9",
+                null
+              ]
+            },
+            "epg_data_count": 3,
+            "has_channels": true
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/sources/?name=missing",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 3,
+            "name": "rust-probe-epg-reads-dummy",
+            "source_type": "dummy",
+            "url": null,
+            "username": null,
+            "is_active": true,
+            "file_path": "/data/fixture-missing.xml",
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514279Z",
+            "updated_at": null,
+            "custom_properties": null,
+            "epg_data_count": 1,
+            "has_channels": false
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-epg-reads-inactive",
+            "source_type": "xmltv",
+            "url": null,
+            "username": null,
+            "is_active": false,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "disabled",
+            "last_message": "Fixture disabled",
+            "created_at": "2026-11-13T14:00:12.514277Z",
+            "updated_at": null,
+            "custom_properties": {},
+            "epg_data_count": 3,
+            "has_channels": false
+          },
+          {
+            "id": 1,
+            "name": "rust-probe-epg-reads-xmltv",
+            "source_type": "xmltv",
+            "url": "https://fixture.invalid/guide.xml",
+            "username": "fixture-user",
+            "is_active": true,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "5 1,13 * * 1-5",
+            "priority": 7,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514272Z",
+            "updated_at": "2026-11-09T12:00:00Z",
+            "custom_properties": {
+              "fixture": [
+                "\u65e5\u672c\u8a9e",
+                "\u00e9",
+                null
+              ]
+            },
+            "epg_data_count": 3,
+            "has_channels": true
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/sources/?epg_source=999999",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 3,
+            "name": "rust-probe-epg-reads-dummy",
+            "source_type": "dummy",
+            "url": null,
+            "username": null,
+            "is_active": true,
+            "file_path": "/data/fixture-missing.xml",
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514279Z",
+            "updated_at": null,
+            "custom_properties": null,
+            "epg_data_count": 1,
+            "has_channels": false
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-epg-reads-inactive",
+            "source_type": "xmltv",
+            "url": null,
+            "username": null,
+            "is_active": false,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "disabled",
+            "last_message": "Fixture disabled",
+            "created_at": "2026-11-13T14:00:12.514277Z",
+            "updated_at": null,
+            "custom_properties": {},
+            "epg_data_count": 3,
+            "has_channels": false
+          },
+          {
+            "id": 1,
+            "name": "rust-probe-epg-reads-xmltv",
+            "source_type": "xmltv",
+            "url": "https://fixture.invalid/guide.xml",
+            "username": "fixture-user",
+            "is_active": true,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "5 1,13 * * 1-5",
+            "priority": 7,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514272Z",
+            "updated_at": "2026-11-09T12:00:00Z",
+            "custom_properties": {
+              "fixture": [
+                "\u65e5\u672c\u8a9e",
+                "\u00e9",
+                null
+              ]
+            },
+            "epg_data_count": 3,
+            "has_channels": true
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/sources/?tvg_id=missing",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 3,
+            "name": "rust-probe-epg-reads-dummy",
+            "source_type": "dummy",
+            "url": null,
+            "username": null,
+            "is_active": true,
+            "file_path": "/data/fixture-missing.xml",
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514279Z",
+            "updated_at": null,
+            "custom_properties": null,
+            "epg_data_count": 1,
+            "has_channels": false
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-epg-reads-inactive",
+            "source_type": "xmltv",
+            "url": null,
+            "username": null,
+            "is_active": false,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "disabled",
+            "last_message": "Fixture disabled",
+            "created_at": "2026-11-13T14:00:12.514277Z",
+            "updated_at": null,
+            "custom_properties": {},
+            "epg_data_count": 3,
+            "has_channels": false
+          },
+          {
+            "id": 1,
+            "name": "rust-probe-epg-reads-xmltv",
+            "source_type": "xmltv",
+            "url": "https://fixture.invalid/guide.xml",
+            "username": "fixture-user",
+            "is_active": true,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "5 1,13 * * 1-5",
+            "priority": 7,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514272Z",
+            "updated_at": "2026-11-09T12:00:00Z",
+            "custom_properties": {
+              "fixture": [
+                "\u65e5\u672c\u8a9e",
+                "\u00e9",
+                null
+              ]
+            },
+            "epg_data_count": 3,
+            "has_channels": true
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/sources/?format=json",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 3,
+            "name": "rust-probe-epg-reads-dummy",
+            "source_type": "dummy",
+            "url": null,
+            "username": null,
+            "is_active": true,
+            "file_path": "/data/fixture-missing.xml",
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514279Z",
+            "updated_at": null,
+            "custom_properties": null,
+            "epg_data_count": 1,
+            "has_channels": false
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-epg-reads-inactive",
+            "source_type": "xmltv",
+            "url": null,
+            "username": null,
+            "is_active": false,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "disabled",
+            "last_message": "Fixture disabled",
+            "created_at": "2026-11-13T14:00:12.514277Z",
+            "updated_at": null,
+            "custom_properties": {},
+            "epg_data_count": 3,
+            "has_channels": false
+          },
+          {
+            "id": 1,
+            "name": "rust-probe-epg-reads-xmltv",
+            "source_type": "xmltv",
+            "url": "https://fixture.invalid/guide.xml",
+            "username": "fixture-user",
+            "is_active": true,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "5 1,13 * * 1-5",
+            "priority": 7,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514272Z",
+            "updated_at": "2026-11-09T12:00:00Z",
+            "custom_properties": {
+              "fixture": [
+                "\u65e5\u672c\u8a9e",
+                "\u00e9",
+                null
+              ]
+            },
+            "epg_data_count": 3,
+            "has_channels": true
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/sources/1/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 1,
+          "name": "rust-probe-epg-reads-xmltv",
+          "source_type": "xmltv",
+          "url": "https://fixture.invalid/guide.xml",
+          "username": "fixture-user",
+          "is_active": true,
+          "file_path": null,
+          "refresh_interval": 0,
+          "cron_expression": "5 1,13 * * 1-5",
+          "priority": 7,
+          "status": "idle",
+          "last_message": null,
+          "created_at": "2026-11-13T14:00:12.514272Z",
+          "updated_at": "2026-11-09T12:00:00Z",
+          "custom_properties": {
+            "fixture": [
+              "\u65e5\u672c\u8a9e",
+              "\u00e9",
+              null
+            ]
+          },
+          "epg_data_count": 3,
+          "has_channels": true
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/2/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 2,
+          "name": "rust-probe-epg-reads-inactive",
+          "source_type": "xmltv",
+          "url": null,
+          "username": null,
+          "is_active": false,
+          "file_path": null,
+          "refresh_interval": 0,
+          "cron_expression": "",
+          "priority": 0,
+          "status": "disabled",
+          "last_message": "Fixture disabled",
+          "created_at": "2026-11-13T14:00:12.514277Z",
+          "updated_at": null,
+          "custom_properties": {},
+          "epg_data_count": 3,
+          "has_channels": false
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/3/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 3,
+          "name": "rust-probe-epg-reads-dummy",
+          "source_type": "dummy",
+          "url": null,
+          "username": null,
+          "is_active": true,
+          "file_path": "/data/fixture-missing.xml",
+          "refresh_interval": 0,
+          "cron_expression": "",
+          "priority": 0,
+          "status": "idle",
+          "last_message": null,
+          "created_at": "2026-11-13T14:00:12.514279Z",
+          "updated_at": null,
+          "custom_properties": null,
+          "epg_data_count": 1,
+          "has_channels": false
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/999999/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "No EPGSource matches the given query."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/bad/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "Not found."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/0/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "No EPGSource matches the given query."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/-1/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "No EPGSource matches the given query."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/0001/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 1,
+          "name": "rust-probe-epg-reads-xmltv",
+          "source_type": "xmltv",
+          "url": "https://fixture.invalid/guide.xml",
+          "username": "fixture-user",
+          "is_active": true,
+          "file_path": null,
+          "refresh_interval": 0,
+          "cron_expression": "5 1,13 * * 1-5",
+          "priority": 7,
+          "status": "idle",
+          "last_message": null,
+          "created_at": "2026-11-13T14:00:12.514272Z",
+          "updated_at": "2026-11-09T12:00:00Z",
+          "custom_properties": {
+            "fixture": [
+              "\u65e5\u672c\u8a9e",
+              "\u00e9",
+              null
+            ]
+          },
+          "epg_data_count": 3,
+          "has_channels": true
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "81e1be99f414ca9affc18fc8ea8998ebf62670a09e052126147a1cea7c42aa32",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 3,
+            "name": "rust-probe-epg-reads-dummy",
+            "source_type": "dummy",
+            "url": null,
+            "username": null,
+            "is_active": true,
+            "file_path": "/data/fixture-missing.xml",
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514279Z",
+            "updated_at": null,
+            "custom_properties": null,
+            "epg_data_count": 1,
+            "has_channels": false
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-epg-reads-inactive",
+            "source_type": "xmltv",
+            "url": null,
+            "username": null,
+            "is_active": false,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "",
+            "priority": 0,
+            "status": "disabled",
+            "last_message": "Fixture disabled",
+            "created_at": "2026-11-13T14:00:12.514277Z",
+            "updated_at": null,
+            "custom_properties": {},
+            "epg_data_count": 3,
+            "has_channels": false
+          },
+          {
+            "id": 1,
+            "name": "rust-probe-epg-reads-xmltv",
+            "source_type": "xmltv",
+            "url": "https://fixture.invalid/guide.xml",
+            "username": "fixture-user",
+            "is_active": true,
+            "file_path": null,
+            "refresh_interval": 0,
+            "cron_expression": "5 1,13 * * 1-5",
+            "priority": 7,
+            "status": "idle",
+            "last_message": null,
+            "created_at": "2026-11-13T14:00:12.514272Z",
+            "updated_at": "2026-11-09T12:00:00Z",
+            "custom_properties": {
+              "fixture": [
+                "\u65e5\u672c\u8a9e",
+                "\u00e9",
+                null
+              ]
+            },
+            "epg_data_count": 3,
+            "has_channels": true
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/sources/1/",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "81e1be99f414ca9affc18fc8ea8998ebf62670a09e052126147a1cea7c42aa32",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 1,
+          "name": "rust-probe-epg-reads-xmltv",
+          "source_type": "xmltv",
+          "url": "https://fixture.invalid/guide.xml",
+          "username": "fixture-user",
+          "is_active": true,
+          "file_path": null,
+          "refresh_interval": 0,
+          "cron_expression": "5 1,13 * * 1-5",
+          "priority": 7,
+          "status": "idle",
+          "last_message": null,
+          "created_at": "2026-11-13T14:00:12.514272Z",
+          "updated_at": "2026-11-09T12:00:00Z",
+          "custom_properties": {
+            "fixture": [
+              "\u65e5\u672c\u8a9e",
+              "\u00e9",
+              null
+            ]
+          },
+          "epg_data_count": 3,
+          "has_channels": true
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/bad/",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "81e1be99f414ca9affc18fc8ea8998ebf62670a09e052126147a1cea7c42aa32",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "Not found."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "d6a60aaab5a0194f7b4a8b9f5e6903c51228c1610b895eb8e3771cb935ab4319",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 403,
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/1/",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "d6a60aaab5a0194f7b4a8b9f5e6903c51228c1610b895eb8e3771cb935ab4319",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 403,
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/bad/",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "d6a60aaab5a0194f7b4a8b9f5e6903c51228c1610b895eb8e3771cb935ab4319",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 403,
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "10239fc88f63f83d01e95496070be869ea51e7c1a5e4a6e0117080a8d88fc3eb",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/1/",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "10239fc88f63f83d01e95496070be869ea51e7c1a5e4a6e0117080a8d88fc3eb",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/bad/",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "10239fc88f63f83d01e95496070be869ea51e7c1a5e4a6e0117080a8d88fc3eb",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/1/",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/bad/",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_ACCEPT": "text/html",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "body_sha256": "65398680ecd3382741545e1e0c3364e9f4a8143b0f857fe047d3b363d9ca714d",
+        "body_length": 21923
+      }
+    },
+    {
+      "path": "/api/epg/sources/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_ACCEPT": "application/xml",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 406,
+        "json": {
+          "detail": "Could not satisfy the request Accept header."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/sources/",
+      "method": "HEAD",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "head_body_empty_on_wire": true,
+        "rendered_representation_bytes": 1182
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "tvg_id": "fixture-0",
+            "name": "rust-probe-epg-reads-0",
+            "icon_url": "",
+            "epg_source": 1
+          },
+          {
+            "id": 2,
+            "tvg_id": "fixture-1",
+            "name": "rust-probe-epg-reads-1",
+            "icon_url": null,
+            "epg_source": 2
+          },
+          {
+            "id": 3,
+            "tvg_id": "fixture-2",
+            "name": "rust-probe-epg-reads-2",
+            "icon_url": "",
+            "epg_source": 3
+          },
+          {
+            "id": 4,
+            "tvg_id": "fixture-3",
+            "name": "rust-probe-epg-reads-3",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 5,
+            "tvg_id": "fixture-4",
+            "name": "rust-probe-epg-reads-4",
+            "icon_url": "",
+            "epg_source": 2
+          },
+          {
+            "id": 6,
+            "tvg_id": null,
+            "name": "rust-probe-epg-reads-null",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 7,
+            "tvg_id": "",
+            "name": "rust-probe-epg-reads-empty",
+            "icon_url": null,
+            "epg_source": 2
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/?page=2&page_size=1",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "tvg_id": "fixture-0",
+            "name": "rust-probe-epg-reads-0",
+            "icon_url": "",
+            "epg_source": 1
+          },
+          {
+            "id": 2,
+            "tvg_id": "fixture-1",
+            "name": "rust-probe-epg-reads-1",
+            "icon_url": null,
+            "epg_source": 2
+          },
+          {
+            "id": 3,
+            "tvg_id": "fixture-2",
+            "name": "rust-probe-epg-reads-2",
+            "icon_url": "",
+            "epg_source": 3
+          },
+          {
+            "id": 4,
+            "tvg_id": "fixture-3",
+            "name": "rust-probe-epg-reads-3",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 5,
+            "tvg_id": "fixture-4",
+            "name": "rust-probe-epg-reads-4",
+            "icon_url": "",
+            "epg_source": 2
+          },
+          {
+            "id": 6,
+            "tvg_id": null,
+            "name": "rust-probe-epg-reads-null",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 7,
+            "tvg_id": "",
+            "name": "rust-probe-epg-reads-empty",
+            "icon_url": null,
+            "epg_source": 2
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/?search=missing",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "tvg_id": "fixture-0",
+            "name": "rust-probe-epg-reads-0",
+            "icon_url": "",
+            "epg_source": 1
+          },
+          {
+            "id": 2,
+            "tvg_id": "fixture-1",
+            "name": "rust-probe-epg-reads-1",
+            "icon_url": null,
+            "epg_source": 2
+          },
+          {
+            "id": 3,
+            "tvg_id": "fixture-2",
+            "name": "rust-probe-epg-reads-2",
+            "icon_url": "",
+            "epg_source": 3
+          },
+          {
+            "id": 4,
+            "tvg_id": "fixture-3",
+            "name": "rust-probe-epg-reads-3",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 5,
+            "tvg_id": "fixture-4",
+            "name": "rust-probe-epg-reads-4",
+            "icon_url": "",
+            "epg_source": 2
+          },
+          {
+            "id": 6,
+            "tvg_id": null,
+            "name": "rust-probe-epg-reads-null",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 7,
+            "tvg_id": "",
+            "name": "rust-probe-epg-reads-empty",
+            "icon_url": null,
+            "epg_source": 2
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/?ordering=-id",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "tvg_id": "fixture-0",
+            "name": "rust-probe-epg-reads-0",
+            "icon_url": "",
+            "epg_source": 1
+          },
+          {
+            "id": 2,
+            "tvg_id": "fixture-1",
+            "name": "rust-probe-epg-reads-1",
+            "icon_url": null,
+            "epg_source": 2
+          },
+          {
+            "id": 3,
+            "tvg_id": "fixture-2",
+            "name": "rust-probe-epg-reads-2",
+            "icon_url": "",
+            "epg_source": 3
+          },
+          {
+            "id": 4,
+            "tvg_id": "fixture-3",
+            "name": "rust-probe-epg-reads-3",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 5,
+            "tvg_id": "fixture-4",
+            "name": "rust-probe-epg-reads-4",
+            "icon_url": "",
+            "epg_source": 2
+          },
+          {
+            "id": 6,
+            "tvg_id": null,
+            "name": "rust-probe-epg-reads-null",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 7,
+            "tvg_id": "",
+            "name": "rust-probe-epg-reads-empty",
+            "icon_url": null,
+            "epg_source": 2
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/?name=missing",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "tvg_id": "fixture-0",
+            "name": "rust-probe-epg-reads-0",
+            "icon_url": "",
+            "epg_source": 1
+          },
+          {
+            "id": 2,
+            "tvg_id": "fixture-1",
+            "name": "rust-probe-epg-reads-1",
+            "icon_url": null,
+            "epg_source": 2
+          },
+          {
+            "id": 3,
+            "tvg_id": "fixture-2",
+            "name": "rust-probe-epg-reads-2",
+            "icon_url": "",
+            "epg_source": 3
+          },
+          {
+            "id": 4,
+            "tvg_id": "fixture-3",
+            "name": "rust-probe-epg-reads-3",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 5,
+            "tvg_id": "fixture-4",
+            "name": "rust-probe-epg-reads-4",
+            "icon_url": "",
+            "epg_source": 2
+          },
+          {
+            "id": 6,
+            "tvg_id": null,
+            "name": "rust-probe-epg-reads-null",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 7,
+            "tvg_id": "",
+            "name": "rust-probe-epg-reads-empty",
+            "icon_url": null,
+            "epg_source": 2
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/?epg_source=999999",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "tvg_id": "fixture-0",
+            "name": "rust-probe-epg-reads-0",
+            "icon_url": "",
+            "epg_source": 1
+          },
+          {
+            "id": 2,
+            "tvg_id": "fixture-1",
+            "name": "rust-probe-epg-reads-1",
+            "icon_url": null,
+            "epg_source": 2
+          },
+          {
+            "id": 3,
+            "tvg_id": "fixture-2",
+            "name": "rust-probe-epg-reads-2",
+            "icon_url": "",
+            "epg_source": 3
+          },
+          {
+            "id": 4,
+            "tvg_id": "fixture-3",
+            "name": "rust-probe-epg-reads-3",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 5,
+            "tvg_id": "fixture-4",
+            "name": "rust-probe-epg-reads-4",
+            "icon_url": "",
+            "epg_source": 2
+          },
+          {
+            "id": 6,
+            "tvg_id": null,
+            "name": "rust-probe-epg-reads-null",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 7,
+            "tvg_id": "",
+            "name": "rust-probe-epg-reads-empty",
+            "icon_url": null,
+            "epg_source": 2
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/?tvg_id=missing",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "tvg_id": "fixture-0",
+            "name": "rust-probe-epg-reads-0",
+            "icon_url": "",
+            "epg_source": 1
+          },
+          {
+            "id": 2,
+            "tvg_id": "fixture-1",
+            "name": "rust-probe-epg-reads-1",
+            "icon_url": null,
+            "epg_source": 2
+          },
+          {
+            "id": 3,
+            "tvg_id": "fixture-2",
+            "name": "rust-probe-epg-reads-2",
+            "icon_url": "",
+            "epg_source": 3
+          },
+          {
+            "id": 4,
+            "tvg_id": "fixture-3",
+            "name": "rust-probe-epg-reads-3",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 5,
+            "tvg_id": "fixture-4",
+            "name": "rust-probe-epg-reads-4",
+            "icon_url": "",
+            "epg_source": 2
+          },
+          {
+            "id": 6,
+            "tvg_id": null,
+            "name": "rust-probe-epg-reads-null",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 7,
+            "tvg_id": "",
+            "name": "rust-probe-epg-reads-empty",
+            "icon_url": null,
+            "epg_source": 2
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/?format=json",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "tvg_id": "fixture-0",
+            "name": "rust-probe-epg-reads-0",
+            "icon_url": "",
+            "epg_source": 1
+          },
+          {
+            "id": 2,
+            "tvg_id": "fixture-1",
+            "name": "rust-probe-epg-reads-1",
+            "icon_url": null,
+            "epg_source": 2
+          },
+          {
+            "id": 3,
+            "tvg_id": "fixture-2",
+            "name": "rust-probe-epg-reads-2",
+            "icon_url": "",
+            "epg_source": 3
+          },
+          {
+            "id": 4,
+            "tvg_id": "fixture-3",
+            "name": "rust-probe-epg-reads-3",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 5,
+            "tvg_id": "fixture-4",
+            "name": "rust-probe-epg-reads-4",
+            "icon_url": "",
+            "epg_source": 2
+          },
+          {
+            "id": 6,
+            "tvg_id": null,
+            "name": "rust-probe-epg-reads-null",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 7,
+            "tvg_id": "",
+            "name": "rust-probe-epg-reads-empty",
+            "icon_url": null,
+            "epg_source": 2
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/1/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 1,
+          "tvg_id": "fixture-0",
+          "name": "rust-probe-epg-reads-0",
+          "icon_url": "",
+          "epg_source": 1
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/2/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 2,
+          "tvg_id": "fixture-1",
+          "name": "rust-probe-epg-reads-1",
+          "icon_url": null,
+          "epg_source": 2
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/3/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 3,
+          "tvg_id": "fixture-2",
+          "name": "rust-probe-epg-reads-2",
+          "icon_url": "",
+          "epg_source": 3
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/4/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 4,
+          "tvg_id": "fixture-3",
+          "name": "rust-probe-epg-reads-3",
+          "icon_url": null,
+          "epg_source": 1
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/5/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 5,
+          "tvg_id": "fixture-4",
+          "name": "rust-probe-epg-reads-4",
+          "icon_url": "",
+          "epg_source": 2
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/6/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 6,
+          "tvg_id": null,
+          "name": "rust-probe-epg-reads-null",
+          "icon_url": null,
+          "epg_source": 1
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/7/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 7,
+          "tvg_id": "",
+          "name": "rust-probe-epg-reads-empty",
+          "icon_url": null,
+          "epg_source": 2
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/999999/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "No EPGData matches the given query."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/bad/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "Not found."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/0/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "No EPGData matches the given query."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/-1/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "No EPGData matches the given query."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/0001/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 1,
+          "tvg_id": "fixture-0",
+          "name": "rust-probe-epg-reads-0",
+          "icon_url": "",
+          "epg_source": 1
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "81e1be99f414ca9affc18fc8ea8998ebf62670a09e052126147a1cea7c42aa32",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "tvg_id": "fixture-0",
+            "name": "rust-probe-epg-reads-0",
+            "icon_url": "",
+            "epg_source": 1
+          },
+          {
+            "id": 2,
+            "tvg_id": "fixture-1",
+            "name": "rust-probe-epg-reads-1",
+            "icon_url": null,
+            "epg_source": 2
+          },
+          {
+            "id": 3,
+            "tvg_id": "fixture-2",
+            "name": "rust-probe-epg-reads-2",
+            "icon_url": "",
+            "epg_source": 3
+          },
+          {
+            "id": 4,
+            "tvg_id": "fixture-3",
+            "name": "rust-probe-epg-reads-3",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 5,
+            "tvg_id": "fixture-4",
+            "name": "rust-probe-epg-reads-4",
+            "icon_url": "",
+            "epg_source": 2
+          },
+          {
+            "id": 6,
+            "tvg_id": null,
+            "name": "rust-probe-epg-reads-null",
+            "icon_url": null,
+            "epg_source": 1
+          },
+          {
+            "id": 7,
+            "tvg_id": "",
+            "name": "rust-probe-epg-reads-empty",
+            "icon_url": null,
+            "epg_source": 2
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/1/",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "81e1be99f414ca9affc18fc8ea8998ebf62670a09e052126147a1cea7c42aa32",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 1,
+          "tvg_id": "fixture-0",
+          "name": "rust-probe-epg-reads-0",
+          "icon_url": "",
+          "epg_source": 1
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/bad/",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "81e1be99f414ca9affc18fc8ea8998ebf62670a09e052126147a1cea7c42aa32",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "Not found."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "d6a60aaab5a0194f7b4a8b9f5e6903c51228c1610b895eb8e3771cb935ab4319",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 403,
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/1/",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "d6a60aaab5a0194f7b4a8b9f5e6903c51228c1610b895eb8e3771cb935ab4319",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 403,
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/bad/",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "d6a60aaab5a0194f7b4a8b9f5e6903c51228c1610b895eb8e3771cb935ab4319",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 403,
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "10239fc88f63f83d01e95496070be869ea51e7c1a5e4a6e0117080a8d88fc3eb",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/1/",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "10239fc88f63f83d01e95496070be869ea51e7c1a5e4a6e0117080a8d88fc3eb",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/bad/",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "10239fc88f63f83d01e95496070be869ea51e7c1a5e4a6e0117080a8d88fc3eb",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/1/",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/bad/",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_ACCEPT": "text/html",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "body_sha256": "25871715039e768bab409431032c7b73968de70cef8e8d6b31b960edc64bbf4a",
+        "body_length": 11846
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_ACCEPT": "application/xml",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 406,
+        "json": {
+          "detail": "Could not satisfy the request Accept header."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/epgdata/",
+      "method": "HEAD",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "head_body_empty_on_wire": true,
+        "rendered_representation_bytes": 637
+      }
+    },
+    {
+      "path": "/api/epg/programs/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "start_time": "2026-11-09T12:00:00Z",
+            "end_time": "2026-11-09T13:00:00Z",
+            "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-0",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 2,
+            "start_time": "2026-11-09T13:00:00Z",
+            "end_time": "2026-11-09T14:00:00.000001Z",
+            "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 3,
+            "start_time": "2026-11-09T14:00:00Z",
+            "end_time": "2026-11-09T15:00:00.000002Z",
+            "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-2",
+            "season": 0,
+            "episode": "2",
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": true,
+            "is_finale": true
+          },
+          {
+            "id": 4,
+            "start_time": "2026-11-09T15:00:00Z",
+            "end_time": "2026-11-09T16:00:00.000003Z",
+            "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 5,
+            "start_time": "2026-11-09T16:00:00Z",
+            "end_time": "2026-11-09T17:00:00.000004Z",
+            "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-4",
+            "season": null,
+            "episode": null,
+            "is_new": true,
+            "is_live": true,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/programs/?page=2&page_size=1",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "start_time": "2026-11-09T12:00:00Z",
+            "end_time": "2026-11-09T13:00:00Z",
+            "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-0",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 2,
+            "start_time": "2026-11-09T13:00:00Z",
+            "end_time": "2026-11-09T14:00:00.000001Z",
+            "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 3,
+            "start_time": "2026-11-09T14:00:00Z",
+            "end_time": "2026-11-09T15:00:00.000002Z",
+            "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-2",
+            "season": 0,
+            "episode": "2",
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": true,
+            "is_finale": true
+          },
+          {
+            "id": 4,
+            "start_time": "2026-11-09T15:00:00Z",
+            "end_time": "2026-11-09T16:00:00.000003Z",
+            "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 5,
+            "start_time": "2026-11-09T16:00:00Z",
+            "end_time": "2026-11-09T17:00:00.000004Z",
+            "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-4",
+            "season": null,
+            "episode": null,
+            "is_new": true,
+            "is_live": true,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/programs/?search=missing",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "start_time": "2026-11-09T12:00:00Z",
+            "end_time": "2026-11-09T13:00:00Z",
+            "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-0",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 2,
+            "start_time": "2026-11-09T13:00:00Z",
+            "end_time": "2026-11-09T14:00:00.000001Z",
+            "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 3,
+            "start_time": "2026-11-09T14:00:00Z",
+            "end_time": "2026-11-09T15:00:00.000002Z",
+            "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-2",
+            "season": 0,
+            "episode": "2",
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": true,
+            "is_finale": true
+          },
+          {
+            "id": 4,
+            "start_time": "2026-11-09T15:00:00Z",
+            "end_time": "2026-11-09T16:00:00.000003Z",
+            "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 5,
+            "start_time": "2026-11-09T16:00:00Z",
+            "end_time": "2026-11-09T17:00:00.000004Z",
+            "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-4",
+            "season": null,
+            "episode": null,
+            "is_new": true,
+            "is_live": true,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/programs/?ordering=-id",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "start_time": "2026-11-09T12:00:00Z",
+            "end_time": "2026-11-09T13:00:00Z",
+            "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-0",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 2,
+            "start_time": "2026-11-09T13:00:00Z",
+            "end_time": "2026-11-09T14:00:00.000001Z",
+            "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 3,
+            "start_time": "2026-11-09T14:00:00Z",
+            "end_time": "2026-11-09T15:00:00.000002Z",
+            "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-2",
+            "season": 0,
+            "episode": "2",
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": true,
+            "is_finale": true
+          },
+          {
+            "id": 4,
+            "start_time": "2026-11-09T15:00:00Z",
+            "end_time": "2026-11-09T16:00:00.000003Z",
+            "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 5,
+            "start_time": "2026-11-09T16:00:00Z",
+            "end_time": "2026-11-09T17:00:00.000004Z",
+            "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-4",
+            "season": null,
+            "episode": null,
+            "is_new": true,
+            "is_live": true,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/programs/?name=missing",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "start_time": "2026-11-09T12:00:00Z",
+            "end_time": "2026-11-09T13:00:00Z",
+            "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-0",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 2,
+            "start_time": "2026-11-09T13:00:00Z",
+            "end_time": "2026-11-09T14:00:00.000001Z",
+            "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 3,
+            "start_time": "2026-11-09T14:00:00Z",
+            "end_time": "2026-11-09T15:00:00.000002Z",
+            "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-2",
+            "season": 0,
+            "episode": "2",
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": true,
+            "is_finale": true
+          },
+          {
+            "id": 4,
+            "start_time": "2026-11-09T15:00:00Z",
+            "end_time": "2026-11-09T16:00:00.000003Z",
+            "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 5,
+            "start_time": "2026-11-09T16:00:00Z",
+            "end_time": "2026-11-09T17:00:00.000004Z",
+            "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-4",
+            "season": null,
+            "episode": null,
+            "is_new": true,
+            "is_live": true,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/programs/?epg_source=999999",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "start_time": "2026-11-09T12:00:00Z",
+            "end_time": "2026-11-09T13:00:00Z",
+            "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-0",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 2,
+            "start_time": "2026-11-09T13:00:00Z",
+            "end_time": "2026-11-09T14:00:00.000001Z",
+            "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 3,
+            "start_time": "2026-11-09T14:00:00Z",
+            "end_time": "2026-11-09T15:00:00.000002Z",
+            "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-2",
+            "season": 0,
+            "episode": "2",
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": true,
+            "is_finale": true
+          },
+          {
+            "id": 4,
+            "start_time": "2026-11-09T15:00:00Z",
+            "end_time": "2026-11-09T16:00:00.000003Z",
+            "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 5,
+            "start_time": "2026-11-09T16:00:00Z",
+            "end_time": "2026-11-09T17:00:00.000004Z",
+            "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-4",
+            "season": null,
+            "episode": null,
+            "is_new": true,
+            "is_live": true,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/programs/?tvg_id=missing",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "start_time": "2026-11-09T12:00:00Z",
+            "end_time": "2026-11-09T13:00:00Z",
+            "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-0",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 2,
+            "start_time": "2026-11-09T13:00:00Z",
+            "end_time": "2026-11-09T14:00:00.000001Z",
+            "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 3,
+            "start_time": "2026-11-09T14:00:00Z",
+            "end_time": "2026-11-09T15:00:00.000002Z",
+            "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-2",
+            "season": 0,
+            "episode": "2",
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": true,
+            "is_finale": true
+          },
+          {
+            "id": 4,
+            "start_time": "2026-11-09T15:00:00Z",
+            "end_time": "2026-11-09T16:00:00.000003Z",
+            "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 5,
+            "start_time": "2026-11-09T16:00:00Z",
+            "end_time": "2026-11-09T17:00:00.000004Z",
+            "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-4",
+            "season": null,
+            "episode": null,
+            "is_new": true,
+            "is_live": true,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/programs/?format=json",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "start_time": "2026-11-09T12:00:00Z",
+            "end_time": "2026-11-09T13:00:00Z",
+            "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-0",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 2,
+            "start_time": "2026-11-09T13:00:00Z",
+            "end_time": "2026-11-09T14:00:00.000001Z",
+            "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 3,
+            "start_time": "2026-11-09T14:00:00Z",
+            "end_time": "2026-11-09T15:00:00.000002Z",
+            "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-2",
+            "season": 0,
+            "episode": "2",
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": true,
+            "is_finale": true
+          },
+          {
+            "id": 4,
+            "start_time": "2026-11-09T15:00:00Z",
+            "end_time": "2026-11-09T16:00:00.000003Z",
+            "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 5,
+            "start_time": "2026-11-09T16:00:00Z",
+            "end_time": "2026-11-09T17:00:00.000004Z",
+            "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-4",
+            "season": null,
+            "episode": null,
+            "is_new": true,
+            "is_live": true,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/programs/1/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 1,
+          "start_time": "2026-11-09T12:00:00Z",
+          "end_time": "2026-11-09T13:00:00Z",
+          "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+          "sub_title": "",
+          "description": null,
+          "tvg_id": "fixture-0",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "categories": [],
+          "rating": null,
+          "rating_system": null,
+          "star_ratings": [],
+          "credits": {
+            "actors": [],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": null,
+          "aspect_ratio": null,
+          "stereo": null,
+          "is_previously_shown": false,
+          "country": null,
+          "language": null,
+          "production_date": null,
+          "original_air_date": null,
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": null,
+          "runtime": null,
+          "runtime_units": null,
+          "imdb_id": null,
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": null
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/2/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 2,
+          "start_time": "2026-11-09T13:00:00Z",
+          "end_time": "2026-11-09T14:00:00.000001Z",
+          "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+          "sub_title": null,
+          "description": "",
+          "tvg_id": null,
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "categories": [],
+          "rating": null,
+          "rating_system": null,
+          "star_ratings": [],
+          "credits": {
+            "actors": [],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": null,
+          "aspect_ratio": null,
+          "stereo": null,
+          "is_previously_shown": false,
+          "country": null,
+          "language": null,
+          "production_date": null,
+          "original_air_date": null,
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": null,
+          "runtime": null,
+          "runtime_units": null,
+          "imdb_id": null,
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": null
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/3/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 3,
+          "start_time": "2026-11-09T14:00:00Z",
+          "end_time": "2026-11-09T15:00:00.000002Z",
+          "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+          "sub_title": "",
+          "description": null,
+          "tvg_id": "fixture-2",
+          "season": 0,
+          "episode": "2",
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": true,
+          "is_finale": true,
+          "categories": [],
+          "rating": null,
+          "rating_system": null,
+          "star_ratings": [],
+          "credits": {
+            "actors": [],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": null,
+          "aspect_ratio": null,
+          "stereo": null,
+          "is_previously_shown": false,
+          "country": null,
+          "language": null,
+          "production_date": null,
+          "original_air_date": null,
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": null,
+          "runtime": null,
+          "runtime_units": null,
+          "imdb_id": null,
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": null
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/4/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 4,
+          "start_time": "2026-11-09T15:00:00Z",
+          "end_time": "2026-11-09T16:00:00.000003Z",
+          "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+          "sub_title": null,
+          "description": "",
+          "tvg_id": null,
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "categories": [
+            "Drama",
+            "\u65e5\u672c\u8a9e"
+          ],
+          "rating": "PG",
+          "rating_system": "Fixture",
+          "star_ratings": [
+            {
+              "value": "3/5"
+            }
+          ],
+          "credits": {
+            "actors": [
+              "A",
+              {
+                "name": "B"
+              }
+            ],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": "HD",
+          "aspect_ratio": "16:9",
+          "stereo": "stereo",
+          "is_previously_shown": true,
+          "country": null,
+          "language": null,
+          "production_date": null,
+          "original_air_date": "1999",
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": null,
+          "runtime": "45",
+          "runtime_units": "minutes",
+          "imdb_id": null,
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": "http://localhost/api/epg/programs/4/poster/?v=911f9cfad792"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/5/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 5,
+          "start_time": "2026-11-09T16:00:00Z",
+          "end_time": "2026-11-09T17:00:00.000004Z",
+          "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+          "sub_title": "",
+          "description": null,
+          "tvg_id": "fixture-4",
+          "season": null,
+          "episode": null,
+          "is_new": true,
+          "is_live": true,
+          "is_premiere": false,
+          "is_finale": false,
+          "categories": [],
+          "rating": null,
+          "rating_system": null,
+          "star_ratings": [],
+          "credits": {
+            "actors": [],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": null,
+          "aspect_ratio": null,
+          "stereo": null,
+          "is_previously_shown": false,
+          "country": null,
+          "language": null,
+          "production_date": "2026",
+          "original_air_date": null,
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": {
+            "fixture": true
+          },
+          "runtime": null,
+          "runtime_units": null,
+          "imdb_id": "tt-fixture",
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": null
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/999999/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "No ProgramData matches the given query."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/bad/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "Not found."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/0/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "No ProgramData matches the given query."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/-1/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "No ProgramData matches the given query."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/0001/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 1,
+          "start_time": "2026-11-09T12:00:00Z",
+          "end_time": "2026-11-09T13:00:00Z",
+          "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+          "sub_title": "",
+          "description": null,
+          "tvg_id": "fixture-0",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "categories": [],
+          "rating": null,
+          "rating_system": null,
+          "star_ratings": [],
+          "credits": {
+            "actors": [],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": null,
+          "aspect_ratio": null,
+          "stereo": null,
+          "is_previously_shown": false,
+          "country": null,
+          "language": null,
+          "production_date": null,
+          "original_air_date": null,
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": null,
+          "runtime": null,
+          "runtime_units": null,
+          "imdb_id": null,
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": null
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "81e1be99f414ca9affc18fc8ea8998ebf62670a09e052126147a1cea7c42aa32",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": [
+          {
+            "id": 1,
+            "start_time": "2026-11-09T12:00:00Z",
+            "end_time": "2026-11-09T13:00:00Z",
+            "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-0",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 2,
+            "start_time": "2026-11-09T13:00:00Z",
+            "end_time": "2026-11-09T14:00:00.000001Z",
+            "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 3,
+            "start_time": "2026-11-09T14:00:00Z",
+            "end_time": "2026-11-09T15:00:00.000002Z",
+            "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-2",
+            "season": 0,
+            "episode": "2",
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": true,
+            "is_finale": true
+          },
+          {
+            "id": 4,
+            "start_time": "2026-11-09T15:00:00Z",
+            "end_time": "2026-11-09T16:00:00.000003Z",
+            "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+            "sub_title": null,
+            "description": "",
+            "tvg_id": null,
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          },
+          {
+            "id": 5,
+            "start_time": "2026-11-09T16:00:00Z",
+            "end_time": "2026-11-09T17:00:00.000004Z",
+            "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+            "sub_title": "",
+            "description": null,
+            "tvg_id": "fixture-4",
+            "season": null,
+            "episode": null,
+            "is_new": true,
+            "is_live": true,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/epg/programs/1/",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "81e1be99f414ca9affc18fc8ea8998ebf62670a09e052126147a1cea7c42aa32",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 1,
+          "start_time": "2026-11-09T12:00:00Z",
+          "end_time": "2026-11-09T13:00:00Z",
+          "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+          "sub_title": "",
+          "description": null,
+          "tvg_id": "fixture-0",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "categories": [],
+          "rating": null,
+          "rating_system": null,
+          "star_ratings": [],
+          "credits": {
+            "actors": [],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": null,
+          "aspect_ratio": null,
+          "stereo": null,
+          "is_previously_shown": false,
+          "country": null,
+          "language": null,
+          "production_date": null,
+          "original_air_date": null,
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": null,
+          "runtime": null,
+          "runtime_units": null,
+          "imdb_id": null,
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": null
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/bad/",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "81e1be99f414ca9affc18fc8ea8998ebf62670a09e052126147a1cea7c42aa32",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 404,
+        "json": {
+          "detail": "Not found."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "d6a60aaab5a0194f7b4a8b9f5e6903c51228c1610b895eb8e3771cb935ab4319",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 403,
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/1/",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "d6a60aaab5a0194f7b4a8b9f5e6903c51228c1610b895eb8e3771cb935ab4319",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 403,
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/bad/",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "d6a60aaab5a0194f7b4a8b9f5e6903c51228c1610b895eb8e3771cb935ab4319",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 403,
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "10239fc88f63f83d01e95496070be869ea51e7c1a5e4a6e0117080a8d88fc3eb",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/1/",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "10239fc88f63f83d01e95496070be869ea51e7c1a5e4a6e0117080a8d88fc3eb",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/bad/",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "10239fc88f63f83d01e95496070be869ea51e7c1a5e4a6e0117080a8d88fc3eb",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/1/",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/bad/",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 401,
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_ACCEPT": "text/html",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "body_sha256": "ae3efecff2eec2b97167f5c88919bd778148bd6d1c0045e94993873a209aa0b6",
+        "body_length": 18449
+      }
+    },
+    {
+      "path": "/api/epg/programs/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_ACCEPT": "application/xml",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 406,
+        "json": {
+          "detail": "Could not satisfy the request Accept header."
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/",
+      "method": "HEAD",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "http://localhost",
+      "expected": {
+        "status": 200,
+        "head_body_empty_on_wire": true,
+        "rendered_representation_bytes": 1382
+      }
+    },
+    {
+      "path": "/api/epg/programs/1/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_X_FORWARDED_PROTO": "https",
+        "HTTP_X_FORWARDED_HOST": "fixture.invalid",
+        "HTTP_X_FORWARDED_PORT": "9443",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "https://fixture.invalid:9443",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 1,
+          "start_time": "2026-11-09T12:00:00Z",
+          "end_time": "2026-11-09T13:00:00Z",
+          "title": "rust-probe-epg-reads-0 \u65e5\u672c\u8a9e",
+          "sub_title": "",
+          "description": null,
+          "tvg_id": "fixture-0",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "categories": [],
+          "rating": null,
+          "rating_system": null,
+          "star_ratings": [],
+          "credits": {
+            "actors": [],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": null,
+          "aspect_ratio": null,
+          "stereo": null,
+          "is_previously_shown": false,
+          "country": null,
+          "language": null,
+          "production_date": null,
+          "original_air_date": null,
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": null,
+          "runtime": null,
+          "runtime_units": null,
+          "imdb_id": null,
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": null
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/2/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_X_FORWARDED_PROTO": "https",
+        "HTTP_X_FORWARDED_HOST": "fixture.invalid",
+        "HTTP_X_FORWARDED_PORT": "9443",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "https://fixture.invalid:9443",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 2,
+          "start_time": "2026-11-09T13:00:00Z",
+          "end_time": "2026-11-09T14:00:00.000001Z",
+          "title": "rust-probe-epg-reads-1 \u65e5\u672c\u8a9e",
+          "sub_title": null,
+          "description": "",
+          "tvg_id": null,
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "categories": [],
+          "rating": null,
+          "rating_system": null,
+          "star_ratings": [],
+          "credits": {
+            "actors": [],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": null,
+          "aspect_ratio": null,
+          "stereo": null,
+          "is_previously_shown": false,
+          "country": null,
+          "language": null,
+          "production_date": null,
+          "original_air_date": null,
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": null,
+          "runtime": null,
+          "runtime_units": null,
+          "imdb_id": null,
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": null
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/3/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_X_FORWARDED_PROTO": "https",
+        "HTTP_X_FORWARDED_HOST": "fixture.invalid",
+        "HTTP_X_FORWARDED_PORT": "9443",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "https://fixture.invalid:9443",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 3,
+          "start_time": "2026-11-09T14:00:00Z",
+          "end_time": "2026-11-09T15:00:00.000002Z",
+          "title": "rust-probe-epg-reads-2 \u65e5\u672c\u8a9e",
+          "sub_title": "",
+          "description": null,
+          "tvg_id": "fixture-2",
+          "season": 0,
+          "episode": "2",
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": true,
+          "is_finale": true,
+          "categories": [],
+          "rating": null,
+          "rating_system": null,
+          "star_ratings": [],
+          "credits": {
+            "actors": [],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": null,
+          "aspect_ratio": null,
+          "stereo": null,
+          "is_previously_shown": false,
+          "country": null,
+          "language": null,
+          "production_date": null,
+          "original_air_date": null,
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": null,
+          "runtime": null,
+          "runtime_units": null,
+          "imdb_id": null,
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": null
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/4/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_X_FORWARDED_PROTO": "https",
+        "HTTP_X_FORWARDED_HOST": "fixture.invalid",
+        "HTTP_X_FORWARDED_PORT": "9443",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "https://fixture.invalid:9443",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 4,
+          "start_time": "2026-11-09T15:00:00Z",
+          "end_time": "2026-11-09T16:00:00.000003Z",
+          "title": "rust-probe-epg-reads-3 \u65e5\u672c\u8a9e",
+          "sub_title": null,
+          "description": "",
+          "tvg_id": null,
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "categories": [
+            "Drama",
+            "\u65e5\u672c\u8a9e"
+          ],
+          "rating": "PG",
+          "rating_system": "Fixture",
+          "star_ratings": [
+            {
+              "value": "3/5"
+            }
+          ],
+          "credits": {
+            "actors": [
+              "A",
+              {
+                "name": "B"
+              }
+            ],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": "HD",
+          "aspect_ratio": "16:9",
+          "stereo": "stereo",
+          "is_previously_shown": true,
+          "country": null,
+          "language": null,
+          "production_date": null,
+          "original_air_date": "1999",
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": null,
+          "runtime": "45",
+          "runtime_units": "minutes",
+          "imdb_id": null,
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": "https://fixture.invalid:9443/api/epg/programs/4/poster/?v=911f9cfad792"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/programs/5/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_X_FORWARDED_PROTO": "https",
+        "HTTP_X_FORWARDED_HOST": "fixture.invalid",
+        "HTTP_X_FORWARDED_PORT": "9443",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "145490d1171382a25c210b8869765e60704a73147a3ae9e48be905a5f6d5820d",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "component_origin": "https://fixture.invalid:9443",
+      "expected": {
+        "status": 200,
+        "json": {
+          "id": 5,
+          "start_time": "2026-11-09T16:00:00Z",
+          "end_time": "2026-11-09T17:00:00.000004Z",
+          "title": "rust-probe-epg-reads-4 \u65e5\u672c\u8a9e",
+          "sub_title": "",
+          "description": null,
+          "tvg_id": "fixture-4",
+          "season": null,
+          "episode": null,
+          "is_new": true,
+          "is_live": true,
+          "is_premiere": false,
+          "is_finale": false,
+          "categories": [],
+          "rating": null,
+          "rating_system": null,
+          "star_ratings": [],
+          "credits": {
+            "actors": [],
+            "directors": [],
+            "writers": [],
+            "producers": [],
+            "presenters": []
+          },
+          "video_quality": null,
+          "aspect_ratio": null,
+          "stereo": null,
+          "is_previously_shown": false,
+          "country": null,
+          "language": null,
+          "production_date": "2026",
+          "original_air_date": null,
+          "content_advisory": [],
+          "content_ratings": [],
+          "event_details": {
+            "fixture": true
+          },
+          "runtime": null,
+          "runtime_units": null,
+          "imdb_id": "tt-fixture",
+          "tmdb_id": null,
+          "tvdb_id": null,
+          "icon": null,
+          "images": [],
+          "poster_url": null
+        }
+      }
+    }
+  ],
+  "collection_ordering": {
+    "sources": {
+      "ordered": false,
+      "model_ordering": [],
+      "sql": "SELECT \"epg_epgsource\".\"id\", \"epg_epgsource\".\"name\", \"epg_epgsource\".\"source_type\", \"epg_epgsource\".\"url\", \"epg_epgsource\".\"username\", \"epg_epgsource\".\"password\", \"epg_epgsource\".\"is_active\", \"epg_epgsource\".\"file_path\", \"epg_epgsource\".\"extracted_file_path\", \"epg_epgsource\".\"refresh_interval\", \"epg_epgsource\".\"refresh_task_id\", \"epg_epgsource\".\"custom_properties\", \"epg_epgsource\".\"priority\", \"epg_epgsource\".\"status\", \"epg_epgsource\".\"last_message\", \"epg_epgsource\".\"created_at\", \"epg_epgsource\".\"updated_at\", EXISTS(SELECT 1 AS \"a\" FROM \"dispatcharr_channels_channel\" U0 INNER JOIN \"epg_epgdata\" U1 ON (U0.\"epg_data_id\" = U1.\"id\") WHERE U1.\"epg_source_id\" = (\"epg_epgsource\".\"id\") LIMIT 1) AS \"has_channels\", \"django_celery_beat_periodictask\".\"id\", \"django_celery_beat_periodictask\".\"name\", \"django_celery_beat_periodictask\".\"task\", \"django_celery_beat_periodictask\".\"interval_id\", \"django_celery_beat_periodictask\".\"crontab_id\", \"django_celery_beat_periodictask\".\"solar_id\", \"django_celery_beat_periodictask\".\"clocked_id\", \"django_celery_beat_periodictask\".\"args\", \"django_celery_beat_periodictask\".\"kwargs\", \"django_celery_beat_periodictask\".\"queue\", \"django_celery_beat_periodictask\".\"exchange\", \"django_celery_beat_periodictask\".\"routing_key\", \"django_celery_beat_periodictask\".\"headers\", \"django_celery_beat_periodictask\".\"priority\", \"django_celery_beat_periodictask\".\"expires\", \"django_celery_beat_periodictask\".\"expire_seconds\", \"django_celery_beat_periodictask\".\"one_off\", \"django_celery_beat_periodictask\".\"start_time\", \"django_celery_beat_periodictask\".\"enabled\", \"django_celery_beat_periodictask\".\"last_run_at\", \"django_celery_beat_periodictask\".\"total_run_count\", \"django_celery_beat_periodictask\".\"date_changed\", \"django_celery_beat_periodictask\".\"description\", \"django_celery_beat_intervalschedule\".\"id\", \"django_celery_beat_intervalschedule\".\"every\", \"django_celery_beat_intervalschedule\".\"period\", \"django_celery_beat_crontabschedule\".\"id\", \"django_celery_beat_crontabschedule\".\"minute\", \"django_celery_beat_crontabschedule\".\"hour\", \"django_celery_beat_crontabschedule\".\"day_of_month\", \"django_celery_beat_crontabschedule\".\"month_of_year\", \"django_celery_beat_crontabschedule\".\"day_of_week\", \"django_celery_beat_crontabschedule\".\"timezone\" FROM \"epg_epgsource\" LEFT OUTER JOIN \"django_celery_beat_periodictask\" ON (\"epg_epgsource\".\"refresh_task_id\" = \"django_celery_beat_periodictask\".\"id\") LEFT OUTER JOIN \"django_celery_beat_intervalschedule\" ON (\"django_celery_beat_periodictask\".\"interval_id\" = \"django_celery_beat_intervalschedule\".\"id\") LEFT OUTER JOIN \"django_celery_beat_crontabschedule\" ON (\"django_celery_beat_periodictask\".\"crontab_id\" = \"django_celery_beat_crontabschedule\".\"id\")"
+    },
+    "epgdata": {
+      "ordered": false,
+      "model_ordering": [],
+      "sql": "SELECT \"epg_epgdata\".\"id\", \"epg_epgdata\".\"tvg_id\", \"epg_epgdata\".\"name\", \"epg_epgdata\".\"icon_url\", \"epg_epgdata\".\"epg_source_id\" FROM \"epg_epgdata\""
+    },
+    "programs": {
+      "ordered": false,
+      "model_ordering": [],
+      "sql": "SELECT \"epg_programdata\".\"id\", \"epg_programdata\".\"epg_id\", \"epg_programdata\".\"start_time\", \"epg_programdata\".\"end_time\", \"epg_programdata\".\"title\", \"epg_programdata\".\"sub_title\", \"epg_programdata\".\"description\", \"epg_programdata\".\"tvg_id\", \"epg_programdata\".\"program_id\", \"epg_programdata\".\"custom_properties\", \"epg_epgdata\".\"id\", \"epg_epgdata\".\"tvg_id\", \"epg_epgdata\".\"name\", \"epg_epgdata\".\"icon_url\", \"epg_epgdata\".\"epg_source_id\" FROM \"epg_programdata\" INNER JOIN \"epg_epgdata\" ON (\"epg_programdata\".\"epg_id\" = \"epg_epgdata\".\"id\")"
+    }
+  }
+}

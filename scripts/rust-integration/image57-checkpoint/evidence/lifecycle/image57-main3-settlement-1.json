@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "checked_utc": "2026-11-13T13:31:27.841981+00:00",
+  "actual_sessions": [
+    {
+      "scope": "notification9",
+      "session": 94522,
+      "consumed_exit": 0
+    },
+    {
+      "scope": "VOD4s3",
+      "session": 54808,
+      "consumed_exit": 0
+    },
+    {
+      "scope": "header7",
+      "session": 23198,
+      "consumed_exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "own_Cargo_app_media_jobs_active": false,
+  "full_M4_M5_M7_or_performance": false
+}

@@ -1,0 +1,74 @@
+{
+  "name": "live-react-stats",
+  "controller_result_sha256": "f7a2ee5d979cad988773b36126ab092d91c78027f12c5b21ecffb8b5d39684e1",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/live-react-stats/integration.json",
+      "sha256": "07dd783e6ec6325f68246b1e2b9e12c139aaadf3f21f8b03a925f40d4558c3c0"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Normal login, actual browser video decode and statistics scope; no default-database audit exposed or inferred.",
+  "observed_counts_and_candidate_Source_scope": {
+    "browser_backends": {
+      "Original": {
+        "actual_video_frames": [
+          26,
+          76
+        ],
+        "actual_video_times": [
+          0.83398,
+          2.833399
+        ],
+        "normal_login_playback_close_and_stats": true,
+        "API_response_count": 53,
+        "stats_sections": [
+          "catchup",
+          "live",
+          "timestamp",
+          "vod"
+        ]
+      },
+      "native": {
+        "actual_video_frames": [
+          25,
+          75
+        ],
+        "actual_video_times": [
+          0.846073,
+          2.844416
+        ],
+        "normal_login_playback_close_and_stats": true,
+        "API_response_count": 53,
+        "stats_sections": [
+          "catchup",
+          "live",
+          "timestamp",
+          "vod"
+        ]
+      }
+    },
+    "resource_sampler": false,
+    "browser_decode_is_not_FFmpeg_prefix_decode": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-live-browser-6e31953d05"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/reviews/live-react-stats-cleanup.json",
+      "sha256": "0e7a6c388aaa3ede03dc42a29698f18d0128795a17ee0d1eb08923d742c0148f"
+    }
+  }
+}

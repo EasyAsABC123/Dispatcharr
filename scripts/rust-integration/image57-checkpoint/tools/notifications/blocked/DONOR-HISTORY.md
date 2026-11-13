@@ -1,0 +1,1 @@
+Inherited logs/proofs/diffs are literal earlier-image history; no earlier acceptance is transferred to57. New derivation57/current57-controls/current57-candidate proof bind this blocked candidate. No old cue, claim or output was copied. Exact support revision is separately checked equal donor and is NOT the candidate Git.

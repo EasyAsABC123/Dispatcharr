@@ -1,0 +1,342 @@
+test_Original_wrong (__main__.Publication55.test_Original_wrong) ... ok
+test_actual_mapping_not_just_count (__main__.Publication55.test_actual_mapping_not_just_count) ... ok
+test_actual_time_authority_not_self_asserted (__main__.Publication55.test_actual_time_authority_not_self_asserted) ... ok
+test_all_cleanup_queries_required (__main__.Publication55.test_all_cleanup_queries_required) ... ok
+test_controller_count_wrong (__main__.Publication55.test_controller_count_wrong) ... ok
+test_corrupt_selected_payload_refused (__main__.Publication55.test_corrupt_selected_payload_refused) ... ok
+test_existing_reconstruction_output_refused (__main__.Publication55.test_existing_reconstruction_output_refused) ... ok
+test_header_auth_missing (__main__.Publication55.test_header_auth_missing) ... ok
+test_header_extra_unobserved_audit_table (__main__.Publication55.test_header_extra_unobserved_audit_table) ... ERROR
+test_header_full_scope_not_promoted (__main__.Publication55.test_header_full_scope_not_promoted) ... ok
+test_header_missing_case (__main__.Publication55.test_header_missing_case) ... ok
+test_header_missing_origin_request (__main__.Publication55.test_header_missing_origin_request) ... ok
+test_header_request_socket_unclosed (__main__.Publication55.test_header_request_socket_unclosed) ... ok
+test_header_wrong_hostname (__main__.Publication55.test_header_wrong_hostname) ... ok
+test_historical_flag_is_not_new_authority (__main__.Publication55.test_historical_flag_is_not_new_authority) ... ok
+test_main_clientloss_not_fake_HTTP (__main__.Publication55.test_main_clientloss_not_fake_HTTP) ... ERROR
+test_main_container_PID_namespace_not_host (__main__.Publication55.test_main_container_PID_namespace_not_host) ... ERROR
+test_main_hold_over_max (__main__.Publication55.test_main_hold_over_max) ... ERROR
+test_main_missing_SQL_or_follower (__main__.Publication55.test_main_missing_SQL_or_follower) ... ERROR
+test_main_missing_Source_signals (__main__.Publication55.test_main_missing_Source_signals) ... ERROR
+test_main_missing_case (__main__.Publication55.test_main_missing_case) ... ERROR
+test_main_missing_checkpoints (__main__.Publication55.test_main_missing_checkpoints) ... ERROR
+test_main_missing_default_sequences (__main__.Publication55.test_main_missing_default_sequences) ... ERROR
+test_main_missing_other_fence (__main__.Publication55.test_main_missing_other_fence) ... ERROR
+test_main_missing_owned_processes (__main__.Publication55.test_main_missing_owned_processes) ... ERROR
+test_missing_matrix_node (__main__.Publication55.test_missing_matrix_node) ... ok
+test_notification_PATCH_outside_request (__main__.Publication55.test_notification_PATCH_outside_request) ... ok
+test_notification_PUT_mutated (__main__.Publication55.test_notification_PUT_mutated) ... ok
+test_notification_default_changed (__main__.Publication55.test_notification_default_changed) ... ok
+test_notification_missing_case (__main__.Publication55.test_notification_missing_case) ... ok
+test_notification_missing_credential_role (__main__.Publication55.test_notification_missing_credential_role) ... ok
+test_notification_repeat_sequence_used (__main__.Publication55.test_notification_repeat_sequence_used) ... ok
+test_notification_wrong_real_SQL_ID (__main__.Publication55.test_notification_wrong_real_SQL_ID) ... ok
+test_offline_controller_not_application (__main__.Publication55.test_offline_controller_not_application) ... ok
+test_positive_full_public (__main__.Publication55.test_positive_full_public) ... ERROR
+test_privacy_hex_DTO_and_cookie (__main__.Publication55.test_privacy_hex_DTO_and_cookie) ... ok
+test_privacy_hex_JWT (__main__.Publication55.test_privacy_hex_JWT) ... ok
+test_privacy_http_api_key (__main__.Publication55.test_privacy_http_api_key) ... ok
+test_privacy_literal_JWT (__main__.Publication55.test_privacy_literal_JWT) ... ok
+test_swap_required_node_names (__main__.Publication55.test_swap_required_node_names) ... ok
+test_three_exact_blocked_restorations (__main__.Publication55.test_three_exact_blocked_restorations) ... ok
+test_worker_graph_activation (__main__.Publication55.test_worker_graph_activation) ... ok
+
+======================================================================
+ERROR: test_header_extra_unobserved_audit_table (__main__.Publication55.test_header_extra_unobserved_audit_table)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 58, in test_header_extra_unobserved_audit_table
+    def test_header_extra_unobserved_audit_table(self):self.rejects_header(lambda p,s,a:s['default_before']['tables'].update(core_systemnotification={'rows':0,'sha256':'0'*64}))
+                                                       ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 17, in rejects_header
+    with self.assertRaises((ValueError,KeyError,TypeError)):V.header(*x)
+                                                            ~~~~~~~~^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 67, in header
+    audit=load(HERE/'main4s/validate.py','header_default_audit');audit.audit(summary['default_before'],True);audit.audit(summary['default_after'],True);need(summary['default_before']==summary['default_after']and summary['default_named_tables_sequences_unchanged']is True,'HeaderDefaultNineUnchanged')
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_main_clientloss_not_fake_HTTP (__main__.Publication55.test_main_clientloss_not_fake_HTTP)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 56, in test_main_clientloss_not_fake_HTTP
+    def test_main_clientloss_not_fake_HTTP(self):self.rejects_main(lambda d,c,a:d['summary']['cases'][2]['native']['target_outcome'].update(status=503))
+                                                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 24, in rejects_main
+    m,x=self.main();fn(*x)
+        ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 22, in main
+    def main(self):return V.load(H/'main4s/validate.py','controls_main55'),[V.read(H/'main4s'/p)for p in ['retained.json','independent-cleanup-projection.json','coverage-authority.json']]
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_main_container_PID_namespace_not_host (__main__.Publication55.test_main_container_PID_namespace_not_host)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 57, in test_main_container_PID_namespace_not_host
+    def test_main_container_PID_namespace_not_host(self):self.rejects_main(lambda d,c,a:d.update(owned_process_PID_namespace_scope='host PIDs independently absent'))
+                                                         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 24, in rejects_main
+    m,x=self.main();fn(*x)
+        ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 22, in main
+    def main(self):return V.load(H/'main4s/validate.py','controls_main55'),[V.read(H/'main4s'/p)for p in ['retained.json','independent-cleanup-projection.json','coverage-authority.json']]
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_main_hold_over_max (__main__.Publication55.test_main_hold_over_max)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 49, in test_main_hold_over_max
+    def test_main_hold_over_max(self):self.rejects_main(lambda d,c,a:d['summary']['cases'][0]['native']['hold_observation'].update(actual_seconds=4.5))
+                                      ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 24, in rejects_main
+    m,x=self.main();fn(*x)
+        ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 22, in main
+    def main(self):return V.load(H/'main4s/validate.py','controls_main55'),[V.read(H/'main4s'/p)for p in ['retained.json','independent-cleanup-projection.json','coverage-authority.json']]
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_main_missing_SQL_or_follower (__main__.Publication55.test_main_missing_SQL_or_follower)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 51, in test_main_missing_SQL_or_follower
+    for key in ['actual_SQL_Bearer_user_verified','early_follower_valid']:self.rejects_main(lambda d,c,a,k=key:d['summary']['cases'][0]['native'].update({k:False}))
+                                                                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 24, in rejects_main
+    m,x=self.main();fn(*x)
+        ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 22, in main
+    def main(self):return V.load(H/'main4s/validate.py','controls_main55'),[V.read(H/'main4s'/p)for p in ['retained.json','independent-cleanup-projection.json','coverage-authority.json']]
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_main_missing_Source_signals (__main__.Publication55.test_main_missing_Source_signals)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 53, in test_main_missing_Source_signals
+    def test_main_missing_Source_signals(self):self.rejects_main(lambda d,c,a:d['Source_signals'].update(busy=[]))
+                                               ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 24, in rejects_main
+    m,x=self.main();fn(*x)
+        ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 22, in main
+    def main(self):return V.load(H/'main4s/validate.py','controls_main55'),[V.read(H/'main4s'/p)for p in ['retained.json','independent-cleanup-projection.json','coverage-authority.json']]
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_main_missing_case (__main__.Publication55.test_main_missing_case)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 47, in test_main_missing_case
+    def test_main_missing_case(self):self.rejects_main(lambda d,c,a:d['summary']['cases'].pop())
+                                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 24, in rejects_main
+    m,x=self.main();fn(*x)
+        ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 22, in main
+    def main(self):return V.load(H/'main4s/validate.py','controls_main55'),[V.read(H/'main4s'/p)for p in ['retained.json','independent-cleanup-projection.json','coverage-authority.json']]
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_main_missing_checkpoints (__main__.Publication55.test_main_missing_checkpoints)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 52, in test_main_missing_checkpoints
+    def test_main_missing_checkpoints(self):self.rejects_main(lambda d,c,a:d['summary']['cases'][0]['native'].update(checkpoints=[]))
+                                            ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 24, in rejects_main
+    m,x=self.main();fn(*x)
+        ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 22, in main
+    def main(self):return V.load(H/'main4s/validate.py','controls_main55'),[V.read(H/'main4s'/p)for p in ['retained.json','independent-cleanup-projection.json','coverage-authority.json']]
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_main_missing_default_sequences (__main__.Publication55.test_main_missing_default_sequences)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 48, in test_main_missing_default_sequences
+    def test_main_missing_default_sequences(self):self.rejects_main(lambda d,c,a:d['summary']['cases'][0]['default_database_before'].update(sequences={}))
+                                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 24, in rejects_main
+    m,x=self.main();fn(*x)
+        ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 22, in main
+    def main(self):return V.load(H/'main4s/validate.py','controls_main55'),[V.read(H/'main4s'/p)for p in ['retained.json','independent-cleanup-projection.json','coverage-authority.json']]
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_main_missing_other_fence (__main__.Publication55.test_main_missing_other_fence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 55, in test_main_missing_other_fence
+    def test_main_missing_other_fence(self):self.rejects_main(lambda d,c,a:d['summary']['cases'][1]['native']['other_private_after']['ledger'].update(fence=None))
+                                            ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 24, in rejects_main
+    m,x=self.main();fn(*x)
+        ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 22, in main
+    def main(self):return V.load(H/'main4s/validate.py','controls_main55'),[V.read(H/'main4s'/p)for p in ['retained.json','independent-cleanup-projection.json','coverage-authority.json']]
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_main_missing_owned_processes (__main__.Publication55.test_main_missing_owned_processes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 54, in test_main_missing_owned_processes
+    def test_main_missing_owned_processes(self):self.rejects_main(lambda d,c,a:d['owned_process_record_projection'].update(clientloss=[]))
+                                                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 24, in rejects_main
+    m,x=self.main();fn(*x)
+        ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 22, in main
+    def main(self):return V.load(H/'main4s/validate.py','controls_main55'),[V.read(H/'main4s'/p)for p in ['retained.json','independent-cleanup-projection.json','coverage-authority.json']]
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+======================================================================
+ERROR: test_positive_full_public (__main__.Publication55.test_positive_full_public)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/test_public.py", line 26, in test_positive_full_public
+    def test_positive_full_public(self):self.assertTrue(V.verify()['passed'])
+                                                        ~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 115, in verify
+    v=load(HERE/'main4s/validate.py','main57_retained');data=read(HERE/'main4s/retained.json');four=v.validate(data,read(HERE/'main4s/independent-cleanup-projection.json'),read(HERE/'main4s/coverage-authority.json'))
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 15, in load
+    s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+                                                                                          ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 897, in get_code
+  File "<frozen importlib._bootstrap_external>", line 827, in source_to_code
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/main4s/validate.py", line 27
+    require(data.get('actual_exit_code')==0,'ActualExit');require(data.get('omitted_fields')==[],'AllFourResponseMapsRetained')
+                                                                                                                               ^
+IndentationError: unindent does not match any outer indentation level
+
+----------------------------------------------------------------------
+Ran 42 tests in 0.313s
+
+FAILED (errors=12)

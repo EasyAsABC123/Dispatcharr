@@ -1,0 +1,44 @@
+{
+  "name": "output-profile",
+  "controller_result_sha256": "8ed89dd624a5a667b5ea4ca634374ec8815e843eb3689605faf6b06798ebc79e",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/output-profile/integration.json",
+      "sha256": "789cae53d22eeac14574d4641edafae9d83340880e49fa4cefeed14113582231"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/output-profile/packaged-checks.json",
+      "sha256": "563963af071f3bf50f0566b45cbcfde77d3e78731765ad330268a834a8c77dd0"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Individual SQL/cache/FK/fault checks and owned disposable fixture; no complete default-database audit inferred.",
+  "observed_counts_and_candidate_Source_scope": {
+    "source_cases": 127,
+    "sql_fault_cases": 4,
+    "resource_checks": 3,
+    "actual_packaged_check_rows": 130,
+    "subcategory_counts_not_summed": true,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-output-profiles-ec8423528e"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/reviews/output-profile-cleanup.json",
+      "sha256": "f24ebf7cc62d9b09846e8cd94592711e2a0c7d2c1b2f39d6832e7885f0ea1725"
+    }
+  }
+}

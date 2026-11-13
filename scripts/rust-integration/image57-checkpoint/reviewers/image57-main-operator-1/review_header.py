@@ -1,0 +1,10 @@
+"""Independent read-only Main57 header semantics and fresh exact-owned cleanup."""
+import json,sys,hashlib
+from pathlib import Path
+from collect_cleanup import collect
+R=Path.cwd();O=R/'artifacts/rust/image57-worker-header-native-1';C=R/'artifacts/rust/image57-worker-header-native-execution-1';sys.path.insert(0,str(C/'tools'))
+from qualify import phase
+from source_reference import validate_frozen_reference
+from origin_coverage import validate
+s=json.loads((O/'summary-private.json').read_text());v=json.loads((O/'worker-header-native-private.json').read_text());policy=json.loads((C/'policy.json').read_text());q=phase(v,policy,'native');assert q==v['qualification']and q['worker_header_branch_scope_qualified']is True;source=validate_frozen_reference(C);assert source==s['retained_Source6_offline_reference'];assert s['passed']is True and s['default_before']==s['default_after']and len(s['default_before']['tables'])==9 and len(s['default_before']['sequences'])==9;assert s['candidate']['image_id']=='sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a';terminal=validate(s['origin_terminal'],s['fixture_nonce'],terminal=True);assert terminal==s['origin_terminal_validation']and s['origin_terminal']['server_thread_settled']is True
+P=R/'artifacts/rust/root-image57-worker-header-native-actual-review-1';P.mkdir(exist_ok=False);cleanup=collect([s['project']],P/'independent-cleanup.json');assert cleanup['passed'];review={'passed':True,'actual_host_exit':0,'actual_Main7_qualification_recomputed':q,'statuses':[x['status']for x in v['cases']],'retained_Source6_offline_reference_recomputed':True,'Source_requests_executed':False,'origin_terminal_recomputed':terminal,'raw_summary_sha256':hashlib.sha256((O/'summary-private.json').read_bytes()).hexdigest(),'raw_phase_sha256':hashlib.sha256((O/'worker-header-native-private.json').read_bytes()).hexdigest(),'default_named9_tables_and9_sequences_structurally_exact':True,'independent_owned_inventories_empty':True,'full_header_M4_or_performance_acceptance':False};(P/'SourceContract-review.json').write_text(json.dumps(review,indent=2)+'\n');print(json.dumps(review))

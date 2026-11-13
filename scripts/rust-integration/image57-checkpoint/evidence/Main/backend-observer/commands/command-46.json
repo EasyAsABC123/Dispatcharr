@@ -1,0 +1,30 @@
+{
+  "cwd": "/home/justin/github/Dispatcharr",
+  "host_PID": 1047458,
+  "host_PID_starttime": "29800193",
+  "actual_identity_observed": true,
+  "stdout_pipe_closed": true,
+  "stderr_pipe_closed": true,
+  "pipe_reader_threads_settled": true,
+  "stdin_writer_settled": true,
+  "pipes_physically_settled": true,
+  "argv": [
+    "docker",
+    "compose",
+    "-p",
+    "dispatcharr-main57-observer-64ae51f49b48",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/image57-main-backend-observer-1/compose.json",
+    "exec",
+    "-T",
+    "baseline",
+    "/dispatcharrpy/bin/python",
+    "-c",
+    "import socket;s=socket.create_connection(('127.0.0.1',9192),timeout=2);s.close()"
+  ],
+  "actual_exit": 0,
+  "collection_invalid": null,
+  "owned_stop_requested": false,
+  "began_monotonic": 298001.940203804,
+  "completed_monotonic": 298002.040867024
+}

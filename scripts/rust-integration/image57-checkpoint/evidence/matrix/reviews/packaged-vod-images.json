@@ -1,0 +1,47 @@
+{
+  "name": "packaged-vod-images",
+  "controller_result_sha256": "601717494804c95c331cbea323087ffb11d24e7b8145db43e4996a3f32448d16",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/packaged-vod-images/http/source-run.json",
+      "sha256": "b79db38e9afdf052b28f3863eade0a6e8b2161eee2e58cd0699b64afc834bb05"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/packaged-vod-images/http/packaged-http.json",
+      "sha256": "7e507a5aee1c35cb7e4311bd467cbde96ded80a9f6ec973a5128839138a74e01"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/packaged-vod-images/http/packaged-vod-images.json",
+      "sha256": "2a806b23c22b53211114daa7c6dc5c23295b9c2c046e9a0b4fd4f57c1ddfdf53"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual ordinary393 and image240 wire comparisons, two FIFO cancellation observations and two10-reader bursts, full18 restoration and owned cleanup only; no complete default database, fullVOD or performance acceptance.",
+  "observed_counts_and_candidate_Source_scope": {
+    "ordinary": 393,
+    "images": 240,
+    "FIFO_observations": 2,
+    "burst_readers_each_backend": 10,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-vod-api-http-6d69affd78"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/reviews/packaged-vod-images-cleanup.json",
+      "sha256": "aed6aef230aba98a636577155e97630c3739d0c5a55a3ec067fb6c89d79c350f"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify_private.py", line 23, in <module>
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--repo',type=Path,required=True);a=p.parse_args();print(json.dumps(check(a.repo),indent=2))
+                                                                                                                                      ~~~~~^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify_private.py", line 17, in check
+    V.need(value==V.read(HERE/name),'ExactFieldProjection:'+name);V.need(V.sha(HERE/name)==row['projection_sha256'],'ProjectionSHA');count+=1
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image57-checkpoint-publication-1/selected/scripts/rust-integration/image57-checkpoint/verify.py", line 9, in need
+    if not ok:raise ValueError(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: ExactFieldProjection:evidence/matrix/reports/baseline-all/0-integration.json.json

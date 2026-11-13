@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "raw_sha256": "4cf9d508a84ff6192bb583f1bc61a703a26ac3d8e8480cfb7f0b656999debd65",
+  "summary_sha256": "28fe6ce4aa7e3affff25a472c245001b6600a9eee1a6720dabe0817b172cae0b",
+  "recomputed_qualification": {
+    "normal_Bearer_Main_notification_slice_qualified": true,
+    "Source8_framework_not_TCP": true,
+    "Native_definition_extra_cases": true,
+    "Source48_bounded_JSON_mutation_rules": true,
+    "Source_credential_TCP_parity": false,
+    "physical_SQL_concurrency_cancel_qualified": false,
+    "full_endpoint_or_Source48_parity": false,
+    "performance_acceptance": false
+  },
+  "actual_image_Config_User": "65532:65532",
+  "default_named11_structural_equality": true,
+  "fresh_owned_cleanup_queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notification-main-8a21e67a66",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notification-main-8a21e67a66",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notification-main-8a21e67a66",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    }
+  ],
+  "no_application_or_Source_requests_by_review": true,
+  "full_endpoint_or_performance_acceptance": false
+}

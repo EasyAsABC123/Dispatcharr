@@ -1,0 +1,41 @@
+{
+  "name": "sharedTS6-all-down",
+  "controller_result_sha256": "86621a050475472ec2e8fcdab50f52d93dacd6d2ea73b1b7acff8c6e3a7e0474",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/sharedTS6-all-down/shared-ts.json",
+      "sha256": "6a2c2968fd4a344d174d496a0f043ef947c071f6b84429c4245cfc9e975bd9d4"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual shared upstream owner/provider1/clients2 and decoder/fault cleanup controls only; no automatic takeover or comparative performance claim. Heavy fixture dispatched alone after all three agents acknowledged hold.",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 14,
+    "cases": [
+      "all-workers-down"
+    ],
+    "provider_slots_each": 1,
+    "clients_each": 2,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-shared-ts-1a3cafbed698"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/reviews/sharedTS6-all-down-cleanup.json",
+      "sha256": "17c58b1e62230644bf8711675e4636624f5589ec19668f49207e791b07412e19"
+    }
+  }
+}

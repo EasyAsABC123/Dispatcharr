@@ -1,0 +1,30 @@
+{
+  "cwd": "/home/justin/github/Dispatcharr",
+  "host_PID": 1008932,
+  "host_PID_starttime": "29730108",
+  "actual_identity_observed": true,
+  "stdout_pipe_closed": true,
+  "stderr_pipe_closed": true,
+  "pipe_reader_threads_settled": true,
+  "stdin_writer_settled": true,
+  "pipes_physically_settled": true,
+  "argv": [
+    "docker",
+    "compose",
+    "-p",
+    "dispatcharr-xc-main57-3790bdf04a08",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/image57-xc-catalogue-main-1/compose.json",
+    "exec",
+    "-T",
+    "baseline",
+    "/dispatcharrpy/bin/python",
+    "-c",
+    "import urllib.request;assert urllib.request.urlopen('http://127.0.0.1:5656/api/core/version/',timeout=2).status==200"
+  ],
+  "actual_exit": 1,
+  "collection_invalid": null,
+  "owned_stop_requested": false,
+  "began_monotonic": 297301.087344536,
+  "completed_monotonic": 297301.198089705
+}

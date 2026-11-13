@@ -1,0 +1,58 @@
+{
+  "name": "complete-refresh-original",
+  "controller_result_sha256": "e16d177a7b123802dae61a8e4c04e90bf2cfdfb3bd0fcbae79bd96cd6565b06e",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/complete-refresh-original/integration.json",
+      "sha256": "32ad50015f77d466ddb442eb4dd40cbd57a3ce133915138f07e635bd587648ff"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/complete-refresh-original/source-refresh-workflow-private.json",
+      "sha256": "fc79c19b3d39e40007f4f75f7e75f078065ca60ab50238c64a3eb113a62854f0"
+    }
+  ],
+  "observed_default_audits": [
+    {
+      "report": "integration.json",
+      "field": "default_database_unchanged",
+      "observed": true
+    }
+  ],
+  "audit_scope": "Literal controller default-database audit plus scoped copied-database jobs; no all-backend/default-worker acceptance.",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 40,
+    "imports": 2,
+    "task_results": 6,
+    "all_three_families_per_import_SUCCESS": true,
+    "queue_and_results_after_cleanup": [
+      0,
+      0
+    ],
+    "fixture_clock": "2026-11-13T15:24:55+00:00",
+    "native_jobs_verified_legacy_field_literal": false,
+    "native_worker_execution_verified_literal": false,
+    "Series_scope": "zero scheduled recordings",
+    "no_default_graph_or_performance_acceptance": true,
+    "Source_only_prerequisite": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-refresh-workflow-original-01224de34f"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/reviews/complete-refresh-original-cleanup.json",
+      "sha256": "6c8697afe7bb57636ec4d08b65b860a391f4024f66d201962784672c90a614ea"
+    }
+  }
+}

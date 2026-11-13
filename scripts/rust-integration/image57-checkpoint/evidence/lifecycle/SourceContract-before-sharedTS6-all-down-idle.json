@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "checked_epoch": 1794584812.9623427,
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "visible_build_media_decoder_processes": [],
+  "Root_admission_sha256": "b935a13e5fe41f5a5ae3bacfc382379dfd0338d45cc0ae7ab1527818b24a3734",
+  "unrelated_GENMON_Chromium_root_PID1319187_retained_unmodified": true,
+  "scope": "Dispatcharr functional heavy3 only; not whole-host-idle/performance experiment"
+}

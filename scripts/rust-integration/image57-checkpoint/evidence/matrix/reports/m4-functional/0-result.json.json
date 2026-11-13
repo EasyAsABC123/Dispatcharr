@@ -1,0 +1,371 @@
+{
+  "format_version": 1,
+  "scope": "Sustained native XC VOD and archive catch-up playback subset; not full application acceptance",
+  "project": "dispatcharr-m4-perf-5e50274e65",
+  "plan_sha256": "cebad4c1409679e7f5efc6b1544c9fb40fc1b9981789554c490c26d1acfc4f42",
+  "candidate_image_id": "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "build_manifest_sha256": "c1e096bdf7789c5fc2d0d9004ca6e3a68f663fe9100158b26fc621092082df0a",
+  "tool_manifest_sha256": "7f498503d0adb9aca028c37cc8d767092df3a447d1872a8d4ec668581ea9e169",
+  "quiet_authorization_sha256": null,
+  "measurements_started": false,
+  "pairs": [],
+  "preflight": [
+    {
+      "protocol": "vod",
+      "backend": "source",
+      "prefix_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+      "prefix_bytes": 1048576,
+      "decoded_frames": 200,
+      "audio_and_video_mapped": true,
+      "decoder": {
+        "frames": 200,
+        "audio_and_video_mapped": true,
+        "return_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "strict_decoder_passed": true
+      },
+      "websocket": {
+        "messages": 8,
+        "bytes": 5411,
+        "kinds": {
+          "vod_started": 2,
+          "vod_stats": 4,
+          "vod_stopped": 2
+        },
+        "errors": [],
+        "stats_snapshots": 4,
+        "last_connection_counts": {
+          "vod_stats": 0
+        },
+        "empty_snapshots": {
+          "vod_stats": 1
+        }
+      },
+      "provider_counter_released": true
+    },
+    {
+      "protocol": "vod",
+      "backend": "candidate",
+      "prefix_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+      "prefix_bytes": 1048576,
+      "decoded_frames": 200,
+      "audio_and_video_mapped": true,
+      "decoder": {
+        "frames": 200,
+        "audio_and_video_mapped": true,
+        "return_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "strict_decoder_passed": true
+      },
+      "websocket": {
+        "messages": 8,
+        "bytes": 3857,
+        "kinds": {
+          "vod_started": 2,
+          "vod_stats": 4,
+          "vod_stopped": 2
+        },
+        "errors": [],
+        "stats_snapshots": 4,
+        "last_connection_counts": {
+          "vod_stats": 0
+        },
+        "empty_snapshots": {
+          "vod_stats": 2
+        }
+      },
+      "provider_counter_released": true
+    },
+    {
+      "protocol": "timeshift",
+      "backend": "source",
+      "prefix_sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+      "prefix_bytes": 1048576,
+      "decoded_frames": 199,
+      "audio_and_video_mapped": true,
+      "decoder": {
+        "frames": 199,
+        "audio_and_video_mapped": true,
+        "return_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "strict_decoder_passed": true
+      },
+      "websocket": {
+        "messages": 4,
+        "bytes": 2831,
+        "kinds": {
+          "timeshift_stats": 4
+        },
+        "errors": [],
+        "stats_snapshots": 4,
+        "last_connection_counts": {
+          "timeshift_stats": 0
+        },
+        "empty_snapshots": {
+          "timeshift_stats": 2
+        }
+      },
+      "provider_counter_released": true
+    },
+    {
+      "protocol": "timeshift",
+      "backend": "candidate",
+      "prefix_sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+      "prefix_bytes": 1048576,
+      "decoded_frames": 199,
+      "audio_and_video_mapped": true,
+      "decoder": {
+        "frames": 199,
+        "audio_and_video_mapped": true,
+        "return_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "strict_decoder_passed": true
+      },
+      "websocket": {
+        "messages": 4,
+        "bytes": 2679,
+        "kinds": {
+          "timeshift_stats": 4
+        },
+        "errors": [],
+        "stats_snapshots": 4,
+        "last_connection_counts": {
+          "timeshift_stats": 0
+        },
+        "empty_snapshots": {
+          "timeshift_stats": 2
+        }
+      },
+      "provider_counter_released": true
+    }
+  ],
+  "passed": true,
+  "performance_verified": false,
+  "application_performance_verified": false,
+  "full_m4_parity_verified": false,
+  "fixture_ports": {
+    "host_range": [
+      61000,
+      65000
+    ],
+    "kernel_ephemeral_range": [
+      32768,
+      60999
+    ],
+    "services": {
+      "baseline": [
+        {
+          "host": 64358,
+          "container": 5656
+        },
+        {
+          "host": 64359,
+          "container": 5432
+        },
+        {
+          "host": 64360,
+          "container": 6379
+        }
+      ],
+      "origin": [
+        {
+          "host": 64361,
+          "container": 8080
+        }
+      ],
+      "source": [
+        {
+          "host": 64362,
+          "container": 5656
+        },
+        {
+          "host": 64363,
+          "container": 9191
+        }
+      ],
+      "candidate": [
+        {
+          "host": 64364,
+          "container": 9192
+        }
+      ]
+    },
+    "selection": "bind probes held together until overlay is written; released before Docker starts"
+  },
+  "host": {
+    "platform": "Linux-7.3.3-1-cachyos-x86_64-with-glibc2.44",
+    "python": "3.14.9",
+    "cpu_count": 32,
+    "load_driver_included_in_container_resources": false
+  },
+  "fixture_auth": {
+    "token_count": 11,
+    "minimum_remaining_seconds": 7198,
+    "application_jwt_settings_modified": false,
+    "synthetic_token_lifetime_seconds": 7200
+  },
+  "containers": {
+    "infrastructure": {
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "limits": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 1000000000
+      }
+    },
+    "origin": {
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "limits": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 2000000000
+      }
+    },
+    "source": {
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "limits": {
+        "memory_bytes": 536870912,
+        "nano_cpus": 2000000000
+      }
+    },
+    "candidate": {
+      "image_id": "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+      "limits": {
+        "memory_bytes": 536870912,
+        "nano_cpus": 2000000000
+      }
+    }
+  },
+  "candidate_provenance": {
+    "image_id": "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+    "source_tree_sha256": "bbaa9755b4426e256d1f875f66b5c2feb46a127fa6e5150c470f6f23a6456e9c",
+    "manifest_verified": true
+  },
+  "fixture": {
+    "active": 0,
+    "maximum_active": 0,
+    "connections": 0,
+    "bytes": 0,
+    "disconnections": 0,
+    "eof_connections": 0,
+    "fault_requests": 0,
+    "fixture_sha256": "a0a900a044995c4137f1d0a561b0b148d3367a489cd54aad3d222794c423074c",
+    "fixture_bytes": 225001032,
+    "bytes_per_second": 250000,
+    "duration_seconds": 900,
+    "codec": "h264",
+    "video": "h264 320x180 25fps",
+    "audio": "aac 48kHz",
+    "paths": {},
+    "vod": {
+      "fixture_sha256": "d7bfb5df082fb5543822a098a956b8d1be33c3cba17cf074911b7927d4ee3be8",
+      "fixture_bytes": 127660372,
+      "duration_seconds": 900,
+      "video": "h264",
+      "audio": "aac",
+      "etag": "\"d7bfb5df082fb5543822a098a956b8d1be33c3cba17cf074911b7927d4ee3be8\"",
+      "requests": 0,
+      "head_requests": 0,
+      "bytes": 0,
+      "bytes_per_second": 262144
+    },
+    "generator_commands": [
+      [
+        "ffmpeg",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-f",
+        "lavfi",
+        "-i",
+        "testsrc2=size=320x180:rate=25",
+        "-f",
+        "lavfi",
+        "-i",
+        "sine=frequency=440:sample_rate=48000",
+        "-t",
+        "900",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-threads",
+        "1",
+        "-pix_fmt",
+        "yuv420p",
+        "-g",
+        "50",
+        "-keyint_min",
+        "50",
+        "-sc_threshold",
+        "0",
+        "-b:v",
+        "1000k",
+        "-c:a",
+        "aac",
+        "-b:a",
+        "128k",
+        "-flags:v",
+        "+bitexact",
+        "-flags:a",
+        "+bitexact",
+        "-fflags",
+        "+bitexact",
+        "-muxrate",
+        "2000000",
+        "-f",
+        "mpegts",
+        "/tmp/fixture.ts"
+      ],
+      [
+        "ffmpeg",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-f",
+        "lavfi",
+        "-i",
+        "testsrc2=size=320x180:rate=25",
+        "-f",
+        "lavfi",
+        "-i",
+        "sine=frequency=440:sample_rate=48000",
+        "-t",
+        "900",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-threads",
+        "1",
+        "-pix_fmt",
+        "yuv420p",
+        "-g",
+        "50",
+        "-keyint_min",
+        "50",
+        "-sc_threshold",
+        "0",
+        "-b:v",
+        "1000k",
+        "-c:a",
+        "aac",
+        "-b:a",
+        "128k",
+        "-flags:v",
+        "+bitexact",
+        "-flags:a",
+        "+bitexact",
+        "-fflags",
+        "+bitexact",
+        "-movflags",
+        "+faststart",
+        "-f",
+        "mp4",
+        "/tmp/fixture.mp4"
+      ]
+    ],
+    "fixture_profile": "m4-sustained900-h264-aac-vod262144-archive500000"
+  },
+  "mode": "Functional preflight only; no resource measurements",
+  "cleanup_passed": true
+}

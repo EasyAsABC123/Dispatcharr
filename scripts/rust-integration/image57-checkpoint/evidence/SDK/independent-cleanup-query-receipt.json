@@ -1,0 +1,72 @@
+{
+  "all_project_resources_absent": true,
+  "exact_CID_absent": true,
+  "SDK_host_process_waited_exit0": true,
+  "SDK_host_PID_proc_present": false,
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-sdk-d77f-837694"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-sdk-d77f-837694"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-sdk-d77f-837694"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "-q",
+        "--filter",
+        "id=d38f25080027c7b8f14441ab7328255638a391ac1cb3295441cba5279f120309"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "d38f25080027c7b8f14441ab7328255638a391ac1cb3295441cba5279f120309"
+      ],
+      "exit": 1,
+      "stdout": "[]\n",
+      "stderr": "error: no such object: d38f25080027c7b8f14441ab7328255638a391ac1cb3295441cba5279f120309\n"
+    }
+  ]
+}

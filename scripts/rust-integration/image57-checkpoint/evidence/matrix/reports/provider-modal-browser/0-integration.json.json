@@ -1,0 +1,2107 @@
+{
+  "passed": true,
+  "project": "dispatcharr-provider-browser-b959c227ef",
+  "scope": "Dedicated owned Original-first modal browser gate. No builds/resource sampling.\nOriginal Dispatcharr authors retain application credit. Secrets only via stdin.\n",
+  "source_only": false,
+  "commands": [
+    [
+      "docker",
+      "image",
+      "inspect",
+      "dispatcharr-rust-candidate:image57"
+    ],
+    [
+      "docker",
+      "create",
+      "dispatcharr-rust-candidate:image57"
+    ],
+    [
+      "docker",
+      "cp",
+      "7fea3d1513ffa66ba5a800ab14330a8abd9425f3a39283c3f51f2032cf0baca7:/opt/dispatcharr-frontend/.",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/compiled-frontend"
+    ],
+    [
+      "docker",
+      "rm",
+      "7fea3d1513ffa66ba5a800ab14330a8abd9425f3a39283c3f51f2032cf0baca7"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "up",
+      "-d",
+      "--no-build",
+      "baseline"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "exec",
+      "-T",
+      "-e",
+      "VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only",
+      "-e",
+      "VOD_API_OBSERVATION=http",
+      "baseline",
+      "/dispatcharrpy/bin/python",
+      "/vod-api-probe/source.py"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "baseline",
+      "5656"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "up",
+      "-d",
+      "--no-build",
+      "candidate"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "candidate",
+      "9192"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "ps",
+      "-q",
+      "candidate"
+    ],
+    [
+      "docker",
+      "inspect",
+      "44725aefed501154c0bf7925a05e2ed95cad881b7b84d4d699bc1e0662260668"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "port",
+      "candidate",
+      "9192"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "ps",
+      "-q",
+      "baseline"
+    ],
+    [
+      "docker",
+      "inspect",
+      "3046bae23e944eb7a646cb2cfd11a5d1edfcc8e5374744da8f95b0f937132f35"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "exec",
+      "-T",
+      "-e",
+      "VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only",
+      "baseline",
+      "/dispatcharrpy/bin/python",
+      "/vod-api-probe/provider_modal_fixture.py"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "exec",
+      "-T",
+      "-e",
+      "VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only",
+      "baseline",
+      "/dispatcharrpy/bin/python",
+      "/vod-api-probe/provider_modal_fixture.py"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "logs",
+      "--no-color",
+      "--tail",
+      "100"
+    ],
+    [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-provider-browser-b959c227ef",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/tools/docker/compose.rust-playback.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/candidate.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/modal.yml",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser/ports.yml",
+      "down",
+      "--volumes",
+      "--remove-orphans",
+      "--timeout",
+      "5"
+    ],
+    [
+      "docker",
+      "ps",
+      "-aq",
+      "--filter",
+      "label=com.docker.compose.project=dispatcharr-provider-browser-b959c227ef"
+    ]
+  ],
+  "tools_sha256": {
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "docker/compose.rust-candidate.yml": "10623cfc34908fece1bcced814b65948b3999f59a92bc0757a726ed8cd4177ff",
+    "scripts/rust-vod-api-contracts/provider_modal_browser.js": "82d0823a641705562c785c5f0da6d0fbf2015d04c8da86fc10d4e27e5b8489b5",
+    "scripts/rust-vod-api-contracts/provider_modal_browser_runner.py": "d804c605c61fc2cde1720fe5845967090d615ca27c1574dbfa32ddbcb2165776",
+    "scripts/rust-vod-api-contracts/provider_modal_fixture.py": "489a4c086edb4468410b226258de953de0cecabc97ba3a8ae98ee744878f46e8",
+    "scripts/rust-vod-api-contracts/provider_modal_origin.py": "9ad49753f5813192bb20f69e5973bdc96149a5ad95ac92d08e3fe850ff3d5593",
+    "scripts/rust-vod-api-contracts/run_provider_modal_browser.py": "41cec20b2a96924850a4a6f43c966c389038765ed11e61d6d838a6f4d36608bd",
+    "scripts/rust-vod-api-contracts/source.py": "1010346be96810f4483b15217d0dd65f437d5af75e686dc6b4818c647352ad2d",
+    "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+    "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+    "scripts/rust-integration/tool_snapshot.py": "8ef73c640d60242844bb6a875a86b37526f679f39fe8eefa4787e67ae32ffe89",
+    "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+  },
+  "manifest_sha256": "c1e096bdf7789c5fc2d0d9004ca6e3a68f663fe9100158b26fc621092082df0a",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "ports": {
+    "host_range": [
+      61000,
+      65000
+    ],
+    "kernel_ephemeral_range": [
+      32768,
+      60999
+    ],
+    "services": {
+      "baseline": [
+        {
+          "host": 64522,
+          "container": 5656
+        }
+      ],
+      "origin": [
+        {
+          "host": 64523,
+          "container": 8080
+        }
+      ],
+      "candidate": [
+        {
+          "host": 64524,
+          "container": 9192
+        }
+      ]
+    },
+    "selection": "bind probes held together until overlay is written; released before Docker starts"
+  },
+  "frontend_sha256": {
+    "android-chrome-192x192.png": "eafabb4d590e6258215f54b9d5b2e49cfeee40d9b53eb533657e9468a2f78bf3",
+    "android-chrome-512x512.png": "b0338cc29c0eb0faf7bcdf7f59a593ed6da8fc63cba8eaececfd46f00b24dd26",
+    "apple-touch-icon.png": "4ed0ac53d9898de7571b86f50dd01f4d512aa1ee610255b5b4d4970b27237b5e",
+    "favicon-16x16.png": "479e6c24befd3024382bf05dc5817746987ddb145e5fb6af35b3033ceefebb35",
+    "favicon-32x32.png": "b131d0007afe387dc3add1fc8bb5cd3e3d83dce13db0a52ca73ddd3b2294780d",
+    "favicon.ico": "af699f15656d451ae4cbd0292bd35b325d7315127bd7f8f63a29f353da8fe06f",
+    "index.html": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+    "logo.png": "8482bf5fdf8de2006da2cbc031e8999ff97850e180c4f76057186aedecddbd68",
+    "site.webmanifest": "e302b643ac7a6e1f1f8ab02b6c5605654b057af967920b7ff686cea8a144663d",
+    "vite.svg": "4a748afd443918bb16591c834c401dae33e87861ab5dbad0811c3a3b4a9214fb",
+    "assets/AutoSyncAdvanced-D0rSnRij.js": "4499aaa586154a2598cde8fa3b43ebe4e0a2429324816e982699ae92205caae1",
+    "assets/AutoSyncAdvanced-D0rSnRij.js.map": "f349c5dd0800284ef9124ae2de1467cba457dc6e7ffb53faab917be2c9cb7336",
+    "assets/BackupManager-Bpj-Brsf.js": "7984e391df3a1f95a30d158188246e16750ceafd8af5a358fb39a059381f8d3d",
+    "assets/BackupManager-Bpj-Brsf.js.map": "9228b6f39c38723ce1835b7c181bfcad10e337c01f57612215a44ad42528302b",
+    "assets/DvrSettingsForm-vijCk3d1.js": "899be568f58cada7b192fce04b3403998051297cd741043432771fef14a0a372",
+    "assets/DvrSettingsForm-vijCk3d1.js.map": "9f5348e0ae80335d6fb1380f1506b5a34563594400c79b83aff89d77cae926dc",
+    "assets/EpgSettingsForm-CRQQIb4W.js": "1c794e5cad1eeb1df1210fb6fec9fed7ece774747d4aa98e4f8633d76b50e3c4",
+    "assets/EpgSettingsForm-CRQQIb4W.js.map": "79eb05181e5a0dfdf9027185d5feddbfb70b98846572dadfdb5d373c2e348c2d",
+    "assets/NavOrderForm-Dp4YJNQe.js": "5e40301e747a01084d0d9c3c4b66bef10a26a282f902940ffccc1d14f4d64c3e",
+    "assets/NavOrderForm-Dp4YJNQe.js.map": "c11175ab86c11ff1df079971946d971893763281b40ae2e983070ae5a3bcea1a",
+    "assets/NetworkAccessForm-GvCADT6-.js": "9b24555602b2085f4c090e2f4397a5ab1951ecaa13029c53a380bb5356844b53",
+    "assets/NetworkAccessForm-GvCADT6-.js.map": "406bf7d1ec89d4c4847a420054a7ea06951a7664e07c3df8ab148b2980f29155",
+    "assets/OutputProfilesTable-DvQjd_jX.js": "57fbbf63905edf295ae074ba5ad7598bd1f59db09b4b40887bb8e95199cd59ce",
+    "assets/OutputProfilesTable-DvQjd_jX.js.map": "f671ffa6eb027712a0cc584c88acb08d5c11c9290bf6df0ac81ea60f13f33b6a",
+    "assets/PluginCard-Dl686k9g.js": "2bf8492cdb5359c04b981c7f6a96fab955ea975a1939f1e3ba933dbcaaf842c5",
+    "assets/PluginCard-Dl686k9g.js.map": "4b8f8ac7f364a6a460a8fdf9c3cb45a0e41fbf33d8e625f997c4c22f03434c1b",
+    "assets/ProgramDetailModal-CU9z2sBV.js": "03b19ccb6796a0fcf18fd1f270c990550f145c993d70237c083129c863189cee",
+    "assets/ProgramDetailModal-CU9z2sBV.js.map": "a2c360bf47928baa8cd56c36978c7d0b59af35e2bcc721ee240d1a9395bf6be6",
+    "assets/ProgramRecordingModal-yDhujtuM.js": "3441c86b3b4c19dfe03b58a61d735f7d95fc5c6af269edc2c65598038f6210a9",
+    "assets/ProgramRecordingModal-yDhujtuM.js.map": "ae70999a01107df1d275be770e4c371698c8d5ce2b4f5ef7f7ef0645a0b04486",
+    "assets/ProxySettingsForm-B_ZhG06B.js": "0d43727b565aa73f730ec7b66482ac757f689c9f8710b64a8a953bd1f519c2ff",
+    "assets/ProxySettingsForm-B_ZhG06B.js.map": "762ea842a932e04cdf35f77ceb7df4f589498e10bc5f0d739a8405274aaa0886",
+    "assets/RecordingDetailsModal-Bzan6k05.js": "e27551bbc90becff136e143f7f2724dc85c03c018553f88b65d8f0ce6478faa0",
+    "assets/RecordingDetailsModal-Bzan6k05.js.map": "c142921519b4df6f37949c430e44debbbeb4ffc8a6b611fa3b3fe847ea6d21fa",
+    "assets/ReverseProxyAuthForm-Dis7QfvD.js": "88856e70554886b513b21e58ade7138600b4d5ebdb2208e42c187bc888ffbcad",
+    "assets/ReverseProxyAuthForm-Dis7QfvD.js.map": "9b90106d9d8abb14a68a82f8060d605f034b95d9f2abfb7db5bda5b8bddb496e",
+    "assets/SeriesCard-nIrbNhW6.js": "01273822d178ff61de56ab09c1e968373f512a16eedac79a6185aec5e7bdbd86",
+    "assets/SeriesCard-nIrbNhW6.js.map": "b3eaccb04f1ef471da615778f85594b3fb15ed8b27f590cf4ed3ac3d083a324e",
+    "assets/SeriesModal-COKfj0Xi.js": "d6a743ce75287e69d56cb428e65cd9012837503956aed69d82b159c24d6a64b3",
+    "assets/SeriesModal-COKfj0Xi.js.map": "6ed4c24f477acf0cd4be7ec427d08d9960fc78483f0838f6e57c912299b6659e",
+    "assets/SeriesRecordingModal-Cwbw3JTq.js": "0ca08ac72878b4762bc38a6f441b917c4c42f16270cd92fd1b87e4cf6f0a2eaf",
+    "assets/SeriesRecordingModal-Cwbw3JTq.js.map": "252b3365c8851bb36174d8a0844da08ecc99a28734bc3af62bd48fe02ac2b623",
+    "assets/SeriesRuleEditorModal-BNjdSgfn.js": "2cf2cff3c44a4a341e95bd1e8050bd68d76606be16e5ea12d8dd9918fe0bf76d",
+    "assets/SeriesRuleEditorModal-BNjdSgfn.js.map": "a67f2dd2afb7a8e56bc49e06fe7f3780982cad4ff7650efc5256871520a0217e",
+    "assets/StreamConnectionCard-BNKfPfs2.js": "fdca1005e4a76438f98848803148bd5dcf34c1f4abad691a30edd16d06fee649",
+    "assets/StreamConnectionCard-BNKfPfs2.js.map": "75de33196a43469fa60d954b70b744bf39089e7e82256e5a5b66b1a50374ccf8",
+    "assets/StreamProfilesTable-BbaQQ7kb.js": "b98628bf003e2cac22fbd57e26f8b91287413cf35d610ea1c662b860177f9d3b",
+    "assets/StreamProfilesTable-BbaQQ7kb.js.map": "e4e5231ff1291cf70c8bad4c71c68f1c7b1931ccb098929df54c36cd23bdc04f",
+    "assets/StreamSettingsForm-B20C56UL.js": "15fc69c67e234a7604ac4f1a0081dd21d945c7973108cc8181057a5d4d57ad2f",
+    "assets/StreamSettingsForm-B20C56UL.js.map": "c1d5da21802d347cedec7f7bbbd3922cf602a06563417ebbb1cae1bcbc4f0357",
+    "assets/SuperuserForm-Dqptn28e.js": "5456e245e43b4287c55445e604e28565ffd9e6e03e0b6158228d955f17ba2cc5",
+    "assets/SuperuserForm-Dqptn28e.js.map": "e356d6669ea4b8b2a371a3e7e35756df7e8e010887ee640471a99163ab864a48",
+    "assets/SystemSettingsForm-B2q0UWwL.js": "5a991acf5d06b4818cf88492ab8994766258210c7946220b316455d2f0b4e300",
+    "assets/SystemSettingsForm-B2q0UWwL.js.map": "62e1cfd8dce9172a0c078d544162e9e25e0876d11f93424ea2041ac103d96001",
+    "assets/TimeshiftConnectionCard-DvzQlmEO.js": "b7847f5c5d8b59f795c09235a3540fd6b90402c1b020cfce8ec3fdc7e86043d4",
+    "assets/TimeshiftConnectionCard-DvzQlmEO.js.map": "63fc7151852cbf509f371d67507c424db6735479ccca21b6431ae4d9abd85e2d",
+    "assets/UiSettingsForm-U9t_T8Et.js": "51ce7334c8eb73ec6555f46cfe55b7c799a9e4d14a2e9dda4082f62202437890",
+    "assets/UiSettingsForm-U9t_T8Et.js.map": "1a56027dc0e2b2a12f335ec69c0cdfcf80901f51b8e83ec72827654afc734e1a",
+    "assets/UserAgentsTable-q2JNACvR.js": "75740324e5fc35a924c055b731e5146398d3f060a0962d781530bb56317c5354",
+    "assets/UserAgentsTable-q2JNACvR.js.map": "a0b60b83c6e5e880249ae3cb5ddf42d8a44e9a420e1f0519a2d35a2a3f303fae",
+    "assets/UserLimitsForm-DKU89a5m.js": "053c8b451f1035ef87be6f052ecd3ec1f4ccabc694dec6d1ad59222fc0d8e213",
+    "assets/UserLimitsForm-DKU89a5m.js.map": "bb2c1a3e11925d0e2e4bb03469a8cd94c34a0eafbf2631757676895d51fe9461",
+    "assets/VODCard-Bk3A366L.js": "eef860a020253f83b131c8e0ad2b7c7cf45277ce2ac3a9c0119a80eb1d12349f",
+    "assets/VODCard-Bk3A366L.js.map": "0191d12d77aa04ff9953e541acd1a22b3c1462b5b57c08e601377764ce0b057b",
+    "assets/VODCardUtils-DIYkmJ5y.js": "838ac0373a9c2e21c8facdd242ea76c7969ea9b7dcf1dd56d12bc2144a0d5d0d",
+    "assets/VODCardUtils-DIYkmJ5y.js.map": "a7d2a022f029e2f2cf2321560bd5fdf12353c8963ca344519b9c99650c2a10d2",
+    "assets/VODModal-CjfWk3Ax.js": "eed16a0e1c77d36229416d05652a4a2fef2e087ab5905fc1d7066b4c343f9b50",
+    "assets/VODModal-CjfWk3Ax.js.map": "6ad744b75e3a15f7c361bf77bbf6719b81b5fda412c347d236bb688c9d27a189",
+    "assets/VodConnectionCard-Dz0CitJC.js": "bcfaa3865dc7ea08c56824c6f884d3c476cbc3132eb7532d06952535c26b7f2e",
+    "assets/VodConnectionCard-Dz0CitJC.js.map": "cc3c7cf54cf04237f227a88ab75befa43cbcb331066a46dd6c994f38ce9ca49d",
+    "assets/YouTubeTrailerModal-BZ-GC9Ch.js": "0e9d6ca0dcb6cbbd282ea402ba23581e96e58d581eb58fdeb7cd298783587eda",
+    "assets/YouTubeTrailerModal-BZ-GC9Ch.js.map": "25ebfa4aa134c93c2993e0f48ada88e02683b33859e034be76ea3a471a7a6f51",
+    "assets/ghost-B-MnEueJ.svg": "c5a03183e89a99c9bbcb6a49617f460a1d5ca5d53cc4d665defbfe0ab1791e14",
+    "assets/hard-drive-upload-CJKU5jP9.js": "38dabc8350766e2b222af5b8ded19e608cb03546ed8e59b49aa06b0a1dbe2519",
+    "assets/hard-drive-upload-CJKU5jP9.js.map": "967059547ed2080bf4e0ff8ff0493a3d07ac15d052b729a3d95f443e91753183",
+    "assets/index-Ds5qLkMK.css": "5dafb4056775922dd4dc8423bb3e2e50d00170e2bc1ab73c22cda50321fbb33c",
+    "assets/index-msm8qEOi.js": "010b81d1bb1557f5374d6eb2c0bf3f61fd122833029dbd98b321eb5dd1cfd058",
+    "assets/index-msm8qEOi.js.map": "5b07ba5d3f62bef5cf0b31d1b0a1fc128f870bf13157075df40235b6bf32b6be",
+    "assets/logo-iSLm6iWa.png": "8482bf5fdf8de2006da2cbc031e8999ff97850e180c4f76057186aedecddbd68",
+    "assets/profileTableUtils-zZGKorT6.js": "40ed8476246d2c063f61115f2263df71055539e5ec64c723dd27bc95c1f3f8ad",
+    "assets/profileTableUtils-zZGKorT6.js.map": "41cece2bc9adf7dc189f03f1f9e74da60ed897e2b8031ac741fc2f52d0b6c1e9",
+    "assets/symbolicate-BmJUPGzU.js": "e19de470503f750a0da7dacbef2db71b354c952c970d384cd5390deebf81ef70",
+    "assets/symbolicate-BmJUPGzU.js.map": "de822ba93ad5bbb4e3d2e6155538ed24547cc9778fe4e3c705a1362d5c6f17d7",
+    "assets/useSettingsSaveGuard-Chgmn8L5.js": "f07dfc4232a1f2ea43c02cde0189ebb7aea6b351081369a592affbfac4a40cad",
+    "assets/useSettingsSaveGuard-Chgmn8L5.js.map": "1dc519239968373a2ffe7f54f44edc627c48b4d363b419c8b7f27520efbd992e",
+    "static/rest_framework/css/bootstrap-theme.min.css": "f2e1cc227d6bbb4192e4a3becdfed971c7fc530d76200e43add11c98cb962c53",
+    "static/rest_framework/css/bootstrap-theme.min.css.map": "5ebabc49db378681cf6412aa00bd3b7a111a09f2815231f4b56e296fac486130",
+    "static/rest_framework/css/bootstrap-tweaks.css": "4632c2cb68e6da7de041b49d3458d69dc43895507d426dbee4173ec70ecef2eb",
+    "static/rest_framework/css/bootstrap.min.css": "6d92dfc1700fd38cd130ad818e23bc8aef697f815b2ea5face2b5dfad22f2e11",
+    "static/rest_framework/css/bootstrap.min.css.map": "78b58c9ebfd42ec2c61bc4fdf46a5df998e6cd907c773076a0a6e8f5686bafc3",
+    "static/rest_framework/css/default.css": "116577e6db2d0f99b419ecc61b453915af0eff8206b0bf3f9e87897719c1b37b",
+    "static/rest_framework/css/font-awesome-4.0.3.css": "3083e8d3b21ddc3f0e6d65ec3580aa6edfaadca5d9737d9caa27e6a233e1ccf3",
+    "static/rest_framework/css/prettify.css": "f9932af1e67a6e5105b71715b9d335873bf8805c01c2a9603e31e96cc4a95819",
+    "static/rest_framework/fonts/fontawesome-webfont.eot": "39e237c07403e62f00bd6ddf0b59d3349c7bd3869250aaadc389419db6aa40ef",
+    "static/rest_framework/fonts/fontawesome-webfont.svg": "9bf1cf619b8ecb6314009081a848c37a69fbd07b4a2a7cde339f6342b8eba26e",
+    "static/rest_framework/fonts/fontawesome-webfont.ttf": "6b49348ad53886d09ce4c32fa146e899c820de3f85a8dd3704a0624eb3bf7fa1",
+    "static/rest_framework/fonts/fontawesome-webfont.woff": "0fd28fece9ebd606b8b071460ebd3fc2ed7bc7a66ef91c8834f11dfacab4a849",
+    "static/rest_framework/fonts/glyphicons-halflings-regular.eot": "13634da87d9e23f8c3ed9108ce1724d183a39ad072e73e1b3d8cbf646d2d0407",
+    "static/rest_framework/fonts/glyphicons-halflings-regular.svg": "0688333129cbe4acc8baea3b35f8015287078f3035b9f56768389dd9cf8a0d91",
+    "static/rest_framework/fonts/glyphicons-halflings-regular.ttf": "e395044093757d82afcb138957d06a1ea9361bdcf0b442d06a18a8051af57456",
+    "static/rest_framework/fonts/glyphicons-halflings-regular.woff": "a26394f7ede100ca118eff2eda08596275a9839b959c226e15439557a5a80742",
+    "static/rest_framework/fonts/glyphicons-halflings-regular.woff2": "fe185d11a49676890d47bb783312a0cda5a44c4039214094e7957b4c040ef11c",
+    "static/rest_framework/img/glyphicons-halflings-white.png": "f0e0d95a9c8abcdfabf46348e2d4285829bb0491f5f6af0e05af52bffb6324c4",
+    "static/rest_framework/img/glyphicons-halflings.png": "1bd51b53278447c1db33f00c4773e711db21e557ecdd26d9b9ae96ca993f05e2",
+    "static/rest_framework/img/grid.png": "6e2a58503494a708105ac646d3af5c08c8c890325bb781a257d10f91ff968a9c",
+    "static/rest_framework/js/ajax-form.js": "20ccc1eadf07d4e821631c1e7dbda36f303633b9fef61b6e7a3bfd86eb97f1e0",
+    "static/rest_framework/js/bootstrap.min.js": "9ee2fcff6709e4d0d24b09ca0fc56aade12b4961ed9c43fd13b03248bfb57afe",
+    "static/rest_framework/js/csrf.js": "3194d2bd1659d4911f373ca3039a22d61378cd07bb22f14c5bac633fa787454e",
+    "static/rest_framework/js/default.js": "98938fdc9303c909d1497eb45ff4f85a0b58cce04d0d8a6a7356613940bce623",
+    "static/rest_framework/js/jquery-3.7.1.min.js": "fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a",
+    "static/rest_framework/js/load-ajax-form.js": "d457d0e55c3b8c9a84ff853dde5a2cc0f03abd6b6ccb27ff4a386fc77f25fa77",
+    "static/rest_framework/js/prettify-min.js": "e2e576e3bc607cd179ff511947010f645d3441a35313aec0dbd06c4437f83b77"
+  },
+  "candidate_binding": {
+    "image_id": "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+    "source_tree_sha256": "bbaa9755b4426e256d1f875f66b5c2feb46a127fa6e5150c470f6f23a6456e9c",
+    "manifest_verified": true
+  },
+  "browser": {
+    "passed": true,
+    "scope": "Actual unchanged React movie/series modals, provider selection, decoded proxied artwork; no resource claim",
+    "no_Accept_override": true,
+    "normal_login_count": 2,
+    "observations": {
+      "Original": {
+        "passed": true,
+        "scope": "Actual unchanged React normal login, both modal provider switches, provider-specific episodes and actual proxied SVG decoding; no playback/remote refresh",
+        "results": [
+          {
+            "kind": "movie",
+            "id": 28,
+            "provider_order": [
+              29,
+              30
+            ],
+            "initial_default_account": 2,
+            "UI_initial_provider": 29,
+            "observations": [
+              {
+                "relation_id": 29,
+                "account_id": 3,
+                "request": {
+                  "path": "/api/vod/movies/28/provider-info/",
+                  "query": "?relation_id=29",
+                  "status": 200
+                },
+                "episode_names": [],
+                "decoded_images": [
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Movie",
+                    "path": "/api/vod/movies/28/image/",
+                    "query": "?kind=movie_image&m3u_account_id=3&v=381f636e",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  }
+                ]
+              },
+              {
+                "relation_id": 30,
+                "account_id": 2,
+                "request": {
+                  "path": "/api/vod/movies/28/provider-info/",
+                  "query": "?relation_id=30",
+                  "status": 200
+                },
+                "episode_names": [],
+                "decoded_images": [
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Movie",
+                    "path": "/api/vod/movies/28/image/",
+                    "query": "?kind=movie_image&m3u_account_id=2&v=0f588876",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "series",
+            "id": 5,
+            "provider_order": [
+              5,
+              6
+            ],
+            "initial_default_account": 2,
+            "UI_initial_provider": 5,
+            "observations": [
+              {
+                "relation_id": 5,
+                "account_id": 3,
+                "request": {
+                  "path": "/api/vod/series/5/provider-info/",
+                  "query": "?include_episodes=true&relation_id=5",
+                  "status": 200
+                },
+                "episode_names": [
+                  "rust-probe-vod-rest-00 Modal Episode 1",
+                  "rust-probe-vod-rest-00 Modal Episode 2"
+                ],
+                "decoded_images": [
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Series",
+                    "path": "/api/vod/series/5/image/",
+                    "query": "?kind=movie_image&m3u_account_id=3&v=381f636e",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  },
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Episode 1",
+                    "path": "/api/vod/episodes/13/image/",
+                    "query": "?kind=movie_image&m3u_account_id=3&v=e8b817e2",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  }
+                ]
+              },
+              {
+                "relation_id": 6,
+                "account_id": 2,
+                "request": {
+                  "path": "/api/vod/series/5/provider-info/",
+                  "query": "?include_episodes=true&relation_id=6",
+                  "status": 200
+                },
+                "episode_names": [
+                  "rust-probe-vod-rest-00 Modal Episode 2",
+                  "rust-probe-vod-rest-00 Modal Episode 3"
+                ],
+                "decoded_images": [
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Series",
+                    "path": "/api/vod/series/5/image/",
+                    "query": "?kind=movie_image&m3u_account_id=2&v=0f588876",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  },
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Episode 2",
+                    "path": "/api/vod/episodes/14/image/",
+                    "query": "?kind=movie_image&m3u_account_id=2&v=c221f62c",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "VOD_HTTP_failures": [],
+        "forbidden_requests": [],
+        "uncaught_exceptions": 0,
+        "API_responses": [
+          {
+            "path": "/api/accounts/initialize-superuser/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.7",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/auth/proxy-login/",
+            "query": "",
+            "status": 401,
+            "request_id": "1451782.8",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/auth/logout/",
+            "query": "",
+            "status": 401,
+            "request_id": "1451782.11",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/version/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.16",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/token/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.18",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/users/me/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.19",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/settings/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.20",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/settings/env/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.21",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/groups/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.22",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/profiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.23",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/epg/epgdata/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.26",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/epg/sources/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.25",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/outputprofiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.28",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/useragents/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.29",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/m3u/accounts/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.24",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/streamprofiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.27",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/m3u/server-groups/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.30",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/channels/ids/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.31",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/notifications/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.35",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/initialize-superuser/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.44",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/token/refresh/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.45",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/users/me/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.48",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/version/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.49",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/settings/env/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.51",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/settings/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.50",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/profiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.53",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/groups/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.52",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/streamprofiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.57",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/epg/sources/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.55",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/epg/epgdata/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.56",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/outputprofiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.58",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/useragents/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.59",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/m3u/accounts/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.54",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/m3u/server-groups/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.60",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/channels/ids/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.61",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/notifications/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.68",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/vod/all/",
+            "query": "?page=1&page_size=24",
+            "status": 200,
+            "request_id": "1451782.70",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/vod/categories/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.69",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/vod/all/",
+            "query": "?page=1&page_size=24&search=rust-probe-vod-rest-00+Modal",
+            "status": 200,
+            "request_id": "1451782.74",
+            "stage": "movie-open"
+          },
+          {
+            "path": "/api/vod/movies/28/provider-info/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.75",
+            "stage": "movie-open"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.76",
+            "stage": "movie-open"
+          },
+          {
+            "path": "/api/vod/movies/28/image/",
+            "query": "?kind=movie_image&m3u_account_id=2&v=0f588876",
+            "status": 200,
+            "request_id": "1451782.77",
+            "stage": "movie-open"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.78",
+            "stage": "movie-open"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.79",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.80",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/provider-info/",
+            "query": "?relation_id=30",
+            "status": 200,
+            "request_id": "1451782.81",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.82",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.83",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/provider-info/",
+            "query": "?relation_id=29",
+            "status": 200,
+            "request_id": "1451782.84",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.85",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/image/",
+            "query": "?kind=movie_image&m3u_account_id=3&v=381f636e",
+            "status": 200,
+            "request_id": "1451782.86",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.87",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/provider-info/",
+            "query": "?relation_id=30",
+            "status": 200,
+            "request_id": "1451782.88",
+            "stage": "movie-provider-30"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.89",
+            "stage": "movie-provider-30"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.91",
+            "stage": "movie-provider-30"
+          },
+          {
+            "path": "/api/vod/series/5/provider-info/",
+            "query": "?include_episodes=true",
+            "status": 200,
+            "request_id": "1451782.92",
+            "stage": "series-open"
+          },
+          {
+            "path": "/api/vod/series/5/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1451782.93",
+            "stage": "series-open"
+          },
+          {
+            "path": "/api/vod/series/5/image/",
+            "query": "?kind=movie_image&m3u_account_id=2&v=0f588876",
+            "status": 200,
+            "request_id": "1451782.94",
+            "stage": "series-open"
+          },
+          {
+            "path": "/api/vod/series/5/provider-info/",
+            "query": "?include_episodes=true&relation_id=6",
+            "status": 200,
+            "request_id": "1451782.95",
+            "stage": "series-provider-5"
+          },
+          {
+            "path": "/api/vod/series/5/provider-info/",
+            "query": "?include_episodes=true&relation_id=5",
+            "status": 200,
+            "request_id": "1451782.96",
+            "stage": "series-provider-5"
+          },
+          {
+            "path": "/api/vod/series/5/image/",
+            "query": "?kind=movie_image&m3u_account_id=3&v=381f636e",
+            "status": 200,
+            "request_id": "1451782.97",
+            "stage": "series-provider-5"
+          },
+          {
+            "path": "/api/vod/episodes/13/image/",
+            "query": "?kind=movie_image&m3u_account_id=3&v=e8b817e2",
+            "status": 200,
+            "request_id": "1451782.98",
+            "stage": "series-provider-5"
+          },
+          {
+            "path": "/api/vod/series/5/provider-info/",
+            "query": "?include_episodes=true&relation_id=6",
+            "status": 200,
+            "request_id": "1451782.99",
+            "stage": "series-provider-6"
+          },
+          {
+            "path": "/api/vod/episodes/14/image/",
+            "query": "?kind=movie_image&m3u_account_id=2&v=c221f62c",
+            "status": 200,
+            "request_id": "1451782.103",
+            "stage": "series-provider-6"
+          }
+        ]
+      },
+      "native": {
+        "passed": true,
+        "scope": "Actual unchanged React normal login, both modal provider switches, provider-specific episodes and actual proxied SVG decoding; no playback/remote refresh",
+        "results": [
+          {
+            "kind": "movie",
+            "id": 28,
+            "provider_order": [
+              29,
+              30
+            ],
+            "initial_default_account": 2,
+            "UI_initial_provider": 29,
+            "observations": [
+              {
+                "relation_id": 29,
+                "account_id": 3,
+                "request": {
+                  "path": "/api/vod/movies/28/provider-info/",
+                  "query": "?relation_id=29",
+                  "status": 200
+                },
+                "episode_names": [],
+                "decoded_images": [
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Movie",
+                    "path": "/api/vod/movies/28/image/",
+                    "query": "?kind=movie_image&m3u_account_id=3&v=381f636e",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  }
+                ]
+              },
+              {
+                "relation_id": 30,
+                "account_id": 2,
+                "request": {
+                  "path": "/api/vod/movies/28/provider-info/",
+                  "query": "?relation_id=30",
+                  "status": 200
+                },
+                "episode_names": [],
+                "decoded_images": [
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Movie",
+                    "path": "/api/vod/movies/28/image/",
+                    "query": "?kind=movie_image&m3u_account_id=2&v=0f588876",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "series",
+            "id": 5,
+            "provider_order": [
+              5,
+              6
+            ],
+            "initial_default_account": 2,
+            "UI_initial_provider": 5,
+            "observations": [
+              {
+                "relation_id": 5,
+                "account_id": 3,
+                "request": {
+                  "path": "/api/vod/series/5/provider-info/",
+                  "query": "?include_episodes=true&relation_id=5",
+                  "status": 200
+                },
+                "episode_names": [
+                  "rust-probe-vod-rest-00 Modal Episode 1",
+                  "rust-probe-vod-rest-00 Modal Episode 2"
+                ],
+                "decoded_images": [
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Series",
+                    "path": "/api/vod/series/5/image/",
+                    "query": "?kind=movie_image&m3u_account_id=3&v=381f636e",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  },
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Episode 1",
+                    "path": "/api/vod/episodes/13/image/",
+                    "query": "?kind=movie_image&m3u_account_id=3&v=e8b817e2",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  }
+                ]
+              },
+              {
+                "relation_id": 6,
+                "account_id": 2,
+                "request": {
+                  "path": "/api/vod/series/5/provider-info/",
+                  "query": "?include_episodes=true&relation_id=6",
+                  "status": 200
+                },
+                "episode_names": [
+                  "rust-probe-vod-rest-00 Modal Episode 2",
+                  "rust-probe-vod-rest-00 Modal Episode 3"
+                ],
+                "decoded_images": [
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Series",
+                    "path": "/api/vod/series/5/image/",
+                    "query": "?kind=movie_image&m3u_account_id=2&v=0f588876",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  },
+                  {
+                    "alt": "rust-probe-vod-rest-00 Modal Episode 2",
+                    "path": "/api/vod/episodes/14/image/",
+                    "query": "?kind=movie_image&m3u_account_id=2&v=c221f62c",
+                    "complete": true,
+                    "width": 2,
+                    "height": 3
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "VOD_HTTP_failures": [],
+        "forbidden_requests": [],
+        "uncaught_exceptions": 0,
+        "API_responses": [
+          {
+            "path": "/api/accounts/auth/proxy-login/",
+            "query": "",
+            "status": 401,
+            "request_id": "1452136.8",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/initialize-superuser/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.7",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/auth/logout/",
+            "query": "",
+            "status": 401,
+            "request_id": "1452136.12",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/version/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.17",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/token/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.20",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/users/me/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.21",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/settings/env/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.23",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/settings/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.22",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/groups/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.24",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/profiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.25",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/epg/epgdata/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.28",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/useragents/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.31",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/outputprofiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.30",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/channels/ids/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.33",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/streamprofiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.29",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/epg/sources/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.27",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/m3u/server-groups/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.32",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/m3u/accounts/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.26",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/notifications/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.37",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/initialize-superuser/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.45",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/token/refresh/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.46",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/accounts/users/me/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.48",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/version/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.49",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/settings/env/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.51",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/settings/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.50",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/groups/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.52",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/profiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.53",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/epg/epgdata/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.56",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/streamprofiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.57",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/outputprofiles/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.58",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/useragents/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.59",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/epg/sources/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.55",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/m3u/server-groups/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.60",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/m3u/accounts/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.54",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/channels/channels/ids/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.61",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/core/notifications/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.68",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/vod/all/",
+            "query": "?page=1&page_size=24",
+            "status": 200,
+            "request_id": "1452136.70",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/vod/categories/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.69",
+            "stage": "normal-login"
+          },
+          {
+            "path": "/api/vod/all/",
+            "query": "?page=1&page_size=24&search=rust-probe-vod-rest-00+Modal",
+            "status": 200,
+            "request_id": "1452136.75",
+            "stage": "movie-open"
+          },
+          {
+            "path": "/api/vod/movies/28/provider-info/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.76",
+            "stage": "movie-open"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.77",
+            "stage": "movie-open"
+          },
+          {
+            "path": "/api/vod/movies/28/image/",
+            "query": "?kind=movie_image&m3u_account_id=2&v=0f588876",
+            "status": 200,
+            "request_id": "1452136.78",
+            "stage": "movie-open"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.79",
+            "stage": "movie-open"
+          },
+          {
+            "path": "/api/vod/movies/28/provider-info/",
+            "query": "?relation_id=30",
+            "status": 200,
+            "request_id": "1452136.80",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.81",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.82",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/provider-info/",
+            "query": "?relation_id=29",
+            "status": 200,
+            "request_id": "1452136.83",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.84",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/image/",
+            "query": "?kind=movie_image&m3u_account_id=3&v=381f636e",
+            "status": 200,
+            "request_id": "1452136.85",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.86",
+            "stage": "movie-provider-29"
+          },
+          {
+            "path": "/api/vod/movies/28/provider-info/",
+            "query": "?relation_id=30",
+            "status": 200,
+            "request_id": "1452136.87",
+            "stage": "movie-provider-30"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.88",
+            "stage": "movie-provider-30"
+          },
+          {
+            "path": "/api/vod/movies/28/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.90",
+            "stage": "movie-provider-30"
+          },
+          {
+            "path": "/api/vod/series/5/providers/",
+            "query": "",
+            "status": 200,
+            "request_id": "1452136.92",
+            "stage": "series-open"
+          },
+          {
+            "path": "/api/vod/series/5/provider-info/",
+            "query": "?include_episodes=true",
+            "status": 200,
+            "request_id": "1452136.91",
+            "stage": "series-open"
+          },
+          {
+            "path": "/api/vod/series/5/image/",
+            "query": "?kind=movie_image&m3u_account_id=2&v=0f588876",
+            "status": 200,
+            "request_id": "1452136.93",
+            "stage": "series-open"
+          },
+          {
+            "path": "/api/vod/series/5/provider-info/",
+            "query": "?include_episodes=true&relation_id=6",
+            "status": 200,
+            "request_id": "1452136.94",
+            "stage": "series-provider-5"
+          },
+          {
+            "path": "/api/vod/series/5/provider-info/",
+            "query": "?include_episodes=true&relation_id=5",
+            "status": 200,
+            "request_id": "1452136.95",
+            "stage": "series-provider-5"
+          },
+          {
+            "path": "/api/vod/series/5/image/",
+            "query": "?kind=movie_image&m3u_account_id=3&v=381f636e",
+            "status": 200,
+            "request_id": "1452136.96",
+            "stage": "series-provider-5"
+          },
+          {
+            "path": "/api/vod/episodes/13/image/",
+            "query": "?kind=movie_image&m3u_account_id=3&v=e8b817e2",
+            "status": 200,
+            "request_id": "1452136.97",
+            "stage": "series-provider-5"
+          },
+          {
+            "path": "/api/vod/series/5/provider-info/",
+            "query": "?include_episodes=true&relation_id=6",
+            "status": 200,
+            "request_id": "1452136.98",
+            "stage": "series-provider-6"
+          },
+          {
+            "path": "/api/vod/episodes/14/image/",
+            "query": "?kind=movie_image&m3u_account_id=2&v=c221f62c",
+            "status": 200,
+            "request_id": "1452136.100",
+            "stage": "series-provider-6"
+          }
+        ]
+      }
+    },
+    "fixture": {
+      "prepared": true,
+      "username": "rust-probe-vod-rest-standard",
+      "movie": {
+        "id": 28,
+        "name": "rust-probe-vod-rest-00 Modal Movie"
+      },
+      "series": {
+        "id": 5,
+        "name": "rust-probe-vod-rest-00 Modal Series"
+      },
+      "episodes": [
+        {
+          "id": 13,
+          "name": "rust-probe-vod-rest-00 Modal Episode 1"
+        },
+        {
+          "id": 14,
+          "name": "rust-probe-vod-rest-00 Modal Episode 2"
+        },
+        {
+          "id": 15,
+          "name": "rust-probe-vod-rest-00 Modal Episode 3"
+        }
+      ],
+      "origin": "http://172.20.0.3:18881",
+      "freshness": "Both provider caches stamped now; never force_refresh",
+      "provider_ids": {
+        "movie": [
+          29,
+          30
+        ],
+        "series": [
+          5,
+          6
+        ]
+      }
+    },
+    "exact_ordered_modal_observations": true,
+    "restoration": {
+      "restored": true,
+      "seven_model_row_fingerprints_exact": true,
+      "user_full_microsecond_row_exact": true,
+      "origin_requests": [
+        {
+          "method": "GET",
+          "path": "/poster-b.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/poster-a.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/poster-b.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/poster-a.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/episode-a.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/episode-b.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/poster-b.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/poster-a.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/poster-b.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/poster-a.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/episode-a.svg",
+          "allowed": true
+        },
+        {
+          "method": "GET",
+          "path": "/episode-b.svg",
+          "allowed": true
+        }
+      ],
+      "no_provider_contact": true,
+      "scope": "Login audit events and sequence advancement remain genuine fixture effects; owned project must be destroyed."
+    }
+  },
+  "cleanup": "Owned Compose containers/networks/volumes removed",
+  "remaining_owned_containers": ""
+}

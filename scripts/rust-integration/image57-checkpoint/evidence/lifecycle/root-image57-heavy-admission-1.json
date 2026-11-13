@@ -1,0 +1,153 @@
+{
+  "passed": true,
+  "checked_epoch": 1794584615.5012524,
+  "Root_all_actual_app_sessions_consumed": true,
+  "last_Core59888_actual_exit": 1,
+  "last_Core_owned_cleanup_controller_verified": true,
+  "all_containers_and_Compose_resources_empty": true,
+  "all_Dispatcharr_owned_build_app_media_decoder_sampler_idle": true,
+  "Stream_and_Store_HOLD_idle_ack": true,
+  "HOLD_new_Docker_Cargo_app_media_controls_and_hashwalks": true,
+  "fixed_solo_order": [
+    "sharedTS18",
+    "sharedTS6-all-down",
+    "retention100"
+  ],
+  "all25ordinary_passed_clean": true,
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": ""
+    }
+  ],
+  "unrelated_browser_preserved": [
+    {
+      "pid": 1319187,
+      "state": "S<sl",
+      "starttime": "30249700",
+      "ticks_before": 243,
+      "cwd": "/home/justin/github/genmon",
+      "owned_by_unrelated_genmon_browser_root": 1319187,
+      "tick_delta": 0
+    },
+    {
+      "pid": 1319196,
+      "state": "S<",
+      "starttime": "30249703",
+      "ticks_before": 2,
+      "cwd": "/home/justin/github/genmon",
+      "owned_by_unrelated_genmon_browser_root": 1319187,
+      "tick_delta": 0
+    },
+    {
+      "pid": 1319197,
+      "state": "S<",
+      "starttime": "30249704",
+      "ticks_before": 2,
+      "cwd": "/proc/1319198/fdinfo",
+      "owned_by_unrelated_genmon_browser_root": 1319187,
+      "tick_delta": 0
+    },
+    {
+      "pid": 1319199,
+      "state": "S",
+      "starttime": "30249706",
+      "ticks_before": 4,
+      "cwd": "/proc/1319198/fdinfo",
+      "owned_by_unrelated_genmon_browser_root": 1319187,
+      "tick_delta": 0
+    },
+    {
+      "pid": 1319222,
+      "state": "S<l",
+      "starttime": "30249707",
+      "ticks_before": 29,
+      "cwd": "/home/justin/github/genmon",
+      "owned_by_unrelated_genmon_browser_root": 1319187,
+      "tick_delta": 0
+    },
+    {
+      "pid": 1319224,
+      "state": "Sl",
+      "starttime": "30249707",
+      "ticks_before": 46,
+      "cwd": "/home/justin/github/genmon",
+      "owned_by_unrelated_genmon_browser_root": 1319187,
+      "tick_delta": 0
+    },
+    {
+      "pid": 1319263,
+      "state": "Sl",
+      "starttime": "30249710",
+      "ticks_before": 5,
+      "cwd": "/proc/1319198/fdinfo",
+      "owned_by_unrelated_genmon_browser_root": 1319187,
+      "tick_delta": 0
+    },
+    {
+      "pid": 1319282,
+      "state": "SNl",
+      "starttime": "30249713",
+      "ticks_before": 26,
+      "cwd": "/proc/1319198/fdinfo",
+      "owned_by_unrelated_genmon_browser_root": 1319187,
+      "tick_delta": 0
+    },
+    {
+      "pid": 1320054,
+      "state": "Sl",
+      "starttime": "30251165",
+      "ticks_before": 131,
+      "cwd": "/proc/1319198/fdinfo",
+      "owned_by_unrelated_genmon_browser_root": 1319187,
+      "tick_delta": 1
+    },
+    {
+      "pid": 1327868,
+      "state": "S<l",
+      "starttime": "30268079",
+      "ticks_before": 2,
+      "cwd": "/proc/1319198/fdinfo",
+      "owned_by_unrelated_genmon_browser_root": 1319187,
+      "tick_delta": 0
+    }
+  ],
+  "browser_context": "Separate genmon workspace/mobilelink headless browser ancestry attested; no stop/modification performed",
+  "scope": "Functional heavy3 solo across Dispatcharr work; no resource experiment or whole-host idle claim",
+  "earlier_process_probe_refusals": "Process-name probe overbroad; child cwd assertion also overbroad. Neither launched any fixture."
+}

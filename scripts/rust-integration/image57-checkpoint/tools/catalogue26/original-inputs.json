@@ -1,0 +1,84 @@
+{
+  "files": {
+    "absolute_http.py": "beff66f154ddd172731660eab145e3638ccd0e83d7f005184f6738325c208598",
+    "actual-preexecution-review.json": "cabc69ef4bad9c9fbdbccc5b0a5f69df0afa0c78a75fbfb45eddf555760df4d2",
+    "bounded_process.py": "0ca7491087ae756d667dbb9dc1655dbb0f8b0fd0c32b8bfa6592b1f7a16f9867",
+    "bounded_stop.py": "eb6a175a6c02b73a3b5d2d114295805a789eb7f3845b83357bf2e1d038541bc4",
+    "candidate-binding.json": "ae56fe8edda1b9bf3439834f15b7f0a96f19bd96f8898fb39b4eda4ed5dea97c",
+    "candidate_inputs.py": "334ee8eb494cc1c963972822751eade55e6eab9bf422c79f7d48ea17c3ac187f",
+    "cue-template.json": "5ed1f5d9db5466bd65d4514640e18db8a15b5bbfce2dcac11b40c90819c1c981",
+    "definition.py": "6770af0195915c5c25feb4e2c8ef83e81c0373efe285775c8caeb0b82eb26461",
+    "expected-runtime.json": "d349ac8d72d5e77f41c75bde46855129c18a3c9f9d061c92873ff9a8d568f67a",
+    "fixture_db.py": "93653989cb68c3b05fa2fba4e837358ef65383e51526d6c0cb6f310c0c61090f",
+    "host_mechanics.py": "bc0fa10731058a23a5493b45f8c5b2e4471d27e32eaa1de4e40b7ba74763e3a3",
+    "legacy_control.py": "ee99a701d3bce98bc301f04547f55227dc4b52c6d87bdde3d903e30472462ef4",
+    "main_http.py": "0e3ed99f0d38da7f1a2831d4f9d2d27de619bf1051a8ace9f44794815b9b6024",
+    "origin.py": "3fc3edacc3b1d60d0d2d2a8a2f21d844c95d37018a55f1d6125592c65d807890",
+    "owned_process.py": "facccc425206f124a363ce81d22e2ce8314036e3f4ca8e0e3c1cf4c13d84ab18",
+    "pinned-source.json": "dbcebcf556ce59ecef5dbcc194b6d16af04c293a083441023891c00a750b18c2",
+    "policy.json": "a1344c90b30daf56b55c3c62016790a5a9743719964cf9e11ff52a778f34a733",
+    "reader.py": "b24e3a3be28cd07f86b568889887118a59e9c5d209d5642434be028b317a0f14",
+    "reference-inputs.json": "6606902c24b9712dbc131232aa2acda34f10c0c15c066e3ae4824fc823432dee",
+    "retained-fk-schema.json": "abdb79ecfac1bcf351c380762e53b67090df36d26afbed173d238ee3aeafda31",
+    "retained-rows-private.json": "4fa91fb47abf356b432e521e6bc6cf0d79da0fc7e6d0ca3729c6c51737f370c0",
+    "retained-seed-private.json": "c0a0b778ed32273f9de756f78d587ab3b09795d1a2c7aa4e09363d340573a406",
+    "retained-source26.json": "20b909e89e1d89facf8a214fe58e1a470c8cc303e2beb5590d8d637eba6d5ec5",
+    "retained_dependencies.py": "58f4c4c4df0503ba3cae4e00417fc266c581cd17c25d27556f942d6709ec96a3",
+    "retained_seed.py": "9a2cc026a25817fa5e373908cfdf482d3ce34f06d1175329a5c04d5337018f0d",
+    "run.py": "bbd7b258af9df9dbed630ff1a90ff168d8472d7873827b865fa359453edcab32",
+    "schema.json": "18f24c5f14c71d9d8827b1cac7bcff9bf68a2f5f3984c2258f1f93fa3d438566",
+    "seal.json": "e824c0e74d0769af34665811c31b1985f03ecd603b5331d6ca875f0d67b1064d",
+    "selection.json": "2f1a11af838e2246229925ce38e887d8e61439e81259e54863964537cd234083",
+    "test_controls.py": "03f16a823f20dd9aa58a075fc0c73d72f99c169fb7b7c460b3a867457aa2fc16",
+    "tooling-inputs.json": "1c82ae02de1562d80052ab79d1f38ec3e27ed12aea24bdb65f31442105ba6a38",
+    "tooling_guard.py": "ad8143bacac0d1d4da45d94b3a10df65347877c074be1427310bbd25d6e0fcf5"
+  },
+  "omitted_private_inputs": [
+    "retained-seed-private.json",
+    "retained-rows-private.json"
+  ],
+  "policy": "Original private input hashes remain strict. Public Source26 component supplies a separate safe projected seed recipe; this does not recreate the executed private credentials. No consumed cue/claim included; no new app authorization.",
+  "new_input_binding": {
+    "original_definition_sha256": "6770af0195915c5c25feb4e2c8ef83e81c0373efe285775c8caeb0b82eb26461",
+    "new_definition_sha256": "0ea3d61ad8d23354957cbad973bb7627aec2f62c687c7f544a08d6d62ae2e211",
+    "replacement": "one exact private credential literal replaced by public-new-binding-<originalSHAfirst16>; not executed original bytes",
+    "install": "Explicitly choose fresh credential-safe reproduction and rename definition.new-input-binding.py to definition.py. Supply separately reconstructed public Source26 seed/rows; regenerate input seal; never use original executed seal or cue.",
+    "actual_app_replay": false
+  },
+  "blocked_run": {
+    "historical_executed_sha256": "bbd7b258af9df9dbed630ff1a90ff168d8472d7873827b865fa359453edcab32",
+    "public_blocked_sha256": "47272fd25d17552db39655494f22c6a0a17e6a72160821890b107acffe522ba6",
+    "only_change": "EXECUTION_BLOCKED False to True; no cue/claim included"
+  },
+  "new_credential_bindings": {
+    "files": {
+      "retained-seed-private.json": {
+        "original_sha256": "c0a0b778ed32273f9de756f78d587ab3b09795d1a2c7aa4e09363d340573a406",
+        "new_path": "retained-seed-new-binding.json",
+        "new_sha256": "8872adb5783e9b2a66c2622525373c018b97d6218fbda0508c00a71490c7603d"
+      },
+      "retained-rows-private.json": {
+        "original_sha256": "4fa91fb47abf356b432e521e6bc6cf0d79da0fc7e6d0ca3729c6c51737f370c0",
+        "new_path": "retained-rows-new-binding.json",
+        "new_sha256": "730b42e87b64a9a9aa47f46750c738782af7e3e99d33b0c9b4d5cba59dc654e8"
+      }
+    },
+    "replacement_fields": {
+      "d5391f404dca820744d1a93190fdec09b1f4a44a916e43b2944240790d94f795": {
+        "field": "xc_password",
+        "replacement": "public-reproduction-d5391f404dca820744d1a931"
+      },
+      "bb7208bc9b5d7c04f1236a82a0093a5e33f40423d5ba8d4266f7092c3ba43b62": {
+        "field": "password",
+        "replacement": "!"
+      },
+      "f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d": {
+        "field": "password",
+        "replacement": "!"
+      }
+    },
+    "reference_inputs_sha256": "1554f89af8c651ef6e54473aea97a3eb6d4154f69e062ca7453f29c302282926",
+    "password_policy": "Django password field locked with !; XC/API key use public-reproduction-<original value SHA first24>; source raw request/query/history never rewritten",
+    "execution_status": "UNEXECUTED; explicit NEW fixture input binding only; no original seal/cue acceptance"
+  }
+}

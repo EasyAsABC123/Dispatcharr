@@ -1,0 +1,407 @@
+--- image54-vod-main4s-prep-1/candidate-binding.json
++++ image55-vod-main4s-prep-1/candidate-binding.json
+@@ -1,17 +1,17 @@
+ {
+   "status": "BLOCKED input-bound only, no new cue",
+   "execution_authorized": false,
+-  "Root_reviewed_Rust_input_count": 792,
+-  "Root_reviewed_input_map_sha256": "7acb3cf3c8777286cbfab1a8e338920ede7151d9ef173db5b259f77e3b6e802f",
+-  "build_manifest": "artifacts/rust/candidate-build-notification-mutations-image54-1/build.json",
+-  "build_manifest_sha256": "cac7bcdcc60dff6f26e233e78c2737b7f5d9450cf54042719b8d5cd61cf5ff8b",
+-  "candidate_tag": "dispatcharr-rust-app:notification-mutations-image54",
+-  "candidate_image": "sha256:8e3c133c0639d60057d8d05a5be2fce66e0f0968c35e29f674c348495a1a9ca0",
+-  "git_revision": "044f3ad0fb3ee68ffb17b23bbb796ccdae954298",
+-  "source_tree_sha256": "a8ab7ab0e400c1ebcdc1bc0e232434bb9408ba5165a048d1cbf2c0716f501256",
+-  "source_archive": "artifacts/rust/candidate-build-notification-mutations-image54-1/source.tar",
+-  "source_archive_sha256": "86fb4e93032cc1565ada0d0935e21805dc6e0352897f5eeed06b7a0748b3c880",
++  "Root_reviewed_Rust_input_count": 794,
++  "Root_reviewed_input_map_sha256": "a65ca5bfb57097b387451a9cea6c0341c670823d64e541704a20f63a4969dc0d",
++  "build_manifest": "artifacts/rust/candidate-build-union794-image55-1/build.json",
++  "build_manifest_sha256": "3e1cb5c613d280c9297d75e1a69998f22c858c8a3d158949d61377cd1ffd3e76",
++  "candidate_tag": "dispatcharr-rust-app:union794-image55",
++  "candidate_image": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
++  "git_revision": "aca6d900ad13700ab86b2898134a61e4dba57bc1",
++  "source_tree_sha256": "6457d75bad17874f039eaed58941e3a047fb124a841637ff1a28392db2472e5c",
++  "source_archive": "artifacts/rust/candidate-build-union794-image55-1/source.tar",
++  "source_archive_sha256": "8addffe734f0326b99f9faeb7fac0af670129a482ecb591df2a63638446c74af",
+   "reserve_script_sha1": "d757c8db4c0aa5a26a91e84d2dcbfb4047589be0",
+-  "proposed_fresh_output": "artifacts/rust/m4-vod-four-second-main-image54-1",
++  "proposed_fresh_output": "artifacts/rust/m4-vod-four-second-main-image55-1",
+   "cue": null
+ }
+--- image54-vod-main4s-prep-1/cue-template.json
++++ image55-vod-main4s-prep-1/cue-template.json
+@@ -1,6 +1,6 @@
+ {
+   "authorized": false,
+-  "action": "image54-main-four-second-physical-once",
++  "action": "image55-main-four-second-physical-once",
+   "source_native_application_requests_authorized": false,
+   "resource_sampling": false,
+   "performance_acceptance": false,
+@@ -11,22 +11,22 @@
+   "expires_utc": null,
+   "boot_id": null,
+   "selection_sha256": null,
+-  "plan_sha256": null,
+-  "policy_sha256": null,
+-  "binding_sha256": null,
++  "plan_sha256": "0ef22e8e609bf8b91454a12430a6763aa4d11b92056ff0548aad42e1f4cf044c",
++  "policy_sha256": "8a1daf8e5f4b914e22a7ec180b6fe28607250ee5d34e2d80e374c20e8b0e618e",
++  "binding_sha256": "54b8c01326b330094400331659b5e0323ccc869ba782ff97e7ba4de9cd7f9632",
+   "Root_quiet_preflight_sha256": null,
+   "cases": [
+     "success",
+     "busy",
+     "clientloss"
+   ],
+-  "new_output": "artifacts/rust/m4-vod-four-second-main-image54-1",
+-  "build_manifest_sha256": "cac7bcdcc60dff6f26e233e78c2737b7f5d9450cf54042719b8d5cd61cf5ff8b",
+-  "candidate_tag": "dispatcharr-rust-app:notification-mutations-image54",
+-  "candidate_image": "sha256:8e3c133c0639d60057d8d05a5be2fce66e0f0968c35e29f674c348495a1a9ca0",
+-  "git_revision": "044f3ad0fb3ee68ffb17b23bbb796ccdae954298",
+-  "source_tree_sha256": "a8ab7ab0e400c1ebcdc1bc0e232434bb9408ba5165a048d1cbf2c0716f501256",
+-  "source_archive_sha256": "86fb4e93032cc1565ada0d0935e21805dc6e0352897f5eeed06b7a0748b3c880",
+-  "Root_reviewed_Rust_input_count": 792,
+-  "Root_reviewed_input_map_sha256": "7acb3cf3c8777286cbfab1a8e338920ede7151d9ef173db5b259f77e3b6e802f"
++  "new_output": "artifacts/rust/m4-vod-four-second-main-image55-1",
++  "build_manifest_sha256": "3e1cb5c613d280c9297d75e1a69998f22c858c8a3d158949d61377cd1ffd3e76",
++  "candidate_tag": "dispatcharr-rust-app:union794-image55",
++  "candidate_image": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
++  "git_revision": "aca6d900ad13700ab86b2898134a61e4dba57bc1",
++  "source_tree_sha256": "6457d75bad17874f039eaed58941e3a047fb124a841637ff1a28392db2472e5c",
++  "source_archive_sha256": "8addffe734f0326b99f9faeb7fac0af670129a482ecb591df2a63638446c74af",
++  "Root_reviewed_Rust_input_count": 794,
++  "Root_reviewed_input_map_sha256": "a65ca5bfb57097b387451a9cea6c0341c670823d64e541704a20f63a4969dc0d"
+ }
+--- image54-vod-main4s-prep-1/execution-plan.json
++++ image55-vod-main4s-prep-1/execution-plan.json
+@@ -1,5 +1,5 @@
+ {
+-  "scope": "BLOCKED exact image54 Source-first success/busy/clientloss physical4s functional characterization; no resource/performance/default enable",
++  "scope": "BLOCKED exact image55 Source-first success/busy/clientloss physical4s functional characterization; no resource/performance/default enable",
+   "fixture_execution_authorized": false,
+   "Root_activation_required": true,
+   "cases": [
+@@ -7,18 +7,18 @@
+     "busy",
+     "clientloss"
+   ],
+-  "new_output": "artifacts/rust/m4-vod-four-second-main-image54-1",
+-  "cue_path": "artifacts/rust/image54-vod-main4s-prep-1/Root-once-quiet-cue.json",
+-  "Root_quiet_preflight": "artifacts/rust/image54-vod-main4s-prep-1/Root-quiet-preflight.json",
++  "new_output": "artifacts/rust/m4-vod-four-second-main-image55-1",
++  "cue_path": "artifacts/rust/image55-vod-main4s-prep-1/Root-once-quiet-cue.json",
++  "Root_quiet_preflight": "artifacts/rust/image55-vod-main4s-prep-1/Root-quiet-preflight.json",
+   "argv_after_Root_flag_only_activation": [
+     "python3",
+-    "artifacts/rust/image54-vod-main4s-prep-1/controller/launch_once.py",
++    "artifacts/rust/image55-vod-main4s-prep-1/controller/launch_once.py",
+     "--repo",
+     "/home/justin/github/Dispatcharr"
+   ],
+   "cwd": "/home/justin/github/Dispatcharr",
+   "environment_prelude": "source artifacts/rust/tooling/environment.sh",
+-  "sealed_file_count": 25,
++  "sealed_file_count": 26,
+   "maximum_cue_seconds": 1800,
+   "no_retry": true,
+   "capture_failure_and_physical_cleanup": true,
+--- image54-vod-main4s-prep-1/launch_once.py
++++ image55-vod-main4s-prep-1/launch_once.py
+@@ -3,12 +3,12 @@
+ from pathlib import Path
+ EXECUTION_BLOCKED=True
+ HERE=Path(__file__).resolve().parent
+-ACTION='image54-main-four-second-physical-once'
++ACTION='image55-main-four-second-physical-once'
+ def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+ def require(ok,label):
+  if not ok:raise ValueError(label)
+ def guard_candidate(here,repo,binding):
+- spec=importlib.util.spec_from_file_location('image54_inputs',here/'tools/candidate_inputs.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++ spec=importlib.util.spec_from_file_location('image55_inputs',here/'tools/candidate_inputs.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+  return m.bound_candidate(repo/binding['build_manifest'],binding['candidate_image'],here/'tools/expected-runtime.json',repo/binding['source_archive'])
+ def validate(repo,here,cue,now):
+  repo=Path(repo).resolve();here=Path(here).resolve();plan=json.loads((here/'execution-plan.json').read_text());binding=json.loads((here/'candidate-binding.json').read_text());selection=here/'selection.json';rows=json.loads(selection.read_text())['files']
+@@ -23,7 +23,7 @@
+  require(cue.get('boot_id')==Path('/proc/sys/kernel/random/boot_id').read_text().strip(),'SameBoot')
+  for key,value in [('selection_sha256',digest(selection)),('plan_sha256',digest(here/'execution-plan.json')),('policy_sha256',digest(here/'policy.json')),('binding_sha256',digest(here/'candidate-binding.json'))]:require(cue.get(key)==value,'CueSeal '+key)
+  for key in ['build_manifest_sha256','candidate_tag','candidate_image','git_revision','source_tree_sha256','source_archive_sha256','Root_reviewed_Rust_input_count','Root_reviewed_input_map_sha256']:require(cue.get(key)==binding[key],'CueCandidate '+key)
+- require(type(cue.get('Root_reviewed_Rust_input_count'))is int and cue['Root_reviewed_Rust_input_count']==792,'Strict792')
++ require(type(cue.get('Root_reviewed_Rust_input_count'))is int and cue['Root_reviewed_Rust_input_count']==794,'Strict794')
+  require(cue.get('new_output')==plan['new_output'],'ExactNewOutput')
+  preflight=repo/plan['Root_quiet_preflight'];require(preflight.is_file()and cue.get('Root_quiet_preflight_sha256')==digest(preflight),'ExactRootQuietPreflight')
+  quiet=json.loads(preflight.read_text());require(quiet.get('passed')is True and quiet.get('boot_id')==cue['boot_id']and type(quiet.get('checked_epoch'))in[int,float]and cue['issued_epoch']-300<=quiet['checked_epoch']<=cue['issued_epoch'],'FreshQuietPreflight')
+@@ -41,11 +41,11 @@
+  return plan,binding,proof
+ 
+ def dispatch(repo,here,plan,binding):
+- spec=importlib.util.spec_from_file_location('image54_main_protocol',here/'tools/run.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++ spec=importlib.util.spec_from_file_location('image55_main_protocol',here/'tools/run.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+  args=argparse.Namespace(repo=repo,candidate_image=binding['candidate_image'],build_manifest=repo/binding['build_manifest'],source_archive=repo/binding['source_archive'],output=repo/plan['new_output'])
+  return m.execute(args,repo,args.output)
+ def main():
+- if EXECUTION_BLOCKED:raise RuntimeError('IMAGE54_MAIN4S_ROOT_ACTIVATION_REQUIRED')
++ if EXECUTION_BLOCKED:raise RuntimeError('IMAGE55_MAIN4S_ROOT_ACTIVATION_REQUIRED')
+  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--repo',type=Path,required=True);args=parser.parse_args();repo=args.repo.resolve();plan=json.loads((HERE/'execution-plan.json').read_text());cue_path=repo/plan['cue_path'];raw=cue_path.read_bytes();cue=json.loads(raw)
+  plan,binding,proof=validate(repo,HERE,cue,time.time());require(cue['issued_epoch']<=time.time()<cue['expires_epoch'],'ExpiredBeforeClaim')
+  claim=cue_path.with_name(cue_path.stem+'.claimed.json');body={'no_retry':True,'cue_sha256':hashlib.sha256(raw).hexdigest(),'selection_sha256':cue['selection_sha256'],'boot_id':cue['boot_id'],'claimed_epoch':time.time(),'pid':os.getpid(),'new_output':plan['new_output']}
+--- image54-vod-main4s-prep-1/policy.json
++++ image55-vod-main4s-prep-1/policy.json
+@@ -1,23 +1,23 @@
+ {
+   "schema": 1,
+-  "scope": "NEW BLOCKED image54 exact792 three-case Main4s plan; observations and parity separate",
++  "scope": "NEW BLOCKED image55 exact794 three-case Main4s plan; observations and parity separate",
+   "fixture_execution_authorized": false,
+   "hardblock": "UNVALIDATED_MAIN_FIXTURE_DRAFT",
+   "candidate": {
+     "status": "BLOCKED input-bound only, no new cue",
+     "execution_authorized": false,
+-    "Root_reviewed_Rust_input_count": 792,
+-    "Root_reviewed_input_map_sha256": "7acb3cf3c8777286cbfab1a8e338920ede7151d9ef173db5b259f77e3b6e802f",
+-    "build_manifest": "artifacts/rust/candidate-build-notification-mutations-image54-1/build.json",
+-    "build_manifest_sha256": "cac7bcdcc60dff6f26e233e78c2737b7f5d9450cf54042719b8d5cd61cf5ff8b",
+-    "candidate_tag": "dispatcharr-rust-app:notification-mutations-image54",
+-    "candidate_image": "sha256:8e3c133c0639d60057d8d05a5be2fce66e0f0968c35e29f674c348495a1a9ca0",
+-    "git_revision": "044f3ad0fb3ee68ffb17b23bbb796ccdae954298",
+-    "source_tree_sha256": "a8ab7ab0e400c1ebcdc1bc0e232434bb9408ba5165a048d1cbf2c0716f501256",
+-    "source_archive": "artifacts/rust/candidate-build-notification-mutations-image54-1/source.tar",
+-    "source_archive_sha256": "86fb4e93032cc1565ada0d0935e21805dc6e0352897f5eeed06b7a0748b3c880",
++    "Root_reviewed_Rust_input_count": 794,
++    "Root_reviewed_input_map_sha256": "a65ca5bfb57097b387451a9cea6c0341c670823d64e541704a20f63a4969dc0d",
++    "build_manifest": "artifacts/rust/candidate-build-union794-image55-1/build.json",
++    "build_manifest_sha256": "3e1cb5c613d280c9297d75e1a69998f22c858c8a3d158949d61377cd1ffd3e76",
++    "candidate_tag": "dispatcharr-rust-app:union794-image55",
++    "candidate_image": "sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014",
++    "git_revision": "aca6d900ad13700ab86b2898134a61e4dba57bc1",
++    "source_tree_sha256": "6457d75bad17874f039eaed58941e3a047fb124a841637ff1a28392db2472e5c",
++    "source_archive": "artifacts/rust/candidate-build-union794-image55-1/source.tar",
++    "source_archive_sha256": "8addffe734f0326b99f9faeb7fac0af670129a482ecb591df2a63638446c74af",
+     "reserve_script_sha1": "d757c8db4c0aa5a26a91e84d2dcbfb4047589be0",
+-    "proposed_fresh_output": "artifacts/rust/m4-vod-four-second-main-image54-1",
++    "proposed_fresh_output": "artifacts/rust/m4-vod-four-second-main-image55-1",
+     "cue": null
+   },
+   "cases": [
+--- image54-vod-main4s-prep-1/test_activation53.py
++++ image55-vod-main4s-prep-1/test_activation53.py
+@@ -34,7 +34,7 @@
+    with self.assertRaisesRegex(RuntimeError,'EXECUTION_BLOCKED'):m.main()
+    d.assert_not_called()
+  def test_scope_action_and_explicit_authorization(self):
+-  for key,value in [('authorized',1),('source_native_application_requests_authorized',False),('action','old51'),('cases',['success']),('resource_sampling',True),('performance_acceptance',True),('full_M4_acceptance',True),('Root_reviewed_Rust_input_count',792.0),('new_output','old')]:
++  for key,value in [('authorized',1),('source_native_application_requests_authorized',False),('action','old51'),('cases',['success']),('resource_sampling',True),('performance_acceptance',True),('full_M4_acceptance',True),('Root_reviewed_Rust_input_count',794.0),('new_output','old')]:
+    old=self.cue[key];self.cue[key]=value;self.fail();self.cue[key]=old
+  def test_expired_future_nan_bool_and_overlong_cues(self):
+   for changes in [{'expires_epoch':self.now-1},{'issued_epoch':self.now+1},{'issued_epoch':float('nan')},{'issued_epoch':True},{'expires_epoch':self.now+2000}]:
+@@ -70,8 +70,8 @@
+   with mock.patch.object(M,'EXECUTION_BLOCKED',False),mock.patch.object(M,'HERE',self.here),mock.patch.object(sys,'argv',['launch','--repo',str(self.repo)]),mock.patch.object(M,'guard_candidate',return_value=self.proof),mock.patch.object(M.time,'time',side_effect=[self.now,self.now+200]),mock.patch.object(M,'dispatch')as d:
+    with self.assertRaisesRegex(ValueError,'ExpiredBeforeClaim'):M.main()
+    d.assert_not_called();self.assertFalse(path.with_name(path.stem+'.claimed.json').exists())
+- def test_real_image54_exact792_archive_set_and_scripts(self):
+-  p=M.guard_candidate(HERE,ROOT,self.binding);self.assertEqual(len(p['runtime_sha256']),792);self.assertEqual(p['reserve_script_sha1'],self.binding['reserve_script_sha1'])
++ def test_real_image55_exact794_archive_set_and_scripts(self):
++  p=M.guard_candidate(HERE,ROOT,self.binding);self.assertEqual(len(p['runtime_sha256']),794);self.assertEqual(p['reserve_script_sha1'],self.binding['reserve_script_sha1'])
+  def test_changed_runtime_map_and_added_extra_fail_closed(self):
+   p=self.here/'tools/expected-runtime.json';v=json.loads(p.read_text());v['rust/extra.rs']='a'*64;p.write_text(json.dumps(v));
+   with self.assertRaises(ValueError):M.guard_candidate(self.here,ROOT,self.binding)
+--- image54-vod-main4s-prep-1/test_binding55.py
++++ image55-vod-main4s-prep-1/test_binding55.py
+@@ -0,0 +1,33 @@
++"""Pure image55 binding negatives; no archive extraction, Docker or app dispatch."""
++import copy,importlib.util,json,tempfile,unittest
++from pathlib import Path
++HERE=Path(__file__).resolve().parent
++REPO=Path('/home/justin/github/Dispatcharr')
++spec=importlib.util.spec_from_file_location('candidate55_guard',HERE/'tools/candidate_inputs.py')
++G=importlib.util.module_from_spec(spec);spec.loader.exec_module(G)
++class Binding55(unittest.TestCase):
++ def setUp(self):
++  self.expected=json.loads((HERE/'tools/expected-runtime.json').read_text())
++  self.binding=json.loads((HERE/'candidate-binding.json').read_text())
++  self.manifest=self.binding.get('build_manifest',self.binding.get('manifest'))
++  self.archive=self.binding.get('source_archive',self.binding.get('archive'))
++  self.record=json.loads((REPO/self.manifest).read_text())
++ def test_current794_set_exact(self):
++  self.assertEqual(len(self.expected),794);self.assertTrue(G.require_runtime_set(self.record,self.expected))
++ def test_old792_or_extra_input_rejected(self):
++  wrong=copy.deepcopy(self.expected)
++  for _ in range(2):wrong.pop(next(iter(wrong)))
++  for expected in [wrong,{**self.expected,'rust/unreviewed.rs':'0'*64}]:
++   with self.assertRaises(ValueError):G.require_runtime_set(self.record,expected)
++ def test_extra_or_changed_runtime_record_rejected(self):
++  for extra in [True,False]:
++   record=copy.deepcopy(self.record)
++   key='rust/unreviewed.rs'if extra else next(iter(self.expected))
++   record['source_sha256'][key]='0'*64
++   with self.assertRaises(ValueError):G.require_runtime_set(record,self.expected)
++ def test_changed_manifest_or_map_fails_before_archive(self):
++  with tempfile.TemporaryDirectory()as name:
++   root=Path(name);manifest=root/'build.json';manifest.write_text('{}');expected=root/'expected.json';expected.write_text('{}')
++   with self.assertRaisesRegex(ValueError,'ManifestRequired'):G.bound_candidate(manifest,'none',HERE/'tools/expected-runtime.json',root/'NO_ARCHIVE')
++   with self.assertRaisesRegex(ValueError,'Union794Required'):G.bound_candidate(REPO/self.manifest,'none',expected,root/'NO_ARCHIVE')
++if __name__=='__main__':unittest.main()
+--- image54-vod-main4s-prep-1/tools/candidate_inputs.py
++++ image55-vod-main4s-prep-1/tools/candidate_inputs.py
+@@ -23,28 +23,28 @@
+ 
+ 
+ def bound_candidate(manifest_path,image,expected_path,source_archive):
+- """Exact immutable image54 792 runtime inputs, no mutable/extra Rust fallback."""
++ """Exact immutable image55 794 runtime inputs, no mutable/extra Rust fallback."""
+  manifest_raw=Path(manifest_path).read_bytes();record=json.loads(manifest_raw);expected_raw=Path(expected_path).read_bytes();expected=json.loads(expected_raw)
+- if hashlib.sha256(manifest_raw).hexdigest()!=MANIFEST_SHA:raise ValueError('ExactImage54ManifestRequired')
+- if hashlib.sha256(expected_raw).hexdigest()!=EXPECTED_SHA or len(expected)!=792:raise ValueError('ExactReviewedUnion792Required')
++ if hashlib.sha256(manifest_raw).hexdigest()!=MANIFEST_SHA:raise ValueError('ExactImage55ManifestRequired')
++ if hashlib.sha256(expected_raw).hexdigest()!=EXPECTED_SHA or len(expected)!=794:raise ValueError('ExactReviewedUnion794Required')
+  require_runtime_set(record,expected)
+  for key,value in IDENTITY.items():
+-  if record.get(key)!=value:raise ValueError('ExactImage54IdentityRequired '+key)
+- if image not in[IDENTITY['tag'],IDENTITY['image_id']]:raise ValueError('ExactImage54ImageRequired')
++  if record.get(key)!=value:raise ValueError('ExactImage55IdentityRequired '+key)
++ if image not in[IDENTITY['tag'],IDENTITY['image_id']]:raise ValueError('ExactImage55ImageRequired')
+  archive=Path(source_archive)
+  if hashlib.sha256(archive.read_bytes()).hexdigest()!=IDENTITY['source_archive_sha256']:raise ValueError('CandidateArchiveBinding')
+  with tarfile.open(archive)as source:
+   names=[m.name for m in source.getmembers()if m.isfile()and m.name.startswith('rust/')]
+-  if len(names)!=792 or len(set(names))!=792 or set(names)!=set(expected):raise ValueError('ExactArchiveUnion792Required')
++  if len(names)!=794 or len(set(names))!=794 or set(names)!=set(expected):raise ValueError('ExactArchiveUnion794Required')
+  result=candidate(manifest_path,image,expected_path,source_archive)
+  if result['reserve_script_sha1']!='d757c8db4c0aa5a26a91e84d2dcbfb4047589be0':raise ValueError('ExactReserveScriptRequired')
+  return result
+ 
+-MANIFEST_SHA='cac7bcdcc60dff6f26e233e78c2737b7f5d9450cf54042719b8d5cd61cf5ff8b'
+-EXPECTED_SHA='7acb3cf3c8777286cbfab1a8e338920ede7151d9ef173db5b259f77e3b6e802f'
+-IDENTITY={'tag': 'dispatcharr-rust-app:notification-mutations-image54', 'image_id': 'sha256:8e3c133c0639d60057d8d05a5be2fce66e0f0968c35e29f674c348495a1a9ca0', 'git_revision': '044f3ad0fb3ee68ffb17b23bbb796ccdae954298', 'source_tree_sha256': 'a8ab7ab0e400c1ebcdc1bc0e232434bb9408ba5165a048d1cbf2c0716f501256', 'source_archive_sha256': '86fb4e93032cc1565ada0d0935e21805dc6e0352897f5eeed06b7a0748b3c880'}
++MANIFEST_SHA='3e1cb5c613d280c9297d75e1a69998f22c858c8a3d158949d61377cd1ffd3e76'
++EXPECTED_SHA='a65ca5bfb57097b387451a9cea6c0341c670823d64e541704a20f63a4969dc0d'
++IDENTITY={'tag': 'dispatcharr-rust-app:union794-image55', 'image_id': 'sha256:120df2f930a7f4d2738a04fbd793c16b230b7a80114f4d6b03f670244940a014', 'git_revision': 'aca6d900ad13700ab86b2898134a61e4dba57bc1', 'source_tree_sha256': '6457d75bad17874f039eaed58941e3a047fb124a841637ff1a28392db2472e5c', 'source_archive_sha256': '8addffe734f0326b99f9faeb7fac0af670129a482ecb591df2a63638446c74af'}
+ 
+ def require_runtime_set(record,expected):
+  actual={k:v for k,v in record.get('source_sha256',{}).items()if k.startswith('rust/')}
+- if len(expected)!=792 or actual!=expected:raise ValueError('ExactReviewedUnion792Required')
++ if len(expected)!=794 or actual!=expected:raise ValueError('ExactReviewedUnion794Required')
+  return True
+--- image54-vod-main4s-prep-1/tools/expected-runtime.json
++++ image55-vod-main4s-prep-1/tools/expected-runtime.json
+@@ -67,7 +67,7 @@
+   "rust/crates/coordination/README.md": "5e61adac045aaf647049a60c6e12e1404f50d615ff174c1b50a3ddb74a105567",
+   "rust/crates/coordination/src/lib.rs": "68ed4ca4e3b24c7a61887892a7f1058b4f6896bee116420144e7fb46d36ba68a",
+   "rust/crates/coordination/src/scripts.rs": "3aa32d272d91bea97893752a8dde8fbb52d833f0522e384ffbd4d61a85f06fa7",
+-  "rust/crates/coordination/src/task_locks.rs": "77735ebc8fb7f594ddfba928f66d48f9dee93f89e98d1ab919c71773a9b1c23b",
++  "rust/crates/coordination/src/task_locks.rs": "eea76ff66e94008bf1505ee67b9d857bbb679fab72ad276ad9c8525e075cff74",
+   "rust/crates/coordination/tests/acquire_cancel.rs": "bec81af680641eb86c0a919c25149ab3fb954723581e0e2d0bfbe2035a5bd3a6",
+   "rust/crates/coordination/tests/lease_physical.rs": "ccfe40a8a5adfe823d588ab6a7edd119fbc6967a27593ca862c591b72a1fabaf",
+   "rust/crates/coordination/tests/redis.rs": "735287627f354355ee8d9b1e61bec59b9acdae63af9b8273fd56f9b8f132fb62",
+@@ -75,7 +75,7 @@
+   "rust/crates/coordination/tests/retained_reserve.rs": "658b61461d08864184f2c80e68efd70f39430677fdbae21d192c575f653c9088",
+   "rust/crates/coordination/tests/run-redis.py": "30112825bd93a08e79e0de5b598bb3a4d625e5692db19f8e4d1391a6bdb0fd4d",
+   "rust/crates/coordination/tests/series_task_lock.rs": "ab71cf470455dc56d634c87b013dcbf5cb16dfe7fea9a73cf993bd80f574bb11",
+-  "rust/crates/coordination/tests/task_lock_detailed.rs": "7488380a80d30dcf85f3d212c9d4569efdb15231c6bef95007152eee0c765193",
++  "rust/crates/coordination/tests/task_lock_detailed.rs": "ed487ebe82391f51a7629b48c6bfe56e1c2d08923f4a32eca03c3464822e4f80",
+   "rust/crates/coordination/tests/task_locks.rs": "4b002dc944303754876b7bd6c7df52a448e4654886b25b7c63d9d0657d33fdcb",
+   "rust/crates/coordination/tests/verified-failover.json": "00d0429607de5ce874f872f8687856ae5d06204381dec3d4ff05d9f33fd4f87f",
+   "rust/crates/coordination/tests/verified-real-redis.json": "85598e7f96497b5fc58bb61e7e58b8aabb57b02cda31f21671fb49f0adad764a",
+@@ -222,6 +222,7 @@
+   "rust/crates/job-transport/datasets/source-index-eta-117.json": "30dacac4cf32638592398f088d046539f42bf32e86c56c8318c170e5af914aae",
+   "rust/crates/job-transport/datasets/source-index-failure-136.json": "4295a04e1c24fef87d8fa20668ed16b2ee80d0fa25a59f9ea669376918188914",
+   "rust/crates/job-transport/datasets/source-index-failure-reader-1.json": "ad433945094bd04d017739edd602cf85644cd1af5791e3f01b11de6b273196c9",
++  "rust/crates/job-transport/datasets/source-m3u-known-failures.json": "bdd89b732b24aa176d95e59d3a591f2b89884f3a06e2e464388a418e735c1c93",
+   "rust/crates/job-transport/datasets/source-periodic-workers-1.json": "61c03bf0543736a6548e7b8c773c963fd928c0eaa8ec4a8cefccc401a32461e0",
+   "rust/crates/job-transport/datasets/source-pg-error-format-2.json": "8a71a39caffe8ffbcbc6420798309db1a07ad6608cce468fc9b1b019f93c1d5c",
+   "rust/crates/job-transport/datasets/source-refresh-eta-wire.json": "37eb34c22cb6ffce241e9400081fa33e787700bbbe028986163b4de975cbb538",
+@@ -251,7 +252,7 @@
+   "rust/crates/job-transport/src/database_schedule_peer.rs": "a0fdc15209f28db90a1356a3807ccf9c0843ce351c6ac36865404d5afb46b005",
+   "rust/crates/job-transport/src/database_schedule_physical.rs": "2c5c42aa9520ced797b0eca4209f3e63a296dcca8a176c25fb2a6b1011884808",
+   "rust/crates/job-transport/src/database_tick.rs": "f33424ce6a271be9ad462a2ab601ed10939cc52459de2b6e11069f6ba056fda4",
+-  "rust/crates/job-transport/src/decode.rs": "4d3c326edbfe6a92be8756b78527bc63f2dbcbbeb2429479ab25a78a6bfb3d41",
++  "rust/crates/job-transport/src/decode.rs": "93277404417608c8aa2f07bb06a5e6aeff69b19863617ddf01a477964ca43b6c",
+   "rust/crates/job-transport/src/default_application.rs": "eaa886064ef66615dab9703d16169a14b8042222f51a0d89c2a5521b86cd14c6",
+   "rust/crates/job-transport/src/default_domains.rs": "bc61860f09aa36f0972c2fc06e26838a0e656bf734f7eb334ac11f3729179d4e",
+   "rust/crates/job-transport/src/default_expiry_tests.rs": "b01fa4e3b56e6c77f4d195205675e18bd8ba29b46debb334d9b9b2019b3a4d6a",
+@@ -318,12 +319,12 @@
+   "rust/crates/job-transport/src/scanner_index_helper.rs": "93492cfa8f9df1291db9a633e2ed3b7836ae5a6a3351924765a77e160e6aa632",
+   "rust/crates/job-transport/src/scanner_index_peer.rs": "949bda81adab93cd6cf2400fb6155f7cdf0a260b616b35a5568a2ca9b1e1650f",
+   "rust/crates/job-transport/src/scanner_index_resources.rs": "9a5f38cfba04653fd20af8cc35539d0d38049681a3424741a87039f49f7a88e1",
+-  "rust/crates/job-transport/src/scanner_m3u.rs": "3c2d088a18a0ac776fb0ca40e093587dcf2e8360c4eeb54ded333af873cca803",
+-  "rust/crates/job-transport/src/scanner_m3u_files.rs": "e68b7b5892112f36383c3f60003812a9e7ed8b826ead90f215f0ae619a21bb46",
+-  "rust/crates/job-transport/src/scanner_m3u_io.rs": "6ccf58035754bddaded1d3cf1c125161d1013d9c9e1c4450b8712c4ff305094c",
++  "rust/crates/job-transport/src/scanner_m3u.rs": "8d5c68147c62447ec806b373884f2525e11e763584e17b2de15d1090a189e51a",
++  "rust/crates/job-transport/src/scanner_m3u_files.rs": "57143319a89829a8f0328d6ac4a6be50d3b4a51b487cbc3fcf350e9f14556aca",
++  "rust/crates/job-transport/src/scanner_m3u_io.rs": "0fb2ebc8239d12f569cb47918c5f004c127d8b8f2cba1781a32f827d7cba9651",
+   "rust/crates/job-transport/src/scanner_m3u_peer.rs": "c373490140217626958c59f8eeb879467dd079f8206e6d13a83e1048af1613e0",
+   "rust/crates/job-transport/src/scanner_m3u_protocol.rs": "50adf994f46fd1519dd364d2a591ec052a6b2eb0c08c64f6a2e917d1e2b93aaa",
+-  "rust/crates/job-transport/src/scanner_m3u_worker.rs": "3585392bc1aa2ccb4b2ba0ca2baf472b41c0c181bc0ff526e99ebb3022041ecd",
++  "rust/crates/job-transport/src/scanner_m3u_worker.rs": "fd2492b80b40c8e5a59ca1166fb79d4ecf1c52e7feb1da907fe421919059968c",
+   "rust/crates/job-transport/src/scanner_refresh.rs": "d663a999d58ac716f4b5c28a63afdbe26aa4672f7fe9f7a52fba80a4cb89ca80",
+   "rust/crates/job-transport/src/scanner_refresh_io.rs": "e815e279f82d6d76da6a4591e3ea27b623aec9e45bb96fa3e3e2e57aa066cf1d",
+   "rust/crates/job-transport/src/scanner_refresh_peer.rs": "3591a4de0c67a89b3c583a85b4d9c00b2af3f0527ea5c42de37a0bced6076a4b",
+@@ -498,16 +499,17 @@
+   "rust/crates/store/src/image_proxy.rs": "514b25a45584640ec1fae487b0636340171ab98bb7161ed6fc594a4e99579852",
+   "rust/crates/store/src/import_batches.rs": "0bd74144837b85c43dd5c2f519a24a382f337275f18a02c0d7e0c631e0bacf6b",
+   "rust/crates/store/src/import_cleanup.rs": "22d31f91f88d1d0356cc88703d2adc897828ad4d6a3b7258a6cfaa7f77c6a519",
+-  "rust/crates/store/src/import_groups.rs": "ee2ebc02924f596467c10c6a9547147228c15b86c8d2e8cd3b41cdcdc3179d2b",
++  "rust/crates/store/src/import_groups.rs": "28e8a96503bc3df4588629fd943412646d4b70086a3f9409c12856a210ecfff8",
+   "rust/crates/store/src/import_pipeline.rs": "d6f726649867de72c0de01fcd33ddf51d6a739f4c80727dcc7882619aa8c3379",
+   "rust/crates/store/src/ip_lookup.rs": "13106ca0f0f3c909e0a6e625fae764c770ff02a350535bf197bcc408a710364b",
+   "rust/crates/store/src/json_compat.rs": "a5de462b06683aa3f84bc8dc62ba3525ddfcb971eabb576f079374afc5fb64b7",
+   "rust/crates/store/src/json_float_peer.rs": "5e82b0b5ec12aaf31e9d212ce0ce1404d75029b71f9ea73da3cd7d570976e4bc",
+-  "rust/crates/store/src/lib.rs": "81810f876b98a4e16683ab53c34dd84407b0943c052de4a5bc13f3b200c8c5ff",
++  "rust/crates/store/src/lib.rs": "168e5325de258839e1c50701b54f2c1ea74bfb87c47d59611811060469c9e8f2",
+   "rust/crates/store/src/logo_writes.rs": "5fb86bf5b0944d87d16b26174ff2e25377cea7e0eebdce64ca1427d451472cd4",
+   "rust/crates/store/src/logos.rs": "0bf0876c0cec6f8f2fd62f5a4ccd99ce7271c272a5a82fc415c0fa8f86130330",
+   "rust/crates/store/src/notification_restart_peer.rs": "e2698aa353e5156a3bcc54df8787c75109008f10db243b13025caf8fad0b9970",
+-  "rust/crates/store/src/notifications.rs": "06c14d407e5f0a9a55114027ce09441f84345b826257f625e2812f0dce034390",
++  "rust/crates/store/src/notifications.rs": "c89333231ee9cdb351c623454ff5abe1782f83bc5c1d92f47db234f126563531",
++  "rust/crates/store/src/notifications_credentials_sql_tests.rs": "e6db32f4139ee769a09f7e6e431ba95097bac256d496f716a390c7450b514aac",
+   "rust/crates/store/src/operator_commands.rs": "b0147fd783826eeb820f8700f49e7d98fdcd9c282c8ff7e2c14a56985c0adff1",
+   "rust/crates/store/src/operator_create.rs": "6892d8e372f935603f0f9c71e114e1d524f33aeb84ac7018aa83d4f6e7f5e36e",
+   "rust/crates/store/src/output_profile_writes.rs": "8e516b3d6f53ec8cec6947f44755316396fad36f42b45896d97bc6132fca112c",
+--- image54-vod-main4s-prep-1/tools/run.py
++++ image55-vod-main4s-prep-1/tools/run.py
+@@ -10,8 +10,8 @@
+ def save(path,value):Path(path).write_text(json.dumps(value,indent=2)+'\n')
+ def main():
+  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--repo',type=Path,required=True);parser.add_argument('--candidate-image',required=True);parser.add_argument('--build-manifest',type=Path,required=True);parser.add_argument('--source-archive',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args();repo=args.repo.resolve();out=args.output.resolve()
+- # image54 private preparation remains blocked; approved launcher only after Root fresh cue.
+- raise RuntimeError('IMAGE54_MAIN4S_EXECUTION_BLOCKED: Root review and fresh quiet cue required')
++ # image55 private preparation remains blocked; approved launcher only after Root fresh cue.
++ raise RuntimeError('IMAGE55_MAIN4S_EXECUTION_BLOCKED: Root review and fresh quiet cue required')
+ def execute(args,repo,out):
+  out.mkdir(parents=True,exist_ok=False);controller=out/'controller';shutil.copytree(HERE,controller,ignore=shutil.ignore_patterns('__pycache__'))
+  proof=load(controller/'candidate_inputs.py','candidate_guard').bound_candidate(args.build_manifest,args.candidate_image,controller/'expected-runtime.json',args.source_archive);save(out/'candidate-inputs.json',proof)
+--- image54-vod-main4s-prep-1/tools/test_client_loss.py
++++ image55-vod-main4s-prep-1/tools/test_client_loss.py
+@@ -44,9 +44,9 @@
+  def test_candidate_rejects_missing_or_extra_unreviewed_rust(self):
+   import candidate_inputs
+   with tempfile.TemporaryDirectory()as directory:
+-   root=Path(directory);expected={'rust/file'+str(i):'a'*64 for i in range(792)};(root/'expected').write_text(json.dumps(expected))
++   root=Path(directory);expected={'rust/file'+str(i):'a'*64 for i in range(794)};(root/'expected').write_text(json.dumps(expected))
+    for actual in[{},dict(list(expected.items())[:-1]),{**expected,'rust/unreviewed':'b'*64}]:
+-    with self.assertRaisesRegex(ValueError,'ExactReviewedUnion792'):candidate_inputs.require_runtime_set({'source_sha256':actual},expected)
++    with self.assertRaisesRegex(ValueError,'ExactReviewedUnion794'):candidate_inputs.require_runtime_set({'source_sha256':actual},expected)
+    self.assertTrue(candidate_inputs.require_runtime_set({'source_sha256':expected},expected))
+ 
+  def test_socketpair_real_blocked_HTTP_read_abort_and_join(self):
+--- image54-vod-main4s-prep-1/tools/test_controls.py
++++ image55-vod-main4s-prep-1/tools/test_controls.py
+@@ -166,5 +166,5 @@
+   runner=(Path(__file__).parent/'run.py').read_text();self.assertIn("],source_db,6383)",runner);self.assertLess(runner.index("child('source-gate'"),runner.index("child('source-web'"))
+   phase=(Path(__file__).parent/'phase.py').read_text();self.assertIn("6384 if mode=='source'else 6382",phase);self.assertNotIn('reached_monotonic',phase);self.assertNotIn('__owned_fixture',phase)
+  def test_fixture_still_hardblocked(self):
+-  source=(Path(__file__).parent/'run.py').read_text();self.assertIn("raise RuntimeError('IMAGE54_MAIN4S_EXECUTION_BLOCKED",source)
++  source=(Path(__file__).parent/'run.py').read_text();self.assertIn("raise RuntimeError('IMAGE55_MAIN4S_EXECUTION_BLOCKED",source)
+ if __name__=='__main__':unittest.main(verbosity=2)
+--- image54-vod-main4s-prep-1/tools/test_observation.py
++++ image55-vod-main4s-prep-1/tools/test_observation.py
+@@ -88,6 +88,6 @@
+   for field,wrong in[('seen',True),('connections',False),('invalid',None)]:
+    bad=copy.deepcopy(value);bad['proxy_terminal'][field]=wrong;self.assertFalse(observation.finalize(bad)['observation_valid'])
+  def test_controller_still_hardblocked_and_no_production_view_wrapping(self):
+-  root=Path(__file__).parent;text=(root/'run.py').read_text();self.assertIn("raise RuntimeError('IMAGE54_MAIN4S_EXECUTION_BLOCKED",text)
++  root=Path(__file__).parent;text=(root/'run.py').read_text();self.assertIn("raise RuntimeError('IMAGE55_MAIN4S_EXECUTION_BLOCKED",text)
+   wsgi=(root/'source_wsgi.py').read_text();self.assertIn("WSGIServer(('127.0.0.1',5657),application",wsgi);self.assertNotIn('application=',wsgi);self.assertNotIn('client.incr=',wsgi)
+ if __name__=='__main__':unittest.main(verbosity=2)

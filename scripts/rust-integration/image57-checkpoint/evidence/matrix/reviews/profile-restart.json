@@ -1,0 +1,56 @@
+{
+  "name": "profile-restart",
+  "controller_result_sha256": "9df5bfdadb65f66318e40ebc246d56edb3fb9647fa5ea87a0b8193b90be140ab",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/profile-restart/integration.json",
+      "sha256": "d72d2c971783826e565a6f3d1c66fc662affb19eb491a395d933137d8588ccba"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/profile-restart/output-profile-restart.json",
+      "sha256": "c642a510c73fbb0f326786b4aeb949e7fe3f35343e133c6f9faf70a34a3c23a5"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Owned same-service DELETE/cache restart and actual first response; no active media continuity or complete default audit.",
+  "observed_counts_and_candidate_Source_scope": {
+    "phases": [
+      {
+        "backend": "candidate",
+        "warmups": 1,
+        "later_attempts": 2,
+        "first_response_SQL_cache_matches_retained_expected": true,
+        "same_services_Redis_run_id_changed": true
+      },
+      {
+        "backend": "source",
+        "warmups": 1,
+        "later_attempts": 2,
+        "first_response_SQL_cache_matches_retained_expected": true,
+        "same_services_Redis_run_id_changed": true
+      }
+    ],
+    "ordinary130suite_not_run_in_restart_mode": true,
+    "no_performance_acceptance": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-output-profiles-efc4f01bfc"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/reviews/profile-restart-cleanup.json",
+      "sha256": "b3a41e7654ad6d4049f7b3287a7e518cdd783c6dbd648971a93445ffc7edbe83"
+    }
+  }
+}

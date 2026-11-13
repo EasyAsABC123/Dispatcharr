@@ -1,0 +1,1284 @@
+{
+  "scope": "Actual unpatched original-network guide HTTP; clock-stable owned row fixture",
+  "anchor": "2026-11-13T14:00:16.362779+00:00",
+  "utc_hour": "2026-11-13T14:00:00+00:00",
+  "expires": "2026-11-13T14:05:16.362779+00:00",
+  "cases": [
+    {
+      "path": "/api/epg/grid/",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.369594+00:00",
+      "source_after": "2026-11-13T14:00:16.379649+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 33109,
+        "body_sha256": "cc2ea29600227262f17cb6fff4165c37eaea2d31ce846b3be69311f0cce915cd",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=1",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.379700+00:00",
+      "source_after": "2026-11-13T14:00:16.444705+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 33109,
+        "body_sha256": "a18dc95aaa9a11699322966ce9fabfed8dbb3dd8b014c4ec9e8964764ecf7cc1",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=2",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.444776+00:00",
+      "source_after": "2026-11-13T14:00:16.504389+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 33109,
+        "body_sha256": "a18dc95aaa9a11699322966ce9fabfed8dbb3dd8b014c4ec9e8964764ecf7cc1",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=999999",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.504448+00:00",
+      "source_after": "2026-11-13T14:00:16.560235+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 11,
+        "body_sha256": "8fe32e407a1038ee38753b70e5374b3a46d6ae9d5f16cd5b73c53abaca8f5ed0",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "70b33ac42e72fa9f58d0a70650144e0bc35b894b12809bfc697ea6b5bc125f1c",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.560280+00:00",
+      "source_after": "2026-11-13T14:00:16.617884+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 32807,
+        "body_sha256": "b28bd89ea707e3acff2481d9a78a99edf2f245e07fbb218b9a501c86e2554fda",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=1",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "70b33ac42e72fa9f58d0a70650144e0bc35b894b12809bfc697ea6b5bc125f1c",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.617938+00:00",
+      "source_after": "2026-11-13T14:00:16.676662+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 32807,
+        "body_sha256": "b28bd89ea707e3acff2481d9a78a99edf2f245e07fbb218b9a501c86e2554fda",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=2",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "70b33ac42e72fa9f58d0a70650144e0bc35b894b12809bfc697ea6b5bc125f1c",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.676715+00:00",
+      "source_after": "2026-11-13T14:00:16.734895+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 32807,
+        "body_sha256": "b28bd89ea707e3acff2481d9a78a99edf2f245e07fbb218b9a501c86e2554fda",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=999999",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "70b33ac42e72fa9f58d0a70650144e0bc35b894b12809bfc697ea6b5bc125f1c",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.734948+00:00",
+      "source_after": "2026-11-13T14:00:16.790441+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 11,
+        "body_sha256": "8fe32e407a1038ee38753b70e5374b3a46d6ae9d5f16cd5b73c53abaca8f5ed0",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/",
+      "method": "GET",
+      "role": "filtered",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "98de12ab358a5feef8c43030f8b51a6c0eaa45e98db4c2a5a9466084cb257ca3",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.790482+00:00",
+      "source_after": "2026-11-13T14:00:16.845980+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 32209,
+        "body_sha256": "55a55646066c6d2c1e91f0c666ede5affc6a83cb2df47dfc864f7ef1b49cb43d",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=1",
+      "method": "GET",
+      "role": "filtered",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "98de12ab358a5feef8c43030f8b51a6c0eaa45e98db4c2a5a9466084cb257ca3",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.846032+00:00",
+      "source_after": "2026-11-13T14:00:16.897660+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 11,
+        "body_sha256": "8fe32e407a1038ee38753b70e5374b3a46d6ae9d5f16cd5b73c53abaca8f5ed0",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=2",
+      "method": "GET",
+      "role": "filtered",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "98de12ab358a5feef8c43030f8b51a6c0eaa45e98db4c2a5a9466084cb257ca3",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.897709+00:00",
+      "source_after": "2026-11-13T14:00:16.955938+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 32209,
+        "body_sha256": "55a55646066c6d2c1e91f0c666ede5affc6a83cb2df47dfc864f7ef1b49cb43d",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=999999",
+      "method": "GET",
+      "role": "filtered",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "98de12ab358a5feef8c43030f8b51a6c0eaa45e98db4c2a5a9466084cb257ca3",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:16.955990+00:00",
+      "source_after": "2026-11-13T14:00:17.007283+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 11,
+        "body_sha256": "8fe32e407a1038ee38753b70e5374b3a46d6ae9d5f16cd5b73c53abaca8f5ed0",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "992cdf54702b34f412a405a5e45414f80d05885d6cc3665ebd9602a12feadcf5",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.007322+00:00",
+      "source_after": "2026-11-13T14:00:17.057095+00:00",
+      "expected": {
+        "status": 403,
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "63",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=1",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "992cdf54702b34f412a405a5e45414f80d05885d6cc3665ebd9602a12feadcf5",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.057135+00:00",
+      "source_after": "2026-11-13T14:00:17.059127+00:00",
+      "expected": {
+        "status": 403,
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "63",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=2",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "992cdf54702b34f412a405a5e45414f80d05885d6cc3665ebd9602a12feadcf5",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.059154+00:00",
+      "source_after": "2026-11-13T14:00:17.060890+00:00",
+      "expected": {
+        "status": 403,
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "63",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=999999",
+      "method": "GET",
+      "role": "basic",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "992cdf54702b34f412a405a5e45414f80d05885d6cc3665ebd9602a12feadcf5",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.060916+00:00",
+      "source_after": "2026-11-13T14:00:17.062658+00:00",
+      "expected": {
+        "status": 403,
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "63",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "47dcf16b21e2884b76a106666dd8f9164b966ded2a68176ec81e8e1858885da1",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.062675+00:00",
+      "source_after": "2026-11-13T14:00:17.064210+00:00",
+      "expected": {
+        "status": 401,
+        "body_bytes": 52,
+        "body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "52",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": "Bearer realm=\"api\"",
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=1",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "47dcf16b21e2884b76a106666dd8f9164b966ded2a68176ec81e8e1858885da1",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.064240+00:00",
+      "source_after": "2026-11-13T14:00:17.065662+00:00",
+      "expected": {
+        "status": 401,
+        "body_bytes": 52,
+        "body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "52",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": "Bearer realm=\"api\"",
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=2",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "47dcf16b21e2884b76a106666dd8f9164b966ded2a68176ec81e8e1858885da1",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.065686+00:00",
+      "source_after": "2026-11-13T14:00:17.067033+00:00",
+      "expected": {
+        "status": 401,
+        "body_bytes": 52,
+        "body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "52",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": "Bearer realm=\"api\"",
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=999999",
+      "method": "GET",
+      "role": "inactive",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "47dcf16b21e2884b76a106666dd8f9164b966ded2a68176ec81e8e1858885da1",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.067055+00:00",
+      "source_after": "2026-11-13T14:00:17.068402+00:00",
+      "expected": {
+        "status": 401,
+        "body_bytes": 52,
+        "body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "52",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": "Bearer realm=\"api\"",
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "source_before": "2026-11-13T14:00:17.068418+00:00",
+      "source_after": "2026-11-13T14:00:17.069400+00:00",
+      "expected": {
+        "status": 401,
+        "body_bytes": 58,
+        "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "58",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": "Bearer realm=\"api\"",
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=1",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "source_before": "2026-11-13T14:00:17.069422+00:00",
+      "source_after": "2026-11-13T14:00:17.070366+00:00",
+      "expected": {
+        "status": 401,
+        "body_bytes": 58,
+        "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "58",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": "Bearer realm=\"api\"",
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=2",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "source_before": "2026-11-13T14:00:17.070388+00:00",
+      "source_after": "2026-11-13T14:00:17.071323+00:00",
+      "expected": {
+        "status": 401,
+        "body_bytes": 58,
+        "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "58",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": "Bearer realm=\"api\"",
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=999999",
+      "method": "GET",
+      "role": null,
+      "headers": {
+        "HTTP_HOST": "localhost"
+      },
+      "source_before": "2026-11-13T14:00:17.071344+00:00",
+      "source_after": "2026-11-13T14:00:17.072285+00:00",
+      "expected": {
+        "status": 401,
+        "body_bytes": 58,
+        "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "58",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": "Bearer realm=\"api\"",
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?days=0",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.072314+00:00",
+      "source_after": "2026-11-13T14:00:17.079369+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 33109,
+        "body_sha256": "cc2ea29600227262f17cb6fff4165c37eaea2d31ce846b3be69311f0cce915cd",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?days=1",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.079437+00:00",
+      "source_after": "2026-11-13T14:00:17.137938+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 33109,
+        "body_sha256": "cc2ea29600227262f17cb6fff4165c37eaea2d31ce846b3be69311f0cce915cd",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?days=-1",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.137997+00:00",
+      "source_after": "2026-11-13T14:00:17.198235+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 33109,
+        "body_sha256": "cc2ea29600227262f17cb6fff4165c37eaea2d31ce846b3be69311f0cce915cd",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?prev_days=1",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.198295+00:00",
+      "source_after": "2026-11-13T14:00:17.256774+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 69204,
+        "body_sha256": "758b0f9154bed45f43b223f20fc8f69536eb1a4f223537bfae14b42de02d81b3",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?days=bad",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.256829+00:00",
+      "source_after": "2026-11-13T14:00:17.307008+00:00",
+      "expected": {
+        "status": 400,
+        "body_bytes": 42,
+        "body_sha256": "6cbbde362432836958e85c9856b1ce24caa0bfc168bd5d6e7cd9c9e78475cc4f",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "42",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=all",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.307054+00:00",
+      "source_after": "2026-11-13T14:00:17.314243+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 33109,
+        "body_sha256": "cc2ea29600227262f17cb6fff4165c37eaea2d31ce846b3be69311f0cce915cd",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=ALL",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.314284+00:00",
+      "source_after": "2026-11-13T14:00:17.370814+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 33109,
+        "body_sha256": "cc2ea29600227262f17cb6fff4165c37eaea2d31ce846b3be69311f0cce915cd",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=-1",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.370873+00:00",
+      "source_after": "2026-11-13T14:00:17.421445+00:00",
+      "expected": {
+        "status": 400,
+        "body_bytes": 43,
+        "body_sha256": "145aa56a72b6db3fc1f0bb9c6ed8427a859ee82026882e688b35690140a41846",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "43",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?channel_profile_id=bad",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.421492+00:00",
+      "source_after": "2026-11-13T14:00:17.423325+00:00",
+      "expected": {
+        "status": 400,
+        "body_bytes": 56,
+        "body_sha256": "bc192ee9c1720d2293b2cd470e6b185b512c5bc9a2e2c3221cbaff2652954a61",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "56",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?start=2026-11-13T13%3A22%3A47.239323%2B00%3A00&end=2026-11-13T14%3A22%3A47.239323%2B00%3A00",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.423516+00:00",
+      "source_after": "2026-11-13T14:00:17.429969+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 6910,
+        "body_sha256": "d5c6a5ee664186e088ea35f99b29172436d9682f9d365032673868de098ed4e5",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?start=2026-11-13T14%3A00%3A16.362779%2B00%3A00&end=2026-11-13T14%3A00%3A17.239323%2B00%3A00",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.430035+00:00",
+      "source_after": "2026-11-13T14:00:17.487066+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 6303,
+        "body_sha256": "c189ae5171387014c29bf23550093ca81884289ae6198eeb80857bb4abc2e081",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?start=2026-11-13T14%3A22%3A47.239323%2B00%3A00&end=2026-11-13T13%3A22%3A47.239323%2B00%3A00",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.487158+00:00",
+      "source_after": "2026-11-13T14:00:17.538763+00:00",
+      "expected": {
+        "status": 400,
+        "body_bytes": 36,
+        "body_sha256": "023713a96e85ca867b1199bdb832f0913ef7cbcfc22a30ca2916aadc72b61ee8",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "36",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?start=bad",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.538811+00:00",
+      "source_after": "2026-11-13T14:00:17.541121+00:00",
+      "expected": {
+        "status": 400,
+        "body_bytes": 86,
+        "body_sha256": "6f7939986cbd21e68e3c7ea4550d26f070817ea615303d2c48e46cc5e6c7909f",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "86",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?days=1&days=bad",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.541160+00:00",
+      "source_after": "2026-11-13T14:00:17.542822+00:00",
+      "expected": {
+        "status": 400,
+        "body_bytes": 42,
+        "body_sha256": "6cbbde362432836958e85c9856b1ce24caa0bfc168bd5d6e7cd9c9e78475cc4f",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": "42",
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?days=bad&days=1",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.542853+00:00",
+      "source_after": "2026-11-13T14:00:17.549667+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 33109,
+        "body_sha256": "cc2ea29600227262f17cb6fff4165c37eaea2d31ce846b3be69311f0cce915cd",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/",
+      "method": "HEAD",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.549695+00:00",
+      "source_after": "2026-11-13T14:00:17.603139+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?start=2026-11-13T15%3A00%3A00%2B00%3A00&end=2026-11-13T19%3A00%3A00%2B00%3A00",
+      "method": "GET",
+      "role": "admin",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "984b4dad13a5c3f6d0f253fe4371c5640768a98218274d8a56892b2e4a19f3ed",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.603195+00:00",
+      "source_after": "2026-11-13T14:00:17.661789+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 5907,
+        "body_sha256": "0b2f401c6a8fb5f3985887c9a58ce91d595f3e7a8a28fe28d55f7a6efe8ea0c1",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?start=2026-11-13T15%3A00%3A00%2B00%3A00&end=2026-11-13T19%3A00%3A00%2B00%3A00",
+      "method": "GET",
+      "role": "standard",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "70b33ac42e72fa9f58d0a70650144e0bc35b894b12809bfc697ea6b5bc125f1c",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.661847+00:00",
+      "source_after": "2026-11-13T14:00:17.718435+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 5605,
+        "body_sha256": "49252979a4ffc0e623ab599802aa40bce3d41b686cc9a234a0c2e2995abbb404",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    },
+    {
+      "path": "/api/epg/grid/?start=2026-11-13T15%3A00%3A00%2B00%3A00&end=2026-11-13T19%3A00%3A00%2B00%3A00",
+      "method": "GET",
+      "role": "filtered",
+      "headers": {
+        "HTTP_HOST": "localhost",
+        "HTTP_AUTHORIZATION": {
+          "private_value_sha256": "98de12ab358a5feef8c43030f8b51a6c0eaa45e98db4c2a5a9466084cb257ca3",
+          "excluded": "private credential or once-only identity"
+        }
+      },
+      "source_before": "2026-11-13T14:00:17.718487+00:00",
+      "source_after": "2026-11-13T14:00:17.776399+00:00",
+      "expected": {
+        "status": 200,
+        "body_bytes": 5301,
+        "body_sha256": "49d0c5a51396028a2eaaaa86e1e9879031bea627f7a1e96bde404084bbee831e",
+        "content_type": "application/json",
+        "selected_headers": {
+          "Content-Length": null,
+          "Allow": "GET, HEAD, OPTIONS",
+          "WWW-Authenticate": null,
+          "Vary": "Accept, origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "Referrer-Policy": "same-origin",
+          "Cross-Origin-Opener-Policy": "same-origin"
+        }
+      }
+    }
+  ],
+  "native_verified": false,
+  "performance_verified": false
+}
