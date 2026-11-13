@@ -1,0 +1,2024 @@
+--- a/rust/Cargo.lock
++++ b/rust/Cargo.lock
+@@ -796,6 +796,7 @@
+  "base64 0.22.1",
+  "bytes",
+  "chrono",
++ "chrono-tz",
+  "dispatcharr-contracts",
+  "dispatcharr-ingest-core",
+  "dispatcharr-upstream-http",
+--- a/rust/crates/store/Cargo.toml
++++ b/rust/crates/store/Cargo.toml
+@@ -18,6 +18,7 @@
+ reqwest = {version="0.12",default-features=false,features=["rustls-tls","stream"]}
+ tokio-util = {version="0.7",features=["io"]}
+ base64 = "0.22"
++chrono-tz = "0.10"
+ chrono = { version = "0.4", features = ["serde"] }
+ ipnet = "2"
+ jsonwebtoken = "9"
+--- a/rust/crates/store/src/auth.rs
++++ b/rust/crates/store/src/auth.rs
+@@ -73,6 +73,8 @@
+     config: AuthConfig,
+     attempts: Arc<Mutex<AttemptHistory>>,
+     password_workers: Arc<tokio::sync::Semaphore>,
++    pub(crate) display_timezone: crate::display_timezone::DisplayTimezone,
++    pub(crate) request_writer_permit: Option<Arc<tokio::sync::OwnedSemaphorePermit>>,
+     pub(crate) user_agent_workers: Arc<tokio::sync::Semaphore>,
+     pub(crate) channel_control: Option<Arc<dyn ChannelControl>>,
+     pub(crate) notification_cache: Option<crate::NotificationCache>,
+@@ -92,6 +94,8 @@
+             config,
+             attempts: Arc::new(Mutex::new(HashMap::new())),
+             password_workers: Arc::new(tokio::sync::Semaphore::new(4)),
++            display_timezone: crate::display_timezone::DisplayTimezone::new(),
++            request_writer_permit: None,
+             user_agent_workers: Arc::new(tokio::sync::Semaphore::new(4)),
+             channel_control: None,
+             notification_cache: None,
+--- a/rust/crates/store/src/display_timezone.rs
++++ b/rust/crates/store/src/display_timezone.rs
+@@ -0,0 +1,396 @@
++//! Inert Source request_started display-zone callback; Original Dispatcharr credit.
++//! Call explicitly at real request ingress, before authentication/body extraction.
++use crate::{AuthService, StoreError};
++use serde_json::Value;
++use sqlx::Row;
++use std::{
++    future::Future,
++    sync::{Arc, Mutex},
++    time::Duration,
++};
++use tokio::{
++    sync::{OwnedSemaphorePermit, Semaphore},
++    time::Instant,
++};
++
++const REFRESH: Duration = Duration::from_secs(5);
++const SETTINGS_RAW_LIMIT: usize = 65536;
++const SYSTEM_SQL: &str = "SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=65536 THEN value::text END AS value_text FROM core_coresettings WHERE key=$1";
++fn bounded_system_value(bytes: i32, raw: Option<&str>) -> Result<Value, StoreError> {
++    let raw = raw.ok_or(StoreError::Unsupported(
++        "Display timezone settings exceed qualified capacity",
++    ))?;
++    if bytes < 0 || bytes as usize > SETTINGS_RAW_LIMIT || raw.len() != bytes as usize {
++        return Err(StoreError::Unsupported(
++            "Display timezone settings exceed qualified capacity",
++        ));
++    }
++    let (value, _retained_quote) = crate::xc_bounded_user::checked_properties(
++        raw,
++        0,
++        crate::XcUserReadLimits {
++            max_raw_bytes: SETTINGS_RAW_LIMIT,
++            max_nodes: 2048,
++            max_depth: 32,
++            work_bytes: 4 * 1024 * 1024,
++        },
++    )?;
++    Ok(if value.as_object().is_some_and(|v| !v.is_empty()) {
++        value
++    } else {
++        crate::source_system_settings_defaults()
++    })
++}
++
++#[derive(Clone)]
++pub(crate) struct DisplayTimezone {
++    state: Arc<Mutex<ZoneState>>,
++    environment: String,
++}
++struct ZoneState {
++    zone: Option<String>,
++    checked: Option<Instant>,
++}
++fn valid_zone(name: &str) -> bool {
++    name.parse::<chrono_tz::Tz>().is_ok()
++}
++fn environment_zone(dispatcharr: Option<&str>, tz: Option<&str>) -> String {
++    let name = dispatcharr
++        .filter(|v| !v.is_empty())
++        .or(tz.filter(|v| !v.is_empty()))
++        .unwrap_or("UTC");
++    if valid_zone(name) {
++        name.into()
++    } else {
++        "UTC".into()
++    }
++}
++impl DisplayTimezone {
++    pub(crate) fn new() -> Self {
++        Self::from_environment(
++            std::env::var("DISPATCHARR_TIME_ZONE").ok().as_deref(),
++            std::env::var("TZ").ok().as_deref(),
++        )
++    }
++    fn from_environment(dispatcharr: Option<&str>, tz: Option<&str>) -> Self {
++        Self {
++            state: Arc::new(Mutex::new(ZoneState {
++                zone: None,
++                checked: None,
++            })),
++            environment: environment_zone(dispatcharr, tz),
++        }
++    }
++    fn zone(&self) -> String {
++        self.state
++            .lock()
++            .unwrap()
++            .zone
++            .clone()
++            .unwrap_or_else(|| self.environment.clone())
++    }
++    fn claim(&self, force: bool) -> bool {
++        let now = Instant::now();
++        let mut state = self.state.lock().unwrap();
++        if !force
++            && state
++                .checked
++                .is_some_and(|then| now.duration_since(then) < REFRESH)
++        {
++            return false;
++        }
++        // Source stamps BEFORE try: errors, invalid zones and admission refusal
++        // must not turn every subsequent request into another refresh attempt.
++        state.checked = Some(now);
++        true
++    }
++    fn finish(&self, value: &Value) {
++        if let Some(name) = value.as_str().filter(|name| valid_zone(name)) {
++            self.state.lock().unwrap().zone = Some(name.into());
++        }
++    }
++    fn set(&self, value: &Value) {
++        if let Some(name) = value.as_str().filter(|name| valid_zone(name)) {
++            let mut state = self.state.lock().unwrap();
++            state.zone = Some(name.into());
++            state.checked = Some(Instant::now());
++        }
++    }
++    async fn refresh<F, Fut>(
++        &self,
++        force: bool,
++        workers: Arc<Semaphore>,
++        inherited: Option<Arc<OwnedSemaphorePermit>>,
++        work: F,
++    ) where
++        F: FnOnce(Arc<OwnedSemaphorePermit>) -> Fut + Send + 'static,
++        Fut: Future<Output = Result<Value, StoreError>> + Send + 'static,
++    {
++        if !self.claim(force) {
++            return;
++        }
++        let permit = match inherited {
++            Some(p) => p,
++            None => match workers.try_acquire_owned() {
++                Ok(p) => Arc::new(p),
++                Err(_) => return,
++            },
++        };
++        let state = self.clone();
++        // Dropping/aborting the observer does not abort actual SQL/cache work.
++        // Its existing writer permit is also passed to the cache retained owner,
++        // so a late physical reply outlives both this task and logical deadline.
++        let _ = tokio::spawn(async move {
++            if let Ok(value) = work(permit.clone()).await {
++                state.finish(&value);
++            }
++            drop(permit);
++        })
++        .await;
++    }
++}
++impl AuthService {
++    // Unlike pool.fetch_optional, explicit connection ownership keeps the
++    // callback's original permit alive after ErrorResponse through actual Ready.
++    async fn callback_system_settings(&self) -> Result<Value, StoreError> {
++        async fn load(auth: &AuthService) -> Result<Value, StoreError> {
++            let mut connection = auth.store.pool().acquire().await?;
++            let result = sqlx::query(SYSTEM_SQL)
++                .bind("system_settings")
++                .fetch_optional(&mut *connection)
++                .await;
++            if let Err(drain_error) = sqlx::Connection::ping(&mut *connection).await {
++                // Consume/close the actual connection under the same owner.
++                // No second close, new pool, query retry or early lease release.
++                let _ = connection.close().await;
++                return Err(result.err().unwrap_or(drain_error).into());
++            }
++            // Await SQLx return/after_release instead of spawning Drop cleanup
++            // after dropping the callback AuthService and its original token.
++            connection.return_to_pool().await;
++            match result? {
++                Some(row) => {
++                    let bytes: i32 = row.try_get("bytes")?;
++                    let raw: Option<String> = row.try_get("value_text")?;
++                    bounded_system_value(bytes, raw.as_deref())
++                }
++                None => Ok(crate::source_system_settings_defaults()),
++            }
++        }
++        match &self.notification_cache {
++            Some(cache) => cache.settings_group("system_settings", || load(self)).await,
++            None => load(self).await,
++        }
++    }
++    /// Reuse an actual ingress/writer lease; reject tokens from another budget.
++    /// No new permit allowance or artificial caller owner is constructed.
++    pub fn with_request_writer_permit(
++        mut self,
++        permit: Arc<OwnedSemaphorePermit>,
++    ) -> Result<Self, StoreError> {
++        if !Arc::ptr_eq(permit.semaphore(), &self.user_agent_workers) {
++            return Err(StoreError::Unsupported("Foreign request writer permit"));
++        }
++        self.request_writer_permit = Some(permit.clone());
++        Ok(self.with_retained_scope(permit))
++    }
++    /// Explicit inert pre-auth hook. Main/API middleware activation is separate.
++    /// Must run even for anonymous/malformed requests; never call only after auth.
++    pub async fn request_started_display_timezone(&self) {
++        self.refresh_display_timezone(false).await;
++    }
++    pub async fn refresh_display_timezone(&self, force: bool) {
++        let auth = self.clone();
++        self.display_timezone
++            .refresh(
++                force,
++                self.user_agent_workers.clone(),
++                self.request_writer_permit.clone(),
++                move |permit| async move {
++                    let scoped = auth.with_request_writer_permit(permit)?;
++                    let settings = scoped.callback_system_settings().await?;
++                    let value = settings
++                        .get("time_zone")
++                        .filter(|v| crate::channels::truthy(Some(v)))
++                        .cloned()
++                        .unwrap_or(Value::String("UTC".into()));
++                    Ok(value)
++                },
++            )
++            .await;
++    }
++    /// Source post_save setter: valid system time_zone stamps checked; invalid,
++    /// absent or non-string values preserve both previous zone and checked time.
++    pub fn set_display_timezone_on_settings_save(&self, key: &str, value: &Value) {
++        if key == "system_settings" {
++            self.display_timezone
++                .set(&value.get("time_zone").cloned().unwrap_or(Value::Null));
++        }
++    }
++    /// Display/logging consumers may read the cached zone without database I/O.
++    pub fn display_timezone_name(&self) -> String {
++        self.display_timezone.zone()
++    }
++}
++#[cfg(test)]
++mod tests {
++    use super::*;
++    use std::sync::atomic::{AtomicUsize, Ordering};
++    fn zone() -> DisplayTimezone {
++        DisplayTimezone::from_environment(Some("America/New_York"), None)
++    }
++    #[test]
++    fn bounded_system_row_refuses_size_before_decode() {
++        assert!(bounded_system_value(65537, None).is_err());
++        assert!(bounded_system_value(65537, Some("{}")).is_err());
++        assert!(bounded_system_value(-1, Some("{}")).is_err());
++        assert!(bounded_system_value(3, Some("{}")).is_err());
++        let exact = format!("\"{}\"", "x".repeat(65534));
++        assert_eq!(exact.len(), 65536);
++        assert_eq!(
++            bounded_system_value(65536, Some(&exact)).unwrap(),
++            crate::source_system_settings_defaults()
++        );
++    }
++    #[test]
++    fn bounded_system_row_refuses_node_amplification_and_depth() {
++        let nodes = format!("[{}0]", "0,".repeat(2048));
++        assert!(bounded_system_value(nodes.len() as i32, Some(&nodes)).is_err());
++        let deep = format!("{}0{}", "[".repeat(33), "]".repeat(33));
++        assert!(bounded_system_value(deep.len() as i32, Some(&deep)).is_err());
++    }
++    #[test]
++    fn bounded_system_source_defaults_and_primitive_types() {
++        for raw in ["null", "false", "0", "[]", "{}"] {
++            assert_eq!(
++                bounded_system_value(raw.len() as i32, Some(raw)).unwrap(),
++                crate::source_system_settings_defaults()
++            );
++        }
++        let raw = r#"{"time_zone":"UTC","enable_ip_lookup":false,"max_system_events":100}"#;
++        assert_eq!(
++            bounded_system_value(raw.len() as i32, Some(raw)).unwrap(),
++            serde_json::json!({"time_zone":"UTC","enable_ip_lookup":false,"max_system_events":100})
++        );
++    }
++    #[test]
++    fn bounded_system_malformed_input_never_produces_group() {
++        assert!(bounded_system_value(1, Some("{")).is_err());
++    }
++    #[test]
++    fn environment_precedence_and_invalid_fallback() {
++        assert_eq!(
++            environment_zone(Some(""), Some("Europe/London")),
++            "Europe/London"
++        );
++        assert_eq!(
++            environment_zone(Some("invalid zone"), Some("Europe/London")),
++            "UTC"
++        );
++        assert_eq!(environment_zone(None, None), "UTC");
++    }
++    #[tokio::test(start_paused = true)]
++    async fn checked_before_failure_and_exact_five_seconds() {
++        let z = zone();
++        let n = Arc::new(AtomicUsize::new(0));
++        let w = Arc::new(Semaphore::new(4));
++        for wait in [0, 0, 4999, 1] {
++            tokio::time::advance(Duration::from_millis(wait)).await;
++            let n = n.clone();
++            z.refresh(false, w.clone(), None, move |_| async move {
++                n.fetch_add(1, Ordering::SeqCst);
++                Err(StoreError::Unsupported("owned failure"))
++            })
++            .await;
++        }
++        assert_eq!(n.load(Ordering::SeqCst), 2);
++        assert_eq!(z.zone(), "America/New_York");
++    }
++    #[tokio::test(start_paused = true)]
++    async fn invalid_zone_preserves_previous_and_force_bypasses_debounce() {
++        let z = zone();
++        let w = Arc::new(Semaphore::new(4));
++        z.refresh(false, w.clone(), None, |_| async {
++            Ok(Value::String("Europe/London".into()))
++        })
++        .await;
++        z.refresh(true, w, None, |_| async {
++            Ok(Value::String("invalid zone".into()))
++        })
++        .await;
++        assert_eq!(z.zone(), "Europe/London");
++        assert!(!z.claim(false));
++    }
++    #[tokio::test(start_paused = true)]
++    async fn setter_only_valid_system_zone_changes_state() {
++        let z = zone();
++        z.set(&Value::Null);
++        assert!(z.claim(false));
++        tokio::time::advance(REFRESH).await;
++        z.set(&Value::String("Europe/London".into()));
++        assert_eq!(z.zone(), "Europe/London");
++        assert!(!z.claim(false));
++        z.set(&Value::Bool(false));
++        assert_eq!(z.zone(), "Europe/London");
++    }
++    #[tokio::test]
++    async fn abort_observer_keeps_actual_work_and_permit_until_settlement() {
++        let z = zone();
++        let w = Arc::new(Semaphore::new(4));
++        let (began, started) = tokio::sync::oneshot::channel();
++        let (release, held) = tokio::sync::oneshot::channel();
++        let copy = z.clone();
++        let workers = w.clone();
++        let observer = tokio::spawn(async move {
++            copy.refresh(false, workers, None, move |_| async move {
++                let _ = began.send(());
++                held.await.unwrap();
++                Ok(Value::String("Europe/London".into()))
++            })
++            .await;
++        });
++        started.await.unwrap();
++        assert_eq!(w.available_permits(), 3);
++        observer.abort();
++        assert!(observer.await.unwrap_err().is_cancelled());
++        assert_eq!(w.available_permits(), 3);
++        release.send(()).unwrap();
++        tokio::time::timeout(Duration::from_secs(1), async {
++            while w.available_permits() != 4 {
++                tokio::task::yield_now().await;
++            }
++        })
++        .await
++        .unwrap();
++        assert_eq!(z.zone(), "Europe/London");
++    }
++    #[tokio::test]
++    async fn reuse_actual_permit_when_all_four_slots_are_owned() {
++        let z = zone();
++        let w = Arc::new(Semaphore::new(4));
++        let shared = Arc::new(w.clone().acquire_owned().await.unwrap());
++        let rest = w.clone().acquire_many_owned(3).await.unwrap();
++        z.refresh(false, w.clone(), Some(shared.clone()), |_| async {
++            Ok(Value::String("UTC".into()))
++        })
++        .await;
++        assert_eq!(z.zone(), "UTC");
++        assert_eq!(w.available_permits(), 0);
++        drop(rest);
++        drop(shared);
++        assert_eq!(w.available_permits(), 4);
++    }
++    #[tokio::test]
++    async fn saturated_budget_is_best_effort_but_debounced() {
++        let z = zone();
++        let w = Arc::new(Semaphore::new(0));
++        z.refresh(false, w, None, |_| async { panic!("must not enter work") })
++            .await;
++        assert!(!z.claim(false));
++        assert_eq!(z.zone(), "America/New_York");
++    }
++}
++
++#[cfg(test)]
++#[path = "display_timezone_physical_tests.rs"]
++mod physical_tests;
+--- a/rust/crates/store/src/display_timezone_physical_tests.rs
++++ b/rust/crates/store/src/display_timezone_physical_tests.rs
+@@ -0,0 +1,961 @@
++//! Private test-only physical PostgreSQL witness. Original Dispatcharr and SQLx
++//! contributors retain source/algorithm credit. Never enabled outside cfg(test).
++use crate::{
++    initialize_empty_database, AuthConfig, AuthService, NotificationCache, SchemaInitialization,
++    Store,
++};
++use serde_json::{json, Value};
++use sha2::{Digest, Sha256};
++use sqlx::Row;
++use std::{
++    collections::BTreeMap,
++    io::{BufRead, BufReader, Read, Write},
++    net::SocketAddr,
++    os::{fd::AsRawFd, unix::process::ExitStatusExt},
++    path::{Path as FsPath, PathBuf},
++    process::{Child, Command, Stdio},
++    sync::{mpsc, Arc},
++    thread,
++    time::{Duration, Instant},
++};
++use tokio::{io::AsyncWriteExt, net::TcpStream};
++const NOTICE: &str = "core_systemnotification";
++const DISMISS: &str = "core_notificationdismissal";
++const TABLES: [&str; 11] = [
++    "accounts_user",
++    "m3u_m3uaccount",
++    "m3u_m3uaccountprofile",
++    "vod_movie",
++    "vod_m3umovierelation",
++    "vod_series",
++    "vod_episode",
++    "vod_m3uepisoderelation",
++    "core_coresettings",
++    NOTICE,
++    DISMISS,
++];
++fn hash(b: &[u8]) -> String {
++    format!("{:x}", Sha256::digest(b))
++}
++fn hex(b: &[u8]) -> String {
++    b.iter().map(|b| format!("{b:02x}")).collect()
++}
++fn save(path: &FsPath, v: &Value) {
++    let b = serde_json::to_vec_pretty(v).unwrap();
++    assert!(b.len() <= 32 * 1024 * 1024);
++    std::fs::write(path, b).unwrap();
++}
++fn owned(v: &str) {
++    let s = v.strip_prefix("rust_probe_display_callback_").unwrap();
++    assert_eq!(s.len(), 10);
++    assert!(s
++        .bytes()
++        .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c)));
++}
++async fn snapshot(store: &Store) -> Value {
++    let mut tables = BTreeMap::new();
++    let mut sequences = BTreeMap::new();
++    let mut total = 0;
++    for table in TABLES {
++        let rows:Value=sqlx::query_scalar(&format!("SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY id),'[]'::jsonb) FROM (SELECT * FROM {table} ORDER BY id LIMIT 10001) t")).fetch_one(store.pool()).await.unwrap();
++        assert!(rows.as_array().unwrap().len() <= 10000);
++        for row in rows.as_array().unwrap() {
++            let n = serde_json::to_vec(row).unwrap().len();
++            assert!(n <= 131072);
++            total += n;
++            assert!(total <= 8388608);
++        }
++        tables.insert(table, rows);
++        let seq:Value=sqlx::query_scalar(&format!("SELECT jsonb_build_object('last_value',last_value,'is_called',is_called) FROM {table}_id_seq")).fetch_one(store.pool()).await.unwrap();
++        sequences.insert(table, seq);
++    }
++    json!({"tables":tables,"sequences":sequences})
++}
++async fn credentials(store: &Store) -> Value {
++    let rows:Value=sqlx::query_scalar("SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY id),'[]'::jsonb) FROM (SELECT * FROM core_systemevent ORDER BY id LIMIT 10001) t").fetch_one(store.pool()).await.unwrap();
++    assert!(rows.as_array().unwrap().len() <= 10000);
++    assert!(serde_json::to_vec(&rows).unwrap().len() <= 8388608);
++    let sequence:Value=sqlx::query_scalar("SELECT jsonb_build_object('last_value',last_value,'is_called',is_called) FROM core_systemevent_id_seq").fetch_one(store.pool()).await.unwrap();
++    let users: Value = sqlx::query_scalar(
++        "SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY id),'[]'::jsonb) FROM accounts_user t",
++    )
++    .fetch_one(store.pool())
++    .await
++    .unwrap();
++    json!({"accounts_user":users,"events":rows,"sequence":sequence})
++}
++async fn cache(url: &str) -> Value {
++    let client = redis::Client::open(url).unwrap();
++    let mut c = client.get_multiplexed_async_connection().await.unwrap();
++    let mut cursor = 0u64;
++    let mut rows = BTreeMap::new();
++    let mut used = 0;
++    let mut complete = false;
++    for _ in 0..128 {
++        let (next, keys): (u64, Vec<Vec<u8>>) = redis::cmd("SCAN")
++            .arg(cursor)
++            .arg("COUNT")
++            .arg(100)
++            .query_async(&mut c)
++            .await
++            .unwrap();
++        for key in keys {
++            assert!(key.len() <= 1024);
++            let dump: Option<Vec<u8>> = redis::cmd("DUMP")
++                .arg(&key)
++                .query_async(&mut c)
++                .await
++                .unwrap();
++            if let Some(dump) = dump {
++                used += key.len() + dump.len();
++                assert!(dump.len() <= 65536 && used <= 1048576 && rows.len() < 1000);
++                let ttl: i64 = redis::cmd("PTTL")
++                    .arg(&key)
++                    .query_async(&mut c)
++                    .await
++                    .unwrap();
++                rows.insert(hex(&key), json!({"dump_hex":hex(&dump),"pttl":ttl}));
++            }
++        }
++        cursor = next;
++        if cursor == 0 {
++            complete = true;
++            break;
++        }
++    }
++    assert!(complete);
++    json!({"raw_DUMP_PTTL":rows,"credential_Source_comparison":false})
++}
++struct Peer {
++    child: Child,
++    replies: mpsc::Receiver<Result<Value, String>>,
++    reader: Option<thread::JoinHandle<()>>,
++    next: usize,
++    receipt: PathBuf,
++    stopped: bool,
++    starttime: Option<String>,
++}
++impl Peer {
++    fn start(root: &FsPath, output: &FsPath, stages: &Value) -> (Self, u16) {
++        let redis = stages[0] == "cache_system";
++        let err = std::fs::OpenOptions::new()
++            .create_new(true)
++            .write(true)
++            .open(output.join("proxy.stderr"))
++            .unwrap();
++        let mut command = Command::new("/dispatcharrpy/bin/python");
++        command.arg(root.join(if redis {
++            "controller/owned_resp_proxy.py"
++        } else {
++            "controller/owned_pg_proxy.py"
++        }));
++        command
++            .arg("--backend-port")
++            .arg(if redis { "6379" } else { "5432" });
++        command.arg("--contracts").arg(root.join(if redis {
++            "inputs/resp-contracts.json"
++        } else {
++            "inputs/pg-contracts.json"
++        }));
++        if redis {
++            command.arg("--case").arg("cache_system");
++        } else {
++            command.arg("--stages").arg(stages.to_string());
++        }
++        let mut child = command
++            .arg("--evidence")
++            .arg(output.join("proxy-events.jsonl"))
++            .stdin(Stdio::piped())
++            .stdout(Stdio::piped())
++            .stderr(err)
++            .spawn()
++            .unwrap();
++        let starttime = std::fs::read_to_string(format!("/proc/{}/stat", child.id()))
++            .ok()
++            .map(|s| {
++                s.rsplit_once(')')
++                    .unwrap()
++                    .1
++                    .split_whitespace()
++                    .nth(19)
++                    .unwrap()
++                    .to_string()
++            });
++        assert!(starttime.is_some(), "ActualProxyStarttimeRequired");
++        let stdout = child.stdout.take().unwrap();
++        let (tx, replies) = mpsc::channel::<Result<Value, String>>();
++        let stdout_path = output.join("proxy-control.stdout");
++        let reader = thread::spawn(move || {
++            let mut raw_log = std::fs::OpenOptions::new()
++                .write(true)
++                .create_new(true)
++                .open(stdout_path)
++                .unwrap();
++            let mut used = 0usize;
++            let mut r = BufReader::new(stdout);
++            loop {
++                let mut line = Vec::new();
++                let got = Read::take(Read::by_ref(&mut r), 4194305).read_until(b'\n', &mut line);
++                match got {
++                    Ok(0) => break,
++                    Ok(_) => {
++                        used += line.len();
++                        if used > 33554432 {
++                            let _ = tx.send(Err("ProxyRawStdout32MiBCapacity".into()));
++                            break;
++                        }
++                        raw_log.write_all(&line).unwrap();
++                        if line.len() > 4194304 || line.last() != Some(&b'\n') {
++                            let _ = tx.send(Err("ProxyReplyCapacity".into()));
++                            break;
++                        }
++                        let value = serde_json::from_slice(&line).map_err(|e| e.to_string());
++                        if tx.send(value).is_err() {
++                            break;
++                        }
++                    }
++                    Err(e) => {
++                        let _ = tx.send(Err(e.to_string()));
++                        break;
++                    }
++                }
++            }
++        });
++        let hello = replies
++            .recv_timeout(Duration::from_secs(5))
++            .unwrap()
++            .unwrap();
++        assert_eq!(hello["ready"], true);
++        let port = hello["port"].as_u64().unwrap().try_into().unwrap();
++        (
++            Self {
++                child,
++                replies,
++                reader: Some(reader),
++                next: 0,
++                receipt: output.join("proxy-process.json"),
++                stopped: false,
++                starttime,
++            },
++            port,
++        )
++    }
++    fn command(&mut self, action: &str, ordinal: Option<u64>) -> Value {
++        let id = self.next;
++        self.next += 1;
++        assert!(self.next <= 6000);
++        let b = json!({"id":id,"action":action,"ordinal":ordinal}).to_string();
++        let input = self.child.stdin.as_mut().unwrap();
++        writeln!(input, "{b}").unwrap();
++        input.flush().unwrap();
++        let reply = self
++            .replies
++            .recv_timeout(Duration::from_secs(5))
++            .unwrap()
++            .unwrap();
++        assert_eq!(reply["id"], id);
++        reply["result"].clone()
++    }
++    fn stats(&mut self) -> Value {
++        self.command("stats", None)
++    }
++    fn release(&mut self, ordinal: u64) {
++        self.command("release", Some(ordinal));
++    }
++    fn finish(&mut self) -> Value {
++        let stats = self.command("stop", None);
++        self.child.stdin.take();
++        let deadline = Instant::now() + Duration::from_secs(8);
++        let status = loop {
++            if let Some(v) = self.child.try_wait().unwrap() {
++                break v;
++            }
++            assert!(Instant::now() < deadline, "ProxyProcessWait8");
++            thread::sleep(Duration::from_millis(5));
++        };
++        let waited = self.child.wait().unwrap();
++        assert_eq!(status.code(), waited.code());
++        if let Some(r) = self.reader.take() {
++            r.join().unwrap();
++        }
++        self.stopped = true;
++        let stderr_path = self.receipt.with_file_name("proxy.stderr");
++        let stderr_bytes = std::fs::metadata(&stderr_path).unwrap().len();
++        assert!(stderr_bytes <= 1048576, "ProxyStderr1MiBCapacity");
++        let stderr_sha = hash(&std::fs::read(stderr_path).unwrap());
++        save(
++            &self.receipt,
++            &json!({"pid":self.child.id(),"exit":status.code(),"signal":status.signal(),"status_debug":format!("{status:?}"),"starttime":self.starttime,"wait":waited.code(),"stderr_bytes":stderr_bytes,"stderr_sha256":stderr_sha,"proc_PID_absent_after_wait":!std::path::Path::new(&format!("/proc/{}",self.child.id())).exists(),"stdout_reader_joined":true,"forced":false,"settled_utc":chrono::Utc::now()}),
++        );
++        assert!(status.success());
++        stats
++    }
++}
++impl Drop for Peer {
++    fn drop(&mut self) {
++        if !self.stopped {
++            let _ = self.child.kill();
++            self.child.stdin.take();
++            let status = self.child.wait().ok();
++            let joined = self.reader.take().map(|r| r.join().is_ok()).unwrap_or(true);
++            save(
++                &self.receipt,
++                &json!({"pid":self.child.id(),"forced":true,"wait":status.as_ref().and_then(|s|s.code()),"signal":status.as_ref().and_then(|s|s.signal()),"status_debug":format!("{status:?}"),"starttime":self.starttime,"partial_failure_preserved":true,"proc_PID_absent_after_wait":!std::path::Path::new(&format!("/proc/{}",self.child.id())).exists(),"stdout_reader_joined":joined}),
++            );
++        }
++    }
++}
++async fn held(peer: &mut Peer, stage: &str) -> Value {
++    let until = Instant::now() + Duration::from_secs(15);
++    loop {
++        let stats = peer.stats();
++        assert_eq!(stats["errors"], json!([]));
++        if stats["held"]["stage"] == stage {
++            return stats;
++        }
++        assert!(Instant::now() < until, "ActualStageReach15:{stage}");
++        tokio::time::sleep(Duration::from_millis(10)).await;
++    }
++}
++// Owned test-only transport witness. A peer FD close does not imply that Hyper
++// attempted a response write. Retain actual read/write/handler/drop observations.
++#[derive(Default, serde::Serialize)]
++struct HttpFate {
++    accepted: usize,
++    handler_started: usize,
++    handler_cancelled: usize,
++    response_statuses: Vec<u16>,
++    bytes_read: usize,
++    bytes_written: usize,
++    read_eof: bool,
++    write_errors: Vec<String>,
++    socket_dropped: bool,
++    capacity_exceeded: bool,
++}
++type SharedFate = Arc<std::sync::Mutex<HttpFate>>;
++struct FateIo {
++    stream: TcpStream,
++    fate: SharedFate,
++}
++impl tokio::io::AsyncRead for FateIo {
++    fn poll_read(
++        self: std::pin::Pin<&mut Self>,
++        cx: &mut std::task::Context<'_>,
++        buf: &mut tokio::io::ReadBuf<'_>,
++    ) -> std::task::Poll<std::io::Result<()>> {
++        let this = self.get_mut();
++        let before = buf.filled().len();
++        let result = std::pin::Pin::new(&mut this.stream).poll_read(cx, buf);
++        if let std::task::Poll::Ready(Ok(())) = &result {
++            let n = buf.filled().len() - before;
++            let mut fate = this.fate.lock().unwrap();
++            fate.bytes_read += n;
++            fate.read_eof |= n == 0;
++            fate.capacity_exceeded |= fate.bytes_read > 65536;
++        }
++        result
++    }
++}
++impl tokio::io::AsyncWrite for FateIo {
++    fn poll_write(
++        self: std::pin::Pin<&mut Self>,
++        cx: &mut std::task::Context<'_>,
++        buf: &[u8],
++    ) -> std::task::Poll<std::io::Result<usize>> {
++        let this = self.get_mut();
++        let result = std::pin::Pin::new(&mut this.stream).poll_write(cx, buf);
++        match &result {
++            std::task::Poll::Ready(Ok(n)) => {
++                let mut fate = this.fate.lock().unwrap();
++                fate.bytes_written += n;
++                fate.capacity_exceeded |= fate.bytes_written > 65536;
++            }
++            std::task::Poll::Ready(Err(error)) => {
++                let mut fate = this.fate.lock().unwrap();
++                if fate.write_errors.len() < 8 {
++                    fate.write_errors.push(format!("{:?}", error.kind()));
++                } else {
++                    fate.capacity_exceeded = true;
++                }
++            }
++            std::task::Poll::Pending => {}
++        }
++        result
++    }
++    fn poll_flush(
++        self: std::pin::Pin<&mut Self>,
++        cx: &mut std::task::Context<'_>,
++    ) -> std::task::Poll<std::io::Result<()>> {
++        std::pin::Pin::new(&mut self.get_mut().stream).poll_flush(cx)
++    }
++    fn poll_shutdown(
++        self: std::pin::Pin<&mut Self>,
++        cx: &mut std::task::Context<'_>,
++    ) -> std::task::Poll<std::io::Result<()>> {
++        std::pin::Pin::new(&mut self.get_mut().stream).poll_shutdown(cx)
++    }
++}
++impl Drop for FateIo {
++    fn drop(&mut self) {
++        self.fate.lock().unwrap().socket_dropped = true;
++    }
++}
++struct FateListener {
++    listener: tokio::net::TcpListener,
++    fate: SharedFate,
++}
++impl axum::serve::Listener for FateListener {
++    type Io = FateIo;
++    type Addr = SocketAddr;
++    async fn accept(&mut self) -> (Self::Io, Self::Addr) {
++        let (stream, address) = self.listener.accept().await.expect("OwnedHTTPAccept");
++        self.fate.lock().unwrap().accepted += 1;
++        (
++            FateIo {
++                stream,
++                fate: self.fate.clone(),
++            },
++            address,
++        )
++    }
++    fn local_addr(&self) -> std::io::Result<Self::Addr> {
++        self.listener.local_addr()
++    }
++}
++struct HandlerFate {
++    fate: SharedFate,
++    returned: bool,
++}
++impl Drop for HandlerFate {
++    fn drop(&mut self) {
++        if !self.returned {
++            self.fate.lock().unwrap().handler_cancelled += 1;
++        }
++    }
++}
++fn weak_alive(weak: &std::sync::Weak<tokio::sync::OwnedSemaphorePermit>) -> bool {
++    // Upgrade only within this synchronous observation; no strong lease across await.
++    weak.upgrade().is_some()
++}
++async fn leases_settled(
++    auth: &AuthService,
++    weak: &[std::sync::Weak<tokio::sync::OwnedSemaphorePermit>],
++) {
++    tokio::time::timeout(Duration::from_secs(10), async {
++        while auth.user_agent_workers.available_permits() != 4
++            || weak.iter().any(weak_alive)
++            || auth
++                .notification_cache
++                .as_ref()
++                .is_some_and(|c| c.physical_operations() != 0)
++        {
++            tokio::time::sleep(Duration::from_millis(10)).await;
++        }
++    })
++    .await
++    .expect("ActualOriginalLeaseAndCacheSettlement10");
++}
++async fn read_target(observer: &Store, database: &str) -> Value {
++    sqlx::query_scalar("SELECT COALESCE(jsonb_agg(to_jsonb(t)),'[]'::jsonb) FROM (SELECT pid,state,wait_event_type,wait_event,query FROM pg_stat_activity WHERE datname=$1 AND query=$2 AND state='active') t")
++        .bind(database).bind(super::SYSTEM_SQL).fetch_one(observer.pool()).await.unwrap()
++}
++async fn reach_locked(observer: &Store, database: &str, count: usize) -> Value {
++    tokio::time::timeout(Duration::from_secs(15), async {
++        loop {
++            let v = read_target(observer, database).await;
++            if v.as_array().unwrap().len() == count
++                && v.as_array()
++                    .unwrap()
++                    .iter()
++                    .all(|r| r["wait_event_type"] == "Lock")
++            {
++                break v;
++            }
++            tokio::time::sleep(Duration::from_millis(10)).await;
++        }
++    })
++    .await
++    .expect("ActualBoundTargetBackendLock15")
++}
++async fn run_case(case: u64) {
++    assert_eq!(
++        std::env::var("DISPLAY_CALLBACK_AUTHORITY").as_deref(),
++        Ok("owned-native-callback-only")
++    );
++    let db = std::env::var("POSTGRES_DB").unwrap();
++    owned(&db);
++    let root = PathBuf::from(std::env::var("DISPLAY_CALLBACK_ROOT").unwrap());
++    let out = PathBuf::from(std::env::var("DISPLAY_CALLBACK_OUTPUT").unwrap());
++    assert!(out.is_dir());
++    let path = out.join("callback-private.json");
++    assert!(!path.exists());
++    let url = std::env::var("DATABASE_TEST_URL").unwrap();
++    assert!(matches!(
++        initialize_empty_database(&url).await.unwrap(),
++        SchemaInitialization::Created { .. }
++    ));
++    let observer = Store::connect(&url, 2).await.unwrap();
++    assert_eq!(
++        sqlx::query_scalar::<_, String>("SELECT current_database()")
++            .fetch_one(observer.pool())
++            .await
++            .unwrap(),
++        db
++    );
++    sqlx::query("INSERT INTO core_coresettings(key,name,value)VALUES('system_settings','Owned callback system',$1)ON CONFLICT(key)DO UPDATE SET value=EXCLUDED.value").bind(json!({"time_zone":"Europe/London"})).execute(observer.pool()).await.unwrap();
++    let before = snapshot(&observer).await;
++    let credentials_before = credentials(&observer).await;
++    let mut peer = None;
++    let mut subject_url = url::Url::parse(&url).unwrap();
++    subject_url
++        .query_pairs_mut()
++        .append_pair("application_name", "display-callback-subject");
++    let mut redis_url =
++        url::Url::parse(&std::env::var("DISPLAY_CALLBACK_CACHE_URL").unwrap()).unwrap();
++    if case <= 4 {
++        let stage = if case == 2 {
++            "system_error_ready"
++        } else if case >= 3 {
++            "cache_system"
++        } else {
++            "system_ready"
++        };
++        let (p, port) = Peer::start(&root, &out, &json!([stage]));
++        peer = Some(p);
++        if case >= 3 {
++            redis_url.set_port(Some(port)).unwrap();
++        } else {
++            subject_url.set_port(Some(port)).unwrap();
++        }
++    }
++    let subject = Store::connect(subject_url.as_str(), 4).await.unwrap();
++    let mut auth = AuthService::new(
++        subject.clone(),
++        AuthConfig::new("owned-callback-only".into()).unwrap(),
++    );
++    if (3..=4).contains(&case) {
++        auth = auth.with_notification_cache(
++            NotificationCache::connect(redis_url.as_str())
++                .await
++                .unwrap(),
++        );
++    }
++    let prepared_pid = if case == 2 {
++        // Prepare before ACCESS EXCLUSIVE: otherwise Parse fails before Bind.
++        let mut c = subject.pool().acquire().await.unwrap();
++        let pid: i32 = sqlx::query_scalar("SELECT pg_backend_pid()")
++            .fetch_one(&mut *c)
++            .await
++            .unwrap();
++        let value = sqlx::query(super::SYSTEM_SQL)
++            .bind("system_settings")
++            .fetch_one(&mut *c)
++            .await
++            .unwrap();
++        assert_eq!(
++            value.try_get::<String, _>("value_text").unwrap(),
++            r#"{"time_zone": "Europe/London"}"#
++        );
++        drop(c);
++        tokio::time::timeout(Duration::from_secs(5), async {
++            while subject.pool().num_idle() != 1 {
++                tokio::task::yield_now().await;
++            }
++        })
++        .await
++        .unwrap();
++        Some(pid)
++    } else {
++        None
++    };
++    let mut prepared_four_pids = Vec::new();
++    if case == 5 {
++        let mut warm = Vec::new();
++        for _ in 0..4 {
++            let mut c = subject.pool().acquire().await.unwrap();
++            let pid: i32 = sqlx::query_scalar("SELECT pg_backend_pid()")
++                .fetch_one(&mut *c)
++                .await
++                .unwrap();
++            let _ = sqlx::query(super::SYSTEM_SQL)
++                .bind("system_settings")
++                .fetch_one(&mut *c)
++                .await
++                .unwrap();
++            prepared_four_pids.push(pid);
++            warm.push(c);
++        }
++        drop(warm);
++        tokio::time::timeout(Duration::from_secs(5), async {
++            while subject.pool().num_idle() != 4 {
++                tokio::task::yield_now().await;
++            }
++        })
++        .await
++        .unwrap();
++    }
++    let mut lock = if case == 2 || case == 5 {
++        let mut tx = observer.pool().begin().await.unwrap();
++        sqlx::query("LOCK TABLE core_coresettings IN ACCESS EXCLUSIVE MODE")
++            .execute(&mut *tx)
++            .await
++            .unwrap();
++        Some(tx)
++    } else {
++        None
++    };
++    let cache_before = cache(&std::env::var("DISPLAY_CALLBACK_CACHE_URL").unwrap()).await;
++    let mut report = json!({"capture_complete":false,"passed":false,"capture_only":true,"case":case,"database":db,"Source_runs":0,"Main_runs":0,"before":before,"credentials_before":credentials_before,"raw_cache_before":cache_before,"IANA_ZoneInfo_catalogue_equivalent":false,"real_existing_writer_budget":4,"dummy_owner":false});
++    save(&path, &report);
++    if case <= 4 {
++        let permit = Arc::new(auth.user_agent_workers.clone().try_acquire_owned().unwrap());
++        let weak = Arc::downgrade(&permit);
++        let scoped = auth.clone().with_request_writer_permit(permit).unwrap();
++        let mut caller = None;
++        let mut server = None;
++        let mut signal = None;
++        let mut http = None;
++        let fate = Arc::new(std::sync::Mutex::new(HttpFate::default()));
++        if case == 3 {
++            let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
++            let address = listener.local_addr().unwrap();
++            let f = fate.clone();
++            let io_fate = fate.clone();
++            let once = Arc::new(std::sync::Mutex::new(Some(scoped)));
++            let router = axum::Router::new().route(
++                "/callback-owned-only",
++                axum::routing::get(move || {
++                    let auth = once
++                        .lock()
++                        .unwrap()
++                        .take()
++                        .expect("ExactlyOneActualHTTPCallback");
++                    let f = f.clone();
++                    async move {
++                        f.lock().unwrap().handler_started += 1;
++                        let mut guard = HandlerFate {
++                            fate: f.clone(),
++                            returned: false,
++                        };
++                        auth.request_started_display_timezone().await;
++                        f.lock().unwrap().response_statuses.push(200);
++                        guard.returned = true;
++                        axum::http::StatusCode::OK
++                    }
++                }),
++            );
++            // Router captures an AuthService lease. Move to a one-shot handler
++            // container so it cannot retain the original permit after request.
++            let (stop, stopped) = tokio::sync::oneshot::channel();
++            signal = Some(stop);
++            server = Some(tokio::spawn(async move {
++                axum::serve(
++                    FateListener {
++                        listener,
++                        fate: io_fate,
++                    },
++                    router,
++                )
++                .with_graceful_shutdown(async {
++                    let _ = stopped.await;
++                })
++                .await
++            }));
++            let mut stream = TcpStream::connect(address).await.unwrap();
++            stream.write_all(b"GET /callback-owned-only HTTP/1.1\r\nHost: owned\r\nConnection: close\r\n\r\n").await.unwrap();
++            http = Some(stream);
++        } else {
++            caller = Some(tokio::spawn(async move {
++                scoped.request_started_display_timezone().await;
++            }));
++        }
++        if case == 2 {
++            let locked = reach_locked(&observer, &db, 1).await;
++            let pid = locked[0]["pid"].as_i64().unwrap() as i32;
++            assert_eq!(Some(pid), prepared_pid);
++            report["same_target_backend_before_cancel"] = locked;
++            assert!(
++                sqlx::query_scalar::<_, bool>("SELECT pg_cancel_backend($1)")
++                    .bind(pid)
++                    .fetch_one(observer.pool())
++                    .await
++                    .unwrap()
++            );
++        }
++        let reached = if case >= 3 {
++            tokio::time::timeout(Duration::from_secs(15), async {
++                loop {
++                    let s = peer.as_mut().unwrap().stats();
++                    assert_eq!(s["invalid"], json!([]));
++                    if s["seen"] == 1 {
++                        break s;
++                    }
++                    tokio::time::sleep(Duration::from_millis(10)).await;
++                }
++            })
++            .await
++            .unwrap()
++        } else {
++            held(
++                peer.as_mut().unwrap(),
++                if case == 2 {
++                    "system_error_ready"
++                } else {
++                    "system_ready"
++                },
++            )
++            .await
++        };
++        report["held"] = reached;
++        report["weak_original_owner_while_held"] = json!(weak_alive(&weak));
++        report["writer_slots_while_held"] = json!(auth.user_agent_workers.available_permits());
++        assert!(weak_alive(&weak));
++        assert_eq!(auth.user_agent_workers.available_permits(), 3);
++        save(&path, &report);
++        if case == 1 {
++            let t = caller.take().unwrap();
++            t.abort();
++            assert!(t.await.unwrap_err().is_cancelled());
++            report["actual_observer_abort"] = json!(true);
++        }
++        if case == 3 {
++            let mut stream = http.take().unwrap();
++            report["actual_client_FD"] = json!(stream.as_raw_fd());
++            stream.shutdown().await.unwrap();
++            drop(stream);
++            report["HTTP_FDloss_is_not_assumed_handler_abort"] = json!(true);
++        }
++        if case == 4 {
++            tokio::time::timeout(Duration::from_secs(5), caller.take().unwrap())
++                .await
++                .unwrap()
++                .unwrap();
++            assert!(weak_alive(&weak));
++            assert!(
++                auth.notification_cache
++                    .as_ref()
++                    .unwrap()
++                    .physical_operations()
++                    > 0
++            );
++            report["logical_observer_returned_before_physical_reply"] = json!(true);
++        }
++        assert!(weak_alive(&weak));
++        let observation_start = Instant::now();
++        let mut sustained = Vec::new();
++        for sample in 0..2 {
++            if sample == 1 {
++                tokio::time::sleep(Duration::from_millis(250)).await;
++            }
++            let alive = weak_alive(&weak);
++            let slots = auth.user_agent_workers.available_permits();
++            let cache_operations = auth
++                .notification_cache
++                .as_ref()
++                .map(|c| c.physical_operations())
++                .unwrap_or(0);
++            sustained.push(json!({"elapsed_monotonic_seconds":observation_start.elapsed().as_secs_f64(),"original_owner_weak_alive":alive,"writer_slots":slots,"actual_cache_physical_operations":cache_operations}));
++            report["post_loss_or_logical_held_observations"] = json!(sustained);
++            save(&path, &report);
++            assert!(alive);
++            assert_eq!(slots, 3);
++            if case >= 3 {
++                assert!(cache_operations > 0);
++            }
++        }
++        peer.as_mut().unwrap().release(0);
++        if let Some(tx) = lock.take() {
++            tx.rollback().await.unwrap();
++        }
++        if let Some(c) = caller.take() {
++            tokio::time::timeout(Duration::from_secs(5), c)
++                .await
++                .unwrap()
++                .unwrap();
++        }
++        if let Some(s) = signal.take() {
++            s.send(()).unwrap();
++        }
++        if let Some(s) = server.take() {
++            tokio::time::timeout(Duration::from_secs(8), s)
++                .await
++                .unwrap()
++                .unwrap()
++                .unwrap();
++        }
++        leases_settled(&auth, std::slice::from_ref(&weak)).await;
++        report["weak_original_owner_after_settlement"] = json!(weak_alive(&weak));
++        report["HTTP_fate"] = serde_json::to_value(&*fate.lock().unwrap()).unwrap();
++        if case == 2 {
++            assert_eq!(
++                auth.display_timezone_name(),
++                auth.display_timezone.environment
++            );
++            let before_stats = peer.as_mut().unwrap().stats();
++            auth.request_started_display_timezone().await;
++            let after_stats = peer.as_mut().unwrap().stats();
++            assert_eq!(before_stats["events"], after_stats["events"]);
++            report["error_preserved_zone_and_pretry_debounce"] = json!(true);
++        }
++        report["zone_after"] = json!(auth.display_timezone_name());
++        if case != 2 {
++            assert_eq!(auth.display_timezone_name(), "Europe/London");
++        }
++    } else if case == 5 {
++        let mut weak = Vec::new();
++        let mut actors = Vec::new();
++        for _ in 0..4 {
++            let p = Arc::new(auth.user_agent_workers.clone().try_acquire_owned().unwrap());
++            weak.push(Arc::downgrade(&p));
++            let a = auth.clone().with_request_writer_permit(p).unwrap();
++            actors.push(tokio::spawn(async move {
++                a.refresh_display_timezone(true).await;
++            }));
++        }
++        let locked = reach_locked(&observer, &db, 4).await;
++        let mut actual_pids: Vec<i32> = locked
++            .as_array()
++            .unwrap()
++            .iter()
++            .map(|r| r["pid"].as_i64().unwrap() as i32)
++            .collect();
++        actual_pids.sort();
++        prepared_four_pids.sort();
++        assert_eq!(actual_pids, prepared_four_pids);
++        report["four_prepared_actual_backend_PIDs"] = json!(prepared_four_pids);
++        assert_eq!(auth.user_agent_workers.available_permits(), 0);
++        assert!(weak.iter().all(weak_alive));
++        report["four_real_target_backends_held"] = locked;
++        report["four_original_weak_alive"] = json!(true);
++        save(&path, &report);
++        lock.take().unwrap().rollback().await.unwrap();
++        for a in actors {
++            tokio::time::timeout(Duration::from_secs(5), a)
++                .await
++                .unwrap()
++                .unwrap();
++        }
++        leases_settled(&auth, &weak).await;
++        assert_eq!(auth.display_timezone_name(), "Europe/London");
++        report["four_real_reused_tokens_settled"] = json!(true);
++    } else {
++        auth.set_display_timezone_on_settings_save(
++            "system_settings",
++            &json!({"time_zone":"Europe/Paris"}),
++        );
++        assert_eq!(auth.display_timezone_name(), "Europe/Paris");
++        let checked = auth.display_timezone.state.lock().unwrap().checked;
++        for value in [
++            json!({"time_zone":"invalid zone"}),
++            json!({"time_zone":false}),
++            json!({}),
++        ] {
++            auth.set_display_timezone_on_settings_save("system_settings", &value);
++            assert_eq!(auth.display_timezone_name(), "Europe/Paris");
++            assert_eq!(auth.display_timezone.state.lock().unwrap().checked, checked);
++        }
++        auth.request_started_display_timezone().await;
++        assert_eq!(auth.display_timezone_name(), "Europe/Paris");
++        tokio::time::sleep(Duration::from_secs(5)).await;
++        auth.request_started_display_timezone().await;
++        assert_eq!(auth.display_timezone_name(), "Europe/London");
++        report["setter_invalid_previous_zone_and_real_debounce"] = json!(true);
++        report["exact_4999_5000_boundary_authority"] =
++            json!("compiled paused-clock unit test; no wallclock exactness claim");
++    }
++    assert_eq!(snapshot(&observer).await, before);
++    assert_eq!(credentials(&observer).await, credentials_before);
++    report["after"] = snapshot(&observer).await;
++    report["credentials_after"] = credentials(&observer).await;
++    report["raw_cache_after"] = cache(&std::env::var("DISPLAY_CALLBACK_CACHE_URL").unwrap()).await;
++    save(&path, &report);
++    // While the ELF still lives, prove all subject backends physically gone.
++    let close = subject.pool().close();
++    tokio::time::timeout(Duration::from_secs(10), close)
++        .await
++        .expect("FirstPoolClose10");
++    assert_eq!(subject.pool().size(), 0);
++    report["closed_pool_size"] = json!(subject.pool().size());
++    report["closed_pool_idle_diagnostic"] = json!(subject.pool().num_idle());
++    report["writer_slots_after_settlement"] = json!(auth.user_agent_workers.available_permits());
++    assert_eq!(auth.user_agent_workers.available_permits(), 4);
++    drop(auth);
++    if let Some(mut p) = peer {
++        let drained = tokio::time::timeout(Duration::from_secs(10), async {
++            loop {
++                let stats = p.stats();
++                let settled = if case >= 3 {
++                    stats["connections"] == 0
++                } else {
++                    stats["connections"]
++                        .as_array()
++                        .unwrap()
++                        .iter()
++                        .all(|c| c["closed"] == true && c["up_joined"] == true)
++                };
++                if settled {
++                    break stats;
++                }
++                tokio::time::sleep(Duration::from_millis(10)).await;
++            }
++        })
++        .await
++        .expect("NaturalProxyConnectionDrainBeforeStop10");
++        report["proxy_naturally_drained_before_stop"] = drained;
++        let stats = p.finish();
++        let (events, start, end) = if case >= 3 {
++            (
++                &stats["rows"],
++                "backend-target-reply-read-held",
++                "backend-target-reply-released",
++            )
++        } else {
++            (&stats["events"], "ready-held", "ready-forwarded")
++        };
++        let starts: Vec<_> = events
++            .as_array()
++            .unwrap()
++            .iter()
++            .filter(|e| e["kind"] == start)
++            .collect();
++        let ends: Vec<_> = events
++            .as_array()
++            .unwrap()
++            .iter()
++            .filter(|e| e["kind"] == end)
++            .collect();
++        assert_eq!(starts.len(), 1);
++        assert_eq!(ends.len(), 1);
++        let held =
++            ends[0]["monotonic"].as_f64().unwrap() - starts[0]["monotonic"].as_f64().unwrap();
++        assert!(held.is_finite() && (0.0..=25.0).contains(&held));
++        report["actual_target_hold_seconds"] = json!(held);
++        if case >= 3 {
++            assert_eq!(stats["invalid"], json!([]));
++            assert_eq!(stats["listener_joined"], true);
++        } else {
++            assert_eq!(stats["errors"], json!([]));
++            assert_eq!(stats["listener_alive"], false);
++        }
++        report["proxy_final"] = stats;
++    }
++    let own:Value=sqlx::query_scalar("SELECT COALESCE(jsonb_agg(to_jsonb(t)),'[]'::jsonb) FROM (SELECT pid,state FROM pg_stat_activity WHERE datname=$1 AND application_name='display-callback-subject') t").bind(&db).fetch_one(observer.pool()).await.unwrap();
++    assert_eq!(own, json!([]));
++    report["while_ELF_alive_other_owned_SQL_backends"] = own;
++    report["capture_complete"] = json!(true);
++    report["passed"] = json!(true);
++    save(&path, &report);
++    observer.pool().close().await;
++}
++#[tokio::test]
++#[ignore = "requires reviewed owned callback PG/Redis physical fixture"]
++async fn real_callback_physical_case() {
++    let case: u64 = std::env::var("DISPLAY_CALLBACK_CASE")
++        .unwrap()
++        .parse()
++        .unwrap();
++    assert!((1..=6).contains(&case));
++    tokio::time::timeout(Duration::from_secs(90), run_case(case))
++        .await
++        .expect("FixedCase90");
++}
+--- a/rust/crates/store/src/lib.rs
++++ b/rust/crates/store/src/lib.rs
+@@ -20,6 +20,7 @@
+ mod output_profile_writes;
+ pub use output_profile_writes::OutputProfileWrites;
+ mod core_utilities;
++mod display_timezone;
+ mod django_pickle;
+ mod epg_policy;
+ mod epg_reads;
+--- a/rust/crates/store/src/notifications.rs
++++ b/rust/crates/store/src/notifications.rs
+@@ -1371,3 +1371,7 @@
+ #[cfg(test)]
+ #[path = "notifications_forms_sql_tests.rs"]
+ mod forms_sql_tests;
++
++#[cfg(test)]
++#[path = "notifications_callback_sql_tests.rs"]
++mod callback_sql_tests;
+--- a/rust/crates/store/src/notifications_callback_sql_tests.rs
++++ b/rust/crates/store/src/notifications_callback_sql_tests.rs
+@@ -0,0 +1,587 @@
++//! Native notification forms Source12 plus seven predeclared legacy transport checks.
++//! New imported-existing-state callback replay; raw recorder remains capture-only.
++//! Original Dispatcharr contributors retain application/algorithm credit.
++use super::*;
++use crate::{initialize_empty_database, AuthConfig, SchemaInitialization, Store};
++use sha2::{Digest, Sha256};
++use std::{collections::BTreeMap, path::Path};
++const TABLES: [&str; 11] = [
++    "accounts_user",
++    "m3u_m3uaccount",
++    "m3u_m3uaccountprofile",
++    "vod_movie",
++    "vod_m3umovierelation",
++    "vod_series",
++    "vod_episode",
++    "vod_m3uepisoderelation",
++    "core_coresettings",
++    "core_systemnotification",
++    "core_notificationdismissal",
++];
++fn hex(data: &[u8]) -> String {
++    data.iter().map(|b| format!("{b:02x}")).collect()
++}
++fn hash(data: &[u8]) -> String {
++    format!("{:x}", Sha256::digest(data))
++}
++fn save(path: &Path, value: &Value) {
++    let bytes = serde_json::to_vec_pretty(value).unwrap();
++    assert!(bytes.len() <= 134217728);
++    std::fs::write(path, bytes).unwrap();
++}
++async fn rows(store: &Store, table: &str) -> Value {
++    assert!(TABLES.contains(&table) || table == "core_systemevent");
++    let value: Value = sqlx::query_scalar(&format!(
++        "SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY id),'[]'::jsonb) FROM {table} t"
++    ))
++    .fetch_one(store.pool())
++    .await
++    .unwrap();
++    let a = value.as_array().unwrap();
++    assert!(a.len() <= 10000);
++    assert!(serde_json::to_vec(&value).unwrap().len() <= 8388608);
++    value
++}
++async fn snapshot(store: &Store) -> Value {
++    let mut tables = BTreeMap::new();
++    let mut sequences = BTreeMap::new();
++    for table in TABLES {
++        tables.insert(table, rows(store, table).await);
++        let sequence:Value=sqlx::query_scalar(&format!("SELECT jsonb_build_object('last_value',last_value,'is_called',is_called) FROM {table}_id_seq")).fetch_one(store.pool()).await.unwrap();
++        sequences.insert(table, sequence);
++    }
++    json!({"tables":tables,"sequences":sequences})
++}
++async fn cache_snapshot(
++    cache: &NotificationCache,
++    connection: &mut redis::aio::MultiplexedConnection,
++) -> Value {
++    let mut cursor = 0u64;
++    let mut output = BTreeMap::new();
++    let mut used = 0usize;
++    let mut done = false;
++    for _ in 0..128 {
++        let (next, keys): (u64, Vec<Vec<u8>>) = redis::cmd("SCAN")
++            .arg(cursor)
++            .arg("COUNT")
++            .arg(100)
++            .query_async(connection)
++            .await
++            .unwrap();
++        cursor = next;
++        for key in keys {
++            assert!(key.len() <= 1024 && output.len() < 1000);
++            let dump: Option<Vec<u8>> = redis::cmd("DUMP")
++                .arg(&key)
++                .query_async(connection)
++                .await
++                .unwrap();
++            if let Some(dump) = dump {
++                let ttl: i64 = redis::cmd("PTTL")
++                    .arg(&key)
++                    .query_async(connection)
++                    .await
++                    .unwrap();
++                used += key.len() + dump.len();
++                assert!(dump.len() <= 65536 && used <= 1048576);
++                output.insert(
++                    hex(&key),
++                    json!({"key_hex":hex(&key),"dump_hex":hex(&dump),"pttl":ttl}),
++                );
++            }
++        }
++        if cursor == 0 {
++            done = true;
++            break;
++        }
++    }
++    assert!(done);
++    let raw = cache
++        .get(":1:throttle_api_key_auth_127.0.0.1")
++        .await
++        .unwrap();
++    let history = raw
++        .as_ref()
++        .map(|v| crate::django_pickle::decode(v).expect("literal Django failed-auth pickle"))
++        .unwrap_or(Value::Null);
++    assert!(
++        history.is_null()
++            || history
++                .as_array()
++                .is_some_and(|v| v.len() <= 10 && v.iter().all(Value::is_number))
++    );
++    let mut named = BTreeMap::new();
++    for key in [
++        ":1:coresettings:group:system_settings",
++        ":1:coresettings:group:network_access",
++        ":1:coresettings:groupver:network_access",
++    ] {
++        let raw = cache.get(key).await.unwrap();
++        let decoded = raw
++            .as_ref()
++            .map(|v| decode_cache(v).expect("Existing bounded Django pickle decoder"));
++        named.insert(
++            key,
++            json!({"raw_GET_hex":raw.as_ref().map(|v|hex(v)),"decoded":decoded}),
++        );
++    }
++    json!({"named_decoded":named,"rows":output.into_values().collect::<Vec<_>>(),"capture_bytes":used,"api_key_failed_auth_history":history,"api_key_failed_auth_raw_hex":raw.as_ref().map(|v|hex(v)),"scope":"owned Redis cache DB only; raw TTL retained, no exact TTL equality"})
++}
++async fn redis_snapshot(url: &str, db: u8) -> Value {
++    let client = redis::Client::open(url).unwrap();
++    assert_eq!(client.get_connection_info().redis.db, i64::from(db));
++    let mut connection = client.get_multiplexed_async_connection().await.unwrap();
++    let mut cursor = 0u64;
++    let mut rows = BTreeMap::new();
++    let mut used = 0usize;
++    let mut done = false;
++    for _ in 0..128 {
++        let (next, keys): (u64, Vec<Vec<u8>>) = redis::cmd("SCAN")
++            .arg(cursor)
++            .arg("COUNT")
++            .arg(100)
++            .query_async(&mut connection)
++            .await
++            .unwrap();
++        cursor = next;
++        for key in keys {
++            assert!(key.len() <= 1024 && rows.len() < 1000);
++            let kind: String = redis::cmd("TYPE")
++                .arg(&key)
++                .query_async(&mut connection)
++                .await
++                .unwrap();
++            let memory: Option<u64> = redis::cmd("MEMORY")
++                .arg("USAGE")
++                .arg(&key)
++                .query_async(&mut connection)
++                .await
++                .unwrap();
++            assert!(
++                memory.unwrap_or(0) <= 1048576,
++                "OwnedRedisPerKeyPreflight1MiB"
++            );
++            let dump: Option<Vec<u8>> = redis::cmd("DUMP")
++                .arg(&key)
++                .query_async(&mut connection)
++                .await
++                .unwrap();
++            let ttl: i64 = redis::cmd("PTTL")
++                .arg(&key)
++                .query_async(&mut connection)
++                .await
++                .unwrap();
++            let mut row = json!({"key_hex":hex(&key),"type":kind,"dump_hex":dump.as_ref().map(|v|hex(v)),"pttl":ttl});
++            used += key.len() + dump.as_ref().map_or(0, Vec::len);
++            assert!(used <= 8388608);
++            if kind == "string" {
++                let value: Option<Vec<u8>> = redis::cmd("GET")
++                    .arg(&key)
++                    .query_async(&mut connection)
++                    .await
++                    .unwrap();
++                row["value_hex"] = json!(value.map(|v| hex(&v)));
++            } else if kind == "list" {
++                let count: u64 = redis::cmd("LLEN")
++                    .arg(&key)
++                    .query_async(&mut connection)
++                    .await
++                    .unwrap();
++                assert!(count <= 1000);
++                let values: Vec<Vec<u8>> = redis::cmd("LRANGE")
++                    .arg(&key)
++                    .arg(0)
++                    .arg(-1)
++                    .query_async(&mut connection)
++                    .await
++                    .unwrap();
++                assert!(values.iter().map(Vec::len).sum::<usize>() <= 8388608);
++                row["list_hex"] = json!(values.iter().map(|v| hex(v)).collect::<Vec<_>>());
++            }
++            rows.insert(hex(&key), row);
++        }
++        if cursor == 0 {
++            done = true;
++            break;
++        }
++    }
++    assert!(done);
++    json!({"database":db,"capture_bytes":used,"rows":rows.into_values().collect::<Vec<_>>()})
++}
++async fn raw_redis_all(base: &str) -> Value {
++    let mut scopes = Vec::new();
++    for database in 0..=3u8 {
++        let mut url = url::Url::parse(base).unwrap();
++        url.set_path(&format!("/{database}"));
++        scopes.push(
++            tokio::time::timeout(
++                Duration::from_secs(5),
++                redis_snapshot(url.as_str(), database),
++            )
++            .await
++            .unwrap(),
++        );
++    }
++    json!(scopes)
++}
++async fn events(store: &Store) -> Value {
++    rows(store, "core_systemevent").await
++}
++fn target(spec: &Value, aliases: &BTreeMap<String, i64>) -> String {
++    let alias = spec["target_alias"].as_str().unwrap();
++    if alias == "collection" {
++        "/api/core/notifications/".into()
++    } else {
++        format!("/api/core/notifications/{}/", aliases[alias])
++    }
++}
++#[tokio::test]
++#[ignore = "requires reviewed isolated Native forms Source12 fixture; no Source app"]
++async fn real_preauth_callback_forms_twelve_and_seven_transport_regressions() {
++    assert_eq!(
++        std::env::var("NOTIFICATION_FORMS_NATIVE").as_deref(),
++        Ok("owned-native-forms-only")
++    );
++    let database = std::env::var("POSTGRES_DB").unwrap();
++    let nonce = database
++        .strip_prefix("rust_probe_notifforms_native_")
++        .unwrap();
++    assert_eq!(nonce.len(), 10);
++    assert!(nonce
++        .bytes()
++        .all(|v| v.is_ascii_hexdigit() && !v.is_ascii_uppercase()));
++    let root = std::path::PathBuf::from(std::env::var("NOTIFICATION_FORMS_NATIVE_ROOT").unwrap());
++    let output =
++        std::path::PathBuf::from(std::env::var("NOTIFICATION_FORMS_NATIVE_REPORT").unwrap());
++    assert!(!output.exists());
++    let source_bytes = std::fs::read(root.join("inputs/Source12-projection.json")).unwrap();
++    assert_eq!(
++        hash(&source_bytes),
++        "1c3f5dcce14ffe9a773cb29833c4caef52ed15c813cf9473f6c397dc34ca240f"
++    );
++    let binding: Value =
++        serde_json::from_slice(&std::fs::read(root.join("inputs/Source-binding.json")).unwrap())
++            .unwrap();
++    assert_eq!(
++        binding["mode"],
++        "projected-notification-forms-source12-reference-v1"
++    );
++    assert_eq!(
++        binding["Original_raw_sha256"],
++        "b72af1de2683fa9e2345281d24cdaa7418368e1af0404eecba9ba018555a8d84"
++    );
++    let plan_bytes = std::fs::read(root.join("inputs/plan.json")).unwrap();
++    assert_eq!(hash(&plan_bytes), binding["plan_sha256"]);
++    let source: Value = serde_json::from_slice(&source_bytes).unwrap();
++    let plan: Value = serde_json::from_slice(&plan_bytes).unwrap();
++    assert_eq!(plan["cases"].as_array().unwrap().len(), 12);
++    let url = std::env::var("DATABASE_TEST_URL").unwrap();
++    let guard = Store::connect(&url, 1).await.unwrap();
++    assert_eq!(
++        sqlx::query_scalar::<_, String>("SELECT current_database()")
++            .fetch_one(guard.pool())
++            .await
++            .unwrap(),
++        database
++    );
++    guard.pool().close().await;
++    assert!(matches!(
++        initialize_empty_database(&url).await.unwrap(),
++        SchemaInitialization::Created { .. }
++    ));
++    let store = Store::connect(&url, 4).await.unwrap();
++    let mut report = json!({"capture_complete":false,"passed":false,"capture_only_passed_field":true,"database":database,"runtime_base":"e194c9e1d96db7e33857b93df85bfb9b0a97808f","Source_application_runs":0,"Main_application_runs":0,"Source_settings_values_are_owned_fixture_context":true,"default_worker_or_schedule_activation_claimed":false,"actual_auth_backend_introspection":false,"Source_reference_mode":binding["mode"],"Source_projection_sha256":hash(&source_bytes),"Original_raw_sha256":binding["Original_raw_sha256"],"initial_SQL":snapshot(&store).await,"initial_events":events(&store).await,"actual_request_count":0,"requests":[],"Native_transport_diagnostics":[],"full_cache_parity_claimed":false,"callback_replay_unmeasured_before_capture":true,"initial_cache_scope":"IMPORTED_RETAINED_SOURCE_EXISTING_STATE_ONE_NETWORK_VERSION_NOT_NATIVE_SIGNAL"});
++    save(&output, &report);
++    report["seed_started_utc"] = json!(Utc::now().to_rfc3339());
++    let mut tx = store.pool().begin().await.unwrap();
++    sqlx::query("DELETE FROM core_notificationdismissal")
++        .execute(&mut *tx)
++        .await
++        .unwrap();
++    sqlx::query("DELETE FROM core_systemnotification")
++        .execute(&mut *tx)
++        .await
++        .unwrap();
++    assert_eq!(rows(&store, "accounts_user").await, json!([]));
++    let mut users = BTreeMap::new();
++    let seed_clock = Utc::now().to_rfc3339();
++    for role in plan["roles"].as_array().unwrap() {
++        let alias = role["alias"].as_str().unwrap();
++        let mut user = source["seed"]["users"]
++            .as_array()
++            .unwrap()
++            .iter()
++            .find(|v| v["id"] == role["id"])
++            .unwrap()
++            .clone();
++        // Source key evidence/date are never accepted as Native credentials.
++        user["api_key"] = json!(format!("native-forms-api-{nonce}-{alias}"));
++        user["username"] = json!(format!("native-forms-{nonce}-{alias}"));
++        user["date_joined"] = json!(seed_clock);
++        sqlx::query(
++            "INSERT INTO accounts_user SELECT * FROM jsonb_populate_record(NULL::accounts_user,$1)",
++        )
++        .bind(&user)
++        .execute(&mut *tx)
++        .await
++        .unwrap();
++        users.insert(alias.to_owned(), user);
++    }
++    for row in plan["seed_notifications"].as_array().unwrap() {
++        sqlx::query("INSERT INTO core_systemnotification SELECT * FROM jsonb_populate_record(NULL::core_systemnotification,$1)").bind(row).execute(&mut *tx).await.unwrap();
++    }
++    for row in plan["seed_dismissals"].as_array().unwrap() {
++        sqlx::query("INSERT INTO core_notificationdismissal SELECT * FROM jsonb_populate_record(NULL::core_notificationdismissal,$1)").bind(row).execute(&mut *tx).await.unwrap();
++    }
++    for (table, value) in plan["seed_sequences"].as_object().unwrap() {
++        assert!(matches!(
++            table.as_str(),
++            "accounts_user" | "core_systemnotification" | "core_notificationdismissal"
++        ));
++        sqlx::query("SELECT setval($1::regclass,$2,$3)")
++            .bind(format!("{table}_id_seq"))
++            .bind(value["last_value"].as_i64().unwrap())
++            .bind(value["is_called"].as_bool().unwrap())
++            .execute(&mut *tx)
++            .await
++            .unwrap();
++    }
++    // Exact Source settings values are explicit fixture context before requests.
++    // Other baseline records are retained and compared within this Native DB.
++    for row in source["seed"]["audit"]["tables"]["core_coresettings"]["raw_rows"]
++        .as_array()
++        .unwrap()
++    {
++        sqlx::query("INSERT INTO core_coresettings(key,name,value)VALUES($1,$2,$3)ON CONFLICT(key)DO UPDATE SET name=EXCLUDED.name,value=EXCLUDED.value").bind(row["key"].as_str().unwrap()).bind(row["name"].as_str().unwrap()).bind(&row["value"]).execute(&mut *tx).await.unwrap();
++    }
++    tx.commit().await.unwrap();
++    report["seed_completed_utc"] = json!(Utc::now().to_rfc3339());
++    report["seed_SQL"] = snapshot(&store).await;
++    report["seed_events"] = events(&store).await;
++    report["seed_users"] = rows(&store, "accounts_user").await;
++    save(&output, &report);
++    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
++    let cache = NotificationCache::connect(&redis_url).await.unwrap();
++    let mut redis = redis::Client::open(redis_url)
++        .unwrap()
++        .get_multiplexed_async_connection()
++        .await
++        .unwrap();
++    report["natural_cache_before_explicit_import"] = cache_snapshot(&cache, &mut redis).await;
++    assert_eq!(
++        report["natural_cache_before_explicit_import"]["rows"],
++        json!([])
++    );
++    let imported = &source["seed"]["cache"]["rows"];
++    assert_eq!(imported.as_array().unwrap().len(), 1);
++    let row = &imported[0];
++    assert_eq!(
++        row["key_hex"],
++        hex(b":1:coresettings:groupver:network_access")
++    );
++    assert_eq!(row["type"], "string");
++    assert_eq!(row["pttl"], -1);
++    let text = row["value_hex"].as_str().unwrap();
++    assert_eq!(text.len() % 2, 0);
++    assert!(text.len() <= 64);
++    let raw: Vec<u8> = (0..text.len())
++        .step_by(2)
++        .map(|i| u8::from_str_radix(&text[i..i + 2], 16).unwrap())
++        .collect();
++    assert!(!raw.is_empty() && raw.iter().all(u8::is_ascii_digit));
++    let _: () = redis::cmd("SET")
++        .arg(":1:coresettings:groupver:network_access")
++        .arg(&raw)
++        .query_async(&mut redis)
++        .await
++        .unwrap();
++    report["imported_Source_existing_state"] = imported.clone();
++    report["Native_network_save_signal_executed"] = json!(false);
++    report["cache_after_seed"] = cache_snapshot(&cache, &mut redis).await;
++    assert_eq!(
++        report["cache_after_seed"]["rows"].as_array().unwrap().len(),
++        1
++    );
++    save(&output, &report);
++    let service = AuthService::new(
++        store.clone(),
++        AuthConfig::new("notification-forms-native-only".into()).unwrap(),
++    )
++    .with_notification_cache(cache.clone());
++    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
++    let address = listener.local_addr().unwrap();
++    let (stop, stopped) = tokio::sync::oneshot::channel();
++    let callback_service = service.clone();
++    let peer = service.router().layer(axum::middleware::from_fn(
++        move |request: axum::extract::Request, next: axum::middleware::Next| {
++            let auth = callback_service.clone();
++            async move {
++                auth.request_started_display_timezone().await;
++                next.run(request).await
++            }
++        },
++    ));
++    let server = tokio::spawn(async move {
++        axum::serve(
++            listener,
++            peer.into_make_service_with_connect_info::<SocketAddr>(),
++        )
++        .with_graceful_shutdown(async {
++            let _ = stopped.await;
++        })
++        .await
++    });
++    let client = reqwest::Client::builder()
++        .timeout(Duration::from_secs(15))
++        .redirect(reqwest::redirect::Policy::none())
++        .build()
++        .unwrap();
++    let mut aliases = BTreeMap::from([
++        ("aliasDelete".into(), 10),
++        ("foreign".into(), 11),
++        ("derived_missing".into(), 1000011),
++    ]);
++    for spec in plan["cases"].as_array().unwrap() {
++        let index = spec["index"].as_u64().unwrap();
++        let path = target(spec, &aliases);
++        let body = std::fs::read(
++            root.join("inputs")
++                .join(spec["body_path"].as_str().unwrap()),
++        )
++        .unwrap();
++        assert_eq!(hash(&body), spec["body_sha256"]);
++        assert_eq!(body.len() as u64, spec["body_bytes"].as_u64().unwrap());
++        let actor = spec["actor"].as_str().unwrap();
++        let key = users[actor]["api_key"].as_str().unwrap();
++        let mut row = json!({"index":index,"actor":actor,"method":spec["method"],"path":path,"target_alias":spec["target_alias"],"body_sha256":hash(&body),"content_type":spec["content_type"],"actual_request_invoked":true,"raw_headers_private":{"HTTP_X_API_KEY":hex(key.as_bytes())},"before_SQL":snapshot(&store).await,"before_events":events(&store).await,"before_cache":cache_snapshot(&cache,&mut redis).await,"before_raw_Redis":raw_redis_all(&std::env::var("REDIS_TEST_URL").unwrap()).await,"began_utc":Utc::now().to_rfc3339()});
++        report["actual_request_count"] = json!(index);
++        report["requests"].as_array_mut().unwrap().push(row.clone());
++        save(&output, &report);
++        let response = client
++            .request(
++                reqwest::Method::from_bytes(spec["method"].as_str().unwrap().as_bytes()).unwrap(),
++                format!("http://{address}{path}"),
++            )
++            .header("x-api-key", key)
++            .header("accept", "application/json")
++            .header(
++                "content-type",
++                spec["content_type"]
++                    .as_str()
++                    .unwrap_or("application/octet-stream"),
++            )
++            .body(body)
++            .send()
++            .await
++            .unwrap();
++        let status = response.status().as_u16();
++        let headers = response
++            .headers()
++            .iter()
++            .map(|(k, v)| (k.to_string(), Value::String(v.to_str().unwrap().to_owned())))
++            .collect::<Map<_, _>>();
++        let bytes = response.bytes().await.unwrap();
++        assert!(bytes.len() <= 65536);
++        row["status"] = json!(status);
++        row["headers"] = headers.into();
++        row["response_body_bytes"] = json!(bytes.len());
++        row["response_body_hex"] = json!(hex(&bytes));
++        row["response_body_sha256"] = json!(hash(&bytes));
++        row["json"] = serde_json::from_slice(&bytes).unwrap_or(Value::Null);
++        row["completed_utc"] = json!(Utc::now().to_rfc3339());
++        row["after_SQL"] = snapshot(&store).await;
++        row["after_events"] = events(&store).await;
++        row["after_cache"] = cache_snapshot(&cache, &mut redis).await;
++        row["after_raw_Redis"] = raw_redis_all(&std::env::var("REDIS_TEST_URL").unwrap()).await;
++        if index == 1 || index == 7 {
++            let name = if index == 1 { "FormA" } else { "FormB" };
++            let id = row["json"]["id"]
++                .as_i64()
++                .expect("Natural actual create alias required; no fabricated fallback");
++            aliases.insert(name.into(), id);
++        }
++        report["requests"][index as usize - 1] = row;
++        save(&output, &report);
++    }
++    // Predeclared Native-only preservation checks, not new Source authority.
++    let diagnostics = [
++        ("anonymous", false, "application/json", 401u16),
++        ("anonymous", true, "application/json", 401),
++        ("standard", false, "application/json", 403),
++        ("standard", true, "application/json", 403),
++        ("admin", false, "application/json", 400),
++        ("admin", true, "application/json", 400),
++        ("admin", false, "text/plain", 400),
++    ];
++    for (offset, (actor, oversize, content_type, predicted)) in diagnostics.into_iter().enumerate()
++    {
++        let before = snapshot(&store).await;
++        let before_events = events(&store).await;
++        let body = if oversize {
++            vec![b'x'; 2 * 1024 * 1024 + 1]
++        } else {
++            b"{".to_vec()
++        };
++        let mut row = json!({"index":offset+13,"scope":"Native-only existing create extractor/auth regression, not Source12 parity","actor":actor,"oversize":oversize,"content_type":content_type,"body_bytes":body.len(),"body_sha256":hash(&body),"predicted_status_predeclared":predicted,"before_SQL":before,"before_events":before_events,"before_cache":cache_snapshot(&cache,&mut redis).await,"before_raw_Redis":raw_redis_all(&std::env::var("REDIS_TEST_URL").unwrap()).await,"began_utc":Utc::now().to_rfc3339()});
++        let mut request = client
++            .post(format!("http://{address}/api/core/notifications/"))
++            .header("content-type", content_type)
++            .body(body);
++        if actor != "anonymous" {
++            request = request.header("x-api-key", users[actor]["api_key"].as_str().unwrap());
++        }
++        row["actual_request_invoked"] = json!(true);
++        row["raw_headers_private"] = if actor == "anonymous" {
++            json!({})
++        } else {
++            json!({"HTTP_X_API_KEY":hex(users[actor]["api_key"].as_str().unwrap().as_bytes())})
++        };
++        report["Native_transport_diagnostics"]
++            .as_array_mut()
++            .unwrap()
++            .push(row.clone());
++        report["actual_request_count"] = json!(offset + 13);
++        save(&output, &report);
++        let response = request.send().await.unwrap();
++        let status = response.status().as_u16();
++        row["headers"] = response
++            .headers()
++            .iter()
++            .map(|(k, v)| (k.to_string(), Value::String(v.to_str().unwrap().to_owned())))
++            .collect::<Map<_, _>>()
++            .into();
++        let bytes = response.bytes().await.unwrap();
++        assert!(bytes.len() <= 65536);
++        row["status"] = json!(status);
++        row["response_body_bytes"] = json!(bytes.len());
++        row["response_body_hex"] = json!(hex(&bytes));
++        row["response_body_sha256"] = json!(hash(&bytes));
++        row["json"] = serde_json::from_slice(&bytes).unwrap_or(Value::Null);
++        row["completed_utc"] = json!(Utc::now().to_rfc3339());
++        row["after_SQL"] = snapshot(&store).await;
++        row["after_events"] = events(&store).await;
++        row["after_cache"] = cache_snapshot(&cache, &mut redis).await;
++        row["after_raw_Redis"] = raw_redis_all(&std::env::var("REDIS_TEST_URL").unwrap()).await;
++        report["Native_transport_diagnostics"][offset] = row;
++        report["actual_request_count"] = json!(offset + 13);
++        save(&output, &report);
++    }
++    drop(client);
++    stop.send(()).unwrap();
++    tokio::time::timeout(Duration::from_secs(15), server)
++        .await
++        .unwrap()
++        .unwrap()
++        .unwrap();
++    report["server_graceful_wait0"] = json!(true);
++    report["final_SQL"] = snapshot(&store).await;
++    report["final_events"] = events(&store).await;
++    report["final_cache"] = cache_snapshot(&cache, &mut redis).await;
++    report["final_raw_Redis"] = raw_redis_all(&std::env::var("REDIS_TEST_URL").unwrap()).await;
++    report["aliases"] = serde_json::to_value(aliases).unwrap();
++    drop(redis);
++    drop(cache);
++    store.pool().close().await;
++    report["capture_complete"] = json!(true);
++    save(&output, &report);
++}
+--- a/rust/crates/store/src/xc_bounded_user.rs
++++ b/rust/crates/store/src/xc_bounded_user.rs
+@@ -177,7 +177,7 @@
+         Ok(())
+     }
+ }
+-fn checked_properties(
++pub(crate) fn checked_properties(
+     raw: &str,
+     scalar_bytes: usize,
+     limit: XcUserReadLimits,

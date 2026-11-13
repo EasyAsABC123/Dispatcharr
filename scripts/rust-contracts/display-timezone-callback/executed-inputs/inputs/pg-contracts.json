@@ -1,0 +1,24 @@
+{
+  "system_ready": {
+    "sql": "SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=65536 THEN value::text END AS value_text FROM core_coresettings WHERE key=$1",
+    "parameter_hex": [
+      "73797374656d5f73657474696e6773"
+    ],
+    "rows": 1,
+    "command": "SELECT 1",
+    "errors": [],
+    "tx": "I"
+  },
+  "system_error_ready": {
+    "sql": "SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=65536 THEN value::text END AS value_text FROM core_coresettings WHERE key=$1",
+    "parameter_hex": [
+      "73797374656d5f73657474696e6773"
+    ],
+    "rows": 0,
+    "command": null,
+    "errors": [
+      "57014"
+    ],
+    "tx": "I"
+  }
+}

@@ -1,0 +1,18 @@
+# Private inert callback execution closure
+
+Original Dispatcharr contributors retain application credit. This packet compiles the real callback2 with a callback-local SQL settlement fence and bounded system-group loader, plus cfg(test) declarations and two new test files. No Source app, Main, production router, worker or scheduler is activated. All future outcomes remain unmeasured.
+
+Case0 reuses exact retained Source12 projected authority and the unchanged seven Native-only transport diagnostics. It imports exactly one persistent network-version row from retained Source seed as IMPORTED EXISTING STATE before the first callback. System/network groups remain cold. No new Native model-save signal claim is made. Raw recorder passed:false stays literal; validator distinguishes decoded cache effects from serialization parity. No Source rerun.
+
+Cases1–6 are separate fresh owned databases/projects with real callback/AuthService/Store/NotificationCache, actual same4 writer permits, no fake caller lease or second pool/budget. Cases1 and3 distinguish observer abort from actual HTTP FD loss; actual fate is retained. SQL success/ErrorReady and compiled Lua/key bindings, natural proxy drain before stop, actual process/PID/pipe receipts, while-ELF-live subject backend absence and separate after-ELF observer are distinct requirements. Closed idle counter is diagnostic bounded by same compiled max4; physical size0/backend absence remain mandatory. Old max1 failures are unchanged.
+
+The controller is read-only by default. It accepts one exact reviewed seal and one case0..6 in a fresh m5-display-callback-sql-<case>-<suffix> output. Root must review and reserve a global slot before an execution. No automatic retry. Actual command exits, partial captures, default11 plus full62/59 audits and owned cleanup90 are preserved on failure. No ELF is proposed for Git.
+
+Previous private1 formatting negative and QA1 lint negative remain in their original directories. Controller development checks caught undeclared dynamic body dependencies before any app; the current recursive closure checks every exact body hash/path and pinned schema path. No application attempt was involved.
+
+
+QA4 retains the real connection and original permit through SELECT outcome, explicit ping/Ready, and awaited SQLx return-to-pool; a drain error awaits close under that owner. General Store.setting is unchanged. Pinned upstream source bytes document why raw pool fetch on ErrorResponse can return before Ready. Source/Native callback physical outcomes remain unmeasured.
+
+The fused system SELECT returns length metadata and conditionally a <=65536-byte text payload from the same row/snapshot. Before any serde_json Value allocation, it reuses the existing qualified scanner with <=2048 nodes/depth32/4MiB conservative work quote under the existing four writer permits. No new pool/semaphore allowance. Larger or excessive structural values remain explicitly unsupported parity scope; best-effort errors retain previous zone/pretry debounce. The shared scanner change is visibility-only, identical to Stream Core3. Timezone catalogue/log formatter parity is still open.
+
+QA2 and QA3 are separate immutable compiled snapshots. QA2 had the source-level SQLx error-Ready lifetime risk; no application observation was collected. QA3 added the fence but still lacked SQL JSON allocation preflight. QA4 binds the new exact fused SQL in both PG stage contracts, statement warmups, actual backend observer and pure closure controls. All original formatting/lint negatives and pre-seal controller development import/typo negatives remain in their original artifact directories, without application attempts.
