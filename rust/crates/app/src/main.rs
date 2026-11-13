@@ -8,6 +8,7 @@ mod realtime;
 mod response_headers;
 mod static_assets;
 mod statistics;
+mod vod_react_fallback;
 use axum::{
     extract::State,
     http::{header, Method, StatusCode},
@@ -859,8 +860,11 @@ async fn run() -> Result<(), String> {
         }
         app = app.fallback_service(
             tower_http::services::ServeDir::new(path)
-                .fallback(tower_http::services::ServeFile::new(index)),
+                .fallback(tower_http::services::ServeFile::new(index.clone())),
         );
+        // Django converter nonmatches fall through to its final React TemplateView.
+        // Classify before the broad native VOD handlers can authenticate/resolve.
+        app = vod_react_fallback::with_index(app, index);
     }
     app = app.layer(axum::middleware::from_fn(response_headers::apply));
     let listener = tokio::net::TcpListener::bind(bind)
