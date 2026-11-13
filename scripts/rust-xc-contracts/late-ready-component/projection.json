@@ -1,0 +1,13 @@
+{
+  "parameter_encoding": "SHA256 of original parameter hex text, including declared and warm-target equality tokens; not raw parameter bytes",
+  "omitted_fields": [
+    "unused backend body/header frame payloads",
+    "statement names",
+    "ports",
+    "unused case fields",
+    "failed second old case detail beyond identity/result"
+  ],
+  "database_encoding": "SHA256 and byte length of original database identity",
+  "private_inputs": "private-input-hashes.json",
+  "Root_verification": "Exact deterministic projection verified privately; public verifier recomputes selected projected physical predicates, not hidden SQL parameter values or hidden database identities."
+}

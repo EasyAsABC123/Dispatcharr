@@ -45,12 +45,15 @@ pub(crate) async fn write_categories(
     let result = write_category_rows(&mut connection, series, limit, out).await;
     // Even error-result streams must reach ReadyForQuery before their physical
     // connection and the outer request grant can be released. No new pool or
-    // SQL statement is introduced by this protocol flush.
-    if let Err(error) = sqlx::Connection::flush(&mut *connection).await {
+    // business SQL statement is introduced by this protocol synchronization.
+    if let Err(error) = sqlx::Connection::ping(&mut *connection).await {
         let _closed = connection.close().await;
         return Err(StoreError::from(error));
     }
     sqlx::Connection::shrink_buffers(&mut *connection);
+    // Retain the original request/byte scope through the actual pool return.
+    // Drop alone would spawn asynchronous release after losing our owner.
+    connection.return_to_pool().await;
     drop(connection);
     result
 }

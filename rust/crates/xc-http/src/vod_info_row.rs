@@ -87,11 +87,14 @@ pub(crate) async fn read(
         .await;
     // The same supervised outer request/byte owners remain held until real
     // ReadyForQuery/close, including backend errors and observer/caller loss.
-    if let Err(error) = Connection::flush(&mut *connection).await {
+    if let Err(error) = Connection::ping(&mut *connection).await {
         let _closed = connection.close().await;
         return Err(error.into());
     }
     Connection::shrink_buffers(&mut *connection);
+    // Retain the original request/byte scope through the actual pool return.
+    // Drop alone would spawn asynchronous release after losing our owner.
+    connection.return_to_pool().await;
     drop(connection);
     let Some(row) = result? else {
         return Ok(None);

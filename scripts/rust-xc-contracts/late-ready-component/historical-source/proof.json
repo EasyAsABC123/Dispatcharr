@@ -1,0 +1,108 @@
+{
+  "source_map_sha256": "07d067ed27e0eaf4ca4ccf5b2b8794ed3fbc1c3c94d650a0017b64009485865d",
+  "all_source_before_after_equal": true,
+  "actual_waits": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 14,
+      "started_epoch": 1794587244.8979642,
+      "completed_epoch": 1794587246.748052,
+      "actual_exit": 0
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "-p",
+        "dispatcharr-store",
+        "-p",
+        "dispatcharr-xc-http",
+        "--lib",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 41,
+      "started_epoch": 1794587246.7482061,
+      "completed_epoch": 1794587246.9222102,
+      "actual_exit": 0
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "dispatcharr-store",
+        "-p",
+        "dispatcharr-xc-http",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 51,
+      "started_epoch": 1794587246.9223921,
+      "completed_epoch": 1794587248.4010508,
+      "actual_exit": 0
+    },
+    {
+      "stage": "bounded-user",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "xc_bounded_user::tests::",
+        "--offline",
+        "--locked",
+        "--",
+        "--nocapture"
+      ],
+      "PID": 81,
+      "started_epoch": 1794587248.4012272,
+      "completed_epoch": 1794587248.5565157,
+      "actual_exit": 0
+    },
+    {
+      "stage": "XC-defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-xc-http",
+        "--lib",
+        "--offline",
+        "--locked",
+        "--",
+        "--nocapture"
+      ],
+      "PID": 106,
+      "started_epoch": 1794587248.5566978,
+      "completed_epoch": 1794587251.147183,
+      "actual_exit": 0
+    }
+  ],
+  "outside_XC_ELF_sha256": "bb5953153a167c2c8424eca4b88b4cfc81d59100fc3b2829369facb51477b4cb",
+  "outside_XC_ELF_bytes": 26298856,
+  "Rust_inputs": 843,
+  "full_inputs": 848,
+  "five_runtime_hunks_equal_private1": true,
+  "only_new_test_module_prelude_control": true,
+  "Native_actual_prelude_calls_per_future_fault_case": 1,
+  "Native_future_prelude_calls": 10,
+  "Native_future_fault_calls": 10,
+  "Source_requests": 0,
+  "actual_Source_SQL_HTTP_runs": 0,
+  "new_ErrorReady_acceptance": false,
+  "default_test_result": "test result: ok. 61 passed; 0 failed; 25 ignored; 0 measured; 0 filtered out; finished in 0.14s"
+}

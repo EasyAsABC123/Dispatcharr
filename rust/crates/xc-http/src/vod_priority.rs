@@ -108,11 +108,14 @@ pub(crate) async fn read(
         work_bytes,
     )
     .await;
-    if let Err(error) = Connection::flush(&mut *connection).await {
+    if let Err(error) = Connection::ping(&mut *connection).await {
         let _closed = connection.close().await;
         return Err(error.into());
     }
     Connection::shrink_buffers(&mut *connection);
+    // Retain the original request/byte scope through the actual pool return.
+    // Drop alone would spawn asynchronous release after losing our owner.
+    connection.return_to_pool().await;
     drop(connection);
     result
 }

@@ -1,0 +1,59 @@
+{
+  "state": "UNEXECUTED_NATIVE_FAULT_PREPARATION",
+  "base_revision": "77da02b6d91094d7b64882cbde76a15e7e84d9b0",
+  "Source_requests": 0,
+  "Main_activated": false,
+  "new_ErrorReady_acceptance": false,
+  "modes": [
+    "observer_abort",
+    "deadline"
+  ],
+  "producers": [
+    {
+      "producer": "bounded-user",
+      "sql_prefix": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)",
+      "lock_table": "accounts_user",
+      "parameter_count": 2,
+      "transaction_status": "I"
+    },
+    {
+      "producer": "movie-categories",
+      "sql_prefix": "SELECT id,CASE WHEN octet_length(name)",
+      "lock_table": "vod_vodcategory",
+      "parameter_count": 3,
+      "transaction_status": "I"
+    },
+    {
+      "producer": "movie-list",
+      "sql_prefix": "SELECT DISTINCT ON(r.movie_id) r.id::bigint AS id FROM vod_m3umovierelation",
+      "lock_table": "vod_m3umovierelation",
+      "parameter_count": 1,
+      "transaction_status": "E"
+    },
+    {
+      "producer": "movie-parent",
+      "sql_prefix": "SELECT relation_id,account_id,content_id,category_id,year,adult,",
+      "lock_table": "vod_movie",
+      "parameter_count": 2,
+      "transaction_status": "I"
+    },
+    {
+      "producer": "series-episodes",
+      "sql_prefix": "SELECT id,air_date,duration_secs,",
+      "lock_table": "vod_episode",
+      "parameter_count": 3,
+      "transaction_status": "I"
+    }
+  ],
+  "case_count": 10,
+  "request_deadline_seconds": 15,
+  "reply_safety_seconds": 45,
+  "case_max_seconds": 75,
+  "no_new_SQL_or_pool_or_budget": true,
+  "list_boundary": "Original transaction.atomic with two READ COMMITTED statements; actual rollback already provides a fence on some error paths, so no causal delta is inferred for those paths",
+  "episode_boundary": "two separate autocommit statements; unchanged",
+  "Native_gateway_prelude_calls": 10,
+  "Native_gateway_fault_calls": 10,
+  "semantic_parity_requests": 0,
+  "prelude": "one successful actual bounded gateway request per case in same peer/pool, exact target Execute+Ready before arm; same backend required, no adaptive warming"
+}

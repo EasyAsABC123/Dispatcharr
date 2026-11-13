@@ -1,0 +1,25 @@
+import copy,unittest
+import verify as V
+class Public(unittest.TestCase):
+ def setUp(self):self.a=V.read('attempts.json');self.o=V.read('retained/attempt-2/faults.json');self.n=V.read('retained/attempt-3/faults.json');self.c=V.read('cleanup.json')
+ def bad(self,f):
+  f()
+  with self.assertRaises((ValueError,KeyError,TypeError)):V.validate(self.a,self.o,self.n,self.c)
+ def test_actual(self):self.assertEqual(V.validate(self.a,self.o,self.n,self.c)['selected_projected_physical_pairs'],10)
+ def test_wire_tail_after1023(self):self.bad(lambda:self.n['cases'][5]['held'].update(sql=self.n['cases'][5]['held']['sql']+' -- changed'))
+ def test_wire_prefix(self):self.bad(lambda:self.n['cases'][5]['held'].update(sql='other '+self.n['cases'][5]['held']['sql']))
+ def test_pgstat_hash(self):self.bad(lambda:self.n['cases'][5].update(actual_SQL_sha256='0'*64))
+ def test_parameter_token(self):self.bad(lambda:self.n['cases'][5]['held']['parameter_hex'].__setitem__(0,'0'*64))
+ def test_backend(self):self.bad(lambda:self.n['cases'][5]['held'].update(backend_pid=1))
+ def test_generation(self):self.bad(lambda:self.n['cases'][5]['held'].update(execute_generation=0))
+ def test_missing_pair(self):self.bad(lambda:self.n['cases'].pop())
+ def test_premature_owner_release(self):self.bad(lambda:self.n['cases'][5]['while_held'].update(workers=0))
+ def test_premature_shutdown(self):self.bad(lambda:self.n['cases'][5].update(shutdown_held={'shutdown_drained':True}))
+ def test_unclosed_pool(self):self.bad(lambda:self.n['cases'][5]['terminal'].update(pool_closed=False))
+ def test_dirty_observer(self):self.bad(lambda:self.n['cases'][5]['observer_lock_cleanup'].update(autocommit_restored=False))
+ def test_host_relabel(self):self.bad(lambda:self.a[0].update(controller_exit=0))
+ def test_missing_audit_sequences(self):self.bad(lambda:self.a[0]['default_before']['public62'].update(sequences={}))
+ def test_missing_cleanup(self):self.bad(lambda:self.c['queries'].pop())
+ def test_missing_host_absence(self):self.bad(lambda:self.c['host_identity_absence'].pop())
+ def test_old_after_invented(self):self.bad(lambda:self.o.update(after=self.o['before']))
+if __name__=='__main__':unittest.main()

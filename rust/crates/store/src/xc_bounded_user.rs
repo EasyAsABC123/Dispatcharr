@@ -250,11 +250,14 @@ impl Store {
         let mut connection = self.pool.acquire().await?;
         let result = sqlx::query("SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1")
             .bind(username).bind(cap).fetch_optional(&mut *connection).await;
-        if let Err(error) = Connection::flush(&mut *connection).await {
+        if let Err(error) = Connection::ping(&mut *connection).await {
             let _closed = connection.close().await;
             return Err(error.into());
         }
         Connection::shrink_buffers(&mut *connection);
+        // Retain the original request/byte scope through the actual pool return.
+        // Drop alone would spawn asynchronous release after losing our owner.
+        connection.return_to_pool().await;
         drop(connection);
         let Some(row) = result? else {
             return Ok(None);

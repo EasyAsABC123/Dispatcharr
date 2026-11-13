@@ -821,3 +821,6 @@ async fn cached_info_final_frame_keeps_existing_owners_through_shutdown() {
     assert_eq!(gateway.active_requests(), 0);
     assert_eq!(gateway.available_memory_bytes(), maximum);
 }
+
+#[path = "gateway_late_ready_tests.rs"]
+mod late_ready_tests;

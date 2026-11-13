@@ -1,0 +1,2179 @@
+{
+  "passed": false,
+  "Source_requests": 0,
+  "Main": false,
+  "declared_Native_gateway_prelude_calls": 10,
+  "declared_Native_gateway_fault_calls": 10,
+  "declared_first_parameter_hex": {
+    "1": "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+    "2": "50e9b2c6c9072efe8098ff3f38de3d57caa268043a1602f1e4d72945eca46a13",
+    "3": "e163a6091093ae234a5d654906b310b25664512af44cfb5d9621f640c29ca3ed",
+    "4": "665e994827f6b03167e80c1513eb356e0d4f013f2e03a3b345e1e5e3c24dfca6",
+    "5": "665e994827f6b03167e80c1513eb356e0d4f013f2e03a3b345e1e5e3c24dfca6"
+  },
+  "before": {
+    "database": {
+      "private_string_sha256": "8f6e7179473d02b0e390aeb7922853a048ec2cf963e8f04ad99789058e5755b9",
+      "bytes": 29
+    },
+    "tables": {
+      "accounts_user": {
+        "rows": 10,
+        "sha256": "6a0595926976185c98849d021f7ccf4f4b4f0ce0b2a62d536ea63995a6fae0ab"
+      },
+      "accounts_user_channel_profiles": {
+        "rows": 1,
+        "sha256": "40cbf7140d11e95669c97ebfa2068155783654e4646e836eb86c96e381f25f8f"
+      },
+      "accounts_user_groups": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "accounts_user_user_permissions": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "accounts_userappdata": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "auth_group": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "auth_group_permissions": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "auth_permission": {
+        "rows": 228,
+        "sha256": "34f1c73edbfd67fb73b3597d728dd051374bd37db3bcfaaa68601ba351d4bd31"
+      },
+      "core_coresettings": {
+        "rows": 8,
+        "sha256": "763fc537a4e534e3f8cb1934c927059f6f5f01f95027617c3d1d94cb09169a33"
+      },
+      "core_notificationdismissal": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_outputprofile": {
+        "rows": 26,
+        "sha256": "d8811919e879eaac06761a185d12e0c0ce21ea846f369a6573989005228cd66c"
+      },
+      "core_streamprofile": {
+        "rows": 5,
+        "sha256": "b9c4564e43aadbe8daefc0bc44b8477e884305e9e3359de033dab886e974c569"
+      },
+      "core_systemevent": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_systemnotification": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "core_useragent": {
+        "rows": 3,
+        "sha256": "cc5e6fc7d4a8ac974cd85cecdd3c7448979ed46dc8ff81406be680ac1cb87f37"
+      },
+      "dashboard_settings": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_channel": {
+        "rows": 10,
+        "sha256": "b72850aa09cf8378b6e4e1a515b7a4f0e6b0d902941e7e77d6e6d0055e48002b"
+      },
+      "dispatcharr_channels_channelgroup": {
+        "rows": 4,
+        "sha256": "993b171aac92266e9f5a6ae4e60e6bd202d9a08c44c7f0449ce4ba72d0c043d3"
+      },
+      "dispatcharr_channels_channelgroupm3uaccount": {
+        "rows": 4,
+        "sha256": "b38e9f17674ac2deeabdd5db80e2240e2accad94b4b8a873e367395aa4778717"
+      },
+      "dispatcharr_channels_channeloverride": {
+        "rows": 1,
+        "sha256": "eb3d0f69420e6cdd57d593bdca0d7ef37ffa9b15a8aa88fadd9273661e39680a"
+      },
+      "dispatcharr_channels_channelprofile": {
+        "rows": 1,
+        "sha256": "43b64a550393b97249c77db957a5e5b3b8bb658a652d4cc5be5a78c189b7b94b"
+      },
+      "dispatcharr_channels_channelprofilemembership": {
+        "rows": 4,
+        "sha256": "59385a49132c7ba590e7f762668c743203b57a4d06cc61e069df1e12c23edbd5"
+      },
+      "dispatcharr_channels_channelstream": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_logo": {
+        "rows": 1,
+        "sha256": "6ee1e41d1dd46b67d0aec91bb567087f264bd477ffb5ca38c3843e7b4b7a36d8"
+      },
+      "dispatcharr_channels_recording": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_recurringrecordingrule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_channels_stream": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_connect_deliverylog": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_connect_eventsubscription": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dispatcharr_connect_integration": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_admin_log": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_clockedschedule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_crontabschedule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_celery_beat_intervalschedule": {
+        "rows": 2,
+        "sha256": "47fb039204599b5ee2c152e4c00e7e2857b7a0081ff0bce1cc6195cefee109a6"
+      },
+      "django_celery_beat_periodictask": {
+        "rows": 4,
+        "sha256": "772efcfb9b75d8aba542f0230d57c7bcc1be78ccb5905baf353285d7211aab2b"
+      },
+      "django_celery_beat_periodictasks": {
+        "rows": 1,
+        "sha256": "4ceb47cb9c296b09b807f3507acb7ed9615b44236ca4177fef738f4732e81cea"
+      },
+      "django_celery_beat_solarschedule": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "django_content_type": {
+        "rows": 57,
+        "sha256": "92f9261512947eb8e7ecd3319d21760d6be5527e2ba8577fb911ba0fec2c504d"
+      },
+      "django_migrations": {
+        "rows": 184,
+        "sha256": "8a155277c259588e78bb2d5c05c06694c84fdca26c20947f15734e8d153e9f45"
+      },
+      "django_session": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_epgdata": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_epgsource": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_epgsourceindex": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_programdata": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_sdprogrammd5": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "epg_sdschedulemd5": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "hdhr_hdhrdevice": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "m3u_m3uaccount": {
+        "rows": 4,
+        "sha256": "0f7476470deb02a42394e5aa6a31950c0f5fc382e578091e5299626102ad5c8c"
+      },
+      "m3u_m3uaccountprofile": {
+        "rows": 1,
+        "sha256": "3c1bbec7e4c3e1047b66de1ba87cbe28ce31a241e445bb1e3c90100c8e18bed1"
+      },
+      "m3u_m3ufilter": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "m3u_servergroup": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plugins_pluginconfig": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plugins_pluginrepo": {
+        "rows": 1,
+        "sha256": "2deda91396a45bd9475a9a0e6ea321271997faab09077bccc628775575e830c3"
+      },
+      "vod_episode": {
+        "rows": 3,
+        "sha256": "467d2a5cc7425bc7f81a5cb8b8768f05f5d2c63dd02bd5313acfe0d0ce055ad5"
+      },
+      "vod_m3uepisoderelation": {
+        "rows": 4,
+        "sha256": "2c165a22af9309a7d9992cf55a9930d23b802c88d024cd8d1eefb2f290e95971"
+      },
+      "vod_m3umovierelation": {
+        "rows": 4,
+        "sha256": "66c8fb305125b98fd3222ba87fca6026f2e54bfccf9aec2f05894d5099e3f284"
+      },
+      "vod_m3useriesrelation": {
+        "rows": 3,
+        "sha256": "263ce8a66a726cb195337bd8dc4a3fdb874c3ffd2188946d5c66a4a0e773f3ea"
+      },
+      "vod_m3uvodcategoryrelation": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "vod_movie": {
+        "rows": 3,
+        "sha256": "3924f38f032f697e63adb198643e1dbaeadc0fd03f8a1ce070272f004e74502e"
+      },
+      "vod_series": {
+        "rows": 1,
+        "sha256": "5c06eaa8fb9b356810c91eba7a45cbbe8707b91d1776a3d6c4afc17598226d19"
+      },
+      "vod_vodcategory": {
+        "rows": 2,
+        "sha256": "9229343c2e810cf0c7f5b14533f9a0c6e81e61e768582e3a21b3856bcc2197d4"
+      },
+      "vod_vodlogo": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    "sequences": {
+      "accounts_user_channel_profiles_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "accounts_user_groups_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "accounts_user_id_seq": {
+        "last_value": 10,
+        "is_called": true
+      },
+      "accounts_user_user_permissions_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "accounts_userappdata_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "auth_group_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "auth_group_permissions_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "auth_permission_id_seq": {
+        "last_value": 228,
+        "is_called": true
+      },
+      "core_coresettings_id_seq": {
+        "last_value": 18,
+        "is_called": true
+      },
+      "core_notificationdismissal_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "core_outputprofile_id_seq": {
+        "last_value": 26,
+        "is_called": true
+      },
+      "core_streamprofile_id_seq": {
+        "last_value": 5,
+        "is_called": true
+      },
+      "core_systemevent_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "core_systemnotification_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "core_useragent_id_seq": {
+        "last_value": 3,
+        "is_called": true
+      },
+      "dashboard_settings_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_channel_id_seq": {
+        "last_value": 10,
+        "is_called": true
+      },
+      "dispatcharr_channels_channelgroup_id_seq": {
+        "last_value": 4,
+        "is_called": true
+      },
+      "dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+        "last_value": 4,
+        "is_called": true
+      },
+      "dispatcharr_channels_channeloverride_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "dispatcharr_channels_channelprofile_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "dispatcharr_channels_channelprofilemembership_id_seq": {
+        "last_value": 14,
+        "is_called": true
+      },
+      "dispatcharr_channels_channelstream_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_logo_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "dispatcharr_channels_recording_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_recurringrecordingrule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_channels_stream_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_connect_deliverylog_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_connect_eventsubscription_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "dispatcharr_connect_integration_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_admin_log_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_celery_beat_clockedschedule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_celery_beat_crontabschedule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_celery_beat_intervalschedule_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "django_celery_beat_periodictask_id_seq": {
+        "last_value": 4,
+        "is_called": true
+      },
+      "django_celery_beat_solarschedule_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "django_content_type_id_seq": {
+        "last_value": 57,
+        "is_called": true
+      },
+      "django_migrations_id_seq": {
+        "last_value": 184,
+        "is_called": true
+      },
+      "epg_epgdata_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_epgsource_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_programdata_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_sdprogrammd5_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "epg_sdschedulemd5_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "hdhr_hdhrdevice_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "m3u_m3uaccount_id_seq": {
+        "last_value": 4,
+        "is_called": true
+      },
+      "m3u_m3uaccountprofile_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "m3u_m3ufilter_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "m3u_servergroup_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "plugins_pluginconfig_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "plugins_pluginrepo_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "vod_episode_id_seq": {
+        "last_value": 3,
+        "is_called": true
+      },
+      "vod_m3uepisoderelation_id_seq": {
+        "last_value": 4,
+        "is_called": true
+      },
+      "vod_m3umovierelation_id_seq": {
+        "last_value": 4,
+        "is_called": true
+      },
+      "vod_m3useriesrelation_id_seq": {
+        "last_value": 3,
+        "is_called": true
+      },
+      "vod_m3uvodcategoryrelation_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      },
+      "vod_movie_id_seq": {
+        "last_value": 3,
+        "is_called": true
+      },
+      "vod_series_id_seq": {
+        "last_value": 1,
+        "is_called": true
+      },
+      "vod_vodcategory_id_seq": {
+        "last_value": 2,
+        "is_called": true
+      },
+      "vod_vodlogo_id_seq": {
+        "last_value": 1,
+        "is_called": false
+      }
+    }
+  },
+  "eligibility_only_clock": 1794528562638980,
+  "SQL_timestamps_rewritten": false,
+  "cases": [
+    {
+      "held": {
+        "stage": "error",
+        "ordinal": 0,
+        "connection": 0,
+        "backend_pid": 231,
+        "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+        "rows": 0,
+        "commands": [],
+        "errors": [
+          "57014"
+        ],
+        "tx": "I",
+        "parameter_hex": [
+          "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+          "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+        ],
+        "sync_seen": true,
+        "epoch": 1794588784.359779,
+        "execute_generation": 5,
+        "arm_epoch": 1,
+        "execute_monotonic": 309179.404709959
+      },
+      "live_identity": {
+        "PID": 225,
+        "starttime": "30917863",
+        "exe_sha256": "bb5953153a167c2c8424eca4b88b4cfc81d59100fc3b2829369facb51477b4cb",
+        "exe_bytes": 26298856
+      },
+      "original_PID_absent": true,
+      "prelude_completed_monotonic": 309179.399331198,
+      "request_started_monotonic": 309179.403283909,
+      "pipes_settled": true,
+      "observer_finished_seen_monotonic": 309179.430769733,
+      "terminal": {
+        "active_requests": 0,
+        "available_memory_bytes": 201326592,
+        "maximum_memory_bytes": 201326592,
+        "pool_closed": true
+      },
+      "peer_stdout_sha256": "e1c5fbe9966e36631461bf8bf8c79ddd7f4fd71a48f9623fa68e6639fb0b6d73",
+      "settled": {
+        "active_requests": 0,
+        "available_memory_bytes": 201326592,
+        "maximum_memory_bytes": 201326592,
+        "workers": 0,
+        "observer_finished": false,
+        "admission_closed": true
+      },
+      "shutdown_held": {
+        "shutdown_drained": false
+      },
+      "producer": "bounded-user",
+      "prelude_began_monotonic": 309178.902390427,
+      "cleanup_steps": [
+        {
+          "step": "release_owned_reply",
+          "settled": true
+        },
+        {
+          "step": "settle_owned_peer",
+          "settled": true
+        },
+        {
+          "step": "close_join_PG_relay",
+          "settled": true
+        },
+        {
+          "step": "rollback_close_lock",
+          "settled": true
+        },
+        {
+          "step": "close_ledger",
+          "settled": true
+        },
+        {
+          "step": "join_watchdog",
+          "settled": true
+        }
+      ],
+      "case": 1,
+      "prelude_request_issued": true,
+      "proxy_terminal": {
+        "held": null,
+        "next_stage": 1,
+        "connections": [
+          {
+            "id": 0,
+            "closed": true,
+            "up_joined": true
+          }
+        ],
+        "events": [
+          {
+            "kind": "backend-key",
+            "monotonic": 309178.664390596,
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.664437757,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.705146733,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.705208135,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.705307948,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.747078524,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 1,
+            "monotonic": 309178.78813652,
+            "sql": "SELECT id::bigint AS id, username, password, is_active, user_level, stream_limit, COALESCE(custom_properties, '{}'::jsonb) AS custom_properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "parameter_hex": null,
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 1,
+            "monotonic": 309178.788168441,
+            "sql": "SELECT id::bigint AS id, username, password, is_active, user_level, stream_limit, COALESCE(custom_properties, '{}'::jsonb) AS custom_properties FROM accounts_user WHERE username=$1",
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.829104953,
+            "sql": "SELECT id::bigint AS id, username, password, is_active, user_level, stream_limit, COALESCE(custom_properties, '{}'::jsonb) AS custom_properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.870259262,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.870324534,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.903499258,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.90359346,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.903709924,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.944096401,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 2,
+            "monotonic": 309178.985154367,
+            "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+            "connection": 0,
+            "parameter_hex": null,
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 2,
+            "monotonic": 309178.985190048,
+            "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.02718228,
+            "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.068238396,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.068345149,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.06874458,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.068798932,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.068911425,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.109085636,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "target-bind",
+            "monotonic": 309179.150152262,
+            "connection": 0,
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ]
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 3,
+            "monotonic": 309179.150206514,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ],
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 3,
+            "monotonic": 309179.150244175,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.191126016,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.191167997,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.191203778,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.191223079,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232092579,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.232174462,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232242424,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.232288685,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232625224,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.232670216,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232777179,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.273086123,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 4,
+            "monotonic": 309179.31416624,
+            "sql": "SELECT id,CASE WHEN octet_length(name)<=$2 THEN name END AS name FROM (SELECT DISTINCT c.id::bigint AS id,c.name,c.category_type,c.created_at,c.updated_at,LOWER(c.name) AS sort_name FROM vod_vodcategory c JOIN vod_m3umovierelation r ON c.id=r.category_id JOIN m3u_m3uaccount a ON r.m3u_account_id=a.id WHERE c.category_type=$1 AND a.is_active) AS source_categories ORDER BY sort_name LIMIT $3",
+            "connection": 0,
+            "parameter_hex": null,
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 4,
+            "monotonic": 309179.314204011,
+            "sql": "SELECT id,CASE WHEN octet_length(name)<=$2 THEN name END AS name FROM (SELECT DISTINCT c.id::bigint AS id,c.name,c.category_type,c.created_at,c.updated_at,LOWER(c.name) AS sort_name FROM vod_vodcategory c JOIN vod_m3umovierelation r ON c.id=r.category_id JOIN m3u_m3uaccount a ON r.m3u_account_id=a.id WHERE c.category_type=$1 AND a.is_active) AS source_categories ORDER BY sort_name LIMIT $3",
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.356197073,
+            "sql": "SELECT id,CASE WHEN octet_length(name)<=$2 THEN name END AS name FROM (SELECT DISTINCT c.id::bigint AS id,c.name,c.category_type,c.created_at,c.updated_at,LOWER(c.name) AS sort_name FROM vod_vodcategory c JOIN vod_m3umovierelation r ON c.id=r.category_id JOIN m3u_m3uaccount a ON r.m3u_account_id=a.id WHERE c.category_type=$1 AND a.is_active) AS source_categories ORDER BY sort_name LIMIT $3",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.397200578,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.397300531,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.397369643,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.397410624,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 1,
+            "kind": "gate-armed",
+            "monotonic": 309179.400397948
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.404428371,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.404526894,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "target-bind",
+            "monotonic": 309179.404672398,
+            "connection": 0,
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ]
+          },
+          {
+            "arm_epoch": 1,
+            "kind": "execute",
+            "execute_generation": 5,
+            "monotonic": 309179.404717179,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ],
+            "execute_armed": true
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 5,
+            "monotonic": 309179.40474908,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.405172142,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.405232864,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.405259055,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [
+              "57014"
+            ],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "execute_monotonic": 309179.404709959,
+            "arm_epoch": 1,
+            "kind": "ready-held",
+            "execute_generation": 5,
+            "monotonic": 309179.405294706,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [
+              "57014"
+            ],
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ],
+            "rows": 0,
+            "sync_seen": true,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.405345777,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-forwarded",
+            "monotonic": 309184.433138774,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309184.433242677,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309184.474085147,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309184.47417648,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "front-eof",
+            "monotonic": 309184.485835908,
+            "connection": 0
+          },
+          {
+            "kind": "back-eof",
+            "monotonic": 309184.487494265,
+            "connection": 0
+          },
+          {
+            "kind": "connection-closed",
+            "monotonic": 309184.487558386,
+            "connection": 0,
+            "up_joined": true
+          }
+        ],
+        "errors": [],
+        "listener_alive": false
+      },
+      "warm_target": {
+        "connection": 0,
+        "backend_pid": 231,
+        "execute_generation": 3,
+        "execute_monotonic": 309179.150206514,
+        "ready_monotonic": 309179.191223079,
+        "sql_sha256": "9cf6ccbb7a050e98670742afaa32f27b240657112afc4c8d535bac534f70486f",
+        "parameter_count": 2,
+        "first_parameter_hex": "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+        "before_arm": true
+      },
+      "cancelled_backend_pid": 231,
+      "passed": true,
+      "actual_exit": 0,
+      "peer_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "prelude": {
+        "kind": "response",
+        "status": 200,
+        "body_bytes": 95,
+        "Native_gateway_prelude_calls": 1
+      },
+      "observer": {
+        "kind": "join_error",
+        "cancelled": true
+      },
+      "warm_snapshot": {
+        "held": null,
+        "next_stage": 0,
+        "connections": [
+          {
+            "id": 0,
+            "closed": false,
+            "up_joined": false
+          }
+        ],
+        "events": [
+          {
+            "kind": "backend-key",
+            "monotonic": 309178.664390596,
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.664437757,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.705146733,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.705208135,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.705307948,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.747078524,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 1,
+            "monotonic": 309178.78813652,
+            "sql": "SELECT id::bigint AS id, username, password, is_active, user_level, stream_limit, COALESCE(custom_properties, '{}'::jsonb) AS custom_properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "parameter_hex": null,
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 1,
+            "monotonic": 309178.788168441,
+            "sql": "SELECT id::bigint AS id, username, password, is_active, user_level, stream_limit, COALESCE(custom_properties, '{}'::jsonb) AS custom_properties FROM accounts_user WHERE username=$1",
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.829104953,
+            "sql": "SELECT id::bigint AS id, username, password, is_active, user_level, stream_limit, COALESCE(custom_properties, '{}'::jsonb) AS custom_properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.870259262,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.870324534,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.903499258,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.90359346,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.903709924,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.944096401,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 2,
+            "monotonic": 309178.985154367,
+            "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+            "connection": 0,
+            "parameter_hex": null,
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 2,
+            "monotonic": 309178.985190048,
+            "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.02718228,
+            "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.068238396,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.068345149,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.06874458,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.068798932,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.068911425,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.109085636,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "target-bind",
+            "monotonic": 309179.150152262,
+            "connection": 0,
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ]
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 3,
+            "monotonic": 309179.150206514,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ],
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 3,
+            "monotonic": 309179.150244175,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.191126016,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.191167997,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.191203778,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.191223079,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232092579,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.232174462,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232242424,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.232288685,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232625224,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.232670216,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232777179,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.273086123,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 4,
+            "monotonic": 309179.31416624,
+            "sql": "SELECT id,CASE WHEN octet_length(name)<=$2 THEN name END AS name FROM (SELECT DISTINCT c.id::bigint AS id,c.name,c.category_type,c.created_at,c.updated_at,LOWER(c.name) AS sort_name FROM vod_vodcategory c JOIN vod_m3umovierelation r ON c.id=r.category_id JOIN m3u_m3uaccount a ON r.m3u_account_id=a.id WHERE c.category_type=$1 AND a.is_active) AS source_categories ORDER BY sort_name LIMIT $3",
+            "connection": 0,
+            "parameter_hex": null,
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 4,
+            "monotonic": 309179.314204011,
+            "sql": "SELECT id,CASE WHEN octet_length(name)<=$2 THEN name END AS name FROM (SELECT DISTINCT c.id::bigint AS id,c.name,c.category_type,c.created_at,c.updated_at,LOWER(c.name) AS sort_name FROM vod_vodcategory c JOIN vod_m3umovierelation r ON c.id=r.category_id JOIN m3u_m3uaccount a ON r.m3u_account_id=a.id WHERE c.category_type=$1 AND a.is_active) AS source_categories ORDER BY sort_name LIMIT $3",
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.356197073,
+            "sql": "SELECT id,CASE WHEN octet_length(name)<=$2 THEN name END AS name FROM (SELECT DISTINCT c.id::bigint AS id,c.name,c.category_type,c.created_at,c.updated_at,LOWER(c.name) AS sort_name FROM vod_vodcategory c JOIN vod_m3umovierelation r ON c.id=r.category_id JOIN m3u_m3uaccount a ON r.m3u_account_id=a.id WHERE c.category_type=$1 AND a.is_active) AS source_categories ORDER BY sort_name LIMIT $3",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.397200578,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.397300531,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.397369643,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.397410624,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          }
+        ],
+        "errors": [],
+        "listener_alive": true
+      },
+      "watchdog_expired": false,
+      "mode": "observer_abort",
+      "natural_proxy_drain": {
+        "held": null,
+        "next_stage": 1,
+        "connections": [
+          {
+            "id": 0,
+            "closed": true,
+            "up_joined": true
+          }
+        ],
+        "events": [
+          {
+            "kind": "backend-key",
+            "monotonic": 309178.664390596,
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.664437757,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.705146733,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.705208135,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.705307948,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.747078524,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 1,
+            "monotonic": 309178.78813652,
+            "sql": "SELECT id::bigint AS id, username, password, is_active, user_level, stream_limit, COALESCE(custom_properties, '{}'::jsonb) AS custom_properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "parameter_hex": null,
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 1,
+            "monotonic": 309178.788168441,
+            "sql": "SELECT id::bigint AS id, username, password, is_active, user_level, stream_limit, COALESCE(custom_properties, '{}'::jsonb) AS custom_properties FROM accounts_user WHERE username=$1",
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.829104953,
+            "sql": "SELECT id::bigint AS id, username, password, is_active, user_level, stream_limit, COALESCE(custom_properties, '{}'::jsonb) AS custom_properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.870259262,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.870324534,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.903499258,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.90359346,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309178.903709924,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309178.944096401,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 2,
+            "monotonic": 309178.985154367,
+            "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+            "connection": 0,
+            "parameter_hex": null,
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 2,
+            "monotonic": 309178.985190048,
+            "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.02718228,
+            "sql": "SELECT value FROM core_coresettings WHERE key=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.068238396,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.068345149,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.06874458,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.068798932,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.068911425,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.109085636,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "target-bind",
+            "monotonic": 309179.150152262,
+            "connection": 0,
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ]
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 3,
+            "monotonic": 309179.150206514,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ],
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 3,
+            "monotonic": 309179.150244175,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.191126016,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.191167997,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.191203778,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.191223079,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232092579,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.232174462,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232242424,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.232288685,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232625224,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.232670216,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.232777179,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.273086123,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 0,
+            "kind": "execute",
+            "execute_generation": 4,
+            "monotonic": 309179.31416624,
+            "sql": "SELECT id,CASE WHEN octet_length(name)<=$2 THEN name END AS name FROM (SELECT DISTINCT c.id::bigint AS id,c.name,c.category_type,c.created_at,c.updated_at,LOWER(c.name) AS sort_name FROM vod_vodcategory c JOIN vod_m3umovierelation r ON c.id=r.category_id JOIN m3u_m3uaccount a ON r.m3u_account_id=a.id WHERE c.category_type=$1 AND a.is_active) AS source_categories ORDER BY sort_name LIMIT $3",
+            "connection": 0,
+            "parameter_hex": null,
+            "execute_armed": false
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 4,
+            "monotonic": 309179.314204011,
+            "sql": "SELECT id,CASE WHEN octet_length(name)<=$2 THEN name END AS name FROM (SELECT DISTINCT c.id::bigint AS id,c.name,c.category_type,c.created_at,c.updated_at,LOWER(c.name) AS sort_name FROM vod_vodcategory c JOIN vod_m3umovierelation r ON c.id=r.category_id JOIN m3u_m3uaccount a ON r.m3u_account_id=a.id WHERE c.category_type=$1 AND a.is_active) AS source_categories ORDER BY sort_name LIMIT $3",
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.356197073,
+            "sql": "SELECT id,CASE WHEN octet_length(name)<=$2 THEN name END AS name FROM (SELECT DISTINCT c.id::bigint AS id,c.name,c.category_type,c.created_at,c.updated_at,LOWER(c.name) AS sort_name FROM vod_vodcategory c JOIN vod_m3umovierelation r ON c.id=r.category_id JOIN m3u_m3uaccount a ON r.m3u_account_id=a.id WHERE c.category_type=$1 AND a.is_active) AS source_categories ORDER BY sort_name LIMIT $3",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 1,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.397200578,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.397300531,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.397369643,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.397410624,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "arm_epoch": 1,
+            "kind": "gate-armed",
+            "monotonic": 309179.400397948
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.404428371,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.404526894,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "target-bind",
+            "monotonic": 309179.404672398,
+            "connection": 0,
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ]
+          },
+          {
+            "arm_epoch": 1,
+            "kind": "execute",
+            "execute_generation": 5,
+            "monotonic": 309179.404717179,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ],
+            "execute_armed": true
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": 5,
+            "monotonic": 309179.40474908,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.405172142,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "actual-target-backend-frame",
+            "monotonic": 309179.405232864,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309179.405259055,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [
+              "57014"
+            ],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "execute_monotonic": 309179.404709959,
+            "arm_epoch": 1,
+            "kind": "ready-held",
+            "execute_generation": 5,
+            "monotonic": 309179.405294706,
+            "sql": "SELECT id::bigint AS id,is_active,user_level,stream_limit,CASE WHEN octet_length(username)<=$2 THEN username END AS username,CASE WHEN octet_length(password)<=$2 THEN password END AS password,CASE WHEN octet_length(COALESCE(custom_properties,'{}'::jsonb)::text)<=$2 THEN COALESCE(custom_properties,'{}'::jsonb)::text END AS properties FROM accounts_user WHERE username=$1",
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [
+              "57014"
+            ],
+            "parameter_hex": [
+              "ca58cc504cb27380176b9fa97df455ef77ec4ec7685f671ff7998a4cc459dd72",
+              "218ddca0b6d4e4ecb804f1632c0aae9e2602b5648d11b12a8f59eb031f159861"
+            ],
+            "rows": 0,
+            "sync_seen": true,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309179.405345777,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-forwarded",
+            "monotonic": 309184.433138774,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309184.433242677,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "sync-read",
+            "execute_generation": null,
+            "monotonic": 309184.474085147,
+            "sql": null,
+            "connection": 0
+          },
+          {
+            "kind": "ready-observed",
+            "monotonic": 309184.47417648,
+            "sql": null,
+            "connection": 0,
+            "backend_pid": 231,
+            "errors": [],
+            "rows": 0,
+            "tx": "I"
+          },
+          {
+            "kind": "front-eof",
+            "monotonic": 309184.485835908,
+            "connection": 0
+          },
+          {
+            "kind": "back-eof",
+            "monotonic": 309184.487494265,
+            "connection": 0
+          },
+          {
+            "kind": "connection-closed",
+            "monotonic": 309184.487558386,
+            "connection": 0,
+            "up_joined": true
+          }
+        ],
+        "errors": [],
+        "listener_alive": true
+      },
+      "actual_SQL_sha256": "9cf6ccbb7a050e98670742afaa32f27b240657112afc4c8d535bac534f70486f",
+      "elapsed_seconds": 6.032269058050588,
+      "prelude_settled": {
+        "active_requests": 0,
+        "available_memory_bytes": 201326592,
+        "maximum_memory_bytes": 201326592,
+        "workers": 0,
+        "observer_finished": false,
+        "admission_closed": false
+      },
+      "while_held": {
+        "active_requests": 1,
+        "available_memory_bytes": 150863872,
+        "maximum_memory_bytes": 201326592,
+        "workers": 1,
+        "observer_finished": true,
+        "admission_closed": false
+      }
+    },
+    {
+      "case": 1,
+      "mode": "deadline",
+      "passed": false
+    }
+  ]
+}
