@@ -1,0 +1,414 @@
+{
+  "passed": true,
+  "state": "EXACT_NEVER_STARTED_IMAGE_BYTES_CAPTURED",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "container_started": false,
+  "program_executions": 0,
+  "project": "dispatcharr-plugin-renderer-bytes-5d5b748eff",
+  "rows": [
+    {
+      "path": "actual-image/django/core/handlers/exception.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/exception.py",
+      "bytes": 5961,
+      "sha256": "e10b79143b65790bae2d0c159778e4555213a97ece1b5d3a5bc750db2739f1b8"
+    },
+    {
+      "path": "actual-image/django/views/defaults.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/views/defaults.py",
+      "bytes": 4718,
+      "sha256": "0574f7e9abb0f17179670a9d5346a4cd7e484c505686ecbc89d4fc606902a3f2"
+    },
+    {
+      "path": "actual-image/django/views/debug.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/views/debug.py",
+      "bytes": 25905,
+      "sha256": "71c8784faca90cb457637b27a36fd2c8baa16ab3d1e6eae50e1c2d0554a567e1"
+    },
+    {
+      "path": "actual-image/django/conf/global_settings.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/conf/global_settings.py",
+      "bytes": 23321,
+      "sha256": "51cf04f8c1d3e83bf5226cb4a03c255c3bb42f66792be3a03987a90511b13e88"
+    },
+    {
+      "path": "actual-image/django/template/loader.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/template/loader.py",
+      "bytes": 2054,
+      "sha256": "3d515452d0b95a08915554e296143a345667be3972eac3fdb3b6a716632829da"
+    },
+    {
+      "path": "actual-image/django/template/engine.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/template/engine.py",
+      "bytes": 8401,
+      "sha256": "9be5db0f333f4f91cd90916635903523f964b2a34bcfe89f6c73388b82e0cea9"
+    },
+    {
+      "path": "actual-image/django/utils/log.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/utils/log.py",
+      "bytes": 8939,
+      "sha256": "4d245f8381d52e49f75cca59468ad0ce115186aafde2d868efbc5f406138491c"
+    },
+    {
+      "path": "actual-image/django/core/mail/__init__.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/core/mail/__init__.py",
+      "bytes": 7418,
+      "sha256": "f8b2f54b81d6a39de6d2be91bf2b3b0444f1c476cb712a14d6d00240f14114eb"
+    },
+    {
+      "path": "actual-image/django/views/templates/technical_500.html",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/views/templates/technical_500.html",
+      "bytes": 18138,
+      "sha256": "a479b12ed13014d030e33b7793deedcb976f62af6ad04d29d67145d694587692"
+    },
+    {
+      "path": "actual-image/django/views/templates/technical_500.txt",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/views/templates/technical_500.txt",
+      "bytes": 3712,
+      "sha256": "6f48a113f152ed8b5f00539753fca4d3e093814999e1991655f9051dd1105d02"
+    },
+    {
+      "path": "actual-image/django/template/loaders/filesystem.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/template/loaders/filesystem.py",
+      "bytes": 1506,
+      "sha256": "7f8b22943ed65a1bf72bd43248c816edd94618dc3060070708c493169c228976"
+    },
+    {
+      "path": "actual-image/django/template/loaders/app_directories.py",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/django/template/loaders/app_directories.py",
+      "bytes": 312,
+      "sha256": "b10a555ca6299caafd465d584ad35c6be6c62101dc3a44a79a6d65daa4461551"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "create",
+        "--pull=never",
+        "--name",
+        "dispatcharr-plugin-renderer-bytes-5d5b748eff-never-started",
+        "--label",
+        "com.docker.compose.project=dispatcharr-plugin-renderer-bytes-5d5b748eff",
+        "--network",
+        "none",
+        "--read-only",
+        "--entrypoint",
+        "/bin/true",
+        "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+      ],
+      "pid": 2345499,
+      "observed_starttime": "31756861",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.14151297899661586,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234"
+      ],
+      "pid": 2345516,
+      "observed_starttime": "31756876",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010382762993685901,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/exception.py",
+        "-"
+      ],
+      "pid": 2345532,
+      "observed_starttime": "31756877",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.01205577002838254,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/views/defaults.py",
+        "-"
+      ],
+      "pid": 2345548,
+      "observed_starttime": "31756878",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.01498608198016882,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/views/debug.py",
+        "-"
+      ],
+      "pid": 2345563,
+      "observed_starttime": "31756880",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.014212619978934526,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/conf/global_settings.py",
+        "-"
+      ],
+      "pid": 2345579,
+      "observed_starttime": "31756881",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.011581385973840952,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/template/loader.py",
+        "-"
+      ],
+      "pid": 2345595,
+      "observed_starttime": "31756882",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.0128605019999668,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/template/engine.py",
+        "-"
+      ],
+      "pid": 2345612,
+      "observed_starttime": "31756884",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.011854003998450935,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/utils/log.py",
+        "-"
+      ],
+      "pid": 2345627,
+      "observed_starttime": "31756885",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.011778561980463564,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/core/mail/__init__.py",
+        "-"
+      ],
+      "pid": 2345643,
+      "observed_starttime": "31756886",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.01109918300062418,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/views/templates/technical_500.html",
+        "-"
+      ],
+      "pid": 2345659,
+      "observed_starttime": "31756888",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.014726795023307204,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/views/templates/technical_500.txt",
+        "-"
+      ],
+      "pid": 2345676,
+      "observed_starttime": "31756889",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.014904130017384887,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/template/loaders/filesystem.py",
+        "-"
+      ],
+      "pid": 2345693,
+      "observed_starttime": "31756891",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.015598979021888226,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234:/dispatcharrpy/lib/python3.13/site-packages/django/template/loaders/app_directories.py",
+        "-"
+      ],
+      "pid": 2345711,
+      "observed_starttime": "31756893",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.01408935699146241,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234"
+      ],
+      "pid": 2345728,
+      "observed_starttime": "31756894",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010024602001067251,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "--volumes",
+        "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234"
+      ],
+      "pid": 2345744,
+      "observed_starttime": "31756895",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.7752684460137971,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-plugin-renderer-bytes-5d5b748eff",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 2345855,
+      "observed_starttime": "31756973",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010543968004640192,
+      "invalid": null
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 2345872,
+      "observed_starttime": "31756974",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010393953009042889,
+      "invalid": null
+    }
+  ],
+  "CID": "bb7d3c8c01415bf4cefeb3cc35473cbf520ca848b50acadafc38e0483aa30234",
+  "copied_total_bytes": 110385,
+  "exact_owned_cleanup": true,
+  "actual_command_count": 18,
+  "actual_output_bytes": 147726,
+  "actual_controller_exit": 0,
+  "settled_utc": "2026-11-13T19:12:54.709614+00:00"
+}

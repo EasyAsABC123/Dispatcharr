@@ -1,0 +1,17 @@
+"""Fresh Native2 status/body/CT and no-model/auth-history effects; no Source rerun."""
+import hashlib,json
+from retained_native24_helpers import Clocks,selected,cache,own_cache,equal,need
+BODY_SHA='fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624'
+def validate(source,native):
+ need(source['capture_complete']is True and source['actual_request_count']==2 and source['client_raise_request_exception']is False,'ExactMeasuredSource2Reference');need(native['capture_only']is True and native['passed']is False and native['capture_complete']is True and native['actual_request_count']==native['completed_capture_count']==len(native['requests'])==2,'NativeCaptureOnlyExactly2NotRecorderPass');need(native['raw_body_byte_parity_predeclared']is True and native['Source_rendered_HTML_reference']is True and native['Main_or_fullM8']is False,'ExactPredeclaredHTMLScope')
+ clocks=Clocks(source);selected(source['seed'],native['before_requests'],clocks);serialization=[]
+ for a,b in zip(source['requests'],native['requests']):
+  for key in('index','name','actor','method','path','body_hex','body_sha256','body_bytes'):need(equal(a[key],b[key]),'ExactSource2Input:'+key)
+  need(b['actual_request_invoked']is True and b['capture_complete']is True,'ActualNativeInvocation');need(b['physical_close']['fd_after']==-1 and b['physical_close']['original_inode_absent']is True and b['physical_close']['timer_joined']is True,'ActualHTTPSocketPhysicallySettled')
+  need(a['transport']=='http_response'and a['framework_exception']is None and a['response_exc_info']['complete']is True,'ActualSourceHTTPAndSeparateExceptionInfo')
+  need(type(b['status'])is int and b['status']==a['status']==500,'Source2Exact500');raw=bytes.fromhex(b['response_body_hex']);need(raw==bytes.fromhex(a['response_body_hex'])and len(raw)==b['response_body_bytes']==a['response_body_bytes']==145 and hashlib.sha256(raw).hexdigest()==b['response_body_sha256']==a['response_body_sha256']==BODY_SHA,'ExactUnnormalized145ByteSourceBody')
+  headers={k.lower():v for k,v in b['headers']};src={k.lower():v for k,v in a['headers'].items()};need(headers.get('content-type')==src['content-type']=='text/html; charset=utf-8'and headers.get('www-authenticate')==src.get('www-authenticate')is None,'ExactContentTypeAndNoAuthChallenge');need(b['json']is None and b['json_parse_succeeded']is False and type(b['json_parse_error'])is dict,'HTMLRetainedOptionalJSONNotForced')
+  for edge in('before','after'):selected(a[edge],b[edge],clocks);serialization.append(cache(a[edge]['raw_Redis'],b[edge]['raw_Redis']))
+  own_cache(b['before']['raw_Redis'],b['after']['raw_Redis']);need(equal(b['before']['public_manifest'],b['after']['public_manifest']),'All62Tables59SeqSchemaUnchanged')
+  for name in('repos','configs','settings','users','events','system_notifications','notification_dismissals'):need(equal(b['before'][name],b['after'][name]),'NoModelOrCredentialSideEffect:'+name)
+ return {'passed':True,'actual_Native_HTTP_cases':2,'Source2_exact_status_body_ContentType':True,'raw_body_bytes_unchanged':True,'response_bytes_each':145,'body_sha256':BODY_SHA,'Source_response_exc_info_types':[r['response_exc_info']['type']for r in source['requests']],'Native_Python_exception_class_parity_claimed':False,'SQL_auth_history_no_effect_cases':2,'group_serialization_byte_equal_all':all(serialization),'decoded_cache_and_unrelated_Redis_scope_qualified':True,'full_header_or_TCP_Source_or_Main_or_fullM8':False}

@@ -1,0 +1,176 @@
+{
+  "state": "SOURCE_ONLY_DEFINITION_UNEXECUTED",
+  "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "scope": "Two fresh rendered-error requests; not replay of Source24 prefix, not TCP/WSGI/ASGI deployed-stack or Native authority",
+  "request_policy": {
+    "APIClient_raise_request_exception": false,
+    "enforce_csrf_checks": true,
+    "fresh_APIClient_per_request": true,
+    "force_authenticate": false,
+    "HTTP_ACCEPT": "application/json",
+    "REMOTE_ADDR": "127.0.0.1",
+    "auth": "actual persisted X-API-Key only; no Bearer/Session/cookie mixture"
+  },
+  "method_route_bindings": {
+    "custom_zulu": "/api/plugins/repos/802/",
+    "collection": "/api/plugins/repos/"
+  },
+  "roles": [
+    {
+      "alias": "admin_unique",
+      "id": 101,
+      "user_level": 10,
+      "is_active": true,
+      "custom_properties": {},
+      "api_key_alias": "unique_admin"
+    },
+    {
+      "alias": "duplicate_first",
+      "id": 201,
+      "user_level": 10,
+      "is_active": true,
+      "custom_properties": {},
+      "api_key_alias": "duplicate_pair"
+    },
+    {
+      "alias": "duplicate_second",
+      "id": 202,
+      "user_level": 1,
+      "is_active": true,
+      "custom_properties": {},
+      "api_key_alias": "duplicate_pair"
+    }
+  ],
+  "api_key_recipe": {
+    "unique_admin": "owned-rendered-errors-<ownedDBnonce>-unique-admin",
+    "duplicate_pair": "owned-rendered-errors-<ownedDBnonce>-duplicate-pair",
+    "exact_validation": "one unique key matches exactly id101; duplicate key matches exactly ids201/202, same literal stored key, no other rows; key field nonunique metadata and full indexes retained; never get() duplicate during setup"
+  },
+  "seed": {
+    "startup": "real pinned management shell before django.setup, should_skip_initialization True; no method/function patch; default audited independently",
+    "native_seed_import": false,
+    "CoreSettings": [
+      {
+        "key": "network_access",
+        "name": "Owned rendered-error UI networks",
+        "value": {
+          "UI": "127.0.0.0/8"
+        }
+      },
+      {
+        "key": "system_settings",
+        "name": "Owned rendered-error timezone",
+        "value": {
+          "time_zone": "UTC"
+        }
+      }
+    ],
+    "official_repo": "retain actual pinned migration pk1 row; exact fields/clock raw; do not fetch manifest",
+    "custom_repos": [
+      {
+        "id": 802,
+        "name": "Zulu Owned",
+        "url": "https://plugin-repo-owned.invalid/zulu.json",
+        "is_official": false,
+        "enabled": true,
+        "cached_manifest": {
+          "plugins": "not-a-list",
+          "registry_url": null
+        },
+        "public_key": ""
+      }
+    ],
+    "PluginConfig_rows": [],
+    "three_called_sequence_states": {
+      "accounts_user_id_seq": 202,
+      "plugins_pluginrepo_id_seq": 802
+    },
+    "model_lifecycle": "real Source ORM saves only; actual group-version/timezone/cache/log effects retained, no clock patch/cache warming/history reset",
+    "PluginManager_instance": "must remain None before/after every stage"
+  },
+  "cases": [
+    {
+      "index": 1,
+      "name": "fresh-malformed-repository-array-rendered-witness",
+      "actor_key_alias": "unique_admin",
+      "method": "PUT",
+      "target": "custom_zulu",
+      "path": "/api/plugins/repos/802/",
+      "content_type": "application/json",
+      "body_hex": "5b5d",
+      "body_bytes": 2,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "predicted_status": null,
+      "HTTP_status_content_type_body": "UNMEASURED",
+      "prior_authority": "Source24 case24 raised AttributeError under raise_request_exception=True; newFalse rendering is NOT measured by that exception",
+      "predicted_SQL": "no repository/config/user/event/notification/sequence mutation, based previous raised request; newly rendered Django effects still retained/unexpected outcomes negative",
+      "cache_prediction": "raw request_started/auth/group/history/Channels and all clocks are observations; no blanket no-effects claim"
+    },
+    {
+      "index": 2,
+      "name": "fresh-duplicate-persisted-api-key-rendered-witness",
+      "actor_key_alias": "duplicate_pair",
+      "method": "GET",
+      "target": "collection",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "body_hex": "",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "predicted_status": null,
+      "HTTP_status_content_type_body": "UNMEASURED",
+      "inference_only": "pinned User.objects.get(api_key) catches DoesNotExist only; two active matching rows can raise model-specific MultipleObjectsReturned; no Source401/first-row authority",
+      "predicted_SQL": "no first-row selection or credential-failure promotion assumed; all actual auth/history/events/cache/SQL retained"
+    }
+  ],
+  "capture": {
+    "HTTP": "returned status + every header + literal body bytes/SHA/length + Content-Type; parsedJSON only when actual parse succeeds, preserve parse error independently",
+    "response_exc_info": "observe APIClient response.exc_info without calling handlers; full literal exception message/trace with complete/truncation/bytes/SHA, distinct from returned HTTP",
+    "outer_fixture_exception": "separate actual per-request or outer collector exception; never synthesize status500 from exception",
+    "request_parser": "already-cached DRF metadata only; no forced request.data/files/body read to inspect",
+    "raw_SQL": "full62tables59sequences before/after each +raw users/repos/configs/settings/events/notices/dismissals",
+    "raw_Redis": "all4DB keys/type/DUMP/value/list/TTL; nonconsuming Channels registration/frames; no auth normalization omissions",
+    "timing": "all request/seed windows and monotonic5s callback state; Source cache-version epoch bytes retained, no cross-epoch literal normalization",
+    "default": "full62/59 +derived11 literal before/after audit byte equality",
+    "processes": "all host/helper/worker identities/waits/pipes; no external network/no unknown frame consumption",
+    "limits": {
+      "requests": 2,
+      "request_seconds": 8,
+      "phase_seconds": 120,
+      "outer_seconds": 1200,
+      "cleanup_seconds": 90,
+      "response_bytes_each": 1048576,
+      "exception_message_bytes": 65536,
+      "exception_trace_bytes": 4194304,
+      "normal_commands": 224,
+      "total_commands": 256,
+      "normal_output_bytes": 58720256,
+      "total_output_bytes": 67108864
+    }
+  },
+  "future_executor_requirements": [
+    "exact controller/effects/mount closure and actual new rendered-error dependency bytes before app",
+    "ownDB guard and actual seed alias/count validation before first request",
+    "Default62/59 audit helpers real management-shell marker before setup",
+    "actual receiver slot order/type/safe metadata and actual framework exception policy retained",
+    "one reviewed seal/fresh namespace and onceguard; no retry or expectation fitting"
+  ],
+  "additional_pinned_dependency_bytes_needed_before_execution": [
+    "django/core/handlers/exception.py",
+    "django/views/defaults.py",
+    "django/views/debug.py",
+    "django/conf/global_settings.py",
+    "django/template/loader.py",
+    "django/views/templates/technical_500.html",
+    "django/views/templates/technical_500.txt"
+  ],
+  "additional_dependency_capture": "UNPERFORMED; bounded never-started readonly/network-none image byte capture only, hash+PID0+exactCID cleanup and actual defaults/template path review before Source",
+  "unqualified": [
+    "Source TCP/deployed WSGI/ASGI exception renderer",
+    "Native500 body parity",
+    "Native duplicate-key status parity",
+    "valid repository fetch/create/refresh/signature/install/run",
+    "Main/default startup/full M8/full auth/full system/performance"
+  ]
+}

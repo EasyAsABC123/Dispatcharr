@@ -23,6 +23,8 @@ The [Source-derived HTML error correction](rust-source500-correction.md) passes 
 
 The [VOD HEAD authentication correction](rust-vod-head-authentication.md) passes the current library gates (774 tests, 739 ignored) and peer review. Fresh Native wire/Main comparison and SPA/encoded URL boundaries remain open.
 
+The [plugin metadata evidence packet](../scripts/rust-pluginrepo-contracts/metadata-component/README.md) now reproduces four distinct capture epochs, preserving the original exception/JSON difference and the fresh two-case HTML correction. Root verifies 600 payloads, 15 controls, both Git reconstructions and 631,568 exact private projection nodes. Full M8 remains open.
+
 ## Progress ledger
 
 Statuses: **planned**, **in progress**, **blocked**, **passed**. A blocked runtime

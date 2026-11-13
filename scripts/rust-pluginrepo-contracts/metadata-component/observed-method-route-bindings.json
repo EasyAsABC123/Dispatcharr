@@ -1,0 +1,435 @@
+{
+  "state": "SOURCE_OBSERVED_BINDINGS_ONLY_NO_REGISTER_EDIT",
+  "Original_sha": "74d69f0a794b8113df17568452840689798d6e33c8695dd8e525943d24331add",
+  "Source2_sha": "ea995857d4ba024165291c79f5882075accf7435d0abed588d53668722354608",
+  "observations": [
+    {
+      "epoch": "Source24",
+      "index": 1,
+      "name": "anonymous-list",
+      "method": "GET",
+      "concrete_route": "/api/plugins/repos/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoListCreateAPIView",
+      "actual_resolver_kwargs": {},
+      "actor_or_key_alias": "anonymous",
+      "transport": "http_response",
+      "actual_status": 401,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 2,
+      "name": "basic-list",
+      "method": "GET",
+      "concrete_route": "/api/plugins/repos/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoListCreateAPIView",
+      "actual_resolver_kwargs": {},
+      "actor_or_key_alias": "basic",
+      "transport": "http_response",
+      "actual_status": 403,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 3,
+      "name": "standard-list",
+      "method": "GET",
+      "concrete_route": "/api/plugins/repos/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoListCreateAPIView",
+      "actual_resolver_kwargs": {},
+      "actor_or_key_alias": "standard",
+      "transport": "http_response",
+      "actual_status": 200,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 4,
+      "name": "user-network-denied-list",
+      "method": "GET",
+      "concrete_route": "/api/plugins/repos/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoListCreateAPIView",
+      "actual_resolver_kwargs": {},
+      "actor_or_key_alias": "admin_denied",
+      "transport": "http_response",
+      "actual_status": 403,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 5,
+      "name": "standard-put-denied",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/801/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 801
+      },
+      "actor_or_key_alias": "standard",
+      "transport": "http_response",
+      "actual_status": 403,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 6,
+      "name": "standard-delete-denied",
+      "method": "DELETE",
+      "concrete_route": "/api/plugins/repos/802/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 802
+      },
+      "actor_or_key_alias": "standard",
+      "transport": "http_response",
+      "actual_status": 403,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 7,
+      "name": "missing-put-before-body",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/987654321/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 987654321
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 404,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 8,
+      "name": "existing-put-malformed-json",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/801/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 801
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 400,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 9,
+      "name": "empty-put-retains-fields",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/801/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 801
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 200,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 10,
+      "name": "put-disable",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/801/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 801
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 200,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 11,
+      "name": "put-public-key-trim",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/801/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 801
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 200,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 12,
+      "name": "put-ignored-readonly-and-url",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/801/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 801
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 200,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 13,
+      "name": "put-invalid-boolean",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/801/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 801
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 400,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 14,
+      "name": "put-null-public-key",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/801/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 801
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 400,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 15,
+      "name": "put-null-enabled",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/801/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 801
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 400,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 16,
+      "name": "official-delete-refused",
+      "method": "DELETE",
+      "concrete_route": "/api/plugins/repos/1/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 1
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 400,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 17,
+      "name": "missing-delete",
+      "method": "DELETE",
+      "concrete_route": "/api/plugins/repos/987654321/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 987654321
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 404,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 18,
+      "name": "custom-delete-detaches-config",
+      "method": "DELETE",
+      "concrete_route": "/api/plugins/repos/801/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 801
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 200,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 19,
+      "name": "list-after-delete",
+      "method": "GET",
+      "concrete_route": "/api/plugins/repos/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoListCreateAPIView",
+      "actual_resolver_kwargs": {},
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 200,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 20,
+      "name": "admin-patch-not-implemented-by-view",
+      "method": "PATCH",
+      "concrete_route": "/api/plugins/repos/802/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 802
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 405,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 21,
+      "name": "standard-patch-permission-first",
+      "method": "PATCH",
+      "concrete_route": "/api/plugins/repos/802/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 802
+      },
+      "actor_or_key_alias": "standard",
+      "transport": "http_response",
+      "actual_status": 403,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 22,
+      "name": "create-missing-url-validation-only",
+      "method": "POST",
+      "concrete_route": "/api/plugins/repos/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoListCreateAPIView",
+      "actual_resolver_kwargs": {},
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 400,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 23,
+      "name": "create-duplicate-url-validation-only",
+      "method": "POST",
+      "concrete_route": "/api/plugins/repos/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoListCreateAPIView",
+      "actual_resolver_kwargs": {},
+      "actor_or_key_alias": "admin",
+      "transport": "http_response",
+      "actual_status": 400,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source24",
+      "index": 24,
+      "name": "existing-put-json-array-framework-exception",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/802/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 802
+      },
+      "actor_or_key_alias": "admin",
+      "transport": "framework_exception",
+      "actual_status": null,
+      "client_raise_request_exception": true,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source2",
+      "index": 1,
+      "name": "fresh-malformed-repository-array-rendered-witness",
+      "method": "PUT",
+      "concrete_route": "/api/plugins/repos/802/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "actual_resolver_kwargs": {
+        "pk": 802
+      },
+      "actor_or_key_alias": "unique_admin",
+      "transport": "http_response",
+      "actual_status": 500,
+      "client_raise_request_exception": false,
+      "forced_auth": false,
+      "fully_verified": false
+    },
+    {
+      "epoch": "Source2",
+      "index": 2,
+      "name": "fresh-duplicate-persisted-api-key-rendered-witness",
+      "method": "GET",
+      "concrete_route": "/api/plugins/repos/",
+      "actual_resolver_class": "apps.plugins.api_views.PluginRepoListCreateAPIView",
+      "actual_resolver_kwargs": {},
+      "actor_or_key_alias": "duplicate_pair",
+      "transport": "http_response",
+      "actual_status": 500,
+      "client_raise_request_exception": false,
+      "forced_auth": false,
+      "fully_verified": false
+    }
+  ],
+  "registry_changes": false,
+  "full_endpoint_or_TCP": false
+}

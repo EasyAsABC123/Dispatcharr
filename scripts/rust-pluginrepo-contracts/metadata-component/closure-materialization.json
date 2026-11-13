@@ -1,0 +1,2112 @@
+{
+  "Source24": {
+    "executed_seal_sha256": "a16ae2ac30eede05584ebbb91f96bdb25e8587fcd8eea96f6ee73ed3c15cba71",
+    "original_files": {
+      "Original-LICENSE": {
+        "original_sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+        "exact_public_blob": "Original-LICENSE"
+      },
+      "README.md": {
+        "original_sha256": "7aa145017a0b8cf42b8ca71b3fab3fa29083b3ed336c1b39d6b6ae58fcc000e1",
+        "exact_public_blob": "executed/Source24/README.md"
+      },
+      "controller/bounded_process.py": {
+        "original_sha256": "0ca7491087ae756d667dbb9dc1655dbb0f8b0fd0c32b8bfa6592b1f7a16f9867",
+        "exact_public_blob": "executed/Source24/controller/bounded_process.py"
+      },
+      "controller/bounded_stop.py": {
+        "original_sha256": "8b1d619c16271a54012f270b9d886b3ef160fe2157ffc238c675cc1188a86a83",
+        "exact_public_blob": "executed/Source24/controller/bounded_stop.py"
+      },
+      "controller/capture_common.py": {
+        "original_sha256": "84a31c6f5b2f8cbd05c6b43e83e4362dc3c6a967a38f5884cbce7c3752f40b1e",
+        "exact_public_blob": "executed/Source24/controller/capture_common.py"
+      },
+      "controller/default_audit.py": {
+        "original_sha256": "d4dd335baf6452e8475a1be4b17f2281b06eeca0bb6a56d145d99d3bafeeb72e",
+        "exact_public_blob": "executed/Source24/controller/default_audit.py"
+      },
+      "controller/effects.py": {
+        "original_sha256": "f06ef34b2b27d23af89d5158baed4d14153b352636b4fd7cb2ceebd16010914a",
+        "exact_public_blob": "executed/Source24/controller/effects.py"
+      },
+      "controller/fixture_guards.py": {
+        "original_sha256": "d211690ed2274295a7843759a7feb48da96a4519b7b520e95ed3eeeced3a1f13",
+        "exact_public_blob": "executed/Source24/controller/fixture_guards.py"
+      },
+      "controller/public_manifest.py": {
+        "original_sha256": "851ed0bf77ae41a62f422d2ca78d2f08b0531dc1ee89eea597b29ee1766ce98f",
+        "exact_public_blob": "executed/Source24/controller/public_manifest.py"
+      },
+      "controller/redis_channels.py": {
+        "original_sha256": "f6302b2c1370e3d41bf551b9f5da0558a8077afeeb7bbcd7120d47e19fe63720",
+        "exact_public_blob": "executed/Source24/controller/redis_channels.py"
+      },
+      "controller/run.py": {
+        "original_sha256": "647cac2c734145abcdcd59d07f6d66e44b6abc43eab01c8d9133eb1e1261d099",
+        "exact_public_blob": "executed/Source24/controller/run.py"
+      },
+      "controller/source_fixture.py": {
+        "original_sha256": "832d67a48d503b457912caf6532eb82e21c9c34f50e30f9a1cdbb30275949fb8",
+        "exact_public_blob": "executed/Source24/controller/source_fixture.py"
+      },
+      "controller/start.sh": {
+        "original_sha256": "9b9f47239208546c3bf1d8f15479ac661b7c3c833a5034b323398d28a89ddcfe",
+        "exact_public_blob": "executed/Source24/controller/start.sh"
+      },
+      "controller/synthetic.py": {
+        "original_sha256": "510703658d9bcd0dc32f7a10cc22a53ecd17c12c2ca407682f290735588a7022",
+        "exact_public_blob": "executed/Source24/controller/synthetic.py"
+      },
+      "controller/test_controls.py": {
+        "original_sha256": "7d671291493595d54ed75944a3c8c25fa8e2a9512799c10e0b1ea2fbacf330c8",
+        "exact_public_blob": "executed/Source24/controller/test_controls.py"
+      },
+      "controller/tooling_guard.py": {
+        "original_sha256": "ad8143bacac0d1d4da45d94b3a10df65347877c074be1427310bbd25d6e0fcf5",
+        "exact_public_blob": "executed/Source24/controller/tooling_guard.py"
+      },
+      "execution-plan.json": {
+        "original_sha256": "bb8f08061411adb95e8416c90a7ce12c53ee378428384ea7e6cb5513a93a054a",
+        "exact_public_blob": "executed/Source24/execution-plan.json"
+      },
+      "history/development-oracle-negative-1.json": {
+        "original_sha256": "34f911cc195c0024b59e1cc3036691a573a2254bf9770ca476fba02e8faaf9bf",
+        "exact_public_blob": "input-blobs/34f911cc195c0024b59e1cc3036691a573a2254bf9770ca476fba02e8faaf9bf"
+      },
+      "history/development-pycompile-negative.json": {
+        "original_sha256": "427e82f4a9f3aaa853da5e528815d0991593d68b8f64c3674fa0bd63915ddba7",
+        "exact_public_blob": "input-blobs/427e82f4a9f3aaa853da5e528815d0991593d68b8f64c3674fa0bd63915ddba7"
+      },
+      "history/earlier52-controls.log": {
+        "original_sha256": "2326a36fecc681143e0b76476b4f52c5985a2906b64bc322fcb3c01088c6db1f",
+        "exact_public_blob": "input-blobs/2326a36fecc681143e0b76476b4f52c5985a2906b64bc322fcb3c01088c6db1f"
+      },
+      "history/local-controls-1.log": {
+        "original_sha256": "6704a3e7e32a6d7b7bb8e695e986e8c1a1a36b9eea05f7a22cb3d1b3383e7831",
+        "exact_public_blob": "input-blobs/6704a3e7e32a6d7b7bb8e695e986e8c1a1a36b9eea05f7a22cb3d1b3383e7831"
+      },
+      "history/local-controls-2.log": {
+        "original_sha256": "b403f406646e6a9a77d4c51e2968f4236fc8f18d335abc58a045d82a01b49f00",
+        "exact_public_blob": "input-blobs/b403f406646e6a9a77d4c51e2968f4236fc8f18d335abc58a045d82a01b49f00"
+      },
+      "history/preexecution-parser-sentinel-correction.json": {
+        "original_sha256": "fb6cf0d1e9164b7173ef71a5857ea1c37095ec2143009247159f70f6b3593cda",
+        "exact_public_blob": "input-blobs/fb6cf0d1e9164b7173ef71a5857ea1c37095ec2143009247159f70f6b3593cda"
+      },
+      "history/seal-preparation-negative.json": {
+        "original_sha256": "51bdbc580e9c6d725670fd5045381d990673b03682e006c62531c677adb4b604",
+        "exact_public_blob": "input-blobs/51bdbc580e9c6d725670fd5045381d990673b03682e006c62531c677adb4b604"
+      },
+      "inputs/actual-dependencies.json": {
+        "original_sha256": "febdd983e0b84dd1d2bd6379f30903c32fedea65e746c2d04722ed1a0f901cf5",
+        "exact_public_blob": "executed/Source24/inputs/actual-dependencies.json"
+      },
+      "inputs/actual-image/django/__init__.py": {
+        "original_sha256": "57294da38f072b796f59499797f05a663c6210195568f31fceef40b512bde8f7",
+        "exact_public_blob": "authority/actual-image/django/__init__.py"
+      },
+      "inputs/actual-image/django/contrib/auth/__init__.py": {
+        "original_sha256": "fcde40c5311b111caf9798177413740ebe5853ef483e86a605e187b4a5e853e1",
+        "exact_public_blob": "authority/actual-image/django/contrib/auth/__init__.py"
+      },
+      "inputs/actual-image/django/contrib/auth/middleware.py": {
+        "original_sha256": "5c738f24dac92c9b4338959aba7948f1503eaa79bda11477d075a1fbe4cedb13",
+        "exact_public_blob": "authority/actual-image/django/contrib/auth/middleware.py"
+      },
+      "inputs/actual-image/django/core/files/base.py": {
+        "original_sha256": "1bf9d22c3fbbdb2eca0c61cd6a3b1047608bd76e9a787fe70344ad4a9efbffa2",
+        "exact_public_blob": "authority/actual-image/django/core/files/base.py"
+      },
+      "inputs/actual-image/django/core/files/uploadedfile.py": {
+        "original_sha256": "d7d655417b66128f3e39276aca422a3295a1bfe75e7e964e3b94d91ebabadba4",
+        "exact_public_blob": "authority/actual-image/django/core/files/uploadedfile.py"
+      },
+      "inputs/actual-image/django/core/files/uploadhandler.py": {
+        "original_sha256": "c8d989eef378ad5f28b8b071ea935582e418d3de5908d190b30dcf28bed0d21a",
+        "exact_public_blob": "authority/actual-image/django/core/files/uploadhandler.py"
+      },
+      "inputs/actual-image/django/core/handlers/base.py": {
+        "original_sha256": "7e150b989896d5b8c830d1807722a5a1d5a68a48209031d3247695707c2f41ac",
+        "exact_public_blob": "authority/actual-image/django/core/handlers/base.py"
+      },
+      "inputs/actual-image/django/db/models/base.py": {
+        "original_sha256": "3a387fb69469d93a7a1e27e16d93d5258d2e4c5e637bca8dbfb767a851e154ab",
+        "exact_public_blob": "authority/actual-image/django/db/models/base.py"
+      },
+      "inputs/actual-image/django/db/models/deletion.py": {
+        "original_sha256": "27d04ac8ec534f337eb0b257d89f6b59ded830b6c3bc752e2030e818380db18a",
+        "exact_public_blob": "authority/actual-image/django/db/models/deletion.py"
+      },
+      "inputs/actual-image/django/db/models/fields/__init__.py": {
+        "original_sha256": "a3e34e9156a619030257c4f99bd9eb984b6225016a0ef93a9263a2488056ebf5",
+        "exact_public_blob": "authority/actual-image/django/db/models/fields/__init__.py"
+      },
+      "inputs/actual-image/django/http/__init__.py": {
+        "original_sha256": "b95533d28bfe7a6736f616c3efc40a2a46bf4752f89a90c33e19327e4c788f34",
+        "exact_public_blob": "authority/actual-image/django/http/__init__.py"
+      },
+      "inputs/actual-image/django/http/multipartparser.py": {
+        "original_sha256": "f5f3ec9cde944ed3da5fff296d368080ed504c522d2cf7c31c025f990e27d2d7",
+        "exact_public_blob": "authority/actual-image/django/http/multipartparser.py"
+      },
+      "inputs/actual-image/django/http/request.py": {
+        "original_sha256": "6ad362eba6fb2c5b51b7f81944abf2613a9bc9a42b964a28d8271ad124270d0b",
+        "exact_public_blob": "authority/actual-image/django/http/request.py"
+      },
+      "inputs/actual-image/django/http/response.py": {
+        "original_sha256": "66363ef520f59a8037a8acf942b1696890861bba578b6f36bbe44983d64008ec",
+        "exact_public_blob": "authority/actual-image/django/http/response.py"
+      },
+      "inputs/actual-image/django/middleware/csrf.py": {
+        "original_sha256": "ae1d82bd6dabbd7f3f67d8294b9f2f2d57a76693fe71edb90f41fd57b6887ebf",
+        "exact_public_blob": "authority/actual-image/django/middleware/csrf.py"
+      },
+      "inputs/actual-image/django/test/client.py": {
+        "original_sha256": "dd0eb08101baaa523dbcb4432f153966e857c881e0159930a4a8cf5a339d7ac3",
+        "exact_public_blob": "authority/actual-image/django/test/client.py"
+      },
+      "inputs/actual-image/django/utils/datastructures.py": {
+        "original_sha256": "cfe76fe0e3ed795f44c49366ebf770c9e89baf3038a89283306c5b133d3f9eb1",
+        "exact_public_blob": "authority/actual-image/django/utils/datastructures.py"
+      },
+      "inputs/actual-image/django/utils/encoding.py": {
+        "original_sha256": "f0e4db3db05e105d527119b140d0b863c7fc668ccc18a5c2c8c7fc6a4509afd5",
+        "exact_public_blob": "authority/actual-image/django/utils/encoding.py"
+      },
+      "inputs/actual-image/django/utils/http.py": {
+        "original_sha256": "c73cc334ef74c5a9eaee7cf1f8056b62058913ab552f430d310dada7787c34fc",
+        "exact_public_blob": "authority/actual-image/django/utils/http.py"
+      },
+      "inputs/actual-image/django/utils/module_loading.py": {
+        "original_sha256": "a196e7d0511d2357bf4253e9d1c50baca0d183cb24caba94360e9fffa77f2c1f",
+        "exact_public_blob": "authority/actual-image/django/utils/module_loading.py"
+      },
+      "inputs/actual-image/jwt/__init__.py": {
+        "original_sha256": "d3a4446591308befe70cbc989428dbfa0dfe7ec7eee5d35a57a22043451c253c",
+        "exact_public_blob": "authority/actual-image/jwt/__init__.py"
+      },
+      "inputs/actual-image/jwt/algorithms.py": {
+        "original_sha256": "31e174916a77d17f4ed9dbcd3b869e9264a146aaf8d97f02d9b43bf828fe0441",
+        "exact_public_blob": "authority/actual-image/jwt/algorithms.py"
+      },
+      "inputs/actual-image/jwt/api_jws.py": {
+        "original_sha256": "80e83b3a4089f6a19692bb5b2f56784edc3bd65bf74043bad7a230f9c5bdcf12",
+        "exact_public_blob": "authority/actual-image/jwt/api_jws.py"
+      },
+      "inputs/actual-image/jwt/api_jwt.py": {
+        "original_sha256": "a2af9f3593c8cf9133163cb0b5b08223281b8292d5db5665309bc23c212cac76",
+        "exact_public_blob": "authority/actual-image/jwt/api_jwt.py"
+      },
+      "inputs/actual-image/jwt/exceptions.py": {
+        "original_sha256": "3540f48760343221d5e94f933edfc0af4a6b9c01f1c892748ba2c7216cddf154",
+        "exact_public_blob": "authority/actual-image/jwt/exceptions.py"
+      },
+      "inputs/actual-image/jwt/utils.py": {
+        "original_sha256": "b9d89ca2f37984f3779d6a85029b9acd535fa2a776444ffc32d2211b83853aaf",
+        "exact_public_blob": "authority/actual-image/jwt/utils.py"
+      },
+      "inputs/actual-image/rest_framework/__init__.py": {
+        "original_sha256": "c44e145d9d0daada4d6a0666bc73c3372659c9de58aa345440b4ad40dd0efdb5",
+        "exact_public_blob": "authority/actual-image/rest_framework/__init__.py"
+      },
+      "inputs/actual-image/rest_framework/authentication.py": {
+        "original_sha256": "cf9b669f80cc16c88cb9277883567718638763a2f3170a1b9df598fc8a7206fc",
+        "exact_public_blob": "authority/actual-image/rest_framework/authentication.py"
+      },
+      "inputs/actual-image/rest_framework/exceptions.py": {
+        "original_sha256": "935e5ae7264f324e084f615b56620591e0111f5e672043514d7d9be41dcba062",
+        "exact_public_blob": "authority/actual-image/rest_framework/exceptions.py"
+      },
+      "inputs/actual-image/rest_framework/fields.py": {
+        "original_sha256": "45525c12f86f294efea3ab3bac85f49c5f78f6f51ff2732769b5e7827888d188",
+        "exact_public_blob": "authority/actual-image/rest_framework/fields.py"
+      },
+      "inputs/actual-image/rest_framework/generics.py": {
+        "original_sha256": "7ad3311a1f9aae8e5ce42824c211efd089ae2c555bce2326dca5254b30a8352d",
+        "exact_public_blob": "authority/actual-image/rest_framework/generics.py"
+      },
+      "inputs/actual-image/rest_framework/mixins.py": {
+        "original_sha256": "701287aa9709e365577b39cb2f651c93f675eced7a41227a0989796640247da7",
+        "exact_public_blob": "authority/actual-image/rest_framework/mixins.py"
+      },
+      "inputs/actual-image/rest_framework/negotiation.py": {
+        "original_sha256": "7a422847e5255886a224f4cceeba67eed653ed269b37a75fbdd7050e190996eb",
+        "exact_public_blob": "authority/actual-image/rest_framework/negotiation.py"
+      },
+      "inputs/actual-image/rest_framework/parsers.py": {
+        "original_sha256": "7dfbcc2707bc3182fc51b8bb3c426dcdd8ee82d4a6f090f6059429a208fb7622",
+        "exact_public_blob": "authority/actual-image/rest_framework/parsers.py"
+      },
+      "inputs/actual-image/rest_framework/permissions.py": {
+        "original_sha256": "b4c6285334dc756081bc1896606574dd248dad44379ed4b55736a863f70e7e89",
+        "exact_public_blob": "authority/actual-image/rest_framework/permissions.py"
+      },
+      "inputs/actual-image/rest_framework/renderers.py": {
+        "original_sha256": "ded88dfb5dcf205877654ed1daf5e5484ef3d07fa6996d6cc7c1123e5239612f",
+        "exact_public_blob": "authority/actual-image/rest_framework/renderers.py"
+      },
+      "inputs/actual-image/rest_framework/request.py": {
+        "original_sha256": "4d3b8cf78f57a5308d8a11fcdeb902d8d162c5df5dc6be2a85fbbb950c6a7e16",
+        "exact_public_blob": "authority/actual-image/rest_framework/request.py"
+      },
+      "inputs/actual-image/rest_framework/serializers.py": {
+        "original_sha256": "d2ebe00d3b11079cc4de2cd0715ff7f80e6870df3a8b192a6d2a23178a18b9ac",
+        "exact_public_blob": "authority/actual-image/rest_framework/serializers.py"
+      },
+      "inputs/actual-image/rest_framework/settings.py": {
+        "original_sha256": "224f31e20582a0ac5a367a92852042b255521acb3bbc8c15e10b2c8474ebbe17",
+        "exact_public_blob": "authority/actual-image/rest_framework/settings.py"
+      },
+      "inputs/actual-image/rest_framework/test.py": {
+        "original_sha256": "900633e8f584ed23f1d79d76e1d25b5f68c8c4a5f66d87c8918458639f57ffa8",
+        "exact_public_blob": "authority/actual-image/rest_framework/test.py"
+      },
+      "inputs/actual-image/rest_framework/utils/field_mapping.py": {
+        "original_sha256": "8a6f19588df4aa68dcc28ece264d21141282cab5970762cf5e721c71be6db186",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/field_mapping.py"
+      },
+      "inputs/actual-image/rest_framework/utils/html.py": {
+        "original_sha256": "e0f4e296468da88fc6701d8b815c195a66f1d08d36854a09ae68a549bd7e6340",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/html.py"
+      },
+      "inputs/actual-image/rest_framework/utils/json.py": {
+        "original_sha256": "d6a54e3adfc3b9a42a3b878fb9bfa34f6f65646fbdb0d9862c312a5b8d81019d",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/json.py"
+      },
+      "inputs/actual-image/rest_framework/utils/mediatypes.py": {
+        "original_sha256": "71149fdaa455a14cd388857be4c93eefe9b75ae6755a897d9e0c2013a000d352",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/mediatypes.py"
+      },
+      "inputs/actual-image/rest_framework/validators.py": {
+        "original_sha256": "8d24d41c50ba6e2a40cd57d84005518405282429fe84930845e2eb95aa97bd11",
+        "exact_public_blob": "authority/actual-image/rest_framework/validators.py"
+      },
+      "inputs/actual-image/rest_framework/views.py": {
+        "original_sha256": "07d663e11faac813dd0965c337ade1cf3d6596314a37a57a21dd8e30fa56b8be",
+        "exact_public_blob": "authority/actual-image/rest_framework/views.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/__init__.py": {
+        "original_sha256": "ca05e86d0e4576df40508355b6c99f607a4621175bd1a778edcd939794c7b3f0",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/__init__.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/authentication.py": {
+        "original_sha256": "49f8a4f56193507783aa86bd030248d71f271b82eba2f005f5500bce2b05701b",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/authentication.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/backends.py": {
+        "original_sha256": "c4ae446b4c77e95426ae5a9c60444be132b7c0db0b147438c86fd16f6b4c97ee",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/backends.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/exceptions.py": {
+        "original_sha256": "7ce92f9fc3100e65d2e20cd4bdfac3fbf1d45fb5d7a63fa126cfc6a919f8fd69",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/exceptions.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/models.py": {
+        "original_sha256": "a296c95f3209afcee3fdb27dd45738f290abe7b4acda2daff12636d95ed4e442",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/models.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/settings.py": {
+        "original_sha256": "866cd0ad5315338755d43a6c52a36a72b45d7b41f59485843f42aefbddd9b035",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/settings.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/state.py": {
+        "original_sha256": "f2ecdb84235735da1cbd5d0231ce45f62e129663abde102e582c73163521f489",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/state.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/tokens.py": {
+        "original_sha256": "ed6bd22363ce5dc490faa3ed08090232e644b36eb0330952f18847d18902fefc",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/tokens.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/utils.py": {
+        "original_sha256": "c14dc4d60c164e688ce7c91bfd9b1532d9e89cefbcfa3e16d465e7bdb1cfe1e0",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/utils.py"
+      },
+      "inputs/auth23-proof.json": {
+        "original_sha256": "e3a2bcf57ba10e74a4c09d1dc711cc22ef2a1b2dfc75cd8cc85dc7f2fd6aed17",
+        "exact_public_blob": "executed/Source24/inputs/auth23-proof.json"
+      },
+      "inputs/definition-seal.json": {
+        "original_sha256": "c5f0283eec0ae5fa05450f2e84424dc78473451efb0bb1c169c9d8cb1aff43b2",
+        "exact_public_blob": "input-blobs/c5f0283eec0ae5fa05450f2e84424dc78473451efb0bb1c169c9d8cb1aff43b2"
+      },
+      "inputs/definition2/README.md": {
+        "original_sha256": "4cb3071eee31fc5749b4644a8acbedac5b559eb9ac23944b1581398fde017344",
+        "exact_public_blob": "input-blobs/4cb3071eee31fc5749b4644a8acbedac5b559eb9ac23944b1581398fde017344"
+      },
+      "inputs/definition2/derivation.json": {
+        "original_sha256": "15820daf1f44551df14cd9bef0d0cc6447cad0bbb886850f7e36859b185b4ae3",
+        "exact_public_blob": "input-blobs/15820daf1f44551df14cd9bef0d0cc6447cad0bbb886850f7e36859b185b4ae3"
+      },
+      "inputs/definition2/original/apps/accounts/authentication.py": {
+        "original_sha256": "415d74d68295c9764d46bac3b851878fa6ed48027e4aebd3859b0aaade026fe5",
+        "exact_public_blob": "authority/Original/apps/accounts/authentication.py"
+      },
+      "inputs/definition2/original/apps/accounts/models.py": {
+        "original_sha256": "05cab8c590de411e68ff83b72d9d6256ca43007cbbab5d2a7f96a3a8965a9ded",
+        "exact_public_blob": "authority/Original/apps/accounts/models.py"
+      },
+      "inputs/definition2/original/apps/accounts/permissions.py": {
+        "original_sha256": "407a0c6cbae122042c722e2bd3792579875a075cb6e6345ff43588250ac6fe6e",
+        "exact_public_blob": "authority/Original/apps/accounts/permissions.py"
+      },
+      "inputs/definition2/original/apps/api/urls.py": {
+        "original_sha256": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6",
+        "exact_public_blob": "authority/Original/apps/api/urls.py"
+      },
+      "inputs/definition2/original/apps/plugins/api_urls.py": {
+        "original_sha256": "d3072e42ee78bcc546f390e45f1190885f8b8eec365f82a0ad6ab033ab07ef45",
+        "exact_public_blob": "authority/Original/apps/plugins/api_urls.py"
+      },
+      "inputs/definition2/original/apps/plugins/api_views.py": {
+        "original_sha256": "2f948dface3b0bdece923fdaac3d709754f1c6a65c95b3445471b0a2f9e7cb46",
+        "exact_public_blob": "authority/Original/apps/plugins/api_views.py"
+      },
+      "inputs/definition2/original/apps/plugins/apps.py": {
+        "original_sha256": "27b3b52fad5c8ca2aaf1912ac4165b1b5c58ac438cb489ce1d6182c55ef32679",
+        "exact_public_blob": "authority/Original/apps/plugins/apps.py"
+      },
+      "inputs/definition2/original/apps/plugins/loader.py": {
+        "original_sha256": "f6ad90014f5b5f2eb25d2382e1d6c9c2749c6c69202621a445c3a56193da2fbe",
+        "exact_public_blob": "authority/Original/apps/plugins/loader.py"
+      },
+      "inputs/definition2/original/apps/plugins/migrations/0002_pluginrepo.py": {
+        "original_sha256": "f0ebdbfb2aad7ee82f31f31ec2c2fc7a80e483d12cdcb721307b772a2ee54057",
+        "exact_public_blob": "authority/Original/apps/plugins/migrations/0002_pluginrepo.py"
+      },
+      "inputs/definition2/original/apps/plugins/migrations/0003_update_official_repo_url.py": {
+        "original_sha256": "75c406e0778f7a3e0b8979a8b3307bd43d37a69390affe56cc9faae258a6c68a",
+        "exact_public_blob": "authority/Original/apps/plugins/migrations/0003_update_official_repo_url.py"
+      },
+      "inputs/definition2/original/apps/plugins/models.py": {
+        "original_sha256": "f013c9a70afd71ffd55cc90406354a694b9b9836d905c58e3869152b13035cf7",
+        "exact_public_blob": "authority/Original/apps/plugins/models.py"
+      },
+      "inputs/definition2/original/apps/plugins/serializers.py": {
+        "original_sha256": "1623b004a80cb943070cbffde0da9e43f3439b2fe69bd1b9faebf2419b1b7326",
+        "exact_public_blob": "authority/Original/apps/plugins/serializers.py"
+      },
+      "inputs/definition2/original/apps/plugins/tasks.py": {
+        "original_sha256": "19bf9f0d06491280b331615cd17c76b0ce56c0e5ee67f91f10a512823d1284ab",
+        "exact_public_blob": "authority/Original/apps/plugins/tasks.py"
+      },
+      "inputs/definition2/original/core/apps.py": {
+        "original_sha256": "de47309cb6f755fde18bf6299014426189d9ae856c30287936fd77ff60fac79e",
+        "exact_public_blob": "authority/Original/core/apps.py"
+      },
+      "inputs/definition2/original/core/http_security.py": {
+        "original_sha256": "ba765d4d9297bbc708d476eb9309760fdef4ac8242e69a2e457d7f2a4ea09525",
+        "exact_public_blob": "authority/Original/core/http_security.py"
+      },
+      "inputs/definition2/original/core/image_proxy.py": {
+        "original_sha256": "3969f4eae0a1e8aebfc9ee1646290a68de1e408c2e80fa3aceafa7f3cd07f883",
+        "exact_public_blob": "authority/Original/core/image_proxy.py"
+      },
+      "inputs/definition2/original/core/models.py": {
+        "original_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+        "exact_public_blob": "authority/Original/core/models.py"
+      },
+      "inputs/definition2/original/core/signals.py": {
+        "original_sha256": "93b679b154a20e69164495f23efe859a7d60699c878303a3fb8c4dc2ff861bb4",
+        "exact_public_blob": "authority/Original/core/signals.py"
+      },
+      "inputs/definition2/original/core/utils.py": {
+        "original_sha256": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+        "exact_public_blob": "authority/Original/core/utils.py"
+      },
+      "inputs/definition2/original/dispatcharr/app_initialization.py": {
+        "original_sha256": "ca589b7d22428ea2bd10557218a6e943ebd5665a6d076a1bcf57d41b20799021",
+        "exact_public_blob": "authority/Original/dispatcharr/app_initialization.py"
+      },
+      "inputs/definition2/original/dispatcharr/log_collector.py": {
+        "original_sha256": "caadcce5bb836c38db15509a168a439f3035c9710d6b7fe1acbef7352176f829",
+        "exact_public_blob": "authority/Original/dispatcharr/log_collector.py"
+      },
+      "inputs/definition2/original/dispatcharr/settings.py": {
+        "original_sha256": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+        "exact_public_blob": "authority/Original/dispatcharr/settings.py"
+      },
+      "inputs/definition2/original/dispatcharr/urls.py": {
+        "original_sha256": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f",
+        "exact_public_blob": "authority/Original/dispatcharr/urls.py"
+      },
+      "inputs/definition2/original/dispatcharr/utils.py": {
+        "original_sha256": "740da794553c7c059bff3a2d64a14d0a2448ea8d867e7331568e3cd9d4eecdf6",
+        "exact_public_blob": "authority/Original/dispatcharr/utils.py"
+      },
+      "inputs/definition2/original-inputs.json": {
+        "original_sha256": "4c6c877961671aa3fbaf6e4e1fd50676fe69f0c90221efbd22f53d1a7d2b9c8c",
+        "exact_public_blob": "executed/Source24/inputs/original-inputs.json"
+      },
+      "inputs/definition2/plan.json": {
+        "original_sha256": "89583a4c4cec44a8755c5d3c76bf0fa9c6e409b5710bd3f4c1460694dd35a16b",
+        "exact_public_blob": "executed/Source24/inputs/plan.json"
+      },
+      "inputs/definition2/seal.json": {
+        "original_sha256": "c5f0283eec0ae5fa05450f2e84424dc78473451efb0bb1c169c9d8cb1aff43b2",
+        "exact_public_blob": "input-blobs/c5f0283eec0ae5fa05450f2e84424dc78473451efb0bb1c169c9d8cb1aff43b2"
+      },
+      "inputs/definition2/test_definition.py": {
+        "original_sha256": "33476061a660788c185d850c703cb9423fe13b8cf2ed9a6ef703e650d41803fb",
+        "exact_public_blob": "input-blobs/33476061a660788c185d850c703cb9423fe13b8cf2ed9a6ef703e650d41803fb"
+      },
+      "inputs/original/apps/accounts/authentication.py": {
+        "original_sha256": "415d74d68295c9764d46bac3b851878fa6ed48027e4aebd3859b0aaade026fe5",
+        "exact_public_blob": "authority/Original/apps/accounts/authentication.py"
+      },
+      "inputs/original/apps/accounts/models.py": {
+        "original_sha256": "05cab8c590de411e68ff83b72d9d6256ca43007cbbab5d2a7f96a3a8965a9ded",
+        "exact_public_blob": "authority/Original/apps/accounts/models.py"
+      },
+      "inputs/original/apps/accounts/permissions.py": {
+        "original_sha256": "407a0c6cbae122042c722e2bd3792579875a075cb6e6345ff43588250ac6fe6e",
+        "exact_public_blob": "authority/Original/apps/accounts/permissions.py"
+      },
+      "inputs/original/apps/api/urls.py": {
+        "original_sha256": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6",
+        "exact_public_blob": "authority/Original/apps/api/urls.py"
+      },
+      "inputs/original/apps/plugins/api_urls.py": {
+        "original_sha256": "d3072e42ee78bcc546f390e45f1190885f8b8eec365f82a0ad6ab033ab07ef45",
+        "exact_public_blob": "authority/Original/apps/plugins/api_urls.py"
+      },
+      "inputs/original/apps/plugins/api_views.py": {
+        "original_sha256": "2f948dface3b0bdece923fdaac3d709754f1c6a65c95b3445471b0a2f9e7cb46",
+        "exact_public_blob": "authority/Original/apps/plugins/api_views.py"
+      },
+      "inputs/original/apps/plugins/apps.py": {
+        "original_sha256": "27b3b52fad5c8ca2aaf1912ac4165b1b5c58ac438cb489ce1d6182c55ef32679",
+        "exact_public_blob": "authority/Original/apps/plugins/apps.py"
+      },
+      "inputs/original/apps/plugins/loader.py": {
+        "original_sha256": "f6ad90014f5b5f2eb25d2382e1d6c9c2749c6c69202621a445c3a56193da2fbe",
+        "exact_public_blob": "authority/Original/apps/plugins/loader.py"
+      },
+      "inputs/original/apps/plugins/migrations/0002_pluginrepo.py": {
+        "original_sha256": "f0ebdbfb2aad7ee82f31f31ec2c2fc7a80e483d12cdcb721307b772a2ee54057",
+        "exact_public_blob": "authority/Original/apps/plugins/migrations/0002_pluginrepo.py"
+      },
+      "inputs/original/apps/plugins/migrations/0003_update_official_repo_url.py": {
+        "original_sha256": "75c406e0778f7a3e0b8979a8b3307bd43d37a69390affe56cc9faae258a6c68a",
+        "exact_public_blob": "authority/Original/apps/plugins/migrations/0003_update_official_repo_url.py"
+      },
+      "inputs/original/apps/plugins/models.py": {
+        "original_sha256": "f013c9a70afd71ffd55cc90406354a694b9b9836d905c58e3869152b13035cf7",
+        "exact_public_blob": "authority/Original/apps/plugins/models.py"
+      },
+      "inputs/original/apps/plugins/serializers.py": {
+        "original_sha256": "1623b004a80cb943070cbffde0da9e43f3439b2fe69bd1b9faebf2419b1b7326",
+        "exact_public_blob": "authority/Original/apps/plugins/serializers.py"
+      },
+      "inputs/original/apps/plugins/tasks.py": {
+        "original_sha256": "19bf9f0d06491280b331615cd17c76b0ce56c0e5ee67f91f10a512823d1284ab",
+        "exact_public_blob": "authority/Original/apps/plugins/tasks.py"
+      },
+      "inputs/original/core/apps.py": {
+        "original_sha256": "de47309cb6f755fde18bf6299014426189d9ae856c30287936fd77ff60fac79e",
+        "exact_public_blob": "authority/Original/core/apps.py"
+      },
+      "inputs/original/core/http_security.py": {
+        "original_sha256": "ba765d4d9297bbc708d476eb9309760fdef4ac8242e69a2e457d7f2a4ea09525",
+        "exact_public_blob": "authority/Original/core/http_security.py"
+      },
+      "inputs/original/core/image_proxy.py": {
+        "original_sha256": "3969f4eae0a1e8aebfc9ee1646290a68de1e408c2e80fa3aceafa7f3cd07f883",
+        "exact_public_blob": "authority/Original/core/image_proxy.py"
+      },
+      "inputs/original/core/models.py": {
+        "original_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+        "exact_public_blob": "authority/Original/core/models.py"
+      },
+      "inputs/original/core/signals.py": {
+        "original_sha256": "93b679b154a20e69164495f23efe859a7d60699c878303a3fb8c4dc2ff861bb4",
+        "exact_public_blob": "authority/Original/core/signals.py"
+      },
+      "inputs/original/core/utils.py": {
+        "original_sha256": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+        "exact_public_blob": "authority/Original/core/utils.py"
+      },
+      "inputs/original/dispatcharr/app_initialization.py": {
+        "original_sha256": "ca589b7d22428ea2bd10557218a6e943ebd5665a6d076a1bcf57d41b20799021",
+        "exact_public_blob": "authority/Original/dispatcharr/app_initialization.py"
+      },
+      "inputs/original/dispatcharr/log_collector.py": {
+        "original_sha256": "caadcce5bb836c38db15509a168a439f3035c9710d6b7fe1acbef7352176f829",
+        "exact_public_blob": "authority/Original/dispatcharr/log_collector.py"
+      },
+      "inputs/original/dispatcharr/settings.py": {
+        "original_sha256": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+        "exact_public_blob": "authority/Original/dispatcharr/settings.py"
+      },
+      "inputs/original/dispatcharr/urls.py": {
+        "original_sha256": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f",
+        "exact_public_blob": "authority/Original/dispatcharr/urls.py"
+      },
+      "inputs/original/dispatcharr/utils.py": {
+        "original_sha256": "740da794553c7c059bff3a2d64a14d0a2448ea8d867e7331568e3cd9d4eecdf6",
+        "exact_public_blob": "authority/Original/dispatcharr/utils.py"
+      },
+      "inputs/original-inputs.json": {
+        "original_sha256": "4c6c877961671aa3fbaf6e4e1fd50676fe69f0c90221efbd22f53d1a7d2b9c8c",
+        "exact_public_blob": "executed/Source24/inputs/original-inputs.json"
+      },
+      "inputs/original-source.tar": {
+        "original_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "omitted_kind": "immutableOriginalGitArchive",
+        "no_silent_hash_fallback": true
+      },
+      "inputs/parser23-proof.json": {
+        "original_sha256": "cf66343e27db929f216d4b1cdf245c85c3fcf41a5cc37a039ced9e7f5df70fe9",
+        "exact_public_blob": "executed/Source24/inputs/parser23-proof.json"
+      },
+      "inputs/plan.json": {
+        "original_sha256": "89583a4c4cec44a8755c5d3c76bf0fa9c6e409b5710bd3f4c1460694dd35a16b",
+        "exact_public_blob": "executed/Source24/inputs/plan.json"
+      },
+      "inputs/schema62-authority.json": {
+        "original_sha256": "88e887321483a57093cc309ecd783aed7368b125c566a8e595a75fb8a92fc893",
+        "exact_public_blob": "executed/Source24/inputs/schema62-authority.json"
+      },
+      "inputs/serializer9-proof.json": {
+        "original_sha256": "809459c1d8f4349db37f85cd42ff74b03c546d9fb9b828680c285edddb7ca347",
+        "exact_public_blob": "executed/Source24/inputs/serializer9-proof.json"
+      },
+      "inputs/tooling-inputs.json": {
+        "original_sha256": "1c82ae02de1562d80052ab79d1f38ec3e27ed12aea24bdb65f31442105ba6a38",
+        "exact_public_blob": "executed/Source24/inputs/tooling-inputs.json"
+      },
+      "local-controls.log": {
+        "original_sha256": "7fcce67f46b88b25c6f754dd3dca5f4db11a9b4aa0f8d1913e64fb568f91879a",
+        "exact_public_blob": "input-blobs/7fcce67f46b88b25c6f754dd3dca5f4db11a9b4aa0f8d1913e64fb568f91879a"
+      }
+    },
+    "materialization": "All exact nonsensitive original input bytes deduplicated bySHA; archive fromOriginalGit, binary fromactualnewbuild, privateSource refs fromexplicitpublicNEWbinding orOriginalprivatebytes provided explicitly. Noautomaticappseal."
+  },
+  "Native24": {
+    "executed_seal_sha256": "ab31740ec5d7246f45c1d51eaefb492b8a0056f5816c3d67e5697d0b157bff35",
+    "original_files": {
+      "README.md": {
+        "original_sha256": "f2e52a0a0d63dfca433cce9885a84c68a0d049ce218e249bab8faa926deea414",
+        "exact_public_blob": "executed/Native24/README.md"
+      },
+      "build/build.json": {
+        "original_sha256": "706a9584d86cff32fdd93d93f2b3a08fff78c9da27f7cd5e3331bccf335fedc0",
+        "exact_public_blob": "executed/Native24/build/build.json"
+      },
+      "build/command-4.stdout": {
+        "original_sha256": "7bcafb3789687d5789ba4eaf9ca3f2379dcd63cbcab36b56fb308047f65cc0ca",
+        "exact_public_blob": "executed/Native24/build/command-4.stdout"
+      },
+      "build/process-settled.json": {
+        "original_sha256": "7ed55bfe5264e54accca02560d60ca682459f554f94baded5e0fe56bddaf6e15",
+        "exact_public_blob": "executed/Native24/build/process-settled.json"
+      },
+      "build/source-after.json": {
+        "original_sha256": "49378a22b3d27bcd94146a74b858e946abca2fbadf7b85f691cc718fd517271e",
+        "exact_public_blob": "executed/Native24/build/source-after.json"
+      },
+      "build/source-before.json": {
+        "original_sha256": "49378a22b3d27bcd94146a74b858e946abca2fbadf7b85f691cc718fd517271e",
+        "exact_public_blob": "executed/Native24/build/source-after.json"
+      },
+      "build/test-list.json": {
+        "original_sha256": "a9d00fd430f31fa9fe3fc9bf0e2cdd4d94b127ee44c4f17b50cbfe73353b78d9",
+        "exact_public_blob": "executed/Native24/build/test-list.json"
+      },
+      "build/test-list.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "build/test-list.stdout": {
+        "original_sha256": "96fe6b735ebc4023b8b3d3f20d8cef7b9aea0245a6eee3ea29a1743fd04007ca",
+        "exact_public_blob": "executed/Native24/build/test-list.stdout"
+      },
+      "build/waits.json": {
+        "original_sha256": "2e367f6d6a2f05421ef9e006e41e386f50dfd8a0f9841a7a12abf7b86cde98a1",
+        "exact_public_blob": "executed/Native24/build/waits.json"
+      },
+      "controller/absolute_http.py": {
+        "original_sha256": "beff66f154ddd172731660eab145e3638ccd0e83d7f005184f6738325c208598",
+        "exact_public_blob": "executed/Native24/controller/absolute_http.py"
+      },
+      "controller/bootstrap_env.py": {
+        "original_sha256": "2fa13defc359a745e87b71e011105d7e6c8d04149ad7000e4dfa3c2c20aff5cf",
+        "exact_public_blob": "executed/Native24/controller/bootstrap_env.py"
+      },
+      "controller/bounded_process.py": {
+        "original_sha256": "0ca7491087ae756d667dbb9dc1655dbb0f8b0fd0c32b8bfa6592b1f7a16f9867",
+        "exact_public_blob": "executed/Source24/controller/bounded_process.py"
+      },
+      "controller/bounded_stop.py": {
+        "original_sha256": "8b1d619c16271a54012f270b9d886b3ef160fe2157ffc238c675cc1188a86a83",
+        "exact_public_blob": "executed/Source24/controller/bounded_stop.py"
+      },
+      "controller/driver.py": {
+        "original_sha256": "f830d0cfb057c20ad50ca6ab7c00b3ae6c6d622d166a90bfc048f338aa934264",
+        "exact_public_blob": "executed/Native24/controller/driver.py"
+      },
+      "controller/native_http.py": {
+        "original_sha256": "61e5e68a42a4ab039bc492f55f03934958c99693a709b1d4dabdd2b529113a2d",
+        "exact_public_blob": "executed/Native24/controller/native_http.py"
+      },
+      "controller/native_state.py": {
+        "original_sha256": "fe8026ea24b153673177bab24bda2c2cd9d21bbeaa8e2029cc72f08b7e015726",
+        "exact_public_blob": "executed/Native24/controller/native_state.py"
+      },
+      "controller/public_manifest.py": {
+        "original_sha256": "851ed0bf77ae41a62f422d2ca78d2f08b0531dc1ee89eea597b29ee1766ce98f",
+        "exact_public_blob": "executed/Source24/controller/public_manifest.py"
+      },
+      "controller/reader.py": {
+        "original_sha256": "b24e3a3be28cd07f86b568889887118a59e9c5d209d5642434be028b317a0f14",
+        "exact_public_blob": "executed/Native24/controller/reader.py"
+      },
+      "controller/redis_channels.py": {
+        "original_sha256": "f6302b2c1370e3d41bf551b9f5da0558a8077afeeb7bbcd7120d47e19fe63720",
+        "exact_public_blob": "executed/Source24/controller/redis_channels.py"
+      },
+      "controller/run.py": {
+        "original_sha256": "f745443dafeb40736bb829bf0762e0de06759a5168666181cf90207ad1e85099",
+        "exact_public_blob": "executed/Native24/controller/run.py"
+      },
+      "controller/start.sh": {
+        "original_sha256": "af4cbe358b61063b6f87197c30947415958734631ff0f285ec9c2e46e866ecec",
+        "exact_public_blob": "executed/Native24/controller/start.sh"
+      },
+      "controller/test_controls.py": {
+        "original_sha256": "5441f20868dd1bb866c04da06b9abc6fcece28594317ca825f91bf7c58238f94",
+        "exact_public_blob": "executed/Native24/controller/test_controls.py"
+      },
+      "controller/validate_native.py": {
+        "original_sha256": "e46fd4d0fea78634a5694a5065ff28546d68022bfb1b7d41daee3e28a9704453",
+        "exact_public_blob": "executed/Native24/controller/validate_native.py"
+      },
+      "inputs/Source24-private.json": {
+        "original_sha256": "74d69f0a794b8113df17568452840689798d6e33c8695dd8e525943d24331add",
+        "omitted_kind": "explicitProjectedReference_NEW_binding",
+        "no_silent_hash_fallback": true
+      },
+      "inputs/authority.json": {
+        "original_sha256": "8873841b2c2f266eecb3ebcfb0e0daca42115263b87ad4b696b92115dfc87243",
+        "exact_public_blob": "executed/Native24/inputs/authority.json"
+      },
+      "inputs/native-store-tests": {
+        "original_sha256": "94458e52ce67bac3cb4c22928d4d56fe6801beda1439259dc837bfc4fbb69ba7",
+        "omitted_kind": "newBuildRequiresActualELFProof",
+        "no_silent_hash_fallback": true
+      },
+      "inputs/pg-init/01-user-setup.sh": {
+        "original_sha256": "c702e2355ae35f8b8b973efed459bb67672dd7982cc34b34fb2f1e9357436f7b",
+        "exact_public_blob": "executed/Native24/inputs/pg-init/01-user-setup.sh"
+      },
+      "inputs/pg-init/02-postgres.sh": {
+        "original_sha256": "290eeb71c2b60d1773854942f48de337733ae91b4bec30881b1d8900ac2496ac",
+        "exact_public_blob": "executed/Native24/inputs/pg-init/02-postgres.sh"
+      },
+      "inputs/plan.json": {
+        "original_sha256": "89583a4c4cec44a8755c5d3c76bf0fa9c6e409b5710bd3f4c1460694dd35a16b",
+        "exact_public_blob": "executed/Source24/inputs/plan.json"
+      },
+      "inputs/schema62-authority.json": {
+        "original_sha256": "88e887321483a57093cc309ecd783aed7368b125c566a8e595a75fb8a92fc893",
+        "exact_public_blob": "executed/Source24/inputs/schema62-authority.json"
+      },
+      "inputs/source-inputs.json": {
+        "original_sha256": "49378a22b3d27bcd94146a74b858e946abca2fbadf7b85f691cc718fd517271e",
+        "exact_public_blob": "executed/Native24/build/source-after.json"
+      },
+      "outside-peer.json": {
+        "original_sha256": "c0fe078b119d0d6fa6c2cdc0547d199355d13b3b9c3ad7d409468501f9d96c71",
+        "exact_public_blob": "executed/Native24/outside-peer.json"
+      },
+      "plan.json": {
+        "original_sha256": "b60f2239e0255f4c2b5b2391f2ecd6b3f10058e4fa3b0091d752d4cd177db267",
+        "exact_public_blob": "executed/Native24/plan.json"
+      }
+    },
+    "materialization": "All exact nonsensitive original input bytes deduplicated bySHA; archive fromOriginalGit, binary fromactualnewbuild, privateSource refs fromexplicitpublicNEWbinding orOriginalprivatebytes provided explicitly. Noautomaticappseal."
+  },
+  "Source2": {
+    "executed_seal_sha256": "a18db07a891ebec27cf423d8ad383012dc33695ec1e3c4010ac2c042126c179e",
+    "original_files": {
+      "Original-LICENSE": {
+        "original_sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+        "exact_public_blob": "Original-LICENSE"
+      },
+      "README.md": {
+        "original_sha256": "c8de816a22578cb06b8f58f19ee1b8eebe652071551f1bf95ab49069181412df",
+        "exact_public_blob": "executed/Source2/README.md"
+      },
+      "controller/bounded_process.py": {
+        "original_sha256": "0ca7491087ae756d667dbb9dc1655dbb0f8b0fd0c32b8bfa6592b1f7a16f9867",
+        "exact_public_blob": "executed/Source24/controller/bounded_process.py"
+      },
+      "controller/bounded_stop.py": {
+        "original_sha256": "8b1d619c16271a54012f270b9d886b3ef160fe2157ffc238c675cc1188a86a83",
+        "exact_public_blob": "executed/Source24/controller/bounded_stop.py"
+      },
+      "controller/capture_common.py": {
+        "original_sha256": "84a31c6f5b2f8cbd05c6b43e83e4362dc3c6a967a38f5884cbce7c3752f40b1e",
+        "exact_public_blob": "executed/Source24/controller/capture_common.py"
+      },
+      "controller/default_audit.py": {
+        "original_sha256": "d4dd335baf6452e8475a1be4b17f2281b06eeca0bb6a56d145d99d3bafeeb72e",
+        "exact_public_blob": "executed/Source24/controller/default_audit.py"
+      },
+      "controller/effects.py": {
+        "original_sha256": "f5f7138509f4794837753a299b3f986eab36db202e90ea925a1fc99d862f669c",
+        "exact_public_blob": "executed/Source2/controller/effects.py"
+      },
+      "controller/fixture_guards.py": {
+        "original_sha256": "d211690ed2274295a7843759a7feb48da96a4519b7b520e95ed3eeeced3a1f13",
+        "exact_public_blob": "executed/Source24/controller/fixture_guards.py"
+      },
+      "controller/public_manifest.py": {
+        "original_sha256": "851ed0bf77ae41a62f422d2ca78d2f08b0531dc1ee89eea597b29ee1766ce98f",
+        "exact_public_blob": "executed/Source24/controller/public_manifest.py"
+      },
+      "controller/redis_channels.py": {
+        "original_sha256": "f6302b2c1370e3d41bf551b9f5da0558a8077afeeb7bbcd7120d47e19fe63720",
+        "exact_public_blob": "executed/Source24/controller/redis_channels.py"
+      },
+      "controller/retained_effect_helpers.py": {
+        "original_sha256": "4105ea5a675b0b1257b384662c85824b873d9952d58c682865bf01c02acace09",
+        "exact_public_blob": "executed/Source2/controller/retained_effect_helpers.py"
+      },
+      "controller/run.py": {
+        "original_sha256": "c35356f9aa4ad9c0bd86eecd37688223db2e6cdf570bfb396edd7825ce39db95",
+        "exact_public_blob": "executed/Source2/controller/run.py"
+      },
+      "controller/source_fixture.py": {
+        "original_sha256": "dd0318060b57e93d12833c27bbd98bf74a137fb22e87e226cb5ae53969eb46e8",
+        "exact_public_blob": "executed/Source2/controller/source_fixture.py"
+      },
+      "controller/start.sh": {
+        "original_sha256": "9b9f47239208546c3bf1d8f15479ac661b7c3c833a5034b323398d28a89ddcfe",
+        "exact_public_blob": "executed/Source24/controller/start.sh"
+      },
+      "controller/test_controls.py": {
+        "original_sha256": "8ae4d2ad8e1abe1836fec6bef4d64567fc8f347ab31e68fb22a3fd8d6e61ee41",
+        "exact_public_blob": "executed/Source2/controller/test_controls.py"
+      },
+      "controller/tooling_guard.py": {
+        "original_sha256": "ad8143bacac0d1d4da45d94b3a10df65347877c074be1427310bbd25d6e0fcf5",
+        "exact_public_blob": "executed/Source24/controller/tooling_guard.py"
+      },
+      "execution-plan.json": {
+        "original_sha256": "9fa2142ea1f0cb72e33ebe6f8b18d0fb1c789d321dc70e7ad018da20242df744",
+        "exact_public_blob": "executed/Source2/execution-plan.json"
+      },
+      "history/development-oracle-negative-1.json": {
+        "original_sha256": "34f911cc195c0024b59e1cc3036691a573a2254bf9770ca476fba02e8faaf9bf",
+        "exact_public_blob": "input-blobs/34f911cc195c0024b59e1cc3036691a573a2254bf9770ca476fba02e8faaf9bf"
+      },
+      "history/development-pycompile-negative.json": {
+        "original_sha256": "427e82f4a9f3aaa853da5e528815d0991593d68b8f64c3674fa0bd63915ddba7",
+        "exact_public_blob": "input-blobs/427e82f4a9f3aaa853da5e528815d0991593d68b8f64c3674fa0bd63915ddba7"
+      },
+      "history/earlier52-controls.log": {
+        "original_sha256": "2326a36fecc681143e0b76476b4f52c5985a2906b64bc322fcb3c01088c6db1f",
+        "exact_public_blob": "input-blobs/2326a36fecc681143e0b76476b4f52c5985a2906b64bc322fcb3c01088c6db1f"
+      },
+      "history/local-controls-1.log": {
+        "original_sha256": "6704a3e7e32a6d7b7bb8e695e986e8c1a1a36b9eea05f7a22cb3d1b3383e7831",
+        "exact_public_blob": "input-blobs/6704a3e7e32a6d7b7bb8e695e986e8c1a1a36b9eea05f7a22cb3d1b3383e7831"
+      },
+      "history/local-controls-2.log": {
+        "original_sha256": "b403f406646e6a9a77d4c51e2968f4236fc8f18d335abc58a045d82a01b49f00",
+        "exact_public_blob": "input-blobs/b403f406646e6a9a77d4c51e2968f4236fc8f18d335abc58a045d82a01b49f00"
+      },
+      "history/preexecution-parser-sentinel-correction.json": {
+        "original_sha256": "fb6cf0d1e9164b7173ef71a5857ea1c37095ec2143009247159f70f6b3593cda",
+        "exact_public_blob": "input-blobs/fb6cf0d1e9164b7173ef71a5857ea1c37095ec2143009247159f70f6b3593cda"
+      },
+      "history/seal-preparation-negative.json": {
+        "original_sha256": "51bdbc580e9c6d725670fd5045381d990673b03682e006c62531c677adb4b604",
+        "exact_public_blob": "input-blobs/51bdbc580e9c6d725670fd5045381d990673b03682e006c62531c677adb4b604"
+      },
+      "history/source2-code-seal1/local-controls.log": {
+        "original_sha256": "93e2a08cc8f23ef6c56ec94afac651502a23dc27a95c015b39fbff55eeb44c62",
+        "exact_public_blob": "input-blobs/93e2a08cc8f23ef6c56ec94afac651502a23dc27a95c015b39fbff55eeb44c62"
+      },
+      "history/source2-code-seal1/run.py": {
+        "original_sha256": "9de9900345ae89fd57355eaedb224d4a94e53c5bfa24a48c0d24078b87f24e53",
+        "exact_public_blob": "input-blobs/9de9900345ae89fd57355eaedb224d4a94e53c5bfa24a48c0d24078b87f24e53"
+      },
+      "history/source24-unexecuted-donor-controls/synthetic.py": {
+        "original_sha256": "510703658d9bcd0dc32f7a10cc22a53ecd17c12c2ca407682f290735588a7022",
+        "exact_public_blob": "executed/Source24/controller/synthetic.py"
+      },
+      "history/source24-unexecuted-donor-controls/test_controls.py": {
+        "original_sha256": "7d671291493595d54ed75944a3c8c25fa8e2a9512799c10e0b1ea2fbacf330c8",
+        "exact_public_blob": "executed/Source24/controller/test_controls.py"
+      },
+      "inputs/actual-dependencies.json": {
+        "original_sha256": "fb07f4151b5dd21fb7fe5fb5ce2fa7f4d77541974b867b9b34061b0e9ae45700",
+        "exact_public_blob": "executed/Source2/inputs/actual-dependencies.json"
+      },
+      "inputs/actual-image/django/__init__.py": {
+        "original_sha256": "57294da38f072b796f59499797f05a663c6210195568f31fceef40b512bde8f7",
+        "exact_public_blob": "authority/actual-image/django/__init__.py"
+      },
+      "inputs/actual-image/django/conf/global_settings.py": {
+        "original_sha256": "51cf04f8c1d3e83bf5226cb4a03c255c3bb42f66792be3a03987a90511b13e88",
+        "exact_public_blob": "authority/actual-image/django/conf/global_settings.py"
+      },
+      "inputs/actual-image/django/contrib/auth/__init__.py": {
+        "original_sha256": "fcde40c5311b111caf9798177413740ebe5853ef483e86a605e187b4a5e853e1",
+        "exact_public_blob": "authority/actual-image/django/contrib/auth/__init__.py"
+      },
+      "inputs/actual-image/django/contrib/auth/middleware.py": {
+        "original_sha256": "5c738f24dac92c9b4338959aba7948f1503eaa79bda11477d075a1fbe4cedb13",
+        "exact_public_blob": "authority/actual-image/django/contrib/auth/middleware.py"
+      },
+      "inputs/actual-image/django/core/files/base.py": {
+        "original_sha256": "1bf9d22c3fbbdb2eca0c61cd6a3b1047608bd76e9a787fe70344ad4a9efbffa2",
+        "exact_public_blob": "authority/actual-image/django/core/files/base.py"
+      },
+      "inputs/actual-image/django/core/files/uploadedfile.py": {
+        "original_sha256": "d7d655417b66128f3e39276aca422a3295a1bfe75e7e964e3b94d91ebabadba4",
+        "exact_public_blob": "authority/actual-image/django/core/files/uploadedfile.py"
+      },
+      "inputs/actual-image/django/core/files/uploadhandler.py": {
+        "original_sha256": "c8d989eef378ad5f28b8b071ea935582e418d3de5908d190b30dcf28bed0d21a",
+        "exact_public_blob": "authority/actual-image/django/core/files/uploadhandler.py"
+      },
+      "inputs/actual-image/django/core/handlers/base.py": {
+        "original_sha256": "7e150b989896d5b8c830d1807722a5a1d5a68a48209031d3247695707c2f41ac",
+        "exact_public_blob": "authority/actual-image/django/core/handlers/base.py"
+      },
+      "inputs/actual-image/django/core/handlers/exception.py": {
+        "original_sha256": "e10b79143b65790bae2d0c159778e4555213a97ece1b5d3a5bc750db2739f1b8",
+        "exact_public_blob": "authority/actual-image/django/core/handlers/exception.py"
+      },
+      "inputs/actual-image/django/core/mail/__init__.py": {
+        "original_sha256": "f8b2f54b81d6a39de6d2be91bf2b3b0444f1c476cb712a14d6d00240f14114eb",
+        "exact_public_blob": "authority/actual-image/django/core/mail/__init__.py"
+      },
+      "inputs/actual-image/django/db/models/base.py": {
+        "original_sha256": "3a387fb69469d93a7a1e27e16d93d5258d2e4c5e637bca8dbfb767a851e154ab",
+        "exact_public_blob": "authority/actual-image/django/db/models/base.py"
+      },
+      "inputs/actual-image/django/db/models/deletion.py": {
+        "original_sha256": "27d04ac8ec534f337eb0b257d89f6b59ded830b6c3bc752e2030e818380db18a",
+        "exact_public_blob": "authority/actual-image/django/db/models/deletion.py"
+      },
+      "inputs/actual-image/django/db/models/fields/__init__.py": {
+        "original_sha256": "a3e34e9156a619030257c4f99bd9eb984b6225016a0ef93a9263a2488056ebf5",
+        "exact_public_blob": "authority/actual-image/django/db/models/fields/__init__.py"
+      },
+      "inputs/actual-image/django/http/__init__.py": {
+        "original_sha256": "b95533d28bfe7a6736f616c3efc40a2a46bf4752f89a90c33e19327e4c788f34",
+        "exact_public_blob": "authority/actual-image/django/http/__init__.py"
+      },
+      "inputs/actual-image/django/http/multipartparser.py": {
+        "original_sha256": "f5f3ec9cde944ed3da5fff296d368080ed504c522d2cf7c31c025f990e27d2d7",
+        "exact_public_blob": "authority/actual-image/django/http/multipartparser.py"
+      },
+      "inputs/actual-image/django/http/request.py": {
+        "original_sha256": "6ad362eba6fb2c5b51b7f81944abf2613a9bc9a42b964a28d8271ad124270d0b",
+        "exact_public_blob": "authority/actual-image/django/http/request.py"
+      },
+      "inputs/actual-image/django/http/response.py": {
+        "original_sha256": "66363ef520f59a8037a8acf942b1696890861bba578b6f36bbe44983d64008ec",
+        "exact_public_blob": "authority/actual-image/django/http/response.py"
+      },
+      "inputs/actual-image/django/middleware/csrf.py": {
+        "original_sha256": "ae1d82bd6dabbd7f3f67d8294b9f2f2d57a76693fe71edb90f41fd57b6887ebf",
+        "exact_public_blob": "authority/actual-image/django/middleware/csrf.py"
+      },
+      "inputs/actual-image/django/template/engine.py": {
+        "original_sha256": "9be5db0f333f4f91cd90916635903523f964b2a34bcfe89f6c73388b82e0cea9",
+        "exact_public_blob": "authority/actual-image/django/template/engine.py"
+      },
+      "inputs/actual-image/django/template/loader.py": {
+        "original_sha256": "3d515452d0b95a08915554e296143a345667be3972eac3fdb3b6a716632829da",
+        "exact_public_blob": "authority/actual-image/django/template/loader.py"
+      },
+      "inputs/actual-image/django/template/loaders/app_directories.py": {
+        "original_sha256": "b10a555ca6299caafd465d584ad35c6be6c62101dc3a44a79a6d65daa4461551",
+        "exact_public_blob": "authority/actual-image/django/template/loaders/app_directories.py"
+      },
+      "inputs/actual-image/django/template/loaders/filesystem.py": {
+        "original_sha256": "7f8b22943ed65a1bf72bd43248c816edd94618dc3060070708c493169c228976",
+        "exact_public_blob": "authority/actual-image/django/template/loaders/filesystem.py"
+      },
+      "inputs/actual-image/django/test/client.py": {
+        "original_sha256": "dd0eb08101baaa523dbcb4432f153966e857c881e0159930a4a8cf5a339d7ac3",
+        "exact_public_blob": "authority/actual-image/django/test/client.py"
+      },
+      "inputs/actual-image/django/utils/datastructures.py": {
+        "original_sha256": "cfe76fe0e3ed795f44c49366ebf770c9e89baf3038a89283306c5b133d3f9eb1",
+        "exact_public_blob": "authority/actual-image/django/utils/datastructures.py"
+      },
+      "inputs/actual-image/django/utils/encoding.py": {
+        "original_sha256": "f0e4db3db05e105d527119b140d0b863c7fc668ccc18a5c2c8c7fc6a4509afd5",
+        "exact_public_blob": "authority/actual-image/django/utils/encoding.py"
+      },
+      "inputs/actual-image/django/utils/http.py": {
+        "original_sha256": "c73cc334ef74c5a9eaee7cf1f8056b62058913ab552f430d310dada7787c34fc",
+        "exact_public_blob": "authority/actual-image/django/utils/http.py"
+      },
+      "inputs/actual-image/django/utils/log.py": {
+        "original_sha256": "4d245f8381d52e49f75cca59468ad0ce115186aafde2d868efbc5f406138491c",
+        "exact_public_blob": "authority/actual-image/django/utils/log.py"
+      },
+      "inputs/actual-image/django/utils/module_loading.py": {
+        "original_sha256": "a196e7d0511d2357bf4253e9d1c50baca0d183cb24caba94360e9fffa77f2c1f",
+        "exact_public_blob": "authority/actual-image/django/utils/module_loading.py"
+      },
+      "inputs/actual-image/django/views/debug.py": {
+        "original_sha256": "71c8784faca90cb457637b27a36fd2c8baa16ab3d1e6eae50e1c2d0554a567e1",
+        "exact_public_blob": "authority/actual-image/django/views/debug.py"
+      },
+      "inputs/actual-image/django/views/defaults.py": {
+        "original_sha256": "0574f7e9abb0f17179670a9d5346a4cd7e484c505686ecbc89d4fc606902a3f2",
+        "exact_public_blob": "authority/actual-image/django/views/defaults.py"
+      },
+      "inputs/actual-image/django/views/templates/technical_500.html": {
+        "original_sha256": "a479b12ed13014d030e33b7793deedcb976f62af6ad04d29d67145d694587692",
+        "exact_public_blob": "authority/actual-image/django/views/templates/technical_500.html"
+      },
+      "inputs/actual-image/django/views/templates/technical_500.txt": {
+        "original_sha256": "6f48a113f152ed8b5f00539753fca4d3e093814999e1991655f9051dd1105d02",
+        "exact_public_blob": "authority/actual-image/django/views/templates/technical_500.txt"
+      },
+      "inputs/actual-image/jwt/__init__.py": {
+        "original_sha256": "d3a4446591308befe70cbc989428dbfa0dfe7ec7eee5d35a57a22043451c253c",
+        "exact_public_blob": "authority/actual-image/jwt/__init__.py"
+      },
+      "inputs/actual-image/jwt/algorithms.py": {
+        "original_sha256": "31e174916a77d17f4ed9dbcd3b869e9264a146aaf8d97f02d9b43bf828fe0441",
+        "exact_public_blob": "authority/actual-image/jwt/algorithms.py"
+      },
+      "inputs/actual-image/jwt/api_jws.py": {
+        "original_sha256": "80e83b3a4089f6a19692bb5b2f56784edc3bd65bf74043bad7a230f9c5bdcf12",
+        "exact_public_blob": "authority/actual-image/jwt/api_jws.py"
+      },
+      "inputs/actual-image/jwt/api_jwt.py": {
+        "original_sha256": "a2af9f3593c8cf9133163cb0b5b08223281b8292d5db5665309bc23c212cac76",
+        "exact_public_blob": "authority/actual-image/jwt/api_jwt.py"
+      },
+      "inputs/actual-image/jwt/exceptions.py": {
+        "original_sha256": "3540f48760343221d5e94f933edfc0af4a6b9c01f1c892748ba2c7216cddf154",
+        "exact_public_blob": "authority/actual-image/jwt/exceptions.py"
+      },
+      "inputs/actual-image/jwt/utils.py": {
+        "original_sha256": "b9d89ca2f37984f3779d6a85029b9acd535fa2a776444ffc32d2211b83853aaf",
+        "exact_public_blob": "authority/actual-image/jwt/utils.py"
+      },
+      "inputs/actual-image/rest_framework/__init__.py": {
+        "original_sha256": "c44e145d9d0daada4d6a0666bc73c3372659c9de58aa345440b4ad40dd0efdb5",
+        "exact_public_blob": "authority/actual-image/rest_framework/__init__.py"
+      },
+      "inputs/actual-image/rest_framework/authentication.py": {
+        "original_sha256": "cf9b669f80cc16c88cb9277883567718638763a2f3170a1b9df598fc8a7206fc",
+        "exact_public_blob": "authority/actual-image/rest_framework/authentication.py"
+      },
+      "inputs/actual-image/rest_framework/exceptions.py": {
+        "original_sha256": "935e5ae7264f324e084f615b56620591e0111f5e672043514d7d9be41dcba062",
+        "exact_public_blob": "authority/actual-image/rest_framework/exceptions.py"
+      },
+      "inputs/actual-image/rest_framework/fields.py": {
+        "original_sha256": "45525c12f86f294efea3ab3bac85f49c5f78f6f51ff2732769b5e7827888d188",
+        "exact_public_blob": "authority/actual-image/rest_framework/fields.py"
+      },
+      "inputs/actual-image/rest_framework/generics.py": {
+        "original_sha256": "7ad3311a1f9aae8e5ce42824c211efd089ae2c555bce2326dca5254b30a8352d",
+        "exact_public_blob": "authority/actual-image/rest_framework/generics.py"
+      },
+      "inputs/actual-image/rest_framework/mixins.py": {
+        "original_sha256": "701287aa9709e365577b39cb2f651c93f675eced7a41227a0989796640247da7",
+        "exact_public_blob": "authority/actual-image/rest_framework/mixins.py"
+      },
+      "inputs/actual-image/rest_framework/negotiation.py": {
+        "original_sha256": "7a422847e5255886a224f4cceeba67eed653ed269b37a75fbdd7050e190996eb",
+        "exact_public_blob": "authority/actual-image/rest_framework/negotiation.py"
+      },
+      "inputs/actual-image/rest_framework/parsers.py": {
+        "original_sha256": "7dfbcc2707bc3182fc51b8bb3c426dcdd8ee82d4a6f090f6059429a208fb7622",
+        "exact_public_blob": "authority/actual-image/rest_framework/parsers.py"
+      },
+      "inputs/actual-image/rest_framework/permissions.py": {
+        "original_sha256": "b4c6285334dc756081bc1896606574dd248dad44379ed4b55736a863f70e7e89",
+        "exact_public_blob": "authority/actual-image/rest_framework/permissions.py"
+      },
+      "inputs/actual-image/rest_framework/renderers.py": {
+        "original_sha256": "ded88dfb5dcf205877654ed1daf5e5484ef3d07fa6996d6cc7c1123e5239612f",
+        "exact_public_blob": "authority/actual-image/rest_framework/renderers.py"
+      },
+      "inputs/actual-image/rest_framework/request.py": {
+        "original_sha256": "4d3b8cf78f57a5308d8a11fcdeb902d8d162c5df5dc6be2a85fbbb950c6a7e16",
+        "exact_public_blob": "authority/actual-image/rest_framework/request.py"
+      },
+      "inputs/actual-image/rest_framework/serializers.py": {
+        "original_sha256": "d2ebe00d3b11079cc4de2cd0715ff7f80e6870df3a8b192a6d2a23178a18b9ac",
+        "exact_public_blob": "authority/actual-image/rest_framework/serializers.py"
+      },
+      "inputs/actual-image/rest_framework/settings.py": {
+        "original_sha256": "224f31e20582a0ac5a367a92852042b255521acb3bbc8c15e10b2c8474ebbe17",
+        "exact_public_blob": "authority/actual-image/rest_framework/settings.py"
+      },
+      "inputs/actual-image/rest_framework/test.py": {
+        "original_sha256": "900633e8f584ed23f1d79d76e1d25b5f68c8c4a5f66d87c8918458639f57ffa8",
+        "exact_public_blob": "authority/actual-image/rest_framework/test.py"
+      },
+      "inputs/actual-image/rest_framework/utils/field_mapping.py": {
+        "original_sha256": "8a6f19588df4aa68dcc28ece264d21141282cab5970762cf5e721c71be6db186",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/field_mapping.py"
+      },
+      "inputs/actual-image/rest_framework/utils/html.py": {
+        "original_sha256": "e0f4e296468da88fc6701d8b815c195a66f1d08d36854a09ae68a549bd7e6340",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/html.py"
+      },
+      "inputs/actual-image/rest_framework/utils/json.py": {
+        "original_sha256": "d6a54e3adfc3b9a42a3b878fb9bfa34f6f65646fbdb0d9862c312a5b8d81019d",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/json.py"
+      },
+      "inputs/actual-image/rest_framework/utils/mediatypes.py": {
+        "original_sha256": "71149fdaa455a14cd388857be4c93eefe9b75ae6755a897d9e0c2013a000d352",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/mediatypes.py"
+      },
+      "inputs/actual-image/rest_framework/validators.py": {
+        "original_sha256": "8d24d41c50ba6e2a40cd57d84005518405282429fe84930845e2eb95aa97bd11",
+        "exact_public_blob": "authority/actual-image/rest_framework/validators.py"
+      },
+      "inputs/actual-image/rest_framework/views.py": {
+        "original_sha256": "07d663e11faac813dd0965c337ade1cf3d6596314a37a57a21dd8e30fa56b8be",
+        "exact_public_blob": "authority/actual-image/rest_framework/views.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/__init__.py": {
+        "original_sha256": "ca05e86d0e4576df40508355b6c99f607a4621175bd1a778edcd939794c7b3f0",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/__init__.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/authentication.py": {
+        "original_sha256": "49f8a4f56193507783aa86bd030248d71f271b82eba2f005f5500bce2b05701b",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/authentication.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/backends.py": {
+        "original_sha256": "c4ae446b4c77e95426ae5a9c60444be132b7c0db0b147438c86fd16f6b4c97ee",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/backends.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/exceptions.py": {
+        "original_sha256": "7ce92f9fc3100e65d2e20cd4bdfac3fbf1d45fb5d7a63fa126cfc6a919f8fd69",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/exceptions.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/models.py": {
+        "original_sha256": "a296c95f3209afcee3fdb27dd45738f290abe7b4acda2daff12636d95ed4e442",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/models.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/settings.py": {
+        "original_sha256": "866cd0ad5315338755d43a6c52a36a72b45d7b41f59485843f42aefbddd9b035",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/settings.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/state.py": {
+        "original_sha256": "f2ecdb84235735da1cbd5d0231ce45f62e129663abde102e582c73163521f489",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/state.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/tokens.py": {
+        "original_sha256": "ed6bd22363ce5dc490faa3ed08090232e644b36eb0330952f18847d18902fefc",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/tokens.py"
+      },
+      "inputs/actual-image/rest_framework_simplejwt/utils.py": {
+        "original_sha256": "c14dc4d60c164e688ce7c91bfd9b1532d9e89cefbcfa3e16d465e7bdb1cfe1e0",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/utils.py"
+      },
+      "inputs/auth23-proof.json": {
+        "original_sha256": "e3a2bcf57ba10e74a4c09d1dc711cc22ef2a1b2dfc75cd8cc85dc7f2fd6aed17",
+        "exact_public_blob": "executed/Source24/inputs/auth23-proof.json"
+      },
+      "inputs/definition-seal.json": {
+        "original_sha256": "c5f0283eec0ae5fa05450f2e84424dc78473451efb0bb1c169c9d8cb1aff43b2",
+        "exact_public_blob": "input-blobs/c5f0283eec0ae5fa05450f2e84424dc78473451efb0bb1c169c9d8cb1aff43b2"
+      },
+      "inputs/definition2/README.md": {
+        "original_sha256": "4cb3071eee31fc5749b4644a8acbedac5b559eb9ac23944b1581398fde017344",
+        "exact_public_blob": "input-blobs/4cb3071eee31fc5749b4644a8acbedac5b559eb9ac23944b1581398fde017344"
+      },
+      "inputs/definition2/derivation.json": {
+        "original_sha256": "15820daf1f44551df14cd9bef0d0cc6447cad0bbb886850f7e36859b185b4ae3",
+        "exact_public_blob": "input-blobs/15820daf1f44551df14cd9bef0d0cc6447cad0bbb886850f7e36859b185b4ae3"
+      },
+      "inputs/definition2/original/apps/accounts/authentication.py": {
+        "original_sha256": "415d74d68295c9764d46bac3b851878fa6ed48027e4aebd3859b0aaade026fe5",
+        "exact_public_blob": "authority/Original/apps/accounts/authentication.py"
+      },
+      "inputs/definition2/original/apps/accounts/models.py": {
+        "original_sha256": "05cab8c590de411e68ff83b72d9d6256ca43007cbbab5d2a7f96a3a8965a9ded",
+        "exact_public_blob": "authority/Original/apps/accounts/models.py"
+      },
+      "inputs/definition2/original/apps/accounts/permissions.py": {
+        "original_sha256": "407a0c6cbae122042c722e2bd3792579875a075cb6e6345ff43588250ac6fe6e",
+        "exact_public_blob": "authority/Original/apps/accounts/permissions.py"
+      },
+      "inputs/definition2/original/apps/api/urls.py": {
+        "original_sha256": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6",
+        "exact_public_blob": "authority/Original/apps/api/urls.py"
+      },
+      "inputs/definition2/original/apps/plugins/api_urls.py": {
+        "original_sha256": "d3072e42ee78bcc546f390e45f1190885f8b8eec365f82a0ad6ab033ab07ef45",
+        "exact_public_blob": "authority/Original/apps/plugins/api_urls.py"
+      },
+      "inputs/definition2/original/apps/plugins/api_views.py": {
+        "original_sha256": "2f948dface3b0bdece923fdaac3d709754f1c6a65c95b3445471b0a2f9e7cb46",
+        "exact_public_blob": "authority/Original/apps/plugins/api_views.py"
+      },
+      "inputs/definition2/original/apps/plugins/apps.py": {
+        "original_sha256": "27b3b52fad5c8ca2aaf1912ac4165b1b5c58ac438cb489ce1d6182c55ef32679",
+        "exact_public_blob": "authority/Original/apps/plugins/apps.py"
+      },
+      "inputs/definition2/original/apps/plugins/loader.py": {
+        "original_sha256": "f6ad90014f5b5f2eb25d2382e1d6c9c2749c6c69202621a445c3a56193da2fbe",
+        "exact_public_blob": "authority/Original/apps/plugins/loader.py"
+      },
+      "inputs/definition2/original/apps/plugins/migrations/0002_pluginrepo.py": {
+        "original_sha256": "f0ebdbfb2aad7ee82f31f31ec2c2fc7a80e483d12cdcb721307b772a2ee54057",
+        "exact_public_blob": "authority/Original/apps/plugins/migrations/0002_pluginrepo.py"
+      },
+      "inputs/definition2/original/apps/plugins/migrations/0003_update_official_repo_url.py": {
+        "original_sha256": "75c406e0778f7a3e0b8979a8b3307bd43d37a69390affe56cc9faae258a6c68a",
+        "exact_public_blob": "authority/Original/apps/plugins/migrations/0003_update_official_repo_url.py"
+      },
+      "inputs/definition2/original/apps/plugins/models.py": {
+        "original_sha256": "f013c9a70afd71ffd55cc90406354a694b9b9836d905c58e3869152b13035cf7",
+        "exact_public_blob": "authority/Original/apps/plugins/models.py"
+      },
+      "inputs/definition2/original/apps/plugins/serializers.py": {
+        "original_sha256": "1623b004a80cb943070cbffde0da9e43f3439b2fe69bd1b9faebf2419b1b7326",
+        "exact_public_blob": "authority/Original/apps/plugins/serializers.py"
+      },
+      "inputs/definition2/original/apps/plugins/tasks.py": {
+        "original_sha256": "19bf9f0d06491280b331615cd17c76b0ce56c0e5ee67f91f10a512823d1284ab",
+        "exact_public_blob": "authority/Original/apps/plugins/tasks.py"
+      },
+      "inputs/definition2/original/core/apps.py": {
+        "original_sha256": "de47309cb6f755fde18bf6299014426189d9ae856c30287936fd77ff60fac79e",
+        "exact_public_blob": "authority/Original/core/apps.py"
+      },
+      "inputs/definition2/original/core/http_security.py": {
+        "original_sha256": "ba765d4d9297bbc708d476eb9309760fdef4ac8242e69a2e457d7f2a4ea09525",
+        "exact_public_blob": "authority/Original/core/http_security.py"
+      },
+      "inputs/definition2/original/core/image_proxy.py": {
+        "original_sha256": "3969f4eae0a1e8aebfc9ee1646290a68de1e408c2e80fa3aceafa7f3cd07f883",
+        "exact_public_blob": "authority/Original/core/image_proxy.py"
+      },
+      "inputs/definition2/original/core/models.py": {
+        "original_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+        "exact_public_blob": "authority/Original/core/models.py"
+      },
+      "inputs/definition2/original/core/signals.py": {
+        "original_sha256": "93b679b154a20e69164495f23efe859a7d60699c878303a3fb8c4dc2ff861bb4",
+        "exact_public_blob": "authority/Original/core/signals.py"
+      },
+      "inputs/definition2/original/core/utils.py": {
+        "original_sha256": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+        "exact_public_blob": "authority/Original/core/utils.py"
+      },
+      "inputs/definition2/original/dispatcharr/app_initialization.py": {
+        "original_sha256": "ca589b7d22428ea2bd10557218a6e943ebd5665a6d076a1bcf57d41b20799021",
+        "exact_public_blob": "authority/Original/dispatcharr/app_initialization.py"
+      },
+      "inputs/definition2/original/dispatcharr/log_collector.py": {
+        "original_sha256": "caadcce5bb836c38db15509a168a439f3035c9710d6b7fe1acbef7352176f829",
+        "exact_public_blob": "authority/Original/dispatcharr/log_collector.py"
+      },
+      "inputs/definition2/original/dispatcharr/settings.py": {
+        "original_sha256": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+        "exact_public_blob": "authority/Original/dispatcharr/settings.py"
+      },
+      "inputs/definition2/original/dispatcharr/urls.py": {
+        "original_sha256": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f",
+        "exact_public_blob": "authority/Original/dispatcharr/urls.py"
+      },
+      "inputs/definition2/original/dispatcharr/utils.py": {
+        "original_sha256": "740da794553c7c059bff3a2d64a14d0a2448ea8d867e7331568e3cd9d4eecdf6",
+        "exact_public_blob": "authority/Original/dispatcharr/utils.py"
+      },
+      "inputs/definition2/original-inputs.json": {
+        "original_sha256": "4c6c877961671aa3fbaf6e4e1fd50676fe69f0c90221efbd22f53d1a7d2b9c8c",
+        "exact_public_blob": "executed/Source24/inputs/original-inputs.json"
+      },
+      "inputs/definition2/plan.json": {
+        "original_sha256": "89583a4c4cec44a8755c5d3c76bf0fa9c6e409b5710bd3f4c1460694dd35a16b",
+        "exact_public_blob": "executed/Source24/inputs/plan.json"
+      },
+      "inputs/definition2/seal.json": {
+        "original_sha256": "c5f0283eec0ae5fa05450f2e84424dc78473451efb0bb1c169c9d8cb1aff43b2",
+        "exact_public_blob": "input-blobs/c5f0283eec0ae5fa05450f2e84424dc78473451efb0bb1c169c9d8cb1aff43b2"
+      },
+      "inputs/definition2/test_definition.py": {
+        "original_sha256": "33476061a660788c185d850c703cb9423fe13b8cf2ed9a6ef703e650d41803fb",
+        "exact_public_blob": "input-blobs/33476061a660788c185d850c703cb9423fe13b8cf2ed9a6ef703e650d41803fb"
+      },
+      "inputs/original/apps/accounts/authentication.py": {
+        "original_sha256": "415d74d68295c9764d46bac3b851878fa6ed48027e4aebd3859b0aaade026fe5",
+        "exact_public_blob": "authority/Original/apps/accounts/authentication.py"
+      },
+      "inputs/original/apps/accounts/models.py": {
+        "original_sha256": "05cab8c590de411e68ff83b72d9d6256ca43007cbbab5d2a7f96a3a8965a9ded",
+        "exact_public_blob": "authority/Original/apps/accounts/models.py"
+      },
+      "inputs/original/apps/accounts/permissions.py": {
+        "original_sha256": "407a0c6cbae122042c722e2bd3792579875a075cb6e6345ff43588250ac6fe6e",
+        "exact_public_blob": "authority/Original/apps/accounts/permissions.py"
+      },
+      "inputs/original/apps/api/urls.py": {
+        "original_sha256": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6",
+        "exact_public_blob": "authority/Original/apps/api/urls.py"
+      },
+      "inputs/original/apps/plugins/api_urls.py": {
+        "original_sha256": "d3072e42ee78bcc546f390e45f1190885f8b8eec365f82a0ad6ab033ab07ef45",
+        "exact_public_blob": "authority/Original/apps/plugins/api_urls.py"
+      },
+      "inputs/original/apps/plugins/api_views.py": {
+        "original_sha256": "2f948dface3b0bdece923fdaac3d709754f1c6a65c95b3445471b0a2f9e7cb46",
+        "exact_public_blob": "authority/Original/apps/plugins/api_views.py"
+      },
+      "inputs/original/apps/plugins/apps.py": {
+        "original_sha256": "27b3b52fad5c8ca2aaf1912ac4165b1b5c58ac438cb489ce1d6182c55ef32679",
+        "exact_public_blob": "authority/Original/apps/plugins/apps.py"
+      },
+      "inputs/original/apps/plugins/loader.py": {
+        "original_sha256": "f6ad90014f5b5f2eb25d2382e1d6c9c2749c6c69202621a445c3a56193da2fbe",
+        "exact_public_blob": "authority/Original/apps/plugins/loader.py"
+      },
+      "inputs/original/apps/plugins/migrations/0002_pluginrepo.py": {
+        "original_sha256": "f0ebdbfb2aad7ee82f31f31ec2c2fc7a80e483d12cdcb721307b772a2ee54057",
+        "exact_public_blob": "authority/Original/apps/plugins/migrations/0002_pluginrepo.py"
+      },
+      "inputs/original/apps/plugins/migrations/0003_update_official_repo_url.py": {
+        "original_sha256": "75c406e0778f7a3e0b8979a8b3307bd43d37a69390affe56cc9faae258a6c68a",
+        "exact_public_blob": "authority/Original/apps/plugins/migrations/0003_update_official_repo_url.py"
+      },
+      "inputs/original/apps/plugins/models.py": {
+        "original_sha256": "f013c9a70afd71ffd55cc90406354a694b9b9836d905c58e3869152b13035cf7",
+        "exact_public_blob": "authority/Original/apps/plugins/models.py"
+      },
+      "inputs/original/apps/plugins/serializers.py": {
+        "original_sha256": "1623b004a80cb943070cbffde0da9e43f3439b2fe69bd1b9faebf2419b1b7326",
+        "exact_public_blob": "authority/Original/apps/plugins/serializers.py"
+      },
+      "inputs/original/apps/plugins/tasks.py": {
+        "original_sha256": "19bf9f0d06491280b331615cd17c76b0ce56c0e5ee67f91f10a512823d1284ab",
+        "exact_public_blob": "authority/Original/apps/plugins/tasks.py"
+      },
+      "inputs/original/core/apps.py": {
+        "original_sha256": "de47309cb6f755fde18bf6299014426189d9ae856c30287936fd77ff60fac79e",
+        "exact_public_blob": "authority/Original/core/apps.py"
+      },
+      "inputs/original/core/http_security.py": {
+        "original_sha256": "ba765d4d9297bbc708d476eb9309760fdef4ac8242e69a2e457d7f2a4ea09525",
+        "exact_public_blob": "authority/Original/core/http_security.py"
+      },
+      "inputs/original/core/image_proxy.py": {
+        "original_sha256": "3969f4eae0a1e8aebfc9ee1646290a68de1e408c2e80fa3aceafa7f3cd07f883",
+        "exact_public_blob": "authority/Original/core/image_proxy.py"
+      },
+      "inputs/original/core/models.py": {
+        "original_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+        "exact_public_blob": "authority/Original/core/models.py"
+      },
+      "inputs/original/core/signals.py": {
+        "original_sha256": "93b679b154a20e69164495f23efe859a7d60699c878303a3fb8c4dc2ff861bb4",
+        "exact_public_blob": "authority/Original/core/signals.py"
+      },
+      "inputs/original/core/utils.py": {
+        "original_sha256": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+        "exact_public_blob": "authority/Original/core/utils.py"
+      },
+      "inputs/original/dispatcharr/app_initialization.py": {
+        "original_sha256": "ca589b7d22428ea2bd10557218a6e943ebd5665a6d076a1bcf57d41b20799021",
+        "exact_public_blob": "authority/Original/dispatcharr/app_initialization.py"
+      },
+      "inputs/original/dispatcharr/log_collector.py": {
+        "original_sha256": "caadcce5bb836c38db15509a168a439f3035c9710d6b7fe1acbef7352176f829",
+        "exact_public_blob": "authority/Original/dispatcharr/log_collector.py"
+      },
+      "inputs/original/dispatcharr/settings.py": {
+        "original_sha256": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+        "exact_public_blob": "authority/Original/dispatcharr/settings.py"
+      },
+      "inputs/original/dispatcharr/urls.py": {
+        "original_sha256": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f",
+        "exact_public_blob": "authority/Original/dispatcharr/urls.py"
+      },
+      "inputs/original/dispatcharr/utils.py": {
+        "original_sha256": "740da794553c7c059bff3a2d64a14d0a2448ea8d867e7331568e3cd9d4eecdf6",
+        "exact_public_blob": "authority/Original/dispatcharr/utils.py"
+      },
+      "inputs/original-inputs.json": {
+        "original_sha256": "4c6c877961671aa3fbaf6e4e1fd50676fe69f0c90221efbd22f53d1a7d2b9c8c",
+        "exact_public_blob": "executed/Source24/inputs/original-inputs.json"
+      },
+      "inputs/original-source.tar": {
+        "original_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "omitted_kind": "immutableOriginalGitArchive",
+        "no_silent_hash_fallback": true
+      },
+      "inputs/parser23-proof.json": {
+        "original_sha256": "cf66343e27db929f216d4b1cdf245c85c3fcf41a5cc37a039ced9e7f5df70fe9",
+        "exact_public_blob": "executed/Source24/inputs/parser23-proof.json"
+      },
+      "inputs/plan.json": {
+        "original_sha256": "a5cc5c1971ed206aee4b528e0be65990bf38c220b2f6e80554c7960641209f86",
+        "exact_public_blob": "executed/Source2/inputs/plan.json"
+      },
+      "inputs/rendered-definition1/Original-LICENSE": {
+        "original_sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+        "exact_public_blob": "Original-LICENSE"
+      },
+      "inputs/rendered-definition1/README.md": {
+        "original_sha256": "8dad8f0071c15b787ee66404676c01e222a92b93d42368a91121292acd8014e3",
+        "exact_public_blob": "input-blobs/8dad8f0071c15b787ee66404676c01e222a92b93d42368a91121292acd8014e3"
+      },
+      "inputs/rendered-definition1/inputs/actual-dependencies.json": {
+        "original_sha256": "febdd983e0b84dd1d2bd6379f30903c32fedea65e746c2d04722ed1a0f901cf5",
+        "exact_public_blob": "executed/Source24/inputs/actual-dependencies.json"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/__init__.py": {
+        "original_sha256": "57294da38f072b796f59499797f05a663c6210195568f31fceef40b512bde8f7",
+        "exact_public_blob": "authority/actual-image/django/__init__.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/contrib/auth/__init__.py": {
+        "original_sha256": "fcde40c5311b111caf9798177413740ebe5853ef483e86a605e187b4a5e853e1",
+        "exact_public_blob": "authority/actual-image/django/contrib/auth/__init__.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/contrib/auth/middleware.py": {
+        "original_sha256": "5c738f24dac92c9b4338959aba7948f1503eaa79bda11477d075a1fbe4cedb13",
+        "exact_public_blob": "authority/actual-image/django/contrib/auth/middleware.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/core/files/base.py": {
+        "original_sha256": "1bf9d22c3fbbdb2eca0c61cd6a3b1047608bd76e9a787fe70344ad4a9efbffa2",
+        "exact_public_blob": "authority/actual-image/django/core/files/base.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/core/files/uploadedfile.py": {
+        "original_sha256": "d7d655417b66128f3e39276aca422a3295a1bfe75e7e964e3b94d91ebabadba4",
+        "exact_public_blob": "authority/actual-image/django/core/files/uploadedfile.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/core/files/uploadhandler.py": {
+        "original_sha256": "c8d989eef378ad5f28b8b071ea935582e418d3de5908d190b30dcf28bed0d21a",
+        "exact_public_blob": "authority/actual-image/django/core/files/uploadhandler.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/core/handlers/base.py": {
+        "original_sha256": "7e150b989896d5b8c830d1807722a5a1d5a68a48209031d3247695707c2f41ac",
+        "exact_public_blob": "authority/actual-image/django/core/handlers/base.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/db/models/base.py": {
+        "original_sha256": "3a387fb69469d93a7a1e27e16d93d5258d2e4c5e637bca8dbfb767a851e154ab",
+        "exact_public_blob": "authority/actual-image/django/db/models/base.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/db/models/deletion.py": {
+        "original_sha256": "27d04ac8ec534f337eb0b257d89f6b59ded830b6c3bc752e2030e818380db18a",
+        "exact_public_blob": "authority/actual-image/django/db/models/deletion.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/db/models/fields/__init__.py": {
+        "original_sha256": "a3e34e9156a619030257c4f99bd9eb984b6225016a0ef93a9263a2488056ebf5",
+        "exact_public_blob": "authority/actual-image/django/db/models/fields/__init__.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/http/__init__.py": {
+        "original_sha256": "b95533d28bfe7a6736f616c3efc40a2a46bf4752f89a90c33e19327e4c788f34",
+        "exact_public_blob": "authority/actual-image/django/http/__init__.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/http/multipartparser.py": {
+        "original_sha256": "f5f3ec9cde944ed3da5fff296d368080ed504c522d2cf7c31c025f990e27d2d7",
+        "exact_public_blob": "authority/actual-image/django/http/multipartparser.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/http/request.py": {
+        "original_sha256": "6ad362eba6fb2c5b51b7f81944abf2613a9bc9a42b964a28d8271ad124270d0b",
+        "exact_public_blob": "authority/actual-image/django/http/request.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/http/response.py": {
+        "original_sha256": "66363ef520f59a8037a8acf942b1696890861bba578b6f36bbe44983d64008ec",
+        "exact_public_blob": "authority/actual-image/django/http/response.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/middleware/csrf.py": {
+        "original_sha256": "ae1d82bd6dabbd7f3f67d8294b9f2f2d57a76693fe71edb90f41fd57b6887ebf",
+        "exact_public_blob": "authority/actual-image/django/middleware/csrf.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/test/client.py": {
+        "original_sha256": "dd0eb08101baaa523dbcb4432f153966e857c881e0159930a4a8cf5a339d7ac3",
+        "exact_public_blob": "authority/actual-image/django/test/client.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/utils/datastructures.py": {
+        "original_sha256": "cfe76fe0e3ed795f44c49366ebf770c9e89baf3038a89283306c5b133d3f9eb1",
+        "exact_public_blob": "authority/actual-image/django/utils/datastructures.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/utils/encoding.py": {
+        "original_sha256": "f0e4db3db05e105d527119b140d0b863c7fc668ccc18a5c2c8c7fc6a4509afd5",
+        "exact_public_blob": "authority/actual-image/django/utils/encoding.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/utils/http.py": {
+        "original_sha256": "c73cc334ef74c5a9eaee7cf1f8056b62058913ab552f430d310dada7787c34fc",
+        "exact_public_blob": "authority/actual-image/django/utils/http.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/django/utils/module_loading.py": {
+        "original_sha256": "a196e7d0511d2357bf4253e9d1c50baca0d183cb24caba94360e9fffa77f2c1f",
+        "exact_public_blob": "authority/actual-image/django/utils/module_loading.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/jwt/__init__.py": {
+        "original_sha256": "d3a4446591308befe70cbc989428dbfa0dfe7ec7eee5d35a57a22043451c253c",
+        "exact_public_blob": "authority/actual-image/jwt/__init__.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/jwt/algorithms.py": {
+        "original_sha256": "31e174916a77d17f4ed9dbcd3b869e9264a146aaf8d97f02d9b43bf828fe0441",
+        "exact_public_blob": "authority/actual-image/jwt/algorithms.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/jwt/api_jws.py": {
+        "original_sha256": "80e83b3a4089f6a19692bb5b2f56784edc3bd65bf74043bad7a230f9c5bdcf12",
+        "exact_public_blob": "authority/actual-image/jwt/api_jws.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/jwt/api_jwt.py": {
+        "original_sha256": "a2af9f3593c8cf9133163cb0b5b08223281b8292d5db5665309bc23c212cac76",
+        "exact_public_blob": "authority/actual-image/jwt/api_jwt.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/jwt/exceptions.py": {
+        "original_sha256": "3540f48760343221d5e94f933edfc0af4a6b9c01f1c892748ba2c7216cddf154",
+        "exact_public_blob": "authority/actual-image/jwt/exceptions.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/jwt/utils.py": {
+        "original_sha256": "b9d89ca2f37984f3779d6a85029b9acd535fa2a776444ffc32d2211b83853aaf",
+        "exact_public_blob": "authority/actual-image/jwt/utils.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/__init__.py": {
+        "original_sha256": "c44e145d9d0daada4d6a0666bc73c3372659c9de58aa345440b4ad40dd0efdb5",
+        "exact_public_blob": "authority/actual-image/rest_framework/__init__.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/authentication.py": {
+        "original_sha256": "cf9b669f80cc16c88cb9277883567718638763a2f3170a1b9df598fc8a7206fc",
+        "exact_public_blob": "authority/actual-image/rest_framework/authentication.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/exceptions.py": {
+        "original_sha256": "935e5ae7264f324e084f615b56620591e0111f5e672043514d7d9be41dcba062",
+        "exact_public_blob": "authority/actual-image/rest_framework/exceptions.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/fields.py": {
+        "original_sha256": "45525c12f86f294efea3ab3bac85f49c5f78f6f51ff2732769b5e7827888d188",
+        "exact_public_blob": "authority/actual-image/rest_framework/fields.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/generics.py": {
+        "original_sha256": "7ad3311a1f9aae8e5ce42824c211efd089ae2c555bce2326dca5254b30a8352d",
+        "exact_public_blob": "authority/actual-image/rest_framework/generics.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/mixins.py": {
+        "original_sha256": "701287aa9709e365577b39cb2f651c93f675eced7a41227a0989796640247da7",
+        "exact_public_blob": "authority/actual-image/rest_framework/mixins.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/negotiation.py": {
+        "original_sha256": "7a422847e5255886a224f4cceeba67eed653ed269b37a75fbdd7050e190996eb",
+        "exact_public_blob": "authority/actual-image/rest_framework/negotiation.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/parsers.py": {
+        "original_sha256": "7dfbcc2707bc3182fc51b8bb3c426dcdd8ee82d4a6f090f6059429a208fb7622",
+        "exact_public_blob": "authority/actual-image/rest_framework/parsers.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/permissions.py": {
+        "original_sha256": "b4c6285334dc756081bc1896606574dd248dad44379ed4b55736a863f70e7e89",
+        "exact_public_blob": "authority/actual-image/rest_framework/permissions.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/renderers.py": {
+        "original_sha256": "ded88dfb5dcf205877654ed1daf5e5484ef3d07fa6996d6cc7c1123e5239612f",
+        "exact_public_blob": "authority/actual-image/rest_framework/renderers.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/request.py": {
+        "original_sha256": "4d3b8cf78f57a5308d8a11fcdeb902d8d162c5df5dc6be2a85fbbb950c6a7e16",
+        "exact_public_blob": "authority/actual-image/rest_framework/request.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/serializers.py": {
+        "original_sha256": "d2ebe00d3b11079cc4de2cd0715ff7f80e6870df3a8b192a6d2a23178a18b9ac",
+        "exact_public_blob": "authority/actual-image/rest_framework/serializers.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/settings.py": {
+        "original_sha256": "224f31e20582a0ac5a367a92852042b255521acb3bbc8c15e10b2c8474ebbe17",
+        "exact_public_blob": "authority/actual-image/rest_framework/settings.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/test.py": {
+        "original_sha256": "900633e8f584ed23f1d79d76e1d25b5f68c8c4a5f66d87c8918458639f57ffa8",
+        "exact_public_blob": "authority/actual-image/rest_framework/test.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/utils/field_mapping.py": {
+        "original_sha256": "8a6f19588df4aa68dcc28ece264d21141282cab5970762cf5e721c71be6db186",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/field_mapping.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/utils/html.py": {
+        "original_sha256": "e0f4e296468da88fc6701d8b815c195a66f1d08d36854a09ae68a549bd7e6340",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/html.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/utils/json.py": {
+        "original_sha256": "d6a54e3adfc3b9a42a3b878fb9bfa34f6f65646fbdb0d9862c312a5b8d81019d",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/json.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/utils/mediatypes.py": {
+        "original_sha256": "71149fdaa455a14cd388857be4c93eefe9b75ae6755a897d9e0c2013a000d352",
+        "exact_public_blob": "authority/actual-image/rest_framework/utils/mediatypes.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/validators.py": {
+        "original_sha256": "8d24d41c50ba6e2a40cd57d84005518405282429fe84930845e2eb95aa97bd11",
+        "exact_public_blob": "authority/actual-image/rest_framework/validators.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework/views.py": {
+        "original_sha256": "07d663e11faac813dd0965c337ade1cf3d6596314a37a57a21dd8e30fa56b8be",
+        "exact_public_blob": "authority/actual-image/rest_framework/views.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework_simplejwt/__init__.py": {
+        "original_sha256": "ca05e86d0e4576df40508355b6c99f607a4621175bd1a778edcd939794c7b3f0",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/__init__.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework_simplejwt/authentication.py": {
+        "original_sha256": "49f8a4f56193507783aa86bd030248d71f271b82eba2f005f5500bce2b05701b",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/authentication.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework_simplejwt/backends.py": {
+        "original_sha256": "c4ae446b4c77e95426ae5a9c60444be132b7c0db0b147438c86fd16f6b4c97ee",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/backends.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework_simplejwt/exceptions.py": {
+        "original_sha256": "7ce92f9fc3100e65d2e20cd4bdfac3fbf1d45fb5d7a63fa126cfc6a919f8fd69",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/exceptions.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework_simplejwt/models.py": {
+        "original_sha256": "a296c95f3209afcee3fdb27dd45738f290abe7b4acda2daff12636d95ed4e442",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/models.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework_simplejwt/settings.py": {
+        "original_sha256": "866cd0ad5315338755d43a6c52a36a72b45d7b41f59485843f42aefbddd9b035",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/settings.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework_simplejwt/state.py": {
+        "original_sha256": "f2ecdb84235735da1cbd5d0231ce45f62e129663abde102e582c73163521f489",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/state.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework_simplejwt/tokens.py": {
+        "original_sha256": "ed6bd22363ce5dc490faa3ed08090232e644b36eb0330952f18847d18902fefc",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/tokens.py"
+      },
+      "inputs/rendered-definition1/inputs/actual-image/rest_framework_simplejwt/utils.py": {
+        "original_sha256": "c14dc4d60c164e688ce7c91bfd9b1532d9e89cefbcfa3e16d465e7bdb1cfe1e0",
+        "exact_public_blob": "authority/actual-image/rest_framework_simplejwt/utils.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/accounts/authentication.py": {
+        "original_sha256": "415d74d68295c9764d46bac3b851878fa6ed48027e4aebd3859b0aaade026fe5",
+        "exact_public_blob": "authority/Original/apps/accounts/authentication.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/accounts/models.py": {
+        "original_sha256": "05cab8c590de411e68ff83b72d9d6256ca43007cbbab5d2a7f96a3a8965a9ded",
+        "exact_public_blob": "authority/Original/apps/accounts/models.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/accounts/permissions.py": {
+        "original_sha256": "407a0c6cbae122042c722e2bd3792579875a075cb6e6345ff43588250ac6fe6e",
+        "exact_public_blob": "authority/Original/apps/accounts/permissions.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/api/urls.py": {
+        "original_sha256": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6",
+        "exact_public_blob": "authority/Original/apps/api/urls.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/plugins/api_urls.py": {
+        "original_sha256": "d3072e42ee78bcc546f390e45f1190885f8b8eec365f82a0ad6ab033ab07ef45",
+        "exact_public_blob": "authority/Original/apps/plugins/api_urls.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/plugins/api_views.py": {
+        "original_sha256": "2f948dface3b0bdece923fdaac3d709754f1c6a65c95b3445471b0a2f9e7cb46",
+        "exact_public_blob": "authority/Original/apps/plugins/api_views.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/plugins/apps.py": {
+        "original_sha256": "27b3b52fad5c8ca2aaf1912ac4165b1b5c58ac438cb489ce1d6182c55ef32679",
+        "exact_public_blob": "authority/Original/apps/plugins/apps.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/plugins/loader.py": {
+        "original_sha256": "f6ad90014f5b5f2eb25d2382e1d6c9c2749c6c69202621a445c3a56193da2fbe",
+        "exact_public_blob": "authority/Original/apps/plugins/loader.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/plugins/migrations/0002_pluginrepo.py": {
+        "original_sha256": "f0ebdbfb2aad7ee82f31f31ec2c2fc7a80e483d12cdcb721307b772a2ee54057",
+        "exact_public_blob": "authority/Original/apps/plugins/migrations/0002_pluginrepo.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/plugins/migrations/0003_update_official_repo_url.py": {
+        "original_sha256": "75c406e0778f7a3e0b8979a8b3307bd43d37a69390affe56cc9faae258a6c68a",
+        "exact_public_blob": "authority/Original/apps/plugins/migrations/0003_update_official_repo_url.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/plugins/models.py": {
+        "original_sha256": "f013c9a70afd71ffd55cc90406354a694b9b9836d905c58e3869152b13035cf7",
+        "exact_public_blob": "authority/Original/apps/plugins/models.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/plugins/serializers.py": {
+        "original_sha256": "1623b004a80cb943070cbffde0da9e43f3439b2fe69bd1b9faebf2419b1b7326",
+        "exact_public_blob": "authority/Original/apps/plugins/serializers.py"
+      },
+      "inputs/rendered-definition1/inputs/original/apps/plugins/tasks.py": {
+        "original_sha256": "19bf9f0d06491280b331615cd17c76b0ce56c0e5ee67f91f10a512823d1284ab",
+        "exact_public_blob": "authority/Original/apps/plugins/tasks.py"
+      },
+      "inputs/rendered-definition1/inputs/original/core/apps.py": {
+        "original_sha256": "de47309cb6f755fde18bf6299014426189d9ae856c30287936fd77ff60fac79e",
+        "exact_public_blob": "authority/Original/core/apps.py"
+      },
+      "inputs/rendered-definition1/inputs/original/core/http_security.py": {
+        "original_sha256": "ba765d4d9297bbc708d476eb9309760fdef4ac8242e69a2e457d7f2a4ea09525",
+        "exact_public_blob": "authority/Original/core/http_security.py"
+      },
+      "inputs/rendered-definition1/inputs/original/core/image_proxy.py": {
+        "original_sha256": "3969f4eae0a1e8aebfc9ee1646290a68de1e408c2e80fa3aceafa7f3cd07f883",
+        "exact_public_blob": "authority/Original/core/image_proxy.py"
+      },
+      "inputs/rendered-definition1/inputs/original/core/models.py": {
+        "original_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+        "exact_public_blob": "authority/Original/core/models.py"
+      },
+      "inputs/rendered-definition1/inputs/original/core/signals.py": {
+        "original_sha256": "93b679b154a20e69164495f23efe859a7d60699c878303a3fb8c4dc2ff861bb4",
+        "exact_public_blob": "authority/Original/core/signals.py"
+      },
+      "inputs/rendered-definition1/inputs/original/core/utils.py": {
+        "original_sha256": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+        "exact_public_blob": "authority/Original/core/utils.py"
+      },
+      "inputs/rendered-definition1/inputs/original/dispatcharr/app_initialization.py": {
+        "original_sha256": "ca589b7d22428ea2bd10557218a6e943ebd5665a6d076a1bcf57d41b20799021",
+        "exact_public_blob": "authority/Original/dispatcharr/app_initialization.py"
+      },
+      "inputs/rendered-definition1/inputs/original/dispatcharr/log_collector.py": {
+        "original_sha256": "caadcce5bb836c38db15509a168a439f3035c9710d6b7fe1acbef7352176f829",
+        "exact_public_blob": "authority/Original/dispatcharr/log_collector.py"
+      },
+      "inputs/rendered-definition1/inputs/original/dispatcharr/settings.py": {
+        "original_sha256": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+        "exact_public_blob": "authority/Original/dispatcharr/settings.py"
+      },
+      "inputs/rendered-definition1/inputs/original/dispatcharr/urls.py": {
+        "original_sha256": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f",
+        "exact_public_blob": "authority/Original/dispatcharr/urls.py"
+      },
+      "inputs/rendered-definition1/inputs/original/dispatcharr/utils.py": {
+        "original_sha256": "740da794553c7c059bff3a2d64a14d0a2448ea8d867e7331568e3cd9d4eecdf6",
+        "exact_public_blob": "authority/Original/dispatcharr/utils.py"
+      },
+      "inputs/rendered-definition1/inputs/original-inputs.json": {
+        "original_sha256": "4c6c877961671aa3fbaf6e4e1fd50676fe69f0c90221efbd22f53d1a7d2b9c8c",
+        "exact_public_blob": "executed/Source24/inputs/original-inputs.json"
+      },
+      "inputs/rendered-definition1/inputs/schema62-authority.json": {
+        "original_sha256": "88e887321483a57093cc309ecd783aed7368b125c566a8e595a75fb8a92fc893",
+        "exact_public_blob": "executed/Source24/inputs/schema62-authority.json"
+      },
+      "inputs/rendered-definition1/local-controls.log": {
+        "original_sha256": "ade46590bd6cd71bd1901767f75403d440bf6dd312da7e40f0e089c41c93f866",
+        "exact_public_blob": "input-blobs/ade46590bd6cd71bd1901767f75403d440bf6dd312da7e40f0e089c41c93f866"
+      },
+      "inputs/rendered-definition1/plan.json": {
+        "original_sha256": "a5cc5c1971ed206aee4b528e0be65990bf38c220b2f6e80554c7960641209f86",
+        "exact_public_blob": "executed/Source2/inputs/plan.json"
+      },
+      "inputs/rendered-definition1/seal.json": {
+        "original_sha256": "161f204e6aca9c9caa7c58b812a5acaebc4f3112f9c9bb6e23e78262e03f9926",
+        "exact_public_blob": "input-blobs/161f204e6aca9c9caa7c58b812a5acaebc4f3112f9c9bb6e23e78262e03f9926"
+      },
+      "inputs/rendered-definition1/test_definition.py": {
+        "original_sha256": "39ba215db9b294b4eb9395ab711205929c22e1a372335630af21ce98077db951",
+        "exact_public_blob": "input-blobs/39ba215db9b294b4eb9395ab711205929c22e1a372335630af21ce98077db951"
+      },
+      "inputs/renderer-capture/actual-image/django/conf/global_settings.py": {
+        "original_sha256": "51cf04f8c1d3e83bf5226cb4a03c255c3bb42f66792be3a03987a90511b13e88",
+        "exact_public_blob": "authority/actual-image/django/conf/global_settings.py"
+      },
+      "inputs/renderer-capture/actual-image/django/core/handlers/exception.py": {
+        "original_sha256": "e10b79143b65790bae2d0c159778e4555213a97ece1b5d3a5bc750db2739f1b8",
+        "exact_public_blob": "authority/actual-image/django/core/handlers/exception.py"
+      },
+      "inputs/renderer-capture/actual-image/django/core/mail/__init__.py": {
+        "original_sha256": "f8b2f54b81d6a39de6d2be91bf2b3b0444f1c476cb712a14d6d00240f14114eb",
+        "exact_public_blob": "authority/actual-image/django/core/mail/__init__.py"
+      },
+      "inputs/renderer-capture/actual-image/django/template/engine.py": {
+        "original_sha256": "9be5db0f333f4f91cd90916635903523f964b2a34bcfe89f6c73388b82e0cea9",
+        "exact_public_blob": "authority/actual-image/django/template/engine.py"
+      },
+      "inputs/renderer-capture/actual-image/django/template/loader.py": {
+        "original_sha256": "3d515452d0b95a08915554e296143a345667be3972eac3fdb3b6a716632829da",
+        "exact_public_blob": "authority/actual-image/django/template/loader.py"
+      },
+      "inputs/renderer-capture/actual-image/django/template/loaders/app_directories.py": {
+        "original_sha256": "b10a555ca6299caafd465d584ad35c6be6c62101dc3a44a79a6d65daa4461551",
+        "exact_public_blob": "authority/actual-image/django/template/loaders/app_directories.py"
+      },
+      "inputs/renderer-capture/actual-image/django/template/loaders/filesystem.py": {
+        "original_sha256": "7f8b22943ed65a1bf72bd43248c816edd94618dc3060070708c493169c228976",
+        "exact_public_blob": "authority/actual-image/django/template/loaders/filesystem.py"
+      },
+      "inputs/renderer-capture/actual-image/django/utils/log.py": {
+        "original_sha256": "4d245f8381d52e49f75cca59468ad0ce115186aafde2d868efbc5f406138491c",
+        "exact_public_blob": "authority/actual-image/django/utils/log.py"
+      },
+      "inputs/renderer-capture/actual-image/django/views/debug.py": {
+        "original_sha256": "71c8784faca90cb457637b27a36fd2c8baa16ab3d1e6eae50e1c2d0554a567e1",
+        "exact_public_blob": "authority/actual-image/django/views/debug.py"
+      },
+      "inputs/renderer-capture/actual-image/django/views/defaults.py": {
+        "original_sha256": "0574f7e9abb0f17179670a9d5346a4cd7e484c505686ecbc89d4fc606902a3f2",
+        "exact_public_blob": "authority/actual-image/django/views/defaults.py"
+      },
+      "inputs/renderer-capture/actual-image/django/views/templates/technical_500.html": {
+        "original_sha256": "a479b12ed13014d030e33b7793deedcb976f62af6ad04d29d67145d694587692",
+        "exact_public_blob": "authority/actual-image/django/views/templates/technical_500.html"
+      },
+      "inputs/renderer-capture/actual-image/django/views/templates/technical_500.txt": {
+        "original_sha256": "6f48a113f152ed8b5f00539753fca4d3e093814999e1991655f9051dd1105d02",
+        "exact_public_blob": "authority/actual-image/django/views/templates/technical_500.txt"
+      },
+      "inputs/renderer-capture/capture-report.json": {
+        "original_sha256": "e879a695322fc1608585f9f6a2d51cec4b28fc4bf9178f547c73252d7befa51b",
+        "exact_public_blob": "executed/Source2/inputs/renderer-capture-proof.json"
+      },
+      "inputs/renderer-capture/command-01.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-01.stdout": {
+        "original_sha256": "f64a5e2fa16ca3b2c8886ecdf7fd8a49dac7ddf7c09231d26179945b1a6ea825",
+        "exact_public_blob": "input-blobs/f64a5e2fa16ca3b2c8886ecdf7fd8a49dac7ddf7c09231d26179945b1a6ea825"
+      },
+      "inputs/renderer-capture/command-02.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-02.stdout": {
+        "original_sha256": "31974e013e4f86f5103fc578cd326846ab2e49ee36cd43f0cde4637336b79216",
+        "exact_public_blob": "input-blobs/31974e013e4f86f5103fc578cd326846ab2e49ee36cd43f0cde4637336b79216"
+      },
+      "inputs/renderer-capture/command-03.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-03.stdout": {
+        "original_sha256": "685bf970cea2109bc94cb44dc0cda3bf12826c028f5ec47a702eb4844ef36831",
+        "exact_public_blob": "input-blobs/685bf970cea2109bc94cb44dc0cda3bf12826c028f5ec47a702eb4844ef36831"
+      },
+      "inputs/renderer-capture/command-04.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-04.stdout": {
+        "original_sha256": "d961d6ab27441fe9849902cae3e41a740a1679a60579173ac940f5fc64976900",
+        "exact_public_blob": "input-blobs/d961d6ab27441fe9849902cae3e41a740a1679a60579173ac940f5fc64976900"
+      },
+      "inputs/renderer-capture/command-05.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-05.stdout": {
+        "original_sha256": "62326bcb6edeaa9b0588846ab9bfd5b664f5c4ca82505bf2251e32b33388dd15",
+        "exact_public_blob": "input-blobs/62326bcb6edeaa9b0588846ab9bfd5b664f5c4ca82505bf2251e32b33388dd15"
+      },
+      "inputs/renderer-capture/command-06.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-06.stdout": {
+        "original_sha256": "876c6296fbf4db15da48d33b9cd39f2ed7405c557faf6b9903582271049594c3",
+        "exact_public_blob": "input-blobs/876c6296fbf4db15da48d33b9cd39f2ed7405c557faf6b9903582271049594c3"
+      },
+      "inputs/renderer-capture/command-07.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-07.stdout": {
+        "original_sha256": "7b532c8e0bfb202cea264e4808f17cef200335dd5728f455ab1f92cb347d6d92",
+        "exact_public_blob": "input-blobs/7b532c8e0bfb202cea264e4808f17cef200335dd5728f455ab1f92cb347d6d92"
+      },
+      "inputs/renderer-capture/command-08.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-08.stdout": {
+        "original_sha256": "7ad200fd16887cd94d198645dbf920e2d4e0c6a5ce4037f6e74602face15c9c0",
+        "exact_public_blob": "input-blobs/7ad200fd16887cd94d198645dbf920e2d4e0c6a5ce4037f6e74602face15c9c0"
+      },
+      "inputs/renderer-capture/command-09.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-09.stdout": {
+        "original_sha256": "2cea9452fc2defa2a7be6ade6a8ab636efcefe5eb2e5d3d6ff0bce615940be94",
+        "exact_public_blob": "input-blobs/2cea9452fc2defa2a7be6ade6a8ab636efcefe5eb2e5d3d6ff0bce615940be94"
+      },
+      "inputs/renderer-capture/command-10.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-10.stdout": {
+        "original_sha256": "89f6ffbe9b50deca3587a9a5b672b6151ced0e54ac84b61381dac49419c5be1b",
+        "exact_public_blob": "input-blobs/89f6ffbe9b50deca3587a9a5b672b6151ced0e54ac84b61381dac49419c5be1b"
+      },
+      "inputs/renderer-capture/command-11.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-11.stdout": {
+        "original_sha256": "11c8cae5c6e38fdfc653e1927abf79c97851136aff9b104f587a974a9a02d417",
+        "exact_public_blob": "input-blobs/11c8cae5c6e38fdfc653e1927abf79c97851136aff9b104f587a974a9a02d417"
+      },
+      "inputs/renderer-capture/command-12.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-12.stdout": {
+        "original_sha256": "f9c694ec0bf8205566d55375c9fd7d8bd62f070ffac857dc8b2810bc16c5db36",
+        "exact_public_blob": "input-blobs/f9c694ec0bf8205566d55375c9fd7d8bd62f070ffac857dc8b2810bc16c5db36"
+      },
+      "inputs/renderer-capture/command-13.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-13.stdout": {
+        "original_sha256": "2fcb2985f3f1694e2798c1e11cdbc28dac767e18106c5087218ab0fdf179a6b5",
+        "exact_public_blob": "input-blobs/2fcb2985f3f1694e2798c1e11cdbc28dac767e18106c5087218ab0fdf179a6b5"
+      },
+      "inputs/renderer-capture/command-14.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-14.stdout": {
+        "original_sha256": "649c3ab9250daa33a082a0ab8ff291d5ca594b0a7f724ab66e9443423284912d",
+        "exact_public_blob": "input-blobs/649c3ab9250daa33a082a0ab8ff291d5ca594b0a7f724ab66e9443423284912d"
+      },
+      "inputs/renderer-capture/command-15.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-15.stdout": {
+        "original_sha256": "31974e013e4f86f5103fc578cd326846ab2e49ee36cd43f0cde4637336b79216",
+        "exact_public_blob": "input-blobs/31974e013e4f86f5103fc578cd326846ab2e49ee36cd43f0cde4637336b79216"
+      },
+      "inputs/renderer-capture/command-16.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-16.stdout": {
+        "original_sha256": "f64a5e2fa16ca3b2c8886ecdf7fd8a49dac7ddf7c09231d26179945b1a6ea825",
+        "exact_public_blob": "input-blobs/f64a5e2fa16ca3b2c8886ecdf7fd8a49dac7ddf7c09231d26179945b1a6ea825"
+      },
+      "inputs/renderer-capture/command-17.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-17.stdout": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-18.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/command-18.stdout": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/created-inspect.json": {
+        "original_sha256": "b007fb208ccff4302b5e47f9efaf225f73721e6246081b57945c09e757f6c7df",
+        "exact_public_blob": "input-blobs/b007fb208ccff4302b5e47f9efaf225f73721e6246081b57945c09e757f6c7df"
+      },
+      "inputs/renderer-capture/final-before-remove.json": {
+        "original_sha256": "b007fb208ccff4302b5e47f9efaf225f73721e6246081b57945c09e757f6c7df",
+        "exact_public_blob": "input-blobs/b007fb208ccff4302b5e47f9efaf225f73721e6246081b57945c09e757f6c7df"
+      },
+      "inputs/renderer-capture/independent-query-1.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/independent-query-1.stdout": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/independent-query-2.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/independent-query-2.stdout": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "inputs/renderer-capture/independent-review.json": {
+        "original_sha256": "af405b18601cdbde6b1a8896a3ced8023ace8481e147fa9deda0a07aa8522709",
+        "exact_public_blob": "input-blobs/af405b18601cdbde6b1a8896a3ced8023ace8481e147fa9deda0a07aa8522709"
+      },
+      "inputs/renderer-capture-proof.json": {
+        "original_sha256": "e879a695322fc1608585f9f6a2d51cec4b28fc4bf9178f547c73252d7befa51b",
+        "exact_public_blob": "executed/Source2/inputs/renderer-capture-proof.json"
+      },
+      "inputs/renderer-dependency-state.json": {
+        "original_sha256": "d66e14312a44487ba32e7e3b1845cb46f606c73264160bab02f2770f3c9004b3",
+        "exact_public_blob": "input-blobs/d66e14312a44487ba32e7e3b1845cb46f606c73264160bab02f2770f3c9004b3"
+      },
+      "inputs/schema62-authority.json": {
+        "original_sha256": "88e887321483a57093cc309ecd783aed7368b125c566a8e595a75fb8a92fc893",
+        "exact_public_blob": "executed/Source24/inputs/schema62-authority.json"
+      },
+      "inputs/serializer9-proof.json": {
+        "original_sha256": "809459c1d8f4349db37f85cd42ff74b03c546d9fb9b828680c285edddb7ca347",
+        "exact_public_blob": "executed/Source24/inputs/serializer9-proof.json"
+      },
+      "inputs/tooling-inputs.json": {
+        "original_sha256": "1c82ae02de1562d80052ab79d1f38ec3e27ed12aea24bdb65f31442105ba6a38",
+        "exact_public_blob": "executed/Source24/inputs/tooling-inputs.json"
+      },
+      "source2-local-controls.log": {
+        "original_sha256": "b836463aaf0534dd57f5a5de919862377f2dd37f713d51e3a9c1c99e0f547783",
+        "exact_public_blob": "input-blobs/b836463aaf0534dd57f5a5de919862377f2dd37f713d51e3a9c1c99e0f547783"
+      }
+    },
+    "materialization": "All exact nonsensitive original input bytes deduplicated bySHA; archive fromOriginalGit, binary fromactualnewbuild, privateSource refs fromexplicitpublicNEWbinding orOriginalprivatebytes provided explicitly. Noautomaticappseal."
+  },
+  "Native2": {
+    "executed_seal_sha256": "8a6aeaa061d5173ba1343354b08868a7a7710ca8ff423e997ccda0a2fed98199",
+    "original_files": {
+      "controller/absolute_http.py": {
+        "original_sha256": "beff66f154ddd172731660eab145e3638ccd0e83d7f005184f6738325c208598",
+        "exact_public_blob": "executed/Native24/controller/absolute_http.py"
+      },
+      "controller/bootstrap_env.py": {
+        "original_sha256": "2fa13defc359a745e87b71e011105d7e6c8d04149ad7000e4dfa3c2c20aff5cf",
+        "exact_public_blob": "executed/Native24/controller/bootstrap_env.py"
+      },
+      "controller/bounded_process.py": {
+        "original_sha256": "0ca7491087ae756d667dbb9dc1655dbb0f8b0fd0c32b8bfa6592b1f7a16f9867",
+        "exact_public_blob": "executed/Source24/controller/bounded_process.py"
+      },
+      "controller/bounded_stop.py": {
+        "original_sha256": "8b1d619c16271a54012f270b9d886b3ef160fe2157ffc238c675cc1188a86a83",
+        "exact_public_blob": "executed/Source24/controller/bounded_stop.py"
+      },
+      "controller/driver.py": {
+        "original_sha256": "7cb4717e12afa4887b01680dbbc7d94d4bc852d87f2aa44530d7f5b3cf0c1f00",
+        "exact_public_blob": "executed/Native2/controller/driver.py"
+      },
+      "controller/native_http.py": {
+        "original_sha256": "b56c0781c53db379da314ec7aea9a1ea57c4e9672ac65e8d05e700fedffc9c69",
+        "exact_public_blob": "executed/Native2/controller/native_http.py"
+      },
+      "controller/native_state.py": {
+        "original_sha256": "ac365ab8bf76c7f3311f8895c03a621f6d87e9d71403db7abe32426eab2a4faa",
+        "exact_public_blob": "executed/Native2/controller/native_state.py"
+      },
+      "controller/public_manifest.py": {
+        "original_sha256": "851ed0bf77ae41a62f422d2ca78d2f08b0531dc1ee89eea597b29ee1766ce98f",
+        "exact_public_blob": "executed/Source24/controller/public_manifest.py"
+      },
+      "controller/reader.py": {
+        "original_sha256": "b24e3a3be28cd07f86b568889887118a59e9c5d209d5642434be028b317a0f14",
+        "exact_public_blob": "executed/Native24/controller/reader.py"
+      },
+      "controller/redis_channels.py": {
+        "original_sha256": "f6302b2c1370e3d41bf551b9f5da0558a8077afeeb7bbcd7120d47e19fe63720",
+        "exact_public_blob": "executed/Source24/controller/redis_channels.py"
+      },
+      "controller/retained_native24_helpers.py": {
+        "original_sha256": "e46fd4d0fea78634a5694a5065ff28546d68022bfb1b7d41daee3e28a9704453",
+        "exact_public_blob": "executed/Native24/controller/validate_native.py"
+      },
+      "controller/run.py": {
+        "original_sha256": "31bf96e2a67ad3e55fed3d44866cef6d733fecec570eeea68e05271e76b21e1f",
+        "exact_public_blob": "executed/Native2/controller/run.py"
+      },
+      "controller/start.sh": {
+        "original_sha256": "af4cbe358b61063b6f87197c30947415958734631ff0f285ec9c2e46e866ecec",
+        "exact_public_blob": "executed/Native24/controller/start.sh"
+      },
+      "controller/test_controls.py": {
+        "original_sha256": "e5e1783feaedd5b77155cb589a2b24dc8e388c3b29301a6c8a4cce50feb8a38e",
+        "exact_public_blob": "executed/Native2/controller/test_controls.py"
+      },
+      "controller/validate_native.py": {
+        "original_sha256": "288cd3b9f497bfc389d7c04d4497dea233cb016ae596a14789265cde3990afed",
+        "exact_public_blob": "executed/Native2/controller/validate_native.py"
+      },
+      "inputs/Source2-private.json": {
+        "original_sha256": "ea995857d4ba024165291c79f5882075accf7435d0abed588d53668722354608",
+        "omitted_kind": "explicitProjectedReference_NEW_binding",
+        "no_silent_hash_fallback": true
+      },
+      "inputs/authority.json": {
+        "original_sha256": "2a3abf530f11d58ddfb0f8c7762170578ffaa9af6b3c939f7db857795d4e1c78",
+        "exact_public_blob": "executed/Native2/inputs/authority.json"
+      },
+      "inputs/native-store-tests": {
+        "original_sha256": "1281b9ef97b5d9260c2dfd75080667a05a56152d76d0fbcc0412efa66ab0f14c",
+        "omitted_kind": "newBuildRequiresActualELFProof",
+        "no_silent_hash_fallback": true
+      },
+      "inputs/pg-init/01-user-setup.sh": {
+        "original_sha256": "c702e2355ae35f8b8b973efed459bb67672dd7982cc34b34fb2f1e9357436f7b",
+        "exact_public_blob": "executed/Native24/inputs/pg-init/01-user-setup.sh"
+      },
+      "inputs/pg-init/02-postgres.sh": {
+        "original_sha256": "290eeb71c2b60d1773854942f48de337733ae91b4bec30881b1d8900ac2496ac",
+        "exact_public_blob": "executed/Native24/inputs/pg-init/02-postgres.sh"
+      },
+      "inputs/plan.json": {
+        "original_sha256": "a5cc5c1971ed206aee4b528e0be65990bf38c220b2f6e80554c7960641209f86",
+        "exact_public_blob": "executed/Source2/inputs/plan.json"
+      },
+      "inputs/schema62-authority.json": {
+        "original_sha256": "88e887321483a57093cc309ecd783aed7368b125c566a8e595a75fb8a92fc893",
+        "exact_public_blob": "executed/Source24/inputs/schema62-authority.json"
+      },
+      "inputs/source-inputs.json": {
+        "original_sha256": "05a5bb4fb87e58d9acbcf132ef2e5300c4c89c4365718dded6ff4481277e86bf",
+        "exact_public_blob": "executed/Native2/inputs/source-inputs.json"
+      },
+      "build/check.log": {
+        "original_sha256": "dbf836bfa9f3676e038e825a54e8390f2fc35e5a034fe22eb653c386c17cd5ae",
+        "exact_public_blob": "executed/Native2/build/check.log"
+      },
+      "build/defaults.log": {
+        "original_sha256": "448ee739d4544a34a2323e3bd22bd6eb51d116a691947826c3ae8995789c397c",
+        "exact_public_blob": "executed/Native2/build/defaults.log"
+      },
+      "build/fmt.log": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "build/run_checks.py": {
+        "original_sha256": "1cad6086f203699428ba9e34d2d6d81afcb01a5faf8d2f0129a297acdc9969d0",
+        "exact_public_blob": "executed/Native2/build/run_checks.py"
+      },
+      "build/source-role-proof.json": {
+        "original_sha256": "2973176a0b0e3c441d6bc1b4b139b64442c5e0d096377ce1abfec1e713becfcf",
+        "exact_public_blob": "executed/Native2/build/source-role-proof.json"
+      },
+      "build/strict.log": {
+        "original_sha256": "4d7a555af350c1cc8f1c2c7068859ce0903af2990239dccd6000455db53efc59",
+        "exact_public_blob": "executed/Native2/build/strict.log"
+      },
+      "build/test-list.json": {
+        "original_sha256": "a60c6092a6bbcdd93901556ba6d8fa9c5d0af51557f5ee5118bb03478f1fdbc5",
+        "exact_public_blob": "executed/Native2/build/test-list.json"
+      },
+      "build/test-list.stderr": {
+        "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact_public_blob": "executed/Native24/build/test-list.stderr"
+      },
+      "build/test-list.stdout": {
+        "original_sha256": "2e229e39ada8312da5acf739084dd133472cb53adf98e8eddf5310483a01efa9",
+        "exact_public_blob": "executed/Native2/build/test-list.stdout"
+      },
+      "build/waits.json": {
+        "original_sha256": "127840da36bbb68efac2635470fc905b2d852cdd95379b16c30c22eff040acc9",
+        "exact_public_blob": "executed/Native2/build/waits.json"
+      },
+      "plan.json": {
+        "original_sha256": "96addb3834ab604ff43b12a20c9772048bd3ed3d7f237d45b589bbdb591ad684",
+        "exact_public_blob": "executed/Native2/plan.json"
+      },
+      "outside-peer.json": {
+        "original_sha256": "be87f0b4a18331bde851878d3b1c2bff6405065e4d3aa067c4a27211938ba4ca",
+        "exact_public_blob": "executed/Native2/outside-peer.json"
+      },
+      "README.md": {
+        "original_sha256": "b70f94db76ff21ca086c51e07e85ca36cd518942a2bdc16b57c39bb49a43afb5",
+        "exact_public_blob": "executed/Native2/README.md"
+      }
+    },
+    "materialization": "All exact nonsensitive original input bytes deduplicated bySHA; archive fromOriginalGit, binary fromactualnewbuild, privateSource refs fromexplicitpublicNEWbinding orOriginalprivatebytes provided explicitly. Noautomaticappseal."
+  }
+}

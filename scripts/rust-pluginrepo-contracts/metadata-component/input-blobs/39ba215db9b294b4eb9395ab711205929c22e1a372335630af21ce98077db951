@@ -1,0 +1,36 @@
+"""Socket-free definition/authority checks; no Source import or HTTP run."""
+from pathlib import Path
+import copy,hashlib,json,unittest
+P=Path(__file__).resolve().parent
+
+def need(ok,label):
+ if not ok:raise ValueError(label)
+def validate(v):
+ need(v['state']=='SOURCE_ONLY_DEFINITION_UNEXECUTED'and v['Original_git']=='1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430','PinnedDefinitionOnly')
+ p=v['request_policy'];need(p['APIClient_raise_request_exception']is False and p['enforce_csrf_checks']is True and p['fresh_APIClient_per_request']is True and p['force_authenticate']is False,'LiteralFalseObserverRealAuth')
+ need([(r['alias'],r['id'],r['user_level'],r['api_key_alias'])for r in v['roles']]==[('admin_unique',101,10,'unique_admin'),('duplicate_first',201,10,'duplicate_pair'),('duplicate_second',202,1,'duplicate_pair')],'ExactlyRealUniqueAndAmbiguousActiveRoles')
+ need(all(r['is_active']is True and r['custom_properties']=={}for r in v['roles']),'NoInactiveOrNetworkConfounder')
+ expected=[(1,'PUT','custom_zulu','/api/plugins/repos/802/','unique_admin',b'[]'),(2,'GET','collection','/api/plugins/repos/','duplicate_pair',b'')];need(len(v['cases'])==2,'ExactlyTwoFreshRequests')
+ for row,(i,method,target,path,actor,body)in zip(v['cases'],expected):
+  need((row['index'],row['method'],row['target'],row['path'],row['actor_key_alias'])==(i,method,target,path,actor),'ExactFreshCaseRouteActorBinding');need(v['method_route_bindings'][target]==path,'PlanAliasRouteExact');need(bytes.fromhex(row['body_hex'])==body and type(row['body_bytes'])is int and row['body_bytes']==len(body)and row['body_sha256']==hashlib.sha256(body).hexdigest(),'ExactLiteralBody');need(row['predicted_status']is None and row['HTTP_status_content_type_body']=='UNMEASURED','NoInventedHTTPOracle')
+ need(v['seed']['native_seed_import']is False and v['seed']['PluginConfig_rows']==[]and len(v['seed']['custom_repos'])==1 and v['seed']['custom_repos'][0]['id']==802,'FreshSourceModelContextNoPassedPrefix')
+ cap=v['capture']['limits'];need(cap=={'requests':2,'request_seconds':8,'phase_seconds':120,'outer_seconds':1200,'cleanup_seconds':90,'response_bytes_each':1048576,'exception_message_bytes':65536,'exception_trace_bytes':4194304,'normal_commands':224,'total_commands':256,'normal_output_bytes':56*1048576,'total_output_bytes':64*1048576},'ExactFiniteCaps')
+ for row in json.loads((P/'inputs/original-inputs.json').read_text())['files']:
+  raw=(P/'inputs/original'/row['path']).read_bytes();need(len(raw)==row['bytes']and hashlib.sha256(raw).hexdigest()==row['sha256'],'ExactPinnedOriginalBytes')
+ for row in json.loads((P/'inputs/actual-dependencies.json').read_text()):
+  raw=(P/row['path']).read_bytes();need(len(raw)==row['bytes']and hashlib.sha256(raw).hexdigest()==row['sha256'],'ExactActualImageDependencyBytes')
+ return {'passed':True,'Source_calls':0,'Native_calls':0,'cases':2,'Original_files':24,'pinned_existing_dependency_files':55,'new_exception_renderer_dependency_capture':'UNPERFORMED; executor blocked pending exact bytes/closure'}
+class Definition(unittest.TestCase):
+ def test_positive(self):self.assertTrue(validate(json.loads((P/'plan.json').read_text()))['passed'])
+ def test_pinned_observer_and_duplicate_catch_source(self):
+  client=(P/'inputs/actual-image/django/test/client.py').read_text();auth=(P/'inputs/original/apps/accounts/authentication.py').read_text();self.assertIn('response.exc_info = self.exc_info',client);self.assertIn('if self.raise_request_exception:',client);self.assertIn('User.objects.get(api_key=raw_key)',auth);self.assertIn('except User.DoesNotExist:',auth);self.assertNotIn('except User.MultipleObjectsReturned',auth)
+ def test_definition_has_no_executable_app_calls(self):self.assertEqual(json.loads((P/'plan.json').read_text())['state'],'SOURCE_ONLY_DEFINITION_UNEXECUTED')
+def negative(name,path,value):
+ def test(self):
+  v=json.loads((P/'plan.json').read_text());d=v
+  for k in path[:-1]:d=d[k]
+  d[path[-1]]=value
+  with self.assertRaises(ValueError):validate(v)
+ setattr(Definition,'test_negative_'+name,test)
+for name,path,value in [('raise_true',['request_policy','APIClient_raise_request_exception'],True),('force_auth',['request_policy','force_authenticate'],True),('false_as_zero',['request_policy','APIClient_raise_request_exception'],0),('shared_client',['request_policy','fresh_APIClient_per_request'],False),('dupe_only_one',['roles',2,'api_key_alias'],'third_key'),('dupe_same_id',['roles',2,'id'],201),('dupe_inactive',['roles',2,'is_active'],False),('admin_not10',['roles',0,'user_level'],1),('wrong_target_id',['cases',0,'path'],'/api/plugins/repos/801/'),('alias_swap',['method_route_bindings','custom_zulu'],'/api/plugins/repos/801/'),('case_order',['cases',0,'method'],'GET'),('wrong_actor',['cases',1,'actor_key_alias'],'unique_admin'),('invent500',['cases',0,'predicted_status'],500),('invent401',['cases',1,'predicted_status'],401),('body_object',['cases',0,'body_hex'],'7b7d'),('wrong_body_len',['cases',0,'body_bytes'],3),('body_bool_len',['cases',1,'body_bytes'],False),('source_import_native_seed',['seed','native_seed_import'],True),('passed_prefix_count',['capture','limits','requests'],24),('widen_cleanup',['capture','limits','cleanup_seconds'],91)]:negative(name,path,value)
+if __name__=='__main__':unittest.main()

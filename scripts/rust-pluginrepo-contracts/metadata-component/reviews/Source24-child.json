@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "scope": "Independent readonly Source24 framework/API-key metadata authority; no Source rerun/TCP/Native/Main/fullM8",
+  "raw_sha256": "74d69f0a794b8113df17568452840689798d6e33c8695dd8e525943d24331add",
+  "execution_report_sha256": "e5c214ae2ef823ecae0407245860b4454340b26416975f44a9da0509e6f13abd",
+  "recomputed_effects": {
+    "passed": true,
+    "Source_requests": 24,
+    "framework_APIkey_only": true,
+    "Source_TCP_Native_Main_or_fullM8": false,
+    "cache_and_Channels_scope": "decoded owned groups, unrelated raw keys/frames preserved, TTL monotonic; unexecuted predictions"
+  },
+  "actual_HTTP_statuses": [
+    401,
+    403,
+    200,
+    403,
+    403,
+    403,
+    404,
+    400,
+    200,
+    200,
+    200,
+    200,
+    400,
+    400,
+    400,
+    400,
+    404,
+    200,
+    200,
+    405,
+    403,
+    400,
+    400,
+    null
+  ],
+  "last_outcome": "literal framework exception; no HTTP status observed",
+  "recorded_raw_passed": false,
+  "controller_actual_exit": 0,
+  "default_full6259_and_named11_byteexact": true,
+  "host_children": 19,
+  "host_identity_absence_rows": 27,
+  "fresh_cleanup_queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pluginrepo-source-a5ed41842d",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pluginrepo-source-a5ed41842d",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pluginrepo-source-a5ed41842d",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=c85da0edd5739a0424858fdd2d0045a353c91a8eeb8b54048b6d4273169b1241",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "new_app_or_Source_requests_by_review": 0
+}

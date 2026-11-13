@@ -1,0 +1,105 @@
+{
+  "passed": true,
+  "curator": "Source-contract child, notRootscope",
+  "portable_cases": {
+    "Source24": 24,
+    "Native24": 24,
+    "Source2": 2,
+    "Native2": 2
+  },
+  "portable_controls": 15,
+  "portable_controls_exit": 0,
+  "source_reconstruction": {
+    "Native24": {
+      "passed": true,
+      "epoch": "Native24",
+      "Git": "020ab532f6ec80d6c61536207c2b91954485d5b9",
+      "source_inputs": 852,
+      "apps_or_builds": 0
+    },
+    "Native2": {
+      "passed": true,
+      "epoch": "Native2",
+      "Git": "2b0a4db27d99c0824e1ab2ba95e7840ec6703e4a",
+      "source_inputs": 859,
+      "apps_or_builds": 0
+    }
+  },
+  "input_materialization": {
+    "Source24": {
+      "passed": true,
+      "exact_original_input_records": 144,
+      "pending_new_binding_records": 0,
+      "apps_or_builds": 0,
+      "ready_execution_seal": false
+    },
+    "Native24": {
+      "passed": true,
+      "exact_original_input_records": 32,
+      "pending_new_binding_records": 2,
+      "apps_or_builds": 0,
+      "ready_execution_seal": false
+    },
+    "Source2": {
+      "passed": true,
+      "exact_original_input_records": 306,
+      "pending_new_binding_records": 0,
+      "apps_or_builds": 0,
+      "ready_execution_seal": false
+    },
+    "Native2": {
+      "passed": true,
+      "exact_original_input_records": 34,
+      "pending_new_binding_records": 2,
+      "apps_or_builds": 0,
+      "ready_execution_seal": false
+    }
+  },
+  "private_projection_summary": {
+    "passed": true,
+    "scope": "privatecurator independent exacttyped/order projection check, not Rootscope/whole secret proof",
+    "projections": {
+      "Source24": {
+        "exact_typed_order_nodes_checked": 289882,
+        "allowedcredential_changes": 223,
+        "all_other_nodes_exact": true,
+        "Source_private_original_SHA": "74d69f0a794b8113df17568452840689798d6e33c8695dd8e525943d24331add"
+      },
+      "Native24": {
+        "exact_typed_order_nodes_checked": 270818,
+        "allowedcredential_changes": 219,
+        "all_other_nodes_exact": true,
+        "Source_private_original_SHA": "980fac3b2358b5308327db8742e4ba4bdb18a8a21a0c4a2cb858b54608e55a23"
+      },
+      "Source2": {
+        "exact_typed_order_nodes_checked": 43516,
+        "allowedcredential_changes": 20,
+        "all_other_nodes_exact": true,
+        "Source_private_original_SHA": "ea995857d4ba024165291c79f5882075accf7435d0abed588d53668722354608"
+      },
+      "Native2": {
+        "exact_typed_order_nodes_checked": 27352,
+        "allowedcredential_changes": 17,
+        "all_other_nodes_exact": true,
+        "Source_private_original_SHA": "59a74094d531e9d9f6c122793a0532069c7176660bac4f63adda3d260ddf6fda"
+      }
+    },
+    "total_typed_nodes_compared": 631568,
+    "actual_synthetic_keys": 6,
+    "representations_scanned": 18,
+    "selected_files_scanned": 599,
+    "hex_fields_decoded": 23583,
+    "finite_findings": 0,
+    "actualOriginalNativeimporters_consumed_originalSourcekeys": true,
+    "public_reference_binding": "NEWpubliccredentialalias, strictselectedSHAonly",
+    "Source_Native_app_calls": 0
+  },
+  "new_apps_builds_or_Docker": 0,
+  "development_history": "Privatecurator firstSyntaxError and missedexpectedheaderalias expression fixed before qualification; no raw/executedvalidator/app/outcomes changed. No standalonefirststderrfile exists foralias development error; toolhistory only.",
+  "executed_input_closure_records": {
+    "Source24": 144,
+    "Native24": 34,
+    "Source2": 306,
+    "Native2": 36
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "passed": true,
+  "actual_host_exit": 0,
+  "commands": [
+    {
+      "command": 1,
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "pid": 1781604,
+      "observed_starttime": "30860169",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "began_epoch": 1794588206.6504917,
+      "completed_epoch": 1794588208.5235496,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_map_equal_after_wait": true
+    },
+    {
+      "command": 2,
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store"
+      ],
+      "pid": 1781909,
+      "observed_starttime": "30860361",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "began_epoch": 1794588208.5656428,
+      "completed_epoch": 1794588208.7172344,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "fcce12e8e9a3743502ec98eb1888a43a32489c10219b715f931aa40675ed5311",
+      "source_map_equal_after_wait": true
+    },
+    {
+      "command": 3,
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 1781927,
+      "observed_starttime": "30860380",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "began_epoch": 1794588208.7557876,
+      "completed_epoch": 1794588219.971077,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "fd141c21046eaef6779cd235bb7a95ecc4d2f9b502ac35925d092733df5cbd71",
+      "source_map_equal_after_wait": true
+    },
+    {
+      "command": 4,
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "plugin_repositories::tests",
+        "--",
+        "--nocapture"
+      ],
+      "pid": 1782428,
+      "observed_starttime": "30861505",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "began_epoch": 1794588220.0099163,
+      "completed_epoch": 1794588239.3077686,
+      "stdout_sha256": "7bcafb3789687d5789ba4eaf9ca3f2379dcd63cbcab36b56fb308047f65cc0ca",
+      "stderr_sha256": "9f8b4248248cc2e5e61a395feea3009ed7918179c2b1eabf1dcfd9e3e7569296",
+      "source_map_equal_after_wait": true
+    },
+    {
+      "command": 5,
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "pid": 1783479,
+      "observed_starttime": "30863439",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "began_epoch": 1794588239.3473427,
+      "completed_epoch": 1794588239.4808662,
+      "stdout_sha256": "e1d449b12913c0d4b730afaebcb06afcc5ef18dacdc6b5a2f6fd3784c62e90a6",
+      "stderr_sha256": "f9006ecc83d038fb20ca047601370a603d7898251659866e789e4f5da89b8dc7",
+      "source_map_equal_after_wait": true
+    }
+  ],
+  "source_map_sha256": "49378a22b3d27bcd94146a74b858e946abca2fbadf7b85f691cc718fd517271e",
+  "outside_ELF_copied": true
+}

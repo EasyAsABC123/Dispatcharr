@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m8-pluginrepo-rendered-errors-native-execution-plan-1/controller/run.py", line 110, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m8-pluginrepo-rendered-errors-native-execution-plan-1/controller/run.py", line 107, in main
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--execute-reviewed-seal');p.add_argument('--output',type=Path);p.add_argument('--docker',default='docker');a=p.parse_args();seal=check()
+                                                                                                                                                                                                    ~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m8-pluginrepo-rendered-errors-native-execution-plan-1/controller/run.py", line 23, in check
+    source=Path(seal['source_root']);expected=read(ROOT/'inputs/source-inputs.json');actual={str(p.relative_to(source)):sha(p)for p in source.rglob('*')if p.is_file()};need(actual==expected and len(actual)==859,'ExactCompiled859Source');need(all(p.stat().st_mode&0o222==0 for p in source.rglob('*')if p.is_file()),'ReadonlyCompiledSource')
+                                                                                                                                                                                                                                             ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m8-pluginrepo-rendered-errors-native-execution-plan-1/controller/run.py", line 12, in need
+    if not x:raise ValueError(label)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: ReadonlyCompiledSource

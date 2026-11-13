@@ -1,0 +1,78 @@
+{
+  "reviewer": "Root",
+  "passed": true,
+  "qualified_Source_requests": 24,
+  "literal_final_framework_exception_no_HTTP_status": true,
+  "semantic_result": {
+    "passed": true,
+    "Source_requests": 24,
+    "framework_APIkey_only": true,
+    "Source_TCP_Native_Main_or_fullM8": false,
+    "cache_and_Channels_scope": "decoded owned groups, unrelated raw keys/frames preserved, TTL monotonic; unexecuted predictions"
+  },
+  "default_raw_bytes_equal": true,
+  "host_commands_settled_and_PID_start_absent": 19,
+  "fresh_owned_absence": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pluginrepo-source-a5ed41842d",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pluginrepo-source-a5ed41842d",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-pluginrepo-source-a5ed41842d",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=c85da0edd5739a0424858fdd2d0045a353c91a8eeb8b54048b6d4273169b1241",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "Native_Main_performance": false
+}

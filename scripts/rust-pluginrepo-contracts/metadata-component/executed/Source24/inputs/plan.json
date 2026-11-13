@@ -1,0 +1,491 @@
+{
+  "state": "DEFINITION_ONLY_NO_SOURCE_OR_NATIVE_RUN",
+  "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "scope": "Plugin repository metadata REST list/update/delete and invalidcreate refusals only",
+  "method_route_bindings": {
+    "collection": "/api/plugins/repos/",
+    "official": "/api/plugins/repos/1/",
+    "custom_alpha": "/api/plugins/repos/801/",
+    "custom_zulu": "/api/plugins/repos/802/",
+    "missing": "/api/plugins/repos/987654321/"
+  },
+  "auth": "All nonanonymous cases use one actual persisted APIkey per owned actor; no force_authenticate/JWT mixture. REMOTE_ADDR127.0.0.1, globalUI127/8, admin_denied allowed_networks.UI192.0.2/24. Backend/cache/credential events retained.",
+  "roles": [
+    {
+      "alias": "admin",
+      "id": 101,
+      "user_level": 10,
+      "custom_properties": {}
+    },
+    {
+      "alias": "standard",
+      "id": 102,
+      "user_level": 1,
+      "custom_properties": {}
+    },
+    {
+      "alias": "basic",
+      "id": 103,
+      "user_level": 0,
+      "custom_properties": {}
+    },
+    {
+      "alias": "admin_denied",
+      "id": 104,
+      "user_level": 10,
+      "custom_properties": {
+        "allowed_networks": {
+          "UI": "192.0.2.0/24"
+        }
+      }
+    }
+  ],
+  "cases": [
+    {
+      "index": 1,
+      "name": "anonymous-list",
+      "actor": "anonymous",
+      "method": "GET",
+      "target": "collection",
+      "body_hex": "",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 401,
+      "predicted_repo_effect": "none"
+    },
+    {
+      "index": 2,
+      "name": "basic-list",
+      "actor": "basic",
+      "method": "GET",
+      "target": "collection",
+      "body_hex": "",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 403,
+      "predicted_repo_effect": "none"
+    },
+    {
+      "index": 3,
+      "name": "standard-list",
+      "actor": "standard",
+      "method": "GET",
+      "target": "collection",
+      "body_hex": "",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 200,
+      "predicted_repo_effect": "none; serialize ordering/derived registry_url and plugin_count"
+    },
+    {
+      "index": 4,
+      "name": "user-network-denied-list",
+      "actor": "admin_denied",
+      "method": "GET",
+      "target": "collection",
+      "body_hex": "",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 403,
+      "predicted_repo_effect": "none"
+    },
+    {
+      "index": 5,
+      "name": "standard-put-denied",
+      "actor": "standard",
+      "method": "PUT",
+      "target": "custom_alpha",
+      "body_hex": "7b7d",
+      "body_bytes": 2,
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 403,
+      "predicted_repo_effect": "none"
+    },
+    {
+      "index": 6,
+      "name": "standard-delete-denied",
+      "actor": "standard",
+      "method": "DELETE",
+      "target": "custom_zulu",
+      "body_hex": "",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 403,
+      "predicted_repo_effect": "none"
+    },
+    {
+      "index": 7,
+      "name": "missing-put-before-body",
+      "actor": "admin",
+      "method": "PUT",
+      "target": "missing",
+      "body_hex": "7b",
+      "body_bytes": 1,
+      "body_sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 404,
+      "predicted_repo_effect": "none; target lookup precedes request.data access"
+    },
+    {
+      "index": 8,
+      "name": "existing-put-malformed-json",
+      "actor": "admin",
+      "method": "PUT",
+      "target": "custom_alpha",
+      "body_hex": "7b",
+      "body_bytes": 1,
+      "body_sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 400,
+      "predicted_repo_effect": "none"
+    },
+    {
+      "index": 9,
+      "name": "empty-put-retains-fields",
+      "actor": "admin",
+      "method": "PUT",
+      "target": "custom_alpha",
+      "body_hex": "7b7d",
+      "body_bytes": 2,
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 200,
+      "predicted_repo_effect": "only target updated_at own-clock; all optional fields retained"
+    },
+    {
+      "index": 10,
+      "name": "put-disable",
+      "actor": "admin",
+      "method": "PUT",
+      "target": "custom_alpha",
+      "body_hex": "7b22656e61626c6564223a66616c73657d",
+      "body_bytes": 17,
+      "body_sha256": "5acf3ff77b4420677b5923071f303facaba7a9273a346284a667a275df325146",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 200,
+      "predicted_repo_effect": "only target enabled false+updated_at"
+    },
+    {
+      "index": 11,
+      "name": "put-public-key-trim",
+      "actor": "admin",
+      "method": "PUT",
+      "target": "custom_alpha",
+      "body_hex": "7b227075626c69635f6b6579223a22205c725c6e206f776e656420696e657274206b6579205c7420227d",
+      "body_bytes": 42,
+      "body_sha256": "0eb0e5f4591cdf01bb5cb3165aef0d6fb1728322f8dfd1cb06e88df484691f23",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 200,
+      "predicted_repo_effect": "only target public_key trim+updated_at; no verification/network"
+    },
+    {
+      "index": 12,
+      "name": "put-ignored-readonly-and-url",
+      "actor": "admin",
+      "method": "PUT",
+      "target": "custom_alpha",
+      "body_hex": "7b226964223a3939392c226e616d65223a2269676e6f726564222c2275726c223a2268747470733a2f2f69676e6f7265642e696e76616c69642f6d616e69666573742e6a736f6e222c2269735f6f6666696369616c223a747275652c227369676e61747572655f7665726966696564223a747275652c226361636865645f6d616e6966657374223a7b7d2c22637265617465645f6174223a22323030302d30312d30315430303a30303a30305a222c22756e6b6e6f776e223a2269676e6f726564227d",
+      "body_bytes": 195,
+      "body_sha256": "55e2f7dd5b29b46e8a521594379c0c9650684f840c1153fe52df9cd096e72710",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 200,
+      "predicted_repo_effect": "only updated_at; view filters to public_key/enabled before serializer"
+    },
+    {
+      "index": 13,
+      "name": "put-invalid-boolean",
+      "actor": "admin",
+      "method": "PUT",
+      "target": "custom_alpha",
+      "body_hex": "7b22656e61626c6564223a226e6f742d612d626f6f6c65616e227d",
+      "body_bytes": 27,
+      "body_sha256": "9c7a8987c8391cdd20602a66f73b74b81c82e48124fc9289584b16041ab11e56",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 400,
+      "predicted_repo_effect": "none"
+    },
+    {
+      "index": 14,
+      "name": "put-null-public-key",
+      "actor": "admin",
+      "method": "PUT",
+      "target": "custom_alpha",
+      "body_hex": "7b227075626c69635f6b6579223a6e756c6c7d",
+      "body_bytes": 19,
+      "body_sha256": "b6f4f9d015f68a72b69bb8bc5be927d82aea5888478fd1517e1414d0c5db1714",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 400,
+      "predicted_repo_effect": "none"
+    },
+    {
+      "index": 15,
+      "name": "put-null-enabled",
+      "actor": "admin",
+      "method": "PUT",
+      "target": "custom_alpha",
+      "body_hex": "7b22656e61626c6564223a6e756c6c7d",
+      "body_bytes": 16,
+      "body_sha256": "09ca91defaaea6a83db5cde23eada6be4513b6100c84446eb8da71609066cb8b",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 400,
+      "predicted_repo_effect": "none"
+    },
+    {
+      "index": 16,
+      "name": "official-delete-refused",
+      "actor": "admin",
+      "method": "DELETE",
+      "target": "official",
+      "body_hex": "7b2269676e6f726564223a22626f6479227d",
+      "body_bytes": 18,
+      "body_sha256": "2663917135436f6da3685470156004cc96fe0f3115316f35df64725d090abac0",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 400,
+      "predicted_repo_effect": "none; official row retained; delete body ignored"
+    },
+    {
+      "index": 17,
+      "name": "missing-delete",
+      "actor": "admin",
+      "method": "DELETE",
+      "target": "missing",
+      "body_hex": "",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 404,
+      "predicted_repo_effect": "none"
+    },
+    {
+      "index": 18,
+      "name": "custom-delete-detaches-config",
+      "actor": "admin",
+      "method": "DELETE",
+      "target": "custom_alpha",
+      "body_hex": "7b226d616c666f726d65645f69676e6f726564223a226e6f7420706172736564227d",
+      "body_bytes": 34,
+      "body_sha256": "8ca8ca4a8af1d754628d06070603496bd713b40e0b019492c5f17004abb54c3f",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 200,
+      "predicted_repo_effect": "target repository removed; only managed configs source_repo_id SET_NULL; no config updated_at/sequence change"
+    },
+    {
+      "index": 19,
+      "name": "list-after-delete",
+      "actor": "admin",
+      "method": "GET",
+      "target": "collection",
+      "body_hex": "",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 200,
+      "predicted_repo_effect": "none; official first then remaining custom name order"
+    },
+    {
+      "index": 20,
+      "name": "admin-patch-not-implemented-by-view",
+      "actor": "admin",
+      "method": "PATCH",
+      "target": "custom_zulu",
+      "body_hex": "7b7d",
+      "body_bytes": 2,
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 405,
+      "predicted_repo_effect": "none; authorized method has no handler"
+    },
+    {
+      "index": 21,
+      "name": "standard-patch-permission-first",
+      "actor": "standard",
+      "method": "PATCH",
+      "target": "custom_zulu",
+      "body_hex": "7b7d",
+      "body_bytes": 2,
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 403,
+      "predicted_repo_effect": "none; permission precedes method-not-allowed"
+    },
+    {
+      "index": 22,
+      "name": "create-missing-url-validation-only",
+      "actor": "admin",
+      "method": "POST",
+      "target": "collection",
+      "body_hex": "7b7d",
+      "body_bytes": 2,
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 400,
+      "predicted_repo_effect": "none; serializer rejection before manifest fetch"
+    },
+    {
+      "index": 23,
+      "name": "create-duplicate-url-validation-only",
+      "actor": "admin",
+      "method": "POST",
+      "target": "collection",
+      "body_hex": "7b2275726c223a2268747470733a2f2f706c7567696e2d7265706f2d6f776e65642e696e76616c69642f7a756c752e6a736f6e227d",
+      "body_bytes": 53,
+      "body_sha256": "e68785dc510fb3884aaf28fc5b8849933f86264820263180f0420252f20f3a81",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": 400,
+      "predicted_repo_effect": "none; uniqueness rejection before manifest fetch"
+    },
+    {
+      "index": 24,
+      "name": "existing-put-json-array-framework-exception",
+      "actor": "admin",
+      "method": "PUT",
+      "target": "custom_zulu",
+      "body_hex": "5b5d",
+      "body_bytes": 2,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "content_type": "application/json",
+      "prediction_unmeasured": true,
+      "predicted_status": null,
+      "predicted_repo_effect": "unmeasured literal framework exception from request.data.items, not deployed HTTP500 authority"
+    }
+  ],
+  "seed": {
+    "official": "Retain actual migration-created official row1 after pinned migration0003; capture all original timestamps/fields before any request; no fetch",
+    "custom_repos": [
+      {
+        "id": 801,
+        "name": "Alpha Owned",
+        "url": "https://plugin-repo-owned.invalid/alpha.json",
+        "is_official": false,
+        "enabled": true,
+        "public_key": "",
+        "signature_verified": null,
+        "cached_manifest": {
+          "manifest": {
+            "registry_url": "https://plugin-registry-owned.invalid/alpha",
+            "plugins": [
+              {
+                "slug": "one"
+              },
+              {
+                "slug": "two"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": 802,
+        "name": "Zulu Owned",
+        "url": "https://plugin-repo-owned.invalid/zulu.json",
+        "is_official": false,
+        "enabled": true,
+        "public_key": "",
+        "signature_verified": null,
+        "cached_manifest": {
+          "registry_url": null,
+          "plugins": "not-a-list"
+        }
+      }
+    ],
+    "managed_config_pairs": [
+      {
+        "id": 901,
+        "key": "owned-inert-a",
+        "source_repo_id": 801,
+        "enabled": false,
+        "ever_enabled": false
+      },
+      {
+        "id": 902,
+        "key": "owned-inert-b",
+        "source_repo_id": 801,
+        "enabled": false,
+        "ever_enabled": false
+      }
+    ],
+    "sequence_last_values_called": {
+      "plugins_pluginrepo_id_seq": 802,
+      "plugins_pluginconfig_id_seq": 902,
+      "accounts_user_id_seq": 104
+    },
+    "startup_scope": "Real management-shell marker before django.setup; assert pinned should_skip_initialization and PluginsConfig.ready management skip. No function patch, plugin discovery/run/reload/install or unknown startup descendant consumption. Framework/APIClient authority only.",
+    "CoreSettings": [
+      {
+        "key": "network_access",
+        "name": "Owned plugin repository UI networks",
+        "value": {
+          "UI": "127.0.0.0/8"
+        }
+      },
+      {
+        "key": "system_settings",
+        "name": "Owned plugin repository system settings",
+        "value": {
+          "time_zone": "UTC"
+        }
+      }
+    ],
+    "Django_cache_and_Channels_selected_Redis_DB": 1,
+    "CoreSettings_real_source_signal_context": "Real ORM saves invalidate group versions and system save applies timezone/log-collector conf under owned /data/logs. No collector, plugin, web or worker process started. Initial/final owned log/media file bytes/hash and all signal registrations retained. No Native bootstrap/model-signal acceptance."
+  },
+  "capture": {
+    "APIClient_raise_request_exception": true,
+    "exceptions": "Per-request outer fixture catch separate from literal framework exception. Full message/traceback retained with bytes/SHA/complete fields or fail capacity; never silently truncate complete. Final case expected shape unmeasured.",
+    "body_and_headers": "Exact status/CT/body bytes+SHA and parsedJSON for actual responses; full raw request literal; no response synthesized for raised exception",
+    "SQL": "Full62tables59seq before/after each request, raw repo/config rows and exact sequences, actor/credential events; no cross-request clock rewinds; own update clocks; no exact concurrent schedule claim",
+    "Redis": "All selected DB0..3 keys/types/DUMP/value/list/PTTL bounded; API-key history/events and Channels frames retained. Cache/auth/request_started effects are observations; no blanket denied-request no-effect prediction.",
+    "default": "Literal before/after full62/59 default audit bytes; ownedDB only for seed/requests",
+    "network": "network-none fixture internal namespace only, no external I/O; selected views contain no manifest fetch after validation succeeds because validcreate/refresh/install/run are excluded; broker allframes unconsumed unless exact ownership declared",
+    "cleanup": "Owned DB/backend/helper/worker PIDs actual identities, all waits/pipes, exact projectALLcontainer/CID/network/volume absence; cleanup90 reserve before postcapture checks",
+    "limits": {
+      "requests": 24,
+      "request_seconds": 8,
+      "phase_seconds": 120,
+      "outer_seconds": 1200,
+      "cleanup_seconds": 90,
+      "raw_response_bytes_each": 1048576,
+      "captured_exception_bytes_each": 4194304,
+      "command_cap": 256,
+      "normal_output_MiB": 56,
+      "total_output_MiB": 64
+    }
+  },
+  "unqualified": [
+    "valid repository create/fetch/refresh/signature",
+    "plugin discovery/files/install/run/reload/schedules",
+    "physical caller loss/cancel/concurrency",
+    "SourceTCP/Main/defaultstartup",
+    "fullM8/full endpoint/fullauth/cache byte parity/performance"
+  ],
+  "next": "Freeze complete correct-route executor/effects/controller and actual dependency closure/local corruption controls for Root review before ANY app; Native implementation only after measured authority."
+}

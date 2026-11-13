@@ -1,0 +1,28 @@
+"""Pure finite definition controls; no Django/apps/Docker/network."""
+import hashlib,json,unittest
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent
+class Controls(unittest.TestCase):
+ def test_exact_24_and_body_bindings(self):
+  v=json.loads((ROOT/'plan.json').read_text());self.assertEqual([r['index']for r in v['cases']],list(range(1,25)))
+  for row in v['cases']:
+   raw=bytes.fromhex(row['body_hex']);self.assertEqual(len(raw),row['body_bytes']);self.assertEqual(hashlib.sha256(raw).hexdigest(),row['body_sha256']);self.assertIs(row['prediction_unmeasured'],True)
+ def test_Original_exact_blobs(self):
+  for row in json.loads((ROOT/'original-inputs.json').read_text())['files']:
+   raw=(ROOT/'original'/row['path']).read_bytes();self.assertEqual(len(raw),row['bytes']);self.assertEqual(hashlib.sha256(raw).hexdigest(),row['sha256'])
+ def test_no_valid_fetch_create(self):
+  v=json.loads((ROOT/'plan.json').read_text());posts=[r for r in v['cases']if r['method']=='POST'];self.assertEqual(len(posts),2);self.assertEqual(json.loads(bytes.fromhex(posts[0]['body_hex'])),{});self.assertEqual(json.loads(bytes.fromhex(posts[1]['body_hex']))['url'],v['seed']['custom_repos'][1]['url'])
+ def test_only_fixed_route_targets(self):
+  v=json.loads((ROOT/'plan.json').read_text());self.assertTrue(all(r['target']in v['method_route_bindings']for r in v['cases']));self.assertTrue(all(x.startswith('/api/plugins/repos/')for x in v['method_route_bindings'].values()))
+ def test_last_literal_array_and_exception_policy(self):
+  v=json.loads((ROOT/'plan.json').read_text());last=v['cases'][-1];self.assertIsNone(last['predicted_status']);self.assertEqual(json.loads(bytes.fromhex(last['body_hex'])),[]);self.assertIs(v['capture']['APIClient_raise_request_exception'],True)
+ def test_missing_lookup_malformed_body_order(self):
+  v=json.loads((ROOT/'plan.json').read_text());row=v['cases'][6];self.assertEqual((row['target'],bytes.fromhex(row['body_hex']),row['predicted_status']),('missing',b'{',404))
+ def test_real_source_method_permissions(self):
+  text=(ROOT/'original/apps/accounts/permissions.py').read_text();self.assertIn('"GET": [IsStandardUser]',text);self.assertIn('"PUT": [IsAdmin]',text);self.assertIn('"DELETE": [IsAdmin]',text)
+ def test_source_write_whitelist_lookup_before_body(self):
+  text=(ROOT/'original/apps/plugins/api_views.py').read_text();put=text[text.index('class PluginRepoDetailAPIView'):text.index('class PluginRepoRefreshAPIView')];self.assertLess(put.index('repo = PluginRepo.objects.get'),put.index('request.data.items()'));self.assertIn('ALLOWED_FIELDS = {"public_key", "enabled"}',put)
+ def test_source_cascade_is_set_null(self):self.assertIn('on_delete=models.SET_NULL',(ROOT/'original/apps/plugins/models.py').read_text())
+ def test_source_ready_management_skip_authority(self):
+  text=(ROOT/'original/apps/plugins/apps.py').read_text();self.assertIn('"shell"',text);self.assertIn('if argv and argv[0] in mgmt_cmds_to_skip:',text)
+if __name__=='__main__':unittest.main(verbosity=2)
