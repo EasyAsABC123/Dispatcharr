@@ -1,0 +1,152 @@
+{
+  "scope": "ABBA diagnostic resource preflight; invalid first measured phase, no gain acceptance",
+  "Original_authors_retain_full_credit": true,
+  "attempt1": {
+    "status": "pre-app parser failure",
+    "outer_actual_exit": 1,
+    "phase_actual_exit": 2,
+    "application_fixtures_started": 0,
+    "resource_samples": 0,
+    "evidence_directory": "artifacts/rust/m3-resource-preflight-actual-1",
+    "correction": "removed inherited Native-only parser restriction; preserved exact executed-tools and failure; same workload/order/budgets"
+  },
+  "actual_attempt2": {
+    "outer_actual_exit": 1,
+    "phase1_actual_exit": 1,
+    "order": [
+      "Original",
+      "Native",
+      "Native",
+      "Original"
+    ],
+    "completed_resource_windows": [
+      "Original"
+    ],
+    "remaining_phases": "not_run; no retry after invalid measurement",
+    "raw_result_path": "artifacts/rust/m3-resource-preflight-actual-2/result.json",
+    "raw_result_sha256": "a3c8eb967b8488703b0a5e74b4b6ffc34aea59ec6a0860d465fc2d0a25d8e544",
+    "raw_samples_sha256": "b6346a982079749caa895e6823b4736164a4ecadd613aa7020eff803241da0c0",
+    "raw_application_report_sha256": "d57fb09ff2479bef8c879042dc261b2e682b0a96fb9b0ffec30558881877e00f",
+    "samples": 31,
+    "elapsed_seconds": 29.99874352297047,
+    "media_byte_deltas": [
+      4605624,
+      4861492
+    ],
+    "per_second_advance_failure_ticks": [
+      2,
+      4,
+      7,
+      9,
+      10,
+      12,
+      15,
+      17,
+      20,
+      23,
+      25,
+      28,
+      30
+    ],
+    "all_ticks_active_two_clients_one_slot_and_upstream": true,
+    "reader_final_states": [
+      {
+        "bytes": 5629096,
+        "media_bytes": 5629096,
+        "packets": 29942,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": false,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      {
+        "bytes": 5884964,
+        "media_bytes": 5884964,
+        "packets": 31303,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": false,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    ],
+    "useful_work_gate_passed": false,
+    "off_window_decoder": "not_run; failure raised before phase decoder path, retained literally",
+    "owned_groups": {
+      "observer": {
+        "category": "observer",
+        "PID": 2554043
+      },
+      "orchestrator": {
+        "category": "observer",
+        "PID": 2554042
+      },
+      "baseline": {
+        "CID": "4f4676ce828dcea9cda0ebbc6d0ffb3800c6661c44c1c1f57804bcc16b226336",
+        "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "PID": 2554286,
+        "category": "backend_and_infrastructure"
+      },
+      "origin": {
+        "CID": "31e320009f524fb1a29d39c0d18c1923c13d96b5d8b9dd62181897e981d3d47d",
+        "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "PID": 2554207,
+        "category": "origin"
+      },
+      "python-replica": {
+        "CID": "335248273bd2438f19f4767e365eaf4007532a553d58e65a14293132fbea8480",
+        "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "PID": 2555554,
+        "category": "backend_and_infrastructure"
+      }
+    },
+    "accounting_notes": {
+      "charged": "raw cgroup v2 memory.current; includes charged file cache",
+      "working_set": "max(0,memory.current-memory.stat inactive_file), estimate; not RSS",
+      "aggregate": "same tick sequential file reads, read start/end retained; sum simultaneous samples, never sum lifetime peaks",
+      "origin_and_observer": "included in whole_fixture, also separately reported",
+      "peak": "per-group lifetime memory.peak context only; startup/decoder may differ from measurement window",
+      "cpu": "raw cumulative usage_usec plus monotonic sample timestamps; differences only across fixed measurement endpoints"
+    },
+    "raw_single_invalid_phase_metrics": {
+      "backend_and_infrastructure": {
+        "cpu_core_seconds": 1.224864,
+        "charged_memory_median_bytes": 452927488,
+        "charged_memory_max_simultaneous_bytes": 455196672,
+        "working_set_estimate_median_bytes": 452849664,
+        "working_set_estimate_max_simultaneous_bytes": 455118848
+      },
+      "origin": {
+        "cpu_core_seconds": 0.101416,
+        "charged_memory_median_bytes": 88928256,
+        "charged_memory_max_simultaneous_bytes": 89980928,
+        "working_set_estimate_median_bytes": 88924160,
+        "working_set_estimate_max_simultaneous_bytes": 89976832
+      },
+      "observer": {
+        "cpu_core_seconds": 1.993959,
+        "charged_memory_median_bytes": 77606912,
+        "charged_memory_max_simultaneous_bytes": 90017792,
+        "working_set_estimate_median_bytes": 70832128,
+        "working_set_estimate_max_simultaneous_bytes": 87953408
+      },
+      "whole_fixture": {
+        "cpu_core_seconds": 3.320239,
+        "charged_memory_median_bytes": 618557440,
+        "charged_memory_max_simultaneous_bytes": 629825536,
+        "working_set_estimate_median_bytes": 612421632,
+        "working_set_estimate_max_simultaneous_bytes": 627679232
+      }
+    },
+    "aggregate_ratio_computed": false,
+    "changed_inputs": [],
+    "fresh_cleanup_passed": true,
+    "fresh_cleanup_checks": 8
+  },
+  "full_M3_accepted": false,
+  "performance_gain_accepted": false,
+  "next_step_requires_review": "Delivery batching makes a one-second positive advance criterion stricter than decoded useful streaming. Review a future fixed rolling progress/decoded-duration rule and measured fixture bitrate before independently authorizing a new workload. Do not alter or reinterpret this failure."
+}

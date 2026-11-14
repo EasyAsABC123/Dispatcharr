@@ -1,0 +1,130 @@
+{
+  "checks": [
+    {
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-bedc19055139"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-bedc19055139"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-bedc19055139"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=4f4676ce828dcea9cda0ebbc6d0ffb3800c6661c44c1c1f57804bcc16b226336"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=31e320009f524fb1a29d39c0d18c1923c13d96b5d8b9dd62181897e981d3d47d"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "python-replica-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=335248273bd2438f19f4767e365eaf4007532a553d58e65a14293132fbea8480"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "observer-scope-settled",
+      "unit": "dispatcharr-resource-orchestrator-abba2.scope",
+      "argv": [
+        "systemctl",
+        "--user",
+        "show",
+        "dispatcharr-resource-orchestrator-abba2.scope",
+        "--property=ActiveState",
+        "--property=ControlGroup",
+        "--property=LoadState"
+      ],
+      "actual_exit": 0,
+      "stdout": "LoadState=not-found\nActiveState=inactive\nControlGroup=\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "observer-scope-settled",
+      "unit": "dispatcharr-resource-70167da20f874562b95c1c92a54da650.scope",
+      "argv": [
+        "systemctl",
+        "--user",
+        "show",
+        "dispatcharr-resource-70167da20f874562b95c1c92a54da650.scope",
+        "--property=ActiveState",
+        "--property=ControlGroup",
+        "--property=LoadState"
+      ],
+      "actual_exit": 0,
+      "stdout": "LoadState=not-found\nActiveState=inactive\nControlGroup=\n",
+      "stderr": "",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "captured_at": "2026-11-14T17:41:09.477720+00:00",
+  "result_sha256": "a3c8eb967b8488703b0a5e74b4b6ffc34aea59ec6a0860d465fc2d0a25d8e544"
+}

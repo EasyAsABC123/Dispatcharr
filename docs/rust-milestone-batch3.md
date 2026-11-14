@@ -29,11 +29,14 @@ display-timezone debounce, matching the newly observed Original normal-startup
 context. Request-start refresh and settings-setter invalidation remain intact.
 Finite signing numbers reuse the existing Python-compatible normalization and
 formatting before ASCII/surrogate escaping and LF. Nonfinite/capacity domains
-remain explicit; real signed-byte verification still requires Docker execution.
+remain explicit. Subsequent Docker execution verified a fresh Python-signed
+finite numeric/Unicode manifest and rejected its changed counterpart.
 
-Next: build one committed image and run the affected packaged M6 cohort, normal
-startup/setter timing, and valid/invalid finite-number signatures alongside the
-retained plugin references. These are SDK results; the previous runtime outcomes
-do not transfer to this candidate. Broader artwork, default scheduling, recovery,
+The [single Docker build and installed-file probes](rust-milestone-batch3-build.md)
+pass. The [packaged M6 cohort](rust-m6-packaged-main-batch3.md) subsequently passed
+170 assertions, including normal artwork completion and a deliberately failed
+SQL task followed by a successful repeat. Normal startup cache warming passed,
+but the settings PATCH returned 405: Main still needs its settings write router.
+These scoped results do not close a milestone. Broader artwork, default scheduling, recovery,
 formats, plugin operations and full M0–M9 acceptance remain open. No CPU/memory
 gain is claimed.

@@ -1,0 +1,254 @@
+[
+    {
+        "Id": "f5dc28b37f5518f537c780125b47d9785673a2bf5d493546873c87bf47c469ff",
+        "Created": "2026-11-14T17:49:03.150836452Z",
+        "Path": "/usr/local/bin/dispatcharr-rs",
+        "Args": [],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-14T17:49:03.244227319Z",
+            "FinishedAt": "2026-11-14T17:49:07.196055123Z"
+        },
+        "Image": "sha256:29f68ba847b3b8e083e9e77e28a2a8446273a420a0c78887c6dba1bffcacbee9",
+        "ResolvConfPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/b9b28927e7a44a748481c93e4d4660f99a752fee0e79850b30fda2ff09203665/resolv.conf",
+        "HostnamePath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/b9b28927e7a44a748481c93e4d4660f99a752fee0e79850b30fda2ff09203665/hostname",
+        "HostsPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/b9b28927e7a44a748481c93e4d4660f99a752fee0e79850b30fda2ff09203665/hosts",
+        "LogPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/f5dc28b37f5518f537c780125b47d9785673a2bf5d493546873c87bf47c469ff/f5dc28b37f5518f537c780125b47d9785673a2bf5d493546873c87bf47c469ff-json.log",
+        "Name": "/dispatcharr-m6-main-62b309cbe9-native-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch3-actual-1/Original:/app:ro",
+                "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch3-actual-1/main-data:/app/media:rw",
+                "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch3-actual-1:/evidence:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "container:b9b28927e7a44a748481c93e4d4660f99a752fee0e79850b30fda2ff09203665",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 200,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 805306368,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 1610612736,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 256,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch3-actual-1/Original",
+                "Destination": "/app",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch3-actual-1",
+                "Destination": "/evidence",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch3-actual-1/main-data",
+                "Destination": "/app/media",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "b9b28927e7a4",
+            "Domainname": "",
+            "User": "65532:65532",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "9192/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "RUST_EPG_REFRESH_ENABLED=1",
+                "POSTGRES_DB=rust_probe_backup_jobs_62b309cbe9",
+                "REDISCLI_AUTH=playback-fixture-only",
+                "REDIS_PORT=6379",
+                "POSTGRES_USER=dispatch",
+                "RUST_EPG_CACHE_DIR=/app/media/cached_epg",
+                "REDIS_DB=0",
+                "LC_ALL=C.UTF-8",
+                "PGID=1000",
+                "RUST_EPG_MEDIA_ROOT=/app/media",
+                "CELERY_RESULT_BACKEND=redis://:playback-fixture-only@127.0.0.1:6379/9",
+                "POSTGRES_HOST=127.0.0.1",
+                "REDIS_HOST=127.0.0.1",
+                "RUST_BIND=127.0.0.1:9192",
+                "LANG=C.UTF-8",
+                "REDIS_URL=redis://:playback-fixture-only@127.0.0.1:6379/0",
+                "DISPATCHARR_LOG_DIR=/evidence/special-logs/default",
+                "JOB_DISPOSABLE_FIXTURE=playback-fixture-only",
+                "DJANGO_SECRET_KEY=playback-fixture-only",
+                "REDIS_PASSWORD=playback-fixture-only",
+                "DISPATCHARR_PLUGINS_DIR=/evidence/empty-plugins",
+                "PUID=1000",
+                "TZ=UTC",
+                "PYTHONPATH=/special-root:/app",
+                "POSTGRES_PORT=5432",
+                "CELERY_BROKER_URL=redis://:playback-fixture-only@127.0.0.1:6379/8",
+                "RUST_VERSION_TASKS_ENABLED=1",
+                "RUST_SHUTDOWN_SECONDS=12",
+                "RUST_VERSION_HTTP_ORIGIN=http://127.0.0.1:9193",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "RUST_EPG_SOURCE_CWD=/app",
+                "POSTGRES_DIR=/data/db",
+                "POSTGRES_PASSWORD=playback-fixture-only",
+                "DISPATCHARR_ENV=aio",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "RUST_FRONTEND_DIR=/opt/dispatcharr-frontend"
+            ],
+            "Cmd": null,
+            "Image": "sha256:29f68ba847b3b8e083e9e77e28a2a8446273a420a0c78887c6dba1bffcacbee9",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "/usr/local/bin/dispatcharr-rs"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "ad52205f4b0309276d7a09c8065533013f1f7ad6a89b2c75e9f5f0d7d2122e1e",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "baseline:service_started:true",
+                "com.docker.compose.image": "sha256:29f68ba847b3b8e083e9e77e28a2a8446273a420a0c78887c6dba1bffcacbee9",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "dispatcharr-m6-main-62b309cbe9",
+                "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch3-actual-1/compose.json",
+                "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch3-actual-1",
+                "com.docker.compose.service": "native",
+                "com.docker.compose.version": "2.40.3",
+                "org.opencontainers.image.description": "Original Dispatcharr credit belongs to its original authors and contributors; see /usr/share/doc/dispatcharr/ATTRIBUTION.md. Migration parity is incomplete.",
+                "org.opencontainers.image.licenses": "AGPL-3.0-only",
+                "org.opencontainers.image.source-tree-sha256": "01726c2090117d8f817415721d65bd970bb640b288b2772f5da2c804fd4fa767",
+                "org.opencontainers.image.title": "Dispatcharr derivative Rust backend port"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "Networks": {}
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:9d9c780e959b1a31fb173984e9c41d8a5978a32de9b861f9cf10b88e82282d46",
+            "size": 2385,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

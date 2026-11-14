@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch3-driver-1/tools/qualify.py", line 53, in <module>
+    artwork=[x['metadata']for x in new.values()if x['metadata']['parent_id']==series['task_id']];need(len(artwork)==2 and {x['task_id']for x in artwork}=={x[0][0]for x in series['children']},'TwoActualCompletedArtworkChildren')
+                                                  ~~~~~~~~~~~~~^^^^^^^^^^^^^
+KeyError: 'parent_id'

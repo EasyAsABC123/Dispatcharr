@@ -1,0 +1,47 @@
+# Overlay on compose.rust-playback.yml. The baseline container supplies the
+# migrated fixture database and Redis. Stop its web worker for candidate trials.
+services:
+  baseline:
+    volumes:
+      - ../scripts/rust-integration:/integration:ro
+  data-init:
+    image: debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+    platform: linux/amd64
+    user: "0:0"
+    entrypoint: [sh, -c, "mkdir -p /data/logos && chown 65532:65532 /data /data/logos"]
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN]
+    security_opt: [no-new-privileges:true]
+    volumes: [rust-data:/data]
+  candidate:
+    image: dispatcharr-rust-candidate:milestone-batch3
+    build:
+      context: ..
+      dockerfile: rust/Dockerfile.app
+    environment:
+      DATABASE_URL: postgresql://dispatch:playback-fixture-only@baseline:5432/dispatcharr
+      DJANGO_SECRET_KEY: playback-fixture-only
+      REDIS_URL: redis://:playback-fixture-only@baseline:6379/0
+      RUST_BIND: 0.0.0.0:9192
+      # Private upload spools must use the managed volume with a read-only root.
+      TMPDIR: /data
+      RUST_DATABASE_POOL_SIZE: "8"
+      RUST_MAX_CHANNELS: "32"
+      RUST_MAX_VIEWERS_PER_CHANNEL: "400"
+      RUST_RETAINED_BYTES_PER_CHANNEL: "16777216"
+      RUST_RETENTION_SECONDS: "60"
+      TOKIO_WORKER_THREADS: "1"
+      DISPATCHARR_TRUSTED_PROXIES: none
+    ports: ["127.0.0.1::9192"]
+    depends_on:
+      baseline: {condition: service_started}
+      data-init: {condition: service_completed_successfully}
+    read_only: true
+    volumes: [rust-data:/data]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    stop_grace_period: 15s
+
+volumes:
+  rust-data:

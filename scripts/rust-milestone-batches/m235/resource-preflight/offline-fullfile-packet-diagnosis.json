@@ -1,0 +1,76 @@
+{
+  "scope": "Offline whole-file packet-position diagnosis; no Source app replay, no phase acceptance",
+  "tool_version": "ffprobe version n9.0.2 Copyright (c) 2007-2026 the FFmpeg developers",
+  "readers": [
+    {
+      "reader": "owner",
+      "argv": [
+        "ffprobe",
+        "-v",
+        "error",
+        "-show_entries",
+        "packet=stream_index,pts_time,duration_time,pos,flags",
+        "-of",
+        "json",
+        "artifacts/rust/m3-resource-preflight-actual-2/1-baseline/baseline-shared-demand/owner.ts"
+      ],
+      "actual_exit": 0,
+      "stderr": "",
+      "byte_interval": [
+        1023472,
+        5629096
+      ],
+      "streams": {
+        "1": {
+          "packet_count": 170,
+          "first_pts": 7.586667,
+          "last_pts_end": 36.450666,
+          "keyframe_packets": 170,
+          "PTS_span_seconds": 28.863999
+        },
+        "0": {
+          "packet_count": 726,
+          "first_pts": 7.701333,
+          "last_pts_end": 36.741333,
+          "keyframe_packets": 14,
+          "PTS_span_seconds": 29.04
+        }
+      }
+    },
+    {
+      "reader": "follower",
+      "argv": [
+        "ffprobe",
+        "-v",
+        "error",
+        "-show_entries",
+        "packet=stream_index,pts_time,duration_time,pos,flags",
+        "-of",
+        "json",
+        "artifacts/rust/m3-resource-preflight-actual-2/1-baseline/baseline-shared-demand/follower.ts"
+      ],
+      "actual_exit": 0,
+      "stderr": "",
+      "byte_interval": [
+        1023472,
+        5884964
+      ],
+      "streams": {
+        "1": {
+          "packet_count": 180,
+          "first_pts": 7.586667,
+          "last_pts_end": 38.157333,
+          "keyframe_packets": 180,
+          "PTS_span_seconds": 30.570666000000003
+        },
+        "0": {
+          "packet_count": 767,
+          "first_pts": 7.701333,
+          "last_pts_end": 38.381333,
+          "keyframe_packets": 15,
+          "PTS_span_seconds": 30.68
+        }
+      }
+    }
+  ]
+}
