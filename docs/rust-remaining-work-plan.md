@@ -1,80 +1,97 @@
 # Remaining Rust migration work and parallel ownership
 
 Original Dispatcharr authors and dependency contributors retain full application,
-algorithm and licensing credit. This is a work allocation, not a declaration of
-parity or milestone completion. React remains unchanged.
+algorithm and licensing credit. React remains unchanged. This work allocation
+records open acceptance gates; it does not declare any complete M0–M9 milestone.
+The authoritative ledger is [rust-milestones.md](rust-milestones.md).
 
-The authoritative acceptance ledger is [rust-milestones.md](rust-milestones.md).
-Image53 has scoped package/Main and live-performance evidence. The later image54
-build, SDK, all 28 selected corrected package groups and three scoped Main gates
-pass. Its portable evidence and reproduction instructions are in
-[rust-image54-validation.md](rust-image54-validation.md). Performance figures stay
-bound to the measured image/workload.
+The delivered opt-in component composition is
+[current882](../scripts/rust-component-checkpoints/current882/README.md).
+Its unsigned plugin comparisons and recording SQL-rejection correction are
+source-bound component evidence. The selected full package/performance reference
+remains [image57](rust-image57-validation.md); [image61](rust-image61-build.md)
+has separate immutable-build evidence. Later library changes inherit neither
+Main acceptance nor measured performance gains.
 
-| Milestone | Owner | Remaining work | Acceptance evidence |
-| --- | --- | --- | --- |
-| M0: executable baseline contracts | Primary agent | Finish operation-to-Source-test assignments and unresolved behavior contracts; distinguish observed dispatch, static candidates and partial role coverage. Reuse qualified captures where applicable. | Deterministic register with executable fixtures/assertions/results for required behaviors; exact Source provenance and rejection controls. |
-| M1: bounded streaming core | Primary agent, with streaming agent for dependencies | Preserve the already passed technical implementation/benchmark gates; resolve the formal M0 prerequisite and check later changes where relevant. | Existing exact-source core evidence plus completed prerequisites; no redundant core benchmark solely to update prose. |
-| M2: live TS | Streaming agent (`stream_http`) | Complete normal-capacity lifecycle, sharing, disconnect/rejoin, limits and remaining authenticated playback contracts. | Original/native behavior and physical lifecycle checks; decoder evidence and scoped resource acceptance. |
-| M3: formats and profiles | Streaming agent (`stream_http`) | Close remaining HLS/fMP4/profile, failover, cancellation and fanout gaps. | Format/profile contract matrix, real decoding, recovery/cleanup and relevant performance evidence. |
-| M4: VOD/timeshift | Streaming agent (`stream_http`) | Complete range/seek/catchup and session lifecycle; retain explicit counter/finalization/sharing differences until resolved. | Exact packaged Main witnesses, physical ownership/cancellation, decoding and relevant comparisons. |
-| M5: control APIs | API/operations agent (`source_contract_finish`) | Qualify notification SQL cancellation/commit behavior and packaged mutations; close forms, renderer, credential, concurrency and remaining account/settings/channel API gaps. | Source-bound requests/effects, permission/credential cases, actual SQL/HTTP settlement, React workflows and API benchmarks. |
-| M6: ingestion and jobs | Ingestion agent (`store_auth`) | Finish M3U known-failure/native-only child execution and physical collector; configured Series/recurring positive rules; remaining guide/matching/default-task behavior. | Actual producer/native worker/Original result-consumer chain, full SQL/cache/event/file/lock effects, physical fault controls, import/playback comparisons. |
-| M7: outputs and integrations | Streaming agent (`stream_http`) | Complete remaining Xtream/HDHR/XMLTV/M3U/realtime/WebSocket/integration contracts and recovery behavior. | Protocol and integration suites, packaged workflows, physical cleanup and workload-specific performance. |
-| M8: operations | API/operations agent (`source_contract_finish`) | Complete backup/restore/rollback, admin/session/CSRF, plugin/context, environment precedence and startup/shutdown behavior. | Real operational workflows and failure recovery, exact default-state audits and whole-service resource accounting. |
-| M9: full acceptance | Primary agent, with all three agents | Integrate qualified changes; finish package/Main gates, full parity crosswalk, soak, packaging and local cutover/rollback rehearsal. | Final committed-source host/Compose checks, complete prerequisite ledger, representative whole-graph performance/soak and repeatable rollback evidence. |
+| Milestone | Owner and execution queue | Next acceptance gate |
+| --- | --- | --- |
+| M0: executable baseline contracts | Primary agent, with each component owner | Complete operation/method/role crosswalk and missing Source cases against the fixed inventory; distinguish static candidates, observed dispatch and fully verified behavior. |
+| M1: bounded streaming core | Primary agent, with streaming owner | Preserve exact-source technical core evidence, complete prerequisites and test relevant changes; do not repeat a benchmark merely to update prose. |
+| M2: live TS | Streaming agent (`stream_http`), after current Core integration | Finish authenticated capacity, upstream sharing, disconnect/rejoin, counter, timer and teardown comparisons with actual media and physical lifecycle evidence. |
+| M3: formats and profiles | Streaming agent (`stream_http`), following M2 dependencies | Complete HLS/fMP4/profile, failover, cancellation and fanout matrix, real decoding and relevant paired measurements. |
+| M4: VOD/timeshift | Protocol/operations agent (`source_contract_finish`), after current plugin ownership gates | Complete ranges, seeks, catchup and session boundaries; retain unresolved counters/finalization/sharing differences and test packaged Main behavior. |
+| M5: control APIs | Core/streaming agent (`stream_http`) | Run the current combined Native special-settings cohorts against Source51, then late-reply/caller-loss/frame/shutdown gates; wire actual Main consumers and test React/account/channel workflows and API performance. |
+| M6: ingestion and jobs | Recording/jobs agent (`store_auth`) | Execute longer audio/video Native recording and held-result gates; finish Source-backed error/recovery/profile/scheduler/Series/default-job families and worker-inclusive measurements. |
+| M7: outputs and integrations | Protocol/operations agent (`source_contract_finish`), with streaming dependencies | Finish Xtream/HDHR/XMLTV/M3U/realtime/WebSocket contracts, missing/stale/refresh behavior and recovery; qualify combined packaged workflows and workload measurements. |
+| M8: operations/plugins | Protocol/operations agent (`source_contract_finish`) | Finish frontend-disconnect, SQL Ready and concurrent-fetch ownership; qualify HTTPS/DNS/signature domains, discovery/install/run, backup/restore/rollback, sessions/CSRF and environment/startup/shutdown workflows. |
+| M9: final acceptance | Primary agent with all three agents | Assemble the final committed source, complete prerequisites and full workflow/package/SDK checks, then restart/soak/cutover/rollback and representative full-graph paired performance. |
 
 ## Current executable queues
 
-- **Streaming/integration:** image54 package/Main evidence is qualified. Capture
-  bounded Original profile and Xtream observations are now captured (24 model,
-  38 framework and 38 TCP cases, with failed predecessors retained). Implement and
-  verify the remaining format/profile/output and physical SQL ownership gaps.
-- **API/operations:** physical notification cases preserve connection-drain
-  failures in cases 2, 4 and 6; the composite remains negative. The new 20-request
-  Original JWT/API-key capture and matching Native20 effects pass. The personal
-  permission fix is in the qualified source union; preserve separate administrative
-  write checks. The separate [SQLx experiment](rust-sqlx-close-dependency-experiment.md)
-  reproduces a baseline first-close failure and passes three max1 cases with a
-  private candidate; wider shutdown, other API and operational gaps stay open.
-  The [Original backup Source16](rust-backup-source16.md) passes16 requests/144
-  effects and a real owned task/archive; Native create/status and application
-  wiring remain separate gates.
-- **Ingestion:** the M3U candidate passes affected-crate checks and all 189
-  eight-domain guest comparisons. Its host cleanup-parser failure remains
-  recorded. Three lease controls and the corrected remaining two physical cases21
-  pass. Configured Series/recurring Source11 observations are captured with an
-  explicit missing-SQLSTATE instrumentation field; Native implementation, clocked
-  scheduling and complete child execution remain separate work.
-- **Primary agent:** the combined-source Compose SDK check and immutable image55
-  build pass; package/Main replay remains open. Review/integrate the three tracks, finish Source-contract
-  assignments, keep evidence and milestone status current, and commit/push scoped
-  completed work with receiving-ref verification.
+- **Plugin/protocol owner:** the portable Source25/Native25 and two selected
+  physical cases are published in the
+  [unsigned-manifest packet](../scripts/rust-pluginrepo-contracts/unsigned-manifest-component/README.md).
+  Next are four concrete Native-only cases: real frontend socket loss, committed
+  refresh held before Ready, cancelled refresh with late ErrorReady, and four
+  retained fetch/auth frames with fifth-admission rejection and later reuse.
+  Broader transport/signature and operational domains follow their Source gates.
+- **Core/streaming owner:** Source51 captured all six special settings groups,
+  including real unconsumed broker publications and old-key/new-key distinctions.
+  The private candidate and real RealtimeBus fixture peer pass their affected
+  checks; the combined current-source executor is being finalized. Cache warming
+  must use real bounded readers. A persistent proxy cache retains one actual
+  writer token, leaving three slots; helper parity does not establish Main knob
+  freshness. Late replies, caller loss, frame retention and shutdown remain tests.
+- **Recording/jobs owner:** the measured P0001 rejection continuation is delivered.
+  Original's separate nominal61-second audio/video recording produced56.64-second
+  media, decoded both streams and recorded four renewals. A pinned deserializer
+  verified all282 retained event associations without replay. The private Native61
+  composition preserves the existing30-second constructor and prime correction;
+  its full workspace passes826 tests with747 ignored. Fresh positive61 and held
+  post-end result tests remain unexecuted at this checkpoint. Media/clock criteria
+  are declared before output; arbitrary profiles and durations remain open.
+- **Primary agent:** review and publish scoped source/evidence, maintain the M0
+  crosswalk, integrate each qualified lane, then qualify actual Main/React,
+  package/SDK and operational workflows. Performance evidence must be measured
+  on the delivered source and workload; image57 gains do not transfer to workers
+  or later components.
 
-Each owner maintains an itemized checklist and advances implementation and tests
-in dependency order. A missing authority requires a bounded Source capture;
-existing valid observations are reused without inventing coverage. New behavior
-must have reviewable expected responses/effects before execution. Failed attempts
-remain recorded alongside separately qualified corrections.
+A missing authority requires a bounded Source capture. Reuse valid observations;
+never replay a passed Source merely to improve a failed controller's status.
+Preserve failed attempts, missing observations, raw clocks and separately
+qualified corrections. Every new behavior needs reviewable expected effects and
+an immutable input definition before execution.
 
-## Shared execution constraints
+## Shared execution and storage constraints
 
-Three worker agents run alongside the primary agent. Independent coding, compile
-and offline review proceed concurrently in separate frozen source roots. Docker
-fixtures share a global maximum of three ordinary slots. The shared-stream,
-all-workers-down and retention checks run alone after other heavy work settles.
-Resource experiments require a coordinated quiet window.
+Three worker agents run alongside the primary agent. Coding, controller work and
+read-only review proceed concurrently in frozen source roots. Root coordinates
+all application dispatch, with at most three ordinary Docker fixtures. Resource
+experiments require a quiet window; shared-stream/all-workers-down/retention
+checks run alone after other heavy work settles.
 
-All fixture dispatches bind the Docker/Compose tooling environment and run a
-read-only executable/socket/daemon check before claiming outputs. The initial
-image54 host-tooling failures remain failures; the corrected cohort has fresh
-outputs, state and clearance. Guide UTC guards, reference freshness, workload
-budgets and request definitions stay fixed.
+Use the existing shared Cargo target **in place**:
+`artifacts/rust/m7-xc-vod-info-physical-compile-29/target`.
+Root grants an exclusive compile reservation, and the owner releases it after
+actual waits, unchanged-source checks and required outside-ELF copies. Do not
+create a new target per validation run or copy/transplant compiler caches. Use
+locked/offline dependencies, two build jobs, debug information disabled and
+incremental compilation disabled for routine checks. Preserve frozen source,
+results, logs and explicitly recorded outside binaries. The completed cleanup
+removed195 targets and Docker build cache while preserving validation images;
+new work must not recreate that accumulation.
 
-Agents preserve unrelated working-tree edits and use scoped handoffs for shared
-runtime changes. The primary agent reviews source/input maps, actual process
-exits, effects and cleanup, then integrates and publishes completed changes.
+Every fixture binds Docker/Compose tooling, image/source/input hashes, fresh
+owned namespaces, fixed budgets and cleanup receipts. The primary agent checks
+actual exits, SQL/cache/media/clock effects and physical resource settlement
+before integration. Preserve unrelated working-tree edits; stage only reviewed
+paths, commit completed work and verify the receiving fork ref after pushing.
 A component pass, ignored test, preparation control or build alone cannot close
 an application milestone.
 
-Detailed owner queues: [streaming/integration](rust-streaming-remaining.md), [APIs/operations](rust-api-operations-remaining.md), and [ingestion/jobs](rust-ingestion-remaining.md). These retain each known gap, its existing authority and the next finite acceptance action.
+Detailed remaining inventories:
+[streaming/integration](rust-streaming-remaining.md),
+[APIs/operations](rust-api-operations-remaining.md), and
+[ingestion/jobs](rust-ingestion-remaining.md). Their older observations retain
+separate historical source bindings; current scopes are identified above and in
+[rust-remaining-acceptance.md](rust-remaining-acceptance.md).
