@@ -1,0 +1,434 @@
+{
+  "passed": true,
+  "authority_cases": [
+    {
+      "name": "missing_ca_path",
+      "expected_source_connection": false,
+      "command_exit": 0,
+      "actual": {
+        "case": "missing_ca_path",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "connected": false,
+        "error": {
+          "type": "ImproperlyConfigured",
+          "message": "PostgreSQL TLS: POSTGRES_SSL_CA_CERT='/tls/missing.pem' \u2014 file not found. Check that the certificate file exists and the volume is mounted correctly."
+        },
+        "elapsed_seconds": 0.0854820100357756
+      },
+      "expected_match": true
+    },
+    {
+      "name": "sqlite",
+      "expected_source_connection": true,
+      "command_exit": 0,
+      "actual": {
+        "case": "sqlite",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "django.db.backends.sqlite3",
+        "host": null,
+        "options": {},
+        "sqlite_version": "3.46.1",
+        "connected": true,
+        "elapsed_seconds": 0.16861638601403683
+      },
+      "expected_match": true
+    },
+    {
+      "name": "valid_verify_full",
+      "expected_source_connection": true,
+      "command_exit": 0,
+      "actual": {
+        "case": "valid_verify_full",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "dispatcharr.db.backends.postgresql_psycopg3",
+        "host": "127.0.0.1",
+        "options": {
+          "pool": false,
+          "MAX_CONNS": 8,
+          "REUSE_CONNS": 3,
+          "CONN_MAX_LIFETIME": 600,
+          "sslmode": "verify-full",
+          "sslrootcert": "/tls/ca.pem",
+          "sslcert": "/tls/client.pem",
+          "sslkey": "/tls/client-root.key"
+        },
+        "original_core_appconfig_imported": true,
+        "observation": [
+          "rust_probe_pluginrepo_9ade6432ef",
+          "dispatch",
+          "127.0.0.1/32",
+          170,
+          true,
+          "TLSv1.3",
+          "TLS_AES_256_GCM_SHA384",
+          "/CN=dispatch"
+        ],
+        "connected": true,
+        "elapsed_seconds": 0.23167737398762256
+      },
+      "expected_match": true
+    },
+    {
+      "name": "wrong_ca",
+      "expected_source_connection": false,
+      "command_exit": 0,
+      "actual": {
+        "case": "wrong_ca",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "dispatcharr.db.backends.postgresql_psycopg3",
+        "host": "127.0.0.1",
+        "options": {
+          "pool": false,
+          "MAX_CONNS": 8,
+          "REUSE_CONNS": 3,
+          "CONN_MAX_LIFETIME": 600,
+          "sslmode": "verify-full",
+          "sslrootcert": "/tls/wrong-ca.pem",
+          "sslcert": "/tls/client.pem",
+          "sslkey": "/tls/client-root.key"
+        },
+        "original_core_appconfig_imported": true,
+        "connected": false,
+        "error": {
+          "type": "OperationalError",
+          "message": "connection failed: connection to server at \"127.0.0.1\", port 5432 failed: SSL error: certificate verify failed"
+        },
+        "elapsed_seconds": 0.18730777298333123
+      },
+      "expected_match": true
+    },
+    {
+      "name": "hostname_mismatch",
+      "expected_source_connection": false,
+      "command_exit": 0,
+      "actual": {
+        "case": "hostname_mismatch",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "dispatcharr.db.backends.postgresql_psycopg3",
+        "host": "localhost",
+        "options": {
+          "pool": false,
+          "MAX_CONNS": 8,
+          "REUSE_CONNS": 3,
+          "CONN_MAX_LIFETIME": 600,
+          "sslmode": "verify-full",
+          "sslrootcert": "/tls/ca.pem",
+          "sslcert": "/tls/client.pem",
+          "sslkey": "/tls/client-root.key"
+        },
+        "original_core_appconfig_imported": true,
+        "connected": false,
+        "error": {
+          "type": "OperationalError",
+          "message": "connection failed: connection to server at \"127.0.0.1\", port 5432 failed: server certificate for \"127.0.0.1\" (and 1 other name) does not match host name \"localhost\"\nMultiple connection attempts failed. All failures were:\n- host: 'localhost', port: 5432, hostaddr: '::1': connection failed: connection to server at \"::1\", port 5432 failed: server certificate for \"127.0.0.1\" (and 1 other name) does not match host name \"localhost\"\n- host: 'localhost', port: 5432, hostaddr: '127.0.0.1': connection failed: connection to server at \"127.0.0.1\", port 5432 failed: server certificate for \"127.0.0.1\" (and 1 other name) does not match host name \"localhost\""
+        },
+        "elapsed_seconds": 0.19443885399959981
+      },
+      "expected_match": true
+    },
+    {
+      "name": "verify_ca_mismatch",
+      "expected_source_connection": true,
+      "command_exit": 0,
+      "actual": {
+        "case": "verify_ca_mismatch",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "dispatcharr.db.backends.postgresql_psycopg3",
+        "host": "localhost",
+        "options": {
+          "pool": false,
+          "MAX_CONNS": 8,
+          "REUSE_CONNS": 3,
+          "CONN_MAX_LIFETIME": 600,
+          "sslmode": "verify-ca",
+          "sslrootcert": "/tls/ca.pem",
+          "sslcert": "/tls/client.pem",
+          "sslkey": "/tls/client-root.key"
+        },
+        "original_core_appconfig_imported": true,
+        "observation": [
+          "rust_probe_pluginrepo_9ade6432ef",
+          "dispatch",
+          "::1/128",
+          192,
+          true,
+          "TLSv1.3",
+          "TLS_AES_256_GCM_SHA384",
+          "/CN=dispatch"
+        ],
+        "connected": true,
+        "elapsed_seconds": 0.19933509198017418
+      },
+      "expected_match": true
+    },
+    {
+      "name": "no_client_cert",
+      "expected_source_connection": false,
+      "command_exit": 0,
+      "actual": {
+        "case": "no_client_cert",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "dispatcharr.db.backends.postgresql_psycopg3",
+        "host": "127.0.0.1",
+        "options": {
+          "pool": false,
+          "MAX_CONNS": 8,
+          "REUSE_CONNS": 3,
+          "CONN_MAX_LIFETIME": 600,
+          "sslmode": "verify-full",
+          "sslrootcert": "/tls/ca.pem"
+        },
+        "original_core_appconfig_imported": true,
+        "connected": false,
+        "error": {
+          "type": "OperationalError",
+          "message": "connection failed: connection to server at \"127.0.0.1\", port 5432 failed: FATAL:  connection requires a valid client certificate"
+        },
+        "elapsed_seconds": 0.22158951999153942
+      },
+      "expected_match": true
+    },
+    {
+      "name": "require_wrong_ca",
+      "expected_source_connection": false,
+      "command_exit": 0,
+      "actual": {
+        "case": "require_wrong_ca",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "dispatcharr.db.backends.postgresql_psycopg3",
+        "host": "127.0.0.1",
+        "options": {
+          "pool": false,
+          "MAX_CONNS": 8,
+          "REUSE_CONNS": 3,
+          "CONN_MAX_LIFETIME": 600,
+          "sslmode": "require",
+          "sslrootcert": "/tls/wrong-ca.pem",
+          "sslcert": "/tls/client.pem",
+          "sslkey": "/tls/client-root.key"
+        },
+        "original_core_appconfig_imported": true,
+        "connected": false,
+        "error": {
+          "type": "OperationalError",
+          "message": "connection failed: connection to server at \"127.0.0.1\", port 5432 failed: SSL error: certificate verify failed"
+        },
+        "elapsed_seconds": 0.18917144602164626
+      },
+      "expected_match": true
+    },
+    {
+      "name": "unix_socket_ssl_true",
+      "expected_source_connection": true,
+      "command_exit": 0,
+      "actual": {
+        "case": "unix_socket_ssl_true",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "dispatcharr.db.backends.postgresql_psycopg3",
+        "host": "/var/run/postgresql",
+        "options": {
+          "pool": false,
+          "MAX_CONNS": 8,
+          "REUSE_CONNS": 3,
+          "CONN_MAX_LIFETIME": 600,
+          "sslmode": "verify-full",
+          "sslrootcert": "/tls/ca.pem",
+          "sslcert": "/tls/client.pem",
+          "sslkey": "/tls/client-root.key"
+        },
+        "original_core_appconfig_imported": true,
+        "observation": [
+          "rust_probe_pluginrepo_9ade6432ef",
+          "dispatch",
+          null,
+          213,
+          false,
+          null,
+          null,
+          null
+        ],
+        "connected": true,
+        "elapsed_seconds": 0.18398292898200452
+      },
+      "expected_match": true
+    },
+    {
+      "name": "ipv6_verify_ca",
+      "expected_source_connection": true,
+      "command_exit": 0,
+      "actual": {
+        "case": "ipv6_verify_ca",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "dispatcharr.db.backends.postgresql_psycopg3",
+        "host": "::1",
+        "options": {
+          "pool": false,
+          "MAX_CONNS": 8,
+          "REUSE_CONNS": 3,
+          "CONN_MAX_LIFETIME": 600,
+          "sslmode": "verify-ca",
+          "sslrootcert": "/tls/ca.pem",
+          "sslcert": "/tls/client.pem",
+          "sslkey": "/tls/client-root.key"
+        },
+        "original_core_appconfig_imported": true,
+        "observation": [
+          "rust_probe_pluginrepo_9ade6432ef",
+          "dispatch",
+          "::1/128",
+          220,
+          true,
+          "TLSv1.3",
+          "TLS_AES_256_GCM_SHA384",
+          "/CN=dispatch"
+        ],
+        "connected": true,
+        "elapsed_seconds": 0.19421633699676022
+      },
+      "expected_match": true
+    },
+    {
+      "name": "source_allow",
+      "expected_source_connection": true,
+      "command_exit": 0,
+      "actual": {
+        "case": "source_allow",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "dispatcharr.db.backends.postgresql_psycopg3",
+        "host": "127.0.0.1",
+        "options": {
+          "pool": false,
+          "MAX_CONNS": 8,
+          "REUSE_CONNS": 3,
+          "CONN_MAX_LIFETIME": 600,
+          "sslmode": "allow",
+          "sslrootcert": "/tls/ca.pem",
+          "sslcert": "/tls/client.pem",
+          "sslkey": "/tls/client-root.key"
+        },
+        "original_core_appconfig_imported": true,
+        "observation": [
+          "rust_probe_pluginrepo_9ade6432ef",
+          "dispatch",
+          "127.0.0.1/32",
+          228,
+          true,
+          "TLSv1.3",
+          "TLS_AES_256_GCM_SHA384",
+          "/CN=dispatch"
+        ],
+        "connected": true,
+        "elapsed_seconds": 0.19136561697814614
+      },
+      "expected_match": true
+    },
+    {
+      "name": "source_prefer",
+      "expected_source_connection": true,
+      "command_exit": 0,
+      "actual": {
+        "case": "source_prefer",
+        "role_argv": [
+          "/native-tools/probe.py"
+        ],
+        "Source_API_calls": 0,
+        "django_setup_called": false,
+        "engine": "dispatcharr.db.backends.postgresql_psycopg3",
+        "host": "127.0.0.1",
+        "options": {
+          "pool": false,
+          "MAX_CONNS": 8,
+          "REUSE_CONNS": 3,
+          "CONN_MAX_LIFETIME": 600,
+          "sslmode": "prefer",
+          "sslrootcert": "/tls/ca.pem",
+          "sslcert": "/tls/client.pem",
+          "sslkey": "/tls/client-root.key"
+        },
+        "original_core_appconfig_imported": true,
+        "observation": [
+          "rust_probe_pluginrepo_9ade6432ef",
+          "dispatch",
+          "127.0.0.1/32",
+          235,
+          true,
+          "TLSv1.3",
+          "TLS_AES_256_GCM_SHA384",
+          "/CN=dispatch"
+        ],
+        "connected": true,
+        "elapsed_seconds": 0.20718942396342754
+      },
+      "expected_match": true
+    }
+  ],
+  "Source_API_calls": 0,
+  "actual_Source_configuration_probe_processes": 22,
+  "attempt1_pre_script_python_failures": 12,
+  "completed_source_case_replays": 0,
+  "original_python_files_exact_prior_authority": 639,
+  "application_function_replacement": false,
+  "django_setup_calls": 0,
+  "normal_AppConfig_trace_registration_imported": true,
+  "private_keys_published": false,
+  "attempt_controller_exits": {
+    "1": 2,
+    "2": 2,
+    "3": 0
+  },
+  "all_exact_cleanup": true,
+  "default62tables59sequences_Redis7_unchanged": true,
+  "scope": "Pinned Original settings + actual gevent backend SQL driver; not full application startup/API or performance acceptance",
+  "Native_acceptance": false,
+  "SQLite_Rust_gap": true,
+  "allow_prefer_fallback_parity": false,
+  "evidence_hashes": {
+    "1": "1bb384590e573b81148251ceb5e497c7e1b66e5230328d785e911b47601ced29",
+    "2": "c9ae1fd84921141d8e21079172f8ed9e42d352167694165b3f5a36ab57db7f63",
+    "3": "fee6af94a4cec4a59462abe40e78e5ec2bc07592cced7e9d85424cc3b7b0da72"
+  }
+}

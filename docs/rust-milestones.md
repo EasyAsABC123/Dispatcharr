@@ -9,33 +9,39 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The latest runtime is `9440a31973978e6c8efe144912525c59fa3f260f`:
-[890 default tests pass](rust-milestone-batch4.md), with 751 external-fixture
-tests ignored. Its [Docker image](rust-milestone-batch4-build.md) preserves the
-React assets and original credits, and [all11 clean-install/React checks pass](rust-milestone-batch4-clean-install.md).
-The [packaged job cohort](rust-m6-packaged-main-batch4.md) passes191 assertions:
+The latest packaged runtime is `95da37d9f0bd6dcca5f678d114bdac994de9b8de`:
+[896 default tests pass](rust-milestone-batch5.md), with751 external-fixture
+tests ignored. Its [Docker image](rust-milestone-batch5-build.md) preserves the
+React assets and original credits; [all11 clean-install/React checks pass](rust-milestone-batch5-clean-install.md).
+The [packaged job cohort](rust-m6-packaged-main-batch5.md) passes191 assertions:
 configured-rule artwork, actual settings PATCH200, a second real import with
-empty rules, and a failed SQL task followed by continued work. These are scoped
-integration results. The [Core99 Main cohort](rust-main-core99.md) also passes
-99 business HTTP cases with2,257 settings/effect and643 row/task predicates.
-Five produced tasks still lack Source transport metadata, and their downstream
-execution remains unmeasured; full settings/plugin acceptance stays open.
+empty rules, and a failed SQL task followed by continued work.
 
-The complete scheduler/worker graph remains unfinished. The latest
-[resource preflight](rust-milestone-batch2-resource-preflight.md) failed its
-frozen useful-work checks before any Rust measurement; no new performance gain
-is accepted. All M0–M9 gates below remain open. Older results retain their
-recorded source and workload scope.
+The [candidate5 Core99 cohort](rust-batch5-ops-acceptance.md) passes99 business
+HTTP cases,2,257 effect checks,643 row/task checks and93 additional transport
+metadata checks. Five actual publications now include the retained Source
+headers; downstream execution and complete property equality remain unqualified.
+These are scoped integration results, not full milestone completion.
 
-The [default worker graph audit](rust-default-worker-graph.md) lists the selected fourteen
-task families, the eight missing Main integrations, reusable implementations,
-and the grouped acceptance workflow needed before enabling scheduling.
-The [Source task audit](rust-source-task-coverage.md) finds47 static application
-task declarations; required producers/callbacks outside the selected graph still
-need a complete executable coverage crosswalk.
-The [datastore compatibility audit](rust-datastore-compatibility.md) confirms
-SQLite and Original PostgreSQL TLS environment settings remain required and
-unimplemented/unverified; PostgreSQL-only tests cannot close that gate.
+The complete scheduler/worker graph and normal recording HTTP workflows remain
+unfinished. New normal-queue, startup recovery, clocked scheduling, pidbox and
+DVR code is under joint validation and is absent from this packaged image.
+The [default worker audit](rust-default-worker-graph.md) lists the selected14
+task families and missing Main integrations. The [Source task audit](rust-source-task-coverage.md)
+finds47 static application task declarations; producers and callbacks outside
+the selected graph still need an executable coverage crosswalk.
+
+The [actual datastore comparison](rust-batch5-ops-acceptance.md) finds8/11
+PostgreSQL cases compatible. Three mismatches remain: verify-ca hostname and
+IPv6 handling, and allow's TLS fallback. A new Source observation also confirms
+allow's plaintext preference. SQLite remains unsupported in Native; explicit
+rejection is not compatibility. Prepared transport fixes have no runtime
+qualification yet. See the [datastore audit](rust-datastore-compatibility.md).
+
+Both recent [resource preflight protocols](rust-milestone-batch2-resource-preflight.md)
+retain failed useful-work checks. No new performance gain is accepted, and old
+measurements do not transfer to this image. All M0–M9 gates below remain open;
+older results retain their recorded source and workload scope.
 
 The earlier [PATCH405 and plugin attempts](../scripts/rust-milestone-batches/m478/batch3_evidence/README.md)
 remain attached to their original image; the subsequent passing setter workflow

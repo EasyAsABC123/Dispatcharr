@@ -1,0 +1,74 @@
+[
+  {
+    "name": "valid_verify_full",
+    "changes": {},
+    "expected_source_connection": true
+  },
+  {
+    "name": "wrong_ca",
+    "changes": {
+      "POSTGRES_SSL_CA_CERT": "/tls/wrong-ca.pem"
+    },
+    "expected_source_connection": false
+  },
+  {
+    "name": "hostname_mismatch",
+    "changes": {
+      "POSTGRES_HOST": "localhost"
+    },
+    "expected_source_connection": false
+  },
+  {
+    "name": "verify_ca_mismatch",
+    "changes": {
+      "POSTGRES_HOST": "localhost",
+      "POSTGRES_SSL_MODE": "verify-ca"
+    },
+    "expected_source_connection": true
+  },
+  {
+    "name": "no_client_cert",
+    "changes": {
+      "POSTGRES_SSL_CERT": "",
+      "POSTGRES_SSL_KEY": ""
+    },
+    "expected_source_connection": false
+  },
+  {
+    "name": "require_wrong_ca",
+    "changes": {
+      "POSTGRES_SSL_MODE": "require",
+      "POSTGRES_SSL_CA_CERT": "/tls/wrong-ca.pem"
+    },
+    "expected_source_connection": false
+  },
+  {
+    "name": "unix_socket_ssl_true",
+    "changes": {
+      "POSTGRES_HOST": "/var/run/postgresql"
+    },
+    "expected_source_connection": true
+  },
+  {
+    "name": "ipv6_verify_ca",
+    "changes": {
+      "POSTGRES_HOST": "::1",
+      "POSTGRES_SSL_MODE": "verify-ca"
+    },
+    "expected_source_connection": true
+  },
+  {
+    "name": "source_allow",
+    "changes": {
+      "POSTGRES_SSL_MODE": "allow"
+    },
+    "expected_source_connection": true
+  },
+  {
+    "name": "source_prefer",
+    "changes": {
+      "POSTGRES_SSL_MODE": "prefer"
+    },
+    "expected_source_connection": true
+  }
+]

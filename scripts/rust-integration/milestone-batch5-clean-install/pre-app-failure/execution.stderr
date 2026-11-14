@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/run_clean_install.py", line 134, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/run_clean_install.py", line 60, in main
+    project='dispatcharr-native-install-'+uuid.uuid4().hex[:10];environment=dict(os.environ,RUST_CANDIDATE_IMAGE=manifest['tag']);ports=output/'ports.yml';selected=write_port_overlay(ports,{'candidate':[9192]})
+                                                                                                                                                                    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/fixture_ports.py", line 33, in write_port_overlay
+    probe=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+  File "/usr/lib/python3.14/socket.py", line 236, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted

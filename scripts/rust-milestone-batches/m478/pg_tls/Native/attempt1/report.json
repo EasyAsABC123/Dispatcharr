@@ -1,0 +1,4350 @@
+{
+  "project": "dispatcharr-native-pgtls-dc034773ea",
+  "database": "rust_probe_pluginrepo_fb1cb0ac70",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "native_image": "sha256:b7c1ca84201f155dfe7a4b285cff97b6e66522b4d89681830fa63e10eea11c2a",
+  "git_revision": "95da37d9f0bd6dcca5f678d114bdac994de9b8de",
+  "physical_proof_sha256": "320674ed0c604477878ba5c5d567128f26ef58f38e5d09491675bfd0527dac8a",
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-native-pgtls-dc034773ea",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 119044,
+      "observed_starttime": "738224",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009592975000487058,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never"
+      ],
+      "pid": 119061,
+      "observed_starttime": "738225",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.3031202290003421,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "source"
+      ],
+      "pid": 119298,
+      "observed_starttime": "738345",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.047473528000409715,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "dc9cd14c2732fdc38c076ca7e3d4a14486490c8624b8b7ba845226b35815d335"
+      ],
+      "pid": 119351,
+      "observed_starttime": "738350",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009787539000171819,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "source",
+        "psql",
+        "-XAtq",
+        "-h",
+        "/var/run/postgresql",
+        "-U",
+        "dispatch",
+        "-d",
+        "postgres",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "CREATE DATABASE rust_probe_pluginrepo_fb1cb0ac70 TEMPLATE dispatcharr"
+      ],
+      "pid": 119366,
+      "observed_starttime": "738351",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.11129753600016556,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/state.py"
+      ],
+      "pid": 119451,
+      "observed_starttime": "738362",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.28621258400016814,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "source",
+        "bash",
+        "/native-tools/tls.sh"
+      ],
+      "pid": 119521,
+      "observed_starttime": "738391",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 2.4651455450002686,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import sqlite3,os; c=sqlite3.connect('/native-data/dispatcharr.db');c.execute('CREATE TABLE sentinel(value TEXT)');c.execute(\"INSERT INTO sentinel VALUES('unchanged')\");c.commit();c.close();os.chown('/native-data',65532,65532);os.chown('/native-data/dispatcharr.db',65532,65532)"
+      ],
+      "pid": 119701,
+      "observed_starttime": "738637",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.0833915880002678,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import hashlib;print(hashlib.sha256(open('/native-data/dispatcharr.db','rb').read()).hexdigest())"
+      ],
+      "pid": 119769,
+      "observed_starttime": "738646",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.07508683900050528,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 119837,
+      "observed_starttime": "738653",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.1993274520000341,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 119958,
+      "observed_starttime": "738674",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04374706500038883,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "f0a82787762a93fedd89b0136d286869588f0d179070a509dc5c8e8bc7da771a"
+      ],
+      "pid": 120012,
+      "observed_starttime": "738678",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010366165000050387,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=1",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 120028,
+      "observed_starttime": "738679",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.17817806000039127,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 120110,
+      "observed_starttime": "738697",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.09774166300030629,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "f0a82787762a93fedd89b0136d286869588f0d179070a509dc5c8e8bc7da771a"
+      ],
+      "pid": 120194,
+      "observed_starttime": "738707",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009566652999637881,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 120211,
+      "observed_starttime": "738708",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04512075299953722,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 120265,
+      "observed_starttime": "738712",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.07665620199986733,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 120319,
+      "observed_starttime": "738720",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.21921385999939957,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 120430,
+      "observed_starttime": "738742",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.043617431999336986,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "b2e3cbf830aff313c30e667e28e5a79a84c378c655127cbb9bf98424385aefbd"
+      ],
+      "pid": 120507,
+      "observed_starttime": "738747",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009526313000606024,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=0",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 120523,
+      "observed_starttime": "738748",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 6.688791477999985,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 120732,
+      "observed_starttime": "739417",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04752988100062794,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "b2e3cbf830aff313c30e667e28e5a79a84c378c655127cbb9bf98424385aefbd"
+      ],
+      "pid": 120786,
+      "observed_starttime": "739422",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.00935290800043731,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 120801,
+      "observed_starttime": "739423",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.043999274000270816,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 120856,
+      "observed_starttime": "739427",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.0701521450000655,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 120912,
+      "observed_starttime": "739434",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.21262294400003157,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 121028,
+      "observed_starttime": "739455",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.045643088000360876,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "7ca2a9101d4a6163e9554f03b73cc5d1d33ce22166efcc0c6c7e75b8696e19d8"
+      ],
+      "pid": 121104,
+      "observed_starttime": "739460",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010177539999858709,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=0",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 121120,
+      "observed_starttime": "739461",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 6.690254199000265,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 121374,
+      "observed_starttime": "740130",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.044964871000047424,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "7ca2a9101d4a6163e9554f03b73cc5d1d33ce22166efcc0c6c7e75b8696e19d8"
+      ],
+      "pid": 121431,
+      "observed_starttime": "740135",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009315207000327064,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 121446,
+      "observed_starttime": "740136",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04629501799990976,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 121503,
+      "observed_starttime": "740141",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.0695227590003924,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 121559,
+      "observed_starttime": "740148",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.21410826899955282,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 121685,
+      "observed_starttime": "740169",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.0472133829998711,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "9a601f72d2bec67be1d70bafbbc2b27bd7dc4c5377b145bfdabaa39608ba1d1a"
+      ],
+      "pid": 121760,
+      "observed_starttime": "740174",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010274213000229793,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=0",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 121775,
+      "observed_starttime": "740175",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 6.684790125999825,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 121956,
+      "observed_starttime": "740844",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.046411441999225644,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "9a601f72d2bec67be1d70bafbbc2b27bd7dc4c5377b145bfdabaa39608ba1d1a"
+      ],
+      "pid": 122011,
+      "observed_starttime": "740848",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009200763999615447,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 122027,
+      "observed_starttime": "740849",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04497751200051425,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 122077,
+      "observed_starttime": "740854",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.06846198099992762,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 122131,
+      "observed_starttime": "740861",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.19678647500040825,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 122258,
+      "observed_starttime": "740881",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.047449410999433894,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "91e196c7a9180d2668e7ad93901b9519afcd8f58df76eaf8a9cab4c68a51e132"
+      ],
+      "pid": 122336,
+      "observed_starttime": "740886",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010411387999738508,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=1",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 122353,
+      "observed_starttime": "740887",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 8.190655474000778,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 122624,
+      "observed_starttime": "741706",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.046775423000326555,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "91e196c7a9180d2668e7ad93901b9519afcd8f58df76eaf8a9cab4c68a51e132"
+      ],
+      "pid": 122678,
+      "observed_starttime": "741711",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.00901231900024868,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 122693,
+      "observed_starttime": "741712",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04467122499954712,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 122752,
+      "observed_starttime": "741716",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.07063997200020822,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 122802,
+      "observed_starttime": "741723",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.19713719900028082,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 122916,
+      "observed_starttime": "741743",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.049364805000550405,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "49ec7fdfe4aa235a0d8856ec77d0e6163ea3fc9e1c00f2ff804fd6265ababeb4"
+      ],
+      "pid": 122991,
+      "observed_starttime": "741748",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009783849999621452,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=0",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 123007,
+      "observed_starttime": "741749",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 6.690445150000414,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 123355,
+      "observed_starttime": "742418",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.046599599999353813,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "49ec7fdfe4aa235a0d8856ec77d0e6163ea3fc9e1c00f2ff804fd6265ababeb4"
+      ],
+      "pid": 123410,
+      "observed_starttime": "742423",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009659266999733518,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 123427,
+      "observed_starttime": "742424",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04453463199934049,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 123480,
+      "observed_starttime": "742429",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.07409224000002723,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 123538,
+      "observed_starttime": "742436",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.27095143600035954,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 123653,
+      "observed_starttime": "742464",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.047009380999952555,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "8bb052da08cbc4171575b48c54464ddfdbe28cce93c62d10e2a4462f225911ca"
+      ],
+      "pid": 123733,
+      "observed_starttime": "742468",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010170180999921286,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=0",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 123749,
+      "observed_starttime": "742469",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 6.699270447999879,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 124713,
+      "observed_starttime": "743139",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04479326000000583,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "8bb052da08cbc4171575b48c54464ddfdbe28cce93c62d10e2a4462f225911ca"
+      ],
+      "pid": 124773,
+      "observed_starttime": "743144",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009543674000269675,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 124804,
+      "observed_starttime": "743145",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04454203299974324,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 124907,
+      "observed_starttime": "743150",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.07848287300021184,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 125024,
+      "observed_starttime": "743158",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.2334858840004017,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 125140,
+      "observed_starttime": "743181",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04704310200031614,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "0fa57cdc217fda17c1c40794446b0b01d693f7016290104b40af466bab1d9572"
+      ],
+      "pid": 125193,
+      "observed_starttime": "743186",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010494630999346555,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=1",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 125209,
+      "observed_starttime": "743187",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.18016445800003567,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 125283,
+      "observed_starttime": "743205",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.09441889400022774,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "0fa57cdc217fda17c1c40794446b0b01d693f7016290104b40af466bab1d9572"
+      ],
+      "pid": 125369,
+      "observed_starttime": "743215",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.008977618999779224,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 125385,
+      "observed_starttime": "743216",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.043386020999605535,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 125441,
+      "observed_starttime": "743220",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.06895484999949986,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 125492,
+      "observed_starttime": "743227",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.19983169300030568,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 125733,
+      "observed_starttime": "743247",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.06085571499988873,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "8b24ed10ef80f18842b906b8e33e3dff16628bd1e0b179e3d867d7a8bd85c7ba"
+      ],
+      "pid": 125820,
+      "observed_starttime": "743254",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.0103377460000047,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=1",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 125835,
+      "observed_starttime": "743255",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 8.201097080999716,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 127851,
+      "observed_starttime": "744075",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04685022800003935,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "8b24ed10ef80f18842b906b8e33e3dff16628bd1e0b179e3d867d7a8bd85c7ba"
+      ],
+      "pid": 127909,
+      "observed_starttime": "744080",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009741970000504807,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 127925,
+      "observed_starttime": "744081",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.0438693450005303,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 127976,
+      "observed_starttime": "744085",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.07252068900015729,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 128034,
+      "observed_starttime": "744093",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.2119085919994177,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 128149,
+      "observed_starttime": "744114",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04542994900020858,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "c181894c9ff23ecf70c4362e275e965c2c3569a035f56b2239cb3e3ed24d0c5b"
+      ],
+      "pid": 128221,
+      "observed_starttime": "744119",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010295215000041935,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=0",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 128237,
+      "observed_starttime": "744120",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 6.6952251349994185,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 128600,
+      "observed_starttime": "744789",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.045971444999850064,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "c181894c9ff23ecf70c4362e275e965c2c3569a035f56b2239cb3e3ed24d0c5b"
+      ],
+      "pid": 128650,
+      "observed_starttime": "744794",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.00973662999967928,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 128667,
+      "observed_starttime": "744795",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.043746843000008084,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 128724,
+      "observed_starttime": "744800",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.07220481199965434,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 128781,
+      "observed_starttime": "744807",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.19898104799995053,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 128901,
+      "observed_starttime": "744827",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04368850099945121,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "38a83437194cdb92051c045e7b883c3bd6ff9036bd393fd1dfa5bf7192241797"
+      ],
+      "pid": 128953,
+      "observed_starttime": "744832",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.00920425599997543,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=1",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 128968,
+      "observed_starttime": "744833",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.1747666660003233,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 129039,
+      "observed_starttime": "744850",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.09856122300061543,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "38a83437194cdb92051c045e7b883c3bd6ff9036bd393fd1dfa5bf7192241797"
+      ],
+      "pid": 129126,
+      "observed_starttime": "744860",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009621356999559794,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 129141,
+      "observed_starttime": "744861",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.044054700999367924,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 129195,
+      "observed_starttime": "744866",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.07112818200039328,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "native"
+      ],
+      "pid": 129265,
+      "observed_starttime": "744873",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.19662888200036832,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "native"
+      ],
+      "pid": 129376,
+      "observed_starttime": "744893",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.047253490000002785,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "inspect",
+        "31d609c6ea9235d6b806579eceae69f89d6fe44647587fa2cbee1c7d3e92206e"
+      ],
+      "pid": 129449,
+      "observed_starttime": "744898",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009366258999762067,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "-e",
+        "NATIVE_READY_EXPECTED=0",
+        "-e",
+        "TARGET_DB=rust_probe_pluginrepo_fb1cb0ac70",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/observe.py"
+      ],
+      "pid": 129465,
+      "observed_starttime": "744899",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 6.691457818999879,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "stop",
+        "--timeout",
+        "10",
+        "native"
+      ],
+      "pid": 129703,
+      "observed_starttime": "745568",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04656085199985682,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "wait",
+        "31d609c6ea9235d6b806579eceae69f89d6fe44647587fa2cbee1c7d3e92206e"
+      ],
+      "pid": 129758,
+      "observed_starttime": "745573",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.0091522940001596,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "logs",
+        "--no-color",
+        "native"
+      ],
+      "pid": 129773,
+      "observed_starttime": "745574",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.04375581400017836,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "rm",
+        "-f",
+        "native"
+      ],
+      "pid": 129829,
+      "observed_starttime": "745578",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.0704823750002106,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "exec",
+        "-T",
+        "source",
+        "/dispatcharrpy/bin/python",
+        "-B",
+        "/native-tools/state.py"
+      ],
+      "pid": 129886,
+      "observed_starttime": "745585",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.21030451500064373,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "compose",
+        "-p",
+        "dispatcharr-native-pgtls-dc034773ea",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-native-1/compose.json",
+        "down",
+        "--volumes",
+        "--remove-orphans",
+        "--timeout",
+        "10"
+      ],
+      "pid": 129957,
+      "observed_starttime": "745607",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 10.253426386999308,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-native-pgtls-dc034773ea",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130207,
+      "observed_starttime": "746632",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009710240000458725,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-native-pgtls-dc034773ea",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130223,
+      "observed_starttime": "746633",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009100852999836206,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-native-pgtls-dc034773ea",
+        "--format",
+        "{{.Name}}"
+      ],
+      "pid": 130239,
+      "observed_starttime": "746634",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.008476805000100285,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=dc9cd14c2732fdc38c076ca7e3d4a14486490c8624b8b7ba845226b35815d335",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130255,
+      "observed_starttime": "746635",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.008122566000565712,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=f0a82787762a93fedd89b0136d286869588f0d179070a509dc5c8e8bc7da771a",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130271,
+      "observed_starttime": "746636",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.00933179999992717,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=b2e3cbf830aff313c30e667e28e5a79a84c378c655127cbb9bf98424385aefbd",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130287,
+      "observed_starttime": "746637",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.00925523699970654,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=7ca2a9101d4a6163e9554f03b73cc5d1d33ce22166efcc0c6c7e75b8696e19d8",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130302,
+      "observed_starttime": "746638",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009622947000025306,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=9a601f72d2bec67be1d70bafbbc2b27bd7dc4c5377b145bfdabaa39608ba1d1a",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130317,
+      "observed_starttime": "746639",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009188535000248521,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=91e196c7a9180d2668e7ad93901b9519afcd8f58df76eaf8a9cab4c68a51e132",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130332,
+      "observed_starttime": "746640",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.008977759000117658,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=49ec7fdfe4aa235a0d8856ec77d0e6163ea3fc9e1c00f2ff804fd6265ababeb4",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130349,
+      "observed_starttime": "746641",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.008738923000237264,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=8bb052da08cbc4171575b48c54464ddfdbe28cce93c62d10e2a4462f225911ca",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130364,
+      "observed_starttime": "746642",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.008938118000514805,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=0fa57cdc217fda17c1c40794446b0b01d693f7016290104b40af466bab1d9572",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130381,
+      "observed_starttime": "746643",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.008659889999762527,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=8b24ed10ef80f18842b906b8e33e3dff16628bd1e0b179e3d867d7a8bd85c7ba",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130397,
+      "observed_starttime": "746644",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009400911000739143,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=c181894c9ff23ecf70c4362e275e965c2c3569a035f56b2239cb3e3ed24d0c5b",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130413,
+      "observed_starttime": "746645",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009115472999837948,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=38a83437194cdb92051c045e7b883c3bd6ff9036bd393fd1dfa5bf7192241797",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130428,
+      "observed_starttime": "746646",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.00965425799950026,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "--host",
+        "unix:///tmp/dispatcharr-docker.sock",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=31d609c6ea9235d6b806579eceae69f89d6fe44647587fa2cbee1c7d3e92206e",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 130444,
+      "observed_starttime": "746647",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009606577000340621,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "valid_verify_full",
+      "expected_native_ready": true,
+      "actual": {
+        "http": [
+          {
+            "status": 200,
+            "body": "{\"status\":\"ready\",\"backend\":\"rust\",\"parity_complete\":false}"
+          }
+        ],
+        "native_sessions": [
+          [
+            176,
+            "",
+            "127.0.0.1/32",
+            true,
+            "TLSv1.3",
+            "TLS_AES_256_GCM_SHA384",
+            "/CN=dispatch"
+          ]
+        ],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": true,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": true,
+      "physical_mode_match": true,
+      "actual_Main_wait_exit": 0
+    },
+    {
+      "name": "wrong_ca",
+      "expected_native_ready": false,
+      "actual": {
+        "http": [
+          {
+            "error": "URLError",
+            "message": "<urlopen error [Errno 111] Connection refused>"
+          }
+        ],
+        "native_sessions": [],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": false,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": true,
+      "actual_Main_wait_exit": 1
+    },
+    {
+      "name": "missing_ca_path",
+      "expected_native_ready": false,
+      "actual": {
+        "http": [
+          {
+            "error": "URLError",
+            "message": "<urlopen error [Errno 111] Connection refused>"
+          }
+        ],
+        "native_sessions": [],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": false,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": true,
+      "actual_Main_wait_exit": 1
+    },
+    {
+      "name": "hostname_mismatch",
+      "expected_native_ready": false,
+      "actual": {
+        "http": [
+          {
+            "error": "URLError",
+            "message": "<urlopen error [Errno 111] Connection refused>"
+          }
+        ],
+        "native_sessions": [],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": false,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": true,
+      "actual_Main_wait_exit": 1
+    },
+    {
+      "name": "verify_ca_mismatch",
+      "expected_native_ready": true,
+      "actual": {
+        "http": [
+          {
+            "error": "URLError",
+            "message": "<urlopen error [Errno 111] Connection refused>"
+          }
+        ],
+        "native_sessions": [],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": false,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": false,
+      "actual_Main_wait_exit": 1
+    },
+    {
+      "name": "no_client_cert",
+      "expected_native_ready": false,
+      "actual": {
+        "http": [
+          {
+            "error": "URLError",
+            "message": "<urlopen error [Errno 111] Connection refused>"
+          }
+        ],
+        "native_sessions": [],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": false,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": true,
+      "actual_Main_wait_exit": 1
+    },
+    {
+      "name": "require_wrong_ca",
+      "expected_native_ready": false,
+      "actual": {
+        "http": [
+          {
+            "error": "URLError",
+            "message": "<urlopen error [Errno 111] Connection refused>"
+          }
+        ],
+        "native_sessions": [],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": false,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": true,
+      "actual_Main_wait_exit": 1
+    },
+    {
+      "name": "unix_socket_ssl_true",
+      "expected_native_ready": true,
+      "actual": {
+        "http": [
+          {
+            "status": 200,
+            "body": "{\"status\":\"ready\",\"backend\":\"rust\",\"parity_complete\":false}"
+          }
+        ],
+        "native_sessions": [
+          [
+            233,
+            "",
+            null,
+            false,
+            null,
+            null,
+            null
+          ]
+        ],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": true,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": true,
+      "physical_mode_match": true,
+      "actual_Main_wait_exit": 0
+    },
+    {
+      "name": "ipv6_verify_ca",
+      "expected_native_ready": true,
+      "actual": {
+        "http": [
+          {
+            "error": "URLError",
+            "message": "<urlopen error [Errno 111] Connection refused>"
+          }
+        ],
+        "native_sessions": [],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": false,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": false,
+      "actual_Main_wait_exit": 1
+    },
+    {
+      "name": "source_allow",
+      "expected_native_ready": false,
+      "actual": {
+        "http": [
+          {
+            "error": "URLError",
+            "message": "<urlopen error [Errno 111] Connection refused>"
+          }
+        ],
+        "native_sessions": [],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": false,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": true,
+      "actual_Main_wait_exit": 1
+    },
+    {
+      "name": "source_prefer",
+      "expected_native_ready": true,
+      "actual": {
+        "http": [
+          {
+            "status": 200,
+            "body": "{\"status\":\"ready\",\"backend\":\"rust\",\"parity_complete\":false}"
+          }
+        ],
+        "native_sessions": [
+          [
+            258,
+            "",
+            "127.0.0.1/32",
+            true,
+            "TLSv1.3",
+            "TLS_AES_256_GCM_SHA384",
+            "/CN=dispatch"
+          ]
+        ],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": true,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": true,
+      "physical_mode_match": true,
+      "actual_Main_wait_exit": 0
+    },
+    {
+      "name": "sqlite",
+      "expected_native_ready": false,
+      "actual": {
+        "http": [
+          {
+            "error": "URLError",
+            "message": "<urlopen error [Errno 111] Connection refused>"
+          }
+        ],
+        "native_sessions": [],
+        "sqlite_exists": true,
+        "sqlite_sha256": "2aa0e92287f3afb8e3f3565427439beec9a004cc3aa35b51d14ae7ec6882b87b"
+      },
+      "http_ready": false,
+      "Source_API_calls": 0,
+      "Source_driver_calls": 0,
+      "sqlite_unchanged": true,
+      "expected_match": true,
+      "actual_Main_wait_exit": 1,
+      "explicit_unsupported_guard": true
+    }
+  ],
+  "Source_API_calls": 0,
+  "performance_claims": false,
+  "private_keys": "ONLY owned Docker tls volume; never copied to host",
+  "passed": false,
+  "source_cid": "dc9cd14c2732fdc38c076ca7e3d4a14486490c8624b8b7ba845226b35815d335",
+  "native_cids": [
+    "f0a82787762a93fedd89b0136d286869588f0d179070a509dc5c8e8bc7da771a",
+    "b2e3cbf830aff313c30e667e28e5a79a84c378c655127cbb9bf98424385aefbd",
+    "7ca2a9101d4a6163e9554f03b73cc5d1d33ce22166efcc0c6c7e75b8696e19d8",
+    "9a601f72d2bec67be1d70bafbbc2b27bd7dc4c5377b145bfdabaa39608ba1d1a",
+    "91e196c7a9180d2668e7ad93901b9519afcd8f58df76eaf8a9cab4c68a51e132",
+    "49ec7fdfe4aa235a0d8856ec77d0e6163ea3fc9e1c00f2ff804fd6265ababeb4",
+    "8bb052da08cbc4171575b48c54464ddfdbe28cce93c62d10e2a4462f225911ca",
+    "0fa57cdc217fda17c1c40794446b0b01d693f7016290104b40af466bab1d9572",
+    "8b24ed10ef80f18842b906b8e33e3dff16628bd1e0b179e3d867d7a8bd85c7ba",
+    "c181894c9ff23ecf70c4362e275e965c2c3569a035f56b2239cb3e3ed24d0c5b",
+    "38a83437194cdb92051c045e7b883c3bd6ff9036bd393fd1dfa5bf7192241797",
+    "31d609c6ea9235d6b806579eceae69f89d6fe44647587fa2cbee1c7d3e92206e"
+  ],
+  "default_unchanged": true,
+  "qualified_Source_reference": "m478-pg-tls-authority-3/qualified-source-summary.json",
+  "known_mode_gaps": [
+    "allow has no SQLx TLS fallback and fails this TLS-required server; Source succeeds",
+    "prefer fallback after TLS/auth failure remains unmeasured; successful TLS case is only one branch",
+    "SQLite unsupported guard verified; SQLite backend parity remains absent"
+  ],
+  "independent_absence": [
+    {
+      "family": "container",
+      "empty": true
+    },
+    {
+      "family": "network",
+      "empty": true
+    },
+    {
+      "family": "volume",
+      "empty": true
+    },
+    {
+      "exact_cid": "dc9cd14c2732fdc38c076ca7e3d4a14486490c8624b8b7ba845226b35815d335",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "f0a82787762a93fedd89b0136d286869588f0d179070a509dc5c8e8bc7da771a",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "b2e3cbf830aff313c30e667e28e5a79a84c378c655127cbb9bf98424385aefbd",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "7ca2a9101d4a6163e9554f03b73cc5d1d33ce22166efcc0c6c7e75b8696e19d8",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "9a601f72d2bec67be1d70bafbbc2b27bd7dc4c5377b145bfdabaa39608ba1d1a",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "91e196c7a9180d2668e7ad93901b9519afcd8f58df76eaf8a9cab4c68a51e132",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "49ec7fdfe4aa235a0d8856ec77d0e6163ea3fc9e1c00f2ff804fd6265ababeb4",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "8bb052da08cbc4171575b48c54464ddfdbe28cce93c62d10e2a4462f225911ca",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "0fa57cdc217fda17c1c40794446b0b01d693f7016290104b40af466bab1d9572",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "8b24ed10ef80f18842b906b8e33e3dff16628bd1e0b179e3d867d7a8bd85c7ba",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "c181894c9ff23ecf70c4362e275e965c2c3569a035f56b2239cb3e3ed24d0c5b",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "38a83437194cdb92051c045e7b883c3bd6ff9036bd393fd1dfa5bf7192241797",
+      "empty": true
+    },
+    {
+      "exact_native_cid": "31d609c6ea9235d6b806579eceae69f89d6fe44647587fa2cbee1c7d3e92206e",
+      "empty": true
+    }
+  ],
+  "exact_cleanup": true,
+  "host_generations": [
+    {
+      "pid": 119044,
+      "observed_starttime": "738224",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 119061,
+      "observed_starttime": "738225",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 119298,
+      "observed_starttime": "738345",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 119351,
+      "observed_starttime": "738350",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 119366,
+      "observed_starttime": "738351",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 119451,
+      "observed_starttime": "738362",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 119521,
+      "observed_starttime": "738391",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 119701,
+      "observed_starttime": "738637",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 119769,
+      "observed_starttime": "738646",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 119837,
+      "observed_starttime": "738653",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 119958,
+      "observed_starttime": "738674",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120012,
+      "observed_starttime": "738678",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120028,
+      "observed_starttime": "738679",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120110,
+      "observed_starttime": "738697",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120194,
+      "observed_starttime": "738707",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120211,
+      "observed_starttime": "738708",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120265,
+      "observed_starttime": "738712",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120319,
+      "observed_starttime": "738720",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120430,
+      "observed_starttime": "738742",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120507,
+      "observed_starttime": "738747",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120523,
+      "observed_starttime": "738748",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120732,
+      "observed_starttime": "739417",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120786,
+      "observed_starttime": "739422",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120801,
+      "observed_starttime": "739423",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120856,
+      "observed_starttime": "739427",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 120912,
+      "observed_starttime": "739434",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121028,
+      "observed_starttime": "739455",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121104,
+      "observed_starttime": "739460",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121120,
+      "observed_starttime": "739461",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121374,
+      "observed_starttime": "740130",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121431,
+      "observed_starttime": "740135",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121446,
+      "observed_starttime": "740136",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121503,
+      "observed_starttime": "740141",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121559,
+      "observed_starttime": "740148",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121685,
+      "observed_starttime": "740169",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121760,
+      "observed_starttime": "740174",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121775,
+      "observed_starttime": "740175",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 121956,
+      "observed_starttime": "740844",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122011,
+      "observed_starttime": "740848",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122027,
+      "observed_starttime": "740849",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122077,
+      "observed_starttime": "740854",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122131,
+      "observed_starttime": "740861",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122258,
+      "observed_starttime": "740881",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122336,
+      "observed_starttime": "740886",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122353,
+      "observed_starttime": "740887",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122624,
+      "observed_starttime": "741706",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122678,
+      "observed_starttime": "741711",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122693,
+      "observed_starttime": "741712",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122752,
+      "observed_starttime": "741716",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122802,
+      "observed_starttime": "741723",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122916,
+      "observed_starttime": "741743",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 122991,
+      "observed_starttime": "741748",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 123007,
+      "observed_starttime": "741749",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 123355,
+      "observed_starttime": "742418",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 123410,
+      "observed_starttime": "742423",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 123427,
+      "observed_starttime": "742424",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 123480,
+      "observed_starttime": "742429",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 123538,
+      "observed_starttime": "742436",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 123653,
+      "observed_starttime": "742464",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 123733,
+      "observed_starttime": "742468",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 123749,
+      "observed_starttime": "742469",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 124713,
+      "observed_starttime": "743139",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 124773,
+      "observed_starttime": "743144",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 124804,
+      "observed_starttime": "743145",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 124907,
+      "observed_starttime": "743150",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125024,
+      "observed_starttime": "743158",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125140,
+      "observed_starttime": "743181",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125193,
+      "observed_starttime": "743186",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125209,
+      "observed_starttime": "743187",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125283,
+      "observed_starttime": "743205",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125369,
+      "observed_starttime": "743215",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125385,
+      "observed_starttime": "743216",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125441,
+      "observed_starttime": "743220",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125492,
+      "observed_starttime": "743227",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125733,
+      "observed_starttime": "743247",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125820,
+      "observed_starttime": "743254",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 125835,
+      "observed_starttime": "743255",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 127851,
+      "observed_starttime": "744075",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 127909,
+      "observed_starttime": "744080",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 127925,
+      "observed_starttime": "744081",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 127976,
+      "observed_starttime": "744085",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128034,
+      "observed_starttime": "744093",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128149,
+      "observed_starttime": "744114",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128221,
+      "observed_starttime": "744119",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128237,
+      "observed_starttime": "744120",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128600,
+      "observed_starttime": "744789",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128650,
+      "observed_starttime": "744794",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128667,
+      "observed_starttime": "744795",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128724,
+      "observed_starttime": "744800",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128781,
+      "observed_starttime": "744807",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128901,
+      "observed_starttime": "744827",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128953,
+      "observed_starttime": "744832",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 128968,
+      "observed_starttime": "744833",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129039,
+      "observed_starttime": "744850",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129126,
+      "observed_starttime": "744860",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129141,
+      "observed_starttime": "744861",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129195,
+      "observed_starttime": "744866",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129265,
+      "observed_starttime": "744873",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129376,
+      "observed_starttime": "744893",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129449,
+      "observed_starttime": "744898",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129465,
+      "observed_starttime": "744899",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129703,
+      "observed_starttime": "745568",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129758,
+      "observed_starttime": "745573",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129773,
+      "observed_starttime": "745574",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129829,
+      "observed_starttime": "745578",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129886,
+      "observed_starttime": "745585",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 129957,
+      "observed_starttime": "745607",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130207,
+      "observed_starttime": "746632",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130223,
+      "observed_starttime": "746633",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130239,
+      "observed_starttime": "746634",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130255,
+      "observed_starttime": "746635",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130271,
+      "observed_starttime": "746636",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130287,
+      "observed_starttime": "746637",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130302,
+      "observed_starttime": "746638",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130317,
+      "observed_starttime": "746639",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130332,
+      "observed_starttime": "746640",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130349,
+      "observed_starttime": "746641",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130364,
+      "observed_starttime": "746642",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130381,
+      "observed_starttime": "746643",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130397,
+      "observed_starttime": "746644",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130413,
+      "observed_starttime": "746645",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130428,
+      "observed_starttime": "746646",
+      "current_starttime": null,
+      "original_absent": true
+    },
+    {
+      "pid": 130444,
+      "observed_starttime": "746647",
+      "current_starttime": null,
+      "original_absent": true
+    }
+  ],
+  "all_host_generations_absent": true,
+  "actual_controller_exit": 2
+}
