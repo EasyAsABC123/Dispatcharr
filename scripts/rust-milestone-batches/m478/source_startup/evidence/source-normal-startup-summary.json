@@ -1,0 +1,265 @@
+{
+  "passed": true,
+  "checks": {
+    "complete_four_new_HTTP_calls": true,
+    "actual_normal_startup_branch": true,
+    "initial_cache_absent": true,
+    "normal_startup_populates_group": true,
+    "first_HTTP_has_group": true,
+    "actual_HTTP_setter_invalidates": true,
+    "immediate_request_inside_debounce": true,
+    "expired_request_observes_real_clock": true,
+    "expired_request_repopulates": true,
+    "HTTP_statuses": true,
+    "all_HTTP_socket_timer_closes": true,
+    "unchanged_default6259": true,
+    "normal_WSGI_joined": true,
+    "actual_controller_exit0": true,
+    "exact_cleanup": true
+  },
+  "scope": "Original standard WSGI startup plus four real HTTP requests, role django; explicit plugin discovery optout; no worker/beat; not full uWSGI/media runtime",
+  "strict_Native41_cache_result_unchanged": 2,
+  "Source41_replays": 0,
+  "full_M8_acceptance": false,
+  "performance_claims": false,
+  "Original_authors_credit": "All application authorship and credit remain with the Original Dispatcharr authors; see ATTRIBUTION.md.",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_python_files": 639,
+  "controller_actual_exit": 0,
+  "process": {
+    "pid": 132,
+    "start_generation": "39754709",
+    "pid_namespace": "pid:[4026533898]",
+    "argv": [
+      "/native-tools/normal_http.py"
+    ],
+    "actual_should_skip_initialization": false,
+    "actual_process_role": "django"
+  },
+  "steps": [
+    {
+      "label": "before-Original-import",
+      "display_timezone": {
+        "module_loaded": false,
+        "monotonic": 397547.244618117
+      },
+      "system_cache": {
+        "present": false,
+        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773"
+      }
+    },
+    {
+      "label": "after-normal-startup-before-HTTP",
+      "display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397547.789453954,
+        "zone": "None",
+        "checked": 0.0,
+        "age_seconds": 397547.789453954
+      },
+      "system_cache": {
+        "present": true,
+        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+        "type": "string",
+        "pttl": 299846,
+        "value_sha256": "ac5001f5c88ccb25c2e3b2d3133e7b1bdd40cda8f844fba824c566a1fe58deda",
+        "dump_sha256": "a5b9d346537cd02b7a9a8ccbbedc70a8c6981c87bbfa3bad90fd70900fc5b235",
+        "typed_value": {
+          "time_zone": "UTC"
+        }
+      }
+    },
+    {
+      "label": "first-request",
+      "display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397548.432022525,
+        "zone": "UTC",
+        "checked": 397547.840128138,
+        "age_seconds": 0.5918943869764917
+      },
+      "system_cache": {
+        "present": true,
+        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+        "type": "string",
+        "pttl": 299204,
+        "value_sha256": "ac5001f5c88ccb25c2e3b2d3133e7b1bdd40cda8f844fba824c566a1fe58deda",
+        "dump_sha256": "a5b9d346537cd02b7a9a8ccbbedc70a8c6981c87bbfa3bad90fd70900fc5b235",
+        "typed_value": {
+          "time_zone": "UTC"
+        }
+      }
+    },
+    {
+      "label": "actual-settings-setter",
+      "display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397548.489630816,
+        "zone": "UTC",
+        "checked": 397548.486070645,
+        "age_seconds": 0.0035601709969341755
+      },
+      "system_cache": {
+        "present": false,
+        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773"
+      }
+    },
+    {
+      "label": "immediate-after-setter",
+      "display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397548.542291157,
+        "zone": "UTC",
+        "checked": 397548.486070645,
+        "age_seconds": 0.0562205120222643
+      },
+      "system_cache": {
+        "present": false,
+        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773"
+      }
+    },
+    {
+      "label": "expired-after-setter",
+      "display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397553.599805947,
+        "zone": "UTC",
+        "checked": 397553.591190212,
+        "age_seconds": 0.008615734986960888
+      },
+      "system_cache": {
+        "present": true,
+        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+        "type": "string",
+        "pttl": 299949,
+        "value_sha256": "ac5001f5c88ccb25c2e3b2d3133e7b1bdd40cda8f844fba824c566a1fe58deda",
+        "dump_sha256": "a5b9d346537cd02b7a9a8ccbbedc70a8c6981c87bbfa3bad90fd70900fc5b235",
+        "typed_value": {
+          "time_zone": "UTC"
+        }
+      }
+    }
+  ],
+  "requests": [
+    {
+      "label": "first-request",
+      "method": "GET",
+      "path": "/api/plugins/repos/",
+      "status": 200,
+      "before_display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397547.837236665,
+        "zone": "None",
+        "checked": 0.0,
+        "age_seconds": 397547.837236665
+      },
+      "after_display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397548.432019245,
+        "zone": "UTC",
+        "checked": 397547.840128138,
+        "age_seconds": 0.5918911069747992
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      }
+    },
+    {
+      "label": "actual-settings-setter",
+      "method": "PATCH",
+      "path": "/api/core/settings/16/",
+      "status": 200,
+      "before_display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397548.479679543,
+        "zone": "UTC",
+        "checked": 397547.840128138,
+        "age_seconds": 0.6395514049800113
+      },
+      "after_display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397548.489627826,
+        "zone": "UTC",
+        "checked": 397548.486070645,
+        "age_seconds": 0.0035571810440160334
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      }
+    },
+    {
+      "label": "immediate-after-setter",
+      "method": "GET",
+      "path": "/api/plugins/repos/",
+      "status": 200,
+      "before_display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397548.533040793,
+        "zone": "UTC",
+        "checked": 397548.486070645,
+        "age_seconds": 0.04697014798875898
+      },
+      "after_display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397548.542289077,
+        "zone": "UTC",
+        "checked": 397548.486070645,
+        "age_seconds": 0.05621843202970922
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      }
+    },
+    {
+      "label": "expired-after-setter",
+      "method": "GET",
+      "path": "/api/plugins/repos/",
+      "status": 200,
+      "before_display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397553.586137358,
+        "zone": "UTC",
+        "checked": 397548.486070645,
+        "age_seconds": 5.100066712999251
+      },
+      "after_display_timezone": {
+        "module_loaded": true,
+        "monotonic": 397553.599803287,
+        "zone": "UTC",
+        "checked": 397553.591190212,
+        "age_seconds": 0.008613075013272464
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      }
+    }
+  ],
+  "cleanup": {
+    "independent_passed": true,
+    "independent_inventory_queries": 4,
+    "known_host_generations_absent": 16,
+    "controller_cli_count": 12,
+    "all_actual_cli_waits_EOF_zero": true
+  },
+  "raw_evidence_sha256": {
+    "normal-startup.json": "4995e9c36e046791ccd9a41fcce243dff832df55eb3e4ae28a1a5fd5fdb15688",
+    "report.json": "ac5edcc8002ec303d987b97917bdefa367f0db571d060b5d72c1b8c6324d7e37",
+    "Original-python-inputs.json": "d7fe1edb2d98e16819f35aa1c414c37ee7dc46c98305e3d67bc196aa5f4f5118",
+    "cache-context-review.json": "f1c661d3329a2e99691124279ea9560d4da44b1ca9f32e783d99fc738fb4a747",
+    "independent-cleanup.json": "c3a0a7596cc4e0bf7048448b6eb0a4a67255a3a05cce0dd8c34a38ea552360f3"
+  },
+  "Native41_relationship": "Normal Main warming of system_settings is consistent with actual Original startup. Prior Source41 management/framework process inherited setter debounce; strict controller2 is retained. Serialized pickle value/DUMP bytes differ and are unqualified; typed UTC value is identical."
+}

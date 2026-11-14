@@ -1,0 +1,246 @@
+{
+  "scope": "Actual Original custom FFmpeg media characterization, two viewers across two replicas",
+  "Original_authors_credit": "All credit for Dispatcharr belongs to its original authors and contributors.",
+  "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "actual_FFmpeg_version": "ffmpeg version 9.0.2-Dispatcharr Copyright (c) 2000-2026 the FFmpeg developers",
+  "controller_actual_exit": 0,
+  "capture_complete": true,
+  "capture_valid": true,
+  "raw_passed_literal": false,
+  "raw_result_path": "artifacts/rust/m3-original-input-media-actual-1/shared-ts.json",
+  "raw_result_sha256": "4a8b38d7996ac0a05e247683de886f82773e58bbdff8f327135a0f1c2c7250fa",
+  "cases": [
+    {
+      "case": "shared-demand",
+      "status": "captured",
+      "actual_input_process_count": 1,
+      "upstream_connection_delta": 1,
+      "active_upstreams": 1,
+      "shared": {
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "active"
+      },
+      "owner_present": true,
+      "reader_loss_owner_preserved": true,
+      "retirement_observation_seconds": 8.279395947000012,
+      "automatic_resource_retirement": true,
+      "after": {
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "owner_present_after": false,
+      "process_count_after": 0,
+      "origin_active_after": 0,
+      "readers": [
+        {
+          "bytes": 1023472,
+          "media_bytes": 1023472,
+          "packets": 5444,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1535208,
+          "media_bytes": 1535208,
+          "packets": 8166,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "decoders": {
+        "owner": {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "001dc941b6c86d0867f9b050d3c45f6d15d12abc95a148382e5ca35db0a49be1"
+        },
+        "follower": {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "393daaa47d84a917edad8eb1553d898c01e99678108a74e5cd364cc76e2a9bca"
+        }
+      },
+      "stop_response_status": null,
+      "shared_fixture_clean_for_next_context": true
+    },
+    {
+      "case": "stop",
+      "status": "captured",
+      "actual_input_process_count": 1,
+      "upstream_connection_delta": 1,
+      "active_upstreams": 1,
+      "shared": {
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "active"
+      },
+      "owner_present": true,
+      "reader_loss_owner_preserved": null,
+      "retirement_observation_seconds": 0.6164122779737227,
+      "automatic_resource_retirement": true,
+      "after": {
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "owner_present_after": false,
+      "process_count_after": 0,
+      "origin_active_after": 0,
+      "readers": [
+        {
+          "bytes": 1023472,
+          "media_bytes": 1023472,
+          "packets": 5444,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1023472,
+          "media_bytes": 1023472,
+          "packets": 5444,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "decoders": {
+        "owner": {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "001dc941b6c86d0867f9b050d3c45f6d15d12abc95a148382e5ca35db0a49be1"
+        },
+        "follower": {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "001dc941b6c86d0867f9b050d3c45f6d15d12abc95a148382e5ca35db0a49be1"
+        }
+      },
+      "stop_response_status": 200,
+      "shared_fixture_clean_for_next_context": true
+    },
+    {
+      "case": "owner-crash",
+      "status": "captured",
+      "actual_input_process_count": 1,
+      "upstream_connection_delta": 1,
+      "active_upstreams": 1,
+      "shared": {
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "active"
+      },
+      "owner_present": true,
+      "reader_loss_owner_preserved": null,
+      "retirement_observation_seconds": 90.46082658099476,
+      "automatic_resource_retirement": {
+        "error": "TimeoutError",
+        "message": "automatic resource retirement observation"
+      },
+      "after": {
+        "provider_slots": 1,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": 4,
+        "timestamps": 0,
+        "state": null
+      },
+      "owner_present_after": false,
+      "process_count_after": 0,
+      "origin_active_after": 0,
+      "readers": [
+        {
+          "bytes": 1023472,
+          "media_bytes": 1023472,
+          "packets": 5444,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1023472,
+          "media_bytes": 1023472,
+          "packets": 5444,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "decoders": {
+        "owner": {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "001dc941b6c86d0867f9b050d3c45f6d15d12abc95a148382e5ca35db0a49be1"
+        },
+        "follower": {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "001dc941b6c86d0867f9b050d3c45f6d15d12abc95a148382e5ca35db0a49be1"
+        }
+      },
+      "stop_response_status": null,
+      "shared_fixture_clean_for_next_context": false
+    }
+  ],
+  "Source18_model_calls_replayed": false,
+  "known_HEAD_credential_calls_replayed": false,
+  "topology": "two-replicas selected before execution; no fallback",
+  "fixture": "fixed300s local H264/AAC320x180 25fps; two captured viewers; one provider capacity",
+  "performance_verified": false,
+  "full_M3_passed": false,
+  "full_source_media_node_passed": false,
+  "remaining_domains": [
+    "VLC-runtime",
+    "active-OutputProfiles",
+    "provider-regex",
+    "credential-pools",
+    "HLS-fMP4-custom-input"
+  ],
+  "qualification": "This exact FFmpeg/MPEG-TS two-replica fixture context is measured. Owner-crash retains reservation/index at90seconds under this boundary; no claim that every full Original deployment never cleans. No CPU/RSS or broader format/provider acceptance transfers.",
+  "cleanup": "Compose down actual0; independent 5 absence checks actual0; no host PID-generation witness captured",
+  "service_boundary": {
+    "active": "baseline PostgreSQL+Redis+supervised uWSGI master/one worker; python-replica uWSGI master/one worker; deterministic origin",
+    "absent": "Celery, Celery Beat, Daphne and packaged whole-application entrypoint were not started",
+    "crash": "SIGKILL actual baseline supervised uWSGI process group; baseline DB/Redis and python-replica remain alive",
+    "runtime_components": "Pinned Original runtime.py enables live proxy cleanup thread+pubsub in uwsgi/gunicorn; Celery/Daphne are explicitly client-only. Code indicates live orphan recovery runs in stream workers, not a Celery/Beat task. Actual callback invocations were not instrumented.",
+    "timers": "worker heartbeatTTL30s, ownershipTTL30s, orphan metadata sweep30s, TS cleanup check1s; fixture shutdown delay2s, chunk retention60s, reader behind5s; fixed automatic retirement observation90s"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "project": "dispatcharr-shared-ts-ed485f57698e",
+  "captured_at": "2026-11-14T17:25:14.140688+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "name": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-ed485f57698e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-ed485f57698e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-ed485f57698e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "baseline-exact-CID-absent",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=ee8997edbd31778b992eb1b4eb193abda33a83800b75a3615a843a3f954d5a79"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "python-replica-exact-CID-absent",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=90e408d78fcca3a5dacb2618bec3a58388ad38a1e7f9b3e198285c440640d35d"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    }
+  ],
+  "host_generation_witness": "not_captured; no claim invented",
+  "raw_result_sha256": "4a8b38d7996ac0a05e247683de886f82773e58bbdff8f327135a0f1c2c7250fa"
+}

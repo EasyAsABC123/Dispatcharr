@@ -1,0 +1,41 @@
+{
+  "scope": "offline pinned-code audit; no application rerun",
+  "service_boundary": {
+    "active": "baseline PostgreSQL+Redis+supervised uWSGI master/one worker; python-replica uWSGI master/one worker; deterministic origin",
+    "absent": "Celery, Celery Beat, Daphne and packaged whole-application entrypoint were not started",
+    "crash": "SIGKILL actual baseline supervised uWSGI process group; baseline DB/Redis and python-replica remain alive",
+    "runtime_components": "Pinned Original runtime.py enables live proxy cleanup thread+pubsub in uwsgi/gunicorn; Celery/Daphne are explicitly client-only. Code indicates live orphan recovery runs in stream workers, not a Celery/Beat task. Actual callback invocations were not instrumented.",
+    "timers": "worker heartbeatTTL30s, ownershipTTL30s, orphan metadata sweep30s, TS cleanup check1s; fixture shutdown delay2s, chunk retention60s, reader behind5s; fixed automatic retirement observation90s"
+  },
+  "pinned_code": {
+    "apps/proxy/live_proxy/runtime.py": {
+      "git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "sha256": "2a9cc8246cfff4294d5f70a0a5f0f3e4d3f55b71b47dd03bb09fed634bceab1d"
+    },
+    "apps/proxy/live_proxy/server.py": {
+      "git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "sha256": "f6aecdd437c1931bc5bb18f2f005b000d32f4e695d1a85ef131550462806d4ea"
+    },
+    "apps/proxy/config.py": {
+      "git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "sha256": "19877e97d291315d0a2b7d76865b592e907e208448376d8d7033e9dbbee28a61"
+    },
+    "apps/proxy/live_proxy/config_helper.py": {
+      "git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "sha256": "5f03c476d9e8a2cd3280ac444ece1577dde9c6412dae3598bb84bf501dce1283"
+    },
+    "dispatcharr/celery.py": {
+      "git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "sha256": "e478611b17bb46583e6104f0bef3cae04b16b67d0c8e6ada0babef9fc814eeb6"
+    }
+  },
+  "evidence_files": [
+    "docker/compose.rust-playback.yml",
+    "docker/compose.rust-replicas.yml",
+    "scripts/rust-playback-baseline/start.sh",
+    "scripts/rust-playback-baseline/uwsgi.ini",
+    "scripts/rust-playback-baseline/supervisor.py",
+    "scripts/rust-playback-baseline/seed.py"
+  ],
+  "limitations": "No actual cleanup callback instrumentation; observed retention only within declared90s fixture boundary"
+}
