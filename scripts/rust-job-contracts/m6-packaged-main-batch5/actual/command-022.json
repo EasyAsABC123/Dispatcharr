@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+    "compose",
+    "-p",
+    "dispatcharr-m6-main-f691c5179d",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch5-actual-1/compose.json",
+    "exec",
+    "-T",
+    "native",
+    "/bin/sh",
+    "-c",
+    "test ! -e /app/manage.py && test -L /app/media && test -d /app/media && test -d /data"
+  ],
+  "cwd": "/home/justin/github/Dispatcharr",
+  "observer_PID_namespace": "pid:[4026531836]",
+  "PID": 126191,
+  "starttime": "743280",
+  "began_epoch": 1794694464.7540092,
+  "completed_epoch": 1794694464.814894,
+  "actual_exit": 0,
+  "invalid": null,
+  "physically_settled": true,
+  "pipe_threads_settled": true,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

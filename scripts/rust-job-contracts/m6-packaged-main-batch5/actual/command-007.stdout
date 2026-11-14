@@ -1,0 +1,86 @@
+[
+    {
+        "Id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "RepoTags": [
+            "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+        ],
+        "RepoDigests": [
+            "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-11-03T01:13:57.378990379Z",
+        "Config": {
+            "Env": [
+                "PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "LC_ALL=C.UTF-8",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility",
+                "NVIDIA_VISIBLE_DEVICES=all",
+                "LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri",
+                "DEBIAN_FRONTEND=noninteractive",
+                "UV_PROJECT_ENVIRONMENT=/dispatcharrpy",
+                "VIRTUAL_ENV=/dispatcharrpy",
+                "UV_COMPILE_BYTECODE=1",
+                "UV_LINK_MODE=copy"
+            ],
+            "Entrypoint": [
+                "/app/docker/entrypoint.sh"
+            ],
+            "Labels": {
+                "build_version": "DispatcharrBase version: base-20261103010601",
+                "maintainer": "SergeantPanda",
+                "org.opencontainers.image.authors": "SergeantPanda",
+                "org.opencontainers.image.created": "20261103010601",
+                "org.opencontainers.image.description": "Your ultimate IPTV & stream Management companion.",
+                "org.opencontainers.image.documentation": "https://dispatcharr.github.io/Dispatcharr-Docs/",
+                "org.opencontainers.image.licenses": "See repository",
+                "org.opencontainers.image.revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "org.opencontainers.image.source": "https://github.com/Dispatcharr/Dispatcharr",
+                "org.opencontainers.image.title": "dispatcharr",
+                "org.opencontainers.image.url": "https://github.com/Dispatcharr/Dispatcharr",
+                "org.opencontainers.image.vendor": "dispatcharr",
+                "org.opencontainers.image.version": "base-20261103010601"
+            }
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 3759857023,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:5cac300e390e2fd748b258618f403b7813229929ad6de903b0c52a210a930824",
+                "sha256:5f4be2c3badedfd7149d008a4902427c98e708c70031dc19b4264160a545df19",
+                "sha256:56b3674b895175f0b0275472201f2f0c72a48c31f3bcba6d90f54193db45d259",
+                "sha256:878e2383561be36a277643b52d374ba10a86f1c3036f0ebe3ee6fe0ffd0564a9",
+                "sha256:376da22d3f9e5b696220c1c30ccb93ce6e761b37a5380c6ed38382542a7f4ffd",
+                "sha256:4e7f8cb8982f4ca0d16f02963e040c9fb66f73e7e62ed33ac1bf30dbeecba921",
+                "sha256:0020b9b05de1f7565ea4b72ef9196415949a56f2690046ef5c37b8a1045e6af1",
+                "sha256:d058dd2a763687709a3e0d24f4fe33575a73a79977e6b92f25fb35f5a7a3880f",
+                "sha256:ca8d488e1f47565be03938cd3a04844a891046a01b0f44792e9745c8e493631b",
+                "sha256:a9e792219c66e0c5cb03333576ee7091af2d256ced3e5ebea6d4cc72b17fe77f",
+                "sha256:f2d27d7e9899a668a2411101e62716af9da94d8033d356e68c3805d9fe79b9d2",
+                "sha256:774a5f48a4e00cd9783d80c0f0bf716cb7191672278af6ffb45af216f1b309a8",
+                "sha256:c0018f818afaa613dc6443ea14f3abde8ed14d16b9f0e169f8fb82ba080db16d",
+                "sha256:b01089d17f9aed8f89d806dae525ce6af20d2659559ae1f327ecdc6570e83fdc",
+                "sha256:7824257717a876a44732648508c69ee261f860d6ce3963c075db48f279d3fb75",
+                "sha256:a0fae146213956c1142ef8a6f2fa0bd6db5cb0b1934fc036f614f32eb2e62143",
+                "sha256:b2e120a03e4e579b05633e59d187208079a9e935e192813e657859aca711b4ea"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-11-10T03:10:24.970777552Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "size": 3544
+        },
+        "Identity": {
+            "Pull": [
+                {
+                    "Repository": "ghcr.io/dispatcharr/dispatcharr"
+                }
+            ]
+        }
+    }
+]

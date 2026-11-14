@@ -1,0 +1,242 @@
+[
+    {
+        "Id": "8a01c277ef802a7f8c67897764624adb7cf092f8ac11f444056e059bc23bb5ca",
+        "Created": "2026-11-14T22:14:24.446651351Z",
+        "Path": "/usr/local/bin/dispatcharr-rs",
+        "Args": [],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-14T22:14:24.54558077Z",
+            "FinishedAt": "2026-11-14T22:14:29.138983739Z"
+        },
+        "Image": "sha256:b7c1ca84201f155dfe7a4b285cff97b6e66522b4d89681830fa63e10eea11c2a",
+        "ResolvConfPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/3e214909f7f866e1769caa2ce80727f7051a2714106d07e7050bc1eb38db41f8/resolv.conf",
+        "HostnamePath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/3e214909f7f866e1769caa2ce80727f7051a2714106d07e7050bc1eb38db41f8/hostname",
+        "HostsPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/3e214909f7f866e1769caa2ce80727f7051a2714106d07e7050bc1eb38db41f8/hosts",
+        "LogPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/8a01c277ef802a7f8c67897764624adb7cf092f8ac11f444056e059bc23bb5ca/8a01c277ef802a7f8c67897764624adb7cf092f8ac11f444056e059bc23bb5ca-json.log",
+        "Name": "/dispatcharr-m6-main-f691c5179d-native-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch5-actual-1/main-data:/data:rw",
+                "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch5-actual-1:/evidence:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "container:3e214909f7f866e1769caa2ce80727f7051a2714106d07e7050bc1eb38db41f8",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 200,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 805306368,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 1610612736,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 256,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch5-actual-1/main-data",
+                "Destination": "/data",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch5-actual-1",
+                "Destination": "/evidence",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "3e214909f7f8",
+            "Domainname": "",
+            "User": "65532:65532",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "9192/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "POSTGRES_DB=rust_probe_backup_jobs_f691c5179d",
+                "TZ=UTC",
+                "CELERY_BROKER_URL=redis://:playback-fixture-only@127.0.0.1:6379/8",
+                "REDIS_PASSWORD=playback-fixture-only",
+                "PYTHONPATH=/special-root:/app",
+                "LANG=C.UTF-8",
+                "POSTGRES_USER=dispatch",
+                "REDIS_HOST=127.0.0.1",
+                "PGID=1000",
+                "PUID=1000",
+                "REDIS_DB=0",
+                "RUST_VERSION_HTTP_ORIGIN=http://127.0.0.1:9193",
+                "RUST_EPG_REFRESH_ENABLED=1",
+                "CELERY_RESULT_BACKEND=redis://:playback-fixture-only@127.0.0.1:6379/9",
+                "POSTGRES_PASSWORD=playback-fixture-only",
+                "REDIS_URL=redis://:playback-fixture-only@127.0.0.1:6379/0",
+                "RUST_BIND=127.0.0.1:9192",
+                "REDIS_PORT=6379",
+                "POSTGRES_PORT=5432",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "RUST_VERSION_TASKS_ENABLED=1",
+                "RUST_SHUTDOWN_SECONDS=12",
+                "DJANGO_SECRET_KEY=playback-fixture-only",
+                "DISPATCHARR_PLUGINS_DIR=/evidence/empty-plugins",
+                "POSTGRES_HOST=127.0.0.1",
+                "POSTGRES_DIR=/data/db",
+                "DISPATCHARR_LOG_DIR=/evidence/special-logs/default",
+                "DISPATCHARR_ENV=aio",
+                "REDISCLI_AUTH=playback-fixture-only",
+                "LC_ALL=C.UTF-8",
+                "JOB_DISPOSABLE_FIXTURE=playback-fixture-only",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "RUST_FRONTEND_DIR=/opt/dispatcharr-frontend"
+            ],
+            "Cmd": null,
+            "Image": "sha256:b7c1ca84201f155dfe7a4b285cff97b6e66522b4d89681830fa63e10eea11c2a",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "/usr/local/bin/dispatcharr-rs"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "cd0816f6d216cecb35a4ab6ece4bb17c97aaa2f2f351d220c9021140d95ad16d",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "baseline:service_started:true",
+                "com.docker.compose.image": "sha256:b7c1ca84201f155dfe7a4b285cff97b6e66522b4d89681830fa63e10eea11c2a",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "dispatcharr-m6-main-f691c5179d",
+                "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch5-actual-1/compose.json",
+                "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-batch5-actual-1",
+                "com.docker.compose.service": "native",
+                "com.docker.compose.version": "2.40.3",
+                "org.opencontainers.image.description": "Original Dispatcharr credit belongs to its original authors and contributors; see /usr/share/doc/dispatcharr/ATTRIBUTION.md. Migration parity is incomplete.",
+                "org.opencontainers.image.licenses": "AGPL-3.0-only",
+                "org.opencontainers.image.source-tree-sha256": "6570edaa7fcc5d21c266d229e279d2bf7dfc6da8adb097a3ff2ab30ce1725a83",
+                "org.opencontainers.image.title": "Dispatcharr derivative Rust backend port"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "Networks": {}
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:637f1de28516237b7e2b20c118860a28748c1db924f103a96807ad4ce84558d5",
+            "size": 2950,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]
