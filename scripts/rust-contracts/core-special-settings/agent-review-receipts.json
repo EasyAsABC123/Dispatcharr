@@ -1,0 +1,232 @@
+[
+  {
+    "private_raw_sha256": "0b7e7b7c7fa36147d2da68691698c47309fe8da9655f469be039bdf0cd6cf779",
+    "private_raw_bytes": 216129,
+    "projection": {
+      "passed": true,
+      "reviewer": "stream_http agent; not Root",
+      "raw_host_sha256": "eec5b5c67abc01ec6b33879752af4da94ad34adf8669f69bb3acb4df76d7eacb",
+      "assertion_count": 3013,
+      "Source_framework_cases": 51,
+      "raw_recorder_passed_false_preserved": true,
+      "status_sequence": [
+        401,
+        403,
+        200,
+        200,
+        204,
+        201,
+        200,
+        200,
+        401,
+        403,
+        200,
+        403,
+        400,
+        204,
+        201,
+        200,
+        200,
+        200,
+        401,
+        403,
+        200,
+        400,
+        204,
+        201,
+        200,
+        200,
+        401,
+        403,
+        200,
+        200,
+        204,
+        201,
+        200,
+        200,
+        401,
+        403,
+        200,
+        200,
+        204,
+        201,
+        200,
+        200,
+        409,
+        401,
+        403,
+        200,
+        200,
+        204,
+        201,
+        200,
+        200
+      ],
+      "actual_new_task_publications": [
+        {
+          "case": 38,
+          "cohort": "stream_settings",
+          "database": 5,
+          "task": "core.tasks.rehash_streams",
+          "task_id": "778dffab-8836-4a60-970e-117517cae8f7",
+          "frame_sha256": "b373979cf39b7ae9f0c97f233cbe6323debb07cc9df256d67691f564d0e98504",
+          "body": [
+            [
+              [
+                "url"
+              ]
+            ],
+            {
+              "locks_preacquired": true,
+              "preacquired_lock_ids": [
+                1
+              ],
+              "preacquired_lock_token": "48a601e646f84dfda1ead38ab1f1fa4e"
+            },
+            {
+              "callbacks": null,
+              "errbacks": null,
+              "chain": null,
+              "chord": null
+            }
+          ]
+        },
+        {
+          "case": 46,
+          "cohort": "dvr_settings",
+          "database": 6,
+          "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+          "task_id": "c92433fd-3466-4ca5-a017-137cfa4d390c",
+          "frame_sha256": "5748b94485393f3177857e55b39a8cddab740fc7d8d7115a8a1c91c34848291c",
+          "body": [
+            [],
+            {},
+            {
+              "callbacks": null,
+              "errbacks": null,
+              "chain": null,
+              "chord": null
+            }
+          ]
+        },
+        {
+          "case": 47,
+          "cohort": "dvr_settings",
+          "database": 6,
+          "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+          "task_id": "6fdc1e4b-695a-4522-a5b6-4b3657c9f41e",
+          "frame_sha256": "8dead125f0adb75343e9c7adce01933d6aa0b537f73214f35ebc5c4e9bf1c879",
+          "body": [
+            [],
+            {},
+            {
+              "callbacks": null,
+              "errbacks": null,
+              "chain": null,
+              "chord": null
+            }
+          ]
+        },
+        {
+          "case": 49,
+          "cohort": "dvr_settings",
+          "database": 6,
+          "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+          "task_id": "e060df1c-1de5-451b-97a4-c6c6fbb63c10",
+          "frame_sha256": "2fead330212fa289e7540a401c792c6fe43951fabb02582204ff92572adc3aa5",
+          "body": [
+            [],
+            {},
+            {
+              "callbacks": null,
+              "errbacks": null,
+              "chain": null,
+              "chord": null
+            }
+          ]
+        },
+        {
+          "case": 50,
+          "cohort": "dvr_settings",
+          "database": 6,
+          "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+          "task_id": "6692473c-672e-4e9b-86d4-b8905ffc3062",
+          "frame_sha256": "51b757a0521dd71c0f8c926bceec0b12c4f6ae549ef38f275d88eed1e846aec2",
+          "body": [
+            [],
+            {},
+            {
+              "callbacks": null,
+              "errbacks": null,
+              "chain": null,
+              "chord": null
+            }
+          ]
+        }
+      ],
+      "Source_TCP_Native_Main_worker_downstream_or_performance_qualified": false
+    },
+    "independent_public_recompute_of_omitted_fields": false
+  },
+  {
+    "private_raw_sha256": "09de845d8c28b032d33db78a1b88f810767e90246f95043e4686e795201ed7af",
+    "private_raw_bytes": 381754,
+    "projection": {
+      "reviewer": "stream_http agent; NOT Root",
+      "original_controller_exit1_preserved": true,
+      "original_first_failure": {
+        "type": "ValueError",
+        "message": "LiteralStatusBodyParity:12"
+      },
+      "sealed_comparator_sha256": "b9fe1a0254348ad49e19b21009e1abe970613560595c86d11bdece68d51b7cc0",
+      "API_total": 51,
+      "control_total": 290,
+      "literal_status_and_body_equal": 49,
+      "failed_predicates": [
+        "LiteralStatusBodyParity:12",
+        "ContentTypeParity:12",
+        "LiteralStatusBodyParity:16",
+        "ContentTypeParity:16"
+      ],
+      "all_cleanup_steps_passed": true,
+      "global51_qualified": false,
+      "Main_or_fullM5_or_performance": false
+    },
+    "independent_public_recompute_of_omitted_fields": false
+  },
+  {
+    "private_raw_sha256": "4dcfa54507c936561f9393f3b6309522deb56b45b42a71071b139afbf9d04d29",
+    "private_raw_bytes": 174074,
+    "projection": {
+      "reviewer": "stream_http agent; NOT Root",
+      "read_only_no_Source_API_or_Native_replay": true,
+      "passed": true,
+      "execution_sha256": "17d31befd2c8e70e52c1709f79f50747c9881e64370c04764bbb3cb44f637bed",
+      "seal_sha256": "0bd059e99cc166552dfddbe1cb49ccc68b1ac65762494e552fb0d30473836b59",
+      "comparator_sha256": "b9fe1a0254348ad49e19b21009e1abe970613560595c86d11bdece68d51b7cc0",
+      "predicates": 3520,
+      "actual_API": 51,
+      "actual_controls": 290,
+      "actual_Source_API": 0,
+      "all_host_cleanup_steps_passed": true,
+      "original_first_HOST1_not_relabelled": true,
+      "Source_raw_capture_only_passed_false_preserved": true,
+      "legacy_collection_GET_not_bounded_Core_ownership": true,
+      "Main_or_fullM5_or_performance": false
+    },
+    "independent_public_recompute_of_omitted_fields": false
+  },
+  {
+    "private_raw_sha256": "4447a6b142449da0571d233300dfc3cd1a504d6ef351842825779ddd5ddda2cc",
+    "private_raw_bytes": 6449,
+    "projection": {
+      "reviewer": "stream_http agent; NOT Root",
+      "all_original_host_identity_absent": true,
+      "own_project_and_exact_CIDs_empty": true,
+      "no_other_project_or_global_empty_claim": true,
+      "passed": true,
+      "checked_epoch": 1794632491.4632254
+    },
+    "independent_public_recompute_of_omitted_fields": false
+  }
+]

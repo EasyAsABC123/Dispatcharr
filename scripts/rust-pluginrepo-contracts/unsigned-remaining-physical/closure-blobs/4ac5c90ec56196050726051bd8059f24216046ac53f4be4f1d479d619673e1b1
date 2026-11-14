@@ -1,0 +1,95 @@
+--- frozen-QA1/remaining_peers.rs
++++ frozen-QA2/remaining_peers.rs
+@@ -621,6 +621,61 @@
+     assert_eq!(rows, json!([]));
+     json!({"first_close":physical,"independent_while_ELF_subject_backend_rows":rows,"same_original_four_slots":auth.user_agent_workers.available_permits(),"original_weak_after_settlement":admitted(observed)})
+ }
++fn observer_socket(port: i32) -> Value {
++    assert!((1..=65535).contains(&port));
++    let tcp = std::fs::read_to_string("/proc/self/net/tcp").unwrap();
++    assert!(tcp.len() <= 1048576);
++    let mut matched = Vec::new();
++    for line in tcp.lines().skip(1) {
++        let fields: Vec<_> = line.split_whitespace().collect();
++        if fields.len() < 10 {
++            continue;
++        }
++        let (local_addr, local_port) = fields[1].split_once(':').unwrap();
++        let (remote_addr, remote_port) = fields[2].split_once(':').unwrap();
++        if local_addr == "0100007F"
++            && remote_addr == "0100007F"
++            && u16::from_str_radix(local_port, 16).unwrap() == port as u16
++            && u16::from_str_radix(remote_port, 16).unwrap() == 5432
++            && fields[3] == "01"
++        {
++            matched.push(fields[9].to_owned());
++        }
++    }
++    assert_eq!(matched.len(), 1, "OneActualObserverSocketTuple");
++    let link = format!("socket:[{}]", matched[0]);
++    let mut fds = Vec::new();
++    let entries: Vec<_> = std::fs::read_dir("/proc/self/fd").unwrap().collect();
++    assert!(entries.len() <= 512);
++    for row in entries {
++        let path = row.unwrap().path();
++        if std::fs::read_link(&path)
++            .ok()
++            .is_some_and(|v| v.to_string_lossy() == link)
++        {
++            let fd: i32 = path.file_name().unwrap().to_str().unwrap().parse().unwrap();
++            fds.push(fd);
++        }
++    }
++    assert!(!fds.is_empty() && fds.len() <= 4);
++    json!({"original_socket_link":link,"original_fds":fds,"native_PID":std::process::id(),"PID_namespace":std::fs::read_link("/proc/self/ns/pid").unwrap(),"network_namespace":std::fs::read_link("/proc/self/ns/net").unwrap(),"actual_local_port":port,"actual_remote_port":5432,"scope":"actual owned observer tuple+current own FDs; no global duplicate descriptor claim"})
++}
++async fn drain_observer(out: &FsPath, observer: &Store, case: u64) -> Value {
++    let max = if case == 3 { 2 } else { 1 };
++    assert_eq!(observer.pool().options().get_max_connections(), max);
++    let initial = json!({"size":observer.pool().size(),"idle_diagnostic":observer.pool().num_idle(),"closed":observer.pool().is_closed(),"max":max});
++    save(
++        &out.join("observer-drain-progress.json"),
++        &json!({"phase":"before_exact_max_checkout","capture_complete":false,"initial":initial}),
++    );
++    tokio::time::timeout(Duration::from_secs(10),async {
++        let mut checked=Vec::new();for _ in 0..max{checked.push(observer.pool().acquire().await.unwrap());}let mut facts=Vec::new();
++        for c in &mut checked {let row:(i32,String,i32,String,String)=sqlx::query_as("SELECT pg_backend_pid(),host(inet_client_addr()),inet_client_port(),current_database()::text,current_setting('application_name')").fetch_one(&mut **c).await.unwrap();assert_eq!(row.1,"127.0.0.1");assert_eq!(row.4,"unsigned-remaining-observer");c.ping().await.unwrap();facts.push(json!({"actual_backend_pid":row.0,"actual_client_address":row.1,"actual_client_port":row.2,"actual_database":row.3,"actual_application_name":row.4,"socket":observer_socket(row.2)}));}
++        save(&out.join("observer-drain-before-close.json"),&json!({"capture_complete":true,"initial":initial,"exact_existing_max_checked_out":max,"actual_connections":facts,"first_pool_close_not_called_yet":true}));let mut closed=Vec::new();
++        for (c,fact)in checked.into_iter().zip(&facts){c.close().await.unwrap();let socket=&fact["socket"];let mut fd_after=Vec::new();for fd in socket["original_fds"].as_array().unwrap(){let fd=fd.as_i64().unwrap();let after=std::fs::read_link(format!("/proc/self/fd/{fd}")).ok().map(|v|v.to_string_lossy().into_owned());assert_ne!(after.as_deref(),socket["original_socket_link"].as_str());fd_after.push(json!({"fd":fd,"after_link":after,"original_generation_absent":true}));}closed.push(json!({"actual_backend_pid":fact["actual_backend_pid"],"explicit_connection_close_awaited_once":true,"actual_original_FDs_after_close":fd_after}));save(&out.join("observer-drain-progress.json"),&json!({"phase":"explicit_connections_close","capture_complete":false,"actual_connections":facts,"actual_closed":closed}));}
++        observer.pool().close().await;assert!(observer.pool().is_closed());assert_eq!(observer.pool().size(),0);let result=json!({"passed":true,"whole_drain_budget_seconds":10,"max":max,"initial":initial,"actual_connections_before_close":facts,"actual_explicit_closes":closed,"first_pool_close_awaited_once":true,"pool_closed":observer.pool().is_closed(),"pool_size":observer.pool().size(),"pool_idle_diagnostic":observer.pool().num_idle(),"second_pool_close_or_query_retry":false,"external_while_ELF_backend_absence":"controller gate still required"});save(&out.join("observer-drain-progress.json"),&result);result
++    }).await.expect("ExplicitObserverDrainWhole10")
++}
+ async fn finish_report(
+     out: &FsPath,
+     subject: &Store,
+@@ -632,10 +687,16 @@
+     report["physical_close"] = close_subject(subject, observer, auth, observed).await;
+     report["after"] = snapshot(observer).await;
+     report["credentials_after"] = credentials(observer).await;
+-    tokio::time::timeout(Duration::from_secs(10), observer.pool().close())
+-        .await
+-        .expect("FirstObserverClose10");
+-    assert_eq!(observer.pool().size(), 0);
++    report["capture_complete"] = json!(false);
++    report["passed"] = json!(false);
++    report["observer_close_pending"] = json!(true);
++    save(
++        &out.join("unsigned-remaining-physical-private.json"),
++        &report,
++    );
++    report["observer_drain"] =
++        drain_observer(out, observer, report["case"].as_u64().unwrap()).await;
++    report["observer_close_pending"] = json!(false);
+     let proxy_pending = matches!(report["case"].as_u64(), Some(2 | 3));
+     report["proxy_finish_pending"] = json!(proxy_pending);
+     report["capture_complete"] = json!(!proxy_pending);
+@@ -1157,7 +1218,8 @@
+     direct
+         .query_pairs_mut()
+         .append_pair("application_name", "unsigned-remaining-observer");
+-    let observer = Store::connect(direct.as_str(), 4).await.unwrap();
++    let observer_max = if case == 3 { 2 } else { 1 };
++    let observer = Store::connect(direct.as_str(), observer_max).await.unwrap();
+     save(
+         &out.join("remaining-peer-began.json"),
+         &json!({"case":case,"source_requests":0,"Main":false,"Source_existing_state_only":true,"actual_began_utc":Utc::now(),"case_outer_seconds":90,"existing_original_request_writer_slots":4,"owned_database":db,"production_runtime_changed":false}),

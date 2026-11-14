@@ -1,0 +1,63 @@
+"""Finite pure acceptance/refusal controls. No sockets, Docker, Cargo or app."""
+import copy,hashlib,json,unittest
+from pathlib import Path
+import validate_remaining as V
+import origin as O
+ROOT=Path(__file__).resolve().parents[1]
+class Controls(unittest.TestCase):
+ def test_SQL_lexical_timestamp_same_instant(self):V.sql_equal({'updated_at':'2025-01-01T00:00:00Z'},{'updated_at':'2025-01-01T00:00:00.000000+00:00'})
+ def test_SQL_wrong_instant(self):
+  with self.assertRaises(ValueError):V.sql_equal({'updated_at':'2025-01-01T00:00:00Z'},{'updated_at':'2025-01-01T00:00:01Z'})
+ def test_SQL_naive(self):
+  with self.assertRaises(ValueError):V.sql_equal({'updated_at':'2025-01-01T00:00:00Z'},{'updated_at':'2025-01-01T00:00:00'})
+ def test_SQL_bool_not_int(self):
+  with self.assertRaises(ValueError):V.sql_equal({'id':1},{'id':True})
+ def test_SQL_stable_text_not_clock_normalized(self):
+  with self.assertRaises(ValueError):V.sql_equal({'url':'2025-01-01T00:00:00Z'},{'url':'2025-01-01T00:00:00.000000+00:00'})
+ def test_SQL_missing_child(self):
+  with self.assertRaises(ValueError):V.sql_equal([{'id':951},{'id':952}],[{'id':951}])
+ def test_SQL_reordered_child(self):
+  with self.assertRaises(ValueError):V.sql_equal([{'id':951},{'id':952}],[{'id':952},{'id':951}])
+ def test_SQL_field_dropped(self):
+  with self.assertRaises(ValueError):V.sql_equal({'id':951,'slug':'keep'},{'id':951})
+ def test_origin_refresh_exact(self):self.assertEqual(O.reply(2,'/refresh.json',1,b'owned'),b'owned')
+ def test_origin_frames_exact(self):
+  for i,path in enumerate(['/physical/frame-1.json','/physical/frame-2.json','/physical/frame-reuse.json'],1):self.assertIn(b'Owned Physical',O.reply(4,path,i,b''))
+ def test_origin_fifth_forbidden(self):
+  with self.assertRaises(ValueError):O.reply(4,'/physical/forbidden-fifth.json',3,b'')
+ def test_origin_reorder(self):
+  with self.assertRaises(ValueError):O.reply(4,'/physical/frame-2.json',1,b'')
+ def test_origin_extra(self):
+  with self.assertRaises(ValueError):O.reply(4,'/physical/frame-reuse.json',4,b'')
+ def test_origin_bool_case(self):
+  with self.assertRaises(ValueError):O.reply(True,'/physical/frontend-fd-loss.json',1,b'')
+ def test_origin_unknown_path(self):
+  with self.assertRaises(ValueError):O.reply(1,'/unsealed',1,b'')
+
+def samples():return[{'elapsed_seconds':0.,'original_weak':[True],'available_original_four_slots':3,'physical_cache_operations':0},{'elapsed_seconds':.3,'original_weak':[True],'available_original_four_slots':3,'physical_cache_operations':0}]
+def sample_negative(name,fn):
+ def test(self):
+  value=samples();fn(value)
+  with self.assertRaises(ValueError):V.samples(value)
+ setattr(Controls,'test_sample_'+name,test)
+for name,fn in [('short',lambda x:x[1].__setitem__('elapsed_seconds',.1)),('nan',lambda x:x[0].__setitem__('elapsed_seconds',float('nan'))),('inf',lambda x:x[1].__setitem__('elapsed_seconds',float('inf'))),('boolclock',lambda x:x[0].__setitem__('elapsed_seconds',False)),('reversed',lambda x:x.reverse()),('retired',lambda x:x[1].__setitem__('original_weak',[False])),('newallowance',lambda x:x[0].__setitem__('available_original_four_slots',4)),('boolslot',lambda x:x[0].__setitem__('available_original_four_slots',True)),('missing',lambda x:x.pop())]:sample_negative(name,fn)
+def wire():
+ c=json.loads((ROOT/'inputs/pg-contracts.json').read_bytes())['save_ready'];return c,{'backend_pid':123,'sql':c['sql'],'rows':1,'commands':['UPDATE 1'],'errors':[],'tx':'I','parameter_hex':[c['parameter_hex'][0],c['parameter_hex'][1],c['parameter_hex'][2],'0000000000000000','0000000000000001'],'sync_seen':True}
+def wire_negative(name,fn):
+ def test(self):
+  c,w=wire();fn(w)
+  with self.assertRaises(ValueError):V.pg_wire(w,c,{'actual_backend_pid':123})
+ setattr(Controls,'test_wire_'+name,test)
+for name,fn in [('backend',lambda x:x.__setitem__('backend_pid',124)),('rowsbool',lambda x:x.__setitem__('rows',True)),('wrongSQL',lambda x:x.__setitem__('sql','SELECT 1')),('describeReady',lambda x:x.__setitem__('sync_seen',False)),('command',lambda x:x.__setitem__('commands',['UPDATE 0'])),('error',lambda x:x.__setitem__('errors',['57014'])),('transaction',lambda x:x.__setitem__('tx','T')),('parameter',lambda x:x['parameter_hex'].__setitem__(0,'0000000000000322')),('timestampLength',lambda x:x['parameter_hex'].__setitem__(3,'00')),('jsonbVersion',lambda x:x['parameter_hex'].__setitem__(2,'02'+x['parameter_hex'][2][2:]))]:wire_negative(name,fn)
+def cache():return[{'database':n,'inventory':{'raw_DUMP_PTTL':{'6b6579':{'dump_hex':'6f776e6564','pttl':1000}}}}for n in range(4)]
+def cache_negative(name,fn):
+ def test(self):
+  a=cache();b=copy.deepcopy(a);fn(b)
+  with self.assertRaises((ValueError,KeyError)):V.raw_cache(a,b)
+ setattr(Controls,'test_cache_'+name,test)
+for name,fn in [('missingDB',lambda x:x.pop()),('DBswap',lambda x:x.reverse()),('dropkey',lambda x:x[0]['inventory']['raw_DUMP_PTTL'].clear()),('value',lambda x:x[1]['inventory']['raw_DUMP_PTTL']['6b6579'].__setitem__('dump_hex','6f74686572')),('ttlrenewal',lambda x:x[1]['inventory']['raw_DUMP_PTTL']['6b6579'].__setitem__('pttl',1001)),('ttlbool',lambda x:x[1]['inventory']['raw_DUMP_PTTL']['6b6579'].__setitem__('pttl',True))]:cache_negative(name,fn)
+class Baselines(unittest.TestCase):
+ def test_samples(self):self.assertEqual(V.samples(samples()),.3)
+ def test_wire(self):c,w=wire();V.pg_wire(w,c,{'actual_backend_pid':123})
+ def test_raw_cache(self):a=cache();b=copy.deepcopy(a);b[0]['inventory']['raw_DUMP_PTTL']['6b6579']['pttl']=900;V.raw_cache(a,b)
+if __name__=='__main__':unittest.main()

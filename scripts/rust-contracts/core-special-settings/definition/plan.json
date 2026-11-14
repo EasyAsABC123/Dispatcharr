@@ -1,0 +1,1075 @@
+{
+  "state": "BLOCKED_SOURCE_ONLY_NEW_SPECIAL_KEYS",
+  "schema": "Source.CoreSettings.special.v1",
+  "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "current_native_git": "2dd210cf37877d9e132c864a54889fc66d6dd3b1",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "request_count": 51,
+  "cohorts": [
+    {
+      "group": "system_settings",
+      "Redis_database": 1,
+      "case_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "owned_group_value": {
+        "time_zone": "UTC",
+        "log_max_mb": 5,
+        "log_keep": 5,
+        "log_persist": false,
+        "enable_ip_lookup": false
+      },
+      "fresh_process_and_SQL_clone": true
+    },
+    {
+      "group": "network_access",
+      "Redis_database": 2,
+      "case_ids": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "owned_group_value": {
+        "UI": "127.0.0.0/8",
+        "STREAMS": "127.0.0.0/8"
+      },
+      "fresh_process_and_SQL_clone": true
+    },
+    {
+      "group": "reverse_proxy_auth",
+      "Redis_database": 3,
+      "case_ids": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "owned_group_value": {
+        "enabled": false,
+        "header": ""
+      },
+      "fresh_process_and_SQL_clone": true
+    },
+    {
+      "group": "proxy_settings",
+      "Redis_database": 4,
+      "case_ids": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "owned_group_value": {
+        "buffering_timeout": 15,
+        "buffering_speed": 1.0
+      },
+      "fresh_process_and_SQL_clone": true
+    },
+    {
+      "group": "stream_settings",
+      "Redis_database": 5,
+      "case_ids": [
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
+      "owned_group_value": {
+        "default_user_agent": null,
+        "m3u_hash_key": "name,url",
+        "default_output_format": "mpegts"
+      },
+      "fresh_process_and_SQL_clone": true
+    },
+    {
+      "group": "dvr_settings",
+      "Redis_database": 6,
+      "case_ids": [
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51
+      ],
+      "owned_group_value": {
+        "pre_offset_minutes": 0,
+        "post_offset_minutes": 0,
+        "series_rules": []
+      },
+      "fresh_process_and_SQL_clone": true
+    }
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "cohort": "system_settings",
+      "name": "anonymous_special_PATCH",
+      "method": "PATCH",
+      "role": "anonymous",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/01.json",
+        "body_bytes": 103,
+        "body_sha256": "5a60a08055798ba366b8cfb83e0659b8131a2addac9ecb94222356334a91309c",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 2,
+      "cohort": "system_settings",
+      "name": "standard_special_PATCH",
+      "method": "PATCH",
+      "role": "standard",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/02.json",
+        "body_bytes": 103,
+        "body_sha256": "5a60a08055798ba366b8cfb83e0659b8131a2addac9ecb94222356334a91309c",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 3,
+      "cohort": "system_settings",
+      "name": "admin_special_PUT",
+      "method": "PUT",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/03.json",
+        "body_bytes": 151,
+        "body_sha256": "5fbe9f4a4aaad4ce63860945f58ea8c63c8ba389ce05a436620e384581177cc5",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 4,
+      "cohort": "system_settings",
+      "name": "admin_special_edge_PATCH",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/04.json",
+        "body_bytes": 99,
+        "body_sha256": "0738513e513cfd4d3fe8591c5d446db24b1983d466b9aaba7198a8fb781aa363",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 5,
+      "cohort": "system_settings",
+      "name": "admin_special_DELETE",
+      "method": "DELETE",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/05.json",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 6,
+      "cohort": "system_settings",
+      "name": "admin_special_CREATE",
+      "method": "POST",
+      "role": "control_admin",
+      "target": "collection",
+      "body_spec": {
+        "body": "bodies/06.json",
+        "body_bytes": 137,
+        "body_sha256": "9e1ade52cfa1f93f7a801cb0375f453545597c5b85f5f80aead3f34c02ed4156",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "bind_actual_created_id": true,
+      "effect_focus": "create differs from old-key update validation; real DVR publication when offsets supplied"
+    },
+    {
+      "id": 7,
+      "cohort": "system_settings",
+      "name": "rename_old_special_to_ordinary",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/07.json",
+        "body_bytes": 186,
+        "body_sha256": "b5cf8de9dfffc31593a88ef434203eefab9d0f9f07a2d8f35008fe2e3d2b10e8",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key serializer/view branches, new-key post_save signals"
+    },
+    {
+      "id": 8,
+      "cohort": "system_settings",
+      "name": "rename_old_ordinary_back_to_special",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/08.json",
+        "body_bytes": 137,
+        "body_sha256": "9e1ade52cfa1f93f7a801cb0375f453545597c5b85f5f80aead3f34c02ed4156",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key ordinary serializer/view, new-key special signal dispatch"
+    },
+    {
+      "id": 9,
+      "cohort": "network_access",
+      "name": "anonymous_special_PATCH",
+      "method": "PATCH",
+      "role": "anonymous",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/09.json",
+        "body_bytes": 55,
+        "body_sha256": "0e7d420d365583b3dfa78bfeacad62472403d170214dbed26724d670bed8c694",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 10,
+      "cohort": "network_access",
+      "name": "standard_special_PATCH",
+      "method": "PATCH",
+      "role": "standard",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/10.json",
+        "body_bytes": 55,
+        "body_sha256": "0e7d420d365583b3dfa78bfeacad62472403d170214dbed26724d670bed8c694",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 11,
+      "cohort": "network_access",
+      "name": "admin_special_PUT",
+      "method": "PUT",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/11.json",
+        "body_bytes": 109,
+        "body_sha256": "85fbf44a4ca57fedca7f57eeb16dcdd0a7c9dab73ea7f98f271c59230b02c729",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 12,
+      "cohort": "network_access",
+      "name": "global_admin_after_restrictive_network",
+      "method": "GET",
+      "role": "global_admin",
+      "target": "collection",
+      "body_spec": {
+        "body": "bodies/12.json",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "literal later-access denial; control IP unchanged"
+    },
+    {
+      "id": 13,
+      "cohort": "network_access",
+      "name": "admin_special_edge_PATCH",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/13.json",
+        "body_bytes": 54,
+        "body_sha256": "c7b2b49da3692dd659bb9ab6bedb4c8975e04a7e7da2aeeb9814589eb5b1ea0b",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 14,
+      "cohort": "network_access",
+      "name": "admin_special_DELETE",
+      "method": "DELETE",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/14.json",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 15,
+      "cohort": "network_access",
+      "name": "admin_special_CREATE",
+      "method": "POST",
+      "role": "control_admin",
+      "target": "collection",
+      "body_spec": {
+        "body": "bodies/15.json",
+        "body_bytes": 108,
+        "body_sha256": "7d4fac0b3e30603c2a4010c8be0ac8a33bf3494caa75234d8f328ea046ac4046",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "bind_actual_created_id": true,
+      "effect_focus": "create differs from old-key update validation; real DVR publication when offsets supplied"
+    },
+    {
+      "id": 16,
+      "cohort": "network_access",
+      "name": "global_admin_after_fixed_network_restore",
+      "method": "GET",
+      "role": "global_admin",
+      "target": "collection",
+      "body_spec": {
+        "body": "bodies/16.json",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "literal later-access restoration; no adaptive headers/identity"
+    },
+    {
+      "id": 17,
+      "cohort": "network_access",
+      "name": "rename_old_special_to_ordinary",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/17.json",
+        "body_bytes": 153,
+        "body_sha256": "8a581b32adb14f631d731be2dcf0be8aaa00f220d794948df142046b6094eb00",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key serializer/view branches, new-key post_save signals"
+    },
+    {
+      "id": 18,
+      "cohort": "network_access",
+      "name": "rename_old_ordinary_back_to_special",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/18.json",
+        "body_bytes": 107,
+        "body_sha256": "467c4b3bfda9d596a836ca32358ffb60e5a82449f38136529df25139fbaa5494",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key ordinary serializer/view, new-key special signal dispatch"
+    },
+    {
+      "id": 19,
+      "cohort": "reverse_proxy_auth",
+      "name": "anonymous_special_PATCH",
+      "method": "PATCH",
+      "role": "anonymous",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/19.json",
+        "body_bytes": 40,
+        "body_sha256": "c985d0be0c3faae944e6f31d281182a53a0f0323df8c1995c6ae81dea714363a",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 20,
+      "cohort": "reverse_proxy_auth",
+      "name": "standard_special_PATCH",
+      "method": "PATCH",
+      "role": "standard",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/20.json",
+        "body_bytes": 40,
+        "body_sha256": "c985d0be0c3faae944e6f31d281182a53a0f0323df8c1995c6ae81dea714363a",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 21,
+      "cohort": "reverse_proxy_auth",
+      "name": "admin_special_PUT",
+      "method": "PUT",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/21.json",
+        "body_bytes": 126,
+        "body_sha256": "4b9c491fb5826627e79d649b0e9725456035c3f09b02185a72a9b2a98cfc7bc6",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 22,
+      "cohort": "reverse_proxy_auth",
+      "name": "admin_special_edge_PATCH",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/22.json",
+        "body_bytes": 54,
+        "body_sha256": "c8acf2658ede6b7d25d4b7d87292befdbd5dba73e6cee7151730b9dc307088b8",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 23,
+      "cohort": "reverse_proxy_auth",
+      "name": "admin_special_DELETE",
+      "method": "DELETE",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/23.json",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 24,
+      "cohort": "reverse_proxy_auth",
+      "name": "admin_special_CREATE",
+      "method": "POST",
+      "role": "control_admin",
+      "target": "collection",
+      "body_spec": {
+        "body": "bodies/24.json",
+        "body_bytes": 103,
+        "body_sha256": "8bee5e26388c95092b47c6bebd2914a553a64dbe90a78488cea5799c4e45b0b1",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "bind_actual_created_id": true,
+      "effect_focus": "create differs from old-key update validation; real DVR publication when offsets supplied"
+    },
+    {
+      "id": 25,
+      "cohort": "reverse_proxy_auth",
+      "name": "rename_old_special_to_ordinary",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/25.json",
+        "body_bytes": 171,
+        "body_sha256": "e467a103cebfc0e25ed96304ec6b2a1f1a4e964882fa86e2999a19c8e164c77f",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key serializer/view branches, new-key post_save signals"
+    },
+    {
+      "id": 26,
+      "cohort": "reverse_proxy_auth",
+      "name": "rename_old_ordinary_back_to_special",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/26.json",
+        "body_bytes": 110,
+        "body_sha256": "ac40b374ac16f935953cca266b2422f51846fedb91ce2769963a2ec28e4fd994",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key ordinary serializer/view, new-key special signal dispatch"
+    },
+    {
+      "id": 27,
+      "cohort": "proxy_settings",
+      "name": "anonymous_special_PATCH",
+      "method": "PATCH",
+      "role": "anonymous",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/27.json",
+        "body_bytes": 57,
+        "body_sha256": "6377aae9cd59fc7f4da960c644ad0d2b7dd85aba97f3614f633169717742aca8",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 28,
+      "cohort": "proxy_settings",
+      "name": "standard_special_PATCH",
+      "method": "PATCH",
+      "role": "standard",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/28.json",
+        "body_bytes": 57,
+        "body_sha256": "6377aae9cd59fc7f4da960c644ad0d2b7dd85aba97f3614f633169717742aca8",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 29,
+      "cohort": "proxy_settings",
+      "name": "admin_special_PUT",
+      "method": "PUT",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/29.json",
+        "body_bytes": 110,
+        "body_sha256": "4bad800d25a4df4378d94e647016a719a709208719a774f0f9497c48f1501b35",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 30,
+      "cohort": "proxy_settings",
+      "name": "admin_special_edge_PATCH",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/30.json",
+        "body_bytes": 40,
+        "body_sha256": "09508077db82ddb3b97e590c77f6b5c8d90185ecfeb08d81f2a93b83235f911f",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 31,
+      "cohort": "proxy_settings",
+      "name": "admin_special_DELETE",
+      "method": "DELETE",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/31.json",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 32,
+      "cohort": "proxy_settings",
+      "name": "admin_special_CREATE",
+      "method": "POST",
+      "role": "control_admin",
+      "target": "collection",
+      "body_spec": {
+        "body": "bodies/32.json",
+        "body_bytes": 88,
+        "body_sha256": "68cd1cf1eb7e665a04b92c0ebd900846e83a74e95645e4775b5ed1edf9c0aca5",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "bind_actual_created_id": true,
+      "effect_focus": "create differs from old-key update validation; real DVR publication when offsets supplied"
+    },
+    {
+      "id": 33,
+      "cohort": "proxy_settings",
+      "name": "rename_old_special_to_ordinary",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/33.json",
+        "body_bytes": 132,
+        "body_sha256": "cd41e2aaebf7b7c9ab300640d708f86731653f252a205efa9588a5a20d778cae",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key serializer/view branches, new-key post_save signals"
+    },
+    {
+      "id": 34,
+      "cohort": "proxy_settings",
+      "name": "rename_old_ordinary_back_to_special",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/34.json",
+        "body_bytes": 88,
+        "body_sha256": "717dbd50cb6fb8885af1589ceaafc3b0150a94d90c0f764de654118b49272dd6",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key ordinary serializer/view, new-key special signal dispatch"
+    },
+    {
+      "id": 35,
+      "cohort": "stream_settings",
+      "name": "anonymous_special_PATCH",
+      "method": "PATCH",
+      "role": "anonymous",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/35.json",
+        "body_bytes": 97,
+        "body_sha256": "8598f09352666444413c1f60b80de5dad3a9b316d2dc7352b862ae9360ccc20d",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 36,
+      "cohort": "stream_settings",
+      "name": "standard_special_PATCH",
+      "method": "PATCH",
+      "role": "standard",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/36.json",
+        "body_bytes": 97,
+        "body_sha256": "8598f09352666444413c1f60b80de5dad3a9b316d2dc7352b862ae9360ccc20d",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 37,
+      "cohort": "stream_settings",
+      "name": "admin_special_PUT",
+      "method": "PUT",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/37.json",
+        "body_bytes": 152,
+        "body_sha256": "e25509156773717f5fc92b172f8118be71f487c018aad4a369a45ba842a766fb",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 38,
+      "cohort": "stream_settings",
+      "name": "admin_special_edge_PATCH",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/38.json",
+        "body_bytes": 92,
+        "body_sha256": "ca78f10da33dacfce57d697712dbd51466c05567e4f814b2c5fd9a6ab7fa23b4",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 39,
+      "cohort": "stream_settings",
+      "name": "admin_special_DELETE",
+      "method": "DELETE",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/39.json",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 40,
+      "cohort": "stream_settings",
+      "name": "admin_special_CREATE",
+      "method": "POST",
+      "role": "control_admin",
+      "target": "collection",
+      "body_spec": {
+        "body": "bodies/40.json",
+        "body_bytes": 147,
+        "body_sha256": "ff4715ff9678be032ffdcd12478650c3ea76c92882dfb0363783d34793432577",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "bind_actual_created_id": true,
+      "effect_focus": "create differs from old-key update validation; real DVR publication when offsets supplied"
+    },
+    {
+      "id": 41,
+      "cohort": "stream_settings",
+      "name": "rename_old_special_to_ordinary",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/41.json",
+        "body_bytes": 191,
+        "body_sha256": "5ee801ed5410323c5ea44bd22ec792e02366db579b076096c0bba6434006c831",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key serializer/view branches, new-key post_save signals"
+    },
+    {
+      "id": 42,
+      "cohort": "stream_settings",
+      "name": "rename_old_ordinary_back_to_special",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/42.json",
+        "body_bytes": 148,
+        "body_sha256": "46c4abe3453681ded08c49ea89c0cb5969437990abc901ee73231e2eae022d29",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key ordinary serializer/view, new-key special signal dispatch"
+    },
+    {
+      "id": 43,
+      "cohort": "stream_settings",
+      "name": "global_rehash_pending_handoff_conflict",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/43.json",
+        "body_bytes": 33,
+        "body_sha256": "535562913a7d2333ab7657ddce98acdceaad82a798032ed8a6006ca9f61ae760",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "real unconsumed prior task retains actual handoff lock; capture409/no-save if observed, no forced release"
+    },
+    {
+      "id": 44,
+      "cohort": "dvr_settings",
+      "name": "anonymous_special_PATCH",
+      "method": "PATCH",
+      "role": "anonymous",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/44.json",
+        "body_bytes": 77,
+        "body_sha256": "837fcc26dd3ed2f2fac2bd06d2f75de4a3178876e8b5828b8f75275b00adc3e8",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 45,
+      "cohort": "dvr_settings",
+      "name": "standard_special_PATCH",
+      "method": "PATCH",
+      "role": "standard",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/45.json",
+        "body_bytes": 77,
+        "body_sha256": "837fcc26dd3ed2f2fac2bd06d2f75de4a3178876e8b5828b8f75275b00adc3e8",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 46,
+      "cohort": "dvr_settings",
+      "name": "admin_special_PUT",
+      "method": "PUT",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/46.json",
+        "body_bytes": 126,
+        "body_sha256": "534b143878cd816927cecfa7b8815b352849a2c840b5233f9347c131c0e92100",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 47,
+      "cohort": "dvr_settings",
+      "name": "admin_special_edge_PATCH",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/47.json",
+        "body_bytes": 60,
+        "body_sha256": "b6eae1ead64db0e57a499cc1ceee228da67c7c4947254d09423872258d5df4bc",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 48,
+      "cohort": "dvr_settings",
+      "name": "admin_special_DELETE",
+      "method": "DELETE",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/48.json",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true
+    },
+    {
+      "id": 49,
+      "cohort": "dvr_settings",
+      "name": "admin_special_CREATE",
+      "method": "POST",
+      "role": "control_admin",
+      "target": "collection",
+      "body_spec": {
+        "body": "bodies/49.json",
+        "body_bytes": 154,
+        "body_sha256": "5e404b400502e1220b6239b987b2b0b41fa86b2f2d45e62a9e3043b7ced45e73",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "bind_actual_created_id": true,
+      "effect_focus": "create differs from old-key update validation; real DVR publication when offsets supplied"
+    },
+    {
+      "id": 50,
+      "cohort": "dvr_settings",
+      "name": "rename_old_special_to_ordinary",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/50.json",
+        "body_bytes": 151,
+        "body_sha256": "3eb2c874914771ba738a3c585593b038e61ae860353b8f12b57666d6a124bcb4",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key serializer/view branches, new-key post_save signals"
+    },
+    {
+      "id": 51,
+      "cohort": "dvr_settings",
+      "name": "rename_old_ordinary_back_to_special",
+      "method": "PATCH",
+      "role": "control_admin",
+      "target": "bound-current",
+      "body_spec": {
+        "body": "bodies/51.json",
+        "body_bytes": 110,
+        "body_sha256": "727df0f7c78ab037ec3256be984dfc282bef9f5177c473de641f3934111261fb",
+        "content_type": "application/json"
+      },
+      "predeclared_warm": true,
+      "observed_status_not_prediction_filter": true,
+      "effect_focus": "old-key ordinary serializer/view, new-key special signal dispatch"
+    }
+  ],
+  "baseline_groups": {
+    "system_settings": {
+      "time_zone": "UTC",
+      "log_max_mb": 5,
+      "log_keep": 5,
+      "log_persist": false,
+      "enable_ip_lookup": false
+    },
+    "network_access": {
+      "UI": "127.0.0.0/8",
+      "STREAMS": "127.0.0.0/8"
+    },
+    "reverse_proxy_auth": {
+      "enabled": false,
+      "header": ""
+    },
+    "proxy_settings": {
+      "buffering_timeout": 15,
+      "buffering_speed": 1.0
+    },
+    "stream_settings": {
+      "default_user_agent": null,
+      "m3u_hash_key": "name,url",
+      "default_output_format": "mpegts"
+    },
+    "dvr_settings": {
+      "pre_offset_minutes": 0,
+      "post_offset_minutes": 0,
+      "series_rules": []
+    }
+  },
+  "auth": {
+    "kind": "framework_APIClient_real_persisted_APIkey",
+    "force_authenticate": false,
+    "TCP_or_browser_authority": false,
+    "roles": {
+      "control_admin": {
+        "user_level": 10,
+        "REMOTE_ADDR": "127.0.0.2",
+        "custom_UI": "127.0.0.2/32"
+      },
+      "global_admin": {
+        "user_level": 10,
+        "REMOTE_ADDR": "127.0.0.1"
+      },
+      "standard": {
+        "user_level": 1,
+        "REMOTE_ADDR": "127.0.0.2"
+      },
+      "anonymous": {
+        "user_level": null,
+        "REMOTE_ADDR": "127.0.0.2"
+      }
+    }
+  },
+  "global_network_before_user_rule": true,
+  "routes": {
+    "collection": "/api/core/settings/",
+    "detail": "/api/core/settings/{actual_id}/"
+  },
+  "Source32_or_other_previous_case_replay": false,
+  "Native_or_Main_or_guard_removal": false,
+  "genuine_broker_publication": {
+    "workers_or_beat_started": false,
+    "delay_replacement_or_eager_mode": false,
+    "broker_frames_unconsumed": true,
+    "downstream_rehash_or_DVR_durable_effects_qualified": false,
+    "normal_default_route_and_transport": true
+  },
+  "observation": {
+    "group_cache_version_values": "literal semantic cache.get plus bounded raw DUMP/GET/type/PTTL",
+    "history_IPs": [
+      "127.0.0.1",
+      "127.0.0.2"
+    ],
+    "Channels": "owned updates group actual layer, non-consuming frames, not browser delivery",
+    "system_files": "owned DISPATCHARR_LOG_DIR config before/after, no running collector acceptance",
+    "system_timezone": "actual module cache state and clocks, no function replacement",
+    "proxy_local_cache": "actual class scalar/dict state before/after, normal helper warm",
+    "task_frames": "bounded actual Redis broker list frame/header/body decode, not signals/no-op return",
+    "full_default_SQL_tables": 62,
+    "full_default_SQL_sequences": 59,
+    "own_clocks": "real UTC+monotonic no DB/time rewrites"
+  },
+  "limits": {
+    "bootstrap_seconds": 180,
+    "per_cohort_seconds": 180,
+    "total_seconds": 1500,
+    "cleanup_seconds": 90,
+    "stdout_stderr_inflight_bytes_each": 1048576,
+    "request_body_and_response_bytes": 65536,
+    "report_bytes": 134217728,
+    "raw_Redis_snapshot_bytes_total": 2097152,
+    "broker_list_frames": 64,
+    "Channels_frames": 64
+  },
+  "unexpected_or_500_outcomes": "retain literal body/trace/effects; capture validity is separate from expected behavior; no retry or outcome filters; absent actual POST identity ends dependent cohort explicitly incomplete",
+  "all_current_special_group_Rust_guards_remain": true
+}

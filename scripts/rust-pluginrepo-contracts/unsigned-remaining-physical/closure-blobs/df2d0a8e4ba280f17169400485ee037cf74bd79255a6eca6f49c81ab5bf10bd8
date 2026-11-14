@@ -1,0 +1,42 @@
+{
+  "save_ready": {
+    "sql": "UPDATE plugins_pluginrepo AS r SET name=$2,cached_manifest=$3,signature_verified=NULL,last_fetched=$4,last_fetch_status='200',updated_at=$5 WHERE id=$1 AND octet_length((to_jsonb(r)||jsonb_build_object('name',$2,'cached_manifest',$3,'signature_verified',NULL,'last_fetched',$4,'last_fetch_status','200','updated_at',$5))::text)<=65536 RETURNING octet_length(to_jsonb(r)::text) AS bytes,CASE WHEN octet_length(to_jsonb(r)::text)<=65536 THEN to_jsonb(r)::text END AS raw",
+    "sql_sha256": "208e1d77eba9483bbd68fcebe0eeb174e68fb64f7839abb91786e59536c068c6",
+    "rows": 1,
+    "command": "UPDATE 1",
+    "errors": [],
+    "tx": "I",
+    "parameter_hex": [
+      "0000000000000321",
+      "4f776e656420526566726573686564",
+      "017b226d616e6966657374223a7b2272656769737472795f6e616d65223a224f776e656420526566726573686564222c2272656769737472795f75726c223a22687474703a2f2f31312e3235332e3235302e323a3138303830222c226d657461646174615f626173655f75726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6d65746164617461222c22706c7567696e73223a5b7b22736c7567223a226b656570222c2264657072656361746564223a2266616c7365222c226d616e69666573745f75726c223a226b6565702e6a736f6e227d2c7b22736c7567223a226e6577222c226d616e69666573745f75726c223a226e65772e6a736f6e227d5d7d7d",
+      {
+        "timestamptz_binary8": true
+      },
+      {
+        "timestamptz_binary8": true
+      }
+    ]
+  },
+  "save_57014_ready": {
+    "sql": "UPDATE plugins_pluginrepo AS r SET name=$2,cached_manifest=$3,signature_verified=NULL,last_fetched=$4,last_fetch_status='200',updated_at=$5 WHERE id=$1 AND octet_length((to_jsonb(r)||jsonb_build_object('name',$2,'cached_manifest',$3,'signature_verified',NULL,'last_fetched',$4,'last_fetch_status','200','updated_at',$5))::text)<=65536 RETURNING octet_length(to_jsonb(r)::text) AS bytes,CASE WHEN octet_length(to_jsonb(r)::text)<=65536 THEN to_jsonb(r)::text END AS raw",
+    "sql_sha256": "208e1d77eba9483bbd68fcebe0eeb174e68fb64f7839abb91786e59536c068c6",
+    "rows": 0,
+    "command": null,
+    "errors": [
+      "57014"
+    ],
+    "tx": "I",
+    "parameter_hex": [
+      "0000000000000321",
+      "4f776e656420526566726573686564",
+      "017b226d616e6966657374223a7b2272656769737472795f6e616d65223a224f776e656420526566726573686564222c2272656769737472795f75726c223a22687474703a2f2f31312e3235332e3235302e323a3138303830222c226d657461646174615f626173655f75726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6d65746164617461222c22706c7567696e73223a5b7b22736c7567223a226b656570222c2264657072656361746564223a2266616c7365222c226d616e69666573745f75726c223a226b6565702e6a736f6e227d2c7b22736c7567223a226e6577222c226d616e69666573745f75726c223a226e65772e6a736f6e227d5d7d7d",
+      {
+        "timestamptz_binary8": true
+      },
+      {
+        "timestamptz_binary8": true
+      }
+    ]
+  }
+}

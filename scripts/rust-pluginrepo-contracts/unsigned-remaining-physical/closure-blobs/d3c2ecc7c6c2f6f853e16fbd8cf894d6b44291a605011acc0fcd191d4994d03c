@@ -1,0 +1,75 @@
+{
+  "state": "ROOT_AUTHORIZED_FROZEN883_COMPILE_ONLY",
+  "source_map_sha256": "e0b9532801628d9dec0a44dac50c6e725ec24ee65eb66e50d44feb98207972b8",
+  "target": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target",
+  "Root_exclusive_reservation_received": true,
+  "jobs": 2,
+  "debug": 0,
+  "incremental": false,
+  "offline_locked": true,
+  "commands": [
+    [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    [
+      "cargo",
+      "check",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "--offline",
+      "--locked"
+    ],
+    [
+      "cargo",
+      "clippy",
+      "-p",
+      "dispatcharr-store",
+      "--all-targets",
+      "--offline",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    [
+      "python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m8-pluginrepo-unsigned-remaining-physical-private-1/controller",
+      "-p",
+      "test_remaining.py",
+      "-v"
+    ],
+    [
+      "cargo",
+      "test",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "--offline",
+      "--locked",
+      "--",
+      "--test-threads=2"
+    ],
+    [
+      "cargo",
+      "test",
+      "-p",
+      "dispatcharr-store",
+      "--lib",
+      "--no-run",
+      "--message-format=json",
+      "--offline",
+      "--locked"
+    ]
+  ],
+  "outside_ELF": "ONLY after all6 actualwait/poll0 and unchanged883, separate copy receipt",
+  "Source_or_Docker_apps": 0
+}

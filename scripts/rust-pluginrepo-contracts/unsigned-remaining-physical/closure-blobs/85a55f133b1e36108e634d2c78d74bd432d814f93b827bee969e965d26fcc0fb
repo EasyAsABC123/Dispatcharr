@@ -1,0 +1,109 @@
+"""Predeclared raw-evidence acceptance for four NEW Native-only cases."""
+import copy,datetime,hashlib,json,math,struct,re
+from pathlib import Path
+from owned_pg_proxy import parameters_match
+from validate_native import equal,cache as decoded_cache,own_cache
+ROOT=Path(__file__).resolve().parents[1]
+need=lambda ok,label:None if ok else (_ for _ in()).throw(ValueError(label))
+def number(v):return type(v)in(int,float)and math.isfinite(v)
+def integer(v,minimum=0):return type(v)is int and v>=minimum
+def instant(v):
+ need(type(v)is str,'SQLTimestampString');t=datetime.datetime.fromisoformat(v.replace('Z','+00:00'));need(t.utcoffset()==datetime.timedelta(0),'ExplicitAwareUTCSQLInstant');return t
+SQL_CLOCKS={'created_at','updated_at','last_fetched','last_login','date_joined'}
+def sql_equal(a,b,field=None):
+ need(type(a)is type(b),'ExactSQLPrimitiveType')
+ if field in SQL_CLOCKS and type(a)is str:need(instant(a)==instant(b),'ExactSQLClockInstant');return
+ if type(a)is dict:
+  need(set(a)==set(b),'ExactSQLFields')
+  for k in a:sql_equal(a[k],b[k],k)
+ elif type(a)is list:
+  need(len(a)==len(b),'ExactSQLRowCountOrder')
+  for x,y in zip(a,b):sql_equal(x,y)
+ else:need(a==b,'ExactSQLStableField')
+def samples(values):
+ need(type(values)is list and len(values)==2,'ExactlyTwoSustainedSamples')
+ for v in values:need(number(v['elapsed_seconds'])and v['elapsed_seconds']>=0 and equal(v['original_weak'],[True])and integer(v['available_original_four_slots'])and v['available_original_four_slots']==3 and integer(v['physical_cache_operations']),'OriginalOwnerAndOnlyFourSlots')
+ span=values[1]['elapsed_seconds']-values[0]['elapsed_seconds'];need(span>=.25,'ActualSustained250ms');return span
+def raw_cache(a,b):
+ need(type(a)is list and type(b)is list and [r['database']for r in a]==[0,1,2,3]and [r['database']for r in b]==[0,1,2,3],'AllFourRedisDatabases')
+ for left,right in zip(a,b):
+  x,y=left['inventory']['raw_DUMP_PTTL'],right['inventory']['raw_DUMP_PTTL'];need(set(x)==set(y),'NoRedisKeyAddedOrRemovedBeforeAuth')
+  for key,row in x.items():
+   other=y[key];need(type(row['dump_hex'])is str and row['dump_hex']==other['dump_hex'],'ExactRawDUMPValueAndType');bytes.fromhex(row['dump_hex']);u,v=row['pttl'],other['pttl'];need(type(u)is int and type(v)is int and(u==v==-1 or 0<=v<=u),'OwnFiniteTTLMonotonicNoReset')
+def pg_wire(held,want,warm):
+ need(integer(held['backend_pid'],1)and held['backend_pid']==warm['actual_backend_pid'],'SameActualPreparedBackend');need(held['sql']==want['sql']and hashlib.sha256(held['sql'].encode()).hexdigest()==want['sql_sha256'],'FullUntruncatedTargetSQLWire');need(integer(held['rows'])and held['rows']==want['rows']and equal(held['commands'],[]if want['command']is None else[want['command']])and equal(held['errors'],want['errors'])and held['tx']==want['tx']=='I'and held['sync_seen']is True,'ActualExecuteRowsCommandErrorSyncReadyI');need(parameters_match(held['parameter_hex'],want['parameter_hex']),'ExactTargetBindBytesOnlyTimestampWildcard')
+def pg_hold(events,stage,min_span):
+ a=[r for r in events if r['kind']=='ready-held'and r['stage']==stage];b=[r for r in events if r['kind']=='ready-forwarded'and r['stage']==stage];need(len(a)==len(b)==1,'OneActualReadyHoldAndForward');x,y=a[0]['monotonic'],b[0]['monotonic'];need(number(x)and number(y)and y>=x and min_span<=y-x<=25,'ActualFiniteReadyHoldCoversObservedFateAndSamples');return y-x
+def body(record,status):
+ raw=bytes.fromhex(record['body_hex']);need(integer(record['status'])and record['status']==status and integer(record['body_bytes'])and record['body_bytes']==len(raw)and hashlib.sha256(raw).hexdigest()==record['body_sha256'],'ActualResponseStatusLengthSHA');headers={name.lower():bytes.fromhex(value).decode('ascii')for name,value in record['headers_value_hex']};need(headers.get('content-type')=='application/json','ActualJSONResponseContentType');return json.loads(raw)
+def exact_origin(root,case):
+ rows=[json.loads(line)for line in(root/'origin-requests.jsonl').read_text().splitlines()];paths={1:['/physical/frontend-fd-loss.json'],2:['/refresh.json'],3:['/refresh.json'],4:['/physical/frame-1.json','/physical/frame-2.json','/physical/frame-reuse.json']}[case];need([r['path']for r in rows]==paths,'ExactOriginCountOrderNoFifthContact')
+ for row in rows:
+  need(row['valid']is True and row['wire_write_complete']is True and row['peer'][0]=='11.253.250.3'and row['method']=='GET'and row['status']==200 and row['actual_peer_terminal_fate']in('actual_read_EOF','actual_connection_reset'),'ActualOwnedReplyAndPeerFate');raw=bytes.fromhex(row['body_hex']);need(hashlib.sha256(raw).hexdigest()==row['body_sha256']and len(raw)==row['body_bytes'],'ActualOriginBodyHash')
+ return rows
+
+def upstream_retirement(root,rows):
+ events=sorted(root.glob('unsigned-http-event-*.json'),key=lambda p:int(p.stem.rsplit('-',1)[1]));need(len(events)==2*len(rows),'ActualConnectPostDropPairPerUpstreamContact')
+ for i,row in enumerate(rows):
+  opened=json.loads(events[2*i].read_bytes());closed=json.loads(events[2*i+1].read_bytes());socket=opened['socket'];need(opened['event']=='actual_connected'and closed['event']=='actual_after_drop'and equal(closed['original_socket'],socket),'SameActualOriginalUpstreamSocketFact');need(integer(socket['fd'])and integer(socket['PID'],1)and re.fullmatch(r'socket:\[[1-9][0-9]*\]',socket['socket_link'])is not None,'ActualFDAndSocketGeneration');need(re.fullmatch(r'pid:\[[0-9]+\]',socket['PID_namespace'])is not None and re.fullmatch(r'net:\[[0-9]+\]',socket['network_namespace'])is not None,'ActualOriginalSocketNamespaces');need(socket['local']==':'.join(map(str,row['peer']))and socket['peer']=='11.253.250.2:18080','ActualAcceptTupleMatchesNativeUpstream');need(closed['after_link']is None or type(closed['after_link'])is str,'TypedPostDropReadlink');need(closed['after_link']!=socket['socket_link']and closed['original_socket_generation_absent']is True,'ActualOriginalDescriptorGenerationAbsentNotFINInference');need(instant(socket['captured_utc'])<=instant(closed['observed_utc']),'ActualNativeConnectDropClockOrder')
+  for event in [opened,closed]:
+   weak=event['all_original_weak_at_event'];slots=event['actual_four_slots_available_at_event'];need(type(weak)is list and weak and all(type(v)is bool for v in weak)and weak[-1]is True and integer(slots)and slots<=3 and sum(weak)+slots==4,'OriginalOwnerStillAliveAtDescriptorRetirementOnlyFourSlots')
+ return {'actual_pairs':len(rows),'original_upstream_descriptor_generation_absence':True,'all_duplicates_or_global_kernel_TCP_claim':False}
+
+def refresh_delta(source,before,after,held_state,begin,end):
+ need([r['id']for r in before['repos']]==[r['id']for r in after['repos']],'ExactRepositoryIDsOrderNoExtraActorRows')
+ target=next(r for r in source['requests'][13]['after']['repos']if r['id']==801)
+ for old,new in zip(before['repos'],after['repos']):
+  if old['id']!=801:sql_equal(old,new);continue
+  expected=copy.deepcopy(target)
+  for field in ['last_fetched','updated_at']:need(begin<=instant(new[field])<=end,'OwnGeneratedRepoClock');expected[field]=new[field]
+  sql_equal(expected,new);saved=next(r for r in held_state['tables']['plugins_pluginrepo']if r['id']==801);sql_equal(saved,new)
+ need([r['id']for r in before['configs']]==[r['id']for r in after['configs']],'ExactConfigIDsOrder')
+ source_before={r['id']:r for r in source['requests'][13]['before']['configs']};source_after={r['id']:r for r in source['requests'][13]['after']['configs']}
+ for old,new in zip(before['configs'],after['configs']):
+  expected=copy.deepcopy(source_after[old['id']]);prior=source_before[old['id']]
+  if prior['updated_at']!=expected['updated_at']:need(begin<=instant(new['updated_at'])<=end,'OwnGeneratedChangedConfigClock');expected['updated_at']=new['updated_at']
+  sql_equal(expected,new)
+ return True
+
+def external(source,before,after,case,rust):
+ if case==2:refresh_delta(source,before,after,rust['independent_SQL_while_Readyheld'],instant(rust['request_began_utc']),instant(rust['request_completed_utc']))
+ need(source['actual_request_count']==24 and len(source['requests'])==24,'RetainedSourceContextNotBusinessReplay');a,b=before['public_manifest'],after['public_manifest'];need(len(a['tables'])==len(b['tables'])==62 and len(a['sequences'])==len(b['sequences'])==59,'ActualFull6259');expected=copy.deepcopy(a)
+ if case==2:
+  for name in ['plugins_pluginrepo','plugins_pluginconfig']:expected['tables'][name]=b['tables'][name]
+ need(equal(expected,b),'AllForeignTables59SequencesSchemaUnchanged')
+ fields={'repos':'plugins_pluginrepo','configs':'plugins_pluginconfig','settings':'core_coresettings','users':'accounts_user','system_notifications':'core_systemnotification','notification_dismissals':'core_notificationdismissal'}
+ for name,table in fields.items():
+  sql_equal(before[name],source['seed'][name]);sql_equal(after[name],rust['after']['tables'][table]);sql_equal(before[name],rust['before']['tables'][table])
+  if case!=2 or name not in('repos','configs'):sql_equal(before[name],after[name])
+ sql_equal(before['events'],after['events']);sql_equal(rust['credentials_before'],rust['credentials_after']);target=source['requests'][13]['after']if case==2 else source['requests'][0]['after'];own_cache(source['seed']['raw_Redis'],target['raw_Redis'],before['raw_Redis'],after['raw_Redis']);decoded=decoded_cache(target['raw_Redis'],after['raw_Redis']);return decoded
+
+def observer_drain(root,report,case):
+ d=report['observer_drain'];maxconn=2 if case==3 else 1;read=lambda n:json.loads((root/n).read_bytes());need(report['observer_close_pending']is False and d['passed']is True and type(d['max'])is int and d['max']==maxconn and d['whole_drain_budget_seconds']==10,'ExactTestObserverDrainMaxAndWhole10');need(d['first_pool_close_awaited_once']is True and d['second_pool_close_or_query_retry']is False and d['pool_closed']is True and type(d['pool_size'])is int and d['pool_size']==0,'FirstObserverPoolCloseSize0NoWaiver');before=read('observer-drain-before-close.json');need(before['capture_complete']is True and before['first_pool_close_not_called_yet']is True and before['exact_existing_max_checked_out']==maxconn and equal(before['actual_connections'],d['actual_connections_before_close'])and equal(read('observer-drain-progress.json'),d),'RawObserverPrecloseAndFinalReceiptBinding');connections=d['actual_connections_before_close'];closed=d['actual_explicit_closes'];need(len(connections)==len(closed)==maxconn and len({r['actual_backend_pid']for r in connections})==maxconn,'ExactOwnedObserverConnectionsNoHiddenReturn');db=read('remaining-peer-began.json')['owned_database']
+ for a,b in zip(connections,closed):
+  socket=a['socket'];need(integer(a['actual_backend_pid'],1)and a['actual_database']==db and a['actual_application_name']=='unsigned-remaining-observer'and a['actual_client_address']=='127.0.0.1'and a['actual_client_port']==socket['actual_local_port']and socket['actual_remote_port']==5432,'ActualObserverBackendTupleIdentity');need(re.fullmatch(r'socket:\[[1-9][0-9]*\]',socket['original_socket_link'])is not None and integer(socket['native_PID'],1)and re.fullmatch(r'pid:\[[0-9]+\]',socket['PID_namespace'])is not None and re.fullmatch(r'net:\[[0-9]+\]',socket['network_namespace'])is not None,'ActualObserverSocketGenerationNamespaces');fds=socket['original_fds'];need(type(fds)is list and 1<=len(fds)<=4 and all(integer(fd)for fd in fds),'ActualObserverOriginalFDInventory');need(b['actual_backend_pid']==a['actual_backend_pid']and b['explicit_connection_close_awaited_once']is True and[f['fd']for f in b['actual_original_FDs_after_close']]==fds,'EachOwnedObserverConnectionClosedExactlyOnce')
+  for fd in b['actual_original_FDs_after_close']:need(fd['original_generation_absent']is True and(fd['after_link']is None or type(fd['after_link'])is str)and fd['after_link']!=socket['original_socket_link'],'ActualObserverOriginalFDGenerationAbsent')
+ return {'max':maxconn,'actual_backend_PIDs':[r['actual_backend_pid']for r in connections],'first_pool_close_size0':True,'no_production_or_dependency_change':True}
+
+def validate_remaining(output,case):
+ root=Path(output);read=lambda name:json.loads((root/name).read_bytes());v=read('unsigned-remaining-physical-private.json');need(type(case)is int and case in(1,2,3,4)and type(v['case'])is int and v['case']==case and v['capture_complete']is True and v['passed']is True and v.get('proxy_finish_pending',False)is False and type(v['Source_requests'])is int and v['Source_requests']==0 and v['Main']is False,'ActualCompleteOneFiniteNativeCase');need(integer(v['actual_requests'],1)and v['actual_requests']==(6 if case==4 else 1),'ActualMiddlewareCountNotFake24');pool=v['physical_close'];need(pool['same_original_four_slots']==4 and all(x is False for x in pool['original_weak_after_settlement'])and pool['independent_while_ELF_subject_backend_rows']==[],'ActualOwnerAndSubjectBackendSettlement');first=pool['first_close'];need(first['actual_pool_reuse_value']==424242 and integer(first['closed_pool_size'])and first['closed_pool_size']==0 and integer(first['closed_pool_idle_diagnostic'])and first['closed_pool_idle_diagnostic']<=4 and first['pool_max_connections']==4,'FirstCloseSize0AndLiteralBoundedIdle');need(read('owned-backends-while-ELF-after-close.json')==[],'IndependentWholeOwnedDBBackendAbsenceWhileELF');drain=observer_drain(root,v,case);origin=exact_origin(root,case);upstream=upstream_retirement(root,origin)
+ if case==1:
+  c=read('actual-frontend-client-loss.json');need(integer(c['fd'])and c['original_generation_absent']is True and c['after_drop_link']!=c['original_socket_link']and c['FD_loss_implies_handler_abort']is False,'ActualFrontendFDGenerationDropNoAbortInference');held=read('frontend-held-observations.json');need(equal(held['samples'],v['actual_sustained_owner_samples'])and held['actual_HTTP_IO_and_handler_fate_while_held']['response_statuses']==[],'BoundRawSustainedSamplesNoResponseWhileUpstreamHeld');span=samples(held['samples']);row=origin[0];need(number(row['held_monotonic'])and number(row['released_monotonic'])and number(row['actual_hold_seconds'])and span<=row['actual_hold_seconds']<5 and abs(row['released_monotonic']-row['held_monotonic']-row['actual_hold_seconds'])<.000001,'ActualHeaderHoldCoversOwnerSamples');f=v['actual_HTTP_IO_handler_fate'];need(integer(f['accepted'],1)and integer(f['handler_started'],1)and integer(f['handler_cancelled'])and f['accepted']==f['handler_started']==1 and f['socket_dropped']is True and f['capacity_exceeded']is False and len(f['response_statuses'])+f['handler_cancelled']==1,'ActualIndependentIOAndExactlyOneHandlerFate');need(integer(f['bytes_read'],1)and integer(f['bytes_written'])and type(f['write_errors'])is list,'ActualReadWriteObservationsNotInferred');need(not f['response_statuses']or equal(f['response_statuses'],[200]),'Produced200NotClientReceipt')
+ elif case in(2,3):
+  stage='save_ready'if case==2 else'save_57014_ready';contracts=json.loads((ROOT/'inputs/pg-contracts.json').read_bytes());warm=v['actual_warm'];need(warm['observed_before_any_hold']is True and integer(warm['actual_backend_pid'],1)and integer(warm['track_activity_query_size_bytes'],100),'ActualTrackSettingBeforeHold');need(len(warm['full_same_connection_warm_SQL'])==len(warm['full_SQL_sha256'])==2 and all(hashlib.sha256(s.encode()).hexdigest()==h for s,h in zip(warm['full_same_connection_warm_SQL'],warm['full_SQL_sha256'])),'FullWarmSQLFingerprints');sql_equal(warm['warm_before'],warm['warm_after']);sql_equal(warm['warm_before'],v['before']);held=v['actual_held']['held'];pg_wire(held,contracts[stage],warm);need(held['sql']in warm['full_same_connection_warm_SQL'],'ExactActualFullWarmEqualsHeldSQL');f=v['actual_observer_fate'];need(number(f['elapsed_seconds'])and f['elapsed_seconds']>=0 and f['HTTPFDloss_inferred']is False,'ActualObserverFateTyped')
+  if case==2:need(f['kind']=='actual_observer_JoinHandle_abort'and f['actual_join_cancelled']is True and v['actual_response_after_Ready']is None,'ActualJoinCancelledNoResponseObserved')
+  else:
+   need(f['kind']=='actual_borrowed100ms_observer_deadline'and f['actual_timeout']is True and f['deadline_seconds']==.1 and f['elapsed_seconds']>=.1 and f['actual_join_still_unfinished']is True,'ActualBorrowed100msDeadline');lock=v['actual_target_lock'];size=warm['track_activity_query_size_bytes'];prefix=contracts[stage]['sql'][:size-1];need(lock['known_prefix']==prefix and lock['known_prefix_bytes']==len(prefix)and lock['full_SQL_sha256']==contracts[stage]['sql_sha256']and len(lock['actual_rows'])==1 and lock['actual_rows'][0]['pid']==warm['actual_backend_pid']and lock['actual_rows'][0]['wait_event_type']=='Lock','SameActualLockedTargetMeasuredPrefixNotAssumedFull');need(v['actual_cancel']['pg_cancel_backend_result']is True and v['actual_cancel']['same_actual_backend_pid']==warm['actual_backend_pid'],'RealCancelSameOwnedBackend');need(body(v['actual_response_after_Ready'],503)=={'error':'Database unavailable'},'PinnedNativeDBFaultResponseOnly');need(v['actual_response_after_Ready']['Source_injected_SQL_error_HTTP_authority']is False,'NoSourceInjectedFaultHTTPClaim')
+  sample_record=read('SQL-sustained-owner-samples.json');need(equal(sample_record['samples'],v['actual_sustained_owner_samples'])and equal(sample_record['actual_fate'],f)and sample_record['case']==case and sample_record['stage']==stage,'ExactRetainedSustainedSampleAndFateRecord');pg_wire(sample_record['same_gate_still_held']['held'],contracts[stage],warm);span=samples(v['actual_sustained_owner_samples']);stats=read('proxy-final-stats.json');need(stats['errors']==[],'NoRelayErrors');pg_hold(stats['events'],stage,span+f['elapsed_seconds']);process=read('proxy-process.json');need(process['exit']==process['wait']==0 and process['forced']is False and process['stdout_reader_joined']is True and process['proc_PID_absent_after_wait']is True,'ActualRelayProcessWaitJoinedNotForced');sql_equal(v['credentials_before'],v['credentials_while_Readyheld']);
+  if case==3:sql_equal(v['before'],v['independent_SQL_while_Readyheld']);sql_equal(v['before'],v['after'])
+  else:
+   held_state=v['independent_SQL_while_Readyheld'];sql_equal(v['before']['tables']['plugins_pluginconfig'],held_state['tables']['plugins_pluginconfig']);row=next(r for r in held_state['tables']['plugins_pluginrepo']if r['id']==801);need(row['cached_manifest']==json.loads((ROOT/'inputs/refresh-origin-body.json').read_bytes())and row['last_fetch_status']=='200','IndependentCommittedSaveBeforeChildPhase');begin,end=instant(v['request_began_utc']),instant(v['request_completed_utc'])
+   for index,field in [(3,'last_fetched'),(4,'updated_at')]:
+    encoded=bytes.fromhex(held['parameter_hex'][index]);need(len(encoded)==8,'ActualBinaryTimestampBind');stamp=datetime.datetime(2000,1,1,tzinfo=datetime.timezone.utc)+datetime.timedelta(microseconds=struct.unpack('!q',encoded)[0]);need(begin<=stamp<=end and stamp==instant(row[field]),'OwnBindWindowAndIndependentCommittedRow')
+ elif case==4:
+  first=v['actual_first_four'];need(len(first)==4 and v['actual_statuses']==[200,200,401,401,503,200],'ExactlyFourActualFramesAndRefusalReuse')
+  for i,r in enumerate(first):
+   need(r['ordinal']==i+1 and integer(r['actual_data_frame_bytes'],1)and equal(r['original_weak'],[True]*(i+1))and integer(r['slots'])and r['slots']==3-i,'RealFourOriginalFrameOwnersAndSlots');frame=read('actual-response-frame-'+str(i+1)+'.json');raw=bytes.fromhex(frame['frame_hex']);need(frame['capture_complete']is True and frame['frame_observed']is True and frame['status']==(200 if i<2 else 401)and len(raw)==frame['frame_bytes']==r['actual_data_frame_bytes']and hashlib.sha256(raw).hexdigest()==frame['frame_sha256']==r['actual_data_frame_sha256'],'ActualCapturedFrameBytesAndSHA')
+  need(v['fifth_status']==503 and hashlib.sha256(bytes.fromhex(v['fifth_body_hex'])).hexdigest()==v['fifth_body_sha256'],'ActualFifth503Body');sql_equal(v['fifth_SQL_before'],v['fifth_SQL_after']);sql_equal(v['fifth_credentials_before'],v['fifth_credentials_after']);raw_cache(v['fifth_raw_cache_before'],v['fifth_raw_cache_after']);clone=v['clone_kept_after_original_drop'];need(equal(clone['original_weak'],[True]*4)and integer(clone['slots'])and clone['slots']==0 and integer(clone['actual_clone_bytes'],1),'ActualFrameCloneStillHoldsOriginal');reuse=v['sixth_reuse'];need(equal(reuse['original_weak'],[False,True,True,True,True])and integer(reuse['slots'])and reuse['slots']==0 and hashlib.sha256(bytes.fromhex(reuse['body_hex'])).hexdigest()==reuse['body_sha256'],'ActualSixthReusesOnlyReleasedOriginalSlot');frame=read('actual-response-frame-6.json');need(frame['status']==200 and frame['frame_observed']is True and frame['capture_complete']is True and frame['frame_hex']==reuse['body_hex']and frame['frame_sha256']==reuse['body_sha256'],'SixthActualFrameReceiptMatchesReusedBytes')
+ source=json.loads((ROOT/'inputs/Source24-private.json').read_bytes());serialization=external(source,read('owned-before-peer.json'),read('owned-after-peer.json'),case,v)
+ return {'passed':True,'actual_case':case,'actual_new_Native_requests':v['actual_requests'],'actual_origin_contacts':len(origin),'default_full6259_named11':'separate before-after literal controller gate','independent_owned_full6259_and_foreign_rows_qualified':True,'cache_serialization_byte_equal':serialization,'same_original_writer_slots':4,'actual_upstream_retirement':upstream,'actual_observer_drain':drain,'Source_business_replay_Main_fullM8_performance':False,'all_duplicate_FDs_or_global_TCP_retirement_claim':False}

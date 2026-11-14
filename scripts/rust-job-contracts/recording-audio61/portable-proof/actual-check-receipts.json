@@ -1,0 +1,58 @@
+[
+  {
+    "label": "private-projection",
+    "argv": [
+      "/usr/bin/python",
+      "/home/justin/github/Dispatcharr/artifacts/rust/recording-audio61-publication-1/verify_projection.py"
+    ],
+    "cwd": "/home/justin/github/Dispatcharr",
+    "began_utc": "2026-11-14T05:59:20.793047+00:00",
+    "ended_utc": "2026-11-14T05:59:24.106103+00:00",
+    "actual_exit": 0,
+    "stdout_sha256": "67d0a4e3c2a0facdd264ce5cb34ebe6a41b98b85f271bee68619132087d1b80d",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "public-controls",
+    "argv": [
+      "/usr/bin/python",
+      "/home/justin/github/Dispatcharr/artifacts/rust/recording-audio61-publication-1/selected/scripts/rust-job-contracts/recording-audio61/test_public.py"
+    ],
+    "cwd": "/home/justin/github/Dispatcharr",
+    "began_utc": "2026-11-14T05:59:24.106248+00:00",
+    "ended_utc": "2026-11-14T05:59:24.909539+00:00",
+    "actual_exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "7c25cbb3e5325dedea70a4c1d43fe97b0d3e83628a815c3a91dd49d4bf8d884c"
+  },
+  {
+    "label": "restore",
+    "argv": [
+      "/usr/bin/python",
+      "/home/justin/github/Dispatcharr/artifacts/rust/recording-audio61-publication-1/selected/scripts/rust-job-contracts/recording-audio61/materialize.py",
+      "--output",
+      "/home/justin/github/Dispatcharr/artifacts/rust/recording-audio61-publication-1/materialized-final-1"
+    ],
+    "cwd": "/home/justin/github/Dispatcharr",
+    "began_utc": "2026-11-14T05:59:24.909706+00:00",
+    "ended_utc": "2026-11-14T05:59:26.162903+00:00",
+    "actual_exit": 0,
+    "stdout_sha256": "5fbbb4a4a2a3e46368a5ab0455c7d1059b9dfedaa3eea9b46f15264dfc1d5c53",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "retained-acceptors",
+    "argv": [
+      "/usr/bin/python",
+      "/home/justin/github/Dispatcharr/artifacts/rust/recording-audio61-publication-1/selected/scripts/rust-job-contracts/recording-audio61/recompute.py",
+      "--evidence",
+      "/home/justin/github/Dispatcharr/artifacts/rust/recording-audio61-publication-1/materialized-final-1"
+    ],
+    "cwd": "/home/justin/github/Dispatcharr",
+    "began_utc": "2026-11-14T05:59:26.163032+00:00",
+    "ended_utc": "2026-11-14T05:59:26.511926+00:00",
+    "actual_exit": 0,
+    "stdout_sha256": "72ad27a592c04c502bf842efefaceb89fb88a746dddfe335d5d44c51a318716c",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

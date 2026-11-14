@@ -1,0 +1,1 @@
+The Source implementation and reference behavior are from Dispatcharr, pinned at Original Git commit 1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430. Original-LICENSE retains its license bytes. The Rust implementation and finite evidence tooling are part of the Dispatcharr Rust migration. No source author attribution is removed.

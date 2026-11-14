@@ -1,0 +1,27 @@
+"""Finite compile-only matrix; no application/Source/Docker invocation."""
+import datetime,hashlib,json,os,subprocess,time
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent;SOURCE=ROOT/'compile-root1';TARGET=ROOT.parent/'m7-xc-vod-info-physical-compile-29/target';logs=ROOT/'compile-1';logs.mkdir();tmp=ROOT/'tmp-compile1';tmp.mkdir(exist_ok=True)
+expected=json.loads((ROOT/'compile-source1-map.json').read_text());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def actual():return {str(p.relative_to(SOURCE)):sha(p)for p in sorted(SOURCE.rglob('*'))if p.is_file()}
+assert expected==actual()
+for path in Path('/proc').iterdir():
+ if not path.name.isdecimal():continue
+ try:raw=(path/'environ').read_bytes()
+ except(OSError,PermissionError):continue
+ assert ('CARGO_TARGET_DIR='+str(TARGET)).encode()not in raw.split(b'\0'),'OwnedTargetAlreadyActive'
+env=os.environ.copy();env.update(CARGO_TARGET_DIR=str(TARGET),CARGO_BUILD_JOBS='2',CARGO_PROFILE_DEV_DEBUG='0',CARGO_PROFILE_TEST_DEBUG='0',CARGO_INCREMENTAL='0',TMPDIR=str(tmp))
+commands=[['cargo', 'fmt', '--all', '--check'], ['cargo', 'check', '-p', 'dispatcharr-store', '--lib', '--offline', '--locked'], ['cargo', 'clippy', '-p', 'dispatcharr-store', '--all-targets', '--offline', '--locked', '--', '-D', 'warnings'], ['python', '-B', '-m', 'unittest', 'discover', '-s', '/home/justin/github/Dispatcharr/artifacts/rust/m8-pluginrepo-unsigned-remaining-physical-private-1/controller', '-p', 'test_remaining.py', '-v'], ['cargo', 'test', '-p', 'dispatcharr-store', '--lib', '--offline', '--locked', '--', '--test-threads=2'], ['cargo', 'test', '-p', 'dispatcharr-store', '--lib', '--no-run', '--message-format=json', '--offline', '--locked']];rows=[]
+attempt_began=time.monotonic()
+for index,argv in enumerate(commands,1):
+ path=logs/f'command-{index}.log';began=datetime.datetime.now(datetime.timezone.utc).isoformat()
+ with path.open('wb')as f:
+  p=subprocess.Popen(argv,cwd=SOURCE/'rust',env=env,stdin=subprocess.DEVNULL,stdout=f,stderr=subprocess.STDOUT);stat=Path('/proc',str(p.pid),'stat');start=stat.read_text().rsplit(')',1)[1].split()[19]if stat.exists()else None;row={'argv':argv,'pid':p.pid,'observed_starttime':start,'began_utc':began,'PID_namespace':os.readlink('/proc/self/ns/pid'),'scope':'sandbox/tool PID namespace, not host PID claim'};(logs/f'command-{index}.json').write_text(json.dumps(row,indent=2)+'\n');print(json.dumps({'stage':index,'pid':p.pid,'started':True}),flush=True)
+  while p.poll()is None:
+   if time.monotonic()-attempt_began>1800:p.terminate();p.wait();raise RuntimeError("FiniteCompile1800s")
+   if path.stat().st_size>16777216:p.terminate();p.wait();raise RuntimeError('BoundedCompileOutput16MiB')
+   time.sleep(.2)
+  wait=p.wait();row.update(actual_wait_exit=wait,actual_poll_exit=p.poll(),completed_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),completed_epoch=time.time(),source_inputs_unchanged=(actual()==expected),log_sha256=sha(path),log_bytes=path.stat().st_size);rows.append(row);(logs/f'command-{index}.json').write_text(json.dumps(row,indent=2)+'\n');(logs/'waits.json').write_text(json.dumps(rows,indent=2)+'\n');print(json.dumps({'stage':index,'actual_wait':wait,'actual_poll':p.poll()}),flush=True)
+  if wait!=0:break
+post=actual();(logs/'source-inputs-after.json').write_text(json.dumps(post,indent=2)+'\n');assert post==expected
+result={'all_executed_settled':True,'actual_stages':len(rows),'planned_stages':len(commands),'passed':len(rows)==len(commands)and all(r['actual_wait_exit']==0 for r in rows),'source_unchanged':True,'outside_ELFs_copied':0,'Source_Native_Docker_app_runs':0,'target':str(TARGET),'rows':rows};(logs/'result.json').write_text(json.dumps(result,indent=2)+'\n');raise SystemExit(0 if result['passed']else 1)

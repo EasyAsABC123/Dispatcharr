@@ -1,0 +1,14 @@
+"""Raw PG/Redis import/audit only; no Source/Django application startup."""
+import hashlib,json,os,re,sys
+from pathlib import Path
+from native_state import default,import_existing,state,need
+ROOT=Path('/native-root');OUT=Path('/evidence')
+def main():
+ need(os.environ.get('PLUGIN_REPO_DRIVER')=='owned-native-pluginrepo-only','OwnedRawDriver');action=os.environ['PLUGIN_REPO_ACTION'];label=os.environ['PLUGIN_REPO_LABEL'];need(re.fullmatch('[a-z-]{1,48}',label)is not None,'FiniteLabel');db=os.environ['PLUGIN_REPO_DATABASE'];schema=json.loads((ROOT/'inputs/schema62-authority.json').read_bytes())
+ if action=='default':value=default(db,schema)
+ elif action=='state':value=state(db,schema)
+ elif action=='import':
+  epoch=os.environ['PLUGIN_UNSIGNED_EPOCH'];authority=json.loads((ROOT/'inputs/authority.json').read_bytes());need(epoch in authority,'ExactEpoch');binding=authority[epoch];path=ROOT/'inputs'/binding['source_filename'];need(hashlib.sha256(path.read_bytes()).hexdigest()==binding['source_sha256'],'ExactUnmodifiedSourceEpoch');source=json.loads(path.read_bytes());need(source['actual_request_count']==binding['count'],'ExactEpochCount');value=import_existing(db,source,schema)
+ else:raise ValueError('KnownReadOnlyOrOwnedImportAction')
+ need(not any(n=='django'or n.startswith(('django.','apps.','dispatcharr.'))for n in sys.modules),'NoSourceApplicationImport');path=OUT/(label+'.json');need(not path.exists(),'FreshOutput');raw=json.dumps(value,indent=2,allow_nan=False).encode();need(len(raw)<=16777216,'BoundedRawState16MiB');path.write_bytes(raw);print(json.dumps({'passed':True,'action':action,'Source_app':False}))
+if __name__=='__main__':main()

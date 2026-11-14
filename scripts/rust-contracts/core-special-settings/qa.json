@@ -1,0 +1,109 @@
+{
+  "source_map_sha256": "768a146441d09f4ee794c12c903e22eadb5b91911f3f8e0f0fbf05b01e06649e",
+  "actual_commands": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "started_epoch": 1794631791.2188456,
+      "completed_epoch": 1794631793.3317442,
+      "actual_exit": 0
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "started_epoch": 1794631793.3537934,
+      "completed_epoch": 1794631793.5640554,
+      "actual_exit": 0
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "started_epoch": 1794631793.586342,
+      "completed_epoch": 1794631798.1663542,
+      "actual_exit": 0
+    },
+    {
+      "stage": "defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "started_epoch": 1794631798.188983,
+      "completed_epoch": 1794631894.084243,
+      "actual_exit": 0
+    },
+    {
+      "stage": "realtime-no-run",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-realtime",
+        "--lib",
+        "--no-run",
+        "--offline",
+        "--locked"
+      ],
+      "started_epoch": 1794631894.1057804,
+      "completed_epoch": 1794631909.245482,
+      "actual_exit": 0
+    },
+    {
+      "stage": "store-no-run",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--no-run",
+        "--offline",
+        "--locked"
+      ],
+      "started_epoch": 1794631909.268204,
+      "completed_epoch": 1794631931.2944317,
+      "actual_exit": 0
+    }
+  ],
+  "default_counts": {
+    "passed": 833,
+    "ignored": 749,
+    "result_blocks": 172
+  },
+  "outside_ELFs": {
+    "store-tests": {
+      "sha256": "2fccc48f39d7f9675b8a90be1c28e7233b6c2c078e021fc29f2d4689705472d5",
+      "bytes": 71478264
+    },
+    "realtime-tests": {
+      "sha256": "b39cd09c0e773c2982b35c67d65ddb2f1b93d0e24f7091de408186a88a143bf0",
+      "bytes": 25413056
+    }
+  },
+  "outside_ELFs_not_published": true,
+  "all_results_bound_to_historical890_only": true
+}

@@ -1,0 +1,58 @@
+{
+  "state": "BLOCKED_ROOT_REVIEW_REQUIRED",
+  "action": "CoreSettings-special-Source51-once",
+  "cwd": "/home/justin/github/Dispatcharr",
+  "selfcheck_argv": [
+    "python3",
+    "artifacts/rust/m5-core-special-source-prep-2/controller/run.py"
+  ],
+  "local_controls_argv": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "artifacts/rust/m5-core-special-source-prep-2/controller",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "expected_local_methods": 52,
+  "execute_argv_template": [
+    "python3",
+    "<Root-flag-only-copy>/controller/run.py",
+    "--execute-reviewed-seal",
+    "<sha256 of frozen seal.json>",
+    "--cue",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m5-core-special-source-execution-cue-1.json",
+    "--output",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m5-core-special-source-1"
+  ],
+  "tooling_environment_script": "artifacts/rust/tooling/environment.sh",
+  "controller_hardblock": true,
+  "Source_framework_requests": 51,
+  "Source_TCP_or_Native_requests": 0,
+  "fresh_clones": 6,
+  "default_cache_DB": 7,
+  "cohort_DBs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "limits": {
+    "bootstrap_seconds": 180,
+    "per_cohort_seconds": 180,
+    "total_seconds": 1500,
+    "cleanup_seconds": 90,
+    "stdout_stderr_inflight_bytes_each": 1048576,
+    "request_body_and_response_bytes": 65536,
+    "report_bytes": 134217728,
+    "raw_Redis_snapshot_bytes_total": 2097152,
+    "broker_list_frames": 64,
+    "Channels_frames": 64
+  },
+  "no_actual_Source_app_authorization_from_preparation": true
+}

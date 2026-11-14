@@ -1,0 +1,11 @@
+"""Actual read-only guest mount/ELF closure; no Django/Source or business request."""
+import hashlib,json,os
+from pathlib import Path
+rows=json.loads(Path('/native-inputs/runtime-mounted.json').read_bytes())
+for name,row in rows.items():
+ path=Path(name)
+ if not name.startswith(('/native-inputs/','/native-tools/','/native-source/','/native-root/inputs/','/native-root/controller/'))or'..'in path.parts or path.is_symlink()or not path.is_file():raise ValueError('ExactMountedRegularPath:'+name)
+ raw=path.read_bytes()
+ if len(raw)!=row['bytes']or hashlib.sha256(raw).hexdigest()!=row['sha256']:raise ValueError('ExactMountedBytes:'+name)
+ if name=='/native-inputs/native-store-tests'and not os.access(path,os.X_OK):raise ValueError('ActualGuestExecutableMode')
+print(json.dumps({'passed':True,'actual_mounted_files':len(rows),'Source_or_Django_or_business_requests':False}))
