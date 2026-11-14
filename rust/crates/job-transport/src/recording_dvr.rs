@@ -427,23 +427,32 @@ async fn execute(
         .map_err(Error::Files)?;
     let patch = recording_normal::prime_patch(message.recording_id(), &paths, started)
         .map_err(|_| Error::Unsupported("prime metadata"))?;
-    inner
+    let prime_rejected = match inner
         .store
         .clone()
-        .write_properties(
-            message.recording_id(),
-            PropertyWrite::Prime(patch),
+        .prime_properties(message.recording_id(), patch, owner.clone())
+        .await
+        .map_err(Error::Store)?
+    {
+        dispatcharr_store::recording_capture::PrimeWriteOutcome::Applied(_) => false,
+        dispatcharr_store::recording_capture::PrimeWriteOutcome::Rejected(rejection) => {
+            trace(
+                &inner,
+                "settled-prime-rejection",
+                json!({"code":rejection.code(),"protocol_fate":"server rejection followed by actual Ready and close"}),
+            )?;
+            true
+        }
+    };
+    if !prime_rejected {
+        recording_events::send(
+            inner.events.clone(),
+            recording_events::updated(message.recording_id()),
             owner.clone(),
         )
         .await
-        .map_err(Error::Store)?;
-    recording_events::send(
-        inner.events.clone(),
-        recording_events::updated(message.recording_id()),
-        owner.clone(),
-    )
-    .await
-    .map_err(Error::Events)?;
+        .map_err(Error::Events)?;
+    }
     let files = tokio::task::spawn_blocking(move || parent.start_hls())
         .await
         .map_err(|_| Error::Supervisor)?
@@ -514,6 +523,12 @@ async fn execute(
     let shutdown = inner.shutdown.clone();
     let held = owner.clone();
     let log = transcript.clone();
+    let audit_file_name = paths.filename.clone();
+    let audit_file_path = paths
+        .final_path
+        .to_str()
+        .ok_or(Error::Unsupported("audit output UTF8"))?
+        .to_owned();
     tokio::task::spawn_blocking(move || recording_process::remux(paths, shutdown, held, log))
         .await
         .map_err(|_| Error::Supervisor)?
@@ -529,6 +544,18 @@ async fn execute(
             "viewer/proxy metadata arrived outside normal Source3 scope",
         ));
     }
+    if prime_rejected {
+        inner
+            .store
+            .clone()
+            .write_properties(
+                recording,
+                PropertyWrite::PermanentUrlsAfterRejectedPrime,
+                owner.clone(),
+            )
+            .await
+            .map_err(Error::Store)?;
+    }
     let (files, file_size) = tokio::task::spawn_blocking(move || {
         let size = files.final_size()?;
         files.remove_hls()?;
@@ -537,27 +564,36 @@ async fn execute(
     .await
     .map_err(|_| Error::Supervisor)?
     .map_err(Error::Files)?;
-    inner
-        .store
-        .clone()
-        .write_properties(recording, PropertyWrite::RemovedOwnedHls, owner.clone())
-        .await
-        .map_err(Error::Store)?;
+    if !prime_rejected {
+        inner
+            .store
+            .clone()
+            .write_properties(recording, PropertyWrite::RemovedOwnedHls, owner.clone())
+            .await
+            .map_err(Error::Store)?;
+    }
     let properties = inner
         .store
         .clone()
         .write_properties(
             recording,
-            PropertyWrite::CompletedNormal {
-                actual_ended: Utc::now(),
-                bytes_written,
+            if prime_rejected {
+                PropertyWrite::CompletedAfterRejectedPrime {
+                    actual_ended: Utc::now(),
+                    bytes_written,
+                }
+            } else {
+                PropertyWrite::CompletedNormal {
+                    actual_ended: Utc::now(),
+                    bytes_written,
+                }
             },
             owner.clone(),
         )
         .await
         .map_err(Error::Store)?;
     let details = json!({"recording_id":recording,"outcome":"success","has_file":true,"failure_reason":null,
-        "status":"completed","interrupted_reason":null,"file_path":properties["file_path"],"file_name":properties["file_name"],
+        "status":"completed","interrupted_reason":null,"file_path":if prime_rejected {json!(audit_file_path)}else{properties["file_path"].clone()},"file_name":if prime_rejected {json!(audit_file_name)}else{properties["file_name"].clone()},
         "file_url":properties["file_url"],"file_size":file_size,"remux_success":true,"bytes_written":bytes_written,
         "start_time":recording_normal::source_iso(message.start()),"end_time":recording_normal::source_iso(message.end())});
     inner

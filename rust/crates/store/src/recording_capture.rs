@@ -29,6 +29,25 @@ pub enum Error {
     },
     Supervisor,
 }
+/// A prime-write rejection may be consumed only after this module awaited
+/// the existing same-connection Ready/ping AND explicit physical close.
+#[derive(Debug)]
+pub struct SettledPrimeRejection {
+    source: sqlx::Error,
+}
+impl SettledPrimeRejection {
+    pub fn code(&self) -> &'static str {
+        "P0001"
+    }
+    pub fn diagnostic(&self) -> &sqlx::Error {
+        &self.source
+    }
+}
+#[derive(Debug)]
+pub enum PrimeWriteOutcome {
+    Applied(Value),
+    Rejected(SettledPrimeRejection),
+}
 #[derive(Clone, Debug)]
 pub struct RecordingIdentity {
     pub recording: i64,
@@ -36,6 +55,12 @@ pub struct RecordingIdentity {
     pub start: DateTime<Utc>,
     pub end: DateTime<Utc>,
 }
+// Data-only rejection policy; real Ready/close authority comes exclusively
+// from prime_properties awaiting the existing supervised write_properties.
+fn prime_rejection_scope(stage: Stage, code: Option<&str>, settled: bool) -> bool {
+    settled && stage == Stage::MutationWrite && code == Some("P0001")
+}
+
 /// Actual bounded database data only. A service must still validate filesystem,
 /// cache/active-key/domain and due admission; this is NOT a runnable capability.
 #[derive(Debug)]
@@ -66,6 +91,12 @@ pub struct CaptureStore {
 pub enum PropertyWrite {
     Prime(Value),
     RemovedOwnedHls,
+    /// Source's pre-rmtree URL update when the caught prime write left scheduled CP.
+    PermanentUrlsAfterRejectedPrime,
+    CompletedAfterRejectedPrime {
+        actual_ended: DateTime<Utc>,
+        bytes_written: u64,
+    },
     CompletedNormal {
         actual_ended: DateTime<Utc>,
         bytes_written: u64,
@@ -269,6 +300,37 @@ impl CaptureStore {
         .map_err(|_| Error::Supervisor)?
     }
 
+    /// Additive, prime-only outcome API. No raw inner error reaches this
+    /// classification: write_properties returns only after settle ping+close.
+    pub async fn prime_properties(
+        self: Arc<Self>,
+        recording: i64,
+        patch: Value,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<PrimeWriteOutcome, Error> {
+        match self
+            .write_properties(recording, PropertyWrite::Prime(patch), owner)
+            .await
+        {
+            Ok(value) => Ok(PrimeWriteOutcome::Applied(value)),
+            Err(Error::Sql {
+                stage: Stage::MutationWrite,
+                source,
+                settlement: None,
+            }) if prime_rejection_scope(
+                Stage::MutationWrite,
+                source.as_database_error().and_then(|e| e.code()).as_deref(),
+                true,
+            ) =>
+            {
+                Ok(PrimeWriteOutcome::Rejected(SettledPrimeRejection {
+                    source,
+                }))
+            }
+            Err(error) => Err(error),
+        }
+    }
+
     async fn write_properties_inner(
         connection: &mut PgConnection,
         recording: i64,
@@ -315,6 +377,8 @@ impl CaptureStore {
         {
             return Err(Error::Unsupported("property input bound"));
         }
+        let rejected_completion =
+            matches!(&write, PropertyWrite::CompletedAfterRejectedPrime { .. });
         let mut after = before.clone();
         let properties = after
             .as_object_mut()
@@ -367,11 +431,30 @@ impl CaptureStore {
                     return Ok(before.clone());
                 }
             }
+            PropertyWrite::PermanentUrlsAfterRejectedPrime => {
+                if properties.get("status").and_then(Value::as_str) != Some("scheduled")
+                    || properties.contains_key("_hls_dir")
+                {
+                    return Err(Error::Unsupported("rejected prime URL scope"));
+                }
+                let url = format!("/api/channels/recordings/{recording}/file/");
+                properties.insert("file_url".into(), Value::String(url.clone()));
+                properties.insert("output_file_url".into(), Value::String(url));
+            }
             PropertyWrite::CompletedNormal {
                 actual_ended,
                 bytes_written,
+            }
+            | PropertyWrite::CompletedAfterRejectedPrime {
+                actual_ended,
+                bytes_written,
             } => {
-                if properties.get("status").and_then(Value::as_str) != Some("recording")
+                if properties.get("status").and_then(Value::as_str)
+                    != Some(if rejected_completion {
+                        "scheduled"
+                    } else {
+                        "recording"
+                    })
                     || properties.contains_key("_hls_dir")
                     || bytes_written == 0
                 {
@@ -482,4 +565,108 @@ impl CaptureStore {
 pub enum NormalEvent {
     Started,
     Ended,
+}
+
+#[cfg(test)]
+mod prime_rejected_source_controls {
+    use super::*;
+    fn source() -> Value {
+        serde_json::from_str(include_str!("../datasets/dvr-prime-rejected-source.json"))
+            .expect("Source fixture JSON")
+    }
+    #[test]
+    fn actual_source_rejected_prime_does_not_backfill_unsaved_fields() {
+        let data = source();
+        let before = &data["before_properties"];
+        let permanent = CaptureStore::merge_properties(
+            1,
+            before,
+            PropertyWrite::PermanentUrlsAfterRejectedPrime,
+        )
+        .expect("Source pre-rmtree URL merge");
+        assert_eq!(permanent["status"], "scheduled");
+        let expected = &data["after_properties"];
+        let ended = chrono::NaiveDateTime::parse_from_str(
+            expected["ended_at"].as_str().expect("Source ended string"),
+            "%Y-%m-%d %H:%M:%S%.f",
+        )
+        .expect("Source observed UTC")
+        .and_utc();
+        let merged = CaptureStore::merge_properties(
+            1,
+            &permanent,
+            PropertyWrite::CompletedAfterRejectedPrime {
+                actual_ended: ended,
+                bytes_written: expected["bytes_written"]
+                    .as_u64()
+                    .expect("Source byte count"),
+            },
+        )
+        .expect("Source completion merge");
+        assert_eq!(&merged, expected);
+        for key in ["started_at", "file_name", "file_path", "_hls_dir"] {
+            assert!(merged.get(key).is_none());
+        }
+        assert!(data["actual_end_audit"]["file_path"].is_string());
+        assert!(data["actual_end_audit"]["file_name"].is_string());
+        assert_eq!(data["actual_recording_result"]["status"], "SUCCESS");
+        assert!(data["actual_recording_result"]["result"].is_null());
+    }
+    #[test]
+    fn only_measured_prime_stage_code_after_successful_settlement_is_in_scope() {
+        assert!(prime_rejection_scope(
+            Stage::MutationWrite,
+            Some("P0001"),
+            true
+        ));
+        for stage in [
+            Stage::Acquire,
+            Stage::Context,
+            Stage::Recording,
+            Stage::Poster,
+            Stage::MutationRead,
+            Stage::Audit,
+            Stage::Ready,
+            Stage::Close,
+        ] {
+            assert!(!prime_rejection_scope(stage, Some("P0001"), true));
+        }
+        for code in [None, Some("23505"), Some("57014"), Some("08006")] {
+            assert!(!prime_rejection_scope(Stage::MutationWrite, code, true));
+        }
+        assert!(!prime_rejection_scope(
+            Stage::MutationWrite,
+            Some("P0001"),
+            false
+        ));
+    }
+    #[test]
+    fn normal_completion_scope_is_not_broadened_to_scheduled_rows() {
+        let data = source();
+        assert!(CaptureStore::merge_properties(
+            1,
+            &data["before_properties"],
+            PropertyWrite::CompletedNormal {
+                actual_ended: Utc::now(),
+                bytes_written: 1
+            }
+        )
+        .is_err());
+        let mut changed = data["before_properties"].clone();
+        changed["status"] = serde_json::json!("recording");
+        assert!(CaptureStore::merge_properties(
+            1,
+            &changed,
+            PropertyWrite::PermanentUrlsAfterRejectedPrime
+        )
+        .is_err());
+        changed["status"] = serde_json::json!("scheduled");
+        changed["_hls_dir"] = serde_json::json!("foreign");
+        assert!(CaptureStore::merge_properties(
+            1,
+            &changed,
+            PropertyWrite::PermanentUrlsAfterRejectedPrime
+        )
+        .is_err());
+    }
 }

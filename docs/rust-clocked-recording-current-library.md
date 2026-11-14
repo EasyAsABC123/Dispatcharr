@@ -7,6 +7,12 @@ admission, executes the Source-derived SQL cleanup and metadata order, and owns
 FFmpeg children, signals, stderr readers and waits. Observer cancellation does
 not cancel an admitted recording. Main and default workers do not register it.
 
+The later [settled prime-write correction](rust-recording-prime-continuation.md)
+now continues the measured P0001 rejection after actual Ready/close, preserving
+Source's missing unsaved fields. Its fresh successful physical test and the
+[current882 checkpoint](../scripts/rust-component-checkpoints/current882/README.md)
+have separate source bindings from the original878-input evidence below.
+
 The exact878-input snapshot contains873 Rust files and five coupled inputs.
 A full workspace preflight passes formatting, compilation, strict Clippy and804
 tests, with744 external-fixture tests ignored. A later test-only diagnostic

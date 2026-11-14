@@ -32,6 +32,16 @@ and [image59 Main header/HEAD cases](rust-image59-build-worker-header.md) pass
 their selected functional checks. Image59 has no new full package matrix or
 performance acceptance.
 
+The later [unsigned plugin library](rust-unsigned-manifests-current-library.md)
+passes 25 selected Native comparisons and two held-wire ownership cases. The
+[recording prime-write correction](rust-recording-prime-continuation.md) passes
+its Source-backed SQL-rejection continuation test. The combined production
+composition passed 823 workspace tests, with 746 ignored, before test-only
+descriptor/fate observations; four affected checks passed on those final inputs.
+These remain inert components with explicit source bindings and no new measured
+performance claim. Special-settings and longer audio/video Native gates remain
+work in progress.
+
 The [image61 build](rust-image61-build.md) includes the scoped DVR library and
 preserves the installed React files and original credits. The
 [current DVR physical packet](rust-clocked-recording-current-physical.md)

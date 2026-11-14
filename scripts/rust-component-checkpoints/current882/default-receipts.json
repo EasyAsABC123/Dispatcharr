@@ -1,0 +1,112 @@
+{
+  "source_map_sha256": "0db3a1ff20ae00001f89bea10957458d531cf5a9bcf47db01a3c3b87a8ee8e63",
+  "commands": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 3798051,
+      "PID_scope": "host execution",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794620076.630256,
+      "completed_epoch": 1794620078.6177115,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 3798136,
+      "PID_scope": "host execution",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794620078.6562588,
+      "completed_epoch": 1794620088.388633,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 3798896,
+      "PID_scope": "host execution",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794620088.4264112,
+      "completed_epoch": 1794620131.465109,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 3802487,
+      "PID_scope": "host execution",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794620131.501946,
+      "completed_epoch": 1794620246.5346248,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "store-no-run",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--offline",
+        "--locked",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "PID": 3815739,
+      "PID_scope": "host execution",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794620246.57172,
+      "completed_epoch": 1794620269.0718052,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "job-no-run",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-job-transport",
+        "--lib",
+        "--offline",
+        "--locked",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "PID": 3817015,
+      "PID_scope": "host execution",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794620269.1116633,
+      "completed_epoch": 1794620296.4747374,
+      "source_inputs_unchanged": true
+    }
+  ]
+}

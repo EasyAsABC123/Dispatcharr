@@ -1,6 +1,7 @@
 //! Inert bounded PluginRepo metadata adapter from retained Original Source24.
 //! Dispatcharr authors retain application/algorithm credit; see ATTRIBUTION.md.
-//! No manifest fetch, discovery, installation, execution or Main activation.
+//! Default remains metadata-only; explicit finite unsigned fetch opt-in below.
+//! No discovery, installation, execution or Main activation.
 use crate::{
     admin_writes::{boolean, character},
     AuthService, StoreError,
@@ -19,6 +20,8 @@ use serde_json::{json, Map, Value};
 use sqlx::{Connection, Row};
 use std::{net::SocketAddr, sync::Arc};
 
+#[path = "plugin_repository_fetch.rs"]
+mod manifest_fetch;
 const RAW_LIMIT: usize = 65536;
 const RESPONSE_LIMIT: usize = 1024 * 1024;
 struct RetainedFrame {
@@ -75,6 +78,7 @@ type OriginalWriterObserver =
 #[derive(Clone)]
 pub struct PluginRepositories {
     auth: AuthService,
+    unsigned_manifests: bool,
     #[cfg(test)]
     original_writer_observer: Option<OriginalWriterObserver>,
 }
@@ -233,9 +237,20 @@ impl PluginRepositories {
     pub fn new(auth: AuthService) -> Self {
         Self {
             auth,
+            unsigned_manifests: false,
             #[cfg(test)]
             original_writer_observer: None,
         }
+    }
+    /// Exact opt-in descriptor; callers must not treat this as full M8 parity.
+    pub fn unsigned_manifest_domain() -> &'static str {
+        manifest_fetch::DOMAIN
+    }
+    /// Explicit finite library opt-in: literal-IP plain HTTP unsigned manifests.
+    /// HTTPS/DNS/transfer codecs/signatures remain guarded. No Main activation.
+    pub fn with_unsigned_manifest_fetches(mut self) -> Self {
+        self.unsigned_manifests = true;
+        self
     }
     #[cfg(test)]
     fn observe_original_writer(mut self, observer: OriginalWriterObserver) -> Self {
@@ -244,10 +259,15 @@ impl PluginRepositories {
     }
     /// Separate opt-in router only. AuthService::router/Main remain unchanged.
     pub fn router(self) -> Router {
-        Router::new()
+        let mut router = Router::new()
             .route("/api/plugins/repos/", any(collection))
-            .route("/api/plugins/repos/{id}/", any(detail))
-            .with_state(self)
+            .route("/api/plugins/repos/{id}/", any(detail));
+        if self.unsigned_manifests {
+            router = router
+                .route("/api/plugins/repos/preview/", any(manifest_preview))
+                .route("/api/plugins/repos/{id}/refresh/", any(manifest_refresh));
+        }
+        router.with_state(self)
     }
     async fn operation(
         self,
@@ -255,6 +275,19 @@ impl PluginRepositories {
         request: Request,
         target: Option<String>,
     ) -> Result<Response, StoreError> {
+        self.operation_route(peer, request, target, None).await
+    }
+    async fn operation_route(
+        self,
+        peer: SocketAddr,
+        request: Request,
+        target: Option<String>,
+        action: Option<manifest_fetch::Action>,
+    ) -> Result<Response, StoreError> {
+        let action = action.or_else(|| {
+            (self.unsigned_manifests && target.is_none() && request.method() == Method::POST)
+                .then_some(manifest_fetch::Action::Create)
+        });
         // Use the existing actual four writer permits, not a second allowance.
         let permit = Arc::new(
             self.auth
@@ -275,7 +308,7 @@ impl PluginRepositories {
         // callbacks, auth, SQL Ready/error and eager connection return/close.
         let observer_permit = permit.clone();
         let actor = tokio::spawn(async move {
-            let result = Self::owned(auth, peer, request, target).await;
+            let result = Self::owned(auth, peer, request, target, action).await;
             retained_response(result, permit).await
         });
         match actor.await {
@@ -288,6 +321,7 @@ impl PluginRepositories {
         peer: SocketAddr,
         request: Request,
         target: Option<String>,
+        action: Option<manifest_fetch::Action>,
     ) -> Result<Response, StoreError> {
         auth.request_started_display_timezone().await;
         let method = request.method().clone();
@@ -322,7 +356,9 @@ impl PluginRepositories {
         // actor/frame still retains the SAME original request token.
         drop(user);
         drop(reads);
-        let supported = if target.is_some() {
+        let supported = if action.is_some() {
+            method == Method::POST
+        } else if target.is_some() {
             method == Method::PUT || method == Method::DELETE
         } else {
             method == Method::GET || method == Method::POST
@@ -335,7 +371,11 @@ impl PluginRepositories {
                 .into_response());
         }
         let mut connection = auth.store.pool().acquire().await?;
-        let result = Self::sql(&mut connection, request, target).await;
+        let result = if let Some(action) = action {
+            manifest_fetch::execute(&auth, &mut connection, request, action).await
+        } else {
+            Self::sql(&mut connection, request, target).await
+        };
         // fetch_one may decode DataRow before Ready. Physical fence applies
         // even to SQL errors; no timeout/retry pretends a live connection ended.
         let ping = connection.ping().await;
@@ -481,3 +521,28 @@ mod tests;
 #[cfg(test)]
 #[path = "plugin_repositories_physical_tests.rs"]
 mod physical_tests;
+
+async fn manifest_preview(
+    State(service): State<PluginRepositories>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    service
+        .operation_route(peer, request, None, Some(manifest_fetch::Action::Preview))
+        .await
+}
+async fn manifest_refresh(
+    State(service): State<PluginRepositories>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    axum::extract::Path(id): axum::extract::Path<String>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    service
+        .operation_route(
+            peer,
+            request,
+            None,
+            Some(manifest_fetch::Action::Refresh(id)),
+        )
+        .await
+}
