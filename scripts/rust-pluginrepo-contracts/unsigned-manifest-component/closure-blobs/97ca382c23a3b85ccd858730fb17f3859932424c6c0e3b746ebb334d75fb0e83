@@ -1,0 +1,49 @@
+"""Pure provenance, mounted dependency and process-generation refusal controls."""
+import copy,hashlib,json,os,shutil,tempfile,unittest
+from pathlib import Path
+from input_guards import provenance,mounted,owned_helper_signal
+ROOT=Path(__file__).resolve().parents[1]
+class Provenance(unittest.TestCase):
+ def test_actual_pinned_capture_receipts_and_RECORD(self):self.assertTrue(provenance(ROOT)['passed'])
+ def bad(self,change):
+  with tempfile.TemporaryDirectory()as d:
+   root=Path(d);(root/'inputs').mkdir();shutil.copytree(ROOT/'inputs/dependency-provenance',root/'inputs/dependency-provenance');shutil.copyfile(ROOT/'inputs/actual-dependencies.json',root/'inputs/actual-dependencies.json');p=root/'inputs/dependency-provenance/licenses3/capture-report.json';v=json.loads(p.read_text());change(v);p.chmod(0o600);p.write_text(json.dumps(v))  # ONLY our owned TemporaryDirectory corruption copy, never the sealed input
+   with self.assertRaises((ValueError,KeyError)):provenance(root)
+ def test_capture_started(self):self.bad(lambda v:v.update(container_started=True))
+ def test_capture_program(self):self.bad(lambda v:v.update(program_executions=1))
+ def test_capture_hash(self):self.bad(lambda v:v['rows'][0].update(sha256='0'*64))
+ def test_capture_cleanup(self):self.bad(lambda v:v.update(exact_owned_cleanup=False))
+ def test_capture_wrong_image(self):self.bad(lambda v:v.update(image='some-new-tag'))
+class ProcessGeneration(unittest.TestCase):
+ def setup_proc(self,root):
+  p=root/'123';(p/'ns').mkdir(parents=True);os.symlink('pid:[456]',p/'ns/pid');(p/'stat').write_text('123 (fixture helper) '+' '.join(['S']+['0']*18+['789']));return {'pid':123,'starttime':'789','PID_namespace':'pid:[456]'}
+ def check(self,change,reject=True):
+  with tempfile.TemporaryDirectory()as d:
+   root=Path(d);v=self.setup_proc(root);change(v)
+   if reject:
+    with self.assertRaises((ValueError,TypeError)):owned_helper_signal(v,root)
+   else:self.assertEqual(owned_helper_signal(v,root),123)
+ def test_exact_generation(self):self.check(lambda v:None,False)
+ def test_pid_bool(self):self.check(lambda v:v.update(pid=True))
+ def test_missing_start(self):self.check(lambda v:v.update(starttime=None))
+ def test_reused_generation(self):self.check(lambda v:v.update(starttime='790'))
+ def test_wrong_namespace(self):self.check(lambda v:v.update(PID_namespace='pid:[999]'))
+class MountClosure(unittest.TestCase):
+ def fixture(self,root):
+  (root/'controller').mkdir();(root/'inputs').mkdir();files=['/plugin-inputs/'+str(n)+'.json'for n in range(125)]+['/plugin-inputs/'+n for n in ['schema62-authority.json','plan.json','actual-dependencies.json','original-inputs.json','definition3/plan.json']]+['/plugin-tools/real.py'];v={}
+  for guest in files:
+   relative=guest.replace('/plugin-inputs/','inputs/').replace('/plugin-tools/','controller/');p=root/relative;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'{}');v[guest]={'bytes':2,'sha256':hashlib.sha256(b'{}').hexdigest()}
+  return v
+ def check(self,change,reject=True):
+  with tempfile.TemporaryDirectory()as d:
+   root=Path(d);v=self.fixture(root);change(root,v);(root/'inputs/runtime-mounted-inputs.json').write_text(json.dumps(v))
+   if reject:
+    with self.assertRaises((ValueError,FileNotFoundError)):mounted(root)
+   else:self.assertTrue(mounted(root)['passed'])
+ def test_actual_required_mounted_path(self):self.check(lambda r,v:None,False)
+ def test_missing_dynamic_schema_path(self):self.check(lambda r,v:(r/'inputs/schema62-authority.json').unlink())
+ def test_absent_manifest_entry(self):self.check(lambda r,v:v.pop('/plugin-inputs/schema62-authority.json'))
+ def test_changed_guest_bytes(self):self.check(lambda r,v:(r/'controller/real.py').write_bytes(b'wrong'))
+ def test_unsealed_runtime_tool(self):self.check(lambda r,v:(r/'controller/unsealed.py').write_bytes(b'pass'))
+ def test_escape_path(self):self.check(lambda r,v:v.update({'/plugin-inputs/../escape':{'bytes':0,'sha256':'0'*64}}))
+if __name__=='__main__':unittest.main()

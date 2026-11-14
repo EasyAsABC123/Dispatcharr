@@ -1,0 +1,7 @@
+"""No-Django actual source/owned-origin kernel-route snapshot."""
+import json,os
+from pathlib import Path
+from network_guard import kernel_routes
+out=Path('/evidence');role=os.environ.get('FETCH_NETWORK_ROLE');
+if role not in('baseline','origin'):raise ValueError('ExactOwnedNetworkRole')
+v4=Path('/proc/net/route').read_text();v6=Path('/proc/net/ipv6_route').read_text();result=kernel_routes(v4,v6);result.update(role=role,PID_namespace=os.readlink('/proc/self/ns/pid'),network_namespace=os.readlink('/proc/self/ns/net'),actual_ipv4_text=v4,actual_ipv6_text=v6,actual_ipv6_all_disabled=Path('/proc/sys/net/ipv6/conf/all/disable_ipv6').read_text().strip(),actual_ipv6_default_disabled=Path('/proc/sys/net/ipv6/conf/default/disable_ipv6').read_text().strip(),actual_resolv_conf=Path('/etc/resolv.conf').read_text(),Source_or_Django_loaded=False);assert result['actual_ipv6_all_disabled']==result['actual_ipv6_default_disabled']=='1';(out/('network-routes-'+role+'.json')).write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({'passed':True,'role':role,'no_default_external_route':True}))

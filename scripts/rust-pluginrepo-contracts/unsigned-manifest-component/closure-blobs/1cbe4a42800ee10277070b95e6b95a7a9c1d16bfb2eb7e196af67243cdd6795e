@@ -1,0 +1,26 @@
+"""UNEXECUTED real owned loopback-contact witness; no Source monkeypatch."""
+import argparse,hashlib,json,os,select,signal,socket,time
+from pathlib import Path
+
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);a=p.parse_args();out=a.output
+ if not out.is_dir()or(out/'loopback-ready.json').exists():raise ValueError('FreshProbeOutput')
+ listener=socket.socket();listener.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1);listener.bind(('127.0.0.1',18080));listener.listen(4);listener.setblocking(False);began=time.monotonic();rows=[];running=True
+ def stop(*_):
+  nonlocal running
+  running=False
+ signal.signal(signal.SIGTERM,stop);signal.signal(signal.SIGINT,stop)
+ ready={'pid':os.getpid(),'starttime':Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19],'PID_namespace':os.readlink('/proc/self/ns/pid'),'address':['127.0.0.1',18080],'actual_listener_not_Source_method_patch':True};(out/'loopback-ready.json').write_text(json.dumps(ready,indent=2)+'\n')
+ ledger=(out/'loopback-contacts.jsonl').open('x')
+ try:
+  while running and len(rows)<8 and time.monotonic()-began<=300:
+   if not select.select([listener],[],[],.1)[0]:continue
+   client,peer=listener.accept();client.settimeout(.25);row={'ordinal':len(rows)+1,'peer':list(peer),'accepted_epoch':time.time(),'unexpected_policy_contact':True};raw=b''
+   try:
+    raw=client.recv(8193)
+    if len(raw)>8192:raise ValueError('Probe8KiBReadCapacity')
+    client.sendall(b'HTTP/1.0 403 Forbidden\r\nContent-Length: 0\r\nConnection: close\r\n\r\n');row['refusal_write_completed']=True
+   except BaseException as error:row.update(error_type=type(error).__name__,error_message=str(error))
+   finally:client.close();row.update(received_hex=raw.hex(),received_bytes=len(raw),received_sha256=hashlib.sha256(raw).hexdigest(),closed_epoch=time.time());ledger.write(json.dumps(row,allow_nan=False)+'\n');ledger.flush();rows.append(row)
+ finally:listener.close();ledger.close();(out/'loopback-terminal.json').write_text(json.dumps({'accepted_connections':len(rows),'expected_zero_is_unmeasured_until_capture':True,'socket_closed':True,'elapsed_seconds':time.monotonic()-began},indent=2)+'\n')
+if __name__=='__main__':main()

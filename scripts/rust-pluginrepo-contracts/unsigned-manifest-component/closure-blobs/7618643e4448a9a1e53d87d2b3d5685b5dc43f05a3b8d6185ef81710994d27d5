@@ -1,0 +1,61 @@
+"""Socket-free isolation/frame-classification controls; no reachability probes."""
+import copy,json,struct,unittest
+from pathlib import Path
+from network_guard import host_nonoverlap,actual_network,kernel_routes
+from network_observer import classify,invalid_for_scope
+
+def topology():
+ project='owned-fetch';name=project+'_owned';nid='c'*64
+ def endpoint(cid,ip):return {'Id':cid,'Config':{'Labels':{'com.docker.compose.project':project},'Env':[k+'='for k in ['HTTP_PROXY','HTTPS_PROXY','ALL_PROXY','http_proxy','https_proxy','all_proxy']]+['NO_PROXY=*','no_proxy=*']},'HostConfig':{'NetworkMode':name,'PortBindings':None,'Dns':['127.0.0.1']},'NetworkSettings':{'Networks':{name:{'IPAddress':ip,'NetworkID':nid}},'Ports':{}}}
+ s=endpoint('a'*64,'11.253.250.3');o=endpoint('b'*64,'11.253.250.2');n={'Id':nid,'Name':name,'Internal':True,'EnableIPv6':False,'Labels':{'com.docker.compose.project':project},'Driver':'bridge','Options':{'com.docker.network.bridge.enable_ip_masquerade':'false'},'IPAM':{'Config':[{'Subnet':'11.253.250.0/29','Gateway':'11.253.250.1'}]},'Containers':{s['Id']:{},o['Id']:{}}};return n,s,o,project
+
+def frame(src=(11,253,250,3),dst=(11,253,250,2),port=18080,proto=6,fragment=0):
+ ethernet=b'\0'*12+b'\x08\x00';ip=bytearray(20);ip[0]=0x45;ip[6:8]=struct.pack('!H',fragment);ip[9]=proto;ip[12:16]=bytes(src);ip[16:20]=bytes(dst);return ethernet+bytes(ip)+struct.pack('!HH',40000,port)+b'not-retained-payload'
+class Isolation(unittest.TestCase):
+ def test_actual_retained_preapp_builtin_null_IPAM(self):
+  rows=json.loads((Path(__file__).resolve().parents[1]/'inputs/actual-preapp-Docker-network-shape.json').read_text());v=host_nonoverlap([],rows);self.assertEqual([(r['Name'],r['Driver'],r['literal_Config'])for r in v['recognized_builtin_no_L3_IPAM']],[('host','host',None),('none','null',None)])
+ def builtin(self,name='host',driver='host',scope='local',config=None):return {'Name':name,'Driver':driver,'Scope':scope,'IPAM':{'Driver':'default','Config':config}}
+ def test_builtin_host_no_L3(self):self.assertTrue(host_nonoverlap([],[self.builtin()])['passed'])
+ def test_builtin_none_no_L3(self):self.assertTrue(host_nonoverlap([],[self.builtin('none','null')])['passed'])
+ def test_bridge_null_refused(self):
+  with self.assertRaises(ValueError):host_nonoverlap([],[self.builtin('bridge','bridge')])
+ def test_unknown_null_driver_refused(self):
+  with self.assertRaises(ValueError):host_nonoverlap([],[self.builtin('unknown','plugin')])
+ def test_host_name_wrong_driver_refused(self):
+  with self.assertRaises(ValueError):host_nonoverlap([],[self.builtin('host','bridge')])
+ def test_remote_builtin_shape_refused(self):
+  with self.assertRaises(ValueError):host_nonoverlap([],[self.builtin(scope='swarm')])
+ def test_bridge_missing_IPAM_refused(self):
+  with self.assertRaises(ValueError):host_nonoverlap([],[{'Name':'bridge','Driver':'bridge'}])
+ def test_bridge_missing_Config_refused(self):
+  with self.assertRaises(ValueError):host_nonoverlap([],[{'Name':'bridge','Driver':'bridge','IPAM':{}}])
+ def test_bridge_empty_Config_refused(self):
+  with self.assertRaises(ValueError):host_nonoverlap([],[self.builtin('bridge','bridge',config=[])])
+ def test_IPAM_boolean_refused(self):
+  with self.assertRaises(ValueError):host_nonoverlap([],[self.builtin(config=False)])
+ def test_IPAM_member_missing_Subnet_refused(self):
+  with self.assertRaises(ValueError):host_nonoverlap([],[self.builtin('bridge','bridge',config=[{}])])
+ def test_exact_internal_two_peers(self):n,s,o,p=topology();self.assertTrue(actual_network(n,s,o,p)['passed'])
+ def test_specific_route_nonoverlap(self):self.assertTrue(host_nonoverlap([{'dst':'default'},{'dst':'172.18.0.0/16'}],[])['passed'])
+ def test_route_overlap(self):
+  with self.assertRaises(ValueError):host_nonoverlap([{'dst':'11.0.0.0/8'}],[])
+ def test_Docker_overlap(self):
+  with self.assertRaises(ValueError):host_nonoverlap([],[{'IPAM':{'Config':[{'Subnet':'11.253.250.0/24'}]}}])
+ def test_default_external_route(self):
+  with self.assertRaises(ValueError):kernel_routes('Iface Destination Gateway Flags RefCnt Use Metric Mask MTU Window IRTT\neth0 00000000 0100A8C0 0003 0 0 0 00000000 0 0 0\n','')
+ def test_no_default_route(self):self.assertTrue(kernel_routes('Iface Destination Gateway Flags RefCnt Use Metric Mask MTU Window IRTT\neth0 00FAFD0B 00000000 0001 0 0 0 F8FFFFFF 0 0 0\n','')['passed'])
+ def test_ipv6_external_default(self):
+  with self.assertRaises(ValueError):kernel_routes('Iface Destination Gateway Flags RefCnt Use Metric Mask MTU Window IRTT\n','0'*32+' 00 '+'0'*32+' 00 '+'0'*32+' 00000000 00000000 00000000 00000000 eth0')
+ def test_ownedHTTPmetadata(self):v=classify(frame());self.assertIs(v['DNS'],False);self.assertIs(v['outside_declared_namespace_peers'],False);self.assertNotIn('payload',v)
+ def test_DNSobserved(self):self.assertIs(classify(frame(dst=(127,0,0,11),port=53,proto=17))['DNS'],True)
+ def test_external_dest_observed(self):self.assertIs(classify(frame(dst=(8,8,8,8)))['outside_declared_namespace_peers'],True)
+ def test_fragment_observed(self):self.assertIs(classify(frame(fragment=0x2000))['fragmented'],True)
+ def test_unsupported_link_is_coverage_failure(self):self.assertTrue(invalid_for_scope(classify(b'\0'*12+b'\x81\x00'+b'vlan-data')))
+ def test_short_frame(self):self.assertEqual(classify(b'x')['kind'],'short-link')
+def negative(name,fn):
+ def test(self):
+  n,s,o,p=topology();fn(n,s,o)
+  with self.assertRaises(ValueError):actual_network(n,s,o,p)
+ setattr(Isolation,'test_topology_negative_'+name,test)
+for name,fn in [('notinternal',lambda n,s,o:n.update(Internal=False)),('extraendpoint',lambda n,s,o:n['Containers'].update(other={})),('ipmasq',lambda n,s,o:n['Options'].update({'com.docker.network.bridge.enable_ip_masquerade':'true'})),('IPv6',lambda n,s,o:n.update(EnableIPv6=True)),('publishedport',lambda n,s,o:s['HostConfig'].update(PortBindings={'5656/tcp':[{'HostPort':'5656'}]})),('extranetwork',lambda n,s,o:s['NetworkSettings']['Networks'].update(bridge={})),('proxy',lambda n,s,o:s['Config']['Env'].append('HTTP_PROXY=http://outside')),('wrongIP',lambda n,s,o:s['NetworkSettings']['Networks']['owned-fetch_owned'].update(IPAddress='11.253.250.4')),('wronglabel',lambda n,s,o:s['Config']['Labels'].update({'com.docker.compose.project':'other'}))]:negative(name,fn)
+if __name__=='__main__':unittest.main()

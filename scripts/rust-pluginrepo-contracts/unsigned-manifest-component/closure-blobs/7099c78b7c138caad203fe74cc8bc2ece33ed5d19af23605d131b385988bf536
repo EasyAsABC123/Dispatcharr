@@ -1,0 +1,132 @@
+"""Working Native unsigned Source24/fresh1/HTTPphysical controller; default seal only.
+NEVER invokes Source/Django. Actual runs require Root completed-input admission.
+"""
+import argparse,datetime,hashlib,json,os,re,threading,time,uuid
+from pathlib import Path
+from bounded_process import Collected
+from bounded_stop import collect as stop_collect
+from bootstrap_env import storage_environment,audit_helpers
+from network_guard import host_nonoverlap,actual_network
+from validate_native import validate,validate_import
+from validate_origin import validate_origin
+ROOT=Path(__file__).resolve().parents[1];IMAGE='ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f';NORMAL='plugin_repositories::manifest_fetch::peers::actual_unsigned_manifest_source_epoch_peer';PHYSICAL='plugin_repositories::manifest_fetch::peers::actual_owned_http_held_reply_peer'
+def need(ok,label):
+ if not ok:raise ValueError(label)
+def read(p):return json.loads(Path(p).read_bytes())
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def save(p,v):Path(p).write_text(json.dumps(v,indent=2,allow_nan=False)+'\n')
+def utc():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+def identity(pid):
+ try:return Path('/proc',str(pid),'stat').read_text().rsplit(')',1)[1].split()[19]
+ except FileNotFoundError:return None
+
+def check():
+ seal=read(ROOT/'seal.json');need(seal['state']=='COMPILED_CURRENT_UNSIGNED_SOURCE25_EXECUTION_REVIEW','CompletedCompiledAdmissionOnly');actual={str(p.relative_to(ROOT))for folder in ['controller','inputs','build']for p in(ROOT/folder).rglob('*')if p.is_file()and'__pycache__'not in p.parts};actual|={'plan.json','README.md','copy-receipt.json'};need(actual==set(seal['local_inputs']),'EveryLocalMountedInputBound')
+ for name,h in seal['local_inputs'].items():need(not Path(name).is_absolute()and'..'not in Path(name).parts and sha(ROOT/name)==h,'ExactInput:'+name)
+ expected=read(ROOT/'inputs/source-inputs.json');need(len(expected)==881 and sum(name.startswith('rust/')for name in expected)==876,'ExactCurrent881total876Rust5Coupled');need(sha(ROOT/'inputs/source-inputs.json')=='701550d8eedbc91f891e0eb65bb33f69c485eff749b66996d9067781a8456335','ExactRootCurrentMap')
+ for source in [ROOT/'source-root',Path(seal['Root_actual_compiled_source'])]:need({str(p.relative_to(source)):sha(p)for p in source.rglob('*')if p.is_file()}==expected,'ExactActualAndMaterializedSources')
+ need(all(not p.stat().st_mode&0o222 for p in(ROOT/'source-root').rglob('*')if p.is_file()),'OwnReadonlySourceRole');proof=read(ROOT/'build/outside-proof.json');receipts=read(ROOT/'build/actual-receipts.json');need(sha(ROOT/'build/actual-receipts.json')==proof['actual_build_receipts_sha256']=='2581e3fc65827672230a06dfd28b305149942dc71e6bbe8d2adffe3e543fd7cd','ExactRootActualReceipts');need(len(receipts['commands'])==5 and {r['stage']for r in receipts['commands']}=={'fmt','check','strict','defaults','store-no-run'}and all(type(r['actual_wait_exit'])is int and r['actual_wait_exit']==0 and r['source_inputs_unchanged']is True for r in receipts['commands']),'RootActualFiveWaits0')
+ elf=ROOT/'inputs/native-store-tests';need(sha(elf)==proof['ELF_sha256']=='17ca039d7a9235affb84e7bd7417079abb4890174e6e7465c5e77a7e36ee5340'and elf.stat().st_mode&0o111 and not elf.is_symlink(),'ExactCurrentExecutableELF');copy=read(ROOT/'copy-receipt.json');need(copy['copied_epoch']>=max(r['completed_epoch']for r in receipts['commands'])and copy['actual_list_only_exit']==0,'CopyAfterWaitsAndListOnly');need(all(name+': test'in(ROOT/'build/test-list.stdout').read_text()for name in [NORMAL,PHYSICAL]),'ExactIgnoredPeersPresent')
+ audit_helpers(ROOT,storage_environment());authority=read(ROOT/'inputs/authority.json')
+ for epoch,count in [('retained24',24),('fresh404',1)]:
+  binding=authority[epoch];need(binding['count']==count and sha(ROOT/'inputs'/binding['source_filename'])==binding['source_sha256']and sha(ROOT/'inputs'/binding['plan_filename'])==binding['plan_sha256'],'ExactUnmodifiedSourceEpoch:'+epoch)
+ return seal
+
+def execute(args,seal):
+ need(args.execute_reviewed_seal==sha(ROOT/'seal.json'),'ExactRootReviewedSeal');plan=read(ROOT/'plan.json');key=args.epoch if args.mode=='normal'else args.mode;need(key in plan['fresh_outputs'],'FiniteDeclaredMode');need(args.mode=='normal'or args.epoch=='retained24','PhysicalUsesDeclaredSourceExistingState');out=Path(args.output).absolute();need(str(out)==plan['fresh_outputs'][key]and not out.exists()and not any(p.is_symlink()for p in out.parents),'ExactFreshUnaliasedOutput');out.mkdir(mode=0o700);project='dispatcharr-unsigned-'+uuid.uuid4().hex[:10];database='rust_probe_pluginrepo_'+uuid.uuid4().hex[:10];env={k:v for k,v in os.environ.items()if not k.startswith(('GIT_','COMPOSE_','POSTGRES_','DATABASE_','REDIS_','CELERY_','DJANGO_'))};compose=['docker','compose','-p',project,'-f',str(out/'compose.json')];began=time.monotonic();cleanup_began=None;serial=0;jobs=[];long=None;cids={};claimed=False;stoplock=threading.Lock();stopdone=threading.Event();stopping=False;status=1;loopback=None;binding=read(ROOT/'inputs/authority.json')[args.epoch];report={'passed':False,'mode':args.mode,'epoch':args.epoch,'project':project,'database':database,'Source_application_runs':0,'Main_runs':0,'actual_business_requests':0,'processes':[],'service_host_identities':[]}
+ def remaining(cap):return min(cap,max(.01,(cleanup_began+90 if cleanup_began is not None else began+1200)-time.monotonic()))
+ def used():
+  value=sum(job.used for job in jobs)+sum((out/n).stat().st_size for n in ['owned-stop.stdout','owned-stop.stderr']if(out/n).exists());need(value<=(64 if cleanup_began is not None else 56)*1048576,'Aggregate56of64MiB');return value
+ def stop():
+  nonlocal stopping
+  if not claimed:return
+  with stoplock:first=not stopping;stopping=True
+  if not first:need(stopdone.wait(20)and report.get('stop',{}).get('acknowledged')is True,'EarlierStopAcknowledged');return
+  report['stop']={}
+  try:stop_collect(compose+['stop','--timeout','10'],env,out,report['stop'],limit=65536,timeout=remaining(15),save=save)
+  finally:stopdone.set()
+ def start(argv,kind='owned-CLI'):
+  nonlocal serial
+  need(serial<(96 if cleanup_began is not None else 64),'Finite64of96CLIReserve');used();serial+=1;tag=f'command-{serial:03d}';capacity=(64 if cleanup_began is not None else 56)*1048576-used()-65536;need(capacity>0,'BeforeSpawnOutputReserve');job=Collected(argv,env,min(8388608,capacity),stop,stdout_path=out/(tag+'.stdout'),stderr_path=out/(tag+'.stderr'));jobs.append(job);pid=job.process.pid;generation=identity(pid);row={'argv':argv,'kind':kind,'PID':pid,'starttime':generation,'PID_namespace':os.readlink('/proc/self/ns/pid'),'began_utc':utc()};report['processes'].append(row);need(type(generation)is str and generation.isdecimal()and int(generation)>0,'ActualKnownPIDBeforeAcceptance');save(out/(tag+'.json'),row);return job,row,tag
+ def finish(job,row,tag,timeout):
+  try:job.wait(remaining(timeout))
+  finally:row.update(actual_exit=job.process.poll(),invalid=job.invalid,physically_settled=job.physically_settled,readers_settled=not any(t.is_alive()for t in job.threads),writer_settled=job.writer is None or not job.writer.is_alive(),completed_utc=utc());save(out/(tag+'.json'),row)
+  used();need(type(row['actual_exit'])is int and row['actual_exit']==0 and row['invalid']is None and row['physically_settled']is True and row['readers_settled']is True and row['writer_settled']is True,'ActualWait0Pipes');return(out/(tag+'.stdout')).read_text()
+ def command(argv,timeout=120,kind='owned-CLI'):return finish(*start(argv,kind),timeout)
+ def run(*argv,timeout=120):return command(compose+list(argv),timeout)
+ def inventories():return{k:command(['docker',k,'ls']+(['--all','--no-trunc']if k=='container'else[])+['--filter','label=com.docker.compose.project='+project,'--format','{{.Name}}'if k=='volume'else'{{.ID}}'],15)for k in ['container','network','volume']}
+ def cleanup_start():
+  nonlocal cleanup_began
+  if cleanup_began is None:cleanup_began=time.monotonic();report['cleanup_began_utc']=utc()
+ def driver(action,label,db):run('exec','-T','-e','PLUGIN_REPO_DRIVER=owned-native-pluginrepo-only','-e','PLUGIN_REPO_ACTION='+action,'-e','PLUGIN_REPO_LABEL='+label,'-e','PLUGIN_REPO_DATABASE='+db,'-e','PLUGIN_UNSIGNED_EPOCH='+args.epoch,'baseline','/dispatcharrpy/bin/python','/native-tools/driver.py',timeout=45);return read(out/(label+'.json'))
+ def psql(sql):return run('exec','-T','-e','PGOPTIONS=-c default_transaction_read_only=on -c statement_timeout=5000','baseline','psql','-XAtq','-h','/var/run/postgresql','-U','dispatch','-d','postgres','-v','ON_ERROR_STOP=1','-c',sql,timeout=15)
+ def capture_service_hosts():
+  for service,cid in cids.items():
+   lines=command(['docker','top',cid,'-eo','pid'],15).splitlines();need(lines and lines[0].strip()=='PID','ActualDockerTopHostPIDHeader')
+   for line in lines[1:]:
+    need(line.strip().isdecimal(),'ActualDockerTopPositivePID');pid=int(line.strip());generation=identity(pid);need(type(generation)is str and generation.isdecimal()and int(generation)>0,'KnownActualServiceHostPIDGeneration');report['service_host_identities'].append({'service':service,'PID':pid,'starttime':generation,'scope':'DockerTop host namespace; do not compare guest PID numbers to host proc'})
+  need(report['service_host_identities'],'ActualServiceHostPIDInventory');save(out/'service-host-identities.json',report['service_host_identities'])
+ def wait(path,seconds):
+  deadline=time.monotonic()+seconds
+  while not(out/path).is_file():need(time.monotonic()<deadline and(long is None or long[0].process.poll()is None),'OwnedReadiness:'+path);used();time.sleep(.02)
+ try:
+  routes=json.loads(command(['ip','-j','-4','route','show','table','all'],15));ids=command(['docker','network','ls','--format','{{.ID}}'],15).splitlines();need(len(ids)<=256,'FiniteExistingNetworks');networks=json.loads(command(['docker','network','inspect']+ids,15))if ids else[];save(out/'host-nonoverlap.json',host_nonoverlap(routes,networks));need(not any(v.strip()for v in inventories().values()),'FreshOwnedProject')
+  proxy={name:''for name in ['HTTP_PROXY','HTTPS_PROXY','ALL_PROXY','http_proxy','https_proxy','all_proxy']};proxy.update(NO_PROXY='*',no_proxy='*');settings={**storage_environment(),**proxy,'PYTHONPATH':'/native-tools','FETCH_NETWORK_ROLE':'baseline'};common={'image':IMAGE,'pull_policy':'never','platform':'linux/amd64','dns':['127.0.0.1'],'sysctls':{'net.ipv6.conf.all.disable_ipv6':'1','net.ipv6.conf.default.disable_ipv6':'1'},'pids_limit':256};baseline={**common,'working_dir':'/tmp','entrypoint':['bash','/native-tools/start.sh'],'environment':settings,'volumes':[str(ROOT/'controller')+':/native-tools:ro',str(ROOT/'inputs/pg-init')+':/pg-bootstrap:ro',str(ROOT/'inputs')+':/native-inputs:ro',str(ROOT)+':/native-root:ro',str(ROOT/'source-root')+':/native-source:ro',str(out)+':/evidence'],'tmpfs':['/data:mode=1777,size=2147483648','/tmp:mode=1777,size=536870912'],'cpus':1,'mem_limit':'1536m','networks':{'owned':{'ipv4_address':'11.253.250.3'}}};origin={**common,'read_only':True,'entrypoint':['/dispatcharrpy/bin/python','/native-tools/origin.py','--mode',args.mode,'--plan','/native-inputs/'+binding['plan_filename'],'--output','/evidence'],'environment':{**proxy,'FETCH_NETWORK_ROLE':'origin'},'volumes':[str(ROOT/'controller')+':/native-tools:ro',str(ROOT/'inputs')+':/native-inputs:ro',str(out)+':/evidence'],'tmpfs':['/tmp:size=67108864'],'cpus':.25,'mem_limit':'128m','networks':{'owned':{'ipv4_address':'11.253.250.2'}}};save(out/'compose.json',{'services':{'baseline':baseline,'origin':origin},'networks':{'owned':{'internal':True,'enable_ipv6':False,'driver_opts':{'com.docker.network.bridge.enable_ip_masquerade':'false'},'ipam':{'config':[{'subnet':'11.253.250.0/29','gateway':'11.253.250.1'}]}}}});claimed=True;run('up','-d','--no-build','--pull','never','baseline','origin')
+  for service in ['baseline','origin']:found=run('ps','--all','-q',service).splitlines();need(len(found)==1,'ExactlyOneDeclaredService');cids[service]=found[0]
+  inspection=json.loads(command(['docker','inspect',*cids.values()],15));by={row['Id']:row for row in inspection};network=json.loads(command(['docker','network','inspect',project+'_owned'],15))[0];save(out/'initial-container-inspect.json',inspection);save(out/'actual-isolation.json',actual_network(network,by[cids['baseline']],by[cids['origin']],project));save(out/'owned-network-inspect.json',network)
+  for service in cids:run('exec','-T',service,'/dispatcharrpy/bin/python','/native-tools/network_snapshot.py',timeout=15)
+  wait('bootstrap-ready',180);wait('origin-ready.json',15);(out/'loopback').mkdir();loopback=start(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/native-tools/loopback_probe.py','--output','/evidence/loopback'],'actual-private-target-loopback-witness');wait('loopback/loopback-ready.json',15);run('exec','-T','baseline','/dispatcharrpy/bin/python','/native-tools/guest_preflight.py',timeout=30);run('exec','-T','baseline','test','-x','/native-inputs/native-store-tests',timeout=10);listing=run('exec','-T','baseline','/native-inputs/native-store-tests','--list','--format','terse',timeout=30);need(NORMAL+': test'in listing and PHYSICAL+': test'in listing,'ActualGuestReadExecutablePeerClosure');driver('default','default-before','dispatcharr');need(psql("SELECT count(*) FROM pg_database WHERE datname='"+database+"'").strip()=='0','OwnedDBAbsent');run('exec','-T','baseline','psql','-Xq','-h','/var/run/postgresql','-U','dispatch','-d','postgres','-v','ON_ERROR_STOP=1','-c','CREATE DATABASE '+database);run('exec','-T','baseline','psql','-Xq','-h','/var/run/postgresql','-U','dispatch','-d',database,'-v','ON_ERROR_STOP=1','-1','-f','/native-source/rust/crates/store/schema/original-1241b3-schema.sql');driver('import','import-existing-state',database);initialstate=driver('state','owned-before-peer',database);save(out/'initial-import-validation.json',validate_import(read(ROOT/'inputs'/binding['source_filename']),initialstate));need('not found'not in run('exec','-T','baseline','ldd','/native-inputs/native-store-tests',timeout=30),'ActualELFLoaderClosure')
+  pairs={'PLUGIN_UNSIGNED_AUTHORITY':'owned-unsigned-literal-http-only','PLUGIN_UNSIGNED_INPUTS':'/native-inputs','PLUGIN_UNSIGNED_OUTPUT':'/evidence','PLUGIN_UNSIGNED_SOURCE_SHA256':binding['source_sha256'],'PLUGIN_UNSIGNED_EPOCH':args.epoch,'POSTGRES_DB':database,'DATABASE_TEST_URL':'postgres://dispatch:playback-fixture-only@127.0.0.1:5432/'+database,'REDIS_TEST_URL':'redis://:playback-fixture-only@127.0.0.1:6379/1'}
+  if args.mode!='normal':pairs.update(PLUGIN_UNSIGNED_PHYSICAL_STAGE=args.mode,PLUGIN_UNSIGNED_PHYSICAL_ORIGIN='http://11.253.250.2:18080/physical/'+args.mode+'.json')
+  envargs=[part for key,value in pairs.items()for part in ['-e',key+'='+value]];long=start(compose+['exec','-T',*envargs,'baseline','/native-inputs/native-store-tests',NORMAL if args.mode=='normal'else PHYSICAL,'--exact','--ignored','--nocapture','--test-threads=1'],'actual-ignored-Native-peer')
+  if args.mode=='normal':wait('peer-ready.json',45);capture_service_hosts();save(out/'native-phase-cue.json',{'after_seed_before_first_API':True,'Native_only':True});run('exec','-T','-e','PLUGIN_UNSIGNED_COLLECT=owned-unsigned-real-router','-e','PLUGIN_UNSIGNED_EPOCH='+args.epoch,'-e','PLUGIN_REPO_DATABASE='+database,'baseline','/dispatcharrpy/bin/python','/native-tools/native_http.py',timeout=330);cleanup_start();run('exec','-T','baseline','touch','/evidence/peer-stop',timeout=10)
+  else:wait('native-held-observations.json',45);cleanup_start()
+  wait('pool-closed-ready.json',30);backends=json.loads(psql("SELECT COALESCE(json_agg(t),'[]')FROM(SELECT pid,state FROM pg_stat_activity WHERE datname='"+database+"')t"));save(out/'owned-backends-while-ELF-after-close.json',backends);need(backends==[],'ActualWhileELFBackendAbsence');run('exec','-T','baseline','touch','/evidence/backend-observer-done',timeout=10);finish(*long,20);report['actual_ELF_exit']=0;terminal=read(out/'peer-terminal.json');need(terminal['passed']is True,'ActualPeerAssertionsPassed');report['actual_business_requests']=terminal['actual_requests'];driver('state','owned-after-peer',database)
+  if args.mode=='normal':qualification=validate(read(ROOT/'inputs'/binding['source_filename']),read(out/'Native-unsigned-private.json'));save(out/'effect-validation.json',qualification);report['qualification']=qualification;origincheck=validate_origin(out,ROOT,args.epoch);save(out/'origin-validation.json',origincheck);report['origin_qualification']=origincheck
+  else:
+   from validate_physical import validate_physical
+   qualification=validate_physical(out,args.mode);save(out/'physical-validation.json',qualification);report['qualification']=qualification
+  report['passed']=True;status=0
+ except BaseException as error:report['error']={'type':type(error).__name__,'message':str(error),'full_bytes':len(str(error).encode()),'full_sha256':hashlib.sha256(str(error).encode()).hexdigest()};status=1
+ finally:
+  cleanup_start()
+  def cleanup(label,action):
+   nonlocal status
+   try:return action()
+   except BaseException as error:report.setdefault('cleanup_errors',[]).append({'label':label,'type':type(error).__name__,'message':str(error)});report['passed']=False;status=1
+  if cids.get('baseline'):
+   def default_after():driver('default','default-after','dispatcharr');need((out/'default-before.json').read_bytes()==(out/'default-after.json').read_bytes(),'Default6259And11LiteralByteEquality');return True
+   report['default6259_literal_equal']=cleanup('default-after',default_after)
+   if loopback is not None and(out/'loopback/loopback-ready.json').is_file():
+    def close_loopback():
+     ready=read(out/'loopback/loopback-ready.json');script="import json,os;from pathlib import Path;r=json.loads("+repr(json.dumps(ready))+");p=Path('/proc',str(r['pid']));assert os.readlink(p/'ns/pid')==r['PID_namespace'];assert(p/'stat').read_text().rsplit(')',1)[1].split()[19]==r['starttime'];os.kill(r['pid'],15)";run('exec','-T','baseline','/dispatcharrpy/bin/python','-c',script,timeout=10);finish(*loopback,10);terminal=read(out/'loopback/loopback-terminal.json');need(type(terminal['accepted_connections'])is int and terminal['accepted_connections']==0 and terminal['socket_closed']is True and terminal['stopped_by_signal']is True,'ActualZeroPrivateLoopbackContacts');return terminal
+    report['actual_loopback_witness']=cleanup('owned-loopback-stop',close_loopback)
+   if report.get('actual_ELF_exit')==0:
+    def after_elf():
+     value=json.loads(psql("SELECT COALESCE(json_agg(t),'[]')FROM(SELECT pid,state FROM pg_stat_activity WHERE datname='"+database+"')t"));save(out/'owned-backends-after-ELF.json',value);need(value==[],'ActualAfterELFBackendAbsence');return True
+    report['owned_backends_after_ELF']=cleanup('after-ELF-owned-backends',after_elf)
+  if long is not None and long[0].process.poll()is None:cleanup('stop-live-peer',stop)
+  if cids.get('origin'):
+   cleanup('normal-origin-stop',lambda:run('stop','--timeout','10','origin',timeout=15))
+   def origin_exit():
+    value=json.loads(command(['docker','inspect',cids['origin']],15));save(out/'origin-stopped-inspect.json',value);need(len(value)==1 and value[0]['Id']==cids['origin']and value[0]['State']['Running']is False and value[0]['State']['ExitCode']==0 and value[0]['State']['OOMKilled']is False,'ActualOriginExit0');terminal=read(out/'origin-terminal.json');need(terminal['server_closed']is True and terminal['stopped_by_signal']is True and terminal['valid_all']is True,'ActualOriginClosedNormal');return True
+   report['actual_origin_stopped_exit0']=cleanup('actual-origin-exit0',origin_exit)
+  if claimed:
+   for service in ['baseline','origin']:
+    if service not in cids:
+     def recover(service=service):
+      ids=run('ps','--all','-q',service,timeout=10).splitlines();need(len(ids)<=1,'AtMostOneExactPartialService')
+      if ids:cids[service]=ids[0]
+     cleanup('recover-partial-'+service,recover)
+   cleanup('logs',lambda:run('logs','--no-color',timeout=15));cleanup('down',lambda:run('down','--volumes','--remove-orphans','--timeout','10',timeout=35));report['remaining']=cleanup('fresh-inventories',inventories)
+  for service,cid in cids.items():cleanup('exactCID-'+service,lambda cid=cid:need(not command(['docker','container','ls','--all','--no-trunc','--filter','id='+cid,'--format','{{.ID}}'],15).strip(),'FormerExactCIDAbsent'))
+  for job,row,tag in [(job,row,f'command-{i:03d}')for i,(job,row)in enumerate(zip(jobs,report['processes']),1)]:
+   if not job.physically_settled:cleanup('postdown-wait-'+tag,lambda job=job,row=row,tag=tag:finish(job,row,tag,5))
+  report['actual_command_count']=serial;report['all_commands_settled']=all(job.physically_settled and job.process.poll()is not None and not any(t.is_alive()for t in job.threads)and(job.writer is None or not job.writer.is_alive())for job in jobs);report['known_PID_generations_absent_in_recorded_namespace']=all(identity(row['PID'])!=row['starttime']for row in report['processes']);report['service_host_original_generations_absent']=all(identity(row['PID'])!=row['starttime']for row in report['service_host_identities']);report['cleanup_elapsed_seconds']=time.monotonic()-cleanup_began
+  if not report['service_host_original_generations_absent']or not report['all_commands_settled']or not report['known_PID_generations_absent_in_recorded_namespace']or report['cleanup_elapsed_seconds']>90 or report.get('remaining')is None or any(v.strip()for v in report['remaining'].values()):status=1;report['passed']=False
+  report['actual_controller_exit']=status;report['settled_utc']=utc();save(out/'execution-report.json',report)
+ return status
+if __name__=='__main__':
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--execute-reviewed-seal');p.add_argument('--mode',choices=['normal'],default='normal');p.add_argument('--epoch',choices=['retained24','fresh404'],default='retained24');p.add_argument('--output');args=p.parse_args();seal=check()
+ if args.execute_reviewed_seal is None:print(json.dumps({'passed':True,'read_only':True,'app_runs':0}));raise SystemExit(0)
+ raise SystemExit(execute(args,seal))

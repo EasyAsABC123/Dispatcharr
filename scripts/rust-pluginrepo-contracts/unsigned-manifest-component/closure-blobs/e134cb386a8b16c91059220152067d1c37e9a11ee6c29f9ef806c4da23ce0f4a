@@ -1,0 +1,56 @@
+"""UNEXECUTED passive source-namespace packet witness; no payload interception.
+No Source functions are patched; all TCP/Redis/Postgres bytes still go to owners.
+"""
+import argparse,hashlib,ipaddress,json,os,select,signal,socket,struct,time
+from pathlib import Path
+
+def classify(frame):
+ if len(frame)<14:return {'kind':'short-link'}
+ ethertype=struct.unpack('!H',frame[12:14])[0]
+ if ethertype==0x0806:return {'kind':'ARP'}
+ if ethertype==0x0800:
+  ip=frame[14:]
+  if len(ip)<20 or ip[0]>>4!=4:return {'kind':'short-IPv4'}
+  header=(ip[0]&15)*4
+  if header<20 or len(ip)<header:return {'kind':'bad-IPv4-header'}
+  src=str(ipaddress.ip_address(ip[12:16]));dst=str(ipaddress.ip_address(ip[16:20]));proto=ip[9];fragment=struct.unpack('!H',ip[6:8])[0]&0x3fff;ports=None
+  if proto in(6,17)and fragment==0 and len(ip)>=header+4:ports=list(struct.unpack('!HH',ip[header:header+4]))
+  allowed=all(ipaddress.ip_address(v).is_loopback or v in('11.253.250.2','11.253.250.3')for v in(src,dst));return {'kind':'IPv4','source':src,'destination':dst,'protocol':proto,'ports':ports,'DNS':ports is not None and 53 in ports,'fragmented':fragment!=0,'outside_declared_namespace_peers':not allowed}
+ if ethertype==0x86dd:
+  ip=frame[14:]
+  if len(ip)<40:return {'kind':'short-IPv6'}
+  src=str(ipaddress.ip_address(ip[8:24]));dst=str(ipaddress.ip_address(ip[24:40]));proto=ip[6];ports=list(struct.unpack('!HH',ip[40:44]))if proto in(6,17)and len(ip)>=44 else None;return {'kind':'IPv6','source':src,'destination':dst,'protocol':proto,'ports':ports,'DNS':ports is not None and 53 in ports,'outside_declared_namespace_peers':src!='::1'or dst!='::1','unsupported_extension_headers':proto not in(6,17,58)}
+ return {'kind':'other-link','ethertype':ethertype}
+
+def invalid_for_scope(row):
+ return bool(row.get('DNS')or row.get('outside_declared_namespace_peers')or row.get('fragmented')or row.get('unsupported_extension_headers')or row['kind'].startswith(('short','bad'))or row['kind']=='other-link')
+
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);a=p.parse_args();out=a.output
+ if not out.is_dir()or(out/'network-observer-ready.json').exists():raise ValueError('FreshOwnedObserverOutput')
+ sock=socket.socket(socket.AF_PACKET,socket.SOCK_RAW,socket.htons(3));sock.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF,1048576);sock.setblocking(False);began=time.monotonic();counts={};exceptions=[];packets=0;running=True
+ def stop(*_):
+  nonlocal running
+  running=False
+ signal.signal(signal.SIGTERM,stop);signal.signal(signal.SIGINT,stop)
+ ready={'pid':os.getpid(),'PID_namespace':os.readlink('/proc/self/ns/pid'),'network_namespace':os.readlink('/proc/self/ns/net'),'starttime':Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19],'passive_AF_PACKET_all_source_interfaces':True,'no_Source_import_or_method_patch':True,'started_epoch':time.time()};(out/'network-observer-ready.json').write_text(json.dumps(ready,indent=2)+'\n')
+ invalid=None;drained=False
+ def receive_one():
+  nonlocal packets
+  frame,addr=sock.recvfrom(65536);packets+=1;row=classify(frame);counts[row['kind']]=counts.get(row['kind'],0)+1
+  if invalid_for_scope(row):
+   if len(exceptions)>=128:raise ValueError('NetworkException128Capacity')
+   exceptions.append({'packet_ordinal':packets,'interface':addr[0],'epoch':time.time(),'metadata':row,'frame_sha256':hashlib.sha256(frame).hexdigest(),'frame_bytes':len(frame),'raw_payload_retained':False})
+ try:
+  while running and packets<1000000 and time.monotonic()-began<=900:
+   if select.select([sock],[],[],.02)[0]:receive_one()
+  # Stop only after the Source process/default audits have settled. Drain queued
+  # packets rather than treating an empty exception list as complete coverage.
+  deadline=time.monotonic()+1
+  while packets<1000000 and time.monotonic()<deadline:
+   if not select.select([sock],[],[],.1)[0]:drained=True;break
+   receive_one()
+ except BaseException as error:invalid={'type':type(error).__name__,'message':str(error)}
+ finally:
+  kernel=struct.unpack('II',sock.getsockopt(263,6,8));sock.close();complete=invalid is None and drained and packets<1000000 and time.monotonic()-began<=901 and kernel[0]==packets and kernel[1]==0;report={'capture_complete':complete,'observed_packets':packets,'counts':counts,'exceptions':exceptions,'kernel_received_packets':kernel[0],'kernel_drops':kernel[1],'kernel_packet_count_equals_observed':kernel[0]==packets,'queued_packet_drain_observed':drained,'invalid':invalid,'socket_closed':True,'stopped_by_signal':not running,'started_epoch':ready['started_epoch'],'terminal_epoch':time.time(),'elapsed_seconds':time.monotonic()-began,'PID_namespace':ready['PID_namespace'],'network_namespace':ready['network_namespace'],'scope':'source network namespace; no DNS/external contacts only if zero exceptions AND drops0 AND complete. No Internet reachability probe.'};(out/'network-observer-terminal.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
+if __name__=='__main__':main()

@@ -1,0 +1,92 @@
+--- definition1/origin.py
++++ definition2/origin.py
+@@ -25,7 +25,7 @@
+   def setup(self):self.request.settimeout(2);super().setup()
+   def log_message(self,*args):pass
+   def do_GET(self):
+-   row={'ordinal':len(rows)+1,'method':'GET','path':self.path,'peer':list(self.client_address),'began_utc_epoch':time.time(),'headers':list(self.headers.items()),'valid':False}
++   row={'ordinal':len(rows)+1,'method':'GET','path':self.path,'peer':list(self.client_address),'began_utc_epoch':time.time(),'headers':list(self.headers.items()),'valid':False,'phase_cue_seen':phase_began is not None}
+    try:
+     if self.client_address[0]!=origin['Source_ip']or len(rows)>=32 or len(self.headers.as_bytes())>8192 or self.headers.get('Transfer-Encoding')is not None or self.headers.get('Content-Length','0')!='0':raise ValueError('OnlyActualOwnedSourceBoundedGET')
+     counts[self.path]+=1;v,body=response(plan,self.path,counts[self.path]);row.update(status=v['status'],content_type=v['content_type'],body_hex=body.hex(),body_sha256=hashlib.sha256(body).hexdigest(),body_bytes=len(body),path_occurrence=counts[self.path],valid=True)
+@@ -40,13 +40,18 @@
+    with (out/'origin-accepts.jsonl').open('a')as f:f.write(json.dumps(record)+'\n')
+    return stream,peer
+  server=Server((origin['ip'],origin['port']),Handler);server.timeout=.1;server.socket.settimeout(.1)
+- running=True
++ running=True;phase_began=None;cue=out.parent/'source-phase-cue.json'
+  def stop(*_):
+   nonlocal running
+   running=False
+  signal.signal(signal.SIGTERM,stop);signal.signal(signal.SIGINT,stop)
+  ready={'pid':os.getpid(),'PID_namespace':os.readlink('/proc/self/ns/pid'),'starttime':Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19],'address':[origin['ip'],origin['port']],'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest(),'monotonic_started':began,'Source_or_Django_imports':False};(out/'origin-ready.json').write_text(json.dumps(ready,indent=2)+'\n')
+  try:
+-  while running and len(rows)<32 and getattr(server,'accepted_count',0)<32 and time.monotonic()-began<=300:server.handle_request()
+- finally:server.server_close();ledger.close();(out/'origin-terminal.json').write_text(json.dumps({'requests':len(rows),'valid_all':all(x['valid']for x in rows),'counts':dict(counts),'elapsed_seconds':time.monotonic()-began,'server_closed':True,'PID_namespace':ready['PID_namespace']},indent=2)+'\n')
++  while running and len(rows)<32 and getattr(server,'accepted_count',0)<32:
++   if phase_began is None and cue.is_file():
++    if cue.is_symlink():raise ValueError('OwnedPhaseCueNoSymlink')
++    phase_began=time.monotonic()
++   if (phase_began is None and time.monotonic()-began>180)or(phase_began is not None and time.monotonic()-phase_began>300):break
++   server.handle_request()
++ finally:server.server_close();ledger.close();(out/'origin-terminal.json').write_text(json.dumps({'requests':len(rows),'valid_all':all(x['valid']for x in rows),'counts':dict(counts),'setup_elapsed_seconds':None if phase_began is None else phase_began-began,'phase_elapsed_seconds':None if phase_began is None else time.monotonic()-phase_began,'elapsed_seconds':time.monotonic()-began,'server_closed':True,'PID_namespace':ready['PID_namespace']},indent=2)+'\n')
+ if __name__=='__main__':main()
+--- definition1/loopback_probe.py
++++ definition2/loopback_probe.py
+@@ -5,7 +5,7 @@
+ def main():
+  p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);a=p.parse_args();out=a.output
+  if not out.is_dir()or(out/'loopback-ready.json').exists():raise ValueError('FreshProbeOutput')
+- listener=socket.socket();listener.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1);listener.bind(('127.0.0.1',18080));listener.listen(4);listener.setblocking(False);began=time.monotonic();rows=[];running=True
++ listener=socket.socket();listener.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1);listener.bind(('127.0.0.1',18080));listener.listen(4);listener.setblocking(False);began=time.monotonic();rows=[];running=True;phase_began=None;cue=out.parent/'source-phase-cue.json'
+  def stop(*_):
+   nonlocal running
+   running=False
+@@ -13,14 +13,18 @@
+  ready={'pid':os.getpid(),'starttime':Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19],'PID_namespace':os.readlink('/proc/self/ns/pid'),'address':['127.0.0.1',18080],'actual_listener_not_Source_method_patch':True};(out/'loopback-ready.json').write_text(json.dumps(ready,indent=2)+'\n')
+  ledger=(out/'loopback-contacts.jsonl').open('x')
+  try:
+-  while running and len(rows)<8 and time.monotonic()-began<=300:
++  while running and len(rows)<8:
++   if phase_began is None and cue.is_file():
++    if cue.is_symlink():raise ValueError('OwnedPhaseCueNoSymlink')
++    phase_began=time.monotonic()
++   if (phase_began is None and time.monotonic()-began>180)or(phase_began is not None and time.monotonic()-phase_began>300):break
+    if not select.select([listener],[],[],.1)[0]:continue
+-   client,peer=listener.accept();client.settimeout(.25);row={'ordinal':len(rows)+1,'peer':list(peer),'accepted_epoch':time.time(),'unexpected_policy_contact':True};raw=b''
++   client,peer=listener.accept();client.settimeout(.25);row={'ordinal':len(rows)+1,'peer':list(peer),'accepted_epoch':time.time(),'unexpected_policy_contact':True,'phase_cue_seen':phase_began is not None};raw=b''
+    try:
+     raw=client.recv(8193)
+     if len(raw)>8192:raise ValueError('Probe8KiBReadCapacity')
+     client.sendall(b'HTTP/1.0 403 Forbidden\r\nContent-Length: 0\r\nConnection: close\r\n\r\n');row['refusal_write_completed']=True
+    except BaseException as error:row.update(error_type=type(error).__name__,error_message=str(error))
+    finally:client.close();row.update(received_hex=raw.hex(),received_bytes=len(raw),received_sha256=hashlib.sha256(raw).hexdigest(),closed_epoch=time.time());ledger.write(json.dumps(row,allow_nan=False)+'\n');ledger.flush();rows.append(row)
+- finally:listener.close();ledger.close();(out/'loopback-terminal.json').write_text(json.dumps({'accepted_connections':len(rows),'expected_zero_is_unmeasured_until_capture':True,'socket_closed':True,'elapsed_seconds':time.monotonic()-began},indent=2)+'\n')
++ finally:listener.close();ledger.close();(out/'loopback-terminal.json').write_text(json.dumps({'accepted_connections':len(rows),'expected_zero_is_unmeasured_until_capture':True,'socket_closed':True,'setup_elapsed_seconds':None if phase_began is None else phase_began-began,'phase_elapsed_seconds':None if phase_began is None else time.monotonic()-phase_began,'elapsed_seconds':time.monotonic()-began},indent=2)+'\n')
+ if __name__=='__main__':main()
+--- definition1/plan.json
++++ definition2/plan.json
+@@ -464,7 +464,9 @@
+       ]
+     },
+     "TCP_accept_ledger_required": true,
+-    "max_header_read_seconds": 2
++    "max_header_read_seconds": 2,
++    "phase_start": "owned source-phase-cue.json after seed, before first API request",
++    "prephase_setup_deadline_seconds": 180
+   },
+   "seed": {
+     "repos": {
+@@ -543,6 +545,10 @@
+     "actual_accepts_and_received_bytes_preserved": true,
+     "phase_seconds": 300,
+     "max_accepts": 8,
+-    "reason": "an empty remote origin ledger alone cannot prove there was no attempted loopback connection"
+-  }
++    "reason": "an empty remote origin ledger alone cannot prove there was no attempted loopback connection",
++    "phase_start": "owned source-phase-cue.json after seed, before first API request",
++    "prephase_setup_deadline_seconds": 180
++  },
++  "original_definition1_preserved": true,
++  "definition2_change": "Setup-only align300s origin/probe phase with unchanged Source300 afterseed; early contacts remain captured and invalid; no body/role/order/route/Source15s timeout change"
+ }

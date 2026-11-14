@@ -1,0 +1,64 @@
+"""Pure post-capture witness corruptions, with no sockets/containers/apps."""
+import copy,collections,hashlib,json,tempfile,unittest
+from loopback_probe import terminal_record
+from origin import response
+from pathlib import Path
+from network_guard import observed_isolation
+ROOT=Path(__file__).resolve().parents[1];PLAN=json.loads((ROOT/'inputs/plan.json').read_text())
+def fixture(root):
+ def write(path,value):
+  p=root/path;p.parent.mkdir(exist_ok=True,parents=True);p.write_text(json.dumps(value))
+ write('plugin-repositories-private.json',{'phase_started_utc':'2026-11-13T00:00:01+00:00','phase_completed_utc':'2026-11-13T00:00:02+00:00'})
+ lifetime={'terminal_epoch':1794528003,'stopped_by_signal':True,'phase_cue_seen':True}
+ write('network/network-observer-terminal.json',{**lifetime,'started_epoch':1794528000,'capture_complete':True,'kernel_drops':0,'kernel_packet_count_equals_observed':True,'queued_packet_drain_observed':True,'exceptions':[],'socket_closed':True,'observed_packets':128,'kernel_received_packets':128,'invalid':None,'counts':{'IPv4':128}})
+ write('loopback/loopback-terminal.json',terminal_record(0,0.,1.,False,3.,1794528003.))
+ paths=[path for row in PLAN['cases']for path in row['planned_origin_contact']];write('origin/origin-terminal.json',{**lifetime,'server_closed':True,'valid_all':True,'requests':len(paths),'counts':dict(collections.Counter(paths))})
+ occurrences=collections.Counter();rows=[]
+ for i,path in enumerate(paths,1):
+  occurrences[path]+=1;value,body=response({'origin':PLAN['origin_definition']},path,occurrences[path]);rows.append({'ordinal':i,'method':'GET','path':path,'path_occurrence':occurrences[path],'status':value['status'],'content_type':value['content_type'],'body_hex':body.hex(),'body_bytes':len(body),'body_sha256':hashlib.sha256(body).hexdigest(),'location':value.get('location'),'valid':True,'write_completed':True,'peer':['11.253.250.3',40000],'phase_cue_seen':True})
+ (root/'origin/origin-requests.jsonl').write_text(''.join(json.dumps(row)+'\n'for row in rows));(root/'origin/origin-accepts.jsonl').write_text(''.join(json.dumps({'peer':['11.253.250.3',40000]})+'\n'for _ in paths))
+
+class Witness(unittest.TestCase):
+ def test_synthetic_witness_baseline_only(self):
+  with tempfile.TemporaryDirectory()as d:fixture(Path(d));self.assertTrue(observed_isolation(d,PLAN)['passed'])
+ def corrupt_origin(self,change):
+  with tempfile.TemporaryDirectory()as d:
+   root=Path(d);fixture(root);path=root/'origin/origin-requests.jsonl';rows=[json.loads(line)for line in path.read_text().splitlines()];change(rows);path.write_text(''.join(json.dumps(row)+'\n'for row in rows))
+   with self.assertRaises((ValueError,KeyError,TypeError)):observed_isolation(root,PLAN)
+ def test_wrong_actual_origin_body(self):self.corrupt_origin(lambda rows:rows[0].update(body_hex='7b7d'))
+ def test_wrong_origin_status(self):self.corrupt_origin(lambda rows:rows[0].update(status=418))
+ def test_wrong_origin_content_type(self):self.corrupt_origin(lambda rows:rows[0].update(content_type='text/html'))
+ def test_origin_bool_occurrence(self):self.corrupt_origin(lambda rows:rows[0].update(path_occurrence=True))
+ def test_extra_origin_contact(self):self.corrupt_origin(lambda rows:rows.append(copy.deepcopy(rows[-1])))
+ def test_missing_origin_contact(self):self.corrupt_origin(lambda rows:rows.pop())
+ def test_origin_non_Source_peer(self):self.corrupt_origin(lambda rows:rows[0].update(peer=['11.253.250.4',40000]))
+
+def negative(name,file,key,value):
+ def test(self):
+  with tempfile.TemporaryDirectory()as d:
+   root=Path(d);fixture(root);path=root/file;data=json.loads(path.read_text());data[key]=value;path.write_text(json.dumps(data))
+   with self.assertRaises((ValueError,KeyError,TypeError)):observed_isolation(root,PLAN)
+ setattr(Witness,'test_reject_'+name,test)
+for name,file,key,value in [
+ ('untyped_drop','network/network-observer-terminal.json','kernel_drops',False),
+ ('kernel_literal_count_mismatch','network/network-observer-terminal.json','kernel_received_packets',129),
+ ('loopback_bool_count','loopback/loopback-terminal.json','accepted_connections',False),
+ ('origin_wrong_count','origin/origin-terminal.json','requests',17),
+ ('packet_drop','network/network-observer-terminal.json','kernel_drops',1),
+ ('incomplete_observer','network/network-observer-terminal.json','capture_complete',False),
+ ('unread_queue','network/network-observer-terminal.json','queued_packet_drain_observed',False),
+ ('kernel_count_gap','network/network-observer-terminal.json','kernel_packet_count_equals_observed',False),
+ ('DNS_or_external_contact','network/network-observer-terminal.json','exceptions',[{'DNS':True}]),
+ ('early_observer_exit','network/network-observer-terminal.json','terminal_epoch',1794528001),
+ ('observer_late_start','network/network-observer-terminal.json','started_epoch',1794528002),
+ ('observer_nan','network/network-observer-terminal.json','terminal_epoch',float('nan')),
+ ('observer_bool','network/network-observer-terminal.json','terminal_epoch',True),
+ ('observer_no_signal','network/network-observer-terminal.json','stopped_by_signal',False),
+ ('loopback_contact','loopback/loopback-terminal.json','accepted_connections',1),
+ ('loopback_expired_before_requests','loopback/loopback-terminal.json','terminal_epoch',1794528000),
+ ('loopback_no_cue','loopback/loopback-terminal.json','phase_cue_seen',False),
+ ('origin_bad_write','origin/origin-terminal.json','valid_all',False),
+ ('origin_no_cue','origin/origin-terminal.json','phase_cue_seen',False),
+ ('origin_early','origin/origin-terminal.json','terminal_epoch',1794528000),
+]:negative(name,file,key,value)
+if __name__=='__main__':unittest.main()

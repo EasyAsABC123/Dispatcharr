@@ -1,0 +1,27 @@
+{
+  "origin": {
+    "internal_Docker_only": true,
+    "subnet": "11.253.250.0/29",
+    "ip": "11.253.250.2",
+    "Source_ip": "11.253.250.3",
+    "port": 18080,
+    "Internet_or_external_DNS": false,
+    "literal_public_address_class_not_public_exposure": true,
+    "max_requests": 32,
+    "max_body_bytes": 4096,
+    "phase_seconds": 300,
+    "fixtures": {
+      "/create-notfound.json": [
+        {
+          "status": 404,
+          "content_type": "application/json",
+          "body": "{\"detail\":\"owned not found\"}"
+        }
+      ]
+    },
+    "TCP_accept_ledger_required": true,
+    "max_header_read_seconds": 2,
+    "phase_start": "owned source-phase-cue.json after seed, before first API request",
+    "prephase_setup_deadline_seconds": 180
+  }
+}

@@ -1,0 +1,46 @@
+"""Socket-free exact capture provenance and guest-mounted dependency closure."""
+import base64,csv,hashlib,io,json,os,re
+from pathlib import Path
+IMAGE='ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'
+def need(ok,label):
+ if not ok:raise ValueError(label)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def safe_relative(value):
+ need(type(value)is str and value and not Path(value).is_absolute()and '..'not in Path(value).parts,'SafeClosedRelativeInput');return value
+
+def provenance(root):
+ root=Path(root);reports={}
+ for name,count,total in [('fetch43',43,761807),('distinfo4',4,18025),('licenses3',3,11273)]:
+  folder=root/'inputs/dependency-provenance'/name;report=json.loads((folder/'capture-report.json').read_text());need(report['passed']is True and report['data_capture_complete']is True and type(report['actual_controller_exit'])is int and report['actual_controller_exit']==0,'ActualDataCaptureComplete:'+name);need(report['image']==IMAGE and report['container_started']is False and report['program_executions']==0 and report['volumes_created']==[],'NeverStartedExactPinnedImage:'+name);need(len(report['rows'])==count and sum(row['bytes']for row in report['rows'])==total,'ExactCaptureCountBytes:'+name)
+  need(report['exact_owned_cleanup']is True and report['all_known_host_PIDs_absent']is True and type(report['cleanup_elapsed_seconds'])in(int,float)and report['cleanup_elapsed_seconds']<=90,'ActualCaptureOwnedCleanup:'+name)
+  for row in report['rows']:
+   raw=(folder/safe_relative(row['path'])).read_bytes();need(len(raw)==row['bytes']and sha(raw)==row['sha256'],'ExactCapturedBytes:'+row['path'])
+  reports[name]=report
+ actual_deps=json.loads((root/'inputs/actual-dependencies.json').read_text());by_runtime={row['runtime_path']:row for row in actual_deps}
+ for row in reports['fetch43']['rows']:
+  actual=by_runtime.get(row['runtime_path']);need(actual is not None and actual['sha256']==row['sha256']and actual['bytes']==row['bytes'],'ActualRuntimeModuleBoundToCapturedBytes:'+row['runtime_path'])
+ records={}
+ for row in reports['distinfo4']['rows']:
+  if row['path'].endswith('/RECORD'):
+   for filename,digest,size in csv.reader(io.StringIO((root/'inputs/dependency-provenance/distinfo4'/row['path']).read_text())):
+    if digest:need(digest.startswith('sha256='),'ExactWheelSHA256Algorithm');records[filename]=(base64.urlsafe_b64decode(digest.split('=',1)[1]+'===').hex(),int(size))
+ for name in ('fetch43','licenses3'):
+  for row in reports[name]['rows']:
+   if '/site-packages/'not in row['path']:continue # Four stdlib files have separate pinned-image authority, not wheel provenance.
+   relative=row['path'].split('/site-packages/',1)[1];need(records.get(relative)==(row['sha256'],row['bytes']),'InstalledWheelRECORDSHAAndSize:'+relative)
+ return {'passed':True,'exact_captured_files':50,'package_source_files_RECORD_verified':39,'license_files_RECORD_verified':3,'stdlib4_separate_image_authority_no_public_license_claim':True}
+
+def mounted(root):
+ root=Path(root);manifest=json.loads((root/'inputs/runtime-mounted-inputs.json').read_text());need(type(manifest)is dict and len(manifest)>120,'FiniteExplicitMountedClosure')
+ for guest,row in manifest.items():
+  prefix='/plugin-tools/'if guest.startswith('/plugin-tools/')else'/plugin-inputs/'if guest.startswith('/plugin-inputs/')else None;need(prefix is not None,'OnlyDeclaredGuestMounts');relative=safe_relative(guest.removeprefix(prefix));path=root/('controller'if prefix=='/plugin-tools/'else'inputs')/relative;need(path.is_file()and not path.is_symlink(),'ActualRegularMountedInput:'+guest);raw=path.read_bytes();need(len(raw)==row['bytes']and sha(raw)==row['sha256'],'ExactGuestMountedBytes:'+guest)
+ for guest in ['/plugin-inputs/schema62-authority.json','/plugin-inputs/plan.json','/plugin-inputs/actual-dependencies.json','/plugin-inputs/original-inputs.json','/plugin-inputs/definition3/plan.json']:
+  need(guest in manifest,'DeclaredDynamicRead:'+guest)
+ # Every real entrypoint/runpy tool, and all imported sibling modules, is covered;
+ # a runtime path cannot be satisfied merely by a similarly named host file.
+ for file in(root/'controller').glob('*'):
+  if file.is_file()and file.suffix in('.py','.sh'):need('/plugin-tools/'+file.name in manifest,'ClosedRuntimeTool:'+file.name)
+ return {'passed':True,'exact_guest_mounted_files':len(manifest),'no_Django_or_Source_imports':True}
+
+def owned_helper_signal(ready,proc_root=Path('/proc')):
+ pid=ready['pid'];start=ready['starttime'];need(type(pid)is int and pid>1 and type(start)is str and start.isdecimal()and int(start)>0,'TypedActualOwnedHelperIdentity');need(re.fullmatch(r'pid:\[\d+\]',ready['PID_namespace'])is not None,'ActualPIDNamespaceIdentity');path=Path(proc_root)/str(pid);need(os.readlink(path/'ns/pid')==ready['PID_namespace'],'SameOwnedPIDNamespaceBeforeSignal');need((path/'stat').read_text().rsplit(')',1)[1].split()[19]==start,'SameActualHelperGenerationBeforeSignal');return pid

@@ -1,0 +1,80 @@
+{
+  "source_map_sha256": "b304327485c8480b6e9d75e870ed31e52de898f7e1babef7c79f8758bf6758d6",
+  "commands": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 4,
+      "PID_scope": "tool namespace, not host absence proof",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794622135.0344627,
+      "completed_epoch": 1794622137.1182616,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "strict-store",
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "dispatcharr-store",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 31,
+      "PID_scope": "tool namespace, not host absence proof",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794622137.1568844,
+      "completed_epoch": 1794622151.5007913,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "fetch-focused",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--offline",
+        "--locked",
+        "plugin_repository_fetch"
+      ],
+      "PID": 241,
+      "PID_scope": "tool namespace, not host absence proof",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794622151.5399568,
+      "completed_epoch": 1794622175.8845322,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "store-no-run",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--offline",
+        "--locked",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "PID": 345,
+      "PID_scope": "tool namespace, not host absence proof",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794622175.924291,
+      "completed_epoch": 1794622176.1045525,
+      "source_inputs_unchanged": true
+    }
+  ]
+}

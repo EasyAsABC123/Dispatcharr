@@ -1,0 +1,129 @@
+"""UNEXECUTED Source fresh uniqueURL-fetch404 supplement1; default complete-seal checks only.
+No app entry is permitted until actual deps/licenses/network plans are reviewed.
+"""
+import argparse,datetime,hashlib,json,os,re,subprocess,threading,time,uuid
+from pathlib import Path
+from bounded_process import Collected
+from bounded_stop import collect as stop_collect
+from network_guard import host_nonoverlap,actual_network,observed_isolation
+from effects import validate
+from input_guards import provenance,mounted
+from tooling_guard import assert_inputs
+ROOT=Path(__file__).resolve().parents[1];IMAGE='ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'
+def need(ok,label):
+ if not ok:raise ValueError(label)
+def read(p):return json.loads(Path(p).read_bytes())
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def save(p,v):Path(p).write_text(json.dumps(v,indent=2,allow_nan=False)+'\n')
+def now():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+def identity(pid):
+ try:return Path('/proc',str(pid),'stat').read_text().rsplit(')',1)[1].split()[19]
+ except FileNotFoundError:return None
+
+def check():
+ seal=read(ROOT/'seal.json');need(seal['state']=='SEALED_FRESH_SOURCE_CREATE_FETCH404_SUPPLEMENT1','NoWorkingOrDefinitionOnlyAppAdmission');actual={str(p.relative_to(ROOT))for folder in('controller','inputs')for p in(ROOT/folder).rglob('*')if p.is_file()and'__pycache__'not in p.parts};actual|={'README.md','execution-plan.json'};need(actual==set(seal['local_inputs']),'ClosedEveryProgramInput')
+ for name,h in seal['local_inputs'].items():need(not(ROOT/name).is_symlink()and sha(ROOT/name)==h,'ExactRegularSealedInput:'+name)
+ provenance(ROOT);mounted(ROOT);assert_inputs(os.environ,read(ROOT/'inputs/tooling.json'))
+ deps=read(ROOT/'inputs/actual-dependencies.json');need(len(deps)==110,'Actual67Plus43NoInventedDependencies')
+ for row in deps:need(sha(ROOT/row['path'])==row['sha256'],'ExactActualDependency:'+row['path'])
+ need(sha(ROOT/'inputs/original-source.tar')=='f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff','ExactOriginal1241Archive');need(read(ROOT/'inputs/plan.json')['cases']==read(ROOT/'execution-plan.json')['literal1case'],'OneLiteralCasePlan');return seal
+
+def execute(args,seal):
+ need(args.execute_reviewed_seal==sha(ROOT/'seal.json'),'ExactReviewedSeal');plan=read(ROOT/'execution-plan.json');need(args.output is not None and str(args.output.absolute())==plan['fresh_output']and not args.output.exists(),'ExactFreshOnceOutput');out=args.output.absolute();out.mkdir(mode=0o700);source=out/'source';source.mkdir();nonce=uuid.uuid4().hex[:10];project='dispatcharr-pluginrepo-fetch-source-'+nonce;database='rust_probe_pluginrepo_'+nonce;env={k:v for k,v in os.environ.items()if not k.startswith(('GIT_','COMPOSE_','POSTGRES_','REDIS_','DATABASE_','DJANGO_','CELERY_'))};compose=['docker','compose','-p',project,'-f',str(out/'compose.json')];began=time.monotonic();cleanup_began=None;serial=0;jobs=[];cids={};long=[];claimed=False;stop_lock=threading.Lock();stop_done=threading.Event();stopping=False;status=1;report={'passed':False,'project':project,'database':database,'Source_only':True,'Native_Main_runs':0,'processes':[],'Source_requests':0}
+ def remaining(cap):return min(cap,max(.01,(cleanup_began+90 if cleanup_began is not None else began+1200)-time.monotonic()))
+ def aggregate():
+  used=sum(j.used for j in jobs)+sum((out/n).stat().st_size for n in('owned-stop.stdout','owned-stop.stderr')if(out/n).exists());need(used<=(64 if cleanup_began is not None else 56)*1048576,'Output56of64MiB');return used
+ def stop():
+  nonlocal stopping
+  if not claimed:return
+  with stop_lock:first=not stopping;stopping=True
+  if not first:need(stop_done.wait(20)and report.get('stop',{}).get('acknowledged')is True,'OwnedStopAcknowledgedBeforeReuse');return
+  report['stop']={}
+  try:stop_collect(compose+['stop','--timeout','10'],env,out,report['stop'],limit=65536,timeout=remaining(15),save=save)
+  finally:stop_done.set()
+ def begin_cleanup():
+  nonlocal cleanup_began
+  if cleanup_began is None:cleanup_began=time.monotonic();report['cleanup_started_utc']=now()
+ def start(argv,kind,limit=8388608):
+  nonlocal serial
+  need(serial<(255 if cleanup_began is not None else 223),'256CommandReserve');used=aggregate();limit=min(limit,(64*1048576-65536 if cleanup_began is not None else 56*1048576)-used);need(limit>0,'OutputReserveBeforeSpawn');serial+=1;tag=f'command-{serial:03d}';job=Collected(argv,env,limit,stop,stdout_path=out/(tag+'.stdout'),stderr_path=out/(tag+'.stderr'));jobs.append(job);s=identity(job.process.pid);record={'argv':argv,'kind':kind,'pid':job.process.pid,'observed_starttime':s,'began_utc':now()};report['processes'].append(record);need(type(s)is str and s.isdecimal()and int(s)>0,'KnownActualHostPIDBeforeAcceptance');save(out/(tag+'.json'),record);return job,record,tag
+ def finish(job,record,tag,seconds):
+  try:job.wait(remaining(seconds))
+  finally:record.update(actual_exit=job.process.poll(),invalid=job.invalid,physically_settled=job.physically_settled,readers_settled=not any(t.is_alive()for t in job.threads),writer_settled=job.writer is None or not job.writer.is_alive(),completed_utc=now());save(out/(tag+'.json'),record)
+  aggregate();need(type(record['actual_exit'])is int and record['actual_exit']==0 and record['invalid']is None and record['physically_settled']is True and record['readers_settled']is True and record['writer_settled']is True,'ActualWait0AndPipes');return(out/(tag+'.stdout')).read_text()
+ def command(argv,seconds=120,kind='owned-CLI'):return finish(*start(argv,kind),seconds)
+ def run(*argv,seconds=120,kind='owned-compose'):return command(compose+list(argv),seconds,kind)
+ def shell(db,script,label=None,seconds=120):
+  entries={'POSTGRES_DB':db,'PLUGIN_REPO_DATABASE':db,'PLUGIN_REPO_AUTHORITY':'owned-source-repository-only','REDIS_DB':'0'if label else'1','PGOPTIONS':'-c statement_timeout=7000 -c lock_timeout=7000'}
+  if label:entries['PLUGIN_REPO_AUDIT_LABEL']=label
+  args=[x for k,v in entries.items()for x in('-e',k+'='+v)];return run('exec','-T',*args,'baseline','/dispatcharrpy/bin/python','manage.py','shell','-c',"import runpy;runpy.run_path('/plugin-tools/"+script+"',run_name='__main__')",seconds=seconds,kind='Source-management-shell-'+script)
+ def inventories():return{k:command(['docker']+argv+['--filter','label=com.docker.compose.project='+project],15)for k,argv in{'containers':['container','ls','--all','--no-trunc','--format','{{.ID}}'],'networks':['network','ls','--format','{{.ID}}'],'volumes':['volume','ls','--format','{{.Name}}']}.items()}
+ def audit(label):shell('dispatcharr','default_audit.py',label);return read(out/f'default-{label}-private.json')
+ def terminate_helper(name,ready):
+  encoded=json.dumps(ready,separators=(',',':'));script="import json,os;from input_guards import owned_helper_signal;os.kill(owned_helper_signal(json.loads("+repr(encoded)+")),15)"
+  run('exec','-T','baseline','/dispatcharrpy/bin/python','-c',script,seconds=10,kind='generation-guarded-stop-only-owned-'+name)
+ try:
+  for argv in [['docker','version','--format','{{.Client.Version}}'],['docker','compose','version'],['docker','info','--format','{{.ServerVersion}}']]:command(argv,10,kind='bound-tooling-readonly-metadata')
+  image_meta=json.loads(command(['docker','image','inspect',IMAGE],15));need(len(image_meta)==1,'ExactlyOnePinnedOriginalImage');save(out/'pinned-image-inspect.json',image_meta)
+  command(['tar','-xf',str(ROOT/'inputs/original-source.tar'),'--no-same-owner','-C',str(source)]);(source/'media').mkdir(exist_ok=True);routes=json.loads(command(['ip','-j','-4','route','show','table','all'],15));network_ids=command(['docker','network','ls','--format','{{.ID}}'],15).splitlines();need(len(network_ids)<=256,'FiniteExistingNetworkInventory');networks=json.loads(command(['docker','network','inspect']+network_ids,20))if network_ids else[];save(out/'host-nonoverlap.json',host_nonoverlap(routes,networks));save(out/'host-routes-before.json',routes);save(out/'Docker-networks-before.json',networks);need(not any(v.strip()for v in inventories().values()),'InitiallyAbsentOwnedProject')
+  settings={'DISPATCHARR_ENV':'aio','DJANGO_SECRET_KEY':'owned-fetch-source-only','POSTGRES_DB':'dispatcharr','POSTGRES_USER':'dispatch','POSTGRES_PASSWORD':'playback-fixture-only','POSTGRES_HOST':'/var/run/postgresql','POSTGRES_PORT':'5432','POSTGRES_DIR':'/data/db','REDIS_HOST':'127.0.0.1','REDIS_PORT':'6379','REDIS_PASSWORD':'playback-fixture-only','REDISCLI_AUTH':'playback-fixture-only','CELERY_BROKER_URL':'redis://:playback-fixture-only@127.0.0.1:6379/2','CELERY_RESULT_BACKEND':'redis://:playback-fixture-only@127.0.0.1:6379/3','PYTHONDONTWRITEBYTECODE':'1','PYTHONPATH':'/plugin-tools:/app','PUID':'1000','PGID':'1000','LANG':'C.UTF-8','LC_ALL':'C.UTF-8','FETCH_NETWORK_ROLE':'baseline',**{k:''for k in['HTTP_PROXY','HTTPS_PROXY','ALL_PROXY','http_proxy','https_proxy','all_proxy']},'NO_PROXY':'*','no_proxy':'*'}
+  for name in ['origin','loopback','network']:(out/name).mkdir()
+  common={'image':IMAGE,'pull_policy':'never','platform':'linux/amd64','read_only':True,'pids_limit':256,'sysctls':{'net.ipv6.conf.all.disable_ipv6':'1','net.ipv6.conf.default.disable_ipv6':'1'},'dns':['127.0.0.1']};baseline={**common,'read_only':False,'working_dir':'/app','entrypoint':['bash','/plugin-tools/start-storage.sh'],'environment':settings,'volumes':[str(source)+':/app:ro',str(ROOT/'controller')+':/plugin-tools:ro',str(ROOT/'inputs')+':/plugin-inputs:ro',str(out)+':/evidence'],'tmpfs':['/data:mode=1777,size=2147483648','/app/media:mode=1777,size=67108864','/tmp:mode=1777,size=536870912'],'cap_add':['NET_RAW'],'cpus':1,'mem_limit':'1536m','networks':{'owned':{'ipv4_address':'11.253.250.3'}}};origin={**common,'working_dir':'/tmp','entrypoint':['/dispatcharrpy/bin/python','/plugin-tools/origin.py','--plan','/plugin-inputs/origin-plan.json','--output','/evidence/origin'],'environment':{**settings,'FETCH_NETWORK_ROLE':'origin'},'volumes':[str(ROOT/'controller')+':/plugin-tools:ro',str(ROOT/'inputs')+':/plugin-inputs:ro',str(out)+':/evidence'],'tmpfs':['/tmp:mode=1777,size=67108864'],'cpus':.25,'mem_limit':'128m','networks':{'owned':{'ipv4_address':'11.253.250.2'}}};save(out/'compose.json',{'services':{'baseline':baseline,'origin':origin},'networks':{'owned':{'internal':True,'enable_ipv6':False,'driver_opts':{'com.docker.network.bridge.enable_ip_masquerade':'false'},'ipam':{'config':[{'subnet':'11.253.250.0/29','gateway':'11.253.250.1'}]}}}});claimed=True;run('up','-d','--no-build','--pull','never','baseline','origin')
+  for service in('baseline','origin'):
+   ids=run('ps','--all','-q',service).splitlines();need(len(ids)==1,'ExactlyOneOwnedService');cids[service]=ids[0]
+  inspected=json.loads(command(['docker','inspect',cids['baseline'],cids['origin']]));by={i['Id']:i for i in inspected};need(all(i['Image']==image_meta[0]['Id']for i in inspected),'ActualBothContainersPinnedOriginalImageID');net=json.loads(command(['docker','network','inspect',project+'_owned']))[0];save(out/'initial-services-inspect.json',inspected);save(out/'owned-network-inspect.json',net);save(out/'actual-isolation.json',actual_network(net,by[cids['baseline']],by[cids['origin']],project))
+  for service in('baseline','origin'):run('exec','-T',service,'/dispatcharrpy/bin/python','/plugin-tools/network_snapshot.py',seconds=15,kind='actual-kernel-routes-'+service)
+  for service in('baseline','origin'):run('exec','-T',service,'/dispatcharrpy/bin/python','/plugin-tools/guest_preflight.py',seconds=30,kind='actual-mounted-input-preflight-'+service)
+  service_host=[]
+  for service in('baseline','origin'):
+   lines=command(['docker','top',cids[service],'-eo','pid'],15).splitlines();need(lines and lines[0].strip()=='PID'and 1<=len(lines)-1<=256,'ActualServiceHostPIDInventory')
+   for line in lines[1:]:
+    need(line.strip().isdecimal(),'ActualPositiveDockerTopHostPID');pid=int(line.strip());starttime=identity(pid);need(type(starttime)is str and starttime.isdecimal()and int(starttime)>0,'KnownServiceHostPIDGeneration');service_host.append({'service':service,'host_pid':pid,'host_starttime':starttime,'scope':'Docker top host namespace; later guest-ready PIDs are separately namespaced'})
+  report['initial_service_host_identities']=service_host;save(out/'service-host-identities-before-Source.json',service_host)
+  # Passive source network coverage starts BEFORE any Source app import/migration.
+  observer=start(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/plugin-tools/network_observer.py','--output','/evidence/network'],'passive-network-observer');long.append(observer);loopback=start(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/plugin-tools/loopback_probe.py','--output','/evidence/loopback'],'actual-loopback-refusal-witness');long.append(loopback)
+  deadline=time.monotonic()+180
+  while not all((out/path).exists()for path in['storage-ready','origin/origin-ready.json','network/network-observer-ready.json','loopback/loopback-ready.json']):need(time.monotonic()<deadline and all(j[0].process.poll()is None for j in long),'AllRealOwnedStorageAndWitnessReadiness180');aggregate();time.sleep(.05)
+  # Real management-shell startup marker, never a Source patch.
+  run('exec','-T','baseline','/dispatcharrpy/bin/python','manage.py','shell','-c',"from dispatcharr.app_initialization import should_skip_initialization;assert should_skip_initialization() is True;from django.core.management import call_command;call_command('migrate',interactive=False,verbosity=0)",seconds=120,kind='actual-Source-management-shell-migrations');audit('before');run('exec','-T','baseline','psql','-XAtq','-h','/var/run/postgresql','-U','dispatch','-d','postgres','-v','ON_ERROR_STOP=1','-c','CREATE DATABASE '+database+' TEMPLATE dispatcharr');shell(database,'source_fixture.py',seconds=360);begin_cleanup();actual=read(out/'plugin-repositories-private.json');qualification=validate(actual,read(ROOT/'inputs/plan.json'),read(ROOT/'inputs/schema62-authority.json'));save(out/'Source-observation-validation.json',qualification);report['qualification']=qualification;report['Source_requests']=actual['actual_request_count'];report['passed']=True;status=0
+ except BaseException as error:report['error']={'type':type(error).__name__,'message':str(error),'full_bytes':len(str(error).encode()),'full_sha256':hashlib.sha256(str(error).encode()).hexdigest()};status=1
+ finally:
+  begin_cleanup()
+  def cleanup(label,action):
+   nonlocal status
+   try:return action()
+   except BaseException as error:report.setdefault('cleanup_errors',[]).append({'label':label,'type':type(error).__name__,'message':str(error)});report['passed']=False;status=1
+  if cids.get('baseline'):
+   def default_after():audit('after');need((out/'default-before-private.json').read_bytes()==(out/'default-after-private.json').read_bytes(),'DefaultLiteral6259After');return True
+   report['default6259_literal_equal']=cleanup('default-after',default_after)
+   for helper,path in [('loopback','loopback/loopback-ready.json'),('network','network/network-observer-ready.json')]:
+    if(out/path).exists():ready=read(out/path);cleanup('stop-'+helper,lambda helper=helper,ready=ready:terminate_helper(helper,ready))
+   for handle in long:cleanup('wait-helper',lambda handle=handle:finish(*handle,10))
+   def backend():raw=run('exec','-T','-e','PGOPTIONS=-c default_transaction_read_only=on -c statement_timeout=5000','baseline','psql','-XAtq','-h','/var/run/postgresql','-U','dispatch','-d','postgres','-v','ON_ERROR_STOP=1','-c',"SELECT COALESCE(json_agg(t),'[]') FROM(SELECT pid,state FROM pg_stat_activity WHERE datname='"+database+"')t",seconds=10);v=json.loads(raw);save(out/'owned-backends-after-Source.json',v);need(v==[],'OwnedSourceBackendEmpty');return True
+   report['owned_backends_after_Source']=cleanup('backend',backend)
+  if cids.get('origin'):
+   cleanup('stop-origin',lambda:run('stop','--timeout','10','origin',seconds=15))
+   def origin_exit():
+    value=json.loads(command(['docker','inspect',cids['origin']],15));save(out/'actual-origin-stopped-inspect.json',value);need(len(value)==1 and value[0]['Id']==cids['origin']and value[0]['State']['Running']is False and type(value[0]['State']['ExitCode'])is int and value[0]['State']['ExitCode']==0 and value[0]['State']['OOMKilled']is False and not value[0]['State']['Error'],'ActualOriginNormalProcessExit0');return True
+   report['actual_origin_exit0']=cleanup('actual-origin-exit0',origin_exit); report['measured_network_isolation']=cleanup('actual-origin-DNS-and-loopback-observations',lambda:observed_isolation(out,read(ROOT/'inputs/plan.json')))
+  if claimed:
+   for service in('baseline','origin'):
+    if service not in cids:
+     def recover(service=service):
+      values=run('ps','--all','-q',service,seconds=10).splitlines();need(len(values)<=1,'AtMostOneExactPartialOwnedService')
+      if values:cids[service]=values[0]
+     cleanup('recover-partial-CID-'+service,recover)
+  if claimed:cleanup('logs',lambda:run('logs','--no-color',seconds=15));cleanup('down',lambda:run('down','--volumes','--remove-orphans','--timeout','10',seconds=35));report['remaining']=cleanup('fresh-inventories',inventories)
+  for service,cid in cids.items():cleanup('exact-CID-'+service,lambda cid=cid:need(not command(['docker','container','ls','--all','--no-trunc','--filter','id='+cid,'--format','{{.ID}}'],15).strip(),'ExactCIDAbsent'))
+  for job,record,tag in [(j,r,'command-'+str(i+1).zfill(3))for i,(j,r)in enumerate(zip(jobs,report['processes']))]:
+   if not job.physically_settled:cleanup('post-down-settle-'+tag,lambda job=job,record=record,tag=tag:finish(job,record,tag,5))
+  report['initial_service_host_identities_absent']=all(identity(r['host_pid'])!=r['host_starttime']for r in report.get('initial_service_host_identities',[]));report['all_commands_waited_pipes']=all(j.physically_settled and j.process.poll()is not None and not any(t.is_alive()for t in j.threads)and(j.writer is None or not j.writer.is_alive())for j in jobs);report['original_host_PIDs_absent']=all(identity(r['pid'])!=r['observed_starttime']for r in report['processes']);report['cleanup_elapsed_seconds']=time.monotonic()-cleanup_began;report['actual_command_count']=serial;report['aggregate_output_bytes']=cleanup('aggregate',aggregate)
+  if report.get('stop')is not None and report['stop'].get('starttime')is not None:
+   cleanup('actual-stop-host-PID-absence',lambda:need(identity(report['stop']['pid'])!=report['stop']['starttime'],'ActualStopHostPIDAbsent'))
+  if not report['initial_service_host_identities_absent']or not report['all_commands_waited_pipes']or not report['original_host_PIDs_absent']or report['cleanup_elapsed_seconds']>90 or report.get('remaining')is None or any(v.strip()for v in report['remaining'].values()):status=1;report['passed']=False
+  report['actual_controller_exit']=status;report['settled_utc']=now();save(out/'execution-report.json',report)
+ return status
+if __name__=='__main__':
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--execute-reviewed-seal');p.add_argument('--output',type=Path);a=p.parse_args();seal=check()
+ if a.execute_reviewed_seal is None:print(json.dumps({'passed':True,'read_only':True,'Source_runs':0}));raise SystemExit(0)
+ raise SystemExit(execute(a,seal))

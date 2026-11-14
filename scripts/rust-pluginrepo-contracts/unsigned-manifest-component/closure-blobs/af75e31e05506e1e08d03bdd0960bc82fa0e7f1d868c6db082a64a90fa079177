@@ -1,0 +1,43 @@
+"""Pure synthetic corruption controls; no request/app/database/network execution."""
+import copy,hashlib,json,unittest
+from pathlib import Path
+from effects import validate
+ROOT=Path(__file__).resolve().parents[1]
+PLAN=json.loads((ROOT/'inputs/plan.json').read_text());SCHEMA=json.loads((ROOT/'inputs/schema62-authority.json').read_text())
+def synthetic():
+ nonce='1234567890';manifest={'tables':{n:{'count':0,'sha_like_md5':'0'*32}for n in SCHEMA['tables']},'sequences':{n:[1,False]for n in SCHEMA['sequences']},**{n:copy.deepcopy(SCHEMA[n])for n in ('columns','indexes','constraints')}}
+ for name,last in PLAN['seed']['sequence_last_values_called'].items():manifest['sequences'][name]=[last,True]
+ users=[{'id':r['id'],'username':'owned-pluginrepo-'+nonce+'-'+r['alias'],'api_key':'owned-pluginrepo-api-'+nonce+'-'+r['alias'],'password':'!','is_active':True,'user_level':r['user_level'],'custom_properties':copy.deepcopy(r['custom_properties'])}for r in PLAN['roles']]
+ repos=[{'id':1,'is_official':True,'url':'https://dispatcharr.github.io/Plugins/manifest.json'}]+copy.deepcopy(PLAN['seed']['custom_repos'])
+ configs=[{**copy.deepcopy(r),'enabled':False,'ever_enabled':False,'owned_tasks':[],'suspended_schedules':[]}for r in PLAN['seed']['configs']]
+ seed={'users':users,'repos':repos,'configs':configs,'public_manifest':manifest};rows=[]
+ for spec in PLAN['cases']:
+  rows.append({**copy.deepcopy(spec),'raw_headers_private':{}if spec['actor']=='anonymous'else{'HTTP_X_API_KEY':('owned-pluginrepo-api-'+nonce+'-'+spec['actor']).encode().hex()},'before':copy.deepcopy(seed),'after':copy.deepcopy(seed),'capture_complete':True,'began_utc':'2026-11-13T00:00:01+00:00','completed_utc':'2026-11-13T00:00:01+00:00','transport':'http_response','response_body_hex':'7b7d','response_body_bytes':2,'response_body_sha256':hashlib.sha256(b'{}').hexdigest(),'status':200,'framework_exception':None,'response_exc_info':None})
+ return {'capture_only':True,'passed':False,'capture_complete':True,'force_authenticate_used':False,'client_raise_request_exception':False,'Source_framework_APIClient_only':True,'Source_TCP_or_Native':False,'database':'rust_probe_pluginrepo_'+nonce,'actual_request_count':1,'completed_capture_count':1,'phase_started_utc':'2026-11-13T00:00:00+00:00','seed':seed,'seed_cache_binding':[{'key':key,'django_key':':1:'+key,'decoded_value':{'owned_cache_sentinel':key}}for key in PLAN['cache_detail_seed']],'requests':rows}
+class Observation(unittest.TestCase):
+ def test_synthetic_integrity_not_actual_source(self):self.assertTrue(validate(synthetic(),PLAN,SCHEMA)['passed_observation_integrity'])
+ def test_exact_new_one_body_not_old_case11(self):
+  self.assertEqual(len(PLAN['cases']),1);row=PLAN['cases'][0];self.assertEqual(row['name'],'fresh_create_unique_url_fetch404');url=json.loads(bytes.fromhex(row['body_hex']))['url'];self.assertNotIn(url,[repo['url']for repo in PLAN['seed']['custom_repos']]);self.assertTrue(url.endswith('/create-notfound.json'))
+def negative(name,change):
+ def test(self):
+  value=synthetic();change(value)
+  with self.assertRaises((ValueError,KeyError,TypeError)):validate(value,PLAN,SCHEMA)
+ setattr(Observation,'test_reject_'+name,test)
+for name,fn in [
+ ('extra_request',lambda v:v['requests'].append(copy.deepcopy(v['requests'][0]))),
+ ('missing_request',lambda v:v['requests'].clear()),
+ ('actor',lambda v:v['requests'][0].update(actor='standard')),
+ ('old_body',lambda v:v['requests'][0].update(body_hex=b'{"url":"http://11.253.250.2:18080/notfound.json"}'.hex())),
+ ('headers',lambda v:v['requests'][0].update(raw_headers_private={})),
+ ('path',lambda v:v['requests'][0].update(path='/api/plugins/repos/preview/')),
+ ('seed_role',lambda v:v['seed']['users'][0].update(user_level=True)),
+ ('seed_child',lambda v:v['seed']['configs'][0].update(source_repo_id=802)),
+ ('seed_cache',lambda v:v['seed_cache_binding'][0].update(decoded_value={})),
+ ('seed_seq',lambda v:v['seed']['public_manifest']['sequences'].update(plugins_pluginrepo_id_seq=[901,True])),
+ ('bodysha',lambda v:v['requests'][0].update(response_body_sha256='0'*64)),
+ ('incomplete',lambda v:v.update(capture_complete=False)),
+ ('forceauth',lambda v:v.update(force_authenticate_used=True)),
+ ('raise_true',lambda v:v.update(client_raise_request_exception=True)),
+ ('response_exception_truncated',lambda v:v['requests'][0].update(response_exc_info={'complete':False})),
+]:negative(name,fn)
+if __name__=='__main__':unittest.main()

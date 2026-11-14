@@ -1,0 +1,44 @@
+"""Pure input, Source25 epoch, storage environment and origin behavior guards."""
+import copy,hashlib,json,unittest
+from pathlib import Path
+from bootstrap_env import storage_environment,audit_helpers,validate_environment
+from network_guard import host_nonoverlap
+from origin import fixed
+from validate_native import validate_import
+from test_normal import reference
+ROOT=Path(__file__).resolve().parents[1]
+class Context(unittest.TestCase):
+ def test_all_Source_helper_variables_classified(self):self.assertTrue(audit_helpers(ROOT,storage_environment())['passed'])
+ def test_missing_aio_refuses_before_storage(self):
+  env=storage_environment();env.pop('DISPATCHARR_ENV')
+  with self.assertRaises(ValueError):validate_environment(env)
+ def test_exact_Source25_two_epochs(self):
+  a=json.loads((ROOT/'inputs/authority.json').read_bytes());self.assertEqual({k:v['count']for k,v in a.items()},{'retained24':24,'fresh404':1})
+  for row in a.values():self.assertEqual(hashlib.sha256((ROOT/'inputs'/row['source_filename']).read_bytes()).hexdigest(),row['source_sha256'])
+ def test_source24_observed17_not_old18(self):
+  a=json.loads((ROOT/'inputs/authority.json').read_bytes())['retained24'];self.assertEqual(a['actual_Source_origin_count'],17);self.assertEqual(len((ROOT/'inputs'/a['actual_Source_origin_filename']).read_text().splitlines()),17)
+ def test_fresh404_fixed_new_url(self):
+  p=json.loads((ROOT/'inputs/plan-fresh404.json').read_bytes());row,body=fixed(p,'/create-notfound.json',1);self.assertEqual(row['status'],404);self.assertEqual(body,b'{"detail":"owned not found"}')
+ def test_origin_undeclared_path_refuses(self):
+  p=json.loads((ROOT/'inputs/plan-retained24.json').read_bytes())
+  with self.assertRaises(ValueError):fixed(p,'/unknown.json',1)
+ def test_fourth_refresh_response_not_recycled(self):
+  p=json.loads((ROOT/'inputs/plan-retained24.json').read_bytes())
+  with self.assertRaises(ValueError):fixed(p,'/refresh.json',4)
+ def test_known_builtin_null_IPAM_not_global_skip(self):
+  self.assertTrue(host_nonoverlap([],[{'Name':'host','Driver':'host','Scope':'local','IPAM':{'Driver':'default','Config':None}}])['passed'])
+  with self.assertRaises(ValueError):host_nonoverlap([],[{'Name':'bridge','Driver':'bridge','IPAM':{'Driver':'default','Config':None}}])
+ def test_initial_exact9_keys(self):s=reference('retained24');self.assertTrue(validate_import(s,copy.deepcopy(s['seed']))['passed'])
+ def test_initial_missing_sentinel_refused(self):
+  s=reference('retained24');v=copy.deepcopy(s['seed']);v['raw_Redis'][1]['rows'].pop()
+  with self.assertRaises(ValueError):validate_import(s,v)
+ def test_initial_wrong_child_binding_refused(self):
+  s=reference('retained24');v=copy.deepcopy(s['seed']);v['configs'][0]['source_repo_id']=802
+  with self.assertRaises(ValueError):validate_import(s,v)
+ def test_initial_wrong_SQL_instant_refused(self):
+  s=reference('retained24');v=copy.deepcopy(s['seed']);v['repos'][1]['updated_at']='2099-01-01T00:00:00Z'
+  with self.assertRaises(ValueError):validate_import(s,v)
+ def test_initial_ttl_renewal_refused(self):
+  s=reference('retained24');v=copy.deepcopy(s['seed']);v['raw_Redis'][0]['rows'][0]['pttl']+=1
+  with self.assertRaises(ValueError):validate_import(s,v)
+if __name__=='__main__':unittest.main()

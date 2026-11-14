@@ -1,0 +1,61 @@
+"""UNEXECUTED exact owned unsigned-manifest origin; no Source imports."""
+import argparse,collections,hashlib,http.server,json,os,signal,time
+from pathlib import Path
+from phase_clock import phase_start
+
+def response(plan,path,occurrence):
+ if type(path)is not str or len(path)>8192 or type(occurrence)is not int or not 1<=occurrence<=32:raise ValueError('BoundedLiteralPathAndOccurrence')
+ rows=plan['origin']['fixtures'].get(path)
+ if rows is None:raise ValueError('UndeclaredOriginPath')
+ if len(rows)>1 and occurrence>len(rows):raise ValueError('FiniteDeclaredRefreshResponses')
+ value=rows[min(occurrence-1,len(rows)-1)];body=value['body'].encode();
+ if len(body)>4096 or type(value['status'])is not int or not 200<=value['status']<=599:raise ValueError('FixedBodyCapacity')
+ return value,body
+
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--plan',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();plan=json.loads(a.plan.read_text());origin=plan['origin'];out=a.output
+ if origin['ip']!='11.253.250.2'or origin['Source_ip']!='11.253.250.3'or origin['port']!=18080 or origin['max_requests']!=32 or origin['phase_seconds']!=300:raise ValueError('ExactOwnedNetworkAndBudget')
+ if not out.is_dir()or(out/'origin-ready.json').exists():raise ValueError('FreshOriginOutput')
+ counts=collections.Counter();rows=[];began=time.monotonic();ledger=(out/'origin-requests.jsonl').open('x')
+ def save(row):
+  raw=json.dumps(row,allow_nan=False)+'\n'
+  if ledger.tell()+len(raw.encode())>1048576:raise ValueError('OriginLedger1MiB')
+  ledger.write(raw);ledger.flush();rows.append(row)
+ class Handler(http.server.BaseHTTPRequestHandler):
+  protocol_version='HTTP/1.0'
+  def setup(self):self.request.settimeout(2);super().setup()
+  def log_message(self,*args):pass
+  def do_GET(self):
+   nonlocal phase_began
+   if cue.is_symlink():raise ValueError('OwnedPhaseCueNoSymlink')
+   phase_began=phase_start(phase_began,time.monotonic(),cue.is_file())
+   row={'ordinal':len(rows)+1,'method':'GET','path':self.path,'peer':list(self.client_address),'began_utc_epoch':time.time(),'headers':list(self.headers.items()),'valid':False,'phase_cue_seen':phase_began is not None}
+   try:
+    if self.client_address[0]!=origin['Source_ip']or len(rows)>=32 or len(self.headers.as_bytes())>8192 or self.headers.get('Transfer-Encoding')is not None or self.headers.get('Content-Length','0')!='0':raise ValueError('OnlyActualOwnedSourceBoundedGET')
+    counts[self.path]+=1;v,body=response(plan,self.path,counts[self.path]);row.update(status=v['status'],content_type=v['content_type'],body_hex=body.hex(),body_sha256=hashlib.sha256(body).hexdigest(),body_bytes=len(body),path_occurrence=counts[self.path],valid=True)
+    self.send_response(v['status']);self.send_header('Content-Type',v['content_type']);self.send_header('Content-Length',str(len(body)))
+    if 'location'in v:self.send_header('Location',v['location']);row['location']=v['location']
+    self.end_headers();self.wfile.write(body);self.wfile.flush();row['write_completed']=True
+   except BaseException as error:row.update(error_type=type(error).__name__,error_message=str(error),valid=False)
+   finally:row['completed_utc_epoch']=time.time();save(row);self.close_connection=True
+ class Server(http.server.HTTPServer):
+  def get_request(self):
+   stream,peer=super().get_request();self.accepted_count=getattr(self,'accepted_count',0)+1;record={'peer':list(peer),'accepted_epoch':time.time(),'scope':'actual TCP accept, not merely a parsed GET'};
+   with (out/'origin-accepts.jsonl').open('a')as f:f.write(json.dumps(record)+'\n')
+   return stream,peer
+ server=Server((origin['ip'],origin['port']),Handler);server.timeout=.1;server.socket.settimeout(.1)
+ running=True;phase_began=None;cue=out.parent/'source-phase-cue.json'
+ def stop(*_):
+  nonlocal running
+  running=False
+ signal.signal(signal.SIGTERM,stop);signal.signal(signal.SIGINT,stop)
+ ready={'pid':os.getpid(),'PID_namespace':os.readlink('/proc/self/ns/pid'),'starttime':Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19],'address':[origin['ip'],origin['port']],'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest(),'monotonic_started':began,'Source_or_Django_imports':False};(out/'origin-ready.json').write_text(json.dumps(ready,indent=2)+'\n')
+ try:
+  while running and len(rows)<32 and getattr(server,'accepted_count',0)<32:
+   if phase_began is None and cue.is_file():
+    if cue.is_symlink():raise ValueError('OwnedPhaseCueNoSymlink')
+    phase_began=phase_start(phase_began,time.monotonic(),True)
+   if (phase_began is None and time.monotonic()-began>180)or(phase_began is not None and time.monotonic()-phase_began>300):break
+   server.handle_request()
+ finally:server.server_close();ledger.close();(out/'origin-terminal.json').write_text(json.dumps({'requests':len(rows),'valid_all':all(x['valid']for x in rows),'counts':dict(counts),'setup_elapsed_seconds':None if phase_began is None else phase_began-began,'phase_elapsed_seconds':None if phase_began is None else time.monotonic()-phase_began,'elapsed_seconds':time.monotonic()-began,'server_closed':True,'PID_namespace':ready['PID_namespace']},indent=2)+'\n')
+if __name__=='__main__':main()

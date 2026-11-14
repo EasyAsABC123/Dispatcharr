@@ -1,0 +1,11 @@
+"""Exact measured Source17+1 owned GET context, never planned18 relabeling."""
+import hashlib,json
+from pathlib import Path
+from origin import fixed
+from validate_native import equal
+need=lambda ok,label:None if ok else (_ for _ in()).throw(ValueError(label))
+def validate_origin(output,root,epoch):
+ output,root=Path(output),Path(root);binding=json.loads((root/'inputs/authority.json').read_bytes())[epoch];path=root/'inputs'/binding['actual_Source_origin_filename'];need(hashlib.sha256(path.read_bytes()).hexdigest()==binding['actual_Source_origin_sha256'],'ExactObservedSourceOriginReference');reference=[json.loads(line)for line in path.read_text().splitlines()];native=[json.loads(line)for line in(output/'origin-requests.jsonl').read_text().splitlines()];need(len(native)==len(reference)==binding['actual_Source_origin_count'],'Measured17Or1NotOld18Prediction');plan=json.loads((root/'inputs'/binding['plan_filename']).read_bytes())
+ for a,b in zip(reference,native):
+  need(b['valid']is True and b['wire_write_complete']is True and b['peer'][0]=='11.253.250.3','ActualNativeOwnedOrigin');need(all(equal(a[key],b[key])for key in ['ordinal','method','path','path_occurrence','status','content_type','body_hex','body_sha256']),'ExactObservedPathOccurrenceAndReply');head=bytes.fromhex(b['request_header_hex']);need(hashlib.sha256(head).hexdigest()==b['request_header_sha256'],'ActualRequestHeaderSHA');lines=head.decode('ascii').split('\r\n');need(lines[0]=='GET '+b['path']+' HTTP/1.1','ActualGETVersion');headers=[line.split(': ',1)for line in lines[1:]if line];need(equal([list(row)for row in a['headers']],headers),'ActualSourceRequestsHeaderOrderValues');value,body=fixed(plan,b['path'],b['path_occurrence']);need(body.hex()==b['body_hex']and value['status']==b['status'],'PredeclaredFixedReplyUnchanged')
+ return {'passed':True,'actual_Native_origin_HTTP_TCP_contacts':len(native),'Source_reference_contacts':len(reference),'prior_Source24_planned18_remains_failed':True,'actual_GET_header_order_values_equal':True,'Source_TCP_API_or_full_lifecycle_packet_clean_claim':False}

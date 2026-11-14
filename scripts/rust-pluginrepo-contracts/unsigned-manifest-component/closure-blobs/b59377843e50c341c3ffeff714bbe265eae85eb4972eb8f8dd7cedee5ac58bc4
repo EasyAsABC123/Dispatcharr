@@ -1,0 +1,55 @@
+"""Pure synthetic corruption controls; no request/app/database/network execution."""
+import copy,hashlib,json,unittest
+from pathlib import Path
+from effects import validate
+ROOT=Path(__file__).resolve().parents[1]
+PLAN=json.loads((ROOT/'inputs/plan.json').read_text());SCHEMA=json.loads((ROOT/'inputs/schema62-authority.json').read_text())
+def synthetic():
+ nonce='1234567890';manifest={'tables':{n:{'count':0,'sha_like_md5':'0'*32}for n in SCHEMA['tables']},'sequences':{n:[1,False]for n in SCHEMA['sequences']},**{n:copy.deepcopy(SCHEMA[n])for n in ('columns','indexes','constraints')}}
+ for name,last in PLAN['seed']['sequence_last_values_called'].items():manifest['sequences'][name]=[last,True]
+ users=[{'id':r['id'],'username':'owned-pluginrepo-'+nonce+'-'+r['alias'],'api_key':'owned-pluginrepo-api-'+nonce+'-'+r['alias'],'password':'!','is_active':True,'user_level':r['user_level'],'custom_properties':copy.deepcopy(r['custom_properties'])}for r in PLAN['roles']]
+ repos=[{'id':1,'is_official':True,'url':'https://dispatcharr.github.io/Plugins/manifest.json'}]+copy.deepcopy(PLAN['seed']['custom_repos'])
+ configs=[{**copy.deepcopy(r),'enabled':False,'ever_enabled':False,'owned_tasks':[],'suspended_schedules':[]}for r in PLAN['seed']['configs']]
+ seed={'users':users,'repos':repos,'configs':configs,'public_manifest':manifest};rows=[]
+ for spec in PLAN['cases']:
+  rows.append({**copy.deepcopy(spec),'raw_headers_private':{}if spec['actor']=='anonymous'else{'HTTP_X_API_KEY':('owned-pluginrepo-api-'+nonce+'-'+spec['actor']).encode().hex()},'before':copy.deepcopy(seed),'after':copy.deepcopy(seed),'capture_complete':True,'began_utc':'2026-11-13T00:00:01+00:00','completed_utc':'2026-11-13T00:00:01+00:00','transport':'http_response','response_body_hex':'7b7d','response_body_bytes':2,'response_body_sha256':hashlib.sha256(b'{}').hexdigest(),'status':200,'framework_exception':None,'response_exc_info':None})
+ return {'capture_only':True,'passed':False,'capture_complete':True,'force_authenticate_used':False,'client_raise_request_exception':False,'Source_framework_APIClient_only':True,'Source_TCP_or_Native':False,'database':'rust_probe_pluginrepo_'+nonce,'actual_request_count':24,'completed_capture_count':24,'phase_started_utc':'2026-11-13T00:00:00+00:00','seed':seed,'seed_cache_binding':[{'key':key,'django_key':':1:'+key,'decoded_value':{'owned_cache_sentinel':key}}for key in PLAN['cache_detail_seed']],'requests':rows}
+class Observation(unittest.TestCase):
+ def test_synthetic_integrity_baseline_not_Source_outcome_claim(self):self.assertTrue(validate(synthetic(),PLAN,SCHEMA)['passed_observation_integrity'])
+def negative(name,mutate):
+ def test(self):
+  value=synthetic();mutate(value)
+  with self.assertRaises((ValueError,KeyError,TypeError)):validate(value,PLAN,SCHEMA)
+ setattr(Observation,'test_reject_'+name,test)
+for name,fn in [
+ ('header_swap',lambda v:v['requests'][1].update(raw_headers_private={})),
+ ('seed_detail_cache',lambda v:v['seed_cache_binding'][0].update(decoded_value={})),
+ ('before_sequence_reset',lambda v:v['requests'][1]['before']['public_manifest']['sequences'].update(plugins_pluginrepo_id_seq=[1,False])),
+ ('actor_swap',lambda v:v['requests'][0].update(actor='admin')),
+ ('path_swap',lambda v:v['requests'][0].update(path='/api/plugins/repos/801/refresh/')),
+ ('body_changed',lambda v:v['requests'][0].update(body_hex='7b7d')),
+ ('order_swap',lambda v:v['requests'].reverse()),
+ ('missing_request',lambda v:v['requests'].pop()),
+ ('forceauth',lambda v:v.update(force_authenticate_used=True)),
+ ('raise_true',lambda v:v.update(client_raise_request_exception=True)),
+ ('reported_passed_true',lambda v:v.update(passed=True)),
+ ('incomplete',lambda v:v.update(capture_complete=False)),
+ ('role_level_bool',lambda v:v['seed']['users'][0].update(user_level=True)),
+ ('role_network',lambda v:v['seed']['users'][3].update(custom_properties={})),
+ ('actor_password',lambda v:v['seed']['users'][0].update(password='fake')),
+ ('repo_url',lambda v:v['seed']['repos'][1].update(url='http://example.org')),
+ ('seed_child_alias',lambda v:v['seed']['configs'][0].update(source_repo_id=802)),
+ ('seed_sequence',lambda v:v['seed']['public_manifest']['sequences'].update(plugins_pluginrepo_id_seq=[901,True])),
+ ('sequence_bool_count',lambda v:v['requests'][0]['after']['public_manifest']['sequences'].update(plugins_pluginrepo_id_seq=[True,True])),
+ ('table_alias_swap_same_count',lambda v:v['requests'][0]['after']['public_manifest']['tables'].update(wrong=v['requests'][0]['after']['public_manifest']['tables'].pop('accounts_user'))),
+ ('schema_column',lambda v:v['requests'][0]['after']['public_manifest']['columns'][0].__setitem__(1,'wrong')),
+ ('bodysha',lambda v:v['requests'][0].update(response_body_sha256='0'*64)),
+ ('status_bool',lambda v:v['requests'][0].update(status=True)),
+ ('response_exception_truncated',lambda v:v['requests'][0].update(response_exc_info={'complete':False})),
+ ('raised_exception_truncated',lambda v:v['requests'][0].update(transport='framework_exception',framework_exception={'complete':False})),
+ ('backwards_clock',lambda v:v['requests'][1].update(began_utc='2026-11-12T00:00:01+00:00')),
+ ('naive_clock',lambda v:v['requests'][0].update(began_utc='2026-11-13T00:00:01')),
+ ('adjacent_repo_reset',lambda v:v['requests'][1]['before']['repos'][1].update(name='reset')),
+ ('request_user_rewrite',lambda v:v['requests'][0]['after']['users'][0].update(password='changed')),
+]:negative(name,fn)
+if __name__=='__main__':unittest.main()

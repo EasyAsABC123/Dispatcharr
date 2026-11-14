@@ -1,0 +1,548 @@
+{
+  "state": "UNMEASURED_SOURCE_ONLY_DEFINITION_NO_EXECUTOR_ADMISSION",
+  "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "scope": "NEW preview/create/refresh unsigned bounded manifests; not replay of historical metadata Source24",
+  "auth": "persisted real APIkeys/APIClient, no forceauth; same Source24 role semantics newly owned context",
+  "APIClient_raise_request_exception": false,
+  "cases": [
+    {
+      "index": 1,
+      "name": "anonymous_preview_refusal",
+      "actor": "anonymous",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/preview-good.json\"}",
+      "planned_origin_contact": [],
+      "prediction_note": "Permission/no-contact prediction until measured; no forced auth",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 2,
+      "name": "standard_preview_refusal",
+      "actor": "standard",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/preview-good.json\"}",
+      "planned_origin_contact": [],
+      "prediction_note": "Permission/no-contact prediction until measured; no forced auth",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 3,
+      "name": "admin_denied_preview_refusal",
+      "actor": "admin_denied",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/preview-good.json\"}",
+      "planned_origin_contact": [],
+      "prediction_note": "Permission/no-contact prediction until measured; no forced auth",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 4,
+      "name": "loopback_preview_refusal",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://127.0.0.1:18080/private.json\"}",
+      "planned_origin_contact": [],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 5,
+      "name": "missing_name_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/missing-name.json\"}",
+      "planned_origin_contact": [
+        "/missing-name.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 6,
+      "name": "official_name_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/official-name.json\"}",
+      "planned_origin_contact": [
+        "/official-name.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 7,
+      "name": "bare_manifest_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/bare.json\"}",
+      "planned_origin_contact": [
+        "/bare.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 8,
+      "name": "wrapped_manifest_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/preview-good.json\"}",
+      "planned_origin_contact": [
+        "/preview-good.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 9,
+      "name": "create_valid_unsigned",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/create.json\",\"public_key\":\"\",\"enabled\":true}",
+      "planned_origin_contact": [
+        "/create.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 10,
+      "name": "create_duplicate_url",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/create.json\"}",
+      "planned_origin_contact": [],
+      "prediction_note": "Serializer uniqueness before fetch; preserve actual if different",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 11,
+      "name": "create_fetch404",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/notfound.json\"}",
+      "planned_origin_contact": [
+        "/notfound.json"
+      ],
+      "prediction_note": "Temporary row may consume sequence then delete; capture literally",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 12,
+      "name": "create_missing_registry",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/create-missing.json\"}",
+      "planned_origin_contact": [
+        "/create-missing.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 13,
+      "name": "refresh_missing_target",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/999999/refresh/",
+      "content_type": "application/json",
+      "body": "{}",
+      "planned_origin_contact": [],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 14,
+      "name": "refresh_existing_drop_and_deprecate",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/801/refresh/",
+      "content_type": "application/json",
+      "body": "{}",
+      "planned_origin_contact": [
+        "/refresh.json"
+      ],
+      "prediction_note": "Dropped source_repo/slug/deprecated QuerySet update vs retained config auto_now save distinct; cache detail deletion",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 15,
+      "name": "refresh_same_again",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/801/refresh/",
+      "content_type": "application/json",
+      "body": "{}",
+      "planned_origin_contact": [
+        "/refresh.json"
+      ],
+      "prediction_note": "Repository own clocks advance; already-deprecated retained config should not save again",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 16,
+      "name": "refresh_fetch404",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/802/refresh/",
+      "content_type": "application/json",
+      "body": "{}",
+      "planned_origin_contact": [
+        "/notfound.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 17,
+      "name": "redirect_private_refusal",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/redirect-private\"}",
+      "planned_origin_contact": [
+        "/redirect-private"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 18,
+      "name": "invalid_json_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/invalid.json\"}",
+      "planned_origin_contact": [
+        "/invalid.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 19,
+      "name": "redirect_owned_valid",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/redirect-good\"}",
+      "planned_origin_contact": [
+        "/redirect-good",
+        "/preview-good.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 20,
+      "name": "missing_plugins_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/missing-plugins.json\"}",
+      "planned_origin_contact": [
+        "/missing-plugins.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 21,
+      "name": "create_loopback_refusal",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://127.0.0.1:18080/private.json\"}",
+      "planned_origin_contact": [],
+      "prediction_note": "Do not assume no sequence use: URL serializer may save before outbound refusal",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 22,
+      "name": "refresh_invalid_name_third_fetch",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/801/refresh/",
+      "content_type": "application/json",
+      "body": "{}",
+      "planned_origin_contact": [
+        "/refresh.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 23,
+      "name": "preview_duplicate_still_fetches",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/create.json\"}",
+      "planned_origin_contact": [
+        "/create.json"
+      ],
+      "prediction_note": "Preview checks URL duplicate AFTER actual fetch",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    },
+    {
+      "index": 24,
+      "name": "create_official_sounding",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "body": "{\"url\":\"http://11.253.250.2:18080/official-name.json\"}",
+      "planned_origin_contact": [
+        "/official-name.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED"
+    }
+  ],
+  "origin": {
+    "internal_Docker_only": true,
+    "subnet": "11.253.250.0/29",
+    "ip": "11.253.250.2",
+    "Source_ip": "11.253.250.3",
+    "port": 18080,
+    "Internet_or_external_DNS": false,
+    "literal_public_address_class_not_public_exposure": true,
+    "max_requests": 32,
+    "max_body_bytes": 4096,
+    "phase_seconds": 300,
+    "fixtures": {
+      "/preview-good.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Owned Preview\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[]}}"
+        }
+      ],
+      "/create.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Owned Created\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[]}}"
+        }
+      ],
+      "/bare.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"registry_name\":\"Owned Bare\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[]}"
+        }
+      ],
+      "/missing-name.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"plugins\":[]}}"
+        }
+      ],
+      "/create-missing.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"plugins\":[]}}"
+        }
+      ],
+      "/official-name.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Dispatcharr Official Untrusted\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[]}}"
+        }
+      ],
+      "/missing-plugins.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Owned No Plugins\"}}"
+        }
+      ],
+      "/invalid.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{not-json"
+        }
+      ],
+      "/notfound.json": [
+        {
+          "status": 404,
+          "content_type": "text/plain",
+          "body": "owned not found\n"
+        }
+      ],
+      "/redirect-private": [
+        {
+          "status": 302,
+          "content_type": "text/plain",
+          "body": "",
+          "location": "http://127.0.0.1:18080/private.json"
+        }
+      ],
+      "/redirect-good": [
+        {
+          "status": 302,
+          "content_type": "text/plain",
+          "body": "",
+          "location": "/preview-good.json"
+        }
+      ],
+      "/refresh.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Owned Refreshed\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[{\"slug\":\"keep\",\"deprecated\":\"false\",\"manifest_url\":\"keep.json\"},{\"slug\":\"new\",\"manifest_url\":\"new.json\"}]}}"
+        },
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Owned Refreshed\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[{\"slug\":\"keep\",\"deprecated\":\"false\",\"manifest_url\":\"keep.json\"},{\"slug\":\"new\",\"manifest_url\":\"new.json\"}]}}"
+        },
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"plugins\":[]}}"
+        }
+      ]
+    },
+    "TCP_accept_ledger_required": true,
+    "max_header_read_seconds": 2
+  },
+  "seed": {
+    "repos": {
+      "1": "official unchanged; never fetched",
+      "801": {
+        "url": "http://11.253.250.2:18080/refresh.json",
+        "cached_manifest": {
+          "manifest": {
+            "registry_name": "Owned Old",
+            "registry_url": "http://11.253.250.2:18080",
+            "metadata_base_url": "http://11.253.250.2:18080/metadata",
+            "plugins": [
+              {
+                "slug": "keep",
+                "deprecated": false,
+                "manifest_url": "keep.json"
+              },
+              {
+                "slug": "drop",
+                "manifest_url": "drop.json"
+              }
+            ]
+          }
+        }
+      },
+      "802": {
+        "url": "http://11.253.250.2:18080/notfound.json",
+        "foreign_unchanged": true
+      }
+    },
+    "plugin_configs": {
+      "951": {
+        "source_repo_id": 801,
+        "slug": "drop",
+        "deprecated": true
+      },
+      "952": {
+        "source_repo_id": 801,
+        "slug": "keep",
+        "deprecated": false
+      },
+      "953": {
+        "source_repo_id": 802,
+        "slug": "foreign",
+        "deprecated": false
+      }
+    },
+    "repo_sequence": [
+      900,
+      true
+    ],
+    "known_plugin_detail_cache": "seed keep/new plus drop and foreign sentinels; only new-manifest URL keys invalidated by actual refresh",
+    "clocks": "seed existing UTC exact; every actual generated field preserved and own-request window/identity relations declared before run"
+  },
+  "startup": "real management-shell marker before django.setup; assert should_skip_initialization; preserve real receivers/raw queues; no PluginManager invocation/monkeypatch",
+  "environment": "HTTP_PROXY/HTTPS_PROXY/ALL_PROXY empty, NO_PROXY=*; owned internal network; real Core SSRF validator unchanged",
+  "audits": "default literal full62tables/59sequences plus named11; owned full62/59/raw rows/all Redis0..3/Channels/broker queues before/after every request; origin ledgers bytes+peer+timestamps",
+  "exclusions": [
+    "GPG signature execution/validity",
+    "plugin discovery/import/install/run",
+    "Main/TCP Source API",
+    "large manifests/unbounded Source memory equivalence",
+    "Source stdout and dependency capture not yet executed"
+  ],
+  "dependency_capture": "separate bounded never-started pinned-image plan required for exact requests/urllib3/ipaddress parser bytes; reuse known exact Original67 where available",
+  "no_actual_apps_or_Cargo": true,
+  "loopback_refusal_probe": {
+    "required": true,
+    "Source_container_only": true,
+    "bind": [
+      "127.0.0.1",
+      18080
+    ],
+    "real_listener_not_Source_method_patch": true,
+    "predicted_TCP_accepts": 0,
+    "actual_accepts_and_received_bytes_preserved": true,
+    "phase_seconds": 300,
+    "max_accepts": 8,
+    "reason": "an empty remote origin ledger alone cannot prove there was no attempted loopback connection"
+  }
+}

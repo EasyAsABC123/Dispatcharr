@@ -1,0 +1,664 @@
+{
+  "state": "SOURCE_UNSIGNED_FETCH24_WORKING_UNEXECUTED",
+  "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "scope": "NEW preview/create/refresh unsigned bounded manifests; not replay of historical metadata Source24",
+  "roles": [
+    {
+      "alias": "admin",
+      "id": 101,
+      "user_level": 10,
+      "custom_properties": {}
+    },
+    {
+      "alias": "standard",
+      "id": 102,
+      "user_level": 1,
+      "custom_properties": {}
+    },
+    {
+      "alias": "basic",
+      "id": 103,
+      "user_level": 0,
+      "custom_properties": {}
+    },
+    {
+      "alias": "admin_denied",
+      "id": 104,
+      "user_level": 10,
+      "custom_properties": {
+        "allowed_networks": {
+          "UI": "192.0.2.0/24"
+        }
+      }
+    }
+  ],
+  "seed": {
+    "CoreSettings": [
+      {
+        "key": "network_access",
+        "name": "Owned plugin repository UI networks",
+        "value": {
+          "UI": "127.0.0.0/8"
+        }
+      },
+      {
+        "key": "system_settings",
+        "name": "Owned plugin repository system settings",
+        "value": {
+          "time_zone": "UTC"
+        }
+      }
+    ],
+    "custom_repos": [
+      {
+        "id": 801,
+        "name": "Owned Old",
+        "url": "http://11.253.250.2:18080/refresh.json",
+        "enabled": true,
+        "public_key": "",
+        "cached_manifest": {
+          "manifest": {
+            "registry_name": "Owned Old",
+            "registry_url": "http://11.253.250.2:18080",
+            "metadata_base_url": "http://11.253.250.2:18080/metadata",
+            "plugins": [
+              {
+                "slug": "keep",
+                "deprecated": false,
+                "manifest_url": "keep.json"
+              },
+              {
+                "slug": "drop",
+                "manifest_url": "drop.json"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": 802,
+        "name": "Owned Foreign",
+        "url": "http://11.253.250.2:18080/notfound.json",
+        "enabled": true,
+        "public_key": "",
+        "cached_manifest": {
+          "manifest": {
+            "registry_name": "Owned Foreign",
+            "plugins": []
+          }
+        }
+      }
+    ],
+    "configs": [
+      {
+        "id": 951,
+        "key": "owned-fetch-drop",
+        "name": "Owned Drop",
+        "source_repo_id": 801,
+        "slug": "drop",
+        "deprecated": true
+      },
+      {
+        "id": 952,
+        "key": "owned-fetch-keep",
+        "name": "Owned Keep",
+        "source_repo_id": 801,
+        "slug": "keep",
+        "deprecated": false
+      },
+      {
+        "id": 953,
+        "key": "owned-fetch-foreign",
+        "name": "Owned Foreign",
+        "source_repo_id": 802,
+        "slug": "foreign",
+        "deprecated": false
+      }
+    ],
+    "sequence_last_values_called": {
+      "plugins_pluginrepo_id_seq": 900,
+      "plugins_pluginconfig_id_seq": 1000,
+      "accounts_user_id_seq": 200
+    }
+  },
+  "cases": [
+    {
+      "index": 1,
+      "name": "anonymous_preview_refusal",
+      "actor": "anonymous",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [],
+      "prediction_note": "Permission/no-contact prediction until measured; no forced auth",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f707265766965772d676f6f642e6a736f6e227d",
+      "body_bytes": 53,
+      "body_sha256": "3e4a9946649e5e629c74e406ee251ea7eff38a4616ca18caf129d1fdfa98c33b"
+    },
+    {
+      "index": 2,
+      "name": "standard_preview_refusal",
+      "actor": "standard",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [],
+      "prediction_note": "Permission/no-contact prediction until measured; no forced auth",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f707265766965772d676f6f642e6a736f6e227d",
+      "body_bytes": 53,
+      "body_sha256": "3e4a9946649e5e629c74e406ee251ea7eff38a4616ca18caf129d1fdfa98c33b"
+    },
+    {
+      "index": 3,
+      "name": "admin_denied_preview_refusal",
+      "actor": "admin_denied",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [],
+      "prediction_note": "Permission/no-contact prediction until measured; no forced auth",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f707265766965772d676f6f642e6a736f6e227d",
+      "body_bytes": 53,
+      "body_sha256": "3e4a9946649e5e629c74e406ee251ea7eff38a4616ca18caf129d1fdfa98c33b"
+    },
+    {
+      "index": 4,
+      "name": "loopback_preview_refusal",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f3132372e302e302e313a31383038302f707269766174652e6a736f6e227d",
+      "body_bytes": 45,
+      "body_sha256": "3d3075cf67f9e3d161b738e87bac41e2bf0e7415ab45446715db771305942981"
+    },
+    {
+      "index": 5,
+      "name": "missing_name_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/missing-name.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6d697373696e672d6e616d652e6a736f6e227d",
+      "body_bytes": 53,
+      "body_sha256": "674ccd860d749f901d6093aff77f3c1df66b8ec1b38229c129240898cb0399c6"
+    },
+    {
+      "index": 6,
+      "name": "official_name_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/official-name.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6f6666696369616c2d6e616d652e6a736f6e227d",
+      "body_bytes": 54,
+      "body_sha256": "d9e88f2076aea07ae9d248888645610e841e0ec866b866f6ecca47756f80681b"
+    },
+    {
+      "index": 7,
+      "name": "bare_manifest_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/bare.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f626172652e6a736f6e227d",
+      "body_bytes": 45,
+      "body_sha256": "35c2f10b40abb7b7d8772ea9c0ea60e110312a2a0ad30cb2f0795f407a018896"
+    },
+    {
+      "index": 8,
+      "name": "wrapped_manifest_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/preview-good.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f707265766965772d676f6f642e6a736f6e227d",
+      "body_bytes": 53,
+      "body_sha256": "3e4a9946649e5e629c74e406ee251ea7eff38a4616ca18caf129d1fdfa98c33b"
+    },
+    {
+      "index": 9,
+      "name": "create_valid_unsigned",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/create.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6372656174652e6a736f6e222c227075626c69635f6b6579223a22222c22656e61626c6564223a747275657d",
+      "body_bytes": 78,
+      "body_sha256": "dc4a1b31be96d1c31c10524eff1754e9a242d0a95b30ba01c07ebc6d3252c803"
+    },
+    {
+      "index": 10,
+      "name": "create_duplicate_url",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "planned_origin_contact": [],
+      "prediction_note": "Serializer uniqueness before fetch; preserve actual if different",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6372656174652e6a736f6e227d",
+      "body_bytes": 47,
+      "body_sha256": "465def655d2ab973a14c059c5418b6e4ea4e2cfe78ca97ae18a2057553f5bc80"
+    },
+    {
+      "index": 11,
+      "name": "create_fetch404",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/notfound.json"
+      ],
+      "prediction_note": "Temporary row may consume sequence then delete; capture literally",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6e6f74666f756e642e6a736f6e227d",
+      "body_bytes": 49,
+      "body_sha256": "e20a15a9e94a084f2098bf6c1e90b66b5a33d128415bccdbd3d49f260258404d"
+    },
+    {
+      "index": 12,
+      "name": "create_missing_registry",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/create-missing.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6372656174652d6d697373696e672e6a736f6e227d",
+      "body_bytes": 55,
+      "body_sha256": "daa1d1073a02d9185968bcfc8c6ab100c182750b3262f485bae7699fd15a49df"
+    },
+    {
+      "index": 13,
+      "name": "refresh_missing_target",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/999999/refresh/",
+      "content_type": "application/json",
+      "planned_origin_contact": [],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b7d",
+      "body_bytes": 2,
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "index": 14,
+      "name": "refresh_existing_drop_and_deprecate",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/801/refresh/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/refresh.json"
+      ],
+      "prediction_note": "Dropped source_repo/slug/deprecated QuerySet update vs retained config auto_now save distinct; cache detail deletion",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b7d",
+      "body_bytes": 2,
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "index": 15,
+      "name": "refresh_same_again",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/801/refresh/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/refresh.json"
+      ],
+      "prediction_note": "Repository own clocks advance; already-deprecated retained config should not save again",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b7d",
+      "body_bytes": 2,
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "index": 16,
+      "name": "refresh_fetch404",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/802/refresh/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/notfound.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b7d",
+      "body_bytes": 2,
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "index": 17,
+      "name": "redirect_private_refusal",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/redirect-private"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f72656469726563742d70726976617465227d",
+      "body_bytes": 52,
+      "body_sha256": "b4e1d52af82a3748d765a8a87744759b00cb9f2b335e4774792565ed420e392a"
+    },
+    {
+      "index": 18,
+      "name": "invalid_json_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/invalid.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f696e76616c69642e6a736f6e227d",
+      "body_bytes": 48,
+      "body_sha256": "33c1948b6767d4fbefac9ee35ddfdfe2d8b1e9e3c3a317fd659681362828d442"
+    },
+    {
+      "index": 19,
+      "name": "redirect_owned_valid",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/redirect-good",
+        "/preview-good.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f72656469726563742d676f6f64227d",
+      "body_bytes": 49,
+      "body_sha256": "3ea7d24eec73071ba6d21f083b4979bfebddb65cdb60bb2c764b8525e05caccf"
+    },
+    {
+      "index": 20,
+      "name": "missing_plugins_preview",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/missing-plugins.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6d697373696e672d706c7567696e732e6a736f6e227d",
+      "body_bytes": 56,
+      "body_sha256": "c79bedc3b9763939caaf6768d64a9eff3392ca633ea9683190f7e90d244a69ed"
+    },
+    {
+      "index": 21,
+      "name": "create_loopback_refusal",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "planned_origin_contact": [],
+      "prediction_note": "Do not assume no sequence use: URL serializer may save before outbound refusal",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f3132372e302e302e313a31383038302f707269766174652e6a736f6e227d",
+      "body_bytes": 45,
+      "body_sha256": "3d3075cf67f9e3d161b738e87bac41e2bf0e7415ab45446715db771305942981"
+    },
+    {
+      "index": 22,
+      "name": "refresh_invalid_name_third_fetch",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/801/refresh/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/refresh.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b7d",
+      "body_bytes": 2,
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "index": 23,
+      "name": "preview_duplicate_still_fetches",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/create.json"
+      ],
+      "prediction_note": "Preview checks URL duplicate AFTER actual fetch",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6372656174652e6a736f6e227d",
+      "body_bytes": 47,
+      "body_sha256": "465def655d2ab973a14c059c5418b6e4ea4e2cfe78ca97ae18a2057553f5bc80"
+    },
+    {
+      "index": 24,
+      "name": "create_official_sounding",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "planned_origin_contact": [
+        "/official-name.json"
+      ],
+      "prediction_note": "",
+      "status": "UNMEASURED",
+      "effects": "UNMEASURED",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6f6666696369616c2d6e616d652e6a736f6e227d",
+      "body_bytes": 54,
+      "body_sha256": "d9e88f2076aea07ae9d248888645610e841e0ec866b866f6ecca47756f80681b"
+    }
+  ],
+  "phase_seconds": 300,
+  "origin_definition": {
+    "internal_Docker_only": true,
+    "subnet": "11.253.250.0/29",
+    "ip": "11.253.250.2",
+    "Source_ip": "11.253.250.3",
+    "port": 18080,
+    "Internet_or_external_DNS": false,
+    "literal_public_address_class_not_public_exposure": true,
+    "max_requests": 32,
+    "max_body_bytes": 4096,
+    "phase_seconds": 300,
+    "fixtures": {
+      "/preview-good.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Owned Preview\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[]}}"
+        }
+      ],
+      "/create.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Owned Created\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[]}}"
+        }
+      ],
+      "/bare.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"registry_name\":\"Owned Bare\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[]}"
+        }
+      ],
+      "/missing-name.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"plugins\":[]}}"
+        }
+      ],
+      "/create-missing.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"plugins\":[]}}"
+        }
+      ],
+      "/official-name.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Dispatcharr Official Untrusted\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[]}}"
+        }
+      ],
+      "/missing-plugins.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Owned No Plugins\"}}"
+        }
+      ],
+      "/invalid.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{not-json"
+        }
+      ],
+      "/notfound.json": [
+        {
+          "status": 404,
+          "content_type": "text/plain",
+          "body": "owned not found\n"
+        }
+      ],
+      "/redirect-private": [
+        {
+          "status": 302,
+          "content_type": "text/plain",
+          "body": "",
+          "location": "http://127.0.0.1:18080/private.json"
+        }
+      ],
+      "/redirect-good": [
+        {
+          "status": 302,
+          "content_type": "text/plain",
+          "body": "",
+          "location": "/preview-good.json"
+        }
+      ],
+      "/refresh.json": [
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Owned Refreshed\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[{\"slug\":\"keep\",\"deprecated\":\"false\",\"manifest_url\":\"keep.json\"},{\"slug\":\"new\",\"manifest_url\":\"new.json\"}]}}"
+        },
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"registry_name\":\"Owned Refreshed\",\"registry_url\":\"http://11.253.250.2:18080\",\"metadata_base_url\":\"http://11.253.250.2:18080/metadata\",\"plugins\":[{\"slug\":\"keep\",\"deprecated\":\"false\",\"manifest_url\":\"keep.json\"},{\"slug\":\"new\",\"manifest_url\":\"new.json\"}]}}"
+        },
+        {
+          "status": 200,
+          "content_type": "application/json",
+          "body": "{\"manifest\":{\"plugins\":[]}}"
+        }
+      ]
+    },
+    "TCP_accept_ledger_required": true,
+    "max_header_read_seconds": 2,
+    "phase_start": "owned source-phase-cue.json after seed, before first API request",
+    "prephase_setup_deadline_seconds": 180
+  },
+  "loopback_probe": {
+    "required": true,
+    "Source_container_only": true,
+    "bind": [
+      "127.0.0.1",
+      18080
+    ],
+    "real_listener_not_Source_method_patch": true,
+    "predicted_TCP_accepts": 0,
+    "actual_accepts_and_received_bytes_preserved": true,
+    "phase_seconds": 300,
+    "max_accepts": 8,
+    "reason": "an empty remote origin ledger alone cannot prove there was no attempted loopback connection",
+    "phase_start": "owned source-phase-cue.json after seed, before first API request",
+    "prephase_setup_deadline_seconds": 180
+  },
+  "cache_detail_seed": [
+    "plugin_detail:801:1cb6475512a2ee880a268a894b1548f9",
+    "plugin_detail:801:434fc26b1d031f219237bbf039d0e463",
+    "plugin_detail:801:b4f713d77c2e082790a86dc6c5d640e9",
+    "plugin_detail:802:cac3339ed44022c8c4f3d7fca12d34aa"
+  ],
+  "client_raise_request_exception": false,
+  "force_authenticate_used": false,
+  "actual_outcomes": "UNMEASURED",
+  "Source_framework_only_not_TCP": true,
+  "phase_cue": "owned source-phase-cue.json afterseed/beforefirstAPI; origin/probe refresh cue at actualaccept aswell",
+  "network_observer_scope": "passive source namespace allinterfaces, actual packetdrop and fullqueue coverage required, before any Django import/defaultmigration, no Internet probe"
+}

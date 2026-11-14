@@ -1,0 +1,24 @@
+"""Finite actual Native epoch24 OR fresh1; no Source business execution."""
+import datetime,hashlib,json,os,re,time
+from pathlib import Path
+from absolute_http import Observation
+from native_state import state,need
+ROOT=Path('/native-root');OUT=Path('/evidence')
+def utc():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+def main():
+ need(os.environ.get('PLUGIN_UNSIGNED_COLLECT')=='owned-unsigned-real-router','OwnedCollector');epoch=os.environ['PLUGIN_UNSIGNED_EPOCH'];binding=json.loads((ROOT/'inputs/authority.json').read_bytes())[epoch];sourcepath=ROOT/'inputs'/binding['source_filename'];planpath=ROOT/'inputs'/binding['plan_filename'];need(hashlib.sha256(sourcepath.read_bytes()).hexdigest()==binding['source_sha256']and hashlib.sha256(planpath.read_bytes()).hexdigest()==binding['plan_sha256'],'ExactSourceEpochNoFallback');source=json.loads(sourcepath.read_bytes());plan=json.loads(planpath.read_bytes());count=binding['count'];need(source['actual_request_count']==len(source['requests'])==len(plan['cases'])==count and source['client_raise_request_exception']is False,'ExactNewMeasuredEpoch');ready=json.loads((OUT/'peer-ready.json').read_bytes());need(ready['actual_router']=='PluginRepositories::with_unsigned_manifest_fetches'and ready['Main']is False and ready['HTTP_readiness_probes']==0 and ready['expected_exact_requests']==count,'RealCompiledInertOptin');address=ready['address'];need(re.fullmatch(r'127\.0\.0\.1:[1-9][0-9]{0,4}',address)is not None,'ExactOwnedLoopbackTCP');database=os.environ['PLUGIN_REPO_DATABASE'];schema=json.loads((ROOT/'inputs/schema62-authority.json').read_bytes());users={row['id']:row for row in source['seed']['users']};roles={row['alias']:row for row in plan['roles']};rows=[];result={'capture_only':True,'passed':False,'capture_complete':False,'actual_request_count':0,'completed_capture_count':0,'epoch':epoch,'reference_count':count,'Source_scope':'retained APIClient/APIkey; original network HOST1 and unparsed IPv6 limitations unchanged','Native_transport':'real loopback TCP/inert compiled unsigned router','Main_or_fullM8':False,'raw_body_byte_parity_claimed':False,'seed_import':json.loads((OUT/'import-existing-state.json').read_bytes()),'peer_ready':ready,'before_requests':state(database,schema),'requests':rows,'phase_began_utc':utc()};target=OUT/'Native-unsigned-private.json';need(not target.exists(),'FreshCapture');began=time.monotonic()
+ def save():
+  raw=json.dumps(result,indent=2,allow_nan=False).encode();need(len(raw)<=134217728,'Capture128MiB');target.write_bytes(raw)
+ save()
+ try:
+  for actual,spec in zip(source['requests'],plan['cases']):
+   need(time.monotonic()-began<300,'Phase300');need(all(actual[k]==spec[k]for k in ['index','name','actor','method','path','body_hex','body_sha256','body_bytes']),'ExactMeasuredLiteralInputs');path=spec['path'];need(re.fullmatch(r'/api/plugins/repos/(?:preview/|[0-9]{1,12}/refresh/)?',path)is not None,'ExactUnsignedRoutes');body=bytes.fromhex(spec['body_hex']);need(len(body)==spec['body_bytes']and hashlib.sha256(body).hexdigest()==spec['body_sha256'],'LiteralBodySHA');headers={'Content-Type':spec['content_type'],'Accept':'application/json'}
+   if spec['actor']!='anonymous':headers['X-Api-Key']=users[roles[spec['actor']]['id']]['api_key']
+   row={**{k:spec[k]for k in ['index','name','actor','method','path','body_hex','body_sha256','body_bytes']},'raw_headers_private':headers,'before':state(database,schema),'began_utc':utc(),'began_monotonic':time.monotonic(),'capture_complete':False,'actual_request_invoked':True};rows.append(row);result['actual_request_count']+=1;save();observation=Observation('http://'+address,seconds=20)
+   try:
+    response=observation.request(path,headers,method=spec['method'],body=body);data=response.raw.read(1048577);need(len(data)<=1048576,'Response1MiB');parsed=json.loads(data);row.update(status=response.status_code,headers=list(response.raw.getheaders()),response_body_hex=data.hex(),response_body_bytes=len(data),response_body_sha256=hashlib.sha256(data).hexdigest(),json=parsed,absolute_observation=observation.complete())
+   finally:row['physical_close']=observation.cancel()
+   row.update(completed_utc=utc(),completed_monotonic=time.monotonic(),after=state(database,schema),capture_complete=True);result['completed_capture_count']+=1;save()
+  need(len(rows)==result['actual_request_count']==result['completed_capture_count']==count,'ExactlyDeclaredEpochNoPrefixReplay');result['capture_complete']=True
+ finally:result['phase_completed_utc']=utc();result['phase_elapsed_seconds']=time.monotonic()-began;save()
+if __name__=='__main__':main()

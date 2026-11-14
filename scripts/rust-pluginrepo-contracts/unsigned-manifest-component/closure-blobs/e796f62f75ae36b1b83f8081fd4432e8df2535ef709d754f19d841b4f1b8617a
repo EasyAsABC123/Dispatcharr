@@ -1,0 +1,6 @@
+"""Pure monotonic source-phase cue alignment; no app or clock hook."""
+import math
+def phase_start(previous,now,cue_ready):
+ if type(now)not in(int,float)or not math.isfinite(now)or now<0 or type(cue_ready)is not bool:raise ValueError('TypedFiniteMonotonicPhaseClock')
+ if previous is not None and(type(previous)not in(int,float)or not math.isfinite(previous)or not 0<=previous<=now):raise ValueError('ExistingPhaseCannotRewind')
+ return now if previous is None and cue_ready else previous

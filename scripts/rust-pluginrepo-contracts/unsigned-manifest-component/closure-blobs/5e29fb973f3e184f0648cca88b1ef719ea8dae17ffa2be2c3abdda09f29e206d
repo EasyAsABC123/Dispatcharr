@@ -1,0 +1,14 @@
+import unittest
+from phase_clock import phase_start
+class CueClock(unittest.TestCase):
+ def test_no_cue_keeps_setup(self):self.assertIsNone(phase_start(None,12.,False))
+ def test_cue_starts_after_setup(self):self.assertEqual(phase_start(None,12.,True),12.)
+ def test_callback_refresh_starts_first_request(self):self.assertEqual(phase_start(None,12.1,True),12.1)
+ def test_existing_phase_not_reset(self):self.assertEqual(phase_start(12.,20.,True),12.)
+ def test_rewind_refused(self):
+  with self.assertRaises(ValueError):phase_start(12.,11.,True)
+ def test_bool_clock_refused(self):
+  with self.assertRaises(ValueError):phase_start(None,True,True)
+ def test_nonfinite_refused(self):
+  with self.assertRaises(ValueError):phase_start(None,float('nan'),True)
+if __name__=='__main__':unittest.main()

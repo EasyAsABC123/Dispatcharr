@@ -1,0 +1,195 @@
+{
+  "state": "UNEXECUTED_FRESH_CREATE_FETCH404_SINGLE_REQUEST",
+  "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "scope": "NEW one-request uniqueURL404 supplement; no replay of retained24",
+  "roles": [
+    {
+      "alias": "admin",
+      "id": 101,
+      "user_level": 10,
+      "custom_properties": {}
+    },
+    {
+      "alias": "standard",
+      "id": 102,
+      "user_level": 1,
+      "custom_properties": {}
+    },
+    {
+      "alias": "basic",
+      "id": 103,
+      "user_level": 0,
+      "custom_properties": {}
+    },
+    {
+      "alias": "admin_denied",
+      "id": 104,
+      "user_level": 10,
+      "custom_properties": {
+        "allowed_networks": {
+          "UI": "192.0.2.0/24"
+        }
+      }
+    }
+  ],
+  "seed": {
+    "CoreSettings": [
+      {
+        "key": "network_access",
+        "name": "Owned plugin repository UI networks",
+        "value": {
+          "UI": "127.0.0.0/8"
+        }
+      },
+      {
+        "key": "system_settings",
+        "name": "Owned plugin repository system settings",
+        "value": {
+          "time_zone": "UTC"
+        }
+      }
+    ],
+    "custom_repos": [
+      {
+        "id": 801,
+        "name": "Owned Old",
+        "url": "http://11.253.250.2:18080/refresh.json",
+        "enabled": true,
+        "public_key": "",
+        "cached_manifest": {
+          "manifest": {
+            "registry_name": "Owned Old",
+            "registry_url": "http://11.253.250.2:18080",
+            "metadata_base_url": "http://11.253.250.2:18080/metadata",
+            "plugins": [
+              {
+                "slug": "keep",
+                "deprecated": false,
+                "manifest_url": "keep.json"
+              },
+              {
+                "slug": "drop",
+                "manifest_url": "drop.json"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": 802,
+        "name": "Owned Foreign",
+        "url": "http://11.253.250.2:18080/notfound.json",
+        "enabled": true,
+        "public_key": "",
+        "cached_manifest": {
+          "manifest": {
+            "registry_name": "Owned Foreign",
+            "plugins": []
+          }
+        }
+      }
+    ],
+    "configs": [
+      {
+        "id": 951,
+        "key": "owned-fetch-drop",
+        "name": "Owned Drop",
+        "source_repo_id": 801,
+        "slug": "drop",
+        "deprecated": true
+      },
+      {
+        "id": 952,
+        "key": "owned-fetch-keep",
+        "name": "Owned Keep",
+        "source_repo_id": 801,
+        "slug": "keep",
+        "deprecated": false
+      },
+      {
+        "id": 953,
+        "key": "owned-fetch-foreign",
+        "name": "Owned Foreign",
+        "source_repo_id": 802,
+        "slug": "foreign",
+        "deprecated": false
+      }
+    ],
+    "sequence_last_values_called": {
+      "plugins_pluginrepo_id_seq": 900,
+      "plugins_pluginconfig_id_seq": 1000,
+      "accounts_user_id_seq": 200
+    }
+  },
+  "cases": [
+    {
+      "index": 1,
+      "name": "fresh_create_unique_url_fetch404",
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "content_type": "application/json",
+      "body_hex": "7b2275726c223a22687474703a2f2f31312e3235332e3235302e323a31383038302f6372656174652d6e6f74666f756e642e6a736f6e227d",
+      "body_bytes": 56,
+      "body_sha256": "9c9d5cf9f97490b11f7867d058c1916fde971cf7079b82b1b55f41f9d8c58ddb",
+      "planned_origin_contact": [
+        "/create-notfound.json"
+      ],
+      "actual_outcome": "UNMEASURED"
+    }
+  ],
+  "phase_seconds": 300,
+  "origin_definition": {
+    "internal_Docker_only": true,
+    "subnet": "11.253.250.0/29",
+    "ip": "11.253.250.2",
+    "Source_ip": "11.253.250.3",
+    "port": 18080,
+    "Internet_or_external_DNS": false,
+    "literal_public_address_class_not_public_exposure": true,
+    "max_requests": 32,
+    "max_body_bytes": 4096,
+    "phase_seconds": 300,
+    "fixtures": {
+      "/create-notfound.json": [
+        {
+          "status": 404,
+          "content_type": "application/json",
+          "body": "{\"detail\":\"owned not found\"}"
+        }
+      ]
+    },
+    "TCP_accept_ledger_required": true,
+    "max_header_read_seconds": 2,
+    "phase_start": "owned source-phase-cue.json after seed, before first API request",
+    "prephase_setup_deadline_seconds": 180
+  },
+  "loopback_probe": {
+    "required": true,
+    "Source_container_only": true,
+    "bind": [
+      "127.0.0.1",
+      18080
+    ],
+    "real_listener_not_Source_method_patch": true,
+    "predicted_TCP_accepts": 0,
+    "actual_accepts_and_received_bytes_preserved": true,
+    "phase_seconds": 300,
+    "max_accepts": 8,
+    "reason": "an empty remote origin ledger alone cannot prove there was no attempted loopback connection",
+    "phase_start": "owned source-phase-cue.json after seed, before first API request",
+    "prephase_setup_deadline_seconds": 180
+  },
+  "cache_detail_seed": [
+    "plugin_detail:801:1cb6475512a2ee880a268a894b1548f9",
+    "plugin_detail:801:434fc26b1d031f219237bbf039d0e463",
+    "plugin_detail:801:b4f713d77c2e082790a86dc6c5d640e9",
+    "plugin_detail:802:cac3339ed44022c8c4f3d7fca12d34aa"
+  ],
+  "client_raise_request_exception": false,
+  "force_authenticate_used": false,
+  "actual_outcomes": "UNMEASURED",
+  "Source_framework_only_not_TCP": true,
+  "phase_cue": "owned source-phase-cue.json afterseed/beforefirstAPI; origin/probe refresh cue at actualaccept aswell",
+  "network_observer_scope": "passive source namespace allinterfaces, actual packetdrop and fullqueue coverage required, before any Django import/defaultmigration, no Internet probe"
+}

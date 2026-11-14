@@ -1,0 +1,11 @@
+import hashlib,json,unittest
+from pathlib import Path
+p=json.loads((Path(__file__).resolve().parent/'plan.json').read_text())
+class Definition(unittest.TestCase):
+ def test_fresh_one_only(self):self.assertEqual(len(p['cases']),1);self.assertEqual(p['request_count'],1)
+ def test_url_absent_from_seed(self):self.assertNotIn(json.loads(bytes.fromhex(p['cases'][0]['body_hex']))['url'],[r['url']for r in p['seed']['custom_repos']])
+ def test_exact_literal_body(self):r=p['cases'][0];b=bytes.fromhex(r['body_hex']);self.assertEqual(len(b),r['body_bytes']);self.assertEqual(hashlib.sha256(b).hexdigest(),r['body_sha256'])
+ def test_original_source_authority(self):self.assertEqual(p['Original_git'],'1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430')
+ def test_no_replayed_prefix(self):self.assertEqual(p['cases'][0]['name'],'fresh_create_unique_url_fetch404');self.assertEqual(p['cases'][0]['planned_origin_contact'],['/create-notfound.json'])
+ def test_prediction_unmeasured(self):self.assertEqual(p['cases'][0]['actual_outcome'],'UNMEASURED');self.assertTrue(p['Root_admission_required']);self.assertEqual(p['Source_or_Native_runs'],0)
+if __name__=='__main__':unittest.main()

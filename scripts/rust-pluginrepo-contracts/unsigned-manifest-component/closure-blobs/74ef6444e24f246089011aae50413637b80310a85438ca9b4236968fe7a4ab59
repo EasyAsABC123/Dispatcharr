@@ -1,0 +1,306 @@
+{
+  "passed": true,
+  "state": "EXACT3_RECORD_LICENSE_NEVER_STARTED_IMAGE_BYTES_CAPTURED",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "project": "dispatcharr-fetch-bytes-646546386f",
+  "container_started": false,
+  "program_executions": 0,
+  "rows": [
+    {
+      "path": "actual-image/site-packages/requests-2.34.2.dist-info/licenses/LICENSE",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/requests-2.34.2.dist-info/licenses/LICENSE",
+      "bytes": 10142,
+      "sha256": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b"
+    },
+    {
+      "path": "actual-image/site-packages/requests-2.34.2.dist-info/licenses/NOTICE",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/requests-2.34.2.dist-info/licenses/NOTICE",
+      "bytes": 38,
+      "sha256": "f5110972dedad2b4e9d314518daf3b7d72d6e02e499acd802181de6f74571dcc"
+    },
+    {
+      "path": "actual-image/site-packages/urllib3-2.8.0.dist-info/licenses/LICENSE.txt",
+      "runtime_path": "/dispatcharrpy/lib/python3.13/site-packages/urllib3-2.8.0.dist-info/licenses/LICENSE.txt",
+      "bytes": 1093,
+      "sha256": "130e3a64d5fdd5d096a752694634a7d9df284469de86e5732100268041e3d686"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-fetch-bytes-646546386f",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 3297002,
+      "observed_starttime": "33151463",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010415952012408525,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "name=^/dispatcharr-fetch-bytes-646546386f-never-started$",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 3297018,
+      "observed_starttime": "33151464",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009755214035976678,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "create",
+        "--pull=never",
+        "--name",
+        "dispatcharr-fetch-bytes-646546386f-never-started",
+        "--label",
+        "com.docker.compose.project=dispatcharr-fetch-bytes-646546386f",
+        "--network",
+        "none",
+        "--read-only",
+        "--pids-limit",
+        "32",
+        "--memory",
+        "64m",
+        "--entrypoint",
+        "/bin/true",
+        "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+      ],
+      "pid": 3297034,
+      "observed_starttime": "33151465",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.12065463699400425,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "f88c9050f8b2cd073268f45630ea25cf2ffe09ce40ef5443411d44b62c13e045"
+      ],
+      "pid": 3297050,
+      "observed_starttime": "33151477",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.010309029021300375,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "f88c9050f8b2cd073268f45630ea25cf2ffe09ce40ef5443411d44b62c13e045:/dispatcharrpy/lib/python3.13/site-packages/requests-2.34.2.dist-info/licenses/LICENSE",
+        "-"
+      ],
+      "pid": 3297066,
+      "observed_starttime": "33151478",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.01591012702556327,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "f88c9050f8b2cd073268f45630ea25cf2ffe09ce40ef5443411d44b62c13e045:/dispatcharrpy/lib/python3.13/site-packages/requests-2.34.2.dist-info/licenses/NOTICE",
+        "-"
+      ],
+      "pid": 3297081,
+      "observed_starttime": "33151480",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.011278555961325765,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "f88c9050f8b2cd073268f45630ea25cf2ffe09ce40ef5443411d44b62c13e045:/dispatcharrpy/lib/python3.13/site-packages/urllib3-2.8.0.dist-info/licenses/LICENSE.txt",
+        "-"
+      ],
+      "pid": 3297098,
+      "observed_starttime": "33151481",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.014810925989877433,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "f88c9050f8b2cd073268f45630ea25cf2ffe09ce40ef5443411d44b62c13e045"
+      ],
+      "pid": 3297114,
+      "observed_starttime": "33151483",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009729703015182167,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "--volumes",
+        "f88c9050f8b2cd073268f45630ea25cf2ffe09ce40ef5443411d44b62c13e045"
+      ],
+      "pid": 3297130,
+      "observed_starttime": "33151484",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.05177494301460683,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-fetch-bytes-646546386f",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 3297159,
+      "observed_starttime": "33151489",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.009718492976389825,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "name=^/dispatcharr-fetch-bytes-646546386f-never-started$",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 3297175,
+      "observed_starttime": "33151490",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.00959950900869444,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=f88c9050f8b2cd073268f45630ea25cf2ffe09ce40ef5443411d44b62c13e045",
+        "--format",
+        "{{.ID}}"
+      ],
+      "pid": 3297191,
+      "observed_starttime": "33151491",
+      "actual_wait_exit": 0,
+      "actual_poll_exit": 0,
+      "physical_pipes_closed": true,
+      "both_actual_EOF_observed": true,
+      "forced_termination": false,
+      "elapsed_seconds": 0.00995823903940618,
+      "invalid": null,
+      "PID_namespace": "pid:[4026531836]",
+      "capture_complete": true
+    }
+  ],
+  "volumes_created": [],
+  "CID": "f88c9050f8b2cd073268f45630ea25cf2ffe09ce40ef5443411d44b62c13e045",
+  "copied_total_bytes": 11273,
+  "cleanup_started_utc": "2026-11-13T23:05:19.799856+00:00",
+  "exact_owned_cleanup": true,
+  "all_known_host_PIDs_absent": true,
+  "cleanup_elapsed_seconds": 0.08413476101122797,
+  "actual_command_count": 12,
+  "actual_collected_output_bytes": 32512,
+  "data_capture_complete": true,
+  "actual_controller_exit": 0,
+  "settled_utc": "2026-11-13T23:05:19.883988+00:00"
+}

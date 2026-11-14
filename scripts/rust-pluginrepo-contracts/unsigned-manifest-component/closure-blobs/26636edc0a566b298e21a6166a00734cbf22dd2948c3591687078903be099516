@@ -1,0 +1,30 @@
+"""Pure definition/origin arithmetic only; no Source/Docker/HTTP execution."""
+import copy,hashlib,ipaddress,json,unittest
+from pathlib import Path
+import origin
+ROOT=Path(__file__).resolve().parent
+class Definition(unittest.TestCase):
+ def setUp(self):self.p=json.loads((ROOT/'plan.json').read_text())
+ def test_exact24_order_bodies(self):
+  self.assertEqual([r['index']for r in self.p['cases']],list(range(1,25)));self.assertTrue(all(r['status']==r['effects']=='UNMEASURED'for r in self.p['cases']));self.assertTrue(all(type(json.loads(r['body']))is dict for r in self.p['cases']))
+ def test_original_snapshots_hashes(self):
+  for n,h in json.loads((ROOT/'Original-inputs.json').read_text()).items():self.assertEqual(hashlib.sha256((ROOT/'Original'/n).read_bytes()).hexdigest(),h)
+ def test_host_only_address_class_not_Source_measurement(self):
+  ip=ipaddress.ip_address(self.p['origin']['ip']);self.assertTrue(ip.is_global);self.assertFalse(ip.is_private or ip.is_reserved or ip.is_loopback);self.assertTrue(self.p['origin']['internal_Docker_only'])
+ def test_finite_predicted_contacts_and_no_permission_fetch(self):self.assertEqual(sum(len(r['planned_origin_contact'])for r in self.p['cases']),18);self.assertTrue(all(not r['planned_origin_contact']for r in self.p['cases'][:4]))
+ def test_refresh_third_response_predeclared_not_outcome_adapted(self):
+  a,_=origin.response(self.p,'/refresh.json',1);b,_=origin.response(self.p,'/refresh.json',2);c,_=origin.response(self.p,'/refresh.json',3);self.assertEqual(a,b);self.assertNotEqual(a,c)
+ def test_no_fourth_refresh_response(self):
+  with self.assertRaises(ValueError):origin.response(self.p,'/refresh.json',4)
+ def test_no_unknown_origin_path(self):
+  with self.assertRaises(ValueError):origin.response(self.p,'/unknown',1)
+ def test_body_capacity(self):
+  p=copy.deepcopy(self.p);p['origin']['fixtures']['/preview-good.json'][0]['body']='x'*4097
+  with self.assertRaises(ValueError):origin.response(p,'/preview-good.json',1)
+ def test_no_boolean_occurrence(self):
+  with self.assertRaises(ValueError):origin.response(self.p,'/preview-good.json',True)
+ def test_unsigned_only_no_plugin_execution(self):
+  for path,rows in self.p['origin']['fixtures'].items():
+   for r in rows:
+    self.assertNotIn('signature',r['body']);self.assertLessEqual(len(r['body'].encode()),4096)
+if __name__=='__main__':unittest.main()

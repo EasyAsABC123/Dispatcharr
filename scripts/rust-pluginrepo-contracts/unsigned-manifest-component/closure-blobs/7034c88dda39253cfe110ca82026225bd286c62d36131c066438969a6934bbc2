@@ -1,0 +1,35 @@
+"""Socket-free Source-derived synthetic corruption controls, never app results."""
+import copy,hashlib,json,unittest
+from pathlib import Path
+from validate_native import validate,Clocks,clock
+ROOT=Path(__file__).resolve().parents[1]
+def reference(epoch):return json.loads((ROOT/'inputs'/('Source24-private.json'if epoch=='retained24'else'Source404-private.json')).read_bytes())
+def synthetic(source):
+ rows=[]
+ for a in source['requests']:
+  rows.append({**copy.deepcopy(a),'headers':list(a['headers'].items()),'physical_close':{'fd_after':-1,'original_inode_absent':True,'timer_joined':True}})
+ return {'capture_only':True,'passed':False,'capture_complete':True,'actual_request_count':len(rows),'completed_capture_count':len(rows),'raw_body_byte_parity_claimed':False,'Main_or_fullM8':False,'before_requests':copy.deepcopy(source['seed']),'requests':rows}
+class Normal(unittest.TestCase):
+ def test_retained24_synthetic_baseline_only(self):s=reference('retained24');self.assertEqual(validate(s,synthetic(s))['actual_Native_TCP_cases'],24)
+ def test_fresh1_synthetic_baseline_only(self):s=reference('fresh404');self.assertEqual(validate(s,synthetic(s))['actual_Native_TCP_cases'],1)
+ def bad(self,change,epoch='retained24'):
+  s=reference(epoch);n=synthetic(s);change(n)
+  with self.assertRaises((ValueError,KeyError,TypeError)):validate(s,n)
+ def test_reordered(self):self.bad(lambda n:n['requests'].reverse())
+ def test_wrong_body(self):self.bad(lambda n:n['requests'][0].update(body_hex='7b7d'))
+ def test_wrong_status(self):self.bad(lambda n:n['requests'][8].update(status=400))
+ def test_missing_create_sequence(self):self.bad(lambda n:n['requests'][8]['after']['public_manifest']['sequences'].update(plugins_pluginrepo_id_seq=[900,True]))
+ def test_missing_deleted_transient_sequence(self):self.bad(lambda n:n['requests'][11]['after']['public_manifest']['sequences'].update(plugins_pluginrepo_id_seq=[901,True]))
+ def test_dropped_child_timestamp_changed(self):self.bad(lambda n:n['requests'][13]['after']['configs'][0].update(updated_at='2099-01-01T00:00:00Z'))
+ def test_dropped_child_still_managed(self):self.bad(lambda n:n['requests'][13]['after']['configs'][0].update(source_repo_id=801))
+ def test_truthy_false_deprecated_lost(self):self.bad(lambda n:n['requests'][13]['after']['configs'][1].update(deprecated=False))
+ def test_foreign_table_changed(self):self.bad(lambda n:n['requests'][0]['after']['public_manifest']['tables']['vod_movie'].update(sha_like_md5='0'*32))
+ def test_all_cache_cleared(self):self.bad(lambda n:n['requests'][13]['after']['raw_Redis'][1]['rows'].clear())
+ def test_auth_challenge_removed(self):self.bad(lambda n:n['requests'][0].update(headers=[]))
+ def test_http_fd_unsettled(self):self.bad(lambda n:n['requests'][0]['physical_close'].update(fd_after=4))
+ def test_literal_body_corrupt(self):self.bad(lambda n:n['requests'][0].update(response_body_sha256='0'*64))
+ def test_source1_not_claimed25(self):self.bad(lambda n:n.update(actual_request_count=25),'fresh404')
+ def test_existing_clock_mapping_cannot_rewind_to_source(self):
+  s=reference('retained24');c=Clocks(s);a=next(iter(c.generated));native=a.replace(year=a.year+1);c.mapping[a]=native
+  with self.assertRaises(ValueError):c.compare(a.isoformat(),a.isoformat())
+if __name__=='__main__':unittest.main()

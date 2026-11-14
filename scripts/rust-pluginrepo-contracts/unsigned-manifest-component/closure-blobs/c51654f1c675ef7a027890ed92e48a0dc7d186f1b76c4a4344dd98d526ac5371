@@ -1,0 +1,66 @@
+"""Synthetic corruption controls ONLY; no socket/app/actual physical proof."""
+import copy,hashlib,json,tempfile,unittest
+from pathlib import Path
+from validate_physical import validate_physical
+ROOT=Path(__file__).resolve().parents[1]
+def fixture(root,stage):
+ def write(name,v):(root/name).write_text(json.dumps(v))
+ source=json.loads((ROOT/'inputs/Source24-private.json').read_bytes());before=copy.deepcopy(source['seed']);after=copy.deepcopy(before);after['raw_Redis']=copy.deepcopy(source['requests'][0]['after']['raw_Redis']);write('owned-before-peer.json',before);write('owned-after-peer.json',after);write('owned-backends-while-ELF-after-close.json',[])
+ samples=[{'elapsed_seconds':.01,'original_weak_some':True,'same_four_slots_available':3},{'elapsed_seconds':.261,'original_weak_some':True,'same_four_slots_available':3}];fate={'kind':'actual_observer_abort','actual_join_cancelled':True,'join_error':'cancelled','elapsed_seconds':.001,'request_finished_before_disposition':False,'actual_HTTPFD_loss_claim':False}if stage=='headers-abort'else{'kind':'actual100ms_observer_deadline','actual_timeout':True,'deadline_seconds':.1,'elapsed_seconds':.101,'join_handle_still_unfinished':True,'request_finished_before_disposition':False,'actual_HTTPFD_loss_claim':False}
+ write('origin-wire-held.json',{'mode':stage,'actual_peer':['11.253.250.3',34000],'actual_socket_inode':22222,'held_monotonic':1.,'header_bytes_sent':0 if stage=='headers-abort'else 80,'body_bytes_sent':0 if stage=='headers-abort'else 1,'remaining_wire_bytes':60});write('origin-client-eof.json',{'mode':stage,'actual_socket_inode':22222,'fate':'actual_read_EOF','observed_monotonic':1.7});write('native-held-observations.json',{'stage':stage,'samples':samples,'fate':fate});row={'actual_socket_inode':22222,'peer':['11.253.250.3',34000],'path':'/physical/'+stage+'.json','valid':True,'wire_write_complete':True,'held_monotonic':1.,'released_monotonic':1.6,'actual_hold_seconds':.6};(root/'origin-requests.jsonl').write_text(json.dumps(row)+'\n')
+ socket={'fd':9,'socket_link':'socket:[12345]','PID':7,'PID_namespace':'pid:[456]','network_namespace':'net:[789]','local':'11.253.250.3:34000','peer':'11.253.250.2:18080','captured_utc':'2026-11-14T00:00:00Z'};write('native-http-event-0.json',{'event':'actual_connected','socket':socket,'original_writer_weak_some_at_event':True,'same_four_slots_available_at_event':3});write('native-http-event-1.json',{'event':'actual_after_drop','original_socket':socket,'after_link':None,'original_socket_generation_absent':True,'original_writer_weak_some_at_event':True,'same_four_slots_available_at_event':3,'observed_utc':'2026-11-14T00:00:01Z'})
+ body=b'{"valid":true}';frame={'original_weak_some':True,'same_four_slots_available':3};response=None if stage=='headers-abort'else{'status':200,'headers':[['content-type','application/json']],'body_hex':body.hex(),'body_bytes':len(body),'body_sha256':hashlib.sha256(body).hexdigest(),'after_extract_before_clone':frame,'after_drop_original_clone_kept':{**frame,'clone_bytes':len(body)},'after_drop_clone_weak_some':False,'after_drop_clone_available_slots':4}
+ write('native-response-and-fate.json',{'stage':stage,'actual_observer_fate':fate,'actual_response':response,'original_weak_none_after_retirement':True,'same_four_slots_after_retirement':4,'HTTPFDloss_SQLReady_fourframes_Main_claim':False});write('peer-terminal.json',{'passed':True,'actual_requests':1,'same_four_slots':4,'original_weak_none_after_settlement':True,'Main_or_SQLReady_or_clientFDloss_claim':False,'actual_held_samples':samples,'stage':stage});write('pool-closed-ready.json',{'closed':True,'size':0,'actual_four_slots':4,'max':4,'idle_diagnostic':2})
+class Physical(unittest.TestCase):
+ def test_synthetic_headers_baseline_only(self):
+  with tempfile.TemporaryDirectory()as d:fixture(Path(d),'headers-abort');self.assertTrue(validate_physical(d,'headers-abort')['passed'])
+ def test_synthetic_body_baseline_only(self):
+  with tempfile.TemporaryDirectory()as d:fixture(Path(d),'body-deadline');self.assertTrue(validate_physical(d,'body-deadline')['passed'])
+ def consistent_fate_bad(self,key,value):
+  with tempfile.TemporaryDirectory()as d:
+   root=Path(d);fixture(root,'body-deadline')
+   for name,parent in [('native-response-and-fate.json','actual_observer_fate'),('native-held-observations.json','fate')]:
+    path=root/name;v=json.loads(path.read_text());v[parent][key]=value;path.write_text(json.dumps(v))
+   with self.assertRaises(ValueError):validate_physical(root,'body-deadline')
+ def test_consistent_elapsed_zero(self):self.consistent_fate_bad('elapsed_seconds',0)
+ def test_consistent_elapsed_nan(self):self.consistent_fate_bad('elapsed_seconds',float('nan'))
+ def test_consistent_elapsed_bool(self):self.consistent_fate_bad('elapsed_seconds',True)
+ def test_consistent_timeout_false(self):self.consistent_fate_bad('actual_timeout',False)
+ def test_consistent_sample_window_too_short(self):
+  with tempfile.TemporaryDirectory()as d:
+   root=Path(d);fixture(root,'body-deadline')
+   for name,parent in [('native-held-observations.json','samples'),('peer-terminal.json','actual_held_samples')]:
+    path=root/name;v=json.loads(path.read_text());v[parent][1]['elapsed_seconds']=.1;path.write_text(json.dumps(v))
+   with self.assertRaises(ValueError):validate_physical(root,'body-deadline')
+
+def bad(name,file,change,stage='body-deadline'):
+ def test(self):
+  with tempfile.TemporaryDirectory()as d:
+   root=Path(d);fixture(root,stage);p=root/file;v=json.loads(p.read_text());change(v);p.write_text(json.dumps(v))
+   with self.assertRaises((ValueError,KeyError,TypeError)):validate_physical(root,stage)
+ setattr(Physical,'test_reject_'+name,test)
+for name,file,fn in [
+ ('FIN_without_nativeFD_close','native-http-event-1.json',lambda v:v.update(after_link='socket:[12345]')),
+ ('missing_nativeFD_receipt','native-http-event-1.json',lambda v:v.pop('original_socket')),
+ ('wrong_originalFD','native-http-event-1.json',lambda v:v['original_socket'].update(fd=10)),
+ ('nativeFD_bool','native-http-event-0.json',lambda v:v['socket'].update(fd=True)),
+ ('owner_retires_before_FD','native-http-event-1.json',lambda v:v.update(original_writer_weak_some_at_event=False)),
+ ('extra_budget_at_FDclose','native-http-event-1.json',lambda v:v.update(same_four_slots_available_at_event=4)),
+ ('wrong_native_socket_peer','native-http-event-0.json',lambda v:v['socket'].update(peer='127.0.0.1:18080')),
+ ('hold0','origin-requests.jsonl',lambda v:v.update(actual_hold_seconds=0)),
+ ('hold_nan','origin-requests.jsonl',lambda v:v.update(actual_hold_seconds=float('nan'))),
+ ('hold_bool_clock','origin-requests.jsonl',lambda v:v.update(held_monotonic=True)),
+ ('short_samples','native-held-observations.json',lambda v:v['samples'][1].update(elapsed_seconds=.1)),
+ ('missing_sample','native-held-observations.json',lambda v:v['samples'].pop()),
+ ('weak_missing_while_held','native-held-observations.json',lambda v:v['samples'][0].update(original_weak_some=False)),
+ ('logical_deadline_not_reached','native-response-and-fate.json',lambda v:v['actual_observer_fate'].update(actual_timeout=False)),
+ ('logical_elapsed_too_short','native-response-and-fate.json',lambda v:v['actual_observer_fate'].update(elapsed_seconds=.01)),
+ ('fake_HTTPFDloss','native-response-and-fate.json',lambda v:v['actual_observer_fate'].update(actual_HTTPFD_loss_claim=True)),
+ ('body_sha','native-response-and-fate.json',lambda v:v['actual_response'].update(body_sha256='0'*64)),
+ ('wrong_response_status','native-response-and-fate.json',lambda v:v['actual_response'].update(status=503)),
+ ('frame_lost_owner','native-response-and-fate.json',lambda v:v['actual_response']['after_drop_original_clone_kept'].update(original_weak_some=False)),
+ ('live_SQLpool','pool-closed-ready.json',lambda v:v.update(size=1)),
+ ('idle_outside_same_max','pool-closed-ready.json',lambda v:v.update(idle_diagnostic=5)),
+ ('while_ELF_SQL_backend','owned-backends-while-ELF-after-close.json',lambda v:v.append({'pid':999})),
+]:bad(name,file,fn)
+if __name__=='__main__':unittest.main()

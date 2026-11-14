@@ -1,0 +1,10 @@
+"""Actual mounted-byte preflight; no Django, Source application or network imports."""
+import hashlib,json
+from pathlib import Path
+manifest=json.loads(Path('/plugin-inputs/runtime-mounted-inputs.json').read_text())
+for guest,row in manifest.items():
+ path=Path(guest)
+ if not guest.startswith(('/plugin-tools/','/plugin-inputs/'))or'..'in path.parts or path.is_symlink()or not path.is_file():raise ValueError('ExactActualGuestMountedRegularPath')
+ raw=path.read_bytes()
+ if len(raw)!=row['bytes']or hashlib.sha256(raw).hexdigest()!=row['sha256']:raise ValueError('ActualGuestMountedSHA:'+guest)
+print(json.dumps({'passed':True,'actual_guest_mounted_files':len(manifest),'Source_Django_imported':False}))

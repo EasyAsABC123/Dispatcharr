@@ -1,0 +1,92 @@
+{
+  "source_map_sha256": "701550d8eedbc91f891e0eb65bb33f69c485eff749b66996d9067781a8456335",
+  "commands": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 3725851,
+      "PID_scope": "tool namespace, not host process absence proof",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794618828.2995975,
+      "completed_epoch": 1794618830.3281314,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 3725936,
+      "PID_scope": "tool namespace, not host process absence proof",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794618830.366826,
+      "completed_epoch": 1794618839.8144414,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 3726721,
+      "PID_scope": "tool namespace, not host process absence proof",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794618839.8528414,
+      "completed_epoch": 1794618882.330317,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 3729792,
+      "PID_scope": "tool namespace, not host process absence proof",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794618882.3691292,
+      "completed_epoch": 1794618998.4757469,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "store-no-run",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--offline",
+        "--locked",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "PID": 3743616,
+      "PID_scope": "tool namespace, not host process absence proof",
+      "actual_wait_exit": 0,
+      "began_epoch": 1794618998.5145416,
+      "completed_epoch": 1794619020.6570547,
+      "source_inputs_unchanged": true
+    }
+  ]
+}
