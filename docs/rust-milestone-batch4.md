@@ -30,7 +30,9 @@ pass, as does the [complete clean-install/React regression](rust-milestone-batch
 The [affected job cohort](rust-m6-packaged-main-batch4.md) passes191 assertions:
 the configured-rule chain, actual settings PATCH200 and second real import with
 no rules, using packaged data paths without a Source tree mounted in Main.
-Full settings/plugin acceptance remains pending. The previous Main PATCH405
+The [Core99 Main cohort](rust-main-core99.md) also passes its scoped HTTP/effect
+checks; missing producer transport metadata and other full settings/plugin
+criteria remain open. The previous Main PATCH405
 remains failed evidence on its original image. The [default worker audit](rust-default-worker-graph.md)
 records the broader missing graph. No full milestone or performance gain is
 accepted by these SDK results.

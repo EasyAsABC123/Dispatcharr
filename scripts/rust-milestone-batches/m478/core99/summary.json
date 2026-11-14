@@ -1,0 +1,868 @@
+{
+  "Original_authors_credit": "All application, model, serializer, signal, Channels and task authorship/credit remain with the Original Dispatcharr authors; see ATTRIBUTION.md and LICENSE.",
+  "candidate": {
+    "git": "9440a31973978e6c8efe144912525c59fa3f260f",
+    "source_map_file": "/home/justin/github/Dispatcharr/scripts/rust-integration/milestone-batch4/source-inputs.json",
+    "source_map_sha256": "3231f0f95b137d96b3e62d47c44fa2884582fc1e8f8f27833b067a4c0a60e061",
+    "build_manifest_file": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch4-build-1/build.json",
+    "build_manifest_sha256": "c9e293199016435b0435806c5905c7d6752a3df3f4eff14584292a0f7f04096d",
+    "image_id": "sha256:a6d563ff2f71d9552df2e3d28d10e949b99a891d880305b484416e73733fa4f6",
+    "source_archive_file": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch4-build-1/source.tar",
+    "source_archive_sha256": "dc9b7d4caffffb7295374dbb4a724455e720a612f62b4af4e1e013b1a78fd40e",
+    "plugin_numeric_mode": "finite-v1"
+  },
+  "actual_controller_exit": 0,
+  "actual_elapsed_seconds": 55.7007945330115,
+  "qualified": {
+    "passed": true,
+    "actual_Main_business_HTTP_calls": 99,
+    "additional_plugin_readiness_HTTP_calls": 3,
+    "scoped_Core_effect_predicates": 2257,
+    "additional_row_task_predicates": 643,
+    "Original_management_setup_observer_processes": 6,
+    "Source_API_calls": 0,
+    "raw_report_stale_Source_application_runs_field": 0,
+    "stale_field_is_not_a_zero_Source_program_claim": true,
+    "actual_Controller_exit": 0,
+    "full_task_transport_metadata_parity": false,
+    "task_metadata_gaps": [
+      {
+        "case": 38,
+        "task": "core.tasks.rehash_streams",
+        "missing_Source_header_fields": [
+          "argsrepr",
+          "kwargsrepr",
+          "origin",
+          "replaced_task_nesting",
+          "stamped_headers",
+          "stamps"
+        ],
+        "extra_Main_header_fields": [],
+        "reply_to_UUID_versions": {
+          "Source": 3,
+          "Main": 4
+        },
+        "delivery_tag_valid_UUIDs": true,
+        "full_header_property_parity_claimed": false
+      },
+      {
+        "case": 46,
+        "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+        "missing_Source_header_fields": [
+          "argsrepr",
+          "kwargsrepr",
+          "origin",
+          "replaced_task_nesting",
+          "stamped_headers",
+          "stamps"
+        ],
+        "extra_Main_header_fields": [],
+        "reply_to_UUID_versions": {
+          "Source": 3,
+          "Main": 4
+        },
+        "delivery_tag_valid_UUIDs": true,
+        "full_header_property_parity_claimed": false
+      },
+      {
+        "case": 47,
+        "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+        "missing_Source_header_fields": [
+          "argsrepr",
+          "kwargsrepr",
+          "origin",
+          "replaced_task_nesting",
+          "stamped_headers",
+          "stamps"
+        ],
+        "extra_Main_header_fields": [],
+        "reply_to_UUID_versions": {
+          "Source": 3,
+          "Main": 4
+        },
+        "delivery_tag_valid_UUIDs": true,
+        "full_header_property_parity_claimed": false
+      },
+      {
+        "case": 49,
+        "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+        "missing_Source_header_fields": [
+          "argsrepr",
+          "kwargsrepr",
+          "origin",
+          "replaced_task_nesting",
+          "stamped_headers",
+          "stamps"
+        ],
+        "extra_Main_header_fields": [],
+        "reply_to_UUID_versions": {
+          "Source": 3,
+          "Main": 4
+        },
+        "delivery_tag_valid_UUIDs": true,
+        "full_header_property_parity_claimed": false
+      },
+      {
+        "case": 50,
+        "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+        "missing_Source_header_fields": [
+          "argsrepr",
+          "kwargsrepr",
+          "origin",
+          "replaced_task_nesting",
+          "stamped_headers",
+          "stamps"
+        ],
+        "extra_Main_header_fields": [],
+        "reply_to_UUID_versions": {
+          "Source": 3,
+          "Main": 4
+        },
+        "delivery_tag_valid_UUIDs": true,
+        "full_header_property_parity_claimed": false
+      }
+    ],
+    "strict_framework_cache_context_passed": false,
+    "prior_actual_e88_strict_exit2_preserved": true,
+    "all159_known_host_generations_and12CIDs_independently_absent": true,
+    "private_peer290_predicates_claimed": false,
+    "Native_private_timezone_proxy_consumers_qualified": false,
+    "unconsumed_task_downstream_execution_qualified": false,
+    "full_M5_M8_accepted": false,
+    "performance_claims": false,
+    "application_or_Source_replays_by_this_qualifier": 0
+  },
+  "Core51": {
+    "groups": [
+      {
+        "group": "system_settings",
+        "database": "rust_special_86a9e3c716_system_settings",
+        "passed": true,
+        "actual_API_calls": 8,
+        "completed_API_captures": 8,
+        "capture_valid": true,
+        "actual_Main_exit": 0,
+        "backends_after_Main": []
+      },
+      {
+        "group": "network_access",
+        "database": "rust_special_86a9e3c716_network_access",
+        "passed": true,
+        "actual_API_calls": 10,
+        "completed_API_captures": 10,
+        "capture_valid": true,
+        "actual_Main_exit": 0,
+        "backends_after_Main": []
+      },
+      {
+        "group": "reverse_proxy_auth",
+        "database": "rust_special_86a9e3c716_reverse_proxy_auth",
+        "passed": true,
+        "actual_API_calls": 8,
+        "completed_API_captures": 8,
+        "capture_valid": true,
+        "actual_Main_exit": 0,
+        "backends_after_Main": []
+      },
+      {
+        "group": "proxy_settings",
+        "database": "rust_special_86a9e3c716_proxy_settings",
+        "passed": true,
+        "actual_API_calls": 8,
+        "completed_API_captures": 8,
+        "capture_valid": true,
+        "actual_Main_exit": 0,
+        "backends_after_Main": []
+      },
+      {
+        "group": "stream_settings",
+        "database": "rust_special_86a9e3c716_stream_settings",
+        "passed": true,
+        "actual_API_calls": 9,
+        "completed_API_captures": 9,
+        "capture_valid": true,
+        "actual_Main_exit": 0,
+        "backends_after_Main": []
+      },
+      {
+        "group": "dvr_settings",
+        "database": "rust_special_86a9e3c716_dvr_settings",
+        "passed": true,
+        "actual_API_calls": 8,
+        "completed_API_captures": 8,
+        "capture_valid": true,
+        "actual_Main_exit": 0,
+        "backends_after_Main": []
+      }
+    ],
+    "exact_Core_effect_predicates": 2257,
+    "additional_row_task_predicates": 643,
+    "shared_log_file_bytes_and_exact_Channels_payloads": true,
+    "task_name_args_kwargs_options_declared_lineage_and_real_handoff_lock_relations": true,
+    "full_task_header_metadata_parity": false,
+    "metadata_gaps": [
+      {
+        "case": 38,
+        "task": "core.tasks.rehash_streams",
+        "missing_Source_header_fields": [
+          "argsrepr",
+          "kwargsrepr",
+          "origin",
+          "replaced_task_nesting",
+          "stamped_headers",
+          "stamps"
+        ],
+        "extra_Main_header_fields": [],
+        "reply_to_UUID_versions": {
+          "Source": 3,
+          "Main": 4
+        },
+        "delivery_tag_valid_UUIDs": true,
+        "full_header_property_parity_claimed": false
+      },
+      {
+        "case": 46,
+        "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+        "missing_Source_header_fields": [
+          "argsrepr",
+          "kwargsrepr",
+          "origin",
+          "replaced_task_nesting",
+          "stamped_headers",
+          "stamps"
+        ],
+        "extra_Main_header_fields": [],
+        "reply_to_UUID_versions": {
+          "Source": 3,
+          "Main": 4
+        },
+        "delivery_tag_valid_UUIDs": true,
+        "full_header_property_parity_claimed": false
+      },
+      {
+        "case": 47,
+        "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+        "missing_Source_header_fields": [
+          "argsrepr",
+          "kwargsrepr",
+          "origin",
+          "replaced_task_nesting",
+          "stamped_headers",
+          "stamps"
+        ],
+        "extra_Main_header_fields": [],
+        "reply_to_UUID_versions": {
+          "Source": 3,
+          "Main": 4
+        },
+        "delivery_tag_valid_UUIDs": true,
+        "full_header_property_parity_claimed": false
+      },
+      {
+        "case": 49,
+        "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+        "missing_Source_header_fields": [
+          "argsrepr",
+          "kwargsrepr",
+          "origin",
+          "replaced_task_nesting",
+          "stamped_headers",
+          "stamps"
+        ],
+        "extra_Main_header_fields": [],
+        "reply_to_UUID_versions": {
+          "Source": 3,
+          "Main": 4
+        },
+        "delivery_tag_valid_UUIDs": true,
+        "full_header_property_parity_claimed": false
+      },
+      {
+        "case": 50,
+        "task": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+        "missing_Source_header_fields": [
+          "argsrepr",
+          "kwargsrepr",
+          "origin",
+          "replaced_task_nesting",
+          "stamped_headers",
+          "stamps"
+        ],
+        "extra_Main_header_fields": [],
+        "reply_to_UUID_versions": {
+          "Source": 3,
+          "Main": 4
+        },
+        "delivery_tag_valid_UUIDs": true,
+        "full_header_property_parity_claimed": false
+      }
+    ],
+    "default_SQL6259_and_RedisDB7_unchanged": true
+  },
+  "plugin41": {
+    "transport16": {
+      "actual_calls": 16,
+      "completed_calls": 16,
+      "HTTP_SQL": {
+        "passed": true,
+        "actual_Main_API_cases": 16,
+        "selected_SQL_tables": 7,
+        "all59_sequence_effects": true,
+        "foreign_Native_tables_and_schema_unchanged": true,
+        "initial_all_foreign_Source_rows_equivalent": false,
+        "cache_parity_qualified": false,
+        "literal_API_body_equal_by_case": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "top_level_JSON_order_equal_by_case": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "Source_original_TCP_authority": false,
+        "full_M8_accepted": false,
+        "performance_measured": false
+      },
+      "GPG": {
+        "passed": true,
+        "actual_children": 13,
+        "actual_homes_removed": 7,
+        "children": [
+          {
+            "pid": 27,
+            "generation": "40124371",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 28,
+            "generation": "40124371",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 29,
+            "generation": "40124382",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 30,
+            "generation": "40124382",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 31,
+            "generation": "40124393",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 32,
+            "generation": "40124393",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 33,
+            "generation": "40124405",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 34,
+            "generation": "40124416",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 35,
+            "generation": "40124417",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 36,
+            "generation": "40124440",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 37,
+            "generation": "40124441",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 38,
+            "generation": "40124453",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 39,
+            "generation": "40124453",
+            "PID_namespace": "pid:[4026534807]"
+          }
+        ],
+        "observed_waits": [
+          {
+            "pid": 27,
+            "generation": "40124371",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 28,
+            "generation": "40124371",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 29,
+            "generation": "40124382",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 30,
+            "generation": "40124382",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 31,
+            "generation": "40124393",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 32,
+            "generation": "40124393",
+            "exit": 1,
+            "signal": null
+          },
+          {
+            "pid": 33,
+            "generation": "40124405",
+            "exit": 2,
+            "signal": null
+          },
+          {
+            "pid": 34,
+            "generation": "40124416",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 35,
+            "generation": "40124417",
+            "exit": 2,
+            "signal": null
+          },
+          {
+            "pid": 36,
+            "generation": "40124440",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 37,
+            "generation": "40124441",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 38,
+            "generation": "40124453",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 39,
+            "generation": "40124453",
+            "exit": 0,
+            "signal": null
+          }
+        ]
+      },
+      "Origin": {
+        "passed": true,
+        "actual_application_requests": 12,
+        "literal_response_bytes_equal": true,
+        "actual_request_header_bytes_equal_by_request": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "TLS_header_byte_parity_qualified": false,
+        "passive_whole_network_clean_claim": false
+      },
+      "actual_Main_exit": 0,
+      "functional_error": {
+        "type": "ValueError",
+        "message": "ExactSourceRedisKeySetNoWarmImportOrMissingVersions"
+      }
+    },
+    "retained24": {
+      "actual_calls": 24,
+      "completed_calls": 24,
+      "HTTP_SQL": {
+        "passed": true,
+        "actual_Main_API_cases": 24,
+        "selected_SQL_tables": 7,
+        "all59_sequence_effects": true,
+        "foreign_Native_tables_and_schema_unchanged": true,
+        "initial_all_foreign_Source_rows_equivalent": false,
+        "cache_parity_qualified": false,
+        "literal_API_body_equal_by_case": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "top_level_JSON_order_equal_by_case": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "Source_original_TCP_authority": false,
+        "full_M8_accepted": false,
+        "performance_measured": false
+      },
+      "GPG": {
+        "passed": true,
+        "actual_children": 0,
+        "actual_homes_removed": 0,
+        "children": [],
+        "observed_waits": []
+      },
+      "Origin": {
+        "passed": true,
+        "actual_unsigned_reference_requests": 17,
+        "additional_numeric_requests": 0,
+        "retained_header_order_values_equal": true,
+        "Source24_old_planned18_not_relabelled": true,
+        "passive_whole_network_clean_claim": false
+      },
+      "actual_Main_exit": 0,
+      "functional_error": {
+        "type": "ValueError",
+        "message": "ExactSourceRedisKeySetNoWarmImportOrMissingVersions"
+      }
+    },
+    "fresh404": {
+      "actual_calls": 1,
+      "completed_calls": 1,
+      "HTTP_SQL": {
+        "passed": true,
+        "actual_Main_API_cases": 1,
+        "selected_SQL_tables": 7,
+        "all59_sequence_effects": true,
+        "foreign_Native_tables_and_schema_unchanged": true,
+        "initial_all_foreign_Source_rows_equivalent": false,
+        "cache_parity_qualified": false,
+        "literal_API_body_equal_by_case": [
+          true
+        ],
+        "top_level_JSON_order_equal_by_case": [
+          true
+        ],
+        "Source_original_TCP_authority": false,
+        "full_M8_accepted": false,
+        "performance_measured": false
+      },
+      "GPG": {
+        "passed": true,
+        "actual_children": 2,
+        "actual_homes_removed": 1,
+        "children": [
+          {
+            "pid": 15,
+            "generation": "40125130",
+            "PID_namespace": "pid:[4026534807]"
+          },
+          {
+            "pid": 16,
+            "generation": "40125131",
+            "PID_namespace": "pid:[4026534807]"
+          }
+        ],
+        "observed_waits": [
+          {
+            "pid": 15,
+            "generation": "40125130",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 16,
+            "generation": "40125131",
+            "exit": 1,
+            "signal": null
+          }
+        ]
+      },
+      "Origin": {
+        "passed": true,
+        "actual_unsigned_reference_requests": 1,
+        "additional_numeric_requests": 1,
+        "retained_header_order_values_equal": true,
+        "Source24_old_planned18_not_relabelled": true,
+        "passive_whole_network_clean_claim": false
+      },
+      "actual_Main_exit": 0,
+      "functional_error": {
+        "type": "ValueError",
+        "message": "ExactSourceRedisKeySetNoWarmImportOrMissingVersions"
+      }
+    }
+  },
+  "startup_finite6": {
+    "passed": true,
+    "checks": {
+      "cache4_plus_finite2_complete": true,
+      "no_Original_application_runs": true,
+      "TCP_only_readiness": true,
+      "group_absent_before_Main": true,
+      "group_warm_before_first_HTTP": true,
+      "first_HTTP_group_typed_UTC": true,
+      "actual_setter_invalidates": true,
+      "setter_and_immediate_window_under5s": true,
+      "immediate_GET_leaves_group_absent": true,
+      "actual_expired_age_lower_bound": true,
+      "expired_GET_repopulates_typed_UTC": true,
+      "all6_HTTP200": true,
+      "all6_HTTP_socket_timer_closed": true,
+      "default6259_unchanged": true,
+      "normal_Main_exit0_backends_absent": true,
+      "finite_valid_signature_true": true,
+      "finite_changed_signature_false": true,
+      "actual_GPG_wait_EOF_homes": true,
+      "actual_GPG_live_namespace_absence": true,
+      "owned_finite_Origin_joined": true
+    },
+    "Original_functions_replaced": false,
+    "Source41_replays": 0,
+    "cache_authority": "actual Original normal WSGI startup15 checks; Source checked=0/zoneNone before first HTTP",
+    "Source_numeric_authority": "Python builtin Original canonical expression plus actual independent tool GPG waits0/1; no Source API execution",
+    "pickle_scope": "typed primitive interoperability; raw serialization bytes are not required identical",
+    "full_M8_acceptance": false,
+    "adversarial_Plugin_actor_drain_qualified": false,
+    "performance_claims": false
+  },
+  "numeric_GPG": {
+    "passed": true,
+    "actual_children": 4,
+    "actual_homes_removed": 2,
+    "children": [
+      {
+        "pid": 11,
+        "generation": "40125813",
+        "PID_namespace": "pid:[4026534807]"
+      },
+      {
+        "pid": 12,
+        "generation": "40125813",
+        "PID_namespace": "pid:[4026534807]"
+      },
+      {
+        "pid": 13,
+        "generation": "40125820",
+        "PID_namespace": "pid:[4026534807]"
+      },
+      {
+        "pid": 14,
+        "generation": "40125820",
+        "PID_namespace": "pid:[4026534807]"
+      }
+    ],
+    "observed_waits": [
+      {
+        "pid": 11,
+        "generation": "40125813",
+        "exit": 0,
+        "signal": null
+      },
+      {
+        "pid": 12,
+        "generation": "40125813",
+        "exit": 0,
+        "signal": null
+      },
+      {
+        "pid": 13,
+        "generation": "40125820",
+        "exit": 0,
+        "signal": null
+      },
+      {
+        "pid": 14,
+        "generation": "40125820",
+        "exit": 1,
+        "signal": null
+      }
+    ],
+    "reference_scope": "Required import success; actual owned tool verify0/1 over Python Original canonical bytes, not Source API replay"
+  },
+  "all10_Main_normal_exits0_and_backends_absent": true,
+  "Original_management_processes": {
+    "actual": 6,
+    "Source_API_requests": 0,
+    "raw_legacy_Source_application_runs_field": 0,
+    "legacy_field_inaccurate_for_management_program_count_preserved": true
+  },
+  "closure": {
+    "loopback": {
+      "complete": true,
+      "stopped_by_signal": true,
+      "phase_cue_seen": true,
+      "phase_cue_sha256": "0b08a6dea362dce331800870b8a2f453a19336621bd20ecf36758a1b77e9aa36",
+      "contacts": 1,
+      "started_monotonic": 401216.949222527,
+      "terminal_epoch": 1794680864.4397535,
+      "terminal_monotonic": 401259.485261185,
+      "errors": []
+    },
+    "Origin": {
+      "children": [
+        {
+          "name": "tls",
+          "pid": 7,
+          "wait": 0,
+          "poll": 0,
+          "forced": false
+        },
+        {
+          "name": "unsigned",
+          "pid": 8,
+          "wait": 0,
+          "poll": 0,
+          "forced": false
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    "TLS_http": {
+      "complete": true,
+      "stopped_by_signal": true,
+      "started_monotonic": 401215.827251712,
+      "terminal_epoch": 1794680864.5551915,
+      "terminal_monotonic": 401259.600698925,
+      "accepted_connections": 14,
+      "HTTP_requests": 12,
+      "journal_records": 80,
+      "journal_bytes": 24695,
+      "errors": []
+    },
+    "DNS": {
+      "complete": true,
+      "stopped_by_signal": true,
+      "started_monotonic": 401215.732556058,
+      "terminal_epoch": 1794680864.7425737,
+      "terminal_monotonic": 401259.788081026,
+      "queries": 64,
+      "events": 3,
+      "captured_bytes": 37259,
+      "tcp_connections": 0,
+      "unfinished_tcp_clients": 0,
+      "errors": []
+    },
+    "independent_cleanup": {
+      "exact_owned_absence": true,
+      "PID_namespace_checked": true,
+      "host_generations_absent": 159,
+      "fresh_project_queries": 3,
+      "fresh_CID_queries": 12,
+      "normal_cleanup_report_valid": true,
+      "Source_API_calls": 0,
+      "Main_adversarial_handler_drain_qualified": false
+    }
+  },
+  "remaining": [
+    "Missing producer argsrepr/kwargsrepr/origin/replaced_task_nesting/stamped_headers/stamps, reply_to algorithm differs",
+    "Old290 peer-only/private ownership controls do not transfer to Main",
+    "Actual private display/proxy consumers and all freshness/error/fallback shapes remain unqualified",
+    "Queued tasks were published unconsumed; downstream execution not established",
+    "Adversarial Plugin actor drain remains unqualified",
+    "TLS Origin request header-byte parity unqualified",
+    "No full M5/M8 or new performance acceptance"
+  ],
+  "raw_evidence_sha256": {
+    "report.json": "301c997a636879f1bba1aa1f40c9f60c855a39bfdbd68a94d6dcc1c5079bc643",
+    "Core99-readonly-review.json": "94f93151aa0a94dde5fbf80f26f025bbd74235473ef59f0a58ada5a5cc6a0ad9",
+    "core51/Main-scoped-review.json": "d07b866d12ec87999768247d0d83ca25cbc49b33bdb21921c441138361ccd9b2",
+    "core51/Main-readonly-effect-review.json": "43ae5dcde03b3f0d330ff246dddb87a1aeb083cd2a73e9b6e8c56805a043581c",
+    "core51/Main-readonly-row-task-review.json": "b373e473a599e8aae360f6f1b48cbdabc811b309a678200c06041b3ffaf00aab",
+    "independent-cleanup.json": "7f347fc860f808b0b2343014f438ed443391ae079f25f9308d926b6214a34f06",
+    "independent-cleanup-receipts.json": "e500737208131e2f4c6820013be8a307e08cf1fe92b44cdf17b6bcd79f3afba8"
+  }
+}

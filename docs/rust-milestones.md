@@ -16,7 +16,10 @@ React assets and original credits, and [all11 clean-install/React checks pass](r
 The [packaged job cohort](rust-m6-packaged-main-batch4.md) passes191 assertions:
 configured-rule artwork, actual settings PATCH200, a second real import with
 empty rules, and a failed SQL task followed by continued work. These are scoped
-integration results; full settings/plugin acceptance remains pending.
+integration results. The [Core99 Main cohort](rust-main-core99.md) also passes
+99 business HTTP cases with2,257 settings/effect and643 row/task predicates.
+Five produced tasks still lack Source transport metadata, and their downstream
+execution remains unmeasured; full settings/plugin acceptance stays open.
 
 The complete scheduler/worker graph remains unfinished. The latest
 [resource preflight](rust-milestone-batch2-resource-preflight.md) failed its
@@ -34,6 +37,8 @@ unimplemented/unverified; PostgreSQL-only tests cannot close that gate.
 The earlier [PATCH405 and plugin attempts](../scripts/rust-milestone-batches/m478/batch3_evidence/README.md)
 remain attached to their original image; the subsequent passing setter workflow
 does not rewrite those failures.
+
+## Earlier scoped evidence
 
 The [current Core settings library validation](rust-core-settings-current-validation.md) passes whole-workspace formatting, compilation, strict checks and 725 default tests (736 ignored). Its historical component qualifies 32 requests and seven finite ownership predicates; Main integration and full M5 remain open.
 
