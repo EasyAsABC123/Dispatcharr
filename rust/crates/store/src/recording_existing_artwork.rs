@@ -62,6 +62,65 @@ impl Store {
             origin: Arc::new(()),
         }
     }
+    /// Additive normal Source missing-row terminal branch. Old prepare keeps
+    /// its qualified domain. SQL absence is separately observed and fenced;
+    /// no row/custom properties are fabricated for the caught task result.
+    pub async fn prepare_normal(
+        &self,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Prepared, Error> {
+        match self.prepare(recording, owner.clone()).await {
+            Ok(value) => Ok(value),
+            Err(error @ Error::Unsupported(_)) => {
+                let pool = self.pool.clone();
+                let exists = tokio::spawn(async move {
+                    let _owner = owner;
+                    let mut connection = pool.acquire().await.map_err(sql)?.detach();
+                    let observed = sqlx::query_scalar::<_, bool>(
+                        "SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_recording WHERE id=$1)",
+                    )
+                    .bind(recording)
+                    .fetch_one(&mut connection)
+                    .await;
+                    let ready = connection.ping().await.err().map(Box::new);
+                    let close = connection.close().await.err().map(Box::new);
+                    match observed {
+                        Err(error) => Err(Error::Sql {
+                            primary: Some(Box::new(error)),
+                            ready,
+                            close,
+                        }),
+                        Ok(exists) => {
+                            if ready.is_some() || close.is_some() {
+                                Err(Error::Sql {
+                                    primary: None,
+                                    ready,
+                                    close,
+                                })
+                            } else {
+                                Ok(exists)
+                            }
+                        }
+                    }
+                })
+                .await
+                .map_err(|_| Error::Supervisor)??;
+                if exists {
+                    Err(error)
+                } else {
+                    Ok(Prepared {
+                        origin: self.origin.clone(),
+                        recording,
+                        resolved: Value::Null,
+                        changed: false,
+                        skip: Some("error: Recording matching query does not exist.".into()),
+                    })
+                }
+            }
+            Err(error) => Err(error),
+        }
+    }
     pub async fn prepare(
         &self,
         recording: i64,

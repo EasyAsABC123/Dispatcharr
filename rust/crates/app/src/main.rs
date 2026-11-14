@@ -8,6 +8,7 @@ mod playback;
 mod plugin_gpg_trace;
 mod proxy_health;
 mod realtime;
+mod recording_http_bridge;
 mod response_headers;
 mod selected_jobs;
 mod static_assets;
@@ -993,6 +994,9 @@ async fn run() -> Result<(), String> {
         ));
     if let Some(refresh) = &epg_refresh {
         app = app.merge(refresh.clone().router());
+    }
+    if let Some(selected) = &selected_jobs {
+        app = app.merge(selected.recordings_router());
     }
     if let Some(gateway) = &realtime {
         app = app.merge(gateway.router());

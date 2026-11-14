@@ -191,6 +191,7 @@ struct Entry {
     message: Message,
     recording_start: DateTime<Utc>,
     recording_end: DateTime<Utc>,
+    admission: crate::normal_recording_publication::Admission,
     _slot: OwnedSemaphorePermit,
 }
 struct Inner {
@@ -229,6 +230,12 @@ impl NormalNamedRecordingPublication {
     pub fn channel_id(&self) -> i64 {
         self.message().channel_id()
     }
+    pub fn admission(&self) -> crate::normal_recording_publication::Admission {
+        self.entry.admission
+    }
+    /// Actual row window for published/observed rows; original task argument
+    /// window only for ObservedAbsence. The consumer must separately observe
+    /// actual SQL absence before terminal None/REVOKED and perform no media.
     pub fn recording_start(&self) -> DateTime<Utc> {
         self.entry.recording_start
     }
@@ -253,6 +260,7 @@ impl NormalNamedRecordingPublications {
         message: Message,
         recording_start: DateTime<Utc>,
         recording_end: DateTime<Utc>,
+        admission: crate::normal_recording_publication::Admission,
         slot: OwnedSemaphorePermit,
         observed: crate::transport::ExistingRecordingHead,
     ) -> Result<(), Error> {
@@ -273,6 +281,7 @@ impl NormalNamedRecordingPublications {
                 message,
                 recording_start,
                 recording_end,
+                admission,
                 _slot: slot,
             }),
         );
@@ -351,6 +360,7 @@ impl NormalNamedRecordingPublications {
                 message,
                 recording_start,
                 recording_end,
+                admission: crate::normal_recording_publication::Admission::Published,
                 _slot: slot,
             }),
         );

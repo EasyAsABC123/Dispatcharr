@@ -332,12 +332,12 @@ impl CaptureStore {
     /// method alone grants no queue claim, process or output-path authority.
     pub async fn normal_snapshot(
         self: Arc<Self>,
-        expected: RecordingIdentity,
+        recording_id: i64,
+        argument_channel: i64,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Option<NormalCaptureSnapshot>, Error> {
-        if !(1..=i64::from(i32::MAX)).contains(&expected.recording)
-            || !(1..=i64::from(i32::MAX)).contains(&expected.channel)
-            || expected.end <= expected.start
+        if !(1..=i64::from(i32::MAX)).contains(&recording_id)
+            || !(1..=i64::from(i32::MAX)).contains(&argument_channel)
         {
             return Err(Error::Unsupported("normal recording identity"));
         }
@@ -348,7 +348,8 @@ impl CaptureStore {
                 source,
                 settlement: None,
             })?;
-            let result = Self::read_normal_inner(&mut connection, expected).await;
+            let result =
+                Self::read_normal_inner(&mut connection, recording_id, argument_channel).await;
             settle(connection, result).await
         })
         .await
@@ -356,10 +357,11 @@ impl CaptureStore {
     }
     async fn read_normal_inner(
         connection: &mut PgConnection,
-        expected: RecordingIdentity,
+        recording_id: i64,
+        argument_channel: i64,
     ) -> Result<Option<NormalCaptureSnapshot>, Error> {
-        let row=sqlx::query("SELECT r.id::bigint AS recording,r.channel_id::bigint AS channel,r.start_time,r.end_time,CASE WHEN octet_length(r.task_id)<=255 THEN r.task_id ELSE NULL END AS task_id,CASE WHEN r.custom_properties IS NULL THEN '{}'::jsonb WHEN octet_length(r.custom_properties::text)<=8192 THEN r.custom_properties ELSE NULL END AS properties,c.uuid AS channel_uuid,CASE WHEN octet_length(c.name)<=255 THEN c.name ELSE NULL END AS channel_name,c.epg_data_id::bigint AS epg_data_id,c.stream_profile_id::bigint AS stream_profile_id,EXISTS(SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.channel_id=c.id) AS has_override FROM dispatcharr_channels_recording r JOIN dispatcharr_channels_channel c ON c.id=r.channel_id WHERE r.id=$1 LIMIT 1")
-            .bind(expected.recording).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Recording,source,settlement:None})?;
+        let row=sqlx::query("SELECT r.id::bigint AS recording,r.channel_id::bigint AS channel,r.start_time,r.end_time,CASE WHEN octet_length(r.task_id)<=255 THEN r.task_id ELSE NULL END AS task_id,CASE WHEN r.custom_properties IS NULL THEN '{}'::jsonb WHEN octet_length(r.custom_properties::text)<=8192 THEN r.custom_properties ELSE NULL END AS properties,c.uuid AS channel_uuid,CASE WHEN octet_length(c.name)<=255 THEN c.name ELSE NULL END AS channel_name,c.epg_data_id::bigint AS epg_data_id,c.stream_profile_id::bigint AS stream_profile_id,EXISTS(SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.channel_id=c.id) AS has_override,c.id IS NOT NULL AS argument_channel_exists FROM dispatcharr_channels_recording r LEFT JOIN dispatcharr_channels_channel c ON c.id=$2 WHERE r.id=$1 LIMIT 1")
+            .bind(recording_id).bind(argument_channel).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Recording,source,settlement:None})?;
         let Some(row) = row else {
             return Ok(None);
         };
@@ -390,6 +392,14 @@ impl CaptureStore {
         ) {
             return Ok(None);
         }
+        if !row
+            .try_get::<bool, _>("argument_channel_exists")
+            .map_err(decode)?
+        {
+            return Err(Error::Unsupported(
+                "missing argument Channel requires actual Source task-failure port",
+            ));
+        }
         let hooks:(bool,bool,bool,bool)=sqlx::query_as("SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_connect_integration),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_deliverylog),NOT EXISTS(SELECT 1 FROM plugins_pluginconfig)").fetch_one(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Context,source,settlement:None})?;
         if !(hooks.0 && hooks.1 && hooks.2 && hooks.3) {
             return Err(Error::Unsupported(
@@ -400,12 +410,11 @@ impl CaptureStore {
         let channel: i64 = row.try_get("channel").map_err(decode)?;
         let start: DateTime<Utc> = row.try_get("start_time").map_err(decode)?;
         let end: DateTime<Utc> = row.try_get("end_time").map_err(decode)?;
-        if recording != expected.recording
-            || channel != expected.channel
-            || start != expected.start
-            || end != expected.end
-        {
-            return Err(Error::Unsupported("normal producer/row identity changed"));
+        // Original accepts surviving published arguments after a booking update.
+        // Row identity/window is a NEW actual observation, never overwritten by
+        // the producer registry's historical publication/adoption snapshot.
+        if recording != recording_id {
+            return Err(Error::Unsupported("normal Recording identity changed"));
         }
         let program = properties.get("program");
         let program_id = program.and_then(|p| p.get("id"));
@@ -461,7 +470,12 @@ impl CaptureStore {
         };
         let name: Option<String> = row.try_get("channel_name").map_err(decode)?;
         Ok(Some(NormalCaptureSnapshot {
-            identity: expected,
+            identity: RecordingIdentity {
+                recording,
+                channel,
+                start,
+                end,
+            },
             channel_uuid: row.try_get("channel_uuid").map_err(decode)?,
             channel_name: name
                 .ok_or(Error::Unsupported("normal channel name transfer capacity"))?,

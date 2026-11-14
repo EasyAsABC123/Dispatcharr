@@ -127,6 +127,11 @@ impl Application {
         }
         Ok(Arc::new(NormalHandler { app: self }))
     }
+    /// Actual existing local-artwork Jobs shared with the normal booking signal.
+    /// This creates no connection pool and exposes no arbitrary frame publisher.
+    pub fn booking_publisher(&self) -> Result<transport::ArtworkRootPublisher, transport::Error> {
+        transport::ArtworkRootPublisher::new(self.inner.jobs.clone())
+    }
     pub fn state(&self) -> State {
         self.inner.state.borrow().clone()
     }
@@ -247,11 +252,18 @@ async fn run_mode(
     }
     // Resolve and bound all existing-artwork branches before ACK. Unsupported
     // branches keep original bytes/order, so other families are never skipped.
-    let prepared = match inner
-        .store
-        .prepare(candidate.message.recording, owner.clone())
-        .await
-    {
+    let preparing = if adopt {
+        inner
+            .store
+            .prepare_normal(candidate.message.recording, owner.clone())
+            .await
+    } else {
+        inner
+            .store
+            .prepare(candidate.message.recording, owner.clone())
+            .await
+    };
+    let prepared = match preparing {
         Ok(v) => v,
         Err(recording_existing_artwork::Error::Unsupported(_)) => {
             return Ok(State::UnsupportedHead)
@@ -360,7 +372,26 @@ impl NormalHandler {
     {
         use crate::milestone_dispatch::Disposition as D;
         let inner = self.app.inner.clone();
-        match run_mode(&inner, owner, true, expected).await {
+        let selected = match expected {
+            Some(raw) => raw,
+            None => match inner.jobs.peek_artwork_frame(owner.clone()).await {
+                Ok(Some(raw)) => Arc::from(raw),
+                Ok(None) => return Ok(D::Empty),
+                Err(error) => {
+                    return Err(D::Operational(format!(
+                        "normal artwork selection {error:?}"
+                    )))
+                }
+            },
+        };
+        let frame = crate::clocked_recording_envelope::json_value(&selected)
+            .map_err(|_| D::UnsupportedHead)?;
+        let outcome = if frame["headers"]["parent_id"].is_null() {
+            run_root(&inner, owner, selected).await
+        } else {
+            run_mode(&inner, owner, true, Some(selected)).await
+        };
+        match outcome {
             Ok(State::Empty) => Ok(D::Empty),
             Ok(State::HeadChanged) => Ok(D::HeadChanged),
             Ok(State::UnsupportedHead) => Ok(D::UnsupportedHead),
@@ -373,4 +404,80 @@ impl NormalHandler {
             Err(error) => Err(D::Operational(format!("normal artwork {error:?}"))),
         }
     }
+}
+
+/// Root intake has its own typed message/candidate; no invented parent UUID or
+/// child-publication witness is used to reuse the actual artwork domain service.
+async fn run_root(
+    inner: &Arc<Inner>,
+    owner: Arc<dyn Send + Sync>,
+    expected: Arc<[u8]>,
+) -> Result<State, Error> {
+    let candidate = match inner
+        .jobs
+        .peek_root_artwork(Some(&expected), owner.clone())
+        .await
+    {
+        Ok(Some(candidate)) => candidate,
+        Ok(None) => return Ok(State::Empty),
+        Err(transport::Error::ClaimRace) => return Ok(State::HeadChanged),
+        Err(transport::Error::UnsupportedTask) => return Ok(State::UnsupportedHead),
+        Err(error) => return Err(Error::Transport(error)),
+    };
+    if candidate
+        .message
+        .eta
+        .is_some_and(|eta| eta > chrono::Utc::now())
+    {
+        return Ok(State::NotDue);
+    }
+    let prepared = match inner
+        .store
+        .prepare_normal(candidate.message.recording, owner.clone())
+        .await
+    {
+        Ok(value) => value,
+        Err(recording_existing_artwork::Error::Unsupported(_)) => {
+            return Ok(State::UnsupportedHead)
+        }
+        Err(error) => return Err(Error::Domain(error)),
+    };
+    let message = candidate.message.clone();
+    inner
+        .jobs
+        .claim_root_artwork(candidate, owner.clone())
+        .await
+        .map_err(Error::Transport)?;
+    let completed = inner
+        .store
+        .execute(prepared, owner.clone())
+        .await
+        .map_err(Error::Domain)?;
+    if completed.changed {
+        let (done, settled) = oneshot::channel();
+        let receipt = Arc::new(Receipt {
+            _owner: owner.clone(),
+            done: Some(done),
+        });
+        let observed=inner.events.send_retained("updates",json!({"type":"update","data":{"success":true,"type":"recording_updated","recording_id":completed.recording}}),receipt.clone()).await;
+        drop(receipt);
+        settled.await.map_err(|_| Error::Event)?;
+        observed.map_err(|_| Error::Event)?;
+    }
+    let written = inner
+        .jobs
+        .write_root_artwork(&message, &completed, owner)
+        .await
+        .map_err(Error::Transport)?;
+    Ok(if written {
+        State::Completed {
+            task_id: message.task_id,
+            changed: completed.changed,
+        }
+    } else {
+        State::AlreadySucceeded {
+            task_id: message.task_id,
+            changed: completed.changed,
+        }
+    })
 }

@@ -792,6 +792,54 @@ impl StreamEngine {
         }
     }
 
+    /// Source Recording stop/delete targets exact DVR UA identity. A sibling
+    /// recording or ordinary viewer keeps the shared channel/upstream alive.
+    pub async fn stop_recording_clients(
+        &self,
+        channel: &str,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<usize, PlaybackError> {
+        if recording <= 0 || recording > i64::from(i32::MAX) {
+            return Err(PlaybackError::new(400, "Invalid recording identity"));
+        }
+        let clients = self
+            .inner
+            .clients
+            .as_ref()
+            .ok_or_else(|| PlaybackError::new(503, "Redis client metadata unavailable"))?
+            .clone();
+        let channel = channel.to_owned();
+        tokio::spawn(async move {
+            let _owner = owner;
+            let rows = clients
+                .channel_clients(&channel)
+                .await
+                .map_err(|e| client_error(e, 0))?;
+            let expected = format!("Dispatcharr-DVR/recording-{recording}");
+            let mut stopped = 0usize;
+            for row in rows {
+                if row.get("user_agent").and_then(serde_json::Value::as_str)
+                    != Some(expected.as_str())
+                {
+                    continue;
+                }
+                let Some(id) = row.get("client_id").and_then(serde_json::Value::as_str) else {
+                    continue;
+                };
+                match clients.stop_client(&channel, id).await {
+                    Ok(_) => stopped += 1,
+                    Err(_) => {
+                        eprintln!("Recording client stop failed; preserving other clients")
+                    }
+                }
+            }
+            Ok(stopped)
+        })
+        .await
+        .map_err(|_| PlaybackError::new(503, "Recording client control supervisor failed"))?
+    }
+
     pub async fn stop_client(&self, channel: &str, id: &str) -> Result<bool, PlaybackError> {
         let clients = self
             .inner

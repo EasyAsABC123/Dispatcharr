@@ -197,7 +197,9 @@ impl ScannerParentRegistry {
                 digest: v.digest,
             }))
     }
-    pub(crate) async fn m3u_scope(
+    /// Optional Native report/backend provenance. Normal Source intake must use
+    /// broker_m3u_scope instead; a lost/crashed parent is not refusal authority.
+    pub async fn m3u_scope(
         &self,
         raw: &[u8],
         owner: Arc<dyn Send + Sync>,
@@ -214,6 +216,31 @@ impl ScannerParentRegistry {
                     v.digest,
                 )
             }))
+    }
+    /// Actual authenticated broker observation followed by the consumer's real
+    /// bounded account SQL preflight and exact candidate CAS. No process-local
+    /// producer record or parent SUCCESS is required for surviving Source tasks.
+    pub(crate) async fn broker_m3u_scope(
+        &self,
+        expected: &[u8],
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<crate::scanner_m3u_protocol::Scope>, Error> {
+        let Some(actual) = self.head(owner).await? else {
+            return Err(Error::ClaimRace);
+        };
+        if expected.is_empty() || actual != expected {
+            return Err(Error::ClaimRace);
+        }
+        let message = match crate::scanner_m3u_protocol::parse(&actual) {
+            Ok(message) => message,
+            Err(_) => return Ok(None),
+        };
+        Ok(Some(crate::scanner_m3u_protocol::Scope::from_registry(
+            message.parent,
+            message.account,
+            message.id,
+            Sha256::digest(&actual).into(),
+        )))
     }
     /// Only actual terminal handlers call this after successful backend settlement.
     pub fn retire_child(&self, child: Uuid) -> Result<(), Error> {

@@ -43,6 +43,7 @@ struct Inner {
     started: AtomicBool,
     closed: AtomicBool,
     local: SocketAddr,
+    recording_http: dispatcharr_store::recording_http::RecordingHttp,
     beat_enabled: bool,
 }
 #[derive(Clone)]
@@ -130,6 +131,14 @@ impl SelectedJobs {
             )
             .await
             .map_err(|_| "Selected recording publisher initialization failed")?;
+        publisher
+            .set_booking_artwork(
+                existing
+                    .artwork
+                    .booking_publisher()
+                    .map_err(|_| "Selected root artwork publisher unavailable")?,
+            )
+            .map_err(|_| "Selected root artwork publisher composition failed")?;
         let dvr = Arc::new(
             jobs::recording_dvr_normal::NormalDvr::connect(
                 jobs::recording_dvr_normal::Assembly {
@@ -180,6 +189,17 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected scanner locks initialization failed")?;
+        let recording_http = dispatcharr_store::recording_http::RecordingHttp::prepare(
+            auth.clone(),
+            crate::recording_http_bridge::port(
+                store.clone(),
+                cache.clone(),
+                publisher.clone(),
+                control.clone(),
+                engine.clone(),
+            ),
+            events.clone(),
+        );
         let scanner = jobs::normal_scanner::Prepared::connect(
             shared_jobs.clone(),
             store.clone(),
@@ -302,9 +322,13 @@ impl SelectedJobs {
                 started: AtomicBool::new(false),
                 closed: AtomicBool::new(false),
                 local,
+                recording_http,
                 beat_enabled,
             }),
         })
+    }
+    pub fn recordings_router(&self) -> axum::Router {
+        self.inner.recording_http.clone().router()
     }
     pub fn readiness(&self) -> (bool, serde_json::Value) {
         let queue = self.inner.queue.readiness();
@@ -409,6 +433,7 @@ impl SelectedJobs {
         Ok(())
     }
     pub fn stop_producers(&self) {
+        self.inner.recording_http.close_admission();
         self.inner.closed.store(true, Ordering::Release);
         self.inner.startup.send_replace(Startup::Stopping);
         self.inner.scheduler.stop_admission();
@@ -425,6 +450,14 @@ impl SelectedJobs {
         let Ok(Ok(_startup)) = startup else {
             return false;
         };
+        if !self
+            .inner
+            .recording_http
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            return false;
+        }
         if self
             .inner
             .scheduler

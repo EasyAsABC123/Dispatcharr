@@ -1693,3 +1693,7 @@ pub use normal_recovery_transport::RecoveryJobs;
 mod scanner_parents_io;
 pub(crate) use scanner_parents_io::ScannerPublication;
 pub use scanner_parents_io::{ScannerParentRegistry, ScannerRefreshCapability};
+
+#[path = "recording_artwork_root_transport.rs"]
+mod recording_artwork_root_transport;
+pub use recording_artwork_root_transport::ArtworkRootPublisher;

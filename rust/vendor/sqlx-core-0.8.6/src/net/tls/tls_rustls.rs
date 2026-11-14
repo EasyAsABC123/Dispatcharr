@@ -422,4 +422,35 @@ mod dispatcharr_hostname_context_regression {
             Err(TlsError::InvalidCertificate(CertificateError::BadSignature))
         ));
     }
+    #[test]
+    fn actual_webpki_ipv6_server_name_keeps_ca_and_full_name_validation() {
+        // URL host_str retains IPv6 URI brackets; Rustls rejects that spelling
+        // BEFORE invoking any certificate verifier. Socket connection already
+        // trims these same delimiters. Use its actual IP identity for TLS too.
+        let url_host = "[::1]";
+        assert!(ServerName::try_from(url_host).is_err());
+        let peer = ServerName::try_from(url_host.trim_matches(&['[', ']'][..])).unwrap();
+        assert!(matches!(peer, ServerName::IpAddress(_)));
+        let cert = certificate(include_str!("fixtures/trusted.pem"));
+        let strict = verifier(false);
+        assert!(matches!(
+            strict.verify_server_cert(&cert, &[], &peer, &[], now()),
+            Err(TlsError::InvalidCertificate(
+                CertificateError::NotValidForNameContext { .. }
+            ))
+        ));
+        let verify_ca = NoHostnameTlsVerifier { verifier: strict };
+        assert!(verify_ca
+            .verify_server_cert(&cert, &[], &peer, &[], now())
+            .is_ok());
+        let untrusted = NoHostnameTlsVerifier {
+            verifier: verifier(true),
+        };
+        assert!(matches!(
+            untrusted.verify_server_cert(&cert, &[], &peer, &[], now()),
+            Err(TlsError::InvalidCertificate(
+                CertificateError::UnknownIssuer
+            ))
+        ));
+    }
 }

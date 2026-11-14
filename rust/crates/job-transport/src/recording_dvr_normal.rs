@@ -14,7 +14,7 @@ use crate::{
 use chrono::Utc;
 use dispatcharr_contracts::UpdateEventSink;
 use dispatcharr_store::{
-    recording_capture::{CaptureStore, NormalEvent, RecordingIdentity},
+    recording_capture::{CaptureStore, NormalEvent},
     Store,
 };
 use serde_json::{json, Value};
@@ -376,16 +376,10 @@ async fn execute(
         });
     }
     let per_trace = owner.trace.clone();
-    let expected = RecordingIdentity {
-        recording: message.recording_id(),
-        channel: message.channel_id(),
-        start: task.row_start(),
-        end: task.row_end(),
-    };
     let snapshot = inner
         .store
         .clone()
-        .normal_snapshot(expected.clone(), owner.clone())
+        .normal_snapshot(message.recording_id(), message.channel_id(), owner.clone())
         .await
         .map_err(Error::Store)?;
     let snapshot = match snapshot {
@@ -526,7 +520,7 @@ async fn execute(
     let current = inner
         .store
         .clone()
-        .normal_snapshot(expected, owner.clone())
+        .normal_snapshot(message.recording_id(), message.channel_id(), owner.clone())
         .await
         .map_err(Error::Store)?;
     let Some(current) = current else {

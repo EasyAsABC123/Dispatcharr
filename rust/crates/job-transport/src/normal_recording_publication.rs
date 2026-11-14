@@ -31,12 +31,23 @@ pub enum Error {
         close: Option<Box<sqlx::Error>>,
     },
     Transport(transport::Error),
+    Policy(dispatcharr_ingest_epg::cache_policy::ConfiguredSettingsError),
+    Settings(crate::recording_settings::Error),
+    Audit(Box<dispatcharr_store::recording_capture::Error>),
     Supervisor,
     DrainTimeout,
 }
+/// Evidence source, never a caller-minted publication or fabricated row.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Admission {
+    Published,
+    ObservedRecording,
+    ObservedAbsence,
+}
 struct Entry {
     message: ObservedProducerEnvelope,
-    periodic: i64,
+    periodic: Option<i64>,
+    admission: Admission,
     _slot: OwnedSemaphorePermit,
 }
 struct RegistryInner {
@@ -72,8 +83,11 @@ impl NormalRecordingPublication {
     pub fn periodic_name(&self) -> &str {
         self.message().periodic_name()
     }
-    pub fn periodic_id(&self) -> i64 {
+    pub fn periodic_id(&self) -> Option<i64> {
         self.entry.periodic
+    }
+    pub fn admission(&self) -> Admission {
+        self.entry.admission
     }
     pub fn start(&self) -> DateTime<Utc> {
         self.message().start()
@@ -126,6 +140,7 @@ impl NormalRecordingPublications {
     }
 }
 struct Inner {
+    booking_artwork: Mutex<Option<crate::transport::ArtworkRootPublisher>>,
     pool: PgPool,
     jobs: Jobs,
     registry: NormalRecordingPublications,
@@ -165,6 +180,7 @@ impl NormalRecordingPublisher {
         Ok((
             Self {
                 inner: Arc::new(Inner {
+                    booking_artwork: Mutex::new(None),
                     pool,
                     jobs,
                     registry: registry.clone(),
@@ -241,7 +257,8 @@ impl NormalRecordingPublisher {
                 id,
                 Arc::new(Entry {
                     message,
-                    periodic,
+                    periodic: Some(periodic),
+                    admission: Admission::Published,
                     _slot: retained,
                 }),
             );
@@ -613,22 +630,27 @@ impl NormalRecordingPublisher {
                 let row = adoption_row(
                     inner.pool.clone(),
                     message.recording_id(),
-                    message.channel_id(),
                     None,
                     owner.clone(),
                 )
                 .await?;
-                if message.argument_end() != row.end
-                    || message.argument_start() < row.start
-                    || message.argument_start() >= row.end
-                    || (message.kind() == crate::normal_named_recording::Kind::Immediate
-                        && message.argument_start() != row.start)
-                {
-                    return Err(Error::Unsupported("named DVR/Recording window"));
-                }
+                let (start, end, admission) = match row {
+                    Some(row) => {
+                        // This is historical actual row evidence, not a gate
+                        // requiring Source's published arguments to remain equal
+                        // after update/extend/recovery. The consumer separately
+                        // rereads live row + argument Channel before effects.
+                        (row.start, row.end, Admission::ObservedRecording)
+                    }
+                    None => (
+                        message.argument_start(),
+                        message.argument_end(),
+                        Admission::ObservedAbsence,
+                    ),
+                };
                 inner
                     .named
-                    .adopt_observed(message, row.start, row.end, retained, observed)
+                    .adopt_observed(message, start, end, admission, retained, observed)
                     .map_err(|_| Error::Unsupported("named adoption generation"))?;
             } else {
                 let message = clocked_recording_envelope::parse_normal_head(&expected)
@@ -636,17 +658,17 @@ impl NormalRecordingPublisher {
                 let row = adoption_row(
                     inner.pool.clone(),
                     message.recording_id(),
-                    message.channel_id(),
                     Some(message.periodic_name().into()),
                     owner,
                 )
                 .await?;
-                if message.start() != row.start
-                    || message.end() != row.end
-                    || !observed.confirms(message.raw_frame())
-                {
-                    return Err(Error::Unsupported("clocked DVR/Recording window"));
+                if !observed.confirms(message.raw_frame()) {
+                    return Err(Error::Unsupported("clocked broker observation"));
                 }
+                let (periodic, admission) = match row {
+                    Some(row) => (row.periodic, Admission::ObservedRecording),
+                    None => (None, Admission::ObservedAbsence),
+                };
                 let mut entries = inner
                     .registry
                     .inner
@@ -662,9 +684,8 @@ impl NormalRecordingPublisher {
                         message.task_id(),
                         Arc::new(Entry {
                             message,
-                            periodic: row
-                                .periodic
-                                .ok_or(Error::Unsupported("clocked schedule missing"))?,
+                            periodic,
+                            admission,
                             _slot: retained,
                         }),
                     );
@@ -684,22 +705,21 @@ struct AdoptionRow {
 async fn adoption_row(
     pool: PgPool,
     recording: i64,
-    channel: i64,
     periodic: Option<String>,
     owner: Arc<dyn Send + Sync>,
-) -> Result<AdoptionRow, Error> {
+) -> Result<Option<AdoptionRow>, Error> {
     tokio::spawn(async move {let _owner=owner;let mut connection=pool.acquire().await.map_err(database)?.detach();
   let observed=async {
-   let row=sqlx::query("SELECT start_time,end_time FROM dispatcharr_channels_recording WHERE id=$1 AND channel_id=$2").bind(recording).bind(channel).fetch_optional(&mut connection).await.map_err(database)?.ok_or(Error::Unsupported("DVR Recording/channel missing"))?;
+   let row=sqlx::query("SELECT channel_id::bigint,start_time,end_time FROM dispatcharr_channels_recording WHERE id=$1").bind(recording).fetch_optional(&mut connection).await.map_err(database)?;
+   let Some(row)=row else{return Ok(None);};
    let start=row.try_get("start_time").map_err(database)?;let end=row.try_get("end_time").map_err(database)?;
    let periodic=if let Some(name)=periodic {
-    let schedules=sqlx::query("SELECT p.id::bigint AS id,p.args,c.clocked_time,p.task,p.one_off FROM django_celery_beat_periodictask p JOIN django_celery_beat_clockedschedule c ON c.id=p.clocked_id WHERE p.name=$1 AND octet_length(p.args)<=8192 LIMIT 2").bind(name).fetch_all(&mut connection).await.map_err(database)?;
-    if schedules.len()!=1{return Err(Error::Unsupported("DVR periodic identity"));}let p=&schedules[0];
-    let args:Value=serde_json::from_str(&p.try_get::<String,_>("args").map_err(database)?).map_err(|_|Error::Unsupported("DVR periodic arguments"))?;
-    let expected=serde_json::json!([recording,channel,python_datetime(start,false),python_datetime(end,false)]);
-    if args!=expected||p.try_get::<DateTime<Utc>,_>("clocked_time").map_err(database)?!=start||p.try_get::<String,_>("task").map_err(database)?!="apps.channels.tasks.run_recording"||!p.try_get::<bool,_>("one_off").map_err(database)?{return Err(Error::Unsupported("DVR periodic/Recording mismatch"));}
-    Some(p.try_get::<i64,_>("id").map_err(database)?)
-   }else{None};Ok(AdoptionRow{start,end,periodic})
+    // A PeriodicTask may legitimately have changed/disappeared since Beat
+    // published this authenticated raw. Its current ID is optional provenance,
+    // never a requirement to consume a surviving Source frame.
+    let ids=sqlx::query_scalar::<_,i64>("SELECT id::bigint FROM django_celery_beat_periodictask WHERE name=$1 LIMIT 2").bind(name).fetch_all(&mut connection).await.map_err(database)?;
+    if ids.len()>1{return Err(Error::Unsupported("ambiguous periodic schedule name"));}ids.into_iter().next()
+   }else{None};Ok(Some(AdoptionRow{start,end,periodic}))
   }.await;
   let ready=connection.ping().await.err().map(Box::new);let close=connection.close().await.err().map(Box::new);
   match observed {Err(Error::Database{primary,..})=>Err(Error::Database{primary,ready,close}),other=>if ready.is_some()||close.is_some(){Err(Error::Database{primary:None,ready,close})}else{other}}
@@ -742,6 +762,32 @@ impl NormalRecordingPublisher {
             .await
             .map(|value| value.map(Arc::from))
             .map_err(Error::Transport)
+    }
+}
+
+#[path = "normal_booking_publication.rs"]
+mod normal_booking_publication;
+pub use normal_booking_publication::{BookingPublication, BookingTask};
+
+impl NormalRecordingPublisher {
+    /// Compose the actual Main artwork Jobs, once and before HTTP producers.
+    /// The typed port exposes no arbitrary public frame/parent minting method.
+    pub fn set_booking_artwork(
+        &self,
+        publisher: crate::transport::ArtworkRootPublisher,
+    ) -> Result<(), Error> {
+        let mut current = self
+            .inner
+            .booking_artwork
+            .lock()
+            .map_err(|_| Error::Supervisor)?;
+        if current.is_some() {
+            return Err(Error::Unsupported(
+                "booking artwork publisher already composed",
+            ));
+        }
+        *current = Some(publisher);
+        Ok(())
     }
 }
 

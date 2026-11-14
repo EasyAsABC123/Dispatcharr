@@ -131,9 +131,15 @@ impl Worker {
                         return Err(Error::HeadChanged);
                     }
                     registry
-                        .m3u_scope(&raw, owner.clone())
+                        .broker_m3u_scope(&raw, owner.clone())
                         .await
-                        .map_err(Error::Transport)?
+                        .map_err(|error| {
+                            if error == TransportError::ClaimRace {
+                                Error::HeadChanged
+                            } else {
+                                Error::Transport(error)
+                            }
+                        })?
                         .ok_or(Error::Transport(TransportError::UnsupportedTask))?
                 }
             };

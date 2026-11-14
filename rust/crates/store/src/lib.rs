@@ -475,3 +475,6 @@ pub use core_settings_special_effects::{
 pub mod tvg_programme;
 
 pub mod recording_existing_artwork;
+
+pub mod recording_http;
+mod recording_http_files;

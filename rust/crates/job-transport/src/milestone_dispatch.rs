@@ -1,4 +1,5 @@
-//! PRIVATE UNCOMPILED composition proposal, not Main/default registration.
+//! Experimental selected-family composition; complete Source parity is open.
+//! The composed SDK batch passed; packaged normal Main acceptance is separate.
 //! Original Dispatcharr/Celery authors retain all application/protocol credit.
 //! One bounded queue head is selected without removal/reordering. Each handler
 //! still performs its own actual family/lineage/domain preflight and exact CAS.

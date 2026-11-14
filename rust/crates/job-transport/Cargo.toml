@@ -29,7 +29,7 @@ uuid = {version="1",features=["v4","v3"]}
 [dev-dependencies]
 dispatcharr-realtime = {path="../realtime"}
 zip = {version="=9.5.0",default-features=false,features=["deflate-flate2-zlib-rs"]}
-tokio = {version="1",features=["io-util","net"]}
+tokio = {version="1",features=["io-util","net","test-util"]}
 sha2 = "0.10"
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
 jsonwebtoken = "9"

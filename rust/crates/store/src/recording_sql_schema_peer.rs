@@ -52,13 +52,13 @@ fn parameter_types(index: usize) -> Vec<PgTypeInfo> {
     let time = <DateTime<Utc> as Type<sqlx::Postgres>>::type_info();
     let uuid = <Uuid as Type<sqlx::Postgres>>::type_info();
     match index {
-        2 | 4 | 6 | 9 | 10 | 12 | 13 | 14 | 17 | 18 | 25 | 26 | 31 | 33 | 40 | 41 | 46 | 48 => {
+        2 | 6 | 9 | 10 | 12 | 13 | 14 | 17 | 18 | 25 | 26 | 31 | 33 | 40 | 41 | 46 | 48 => {
             vec![int]
         }
         3 | 21 | 55 | 58 => vec![text],
         11 | 15 => vec![int, value.clone(), value],
         7 => vec![text, time.clone(), time],
-        8 | 56 => vec![int.clone(), int],
+        4 | 8 | 56 => vec![int.clone(), int],
         16 | 20 => vec![text.clone(), time, uuid, text, value],
         27 | 42 => vec![int.clone(), text, int],
         52 | 54 => vec![time],

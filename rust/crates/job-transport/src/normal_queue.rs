@@ -426,6 +426,91 @@ impl Application {
     }
 }
 
+/// Bounded same-unclaimed-head cooldown. A completed handler is not proof of
+/// a claim: ETA/capacity/domain refusals must throttle the Redis peek itself.
+struct HeadBackoff {
+    until: tokio::time::Instant,
+    raw: BTreeMap<Arc<[u8]>, tokio::time::Instant>,
+    maximum: usize,
+}
+impl HeadBackoff {
+    fn new(maximum: usize) -> Self {
+        Self {
+            until: tokio::time::Instant::now(),
+            raw: BTreeMap::new(),
+            maximum,
+        }
+    }
+    fn can_peek(&self) -> bool {
+        tokio::time::Instant::now() >= self.until
+    }
+    fn allow(&mut self, raw: &Arc<[u8]>) -> bool {
+        let now = tokio::time::Instant::now();
+        self.raw.retain(|_, until| *until > now);
+        if let Some(until) = self.raw.get(raw) {
+            self.until = *until;
+            false
+        } else {
+            true
+        }
+    }
+    fn outcome(
+        &mut self,
+        raw: Arc<[u8]>,
+        result: &Result<Disposition, Disposition>,
+        poll: Duration,
+    ) {
+        let value = match result {
+            Ok(value) | Err(value) => value,
+        };
+        if matches!(
+            value,
+            Disposition::Empty
+                | Disposition::NotDue
+                | Disposition::Capacity
+                | Disposition::HeadChanged
+                | Disposition::UnsupportedHead
+                | Disposition::UnsupportedDomain
+        ) {
+            let now = tokio::time::Instant::now();
+            let until = now + poll;
+            self.raw.retain(|_, until| *until > now);
+            if self.raw.len() >= self.maximum && !self.raw.contains_key(&raw) {
+                if let Some(oldest) = self
+                    .raw
+                    .iter()
+                    .min_by_key(|(_, until)| **until)
+                    .map(|(raw, _)| raw.clone())
+                {
+                    self.raw.remove(&oldest);
+                }
+            }
+            self.raw.insert(raw, until);
+            // A real changed-head observation permits one immediate fresh peek;
+            // an identical reappearing raw remains cooled by allow().
+            self.until = if matches!(value, Disposition::HeadChanged) {
+                now
+            } else {
+                until
+            };
+        } else {
+            self.raw.remove(&raw);
+            self.wake();
+        }
+    }
+    fn wake(&mut self) {
+        self.until = tokio::time::Instant::now();
+    }
+    fn deadline(&self, poll: Duration) -> tokio::time::Instant {
+        let now = tokio::time::Instant::now();
+        if self.until > now {
+            self.until
+        } else {
+            now + poll
+        }
+    }
+}
+
 async fn dvr_lane(
     lane: Arc<Lane>,
     head: Arc<dyn crate::milestone_dispatch::Head>,
@@ -439,6 +524,7 @@ async fn dvr_lane(
     let mut tasks = tokio::task::JoinSet::new();
     let mut pending = BTreeSet::<Arc<[u8]>>::new();
     let mut fault = None;
+    let mut backoff = HeadBackoff::new(maximum);
     loop {
         if *stop.borrow() && tasks.is_empty() {
             break;
@@ -446,7 +532,7 @@ async fn dvr_lane(
         if fault.is_some() && tasks.is_empty() {
             break;
         }
-        if !*stop.borrow() && fault.is_none() && tasks.len() < maximum {
+        if !*stop.borrow() && fault.is_none() && tasks.len() < maximum && backoff.can_peek() {
             match head.peek(caller.clone()).await {
                 Ok(Some(raw)) => {
                     if milestone_dispatch::classify(&raw) != Some(Family::Recording) {
@@ -454,7 +540,7 @@ async fn dvr_lane(
                             .send_replace(State::Blocked(Disposition::UnsupportedHead));
                     } else {
                         let expected: Arc<[u8]> = Arc::from(raw);
-                        if !pending.contains(&expected) {
+                        if backoff.allow(&expected) && !pending.contains(&expected) {
                             pending.insert(expected.clone());
                             let selected = expected.clone();
                             let owned = handler.clone();
@@ -485,13 +571,13 @@ async fn dvr_lane(
         tokio::select! {
               result=tasks.join_next(),if !tasks.is_empty()=>{
                match result{
-                Some(Ok((raw,result)))=>{pending.remove(&raw);match result{Ok(value@Disposition::UnsupportedHead)|Ok(value@Disposition::UnsupportedDomain)=>{if fault.is_none(){lane.state.send_replace(State::Blocked(value));}},Ok(value)=>{if fault.is_none(){lane.state.send_replace(State::Observed(value));}},Err(error@Disposition::UnsupportedHead)|Err(error@Disposition::UnsupportedDomain)=>{if fault.is_none(){lane.state.send_replace(State::Blocked(error));}},Err(error@Disposition::Capacity)|Err(error@Disposition::HeadChanged)|Err(error@Disposition::NotDue)=>{if fault.is_none(){lane.state.send_replace(State::Observed(error));}},Err(error)=>{fault=Some(error.clone());lane.state.send_replace(State::Fault(error));}}},
+                Some(Ok((raw,result)))=>{pending.remove(&raw);backoff.outcome(raw.clone(),&result,poll);match result{Ok(value@Disposition::UnsupportedHead)|Ok(value@Disposition::UnsupportedDomain)=>{if fault.is_none(){lane.state.send_replace(State::Blocked(value));}},Ok(value)=>{if fault.is_none(){lane.state.send_replace(State::Observed(value));}},Err(error@Disposition::UnsupportedHead)|Err(error@Disposition::UnsupportedDomain)=>{if fault.is_none(){lane.state.send_replace(State::Blocked(error));}},Err(error@Disposition::Capacity)|Err(error@Disposition::HeadChanged)|Err(error@Disposition::NotDue)=>{if fault.is_none(){lane.state.send_replace(State::Observed(error));}},Err(error)=>{fault=Some(error.clone());lane.state.send_replace(State::Fault(error));}}},
                 Some(Err(_))=>{let error=Disposition::Operational("normal DVR task supervisor failure".into());fault=Some(error.clone());lane.state.send_replace(State::Fault(error));},None=>{}
                }
               },
               _=stop.changed(),if !*stop.borrow()=>{},
-              _=async{match &advanced{Some(notify)=>notify.notified().await,None=>std::future::pending::<()>().await}}=>{},
-        _=tokio::time::sleep(poll)=>{}
+              _=async{match &advanced{Some(notify)=>notify.notified().await,None=>std::future::pending::<()>().await}}=>{backoff.wake();},
+        _=tokio::time::sleep_until(backoff.deadline(poll))=>{}
              }
     }
     if fault.is_none() {
@@ -513,6 +599,7 @@ async fn celery_lane(
     let mut tasks = tokio::task::JoinSet::new();
     let mut pending = BTreeSet::<Arc<[u8]>>::new();
     let mut fault = None;
+    let mut backoff = HeadBackoff::new(maximum);
     loop {
         if *stop.borrow() && tasks.is_empty() {
             break;
@@ -520,7 +607,7 @@ async fn celery_lane(
         if fault.is_some() && tasks.is_empty() {
             break;
         }
-        if !*stop.borrow() && fault.is_none() && tasks.len() < maximum {
+        if !*stop.borrow() && fault.is_none() && tasks.len() < maximum && backoff.can_peek() {
             match head.peek(caller.clone()).await {
                 Ok(Some(raw)) => {
                     let selected = milestone_dispatch::classify(&raw)
@@ -536,7 +623,7 @@ async fn celery_lane(
                             lane.state.send_replace(State::Working(tasks.len()));
                         } else {
                             let expected: Arc<[u8]> = Arc::from(raw);
-                            if !pending.contains(&expected) {
+                            if backoff.allow(&expected) && !pending.contains(&expected) {
                                 pending.insert(expected.clone());
                                 let selected = expected.clone();
                                 let owned = handler.clone();
@@ -568,13 +655,13 @@ async fn celery_lane(
         tokio::select! {
               result=tasks.join_next(),if !tasks.is_empty()=>{
                match result{
-                Some(Ok((raw,result)))=>{pending.remove(&raw);match result{Ok(value@Disposition::UnsupportedHead)|Ok(value@Disposition::UnsupportedDomain)=>{if fault.is_none(){lane.state.send_replace(State::Blocked(value));}},Ok(value)=>{if fault.is_none(){lane.state.send_replace(State::Observed(value));}},Err(error@Disposition::UnsupportedHead)|Err(error@Disposition::UnsupportedDomain)=>{if fault.is_none(){lane.state.send_replace(State::Blocked(error));}},Err(error@Disposition::Capacity)|Err(error@Disposition::HeadChanged)|Err(error@Disposition::NotDue)=>{if fault.is_none(){lane.state.send_replace(State::Observed(error));}},Err(error)=>{fault=Some(error.clone());lane.state.send_replace(State::Fault(error));}}},
+                Some(Ok((raw,result)))=>{pending.remove(&raw);backoff.outcome(raw.clone(),&result,poll);match result{Ok(value@Disposition::UnsupportedHead)|Ok(value@Disposition::UnsupportedDomain)=>{if fault.is_none(){lane.state.send_replace(State::Blocked(value));}},Ok(value)=>{if fault.is_none(){lane.state.send_replace(State::Observed(value));}},Err(error@Disposition::UnsupportedHead)|Err(error@Disposition::UnsupportedDomain)=>{if fault.is_none(){lane.state.send_replace(State::Blocked(error));}},Err(error@Disposition::Capacity)|Err(error@Disposition::HeadChanged)|Err(error@Disposition::NotDue)=>{if fault.is_none(){lane.state.send_replace(State::Observed(error));}},Err(error)=>{fault=Some(error.clone());lane.state.send_replace(State::Fault(error));}}},
                 Some(Err(_))=>{let error=Disposition::Operational("normal Celery task supervisor failure".into());fault=Some(error.clone());lane.state.send_replace(State::Fault(error));},None=>{}
                }
               },
               _=stop.changed(),if !*stop.borrow()=>{},
-              _=async{match &advanced{Some(notify)=>notify.notified().await,None=>std::future::pending::<()>().await}}=>{},
-        _=tokio::time::sleep(poll)=>{}
+              _=async{match &advanced{Some(notify)=>notify.notified().await,None=>std::future::pending::<()>().await}}=>{backoff.wake();},
+        _=tokio::time::sleep_until(backoff.deadline(poll))=>{}
              }
     }
     if fault.is_none() {
@@ -735,5 +822,177 @@ mod tests {
         assert_eq!(probe.queue.lock().unwrap().len(), 1);
         assert!(*lane.done.borrow());
         assert!(matches!(*lane.state.borrow(), State::Stopped));
+    }
+
+    struct UnclaimedProbe {
+        queue: Queue,
+        raw: Mutex<Vec<u8>>,
+        outcome: Mutex<Disposition>,
+        peeks: AtomicUsize,
+        runs: AtomicUsize,
+        advanced: Arc<tokio::sync::Notify>,
+    }
+    impl Head for UnclaimedProbe {
+        fn queue(&self) -> Queue {
+            self.queue
+        }
+        fn peek(
+            &self,
+            _owner: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Option<Vec<u8>>, Disposition>> {
+            Box::pin(async move {
+                self.peeks.fetch_add(1, Ordering::SeqCst);
+                Ok(Some(self.raw.lock().unwrap().clone()))
+            })
+        }
+    }
+    impl Lifecycle for UnclaimedProbe {
+        fn shutdown(&self, _timeout: Duration) -> BoxFuture<'_, Result<(), Disposition>> {
+            Box::pin(async { Ok(()) })
+        }
+    }
+    impl Handler for UnclaimedProbe {
+        fn maximum_concurrency(&self) -> usize {
+            if self.queue == Queue::Dvr {
+                20
+            } else {
+                1
+            }
+        }
+        fn supports_selected_head(&self) -> bool {
+            true
+        }
+        fn head_advance_notifier(&self) -> Option<Arc<tokio::sync::Notify>> {
+            Some(self.advanced.clone())
+        }
+        fn run_once(
+            &self,
+            _owner: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
+            Box::pin(async { Err(Disposition::UnsupportedDomain) })
+        }
+        fn run_selected(
+            &self,
+            _expected: Arc<[u8]>,
+            _owner: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
+            Box::pin(async move {
+                self.runs.fetch_add(1, Ordering::SeqCst);
+                Ok(self.outcome.lock().unwrap().clone())
+            })
+        }
+    }
+    async fn settle_driver() {
+        for _ in 0..128 {
+            tokio::task::yield_now().await;
+        }
+    }
+    /// Real production lane loops with counted broker Head reads, paused clock
+    /// and immediate unclaimed handler completions. This reproduces the actual
+    /// ETA hotloop rather than merely testing a cooldown function in isolation.
+    #[tokio::test(start_paused = true)]
+    async fn both_lanes_bound_actual_peeks_and_relaunches_for_unclaimed_heads() {
+        for queue in [Queue::Celery, Queue::Dvr] {
+            let task_name = if queue == Queue::Dvr {
+                "apps.channels.tasks.run_recording"
+            } else {
+                "apps.channels.tasks.prefetch_recording_artwork"
+            };
+            let raw =
+                serde_json::to_vec(&serde_json::json!({"headers":{"task":task_name,"id":"first"}}))
+                    .unwrap();
+            let probe = Arc::new(UnclaimedProbe {
+                queue,
+                raw: Mutex::new(raw),
+                outcome: Mutex::new(Disposition::NotDue),
+                peeks: AtomicUsize::new(0),
+                runs: AtomicUsize::new(0),
+                advanced: Arc::new(tokio::sync::Notify::new()),
+            });
+            let maximum = probe.maximum_concurrency();
+            let handler = FamilyAdapter(Arc::new(OwnedFamily {
+                inner: probe.clone(),
+                slot: Arc::new(Semaphore::new(maximum)),
+                closed: AtomicBool::new(false),
+            }));
+            let head: Arc<dyn Head> = probe.clone();
+            let entries = milestone_dispatch::REQUIRED
+                .into_iter()
+                .map(|family| (family, Arc::new(handler.clone()) as Arc<dyn Handler>))
+                .collect();
+            let lane = Arc::new(Lane {
+                prepared: Prepared::new(head.clone(), entries).unwrap(),
+                state: watch::channel(State::Starting).0,
+                done: watch::channel(false).0,
+            });
+            let (stop, rx) = watch::channel(false);
+            let poll = Duration::from_millis(100);
+            let running = if queue == Queue::Dvr {
+                tokio::spawn(dvr_lane(
+                    lane.clone(),
+                    head,
+                    handler,
+                    Arc::new(()),
+                    rx,
+                    poll,
+                ))
+            } else {
+                let family = Family::Artwork;
+                tokio::spawn(celery_lane(
+                    lane.clone(),
+                    head,
+                    [(family, handler)].into_iter().collect(),
+                    Arc::new(()),
+                    rx,
+                    poll,
+                ))
+            };
+            settle_driver().await;
+            assert_eq!(probe.peeks.load(Ordering::SeqCst), 1);
+            assert_eq!(probe.runs.load(Ordering::SeqCst), 1);
+            tokio::time::advance(Duration::from_millis(99)).await;
+            settle_driver().await;
+            assert_eq!(probe.peeks.load(Ordering::SeqCst), 1);
+            assert_eq!(probe.runs.load(Ordering::SeqCst), 1);
+            tokio::time::advance(Duration::from_millis(1)).await;
+            settle_driver().await;
+            assert_eq!(probe.peeks.load(Ordering::SeqCst), 2);
+            assert_eq!(probe.runs.load(Ordering::SeqCst), 2);
+            *probe.outcome.lock().unwrap() = Disposition::Capacity;
+            tokio::time::advance(poll).await;
+            settle_driver().await;
+            assert_eq!(probe.peeks.load(Ordering::SeqCst), 3);
+            assert_eq!(probe.runs.load(Ordering::SeqCst), 3);
+            *probe.outcome.lock().unwrap() = Disposition::HeadChanged;
+            tokio::time::advance(poll).await;
+            settle_driver().await;
+            // HeadChanged permits one fresh read, but an identical raw cannot
+            // create another task/read loop at the same clock instant.
+            assert_eq!(probe.peeks.load(Ordering::SeqCst), 5);
+            assert_eq!(probe.runs.load(Ordering::SeqCst), 4);
+            *probe.outcome.lock().unwrap() = Disposition::NotDue;
+            tokio::time::advance(poll).await;
+            settle_driver().await;
+            assert_eq!(probe.peeks.load(Ordering::SeqCst), 6);
+            assert_eq!(probe.runs.load(Ordering::SeqCst), 5);
+            if queue == Queue::Dvr {
+                // Genuine head advance hint follows the old raw's removal.
+                // The changed next head progresses without waiting100ms.
+                *probe.raw.lock().unwrap() = serde_json::to_vec(
+                    &serde_json::json!({"headers":{"task":task_name,"id":"next"}}),
+                )
+                .unwrap();
+                let before = tokio::time::Instant::now();
+                probe.advanced.notify_one();
+                settle_driver().await;
+                assert_eq!(tokio::time::Instant::now(), before);
+                assert_eq!(probe.peeks.load(Ordering::SeqCst), 7);
+                assert_eq!(probe.runs.load(Ordering::SeqCst), 6);
+            }
+            stop.send_replace(true);
+            running.await.unwrap();
+            assert!(*lane.done.borrow());
+            assert!(matches!(*lane.state.borrow(), State::Stopped));
+        }
     }
 }

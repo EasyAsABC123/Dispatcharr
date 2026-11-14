@@ -101,18 +101,6 @@ pub(crate) struct Task {
     candidate: Option<Candidate>,
 }
 impl Task {
-    pub(crate) fn row_start(&self) -> DateTime<Utc> {
-        match &self.proof {
-            Proof::Clocked(p) => p.start(),
-            Proof::Named(p) => p.recording_start(),
-        }
-    }
-    pub(crate) fn row_end(&self) -> DateTime<Utc> {
-        match &self.proof {
-            Proof::Clocked(p) => p.end(),
-            Proof::Named(p) => p.recording_end(),
-        }
-    }
     pub(crate) async fn claim(
         &mut self,
         jobs: Jobs,
