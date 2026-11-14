@@ -1,0 +1,79 @@
+{
+  "protocol": "v2 independently indexed whole-window useful media",
+  "passed": false,
+  "readers": [
+    {
+      "reader": "owner",
+      "passed": false,
+      "window_byte_offsets": [
+        1023472,
+        5629096
+      ],
+      "window_bytes": 4605624,
+      "final_reader_state": {
+        "bytes": 5629096,
+        "media_bytes": 5629096,
+        "packets": 29942,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": false,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "streams": {},
+      "error": {
+        "type": "ValueError",
+        "message": "MissingOrAmbiguousContiguousContentAuthority"
+      }
+    },
+    {
+      "reader": "follower",
+      "passed": true,
+      "window_byte_offsets": [
+        1023472,
+        5884964
+      ],
+      "window_bytes": 4861492,
+      "final_reader_state": {
+        "bytes": 5884964,
+        "media_bytes": 5884964,
+        "packets": 31303,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": false,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "streams": {
+        "0": {
+          "decoded_full_capture_frames": 1003,
+          "decoded_window_frames": 766,
+          "reference_index_start": 157,
+          "reference_PTS_start": 7.72,
+          "reference_PTS_end": 38.36,
+          "useful_duration_seconds": 30.64,
+          "difference_from_wall_seconds": 0.641306431018748,
+          "contiguous_content_match": true
+        },
+        "1": {
+          "decoded_full_capture_frames": 1874,
+          "decoded_window_frames": 1431,
+          "reference_index_start": 291,
+          "reference_PTS_start": 7.608,
+          "reference_PTS_end": 38.135999999999996,
+          "useful_duration_seconds": 30.527999999999995,
+          "difference_from_wall_seconds": 0.5293064310187425,
+          "contiguous_content_match": true
+        }
+      }
+    }
+  ],
+  "one_batch_bytes": 255868,
+  "one_batch_PTS_seconds": 2.0480000000000587,
+  "extra_wall_or_equivalence_quantization_allowance_seconds": 0,
+  "gain_acceptance": false,
+  "elapsed_seconds": 29.998693568981253,
+  "live_state_passed": true
+}

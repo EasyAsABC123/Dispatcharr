@@ -1,0 +1,51 @@
+{
+  "scope": "Failed v2 ABBA diagnostic, Original first measured phase; no gains or full milestone acceptance",
+  "Original_authors_retain_full_credit": true,
+  "candidate": "sha256:29f68ba847b3b8e083e9e77e28a2a8446273a420a0c78887c6dba1bffcacbee9",
+  "actual_outer_exit": 1,
+  "actual_phase_exit": 1,
+  "order": [
+    "Original",
+    "Native",
+    "Native",
+    "Original"
+  ],
+  "measured_phases": [
+    "Original"
+  ],
+  "remaining_phases": "Native,Native,Original not_run after invalid content gate",
+  "actual_measurement_seconds": 29.998693568981253,
+  "actual_samples": 31,
+  "whole_window_media_byte_deltas": [
+    4605624,
+    4861492
+  ],
+  "live_state_passed": true,
+  "useful_media_gate_passed": false,
+  "independent_one_batch_conservative_PTS_upper_bound_seconds": 2.0480000000000587,
+  "full_decode_performed_for_both_captures": true,
+  "owner_video": "First882frames exactly match independent reference; only final frame882 atPTS36.72 differs. No matching nonempty suffix because terminal frame mismatches.",
+  "owner_audio": "All1650decodedframes match independent reference exactly",
+  "follower": "All1003video/1874audioframes match; measured video30.64s/audio30.528s indexed useful duration",
+  "actual_owner_decode_status": 0,
+  "actual_owner_decode_stderr": "Invalid level prefix; error while decoding MB9 1",
+  "diagnostic_interpretation": "Terminal capture truncation/decoder concealment is supported; no observed internal content drop/duplication or prefix corruption. This is a saved capture boundary observation, not a claim that Source globally emits corrupt streams. Frozen full-capture exact-match gate remains failed.",
+  "pre_measurement_attempts": [
+    {
+      "path": "artifacts/rust/m3-resource-protocol-v2-actual-1",
+      "failure": "Compose cp exit1; stderr unavailable in original wrapper; no viewers or samples;8freshcleanup passed"
+    },
+    {
+      "path": "artifacts/rust/m3-resource-protocol-v2-actual-2",
+      "failure": "Pinned FFmpeg removed vsync option, exit8 exactstderr captured; no viewers or samples;8freshcleanup passed"
+    }
+  ],
+  "repairs": "Reference hash/index/decode inside actual Origin avoids cp/75MBcopies; explicit fps_mode:v passthrough restores unchanged timing intent; all commands actualstatus/stdout/stderr persisted before parse; no normalization fallback",
+  "cleanup": "Compose teardown0, runner6absencechecks0, fresh independent12checks0 including3 exactCIDs and2 scopes inactive/not-found/noControlGroup",
+  "resource_ratios_computed": false,
+  "gain_accepted": false,
+  "full_M3_accepted": false,
+  "changed_inputs": [],
+  "raw_result_sha256": "72a35ea381b1fe0fae29bc4cdd03420a65ce73644510f41c20a474f7537129cd",
+  "raw_source_report_sha256": "48a16ddb9098fefab44084f2210c130350f170ad6d422322caae530a0d5cf427"
+}

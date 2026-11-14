@@ -28,3 +28,13 @@ A future separately frozen protocol must derive useful-work tolerances from the
 fixed media, PTS/content and actual buffering cadence. It must not lower gates
 after observing a result. Full M3 and whole-application performance remain open.
 Original Dispatcharr and dependency authors retain full credit and licenses.
+
+The separate [v2 diagnostic](../scripts/rust-milestone-batches/m235/resource-protocol-v2/README.md)
+subsequently completed independent fixture indexing, one Original window and
+both full off-window decodes. Its frozen content gate failed: the owner's final
+captured video frame differed and the decoder reported a terminal decode error;
+the preceding 882 video frames and all audio matched. The follower matched
+throughout. This supports a capture-termination issue, without retroactively
+passing either protocol. No Native phase or ratio ran. Twelve fresh independent
+cleanup checks passed. Further resource comparison waits for the relevant
+functional graph and a prospectively frozen complete-unit window rule.

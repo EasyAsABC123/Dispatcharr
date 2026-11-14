@@ -50,6 +50,7 @@ pub struct Service {
     identity: Arc<()>,
 }
 pub struct PreparedSeries {
+    no_rules: bool,
     origin: Arc<()>,
     task: DirectTask,
     title: String,
@@ -58,6 +59,7 @@ pub struct PreparedSeries {
 }
 #[derive(Debug)]
 pub struct SeriesReport {
+    no_rules: bool,
     task: Uuid,
     root: Uuid,
     parent: Option<Uuid>,
@@ -78,6 +80,7 @@ impl SeriesReport {
         frames: Vec<crate::recording_artwork_protocol::Message>,
     ) -> Self {
         Self {
+            no_rules: false,
             task: parent.task_id,
             root: parent.root,
             parent: parent.parent,
@@ -109,6 +112,9 @@ impl SeriesReport {
         self.children.clone()
     }
     pub fn value(&self) -> Value {
+        if self.no_rules {
+            return crate::series_protocol::KnownReturn::NoRules.value();
+        }
         let mut details: Vec<Value> = self
             .caught_insert_errors
             .iter()
@@ -198,6 +204,41 @@ impl Service {
             events,
             identity: Arc::new(()),
         }
+    }
+    /// Normal Main rule preparation follows Original CoreSettings filtering.
+    /// No rules return before offset parsing/SQL/events; legacy prepare is unchanged.
+    pub(crate) async fn prepare_series_normal(
+        &self,
+        group: &Value,
+        now: DateTime<Utc>,
+        task: DirectTask,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<PreparedSeries, Error> {
+        let mut group = group.as_object().cloned().ok_or(Error::Unsupported)?;
+        let rules = group
+            .get("series_rules")
+            .and_then(Value::as_array)
+            .map(|rules| {
+                rules
+                    .iter()
+                    .filter(|rule| rule.is_object())
+                    .cloned()
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default();
+        if rules.is_empty() {
+            return Ok(PreparedSeries {
+                no_rules: true,
+                origin: self.identity.clone(),
+                task,
+                title: String::new(),
+                tvg: String::new(),
+                intents: vec![],
+            });
+        }
+        group.insert("series_rules".into(), Value::Array(rules));
+        self.prepare_series(&Value::Object(group), now, task, owner)
+            .await
     }
     pub async fn prepare_series(
         &self,
@@ -306,6 +347,7 @@ impl Service {
         let intents = decisions::series(now, &title, &tvg, channel, source, &programmes, &existing)
             .map_err(|_| Error::Unsupported)?;
         Ok(PreparedSeries {
+            no_rules: false,
             origin: self.identity.clone(),
             task,
             title,
@@ -502,11 +544,27 @@ impl Service {
         }
         let task = prepared.task;
         tokio::spawn(async move {
+            if prepared.no_rules {
+                return Ok(SeriesReport {
+                    no_rules: true,
+                    task: task.id(),
+                    root: task.root(),
+                    parent: task.parent(),
+                    title: String::new(),
+                    tvg: String::new(),
+                    created: 0,
+                    children: vec![],
+                    artwork_targets: vec![],
+                    artwork_frames: vec![],
+                    caught_insert_errors: vec![],
+                });
+            }
             let outcome = self
                 .execute_intents(prepared.intents, task, owner.clone())
                 .await?;
             self.event(Some(outcome.created), owner).await?;
             Ok(SeriesReport {
+                no_rules: false,
                 task: task.id(),
                 root: task.root(),
                 parent: task.parent(),
@@ -570,6 +628,7 @@ mod caught_insert_tests {
             if case["name"] == "series-SQL-P0001" {
                 let value = &case["backend"]["result"];
                 let report = SeriesReport {
+                    no_rules: false,
                     task: Uuid::parse_str(case["backend"]["task_id"].as_str().unwrap()).unwrap(),
                     root: Uuid::parse_str(case["backend"]["task_id"].as_str().unwrap()).unwrap(),
                     parent: None,
@@ -599,5 +658,89 @@ mod caught_insert_tests {
             assert_eq!(case["backend"]["status"], json!("SUCCESS"));
             assert!(case["backend"]["traceback"].is_null());
         }
+    }
+}
+
+#[cfg(test)]
+mod normal_defaults_controls {
+    use super::*;
+    struct NoEffects;
+    impl ArtworkSink for NoEffects {
+        fn publish<'a>(
+            &'a self,
+            _recording: i64,
+            _task: DirectTask,
+            _owner: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'a, Result<Uuid, ArtworkError>> {
+            Box::pin(async { panic!("no-rules must not publish artwork") })
+        }
+    }
+    impl UpdateEventSink for NoEffects {
+        fn send<'a>(
+            &'a self,
+            _group: &'a str,
+            _message: Value,
+        ) -> BoxFuture<'a, Result<(), UpdateEventError>> {
+            Box::pin(async { panic!("Source no-rules returns before events") })
+        }
+    }
+    #[tokio::test]
+    async fn normal_no_rules_uses_source_filter_before_offsets_sql_or_events() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .max_connections(1)
+            .connect_lazy("postgres://unreached:unreached@127.0.0.1:1/unreached")
+            .unwrap();
+        let service = Arc::new(Service::new(
+            pool.clone(),
+            Arc::new(NoEffects),
+            Arc::new(NoEffects),
+        ));
+        let id = Uuid::new_v4();
+        let message = crate::series_protocol::SeriesMessage {
+            task_id: id,
+            root: id,
+            parent: None,
+        };
+        let task = DirectTask::series(&message).unwrap();
+        for rules in [
+            None,
+            Some(json!([])),
+            Some(Value::Null),
+            Some(json!("not-a-list")),
+            Some(json!([1, null, "ignored"])),
+        ] {
+            let mut group =
+                json!({"pre_offset_minutes":"ignored before no-rules","post_offset_minutes":null});
+            if let Some(rules) = rules {
+                group["series_rules"] = rules;
+            }
+            let prepared = service
+                .prepare_series_normal(&group, Utc::now(), task, Arc::new(()))
+                .await
+                .unwrap();
+            let report = service
+                .clone()
+                .execute_series(prepared, Arc::new(()))
+                .await
+                .unwrap();
+            assert_eq!(
+                report.value(),
+                crate::series_protocol::KnownReturn::NoRules.value()
+            );
+            assert!(report.matches(&message));
+            assert!(report.children().is_empty());
+            assert!(report.artwork_targets().is_empty());
+            assert!(
+                matches!(
+                    service
+                        .prepare_series(&group, Utc::now(), task, Arc::new(()))
+                        .await,
+                    Err(Error::Unsupported)
+                ),
+                "legacy configured preparation unchanged"
+            );
+        }
+        assert!(matches!(service.prepare_series_normal(&json!({"series_rules":[{},false],"pre_offset_minutes":0,"post_offset_minutes":0}),Utc::now(),task,Arc::new(())).await,Err(Error::Unsupported)),"dictionary rules must reach existing configured preflight");
+        assert_eq!(pool.size(), 0, "all no-rules branches avoid SQL entirely");
     }
 }

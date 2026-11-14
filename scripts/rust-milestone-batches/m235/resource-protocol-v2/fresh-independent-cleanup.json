@@ -1,0 +1,1352 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "kind": "owned-container-event-identities",
+      "actual_exit": 0,
+      "events": [
+        {
+          "type": "container",
+          "action": "exec_start: ffprobe -v error -show_entries stream=index,codec_type,codec_name:packet=stream_index,pts_time,duration_time,pos,size -of json /tmp/fixture.ts",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: ffmpeg -hide_banner -loglevel error -copyts -i /tmp/fixture.ts -map 0:v:0 -map 0:a:0 -fps_mode:v passthrough -c:v rawvideo -pix_fmt yuv420p -c:a pcm_s16le -f framehash -hash sha256 pipe:1",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: ffmpeg -hide_banner -loglevel error -copyts -i /tmp/fixture.ts -map 0:v:0 -map 0:a:0 -fps_mode:v passthrough -c:v rawvideo -pix_fmt yuv420p -c:a pcm_s16le -f framehash -hash sha256 pipe:1",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: /dispatcharrpy/bin/python /verification/supervisor.py control stop",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: /dispatcharrpy/bin/python /verification/supervisor.py control stop",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli FLUSHDB",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli FLUSHDB",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: /dispatcharrpy/bin/python /verification/supervisor.py control start",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: /dispatcharrpy/bin/python /verification/supervisor.py control start",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "create",
+          "ID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca"
+        },
+        {
+          "type": "container",
+          "action": "start",
+          "ID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "top",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "top",
+          "ID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "top",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "top",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        },
+        {
+          "type": "container",
+          "action": "top",
+          "ID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "top",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "top",
+          "ID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca"
+        },
+        {
+          "type": "container",
+          "action": "top",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "top",
+          "ID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: redis-cli --json EVAL local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''} 0 11ca0bac-7532-414a-9d5b-9790cb6784a1 1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: ffprobe -v error -show_entries stream=codec_type,codec_name -of json /evidence/baseline-shared-demand/owner.ts",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: ffprobe -v error -show_entries stream=codec_type,codec_name -of json /evidence/baseline-shared-demand/owner.ts",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: ffmpeg -hide_banner -loglevel error -xerror -progress pipe:1 -nostats -i /evidence/baseline-shared-demand/owner.ts -t 3 -map 0:v:0 -map 0:a:0 -f null -",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: ffmpeg -hide_banner -loglevel error -xerror -progress pipe:1 -nostats -i /evidence/baseline-shared-demand/owner.ts -t 3 -map 0:v:0 -map 0:a:0 -f null -",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: ffprobe -v error -show_entries stream=codec_type,codec_name -of json /evidence/baseline-shared-demand/follower.ts",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: ffprobe -v error -show_entries stream=codec_type,codec_name -of json /evidence/baseline-shared-demand/follower.ts",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: ffmpeg -hide_banner -loglevel error -xerror -progress pipe:1 -nostats -i /evidence/baseline-shared-demand/follower.ts -t 3 -map 0:v:0 -map 0:a:0 -f null -",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: ffmpeg -hide_banner -loglevel error -xerror -progress pipe:1 -nostats -i /evidence/baseline-shared-demand/follower.ts -t 3 -map 0:v:0 -map 0:a:0 -f null -",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: ffprobe -v error -show_entries stream=index,codec_type,codec_name:packet=stream_index,pts_time,duration_time,pos,size -of json /evidence/baseline-shared-demand/owner.ts",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: ffprobe -v error -show_entries stream=index,codec_type,codec_name:packet=stream_index,pts_time,duration_time,pos,size -of json /evidence/baseline-shared-demand/owner.ts",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: ffmpeg -hide_banner -loglevel error -copyts -i /evidence/baseline-shared-demand/owner.ts -map 0:v:0 -map 0:a:0 -fps_mode:v passthrough -c:v rawvideo -pix_fmt yuv420p -c:a pcm_s16le -f framehash -hash sha256 pipe:1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: ffmpeg -hide_banner -loglevel error -copyts -i /evidence/baseline-shared-demand/owner.ts -map 0:v:0 -map 0:a:0 -fps_mode:v passthrough -c:v rawvideo -pix_fmt yuv420p -c:a pcm_s16le -f framehash -hash sha256 pipe:1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: ffprobe -v error -show_entries stream=index,codec_type,codec_name:packet=stream_index,pts_time,duration_time,pos,size -of json /evidence/baseline-shared-demand/follower.ts",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: ffprobe -v error -show_entries stream=index,codec_type,codec_name:packet=stream_index,pts_time,duration_time,pos,size -of json /evidence/baseline-shared-demand/follower.ts",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_create: ffmpeg -hide_banner -loglevel error -copyts -i /evidence/baseline-shared-demand/follower.ts -map 0:v:0 -map 0:a:0 -fps_mode:v passthrough -c:v rawvideo -pix_fmt yuv420p -c:a pcm_s16le -f framehash -hash sha256 pipe:1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_start: ffmpeg -hide_banner -loglevel error -copyts -i /evidence/baseline-shared-demand/follower.ts -map 0:v:0 -map 0:a:0 -fps_mode:v passthrough -c:v rawvideo -pix_fmt yuv420p -c:a pcm_s16le -f framehash -hash sha256 pipe:1",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "exec_die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "kill",
+          "ID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca"
+        },
+        {
+          "type": "container",
+          "action": "stop",
+          "ID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca"
+        },
+        {
+          "type": "container",
+          "action": "die",
+          "ID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca"
+        },
+        {
+          "type": "container",
+          "action": "destroy",
+          "ID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca"
+        },
+        {
+          "type": "container",
+          "action": "kill",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "stop",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "die",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "destroy",
+          "ID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48"
+        },
+        {
+          "type": "container",
+          "action": "kill",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        },
+        {
+          "type": "container",
+          "action": "kill",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        },
+        {
+          "type": "container",
+          "action": "stop",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        },
+        {
+          "type": "container",
+          "action": "die",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        },
+        {
+          "type": "container",
+          "action": "destroy",
+          "ID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "kind": "containers",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "networks",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "volumes",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "baseline-exact-CID",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "origin-exact-CID",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "python-replica-exact-CID",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "exact-CID-absent",
+      "CID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "exact-CID-absent",
+      "CID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "exact-CID-absent",
+      "CID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scope-settled",
+      "unit": "dispatcharr-resource-orchestrator-v2-abba3.scope",
+      "actual_exit": 0,
+      "stdout": "ActiveState=inactive\nControlGroup=\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scope-settled",
+      "unit": "dispatcharr-resource-e67065562fc94f33a14352112eb17499.scope",
+      "actual_exit": 0,
+      "stdout": "ActiveState=inactive\nControlGroup=\n",
+      "stderr": "",
+      "passed": true
+    }
+  ],
+  "viewers_started": 2,
+  "resource_samples": 31,
+  "raw_result_sha256": "72a35ea381b1fe0fae29bc4cdd03420a65ce73644510f41c20a474f7537129cd"
+}

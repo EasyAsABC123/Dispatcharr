@@ -1,0 +1,5679 @@
+{
+  "scope": "diagnostic preflight only",
+  "backend": "baseline",
+  "groups": {
+    "observer": {
+      "path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dispatcharr-resource-e67065562fc94f33a14352112eb17499.scope",
+      "category": "observer",
+      "PID": 2659323
+    },
+    "orchestrator": {
+      "path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dispatcharr-resource-orchestrator-v2-abba3.scope",
+      "category": "observer",
+      "PID": 2659320
+    },
+    "baseline": {
+      "CID": "d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48",
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "PID": 2659588,
+      "path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-d8337eade7fba790fd98490c9da167fc75a0ea6362af3c4107686925f9abbd48.scope",
+      "category": "backend_and_infrastructure"
+    },
+    "origin": {
+      "CID": "30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec",
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "PID": 2659498,
+      "path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-30c4a66d75df59f001bc0876643acd7cd25d4d3cb33ce2a2d48ecab4d31d1cec.scope",
+      "category": "origin"
+    },
+    "python-replica": {
+      "CID": "701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca",
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "PID": 2661787,
+      "path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-701da85abce972df0efb6fb022af9ec6c7a5dd36e7e6708692743e6d5eb561ca.scope",
+      "category": "backend_and_infrastructure"
+    }
+  },
+  "initial_process_inventory": {
+    "baseline": "PID                 PPID                PGID                COMMAND\n2659588             2659561             2659588             python /verification/supervisor.py serve\n2659874             2659588             2659874             /usr/lib/postgresql/17/bin/postgres -D /data/db\n2659875             2659874             2659875             postgres: checkpointer\n2659876             2659874             2659876             postgres: background writer\n2659878             2659874             2659878             postgres: walwriter\n2659879             2659874             2659879             postgres: autovacuum launcher\n2659880             2659874             2659880             postgres: logical replication launcher\n2659909             2659588             2659909             redis-server 0.0.0.0:6379\n2661661             2659588             2661661             uwsgi --ini /verification/uwsgi.ini\n2661733             2661661             2661661             uwsgi --ini /verification/uwsgi.ini\n2661734             2661661             2661661             uwsgi --ini /verification/uwsgi.ini\n2661969             2659874             2661969             postgres: dispatch dispatcharr [local] idle\n2662003             2659874             2662003             postgres: dispatch dispatcharr 172.18.0.4(50928) idle\n2662074             2659874             2662074             postgres: dispatch dispatcharr [local] idle\n2662075             2661733             2662075             ffmpeg -fflags +genpts+discardcorrupt -user_agent TiviMate/5.1.6 (Android 12) -i http://origin:8080/live/0.ts -map 0 -max_interleave_delta 100K -c copy -mpegts_flags +pat_pmt_at_frames+resend_headers+initial_discontinuity -f mpegts pipe:1\n2662373             2659874             2662373             postgres: dispatch dispatcharr 172.18.0.4(50934) idle\n",
+    "origin": "PID                 PPID                PGID                COMMAND\n2659498             2659457             2659498             /dispatcharrpy/bin/python /verification/origin.py\n",
+    "python-replica": "PID                 PPID                PGID                COMMAND\n2661787             2661744             2661787             /dispatcharrpy/bin/uwsgi --ini /verification/uwsgi.ini\n2661967             2661787             2661787             /dispatcharrpy/bin/uwsgi --ini /verification/uwsgi.ini\n2661968             2661787             2661787             /dispatcharrpy/bin/uwsgi --ini /verification/uwsgi.ini\n"
+  },
+  "actual_FFmpeg": [
+    {
+      "service": "baseline",
+      "hostPID": 2662075,
+      "row": "2662075             2661733             2662075             ffmpeg -fflags +genpts+discardcorrupt -user_agent TiviMate/5.1.6 (Android 12) -i http://origin:8080/live/0.ts -map 0 -max_interleave_delta 100K -c copy -mpegts_flags +pat_pmt_at_frames+resend_headers+initial_discontinuity -f mpegts pipe:1",
+      "same_service_cgroup": true
+    }
+  ],
+  "samples": [
+    {
+      "index": 0,
+      "monotonic_start": 399963.022362763,
+      "monotonic_end": 399963.023415593,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 3710642,
+            "user_usec": 2897404,
+            "system_usec": 813237,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 158142464,
+          "inactive_file_bytes": 21884928,
+          "working_set_estimate_bytes": 136257536,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 46086,
+            "user_usec": 34218,
+            "system_usec": 11867,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18413281,
+            "user_usec": 17313667,
+            "system_usec": 1099613,
+            "nice_usec": 2988487,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 287838208,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 287768576,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8600842,
+            "user_usec": 8050132,
+            "system_usec": 550710,
+            "nice_usec": 7153830,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 91033600,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89153536,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3889809,
+            "user_usec": 3705081,
+            "system_usec": 184728,
+            "nice_usec": 3693707,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 157736960,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 157728768,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 445575168,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 445497344,
+          "cpu_usage_usec": 22303090
+        },
+        "origin": {
+          "charged_memory_current_bytes": 91033600,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89153536,
+          "cpu_usage_usec": 8600842
+        },
+        "observer": {
+          "charged_memory_current_bytes": 170266624,
+          "inactive_file_bytes": 21897216,
+          "working_set_estimate_bytes": 148369408,
+          "cpu_usage_usec": 3756728
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 706875392,
+          "inactive_file_bytes": 23855104,
+          "working_set_estimate_bytes": 683020288,
+          "cpu_usage_usec": 34660660
+        }
+      },
+      "readers": [
+        {
+          "bytes": 1023472,
+          "media_bytes": 1023472,
+          "packets": 5444,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1023472,
+          "media_bytes": 1023472,
+          "packets": 5444,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 1839768,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 1839768
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "active"
+      }
+    },
+    {
+      "index": 1,
+      "monotonic_start": 399964.021086698,
+      "monotonic_end": 399964.022062826,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 3774591,
+            "user_usec": 2946903,
+            "system_usec": 827688,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 141258752,
+          "inactive_file_bytes": 21921792,
+          "working_set_estimate_bytes": 119336960,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 46305,
+            "user_usec": 34381,
+            "system_usec": 11924,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18452150,
+            "user_usec": 17343854,
+            "system_usec": 1108296,
+            "nice_usec": 3003410,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 288342016,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 288272384,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8603912,
+            "user_usec": 8053120,
+            "system_usec": 550791,
+            "nice_usec": 7155704,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 91275264,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89395200,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3892753,
+            "user_usec": 3707205,
+            "system_usec": 185547,
+            "nice_usec": 3694981,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 156495872,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 156487680,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 444837888,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444760064,
+          "cpu_usage_usec": 22344903
+        },
+        "origin": {
+          "charged_memory_current_bytes": 91275264,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89395200,
+          "cpu_usage_usec": 8603912
+        },
+        "observer": {
+          "charged_memory_current_bytes": 153382912,
+          "inactive_file_bytes": 21934080,
+          "working_set_estimate_bytes": 131448832,
+          "cpu_usage_usec": 3820896
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 689496064,
+          "inactive_file_bytes": 23891968,
+          "working_set_estimate_bytes": 665604096,
+          "cpu_usage_usec": 34769711
+        }
+      },
+      "readers": [
+        {
+          "bytes": 1279340,
+          "media_bytes": 1279340,
+          "packets": 6805,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1279340,
+          "media_bytes": 1279340,
+          "packets": 6805,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 2088492,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 2088492
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 5,
+        "timestamps": 5,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 2,
+      "monotonic_start": 399965.021060728,
+      "monotonic_end": 399965.022232881,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 3839108,
+            "user_usec": 2991916,
+            "system_usec": 847191,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 140083200,
+          "inactive_file_bytes": 22450176,
+          "working_set_estimate_bytes": 117633024,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 46507,
+            "user_usec": 34507,
+            "system_usec": 12000,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18489561,
+            "user_usec": 17374248,
+            "system_usec": 1115313,
+            "nice_usec": 3019353,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 291033088,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 290963456,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8607336,
+            "user_usec": 8056351,
+            "system_usec": 550984,
+            "nice_usec": 7156371,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 91295744,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89415680,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3894559,
+            "user_usec": 3708952,
+            "system_usec": 185607,
+            "nice_usec": 3695518,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155770880,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155762688,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 446803968,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 446726144,
+          "cpu_usage_usec": 22384120
+        },
+        "origin": {
+          "charged_memory_current_bytes": 91295744,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89415680,
+          "cpu_usage_usec": 8607336
+        },
+        "observer": {
+          "charged_memory_current_bytes": 152207360,
+          "inactive_file_bytes": 22462464,
+          "working_set_estimate_bytes": 129744896,
+          "cpu_usage_usec": 3885615
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 690307072,
+          "inactive_file_bytes": 24420352,
+          "working_set_estimate_bytes": 665886720,
+          "cpu_usage_usec": 34877071
+        }
+      },
+      "readers": [
+        {
+          "bytes": 1279340,
+          "media_bytes": 1279340,
+          "packets": 6805,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1279340,
+          "media_bytes": 1279340,
+          "packets": 6805,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 2338532,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 2338532
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 5,
+        "timestamps": 5,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 3,
+      "monotonic_start": 399966.021056648,
+      "monotonic_end": 399966.022025715,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 3907453,
+            "user_usec": 3028763,
+            "system_usec": 878689,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 141545472,
+          "inactive_file_bytes": 22466560,
+          "working_set_estimate_bytes": 119078912,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 46667,
+            "user_usec": 34625,
+            "system_usec": 12041,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18529356,
+            "user_usec": 17407215,
+            "system_usec": 1122141,
+            "nice_usec": 3035752,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 289296384,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 289226752,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8610585,
+            "user_usec": 8058150,
+            "system_usec": 552434,
+            "nice_usec": 7156371,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90357760,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88477696,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3897614,
+            "user_usec": 3710736,
+            "system_usec": 186877,
+            "nice_usec": 3695543,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155660288,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155652096,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 444956672,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444878848,
+          "cpu_usage_usec": 22426970
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90357760,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88477696,
+          "cpu_usage_usec": 8610585
+        },
+        "observer": {
+          "charged_memory_current_bytes": 153669632,
+          "inactive_file_bytes": 22478848,
+          "working_set_estimate_bytes": 131190784,
+          "cpu_usage_usec": 3954120
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 688984064,
+          "inactive_file_bytes": 24436736,
+          "working_set_estimate_bytes": 664547328,
+          "cpu_usage_usec": 34991675
+        }
+      },
+      "readers": [
+        {
+          "bytes": 1535208,
+          "media_bytes": 1535208,
+          "packets": 8166,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1535208,
+          "media_bytes": 1535208,
+          "packets": 8166,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 2588572,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 2588572
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 6,
+        "timestamps": 6,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 4,
+      "monotonic_start": 399967.021059797,
+      "monotonic_end": 399967.022120178,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 3970046,
+            "user_usec": 3065566,
+            "system_usec": 904480,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 140800000,
+          "inactive_file_bytes": 22994944,
+          "working_set_estimate_bytes": 117805056,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 46875,
+            "user_usec": 34753,
+            "system_usec": 12122,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18569217,
+            "user_usec": 17437203,
+            "system_usec": 1132014,
+            "nice_usec": 3047769,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 291074048,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 291004416,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8614146,
+            "user_usec": 8059618,
+            "system_usec": 554528,
+            "nice_usec": 7156807,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 89989120,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88109056,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3898722,
+            "user_usec": 3711791,
+            "system_usec": 186930,
+            "nice_usec": 3695543,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155262976,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155254784,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 446337024,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 446259200,
+          "cpu_usage_usec": 22467939
+        },
+        "origin": {
+          "charged_memory_current_bytes": 89989120,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88109056,
+          "cpu_usage_usec": 8614146
+        },
+        "observer": {
+          "charged_memory_current_bytes": 152924160,
+          "inactive_file_bytes": 23007232,
+          "working_set_estimate_bytes": 129916928,
+          "cpu_usage_usec": 4016921
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 689250304,
+          "inactive_file_bytes": 24965120,
+          "working_set_estimate_bytes": 664285184,
+          "cpu_usage_usec": 35099006
+        }
+      },
+      "readers": [
+        {
+          "bytes": 1535208,
+          "media_bytes": 1535208,
+          "packets": 8166,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1535208,
+          "media_bytes": 1535208,
+          "packets": 8166,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 2838612,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 2838612
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 7,
+        "timestamps": 7,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 5,
+      "monotonic_start": 399968.021061296,
+      "monotonic_end": 399968.021985363,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4035099,
+            "user_usec": 3103164,
+            "system_usec": 931935,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 142499840,
+          "inactive_file_bytes": 23261184,
+          "working_set_estimate_bytes": 119238656,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 47098,
+            "user_usec": 34918,
+            "system_usec": 12179,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18610793,
+            "user_usec": 17471108,
+            "system_usec": 1139685,
+            "nice_usec": 3063582,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 290750464,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 290680832,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8617967,
+            "user_usec": 8063264,
+            "system_usec": 554703,
+            "nice_usec": 7157781,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 91353088,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89473024,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3902197,
+            "user_usec": 3714984,
+            "system_usec": 187212,
+            "nice_usec": 3696628,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155639808,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155631616,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 446390272,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 446312448,
+          "cpu_usage_usec": 22512990
+        },
+        "origin": {
+          "charged_memory_current_bytes": 91353088,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89473024,
+          "cpu_usage_usec": 8617967
+        },
+        "observer": {
+          "charged_memory_current_bytes": 154624000,
+          "inactive_file_bytes": 23273472,
+          "working_set_estimate_bytes": 131350528,
+          "cpu_usage_usec": 4082197
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 692367360,
+          "inactive_file_bytes": 25231360,
+          "working_set_estimate_bytes": 667136000,
+          "cpu_usage_usec": 35213154
+        }
+      },
+      "readers": [
+        {
+          "bytes": 1791076,
+          "media_bytes": 1791076,
+          "packets": 9527,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1791076,
+          "media_bytes": 1791076,
+          "packets": 9527,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 3088652,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 3088652
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 7,
+        "timestamps": 7,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 6,
+      "monotonic_start": 399969.021017814,
+      "monotonic_end": 399969.022126485,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4106079,
+            "user_usec": 3151950,
+            "system_usec": 954129,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 142639104,
+          "inactive_file_bytes": 24137728,
+          "working_set_estimate_bytes": 118501376,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 47310,
+            "user_usec": 35087,
+            "system_usec": 12222,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18650579,
+            "user_usec": 17503624,
+            "system_usec": 1146954,
+            "nice_usec": 3079162,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 292155392,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 292085760,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8621297,
+            "user_usec": 8066379,
+            "system_usec": 554917,
+            "nice_usec": 7158204,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90955776,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89075712,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3905598,
+            "user_usec": 3718074,
+            "system_usec": 187524,
+            "nice_usec": 3697954,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155123712,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155115520,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 447279104,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 447201280,
+          "cpu_usage_usec": 22556177
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90955776,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89075712,
+          "cpu_usage_usec": 8621297
+        },
+        "observer": {
+          "charged_memory_current_bytes": 154763264,
+          "inactive_file_bytes": 24150016,
+          "working_set_estimate_bytes": 130613248,
+          "cpu_usage_usec": 4153389
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 692998144,
+          "inactive_file_bytes": 26107904,
+          "working_set_estimate_bytes": 666890240,
+          "cpu_usage_usec": 35330863
+        }
+      },
+      "readers": [
+        {
+          "bytes": 2046944,
+          "media_bytes": 2046944,
+          "packets": 10888,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 2046944,
+          "media_bytes": 2046944,
+          "packets": 10888,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 3338692,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 3338692
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 8,
+        "timestamps": 8,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 7,
+      "monotonic_start": 399970.021079583,
+      "monotonic_end": 399970.022079482,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4173115,
+            "user_usec": 3194910,
+            "system_usec": 978204,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 143958016,
+          "inactive_file_bytes": 24154112,
+          "working_set_estimate_bytes": 119803904,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 47450,
+            "user_usec": 35191,
+            "system_usec": 12259,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18686831,
+            "user_usec": 17533071,
+            "system_usec": 1153760,
+            "nice_usec": 3096079,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 291479552,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 291409920,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8624407,
+            "user_usec": 8069344,
+            "system_usec": 555062,
+            "nice_usec": 7159198,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 91045888,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89165824,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3907347,
+            "user_usec": 3719770,
+            "system_usec": 187577,
+            "nice_usec": 3698585,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155365376,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155357184,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 446844928,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 446767104,
+          "cpu_usage_usec": 22594178
+        },
+        "origin": {
+          "charged_memory_current_bytes": 91045888,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89165824,
+          "cpu_usage_usec": 8624407
+        },
+        "observer": {
+          "charged_memory_current_bytes": 156082176,
+          "inactive_file_bytes": 24166400,
+          "working_set_estimate_bytes": 131915776,
+          "cpu_usage_usec": 4220565
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 693972992,
+          "inactive_file_bytes": 26124288,
+          "working_set_estimate_bytes": 667848704,
+          "cpu_usage_usec": 35439150
+        }
+      },
+      "readers": [
+        {
+          "bytes": 2046944,
+          "media_bytes": 2046944,
+          "packets": 10888,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 2046944,
+          "media_bytes": 2046944,
+          "packets": 10888,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 3588732,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 3588732
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 8,
+        "timestamps": 8,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 8,
+      "monotonic_start": 399971.021014589,
+      "monotonic_end": 399971.021994727,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4239784,
+            "user_usec": 3240146,
+            "system_usec": 999637,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 143024128,
+          "inactive_file_bytes": 24416256,
+          "working_set_estimate_bytes": 118607872,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 47662,
+            "user_usec": 35348,
+            "system_usec": 12313,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18725104,
+            "user_usec": 17561360,
+            "system_usec": 1163743,
+            "nice_usec": 3108007,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 291753984,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 291684352,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8627979,
+            "user_usec": 8072762,
+            "system_usec": 555217,
+            "nice_usec": 7160530,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 91295744,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89415680,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3910485,
+            "user_usec": 3722430,
+            "system_usec": 188055,
+            "nice_usec": 3699206,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155594752,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155586560,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 447348736,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 447270912,
+          "cpu_usage_usec": 22635589
+        },
+        "origin": {
+          "charged_memory_current_bytes": 91295744,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89415680,
+          "cpu_usage_usec": 8627979
+        },
+        "observer": {
+          "charged_memory_current_bytes": 155148288,
+          "inactive_file_bytes": 24428544,
+          "working_set_estimate_bytes": 130719744,
+          "cpu_usage_usec": 4287446
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 693792768,
+          "inactive_file_bytes": 26386432,
+          "working_set_estimate_bytes": 667406336,
+          "cpu_usage_usec": 35551014
+        }
+      },
+      "readers": [
+        {
+          "bytes": 2302812,
+          "media_bytes": 2302812,
+          "packets": 12249,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 2302812,
+          "media_bytes": 2302812,
+          "packets": 12249,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 3838772,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 3838772
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 9,
+        "timestamps": 9,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 9,
+      "monotonic_start": 399972.021056747,
+      "monotonic_end": 399972.022071956,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4303803,
+            "user_usec": 3285753,
+            "system_usec": 1018049,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 144261120,
+          "inactive_file_bytes": 24674304,
+          "working_set_estimate_bytes": 119586816,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 47827,
+            "user_usec": 35470,
+            "system_usec": 12356,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18763824,
+            "user_usec": 17594022,
+            "system_usec": 1169801,
+            "nice_usec": 3124522,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 292675584,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 292605952,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8630813,
+            "user_usec": 8073390,
+            "system_usec": 557423,
+            "nice_usec": 7161522,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 91418624,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89538560,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3912104,
+            "user_usec": 3724031,
+            "system_usec": 188073,
+            "nice_usec": 3700445,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155222016,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155213824,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 447897600,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 447819776,
+          "cpu_usage_usec": 22675928
+        },
+        "origin": {
+          "charged_memory_current_bytes": 91418624,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89538560,
+          "cpu_usage_usec": 8630813
+        },
+        "observer": {
+          "charged_memory_current_bytes": 156385280,
+          "inactive_file_bytes": 24686592,
+          "working_set_estimate_bytes": 131698688,
+          "cpu_usage_usec": 4351630
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 695701504,
+          "inactive_file_bytes": 26644480,
+          "working_set_estimate_bytes": 669057024,
+          "cpu_usage_usec": 35658371
+        }
+      },
+      "readers": [
+        {
+          "bytes": 2558680,
+          "media_bytes": 2558680,
+          "packets": 13610,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 2302812,
+          "media_bytes": 2302812,
+          "packets": 12249,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 4088812,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 4088812
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 10,
+        "timestamps": 10,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 10,
+      "monotonic_start": 399973.021058184,
+      "monotonic_end": 399973.022183326,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4370933,
+            "user_usec": 3332240,
+            "system_usec": 1038693,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 144850944,
+          "inactive_file_bytes": 25190400,
+          "working_set_estimate_bytes": 119660544,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 47989,
+            "user_usec": 35590,
+            "system_usec": 12398,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18800448,
+            "user_usec": 17626334,
+            "system_usec": 1174113,
+            "nice_usec": 3142256,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 292634624,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 292564992,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8634083,
+            "user_usec": 8075370,
+            "system_usec": 558713,
+            "nice_usec": 7162251,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90959872,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89079808,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3915722,
+            "user_usec": 3726715,
+            "system_usec": 189007,
+            "nice_usec": 3701665,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155385856,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155377664,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 448020480,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 447942656,
+          "cpu_usage_usec": 22716170
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90959872,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89079808,
+          "cpu_usage_usec": 8634083
+        },
+        "observer": {
+          "charged_memory_current_bytes": 156975104,
+          "inactive_file_bytes": 25202688,
+          "working_set_estimate_bytes": 131772416,
+          "cpu_usage_usec": 4418922
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 695955456,
+          "inactive_file_bytes": 27160576,
+          "working_set_estimate_bytes": 668794880,
+          "cpu_usage_usec": 35769175
+        }
+      },
+      "readers": [
+        {
+          "bytes": 2558680,
+          "media_bytes": 2558680,
+          "packets": 13610,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 2558680,
+          "media_bytes": 2558680,
+          "packets": 13610,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 4338852,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 4338852
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 10,
+        "timestamps": 10,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 11,
+      "monotonic_start": 399974.02107347,
+      "monotonic_end": 399974.022094939,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4443322,
+            "user_usec": 3386642,
+            "system_usec": 1056679,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 145342464,
+          "inactive_file_bytes": 25460736,
+          "working_set_estimate_bytes": 119881728,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 48209,
+            "user_usec": 35758,
+            "system_usec": 12451,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18840196,
+            "user_usec": 17658528,
+            "system_usec": 1181667,
+            "nice_usec": 3158412,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 292376576,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 292306944,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8637334,
+            "user_usec": 8076398,
+            "system_usec": 560936,
+            "nice_usec": 7162542,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90873856,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88993792,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3918835,
+            "user_usec": 3729713,
+            "system_usec": 189121,
+            "nice_usec": 3702405,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155332608,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155324416,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 447709184,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 447631360,
+          "cpu_usage_usec": 22759031
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90873856,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88993792,
+          "cpu_usage_usec": 8637334
+        },
+        "observer": {
+          "charged_memory_current_bytes": 157466624,
+          "inactive_file_bytes": 25473024,
+          "working_set_estimate_bytes": 131993600,
+          "cpu_usage_usec": 4491531
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 696049664,
+          "inactive_file_bytes": 27430912,
+          "working_set_estimate_bytes": 668618752,
+          "cpu_usage_usec": 35887896
+        }
+      },
+      "readers": [
+        {
+          "bytes": 2814548,
+          "media_bytes": 2814548,
+          "packets": 14971,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 2814548,
+          "media_bytes": 2814548,
+          "packets": 14971,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 4588892,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 4588892
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 11,
+        "timestamps": 11,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 12,
+      "monotonic_start": 399975.021059765,
+      "monotonic_end": 399975.022104475,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4510598,
+            "user_usec": 3438154,
+            "system_usec": 1072444,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 145235968,
+          "inactive_file_bytes": 25710592,
+          "working_set_estimate_bytes": 119525376,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 48397,
+            "user_usec": 35897,
+            "system_usec": 12499,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18877012,
+            "user_usec": 17686336,
+            "system_usec": 1190675,
+            "nice_usec": 3174330,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 292364288,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 292294656,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8640388,
+            "user_usec": 8079332,
+            "system_usec": 561055,
+            "nice_usec": 7163893,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90624000,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88743936,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3920295,
+            "user_usec": 3731131,
+            "system_usec": 189164,
+            "nice_usec": 3702969,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 154939392,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 154931200,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 447303680,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 447225856,
+          "cpu_usage_usec": 22797307
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90624000,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88743936,
+          "cpu_usage_usec": 8640388
+        },
+        "observer": {
+          "charged_memory_current_bytes": 157360128,
+          "inactive_file_bytes": 25722880,
+          "working_set_estimate_bytes": 131637248,
+          "cpu_usage_usec": 4558995
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 695287808,
+          "inactive_file_bytes": 27680768,
+          "working_set_estimate_bytes": 667607040,
+          "cpu_usage_usec": 35996690
+        }
+      },
+      "readers": [
+        {
+          "bytes": 2814548,
+          "media_bytes": 2814548,
+          "packets": 14971,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 2814548,
+          "media_bytes": 2814548,
+          "packets": 14971,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 4838932,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 4838932
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 12,
+        "timestamps": 12,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 13,
+      "monotonic_start": 399976.021010478,
+      "monotonic_end": 399976.022035437,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4576376,
+            "user_usec": 3482001,
+            "system_usec": 1094374,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 145608704,
+          "inactive_file_bytes": 26234880,
+          "working_set_estimate_bytes": 119373824,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 48552,
+            "user_usec": 36012,
+            "system_usec": 12539,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18914934,
+            "user_usec": 17717954,
+            "system_usec": 1196979,
+            "nice_usec": 3189773,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 287895552,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 287825920,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8643429,
+            "user_usec": 8082179,
+            "system_usec": 561249,
+            "nice_usec": 7164113,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90288128,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88408064,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3923511,
+            "user_usec": 3734144,
+            "system_usec": 189366,
+            "nice_usec": 3703594,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155082752,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155074560,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 442978304,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 442900480,
+          "cpu_usage_usec": 22838445
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90288128,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88408064,
+          "cpu_usage_usec": 8643429
+        },
+        "observer": {
+          "charged_memory_current_bytes": 157732864,
+          "inactive_file_bytes": 26247168,
+          "working_set_estimate_bytes": 131485696,
+          "cpu_usage_usec": 4624928
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 690999296,
+          "inactive_file_bytes": 28205056,
+          "working_set_estimate_bytes": 662794240,
+          "cpu_usage_usec": 36106802
+        }
+      },
+      "readers": [
+        {
+          "bytes": 3070416,
+          "media_bytes": 3070416,
+          "packets": 16332,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 3070416,
+          "media_bytes": 3070416,
+          "packets": 16332,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 5088972,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 5088972
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 12,
+        "timestamps": 12,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 14,
+      "monotonic_start": 399977.021014853,
+      "monotonic_end": 399977.022115664,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4644847,
+            "user_usec": 3526079,
+            "system_usec": 1118767,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 146116608,
+          "inactive_file_bytes": 26755072,
+          "working_set_estimate_bytes": 119361536,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 48720,
+            "user_usec": 36136,
+            "system_usec": 12583,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18954283,
+            "user_usec": 17749008,
+            "system_usec": 1205274,
+            "nice_usec": 3206546,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 288690176,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 288620544,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8646830,
+            "user_usec": 8085423,
+            "system_usec": 561406,
+            "nice_usec": 7165102,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90701824,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88821760,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3926760,
+            "user_usec": 3736267,
+            "system_usec": 190493,
+            "nice_usec": 3703594,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155701248,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155693056,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 444391424,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444313600,
+          "cpu_usage_usec": 22881043
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90701824,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88821760,
+          "cpu_usage_usec": 8646830
+        },
+        "observer": {
+          "charged_memory_current_bytes": 158240768,
+          "inactive_file_bytes": 26767360,
+          "working_set_estimate_bytes": 131473408,
+          "cpu_usage_usec": 4693567
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 693334016,
+          "inactive_file_bytes": 28725248,
+          "working_set_estimate_bytes": 664608768,
+          "cpu_usage_usec": 36221440
+        }
+      },
+      "readers": [
+        {
+          "bytes": 3326284,
+          "media_bytes": 3326284,
+          "packets": 17693,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 3326284,
+          "media_bytes": 3326284,
+          "packets": 17693,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 5339012,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 5339012
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 13,
+        "timestamps": 13,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 15,
+      "monotonic_start": 399978.021060048,
+      "monotonic_end": 399978.021998414,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4711546,
+            "user_usec": 3573493,
+            "system_usec": 1138052,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 146354176,
+          "inactive_file_bytes": 26767360,
+          "working_set_estimate_bytes": 119586816,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 48924,
+            "user_usec": 36288,
+            "system_usec": 12636,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 18990951,
+            "user_usec": 17780771,
+            "system_usec": 1210179,
+            "nice_usec": 3224059,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 287465472,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 287395840,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8649985,
+            "user_usec": 8088405,
+            "system_usec": 561580,
+            "nice_usec": 7165743,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90841088,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88961024,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3928961,
+            "user_usec": 3738368,
+            "system_usec": 190592,
+            "nice_usec": 3705198,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155746304,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155738112,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 443211776,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 443133952,
+          "cpu_usage_usec": 22919912
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90841088,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88961024,
+          "cpu_usage_usec": 8649985
+        },
+        "observer": {
+          "charged_memory_current_bytes": 158478336,
+          "inactive_file_bytes": 26779648,
+          "working_set_estimate_bytes": 131698688,
+          "cpu_usage_usec": 4760470
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 692531200,
+          "inactive_file_bytes": 28737536,
+          "working_set_estimate_bytes": 663793664,
+          "cpu_usage_usec": 36330367
+        }
+      },
+      "readers": [
+        {
+          "bytes": 3326284,
+          "media_bytes": 3326284,
+          "packets": 17693,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 3326284,
+          "media_bytes": 3326284,
+          "packets": 17693,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 5589052,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 5589052
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 13,
+        "timestamps": 13,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 16,
+      "monotonic_start": 399979.021061821,
+      "monotonic_end": 399979.022120921,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4778386,
+            "user_usec": 3620695,
+            "system_usec": 1157690,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 146882560,
+          "inactive_file_bytes": 27295744,
+          "working_set_estimate_bytes": 119586816,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 49134,
+            "user_usec": 36444,
+            "system_usec": 12690,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19032158,
+            "user_usec": 17813758,
+            "system_usec": 1218399,
+            "nice_usec": 3241358,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 288624640,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 288555008,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8653937,
+            "user_usec": 8090359,
+            "system_usec": 563578,
+            "nice_usec": 7167357,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90984448,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89104384,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3932120,
+            "user_usec": 3741220,
+            "system_usec": 190900,
+            "nice_usec": 3706342,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155774976,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155766784,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 444399616,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444321792,
+          "cpu_usage_usec": 22964278
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90984448,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89104384,
+          "cpu_usage_usec": 8653937
+        },
+        "observer": {
+          "charged_memory_current_bytes": 159006720,
+          "inactive_file_bytes": 27308032,
+          "working_set_estimate_bytes": 131698688,
+          "cpu_usage_usec": 4827520
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 694390784,
+          "inactive_file_bytes": 29265920,
+          "working_set_estimate_bytes": 665124864,
+          "cpu_usage_usec": 36445735
+        }
+      },
+      "readers": [
+        {
+          "bytes": 3582152,
+          "media_bytes": 3582152,
+          "packets": 19054,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 3582152,
+          "media_bytes": 3582152,
+          "packets": 19054,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 5839092,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 5839092
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 14,
+        "timestamps": 14,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 17,
+      "monotonic_start": 399980.021014132,
+      "monotonic_end": 399980.021903928,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4845335,
+            "user_usec": 3659728,
+            "system_usec": 1185606,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 146444288,
+          "inactive_file_bytes": 27312128,
+          "working_set_estimate_bytes": 119132160,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 49337,
+            "user_usec": 36600,
+            "system_usec": 12736,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19070441,
+            "user_usec": 17843054,
+            "system_usec": 1227387,
+            "nice_usec": 3258223,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 288985088,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 288915456,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8657271,
+            "user_usec": 8093407,
+            "system_usec": 563863,
+            "nice_usec": 7167636,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90185728,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88305664,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3933958,
+            "user_usec": 3743037,
+            "system_usec": 190920,
+            "nice_usec": 3707751,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155398144,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155389952,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 444383232,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444305408,
+          "cpu_usage_usec": 23004399
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90185728,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88305664,
+          "cpu_usage_usec": 8657271
+        },
+        "observer": {
+          "charged_memory_current_bytes": 158568448,
+          "inactive_file_bytes": 27324416,
+          "working_set_estimate_bytes": 131244032,
+          "cpu_usage_usec": 4894672
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 693137408,
+          "inactive_file_bytes": 29282304,
+          "working_set_estimate_bytes": 663855104,
+          "cpu_usage_usec": 36556342
+        }
+      },
+      "readers": [
+        {
+          "bytes": 3582152,
+          "media_bytes": 3582152,
+          "packets": 19054,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 3582152,
+          "media_bytes": 3582152,
+          "packets": 19054,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 6089132,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 6089132
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 15,
+        "timestamps": 15,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 18,
+      "monotonic_start": 399981.021015035,
+      "monotonic_end": 399981.021935161,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4917946,
+            "user_usec": 3706475,
+            "system_usec": 1211470,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 145891328,
+          "inactive_file_bytes": 27795456,
+          "working_set_estimate_bytes": 118095872,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 49550,
+            "user_usec": 36758,
+            "system_usec": 12791,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19110791,
+            "user_usec": 17876567,
+            "system_usec": 1234223,
+            "nice_usec": 3275307,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 289013760,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 288944128,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8660836,
+            "user_usec": 8096390,
+            "system_usec": 564445,
+            "nice_usec": 7168645,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90648576,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88768512,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3937110,
+            "user_usec": 3745433,
+            "system_usec": 191677,
+            "nice_usec": 3707751,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155578368,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155570176,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 444592128,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444514304,
+          "cpu_usage_usec": 23047901
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90648576,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88768512,
+          "cpu_usage_usec": 8660836
+        },
+        "observer": {
+          "charged_memory_current_bytes": 158015488,
+          "inactive_file_bytes": 27807744,
+          "working_set_estimate_bytes": 130207744,
+          "cpu_usage_usec": 4967496
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 693256192,
+          "inactive_file_bytes": 29765632,
+          "working_set_estimate_bytes": 663490560,
+          "cpu_usage_usec": 36676233
+        }
+      },
+      "readers": [
+        {
+          "bytes": 3838020,
+          "media_bytes": 3838020,
+          "packets": 20415,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 3838020,
+          "media_bytes": 3838020,
+          "packets": 20415,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 6339172,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 6339172
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 15,
+        "timestamps": 15,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 19,
+      "monotonic_start": 399982.021018196,
+      "monotonic_end": 399982.021978614,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 4981269,
+            "user_usec": 3739527,
+            "system_usec": 1241742,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 146780160,
+          "inactive_file_bytes": 28069888,
+          "working_set_estimate_bytes": 118710272,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 49745,
+            "user_usec": 36903,
+            "system_usec": 12841,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19150033,
+            "user_usec": 17906796,
+            "system_usec": 1243237,
+            "nice_usec": 3290237,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 289046528,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 288976896,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8664285,
+            "user_usec": 8098862,
+            "system_usec": 565423,
+            "nice_usec": 7168664,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90574848,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88694784,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3940149,
+            "user_usec": 3747781,
+            "system_usec": 192368,
+            "nice_usec": 3708407,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155418624,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155410432,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 444465152,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444387328,
+          "cpu_usage_usec": 23090182
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90574848,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88694784,
+          "cpu_usage_usec": 8664285
+        },
+        "observer": {
+          "charged_memory_current_bytes": 158904320,
+          "inactive_file_bytes": 28082176,
+          "working_set_estimate_bytes": 130822144,
+          "cpu_usage_usec": 5031014
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 693944320,
+          "inactive_file_bytes": 30040064,
+          "working_set_estimate_bytes": 663904256,
+          "cpu_usage_usec": 36785481
+        }
+      },
+      "readers": [
+        {
+          "bytes": 4093888,
+          "media_bytes": 4093888,
+          "packets": 21776,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 4093888,
+          "media_bytes": 4093888,
+          "packets": 21776,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 6589212,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 6589212
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 16,
+        "timestamps": 16,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 20,
+      "monotonic_start": 399983.021060159,
+      "monotonic_end": 399983.022034736,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5045160,
+            "user_usec": 3791700,
+            "system_usec": 1253460,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 148860928,
+          "inactive_file_bytes": 28340224,
+          "working_set_estimate_bytes": 120520704,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 49943,
+            "user_usec": 37050,
+            "system_usec": 12893,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19185589,
+            "user_usec": 17934445,
+            "system_usec": 1251143,
+            "nice_usec": 3304381,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 289501184,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 289431552,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8667869,
+            "user_usec": 8099626,
+            "system_usec": 568243,
+            "nice_usec": 7168959,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90607616,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88727552,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3942267,
+            "user_usec": 3749847,
+            "system_usec": 192420,
+            "nice_usec": 3709444,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155099136,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155090944,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 444600320,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444522496,
+          "cpu_usage_usec": 23127856
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90607616,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88727552,
+          "cpu_usage_usec": 8667869
+        },
+        "observer": {
+          "charged_memory_current_bytes": 160985088,
+          "inactive_file_bytes": 28352512,
+          "working_set_estimate_bytes": 132632576,
+          "cpu_usage_usec": 5095103
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 696193024,
+          "inactive_file_bytes": 30310400,
+          "working_set_estimate_bytes": 665882624,
+          "cpu_usage_usec": 36890828
+        }
+      },
+      "readers": [
+        {
+          "bytes": 4093888,
+          "media_bytes": 4093888,
+          "packets": 21776,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 4093888,
+          "media_bytes": 4093888,
+          "packets": 21776,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 6839252,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 6839252
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 17,
+        "timestamps": 17,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 21,
+      "monotonic_start": 399984.021014918,
+      "monotonic_end": 399984.021968875,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5110698,
+            "user_usec": 3836685,
+            "system_usec": 1274013,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 148008960,
+          "inactive_file_bytes": 28868608,
+          "working_set_estimate_bytes": 119140352,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 50116,
+            "user_usec": 37179,
+            "system_usec": 12937,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19223621,
+            "user_usec": 17963890,
+            "system_usec": 1259730,
+            "nice_usec": 3319332,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 288546816,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 288477184,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8671063,
+            "user_usec": 8101250,
+            "system_usec": 569813,
+            "nice_usec": 7168959,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90873856,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88993792,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3945189,
+            "user_usec": 3751698,
+            "system_usec": 193491,
+            "nice_usec": 3709637,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155688960,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155680768,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 444235776,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444157952,
+          "cpu_usage_usec": 23168810
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90873856,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88993792,
+          "cpu_usage_usec": 8671063
+        },
+        "observer": {
+          "charged_memory_current_bytes": 160133120,
+          "inactive_file_bytes": 28880896,
+          "working_set_estimate_bytes": 131252224,
+          "cpu_usage_usec": 5160814
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 695242752,
+          "inactive_file_bytes": 30838784,
+          "working_set_estimate_bytes": 664403968,
+          "cpu_usage_usec": 37000687
+        }
+      },
+      "readers": [
+        {
+          "bytes": 4349756,
+          "media_bytes": 4349756,
+          "packets": 23137,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 4349756,
+          "media_bytes": 4349756,
+          "packets": 23137,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 7089292,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 7089292
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 17,
+        "timestamps": 17,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 22,
+      "monotonic_start": 399985.021016058,
+      "monotonic_end": 399985.022033047,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5179157,
+            "user_usec": 3888892,
+            "system_usec": 1290264,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 149549056,
+          "inactive_file_bytes": 29372416,
+          "working_set_estimate_bytes": 120176640,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 50285,
+            "user_usec": 37304,
+            "system_usec": 12981,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19263243,
+            "user_usec": 17992060,
+            "system_usec": 1271183,
+            "nice_usec": 3332273,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 289218560,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 289148928,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8674417,
+            "user_usec": 8104103,
+            "system_usec": 570313,
+            "nice_usec": 7170826,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90275840,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88395776,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3948370,
+            "user_usec": 3754307,
+            "system_usec": 194063,
+            "nice_usec": 3710184,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155811840,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155803648,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 445030400,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444952576,
+          "cpu_usage_usec": 23211613
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90275840,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88395776,
+          "cpu_usage_usec": 8674417
+        },
+        "observer": {
+          "charged_memory_current_bytes": 161673216,
+          "inactive_file_bytes": 29384704,
+          "working_set_estimate_bytes": 132288512,
+          "cpu_usage_usec": 5229442
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 696979456,
+          "inactive_file_bytes": 31342592,
+          "working_set_estimate_bytes": 665636864,
+          "cpu_usage_usec": 37115472
+        }
+      },
+      "readers": [
+        {
+          "bytes": 4605624,
+          "media_bytes": 4605624,
+          "packets": 24498,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 4605624,
+          "media_bytes": 4605624,
+          "packets": 24498,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 7339332,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 7339332
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 18,
+        "timestamps": 18,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 23,
+      "monotonic_start": 399986.021060129,
+      "monotonic_end": 399986.022123009,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5246460,
+            "user_usec": 3936202,
+            "system_usec": 1310257,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 148135936,
+          "inactive_file_bytes": 29401088,
+          "working_set_estimate_bytes": 118734848,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 50476,
+            "user_usec": 37445,
+            "system_usec": 13030,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19305303,
+            "user_usec": 18025839,
+            "system_usec": 1279463,
+            "nice_usec": 3352459,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 289832960,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 289763328,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8678171,
+            "user_usec": 8107647,
+            "system_usec": 570524,
+            "nice_usec": 7171468,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90734592,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88854528,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3950990,
+            "user_usec": 3756908,
+            "system_usec": 194082,
+            "nice_usec": 3712403,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155140096,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155131904,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 444973056,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 444895232,
+          "cpu_usage_usec": 23256293
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90734592,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88854528,
+          "cpu_usage_usec": 8678171
+        },
+        "observer": {
+          "charged_memory_current_bytes": 160260096,
+          "inactive_file_bytes": 29413376,
+          "working_set_estimate_bytes": 130846720,
+          "cpu_usage_usec": 5296936
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 695967744,
+          "inactive_file_bytes": 31371264,
+          "working_set_estimate_bytes": 664596480,
+          "cpu_usage_usec": 37231400
+        }
+      },
+      "readers": [
+        {
+          "bytes": 4605624,
+          "media_bytes": 4605624,
+          "packets": 24498,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 4605624,
+          "media_bytes": 4605624,
+          "packets": 24498,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 7589372,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 7589372
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 18,
+        "timestamps": 18,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 24,
+      "monotonic_start": 399987.021056828,
+      "monotonic_end": 399987.022082777,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5314001,
+            "user_usec": 3983001,
+            "system_usec": 1331000,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 150102016,
+          "inactive_file_bytes": 29908992,
+          "working_set_estimate_bytes": 120193024,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 50672,
+            "user_usec": 37591,
+            "system_usec": 13081,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19344358,
+            "user_usec": 18054916,
+            "system_usec": 1289441,
+            "nice_usec": 3367708,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 290041856,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 289972224,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8681322,
+            "user_usec": 8110623,
+            "system_usec": 570698,
+            "nice_usec": 7172003,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90488832,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88608768,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3954139,
+            "user_usec": 3759569,
+            "system_usec": 194570,
+            "nice_usec": 3712657,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155488256,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155480064,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 445530112,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 445452288,
+          "cpu_usage_usec": 23298497
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90488832,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88608768,
+          "cpu_usage_usec": 8681322
+        },
+        "observer": {
+          "charged_memory_current_bytes": 162226176,
+          "inactive_file_bytes": 29921280,
+          "working_set_estimate_bytes": 132304896,
+          "cpu_usage_usec": 5364673
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 698245120,
+          "inactive_file_bytes": 31879168,
+          "working_set_estimate_bytes": 666365952,
+          "cpu_usage_usec": 37344492
+        }
+      },
+      "readers": [
+        {
+          "bytes": 4861492,
+          "media_bytes": 4861492,
+          "packets": 25859,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 4861492,
+          "media_bytes": 4861492,
+          "packets": 25859,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 7839412,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 7839412
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 19,
+        "timestamps": 19,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 25,
+      "monotonic_start": 399988.021059327,
+      "monotonic_end": 399988.021954912,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5379758,
+            "user_usec": 4024419,
+            "system_usec": 1355339,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 149348352,
+          "inactive_file_bytes": 30179328,
+          "working_set_estimate_bytes": 119169024,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 50837,
+            "user_usec": 37713,
+            "system_usec": 13123,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19380831,
+            "user_usec": 18081285,
+            "system_usec": 1299546,
+            "nice_usec": 3381642,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 290783232,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 290713600,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8684431,
+            "user_usec": 8113556,
+            "system_usec": 570874,
+            "nice_usec": 7172386,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90615808,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88735744,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3957821,
+            "user_usec": 3762768,
+            "system_usec": 195053,
+            "nice_usec": 3714223,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155688960,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155680768,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 446472192,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 446394368,
+          "cpu_usage_usec": 23338652
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90615808,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88735744,
+          "cpu_usage_usec": 8684431
+        },
+        "observer": {
+          "charged_memory_current_bytes": 161472512,
+          "inactive_file_bytes": 30191616,
+          "working_set_estimate_bytes": 131280896,
+          "cpu_usage_usec": 5430595
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 698560512,
+          "inactive_file_bytes": 32149504,
+          "working_set_estimate_bytes": 666411008,
+          "cpu_usage_usec": 37453678
+        }
+      },
+      "readers": [
+        {
+          "bytes": 4861492,
+          "media_bytes": 4861492,
+          "packets": 25859,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 5117360,
+          "media_bytes": 5117360,
+          "packets": 27220,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 8089452,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 8089452
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 20,
+        "timestamps": 20,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 26,
+      "monotonic_start": 399989.021058785,
+      "monotonic_end": 399989.022059163,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5447140,
+            "user_usec": 4074132,
+            "system_usec": 1373008,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 149725184,
+          "inactive_file_bytes": 30453760,
+          "working_set_estimate_bytes": 119271424,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 50975,
+            "user_usec": 37817,
+            "system_usec": 13158,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19418272,
+            "user_usec": 18108435,
+            "system_usec": 1309837,
+            "nice_usec": 3394591,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 291143680,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 291074048,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8687382,
+            "user_usec": 8113677,
+            "system_usec": 573704,
+            "nice_usec": 7172386,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90824704,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88944640,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3959665,
+            "user_usec": 3764593,
+            "system_usec": 195071,
+            "nice_usec": 3715677,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 154935296,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 154927104,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 446078976,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 446001152,
+          "cpu_usage_usec": 23377937
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90824704,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88944640,
+          "cpu_usage_usec": 8687382
+        },
+        "observer": {
+          "charged_memory_current_bytes": 161849344,
+          "inactive_file_bytes": 30466048,
+          "working_set_estimate_bytes": 131383296,
+          "cpu_usage_usec": 5498115
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 698753024,
+          "inactive_file_bytes": 32423936,
+          "working_set_estimate_bytes": 666329088,
+          "cpu_usage_usec": 37563434
+        }
+      },
+      "readers": [
+        {
+          "bytes": 5117360,
+          "media_bytes": 5117360,
+          "packets": 27220,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 5117360,
+          "media_bytes": 5117360,
+          "packets": 27220,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 8339492,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 8339492
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 20,
+        "timestamps": 20,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 27,
+      "monotonic_start": 399990.021056522,
+      "monotonic_end": 399990.02204048,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5516913,
+            "user_usec": 4127278,
+            "system_usec": 1389634,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 149291008,
+          "inactive_file_bytes": 30720000,
+          "working_set_estimate_bytes": 118571008,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 51175,
+            "user_usec": 37965,
+            "system_usec": 13210,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19456084,
+            "user_usec": 18139776,
+            "system_usec": 1316307,
+            "nice_usec": 3410317,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 290656256,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 290586624,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8690716,
+            "user_usec": 8116867,
+            "system_usec": 573849,
+            "nice_usec": 7173581,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90185728,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88305664,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3962523,
+            "user_usec": 3767310,
+            "system_usec": 195212,
+            "nice_usec": 3716567,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155664384,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155656192,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 446320640,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 446242816,
+          "cpu_usage_usec": 23418607
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90185728,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88305664,
+          "cpu_usage_usec": 8690716
+        },
+        "observer": {
+          "charged_memory_current_bytes": 161415168,
+          "inactive_file_bytes": 30732288,
+          "working_set_estimate_bytes": 130682880,
+          "cpu_usage_usec": 5568088
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 697921536,
+          "inactive_file_bytes": 32690176,
+          "working_set_estimate_bytes": 665231360,
+          "cpu_usage_usec": 37677411
+        }
+      },
+      "readers": [
+        {
+          "bytes": 5373228,
+          "media_bytes": 5373228,
+          "packets": 28581,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 5373228,
+          "media_bytes": 5373228,
+          "packets": 28581,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 8589532,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 8589532
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 21,
+        "timestamps": 21,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 28,
+      "monotonic_start": 399991.021058299,
+      "monotonic_end": 399991.022016327,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5582388,
+            "user_usec": 4169101,
+            "system_usec": 1413287,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 149868544,
+          "inactive_file_bytes": 30998528,
+          "working_set_estimate_bytes": 118870016,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 51399,
+            "user_usec": 38140,
+            "system_usec": 13259,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19492346,
+            "user_usec": 18166513,
+            "system_usec": 1325832,
+            "nice_usec": 3426166,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 290168832,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 290099200,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8693876,
+            "user_usec": 8118819,
+            "system_usec": 575056,
+            "nice_usec": 7174576,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90574848,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88694784,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3964650,
+            "user_usec": 3768464,
+            "system_usec": 196185,
+            "nice_usec": 3716567,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 154996736,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 154988544,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 445165568,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 445087744,
+          "cpu_usage_usec": 23456996
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90574848,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 88694784,
+          "cpu_usage_usec": 8693876
+        },
+        "observer": {
+          "charged_memory_current_bytes": 161992704,
+          "inactive_file_bytes": 31010816,
+          "working_set_estimate_bytes": 130981888,
+          "cpu_usage_usec": 5633787
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 697733120,
+          "inactive_file_bytes": 32968704,
+          "working_set_estimate_bytes": 664764416,
+          "cpu_usage_usec": 37784659
+        }
+      },
+      "readers": [
+        {
+          "bytes": 5373228,
+          "media_bytes": 5373228,
+          "packets": 28581,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 5373228,
+          "media_bytes": 5373228,
+          "packets": 28581,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 8839572,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 8839572
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 22,
+        "timestamps": 22,
+        "state": "active"
+      },
+      "both_media_advance": false
+    },
+    {
+      "index": 29,
+      "monotonic_start": 399992.021059126,
+      "monotonic_end": 399992.022054724,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5649582,
+            "user_usec": 4211826,
+            "system_usec": 1437756,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 150749184,
+          "inactive_file_bytes": 31457280,
+          "working_set_estimate_bytes": 119291904,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 51575,
+            "user_usec": 38270,
+            "system_usec": 13304,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19532068,
+            "user_usec": 18201900,
+            "system_usec": 1330168,
+            "nice_usec": 3444067,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 290676736,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 290607104,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8697627,
+            "user_usec": 8122389,
+            "system_usec": 575237,
+            "nice_usec": 7175554,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90914816,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89034752,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3967449,
+            "user_usec": 3770670,
+            "system_usec": 196779,
+            "nice_usec": 3716884,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 155758592,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 155750400,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 446435328,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 446357504,
+          "cpu_usage_usec": 23499517
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90914816,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89034752,
+          "cpu_usage_usec": 8697627
+        },
+        "observer": {
+          "charged_memory_current_bytes": 162873344,
+          "inactive_file_bytes": 31469568,
+          "working_set_estimate_bytes": 131403776,
+          "cpu_usage_usec": 5701157
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 700223488,
+          "inactive_file_bytes": 33427456,
+          "working_set_estimate_bytes": 666796032,
+          "cpu_usage_usec": 37898301
+        }
+      },
+      "readers": [
+        {
+          "bytes": 5629096,
+          "media_bytes": 5629096,
+          "packets": 29942,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 5629096,
+          "media_bytes": 5629096,
+          "packets": 29942,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 9089612,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 9089612
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 22,
+        "timestamps": 22,
+        "state": "active"
+      },
+      "both_media_advance": true
+    },
+    {
+      "index": 30,
+      "monotonic_start": 399993.021056332,
+      "monotonic_end": 399993.022065521,
+      "groups": {
+        "observer": {
+          "cpu_stat": {
+            "usage_usec": 5709981,
+            "user_usec": 4256527,
+            "system_usec": 1453453,
+            "nice_usec": 0,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 150437888,
+          "inactive_file_bytes": 31727616,
+          "working_set_estimate_bytes": 118710272,
+          "lifetime_memory_peak_context_only_bytes": 203403264
+        },
+        "orchestrator": {
+          "cpu_stat": {
+            "usage_usec": 51717,
+            "user_usec": 38376,
+            "system_usec": 13341,
+            "nice_usec": 15905,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 12124160,
+          "inactive_file_bytes": 12288,
+          "working_set_estimate_bytes": 12111872,
+          "lifetime_memory_peak_context_only_bytes": 13750272
+        },
+        "baseline": {
+          "cpu_stat": {
+            "usage_usec": 19569113,
+            "user_usec": 18232138,
+            "system_usec": 1336974,
+            "nice_usec": 3459493,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 290717696,
+          "inactive_file_bytes": 69632,
+          "working_set_estimate_bytes": 290648064,
+          "lifetime_memory_peak_context_only_bytes": 373530624
+        },
+        "origin": {
+          "cpu_stat": {
+            "usage_usec": 8700805,
+            "user_usec": 8124447,
+            "system_usec": 576358,
+            "nice_usec": 7176246,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 90886144,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89006080,
+          "lifetime_memory_peak_context_only_bytes": 128401408
+        },
+        "python-replica": {
+          "cpu_stat": {
+            "usage_usec": 3970988,
+            "user_usec": 3774025,
+            "system_usec": 196963,
+            "nice_usec": 3717904,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "charged_memory_current_bytes": 156102656,
+          "inactive_file_bytes": 8192,
+          "working_set_estimate_bytes": 156094464,
+          "lifetime_memory_peak_context_only_bytes": 159633408
+        }
+      },
+      "simultaneous_aggregate": {
+        "backend_and_infrastructure": {
+          "charged_memory_current_bytes": 446820352,
+          "inactive_file_bytes": 77824,
+          "working_set_estimate_bytes": 446742528,
+          "cpu_usage_usec": 23540101
+        },
+        "origin": {
+          "charged_memory_current_bytes": 90886144,
+          "inactive_file_bytes": 1880064,
+          "working_set_estimate_bytes": 89006080,
+          "cpu_usage_usec": 8700805
+        },
+        "observer": {
+          "charged_memory_current_bytes": 162562048,
+          "inactive_file_bytes": 31739904,
+          "working_set_estimate_bytes": 130822144,
+          "cpu_usage_usec": 5761698
+        },
+        "whole_fixture": {
+          "charged_memory_current_bytes": 700268544,
+          "inactive_file_bytes": 33697792,
+          "working_set_estimate_bytes": 666570752,
+          "cpu_usage_usec": 38002604
+        }
+      },
+      "readers": [
+        {
+          "bytes": 5629096,
+          "media_bytes": 5629096,
+          "packets": 29942,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 5884964,
+          "media_bytes": 5884964,
+          "packets": 31303,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": false,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "origin": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 9339652,
+        "disconnections": 0,
+        "eof_connections": 0,
+        "fault_requests": 0,
+        "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+        "fixture_bytes": 75002600,
+        "bytes_per_second": 250000,
+        "duration_seconds": 300,
+        "codec": "h264",
+        "video": "h264 320x180 25fps",
+        "audio": "aac 48kHz",
+        "paths": {
+          "/live/0.ts": {
+            "active": 1,
+            "connections": 1,
+            "bytes": 9339652
+          }
+        }
+      },
+      "metadata": {
+        "owner": "d8337eade7fb:272",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 34,
+        "input_index": 23,
+        "timestamps": 23,
+        "state": "active"
+      },
+      "both_media_advance": false
+    }
+  ],
+  "useful_work_passed": false,
+  "performance_acceptance": false,
+  "elapsed_seconds": 29.998693568981253,
+  "media_byte_deltas": [
+    4605624,
+    4861492
+  ],
+  "final_origin": {
+    "active": 1,
+    "maximum_active": 1,
+    "connections": 1,
+    "bytes": 9364656,
+    "disconnections": 0,
+    "eof_connections": 0,
+    "fault_requests": 0,
+    "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+    "fixture_bytes": 75002600,
+    "bytes_per_second": 250000,
+    "duration_seconds": 300,
+    "codec": "h264",
+    "video": "h264 320x180 25fps",
+    "audio": "aac 48kHz",
+    "paths": {
+      "/live/0.ts": {
+        "active": 1,
+        "connections": 1,
+        "bytes": 9364656
+      }
+    }
+  },
+  "final_metadata": {
+    "owner": "d8337eade7fb:272",
+    "provider_slots": 1,
+    "clients": 2,
+    "metadata_fields": 34,
+    "input_index": 23,
+    "timestamps": 23,
+    "state": "active"
+  },
+  "live_state_passed": true,
+  "accounting_notes": {
+    "charged": "raw cgroup v2 memory.current; includes charged file cache",
+    "working_set": "max(0,memory.current-memory.stat inactive_file), estimate; not RSS",
+    "aggregate": "same tick sequential file reads, read start/end retained; sum simultaneous samples, never sum lifetime peaks",
+    "origin_and_observer": "included in whole_fixture, also separately reported",
+    "peak": "per-group lifetime memory.peak context only; startup/decoder may differ from measurement window",
+    "cpu": "raw cumulative usage_usec plus monotonic sample timestamps; differences only across fixed measurement endpoints"
+  }
+}

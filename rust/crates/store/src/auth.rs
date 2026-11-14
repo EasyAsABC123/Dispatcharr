@@ -166,10 +166,38 @@ impl AuthService {
     }
 
     pub fn router(self) -> Router {
+        self.assembled_router(None)
+    }
+
+    /// Compose the qualified CoreSettings methods with the existing Auth APIs.
+    /// The Core service must retain this same original four-slot writer budget.
+    pub fn router_with_core_settings(
+        self,
+        settings: crate::CoreSettingsWrites,
+    ) -> Result<Router, StoreError> {
+        if !settings.shares_auth_admission(&self) {
+            return Err(StoreError::Unsupported(
+                "Foreign CoreSettings writer budget",
+            ));
+        }
+        Ok(self.assembled_router(Some(settings)))
+    }
+
+    fn assembled_router(self, settings: Option<crate::CoreSettingsWrites>) -> Router {
         let accounts = crate::accounts::router(self.clone());
-        let core = crate::core_reads::router(self.clone())
-            .merge(crate::core_utilities::router(self.clone()))
-            .merge(crate::notifications::router(self.clone()));
+        let reads = if settings.is_some() {
+            crate::core_reads::router_without_settings_detail(self.clone())
+        } else {
+            crate::core_reads::router(self.clone())
+        };
+        // Collection GET stays on the existing read route. Detail GET and all
+        // qualified mutations belong to one Core service, with no overlap.
+        let core = match settings {
+            Some(settings) => reads.merge(settings.router()),
+            None => reads,
+        }
+        .merge(crate::core_utilities::router(self.clone()))
+        .merge(crate::notifications::router(self.clone()));
         let channel_profiles = crate::channel_profiles::router(self.clone());
         let channels = crate::channels::router(self.clone());
         let channel_groups = crate::channel_groups::router(self.clone());

@@ -168,9 +168,14 @@ endpoints!(useragents, useragent, UserAgents);
 endpoints!(streamprofiles, streamprofile, StreamProfiles);
 endpoints!(outputprofiles, outputprofile, OutputProfiles);
 pub(crate) fn router(auth: AuthService) -> Router {
-    Router::new()
+    router_with_settings_detail(auth, true)
+}
+pub(crate) fn router_without_settings_detail(auth: AuthService) -> Router {
+    router_with_settings_detail(auth, false)
+}
+fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
+    let mut router = Router::new()
         .route("/api/core/settings/", get(settings))
-        .route("/api/core/settings/{id}/", get(setting))
         .route(
             "/api/core/useragents/",
             get(useragents).post(crate::user_agent_writes::create),
@@ -194,8 +199,11 @@ pub(crate) fn router(auth: AuthService) -> Router {
                 .delete(crate::core_stream_writes::delete),
         )
         .route("/api/core/outputprofiles/", get(outputprofiles))
-        .route("/api/core/outputprofiles/{id}/", get(outputprofile))
-        .with_state(auth)
+        .route("/api/core/outputprofiles/{id}/", get(outputprofile));
+    if detail {
+        router = router.route("/api/core/settings/{id}/", get(setting));
+    }
+    router.with_state(auth)
 }
 
 #[cfg(test)]

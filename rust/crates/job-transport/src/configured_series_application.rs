@@ -123,7 +123,7 @@ impl Application {
         } else {
             publisher
         });
-        let direct = Worker::new(Assembly {
+        let assembly = Assembly {
             jobs: jobs.clone(),
             locks: locks.clone(),
             store: store.clone(),
@@ -131,7 +131,12 @@ impl Application {
             artwork: artwork.clone(),
             events: events.clone(),
             family: Family::Series,
-        })
+        };
+        let direct = if completions.is_some() {
+            Worker::new_normal(assembly)
+        } else {
+            Worker::new(assembly)
+        }
         .map_err(|_| "Configured Series worker initialization failed")?;
         let stop = watch::channel(false).0;
         Ok(Self {
@@ -263,7 +268,11 @@ async fn run(inner: &Arc<Inner>, owner: Arc<dyn Send + Sync>) -> Result<State, E
     };
     // Capability is derived from the original retained parent and actual
     // completed backend, not from an arbitrary parented envelope alone.
-    let worker = Worker::new_refresh_series_child(inner.assembly(), pending.child)?;
+    let worker = if inner.completions.is_some() {
+        Worker::new_normal_refresh_series_child(inner.assembly(), pending.child)
+    } else {
+        Worker::new_refresh_series_child(inner.assembly(), pending.child)
+    }?;
     let result = worker.run_once_completed(owner.clone()).await;
     // This worker is scoped to one capability. Do not detach physical work on
     // an observer result; its one slot must actually drain before handoff removal.

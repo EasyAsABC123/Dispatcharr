@@ -1,0 +1,43 @@
+{
+  "status": "prepared_for_Root_review_NOT_EXECUTED",
+  "protocol": "v2 independently indexed full-window useful media",
+  "previous_failed_protocol": "immutable artifacts/rust/m3-resource-preflight-actual-1 and actual-2; no gate reinterpretation/no ratios",
+  "order": [
+    "Original",
+    "Native",
+    "Native",
+    "Original"
+  ],
+  "measurement": {
+    "seconds": 30,
+    "ticks": 31,
+    "interval_seconds": 1,
+    "phase_budget_seconds": 720,
+    "total_budget_seconds": 3000,
+    "fresh_fixture_per_phase": true,
+    "retry_or_fallback": false
+  },
+  "independent_reference": {
+    "fixture": "Actual deterministic origin fixed300s H264/AAC320x18025fps; CBR mux2Mbps/250000Bps input",
+    "sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+    "index_before_viewers": "Hash actual /tmp/fixture.ts inside pinned Origin with streaming hashlib; verify known SHA/path/size; record actual Origin FFmpeg+FFprobe versions. Index packets and fully decode reference to rawvideo+pcm SHA256 framehash in that same Origin off-window, persisting index only (no Docker cp or75MB duplicate). Decoder algorithms/order/gates unchanged.",
+    "source_cadence": "Pinned BUFFER_CHUNK_SIZE=188*1361=255868 bytes; not a per-second readiness promise",
+    "remux": "Custom -c copy input profile has no output muxrate; output byte count cannot be inferred from padded input2Mbps"
+  },
+  "one_batch_boundary": {
+    "bytes": 255868,
+    "duration_bound": "Conservative upper bound, NOT exact TS batch duration: preserve actual mux/demux packet order and take maximum PTS span (including packet durations) in a contiguous <=255868 encoded-payload-byte region. TS header/null overhead omitted makes it conservative. No extra wall/equivalence quantization added.",
+    "allowance": "One conservative bound total for each window-vs-wall absolute deviation; separate global max/min range gate across all8 viewer durations uses the same SINGLE bound independently for audio and video. Never sum per-phase allowances or add frame quantization.",
+    "not_excused": "internal missing/duplicate/reordered content, expired/ended/error viewers, sync loss, new upstream, wrong sharing counts, stale metadata"
+  },
+  "full_capture_gate": "Always decode entire retained capture off-window even after live/resource failure; preserve missing files/decoder failures. Match full decoded video content uniquely as contiguous independent fixture subsequence; match audio sequence around that independently determined video position within one video+AAC frame quantization. Use full-file packet positions/PTS for window offsets, never start a fresh decoder mid-GOP. Report actual whole-window bytes, decoded audio/video frame counts, indexed PTS/media durations and cadence. A comparison cannot pass on bytes or timestamps alone. Count only PES groups for which the next known same-stream packet position is at/before window end, assigning N/A positions to their known PES group. Ambiguous first/final boundary groups are excluded; later reader-loss bytes never establish measured useful work.",
+  "accounting": "All owned project service cgroups including FFmpeg, PG/Redis, compatibility processes and deterministicOrigin; dedicated phase and orchestrator observer cgroups; nonoverlap required. Raw cpu.stat usage+monotonic timestamps, memory.current charged and current-minus-inactive_file working-set estimate. Simultaneous aggregate samples, lifetime peaks context only; split backend+infra/origin/observer/wholefixture. Decode/index off-window, fully disclosed.",
+  "descriptive_outputs_only": "All4 phases must independently pass complete functional/identity/media/cleanup and equivalent useful duration before ratios. Ratios/ranges are diagnostic only; no full M3/global gain acceptance.",
+  "review_points": [
+    "Encoded-content B and mux-order PTS span are a conservative one-transport-batch upper bound, not exact batch timing. Is that bound sufficiently discriminating for the diagnostic?",
+    "Are framehash normalization and video-anchored audio alignment valid for the pinned copy/remux profile? Any mismatch blocks; no runtime normalization fallback.",
+    "Are packet-position/PTS associations precise enough at both boundaries without silently adding a second batch?",
+    "All raw failure states must remain invalid even when final teardown succeeds."
+  ],
+  "Original_authors_retain_full_credit": true
+}

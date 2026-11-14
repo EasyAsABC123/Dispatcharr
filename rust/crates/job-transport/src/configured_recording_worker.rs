@@ -93,6 +93,7 @@ struct Inner {
     service: Arc<Service>,
     family: Family,
     refresh_child: Option<crate::recording_artwork::RefreshSeriesChild>,
+    normal_rules: bool,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
     #[cfg(test)]
@@ -133,6 +134,7 @@ impl Worker {
                 service,
                 family,
                 refresh_child: None,
+                normal_rules: false,
                 slots: Arc::new(Semaphore::new(1)),
                 closed: AtomicBool::new(false),
                 #[cfg(test)]
@@ -141,6 +143,23 @@ impl Worker {
                 owned_parented_series_route: false,
             }),
         })
+    }
+    pub(crate) fn new_normal(assembly: Assembly) -> Result<Self, Error> {
+        let mut worker = Self::new(assembly)?;
+        Arc::get_mut(&mut worker.inner)
+            .ok_or(Error::Configuration)?
+            .normal_rules = true;
+        Ok(worker)
+    }
+    pub(crate) fn new_normal_refresh_series_child(
+        assembly: Assembly,
+        child: crate::recording_artwork::RefreshSeriesChild,
+    ) -> Result<Self, Error> {
+        let mut worker = Self::new_refresh_series_child(assembly, child)?;
+        Arc::get_mut(&mut worker.inner)
+            .ok_or(Error::Configuration)?
+            .normal_rules = true;
+        Ok(worker)
     }
     /// Inert one-known-child constructor; normal/direct intake stays unchanged.
     /// Capability binds the child ID/root/parent to a completed Refresh result.
@@ -405,11 +424,18 @@ async fn series(
     });
     let result = async {
         let group = settings(&inner, scope.clone(), false).await?;
-        let prepared = inner
-            .service
-            .prepare_series(&group, chrono::Utc::now(), task, scope.clone())
-            .await
-            .map_err(Error::Domain)?;
+        let prepared = if inner.normal_rules {
+            inner
+                .service
+                .prepare_series_normal(&group, chrono::Utc::now(), task, scope.clone())
+                .await
+        } else {
+            inner
+                .service
+                .prepare_series(&group, chrono::Utc::now(), task, scope.clone())
+                .await
+        }
+        .map_err(Error::Domain)?;
         claim(&inner, pending, scope.clone())
             .await
             .map_err(Error::Transport)?;

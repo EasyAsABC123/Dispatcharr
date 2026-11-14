@@ -222,21 +222,24 @@ async fn run() -> Result<(), String> {
         Ok("0") | Err(_) => false,
         _ => return Err("RUST_DYNAMIC_PROXY_HEALTH_ENABLED must be 0 or 1".into()),
     };
-    // Construct from pre-engine AuthService to avoid a Core -> EngineControl ->
-    // engine -> health-source -> Core cycle. All share the original four slots.
-    let proxy_health_core = if dynamic_health {
+    // One Core instance supplies all qualified settings routes and, when
+    // enabled, dynamic health. Pre-engine Auth prevents an EngineControl cycle.
+    let core_settings = if realtime_bus.is_some() {
         let effects = dispatcharr_store::CoreSettingsSpecialEffects::new(std::path::PathBuf::from(
             env::var("DISPATCHARR_LOG_DIR").unwrap_or_else(|_| "/data/logs".into()),
         ))
-        .map_err(|_| "Invalid proxy health effects directory")?;
+        .map_err(|_| "Invalid Core settings effects directory")?;
         Some(
             dispatcharr_store::CoreSettingsWrites::new(auth.clone())
                 .and_then(|core| core.with_special_effects(effects))
-                .map_err(|_| {
-                    "Dynamic proxy health requires the shared cache and realtime publisher"
-                })?,
+                .map_err(|_| "Core settings require the shared cache and realtime publisher")?,
         )
     } else {
+        if dynamic_health {
+            return Err(
+                "Dynamic proxy health requires the shared cache and realtime publisher".into(),
+            );
+        }
         None
     };
     let mut config = EngineConfig::default();
@@ -366,7 +369,7 @@ async fn run() -> Result<(), String> {
     let engine =
         StreamEngine::new_with_shared_inputs(config, coordinator.clone(), clients.clone(), inputs)
             .map_err(|_| "Invalid streaming configuration")?;
-    let engine = match &proxy_health_core {
+    let engine = match core_settings.as_ref().filter(|_| dynamic_health) {
         Some(core) => engine
             .with_health_settings(Arc::new(proxy_health::CoreProxyHealthSource::new(
                 core.clone(),
@@ -725,6 +728,9 @@ async fn run() -> Result<(), String> {
             .ok_or("Enabled EPG jobs require the realtime publisher")?;
         let broker = env::var("CELERY_BROKER_URL").unwrap_or_else(|_| cache.clone());
         let backend = env::var("CELERY_RESULT_BACKEND").unwrap_or_else(|_| broker.clone());
+        // This is the path base for stored relative input files, not a Python
+        // source-tree dependency. The packaged image supplies /app and its
+        // /app/media -> /data mapping without mounting Original source code.
         let source_cwd = std::path::PathBuf::from(
             env::var("RUST_EPG_SOURCE_CWD").unwrap_or_else(|_| "/app".into()),
         );
@@ -732,7 +738,9 @@ async fn run() -> Result<(), String> {
             env::var("RUST_EPG_MEDIA_ROOT").unwrap_or_else(|_| "/app/media".into()),
         );
         if !source_cwd.is_dir() || !media_root.is_dir() {
-            return Err("Enabled EPG jobs require the original source/media path mounts".into());
+            return Err(
+                "Enabled EPG jobs require their configured input and media directories".into(),
+            );
         }
         let cache_root = media_root.join("cached_epg");
         let cache_dir = env::var("RUST_EPG_CACHE_DIR")
@@ -899,10 +907,17 @@ async fn run() -> Result<(), String> {
     // explicitly unsupported transports and signatures.
     let plugin_repositories =
         dispatcharr_store::PluginRepositories::new(auth.clone()).with_unsigned_manifest_fetches();
+    let auth_routes = match &core_settings {
+        Some(core) => auth
+            .clone()
+            .router_with_core_settings(core.clone())
+            .map_err(|_| "Core settings must share the original Auth writer budget")?,
+        None => auth.clone().router(),
+    };
     let mut app = Router::new()
         .route("/health/ready", get(health))
         .with_state(store)
-        .merge(auth.clone().router())
+        .merge(auth_routes)
         .merge(combined_statistics.router())
         .route("/proxy/stats", any(combined_stats_legacy_alias))
         .merge(output_profiles.clone().router())
@@ -1024,7 +1039,7 @@ async fn run() -> Result<(), String> {
     }
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
     let services = ShutdownServices {
-        proxy_health_core,
+        core_settings,
         engine,
         clients,
         hls,
@@ -1104,7 +1119,7 @@ async fn shutdown_signal() {
 }
 #[derive(Clone)]
 struct ShutdownServices {
-    proxy_health_core: Option<dispatcharr_store::CoreSettingsWrites>,
+    core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
     engine: StreamEngine,
     clients: Option<ClientStore>,
     hls: Option<dispatcharr_hls_http::HlsGateway>,
@@ -1134,7 +1149,7 @@ struct ShutdownServices {
 }
 async fn shutdown_components(services: ShutdownServices) {
     let ShutdownServices {
-        proxy_health_core,
+        core_settings,
         engine,
         clients,
         hls,
@@ -1313,7 +1328,7 @@ async fn shutdown_components(services: ShutdownServices) {
         vod_reads.shutdown(Duration::from_secs(8)),
         combined_statistics.shutdown(Duration::from_secs(8)),
     );
-    let proxy_health_drained = match proxy_health_core {
+    let core_settings_drained = match core_settings {
         Some(core) => core.shutdown().await,
         None => true,
     };
@@ -1324,7 +1339,7 @@ async fn shutdown_components(services: ShutdownServices) {
         Some(index) => index.shutdown(Duration::from_secs(4)).await,
         None => true,
     };
-    if !proxy_health_drained
+    if !core_settings_drained
         || !combined_stats_drained
         || !refresh_drained
         || !index_intake_drained

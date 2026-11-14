@@ -128,8 +128,14 @@ impl CoreSettingsWrites {
         state.special = Some(effects);
         Ok(self)
     }
-    /// Deliberately unassembled. A future Main must reconcile the existing read
-    /// router's detail GET instead of merging duplicate method handlers blindly.
+    pub(crate) fn shares_auth_admission(&self, auth: &AuthService) -> bool {
+        Arc::ptr_eq(
+            &self.state.auth.user_agent_workers,
+            &auth.user_agent_workers,
+        )
+    }
+    /// Complete qualified CoreSettings methods. AuthService composition keeps
+    /// collection GET and explicitly replaces the legacy detail GET route.
     pub fn router(self) -> Router {
         Router::new()
             .route("/api/core/settings/", post(create))
@@ -1374,6 +1380,17 @@ mod tests {
                 special: None,
             }),
         }
+    }
+    #[tokio::test]
+    async fn main_composition_reconciles_routes_and_rejects_foreign_budget() {
+        let service = local_service();
+        let auth = service.state.auth.clone();
+        assert!(auth.router_with_core_settings(service.clone()).is_ok());
+        let foreign = AuthService::new(
+            service.state.auth.store.clone(),
+            crate::AuthConfig::new("other-core-tests-only-secret-32".to_owned()).unwrap(),
+        );
+        assert!(foreign.router_with_core_settings(service).is_err());
     }
     #[tokio::test]
     async fn internal_group_read_keeps_original_quote_until_retired() {

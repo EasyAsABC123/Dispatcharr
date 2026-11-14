@@ -24,6 +24,15 @@ frozen useful-work checks before any Rust measurement; no new performance gain
 is accepted. All M0–M9 gates below remain open. Older results retain their
 recorded source and workload scope.
 
+The [default worker graph audit](rust-default-worker-graph.md) lists all fourteen
+task families, the eight missing Main integrations, reusable implementations,
+and the grouped acceptance workflow needed before enabling scheduling.
+
+The [next combined fix](rust-milestone-batch4.md) now passes all workspace checks
+and 890 default tests. It assembles settings writes and the no-rules branch;
+its Docker/Main acceptance is pending. The failed runtime observations above
+remain attached to their original image.
+
 The [current Core settings library validation](rust-core-settings-current-validation.md) passes whole-workspace formatting, compilation, strict checks and 725 default tests (736 ignored). Its historical component qualifies 32 requests and seven finite ownership predicates; Main integration and full M5 remain open.
 
 The [bounded REST reader library](rust-rest-read-ownership.md) passes the current 851-input workspace gates (741 tests passed, 737 ignored). Two historical physical read-cancellation cases independently pass; adoption into Core/Main and duplicate-key error compatibility remain open.
