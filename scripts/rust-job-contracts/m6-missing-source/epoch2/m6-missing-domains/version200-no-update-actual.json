@@ -1,0 +1,2052 @@
+{
+  "name": "version200-no-update",
+  "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+  "before": {
+    "utc": "2026-11-14T14:55:23.041516+00:00",
+    "monotonic": 388518.087029107,
+    "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+    "tables": {
+      "epg_epgsource": [],
+      "epg_epgdata": [],
+      "epg_programdata": [],
+      "dispatcharr_channels_channel": [],
+      "dispatcharr_channels_recording": [],
+      "core_systemnotification": [
+        {
+          "id": 1,
+          "notification_key": "version-0.33.0",
+          "notification_type": "version_update",
+          "priority": "normal",
+          "source": "system",
+          "title": "Owned obsolete notification",
+          "message": "Owned obsolete notification",
+          "action_data": {},
+          "is_active": true,
+          "admin_only": false,
+          "expires_at": null,
+          "created_at": "2026-11-14 14:55:22.972857+00:00",
+          "updated_at": "2026-11-14 14:55:22.972864+00:00"
+        }
+      ],
+      "core_notificationdismissal": [],
+      "core_systemevent": []
+    },
+    "queues": {
+      "celery": [],
+      "dvr": []
+    },
+    "observer": {
+      "prerun": [],
+      "postrun": [],
+      "publication": [],
+      "sql": [
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.781216+00:00",
+          "task_id": null,
+          "sql": "SELECT \"plugins_pluginconfig\".\"id\", \"plugins_pluginconfig\".\"key\", \"plugins_pluginconfig\".\"name\", \"plugins_pluginconfig\".\"version\", \"plugins_pluginconfig\".\"description\", \"plugins_pluginconfig\".\"enabled\", \"plugins_pluginconfig\".\"ever_enabled\", \"plugins_pluginconfig\".\"settings\", \"plugins_pluginconfig\".\"owned_tasks\", \"plugins_pluginconfig\".\"suspended_schedules\", \"plugins_pluginconfig\".\"source_repo_id\", \"plugins_pluginconfig\".\"slug\", \"plugins_pluginconfig\".\"installed_version_is_prerelease\", \"plugins_pluginconfig\".\"deprecated\", \"plugins_pluginconfig\".\"created_at\", \"plugins_pluginconfig\".\"updated_at\" FROM \"plugins_pluginconfig\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668122.7812393,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.7818406
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.833346+00:00",
+          "task_id": null,
+          "sql": "SELECT current_database()",
+          "params": null,
+          "many": false,
+          "began_epoch": 1794668122.8333602,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.833483
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.835017+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"plugins_pluginconfig\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8350341,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8353512
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.836547+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"plugins_pluginrepo\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8365576,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8367677
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.837824+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"dispatcharr_connect_integration\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8378346,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8379943
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.839074+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"dispatcharr_connect_eventsubscription\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8390844,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8392622
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.840321+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"dispatcharr_connect_deliverylog\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8403313,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8405092
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.972969+00:00",
+          "task_id": null,
+          "sql": "INSERT INTO \"core_systemnotification\" (\"notification_key\", \"notification_type\", \"priority\", \"source\", \"title\", \"message\", \"action_data\", \"is_active\", \"admin_only\", \"expires_at\", \"created_at\", \"updated_at\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING \"core_systemnotification\".\"id\"",
+          "params": [
+            "version-0.33.0",
+            "version_update",
+            "normal",
+            "system",
+            "Owned obsolete notification",
+            "Owned obsolete notification",
+            "Jsonb({})",
+            true,
+            false,
+            null,
+            "2026-11-14 14:55:22.972857+00:00",
+            "2026-11-14 14:55:22.972864+00:00"
+          ],
+          "many": false,
+          "began_epoch": 1794668122.9729843,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.974047
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.008613+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_epgsource\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.008628,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.009042
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.012625+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_epgsource\".\"id\", \"epg_epgsource\".\"name\", \"epg_epgsource\".\"source_type\", \"epg_epgsource\".\"url\", \"epg_epgsource\".\"username\", \"epg_epgsource\".\"password\", \"epg_epgsource\".\"is_active\", \"epg_epgsource\".\"file_path\", \"epg_epgsource\".\"extracted_file_path\", \"epg_epgsource\".\"refresh_interval\", \"epg_epgsource\".\"refresh_task_id\", \"epg_epgsource\".\"custom_properties\", \"epg_epgsource\".\"priority\", \"epg_epgsource\".\"status\", \"epg_epgsource\".\"last_message\", \"epg_epgsource\".\"created_at\", \"epg_epgsource\".\"updated_at\" FROM \"epg_epgsource\" ORDER BY \"epg_epgsource\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.012638,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0129275
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.015815+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_epgdata\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.015828,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0160773
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.018970+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_epgdata\".\"id\", \"epg_epgdata\".\"tvg_id\", \"epg_epgdata\".\"name\", \"epg_epgdata\".\"icon_url\", \"epg_epgdata\".\"epg_source_id\" FROM \"epg_epgdata\" ORDER BY \"epg_epgdata\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0189836,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0191019
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.022216+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_programdata\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.022228,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.022473
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.025295+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_programdata\".\"id\", \"epg_programdata\".\"epg_id\", \"epg_programdata\".\"start_time\", \"epg_programdata\".\"end_time\", \"epg_programdata\".\"title\", \"epg_programdata\".\"sub_title\", \"epg_programdata\".\"description\", \"epg_programdata\".\"tvg_id\", \"epg_programdata\".\"program_id\", \"epg_programdata\".\"custom_properties\" FROM \"epg_programdata\" ORDER BY \"epg_programdata\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0253084,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0254319
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.026569+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"dispatcharr_channels_channel\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0265815,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0269575
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.028517+00:00",
+          "task_id": null,
+          "sql": "SELECT \"dispatcharr_channels_channel\".\"id\", \"dispatcharr_channels_channel\".\"channel_number\", \"dispatcharr_channels_channel\".\"name\", \"dispatcharr_channels_channel\".\"logo_id\", \"dispatcharr_channels_channel\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"uuid\", \"dispatcharr_channels_channel\".\"user_level\", \"dispatcharr_channels_channel\".\"is_adult\", \"dispatcharr_channels_channel\".\"auto_created\", \"dispatcharr_channels_channel\".\"auto_created_by_id\", \"dispatcharr_channels_channel\".\"is_catchup\", \"dispatcharr_channels_channel\".\"catchup_days\", \"dispatcharr_channels_channel\".\"is_radio\", \"dispatcharr_channels_channel\".\"hidden_from_output\", \"dispatcharr_channels_channel\".\"created_at\", \"dispatcharr_channels_channel\".\"updated_at\" FROM \"dispatcharr_channels_channel\" ORDER BY \"dispatcharr_channels_channel\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0285296,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.028864
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.030120+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"dispatcharr_channels_recording\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0301335,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0303264
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.031720+00:00",
+          "task_id": null,
+          "sql": "SELECT \"dispatcharr_channels_recording\".\"id\", \"dispatcharr_channels_recording\".\"channel_id\", \"dispatcharr_channels_recording\".\"start_time\", \"dispatcharr_channels_recording\".\"end_time\", \"dispatcharr_channels_recording\".\"task_id\", \"dispatcharr_channels_recording\".\"custom_properties\" FROM \"dispatcharr_channels_recording\" ORDER BY \"dispatcharr_channels_recording\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0317323,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0318565
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.032983+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemnotification\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0329947,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0331435
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.034464+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" ORDER BY \"core_systemnotification\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.034477,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0346537
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.035829+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_notificationdismissal\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0358415,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0360513
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.037361+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_notificationdismissal\".\"id\", \"core_notificationdismissal\".\"user_id\", \"core_notificationdismissal\".\"notification_id\", \"core_notificationdismissal\".\"dismissed_at\", \"core_notificationdismissal\".\"action_taken\" FROM \"core_notificationdismissal\" ORDER BY \"core_notificationdismissal\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0373728,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0374827
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.038740+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0387518,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0389755
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.040192+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_systemevent\".\"id\", \"core_systemevent\".\"event_type\", \"core_systemevent\".\"timestamp\", \"core_systemevent\".\"channel_id\", \"core_systemevent\".\"channel_name\", \"core_systemevent\".\"details\" FROM \"core_systemevent\" ORDER BY \"core_systemevent\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.040204,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0403163
+        }
+      ],
+      "HTTP": [],
+      "raw_ledger_receipts": [
+        {
+          "path": "m6-prerun.jsonl",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "m6-postrun.jsonl",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "m6-publication.jsonl",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "m6-sql.jsonl",
+          "bytes": 14020,
+          "sha256": "52184531d1896fdc9e087697acaee643084d069a449bd74c718a0a8619fac42c"
+        },
+        {
+          "path": "m6-HTTP.jsonl",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "origin": {
+      "url": "http://127.0.0.1:39959",
+      "requests": [],
+      "observer_thread_alive": true
+    },
+    "cache": [
+      {
+        "key_base64": "YXNnaTpncm91cDp1cGRhdGVz",
+        "type": "zset",
+        "DUMP_base64": "ETs7AAAAAgCfc3BlY2lmaWMubTZfODFhNTQ2M2I5YyFyZWNlaXZlciCRMTc5NDY2ODEyMi44NDM0OTES/w8ABlMuotzUlZk=",
+        "ttl": 86400,
+        "raw_values_base64": [
+          "c3BlY2lmaWMubTZfODFhNTQ2M2I5YyFyZWNlaXZlcg==",
+          "MTc5NDY2ODEyMi44NDM0OTE="
+        ]
+      },
+      {
+        "key_base64": "Y29yZTp2ZXJzaW9uX2NoZWNrX2Rpc3BhdGNoX2xvY2s=",
+        "type": "string",
+        "DUMP_base64": "AMABDwA9/IK6f63sBA==",
+        "ttl": 3599,
+        "raw_values_base64": [
+          "MQ=="
+        ]
+      },
+      {
+        "key_base64": "ZHZyOnJlY292ZXJfZGlzcGF0Y2hfbG9jaw==",
+        "type": "string",
+        "DUMP_base64": "AMABDwA9/IK6f63sBA==",
+        "ttl": 3599,
+        "raw_values_base64": [
+          "MQ=="
+        ]
+      }
+    ]
+  },
+  "actual": {
+    "postrun": [
+      {
+        "pid": 323,
+        "starttime": "38851922",
+        "thread": 140249940488704,
+        "PID_namespace": "pid:[4026533898]",
+        "utc": "2026-11-14T14:55:24.268875+00:00",
+        "id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+        "task": "core.tasks.check_for_version_update",
+        "result": null,
+        "result_type": "builtins.NoneType",
+        "state": "SUCCESS",
+        "root_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+        "parent_id": null
+      }
+    ],
+    "observer": {
+      "prerun": [
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.226686+00:00",
+          "id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "task": "core.tasks.check_for_version_update",
+          "args": [],
+          "kwargs": {},
+          "root_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "parent_id": null,
+          "delivery": {
+            "exchange": "",
+            "routing_key": "celery",
+            "priority": 0,
+            "redelivered": false
+          }
+        }
+      ],
+      "postrun": [
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.268875+00:00",
+          "id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "task": "core.tasks.check_for_version_update",
+          "result": null,
+          "result_type": "builtins.NoneType",
+          "state": "SUCCESS",
+          "root_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "parent_id": null
+        }
+      ],
+      "publication": [
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.060847+00:00",
+          "task": "core.tasks.check_for_version_update",
+          "headers": {
+            "lang": "py",
+            "task": "core.tasks.check_for_version_update",
+            "id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+            "parent_id": null,
+            "argsrepr": "()",
+            "kwargsrepr": "{}",
+            "origin": "gen244@00860b7ad93a",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "body": [
+            [],
+            {},
+            {
+              "callbacks": null,
+              "errbacks": null,
+              "chain": null,
+              "chord": null
+            }
+          ],
+          "properties": {
+            "correlation_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+            "reply_to": "015ac5fd-6c98-3969-aeba-d37d8a0c3f86"
+          },
+          "exchange": "",
+          "routing_key": "celery"
+        }
+      ],
+      "sql": [
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.781216+00:00",
+          "task_id": null,
+          "sql": "SELECT \"plugins_pluginconfig\".\"id\", \"plugins_pluginconfig\".\"key\", \"plugins_pluginconfig\".\"name\", \"plugins_pluginconfig\".\"version\", \"plugins_pluginconfig\".\"description\", \"plugins_pluginconfig\".\"enabled\", \"plugins_pluginconfig\".\"ever_enabled\", \"plugins_pluginconfig\".\"settings\", \"plugins_pluginconfig\".\"owned_tasks\", \"plugins_pluginconfig\".\"suspended_schedules\", \"plugins_pluginconfig\".\"source_repo_id\", \"plugins_pluginconfig\".\"slug\", \"plugins_pluginconfig\".\"installed_version_is_prerelease\", \"plugins_pluginconfig\".\"deprecated\", \"plugins_pluginconfig\".\"created_at\", \"plugins_pluginconfig\".\"updated_at\" FROM \"plugins_pluginconfig\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668122.7812393,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.7818406
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.833346+00:00",
+          "task_id": null,
+          "sql": "SELECT current_database()",
+          "params": null,
+          "many": false,
+          "began_epoch": 1794668122.8333602,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.833483
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.835017+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"plugins_pluginconfig\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8350341,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8353512
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.836547+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"plugins_pluginrepo\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8365576,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8367677
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.837824+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"dispatcharr_connect_integration\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8378346,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8379943
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.839074+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"dispatcharr_connect_eventsubscription\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8390844,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8392622
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.840321+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"dispatcharr_connect_deliverylog\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8403313,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8405092
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.972969+00:00",
+          "task_id": null,
+          "sql": "INSERT INTO \"core_systemnotification\" (\"notification_key\", \"notification_type\", \"priority\", \"source\", \"title\", \"message\", \"action_data\", \"is_active\", \"admin_only\", \"expires_at\", \"created_at\", \"updated_at\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING \"core_systemnotification\".\"id\"",
+          "params": [
+            "version-0.33.0",
+            "version_update",
+            "normal",
+            "system",
+            "Owned obsolete notification",
+            "Owned obsolete notification",
+            "Jsonb({})",
+            true,
+            false,
+            null,
+            "2026-11-14 14:55:22.972857+00:00",
+            "2026-11-14 14:55:22.972864+00:00"
+          ],
+          "many": false,
+          "began_epoch": 1794668122.9729843,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.974047
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.008613+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_epgsource\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.008628,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.009042
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.012625+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_epgsource\".\"id\", \"epg_epgsource\".\"name\", \"epg_epgsource\".\"source_type\", \"epg_epgsource\".\"url\", \"epg_epgsource\".\"username\", \"epg_epgsource\".\"password\", \"epg_epgsource\".\"is_active\", \"epg_epgsource\".\"file_path\", \"epg_epgsource\".\"extracted_file_path\", \"epg_epgsource\".\"refresh_interval\", \"epg_epgsource\".\"refresh_task_id\", \"epg_epgsource\".\"custom_properties\", \"epg_epgsource\".\"priority\", \"epg_epgsource\".\"status\", \"epg_epgsource\".\"last_message\", \"epg_epgsource\".\"created_at\", \"epg_epgsource\".\"updated_at\" FROM \"epg_epgsource\" ORDER BY \"epg_epgsource\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.012638,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0129275
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.015815+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_epgdata\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.015828,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0160773
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.018970+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_epgdata\".\"id\", \"epg_epgdata\".\"tvg_id\", \"epg_epgdata\".\"name\", \"epg_epgdata\".\"icon_url\", \"epg_epgdata\".\"epg_source_id\" FROM \"epg_epgdata\" ORDER BY \"epg_epgdata\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0189836,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0191019
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.022216+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_programdata\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.022228,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.022473
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.025295+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_programdata\".\"id\", \"epg_programdata\".\"epg_id\", \"epg_programdata\".\"start_time\", \"epg_programdata\".\"end_time\", \"epg_programdata\".\"title\", \"epg_programdata\".\"sub_title\", \"epg_programdata\".\"description\", \"epg_programdata\".\"tvg_id\", \"epg_programdata\".\"program_id\", \"epg_programdata\".\"custom_properties\" FROM \"epg_programdata\" ORDER BY \"epg_programdata\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0253084,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0254319
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.026569+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"dispatcharr_channels_channel\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0265815,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0269575
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.028517+00:00",
+          "task_id": null,
+          "sql": "SELECT \"dispatcharr_channels_channel\".\"id\", \"dispatcharr_channels_channel\".\"channel_number\", \"dispatcharr_channels_channel\".\"name\", \"dispatcharr_channels_channel\".\"logo_id\", \"dispatcharr_channels_channel\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"uuid\", \"dispatcharr_channels_channel\".\"user_level\", \"dispatcharr_channels_channel\".\"is_adult\", \"dispatcharr_channels_channel\".\"auto_created\", \"dispatcharr_channels_channel\".\"auto_created_by_id\", \"dispatcharr_channels_channel\".\"is_catchup\", \"dispatcharr_channels_channel\".\"catchup_days\", \"dispatcharr_channels_channel\".\"is_radio\", \"dispatcharr_channels_channel\".\"hidden_from_output\", \"dispatcharr_channels_channel\".\"created_at\", \"dispatcharr_channels_channel\".\"updated_at\" FROM \"dispatcharr_channels_channel\" ORDER BY \"dispatcharr_channels_channel\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0285296,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.028864
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.030120+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"dispatcharr_channels_recording\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0301335,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0303264
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.031720+00:00",
+          "task_id": null,
+          "sql": "SELECT \"dispatcharr_channels_recording\".\"id\", \"dispatcharr_channels_recording\".\"channel_id\", \"dispatcharr_channels_recording\".\"start_time\", \"dispatcharr_channels_recording\".\"end_time\", \"dispatcharr_channels_recording\".\"task_id\", \"dispatcharr_channels_recording\".\"custom_properties\" FROM \"dispatcharr_channels_recording\" ORDER BY \"dispatcharr_channels_recording\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0317323,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0318565
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.032983+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemnotification\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0329947,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0331435
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.034464+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" ORDER BY \"core_systemnotification\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.034477,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0346537
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.035829+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_notificationdismissal\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0358415,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0360513
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.037361+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_notificationdismissal\".\"id\", \"core_notificationdismissal\".\"user_id\", \"core_notificationdismissal\".\"notification_id\", \"core_notificationdismissal\".\"dismissed_at\", \"core_notificationdismissal\".\"action_taken\" FROM \"core_notificationdismissal\" ORDER BY \"core_notificationdismissal\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0373728,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0374827
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.038740+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0387518,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0389755
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.040192+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_systemevent\".\"id\", \"core_systemevent\".\"event_type\", \"core_systemevent\".\"timestamp\", \"core_systemevent\".\"channel_id\", \"core_systemevent\".\"channel_name\", \"core_systemevent\".\"details\" FROM \"core_systemevent\" ORDER BY \"core_systemevent\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.040204,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0403163
+        },
+        {
+          "pid": 286,
+          "starttime": "38851801",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.585622+00:00",
+          "task_id": null,
+          "sql": "SELECT \"plugins_pluginconfig\".\"id\", \"plugins_pluginconfig\".\"key\", \"plugins_pluginconfig\".\"name\", \"plugins_pluginconfig\".\"version\", \"plugins_pluginconfig\".\"description\", \"plugins_pluginconfig\".\"enabled\", \"plugins_pluginconfig\".\"ever_enabled\", \"plugins_pluginconfig\".\"settings\", \"plugins_pluginconfig\".\"owned_tasks\", \"plugins_pluginconfig\".\"suspended_schedules\", \"plugins_pluginconfig\".\"source_repo_id\", \"plugins_pluginconfig\".\"slug\", \"plugins_pluginconfig\".\"installed_version_is_prerelease\", \"plugins_pluginconfig\".\"deprecated\", \"plugins_pluginconfig\".\"created_at\", \"plugins_pluginconfig\".\"updated_at\" FROM \"plugins_pluginconfig\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.5856533,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.586148
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.188969+00:00",
+          "task_id": null,
+          "sql": "SELECT \"plugins_pluginconfig\".\"id\", \"plugins_pluginconfig\".\"key\", \"plugins_pluginconfig\".\"name\", \"plugins_pluginconfig\".\"version\", \"plugins_pluginconfig\".\"description\", \"plugins_pluginconfig\".\"enabled\", \"plugins_pluginconfig\".\"ever_enabled\", \"plugins_pluginconfig\".\"settings\", \"plugins_pluginconfig\".\"owned_tasks\", \"plugins_pluginconfig\".\"suspended_schedules\", \"plugins_pluginconfig\".\"source_repo_id\", \"plugins_pluginconfig\".\"slug\", \"plugins_pluginconfig\".\"installed_version_is_prerelease\", \"plugins_pluginconfig\".\"deprecated\", \"plugins_pluginconfig\".\"created_at\", \"plugins_pluginconfig\".\"updated_at\" FROM \"plugins_pluginconfig\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.1890197,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.1897566
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.239923+00:00",
+          "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "sql": "SELECT \"core_coresettings\".\"id\", \"core_coresettings\".\"key\", \"core_coresettings\".\"name\", \"core_coresettings\".\"value\" FROM \"core_coresettings\" WHERE \"core_coresettings\".\"key\" = %s LIMIT 21",
+          "params": [
+            "system_settings"
+          ],
+          "many": false,
+          "began_epoch": 1794668124.2399483,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2408535
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.248308+00:00",
+          "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE (\"core_systemnotification\".\"notification_key\" = %s AND \"core_systemnotification\".\"notification_type\" = %s)",
+          "params": [
+            "version-0.33.0",
+            "version_update"
+          ],
+          "many": false,
+          "began_epoch": 1794668124.2483306,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2494142
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.251405+00:00",
+          "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "sql": "DELETE FROM \"core_notificationdismissal\" WHERE \"core_notificationdismissal\".\"notification_id\" IN (%s)",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668124.2514184,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.251848
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.253004+00:00",
+          "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "sql": "DELETE FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"id\" IN (%s)",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668124.2530148,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2532592
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.265702+00:00",
+          "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_type\" = %s",
+          "params": [
+            "version_update"
+          ],
+          "many": false,
+          "began_epoch": 1794668124.265721,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2660418
+        }
+      ],
+      "HTTP": [
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.260224+00:00",
+          "method": "get",
+          "original_host": "api.github.com",
+          "original_path": "/repos/Dispatcharr/Dispatcharr/releases/latest",
+          "URL_sha256": "52ccdf58adb4665693703a60cc1f0e21d90abf9d014061fac7ce227b195c1d1a",
+          "owned_dependency_route": true
+        }
+      ],
+      "raw_ledger_receipts": [
+        {
+          "path": "m6-prerun.jsonl",
+          "bytes": 426,
+          "sha256": "70fea7eae9f158486b87abb24dab55a9f39b29301881c1a48813a6857b80fd01"
+        },
+        {
+          "path": "m6-postrun.jsonl",
+          "bytes": 380,
+          "sha256": "42b2467c0bfe4d855bde597a3e866ea8fe8419a2cb7b18ff1f8b40ce31a92cb8"
+        },
+        {
+          "path": "m6-publication.jsonl",
+          "bytes": 921,
+          "sha256": "afebf34cc9bef0e718d286b7480bddd3c3589b42de9697f6e1b9b32374ede63c"
+        },
+        {
+          "path": "m6-sql.jsonl",
+          "bytes": 19748,
+          "sha256": "0be5db8780e4a0158bcd8973dac2afbee49574ba98e60334833997223b32cf7d"
+        },
+        {
+          "path": "m6-HTTP.jsonl",
+          "bytes": 378,
+          "sha256": "a7e0f73d9dc0e88c5d95f90606d4348677673eb8f5b945ea08cdc5bdebc90a8b"
+        }
+      ]
+    },
+    "backend": {
+      "key_base64": "Y2VsZXJ5LXRhc2tzOmNlbGVyeS10YXNrLW1ldGEtODY1NWM1YjItNTU3MS00YmQxLWJlMDAtODg4OGFmZmYxZDk0",
+      "raw_base64": "eyJzdGF0dXMiOiAiU1VDQ0VTUyIsICJyZXN1bHQiOiBudWxsLCAidHJhY2ViYWNrIjogbnVsbCwgImNoaWxkcmVuIjogW10sICJkYXRlX2RvbmUiOiAiMjAyNi0xMS0xNFQxNDo1NToyNC4yNjcyMjkrMDA6MDAiLCAidGFza19pZCI6ICI4NjU1YzViMi01NTcxLTRiZDEtYmUwMC04ODg4YWZmZjFkOTQifQ==",
+      "ttl": 3600,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T14:55:24.267229+00:00",
+        "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94"
+      }
+    },
+    "Original_AsyncResult": {
+      "value": null,
+      "state": "SUCCESS"
+    }
+  },
+  "after": {
+    "utc": "2026-11-14T14:55:24.303233+00:00",
+    "monotonic": 388519.348745573,
+    "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+    "tables": {
+      "epg_epgsource": [],
+      "epg_epgdata": [],
+      "epg_programdata": [],
+      "dispatcharr_channels_channel": [],
+      "dispatcharr_channels_recording": [],
+      "core_systemnotification": [],
+      "core_notificationdismissal": [],
+      "core_systemevent": []
+    },
+    "queues": {
+      "celery": [],
+      "dvr": []
+    },
+    "observer": {
+      "prerun": [
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.226686+00:00",
+          "id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "task": "core.tasks.check_for_version_update",
+          "args": [],
+          "kwargs": {},
+          "root_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "parent_id": null,
+          "delivery": {
+            "exchange": "",
+            "routing_key": "celery",
+            "priority": 0,
+            "redelivered": false
+          }
+        }
+      ],
+      "postrun": [
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.268875+00:00",
+          "id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "task": "core.tasks.check_for_version_update",
+          "result": null,
+          "result_type": "builtins.NoneType",
+          "state": "SUCCESS",
+          "root_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "parent_id": null
+        }
+      ],
+      "publication": [
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.060847+00:00",
+          "task": "core.tasks.check_for_version_update",
+          "headers": {
+            "lang": "py",
+            "task": "core.tasks.check_for_version_update",
+            "id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+            "parent_id": null,
+            "argsrepr": "()",
+            "kwargsrepr": "{}",
+            "origin": "gen244@00860b7ad93a",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "body": [
+            [],
+            {},
+            {
+              "callbacks": null,
+              "errbacks": null,
+              "chain": null,
+              "chord": null
+            }
+          ],
+          "properties": {
+            "correlation_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+            "reply_to": "015ac5fd-6c98-3969-aeba-d37d8a0c3f86"
+          },
+          "exchange": "",
+          "routing_key": "celery"
+        }
+      ],
+      "sql": [
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.781216+00:00",
+          "task_id": null,
+          "sql": "SELECT \"plugins_pluginconfig\".\"id\", \"plugins_pluginconfig\".\"key\", \"plugins_pluginconfig\".\"name\", \"plugins_pluginconfig\".\"version\", \"plugins_pluginconfig\".\"description\", \"plugins_pluginconfig\".\"enabled\", \"plugins_pluginconfig\".\"ever_enabled\", \"plugins_pluginconfig\".\"settings\", \"plugins_pluginconfig\".\"owned_tasks\", \"plugins_pluginconfig\".\"suspended_schedules\", \"plugins_pluginconfig\".\"source_repo_id\", \"plugins_pluginconfig\".\"slug\", \"plugins_pluginconfig\".\"installed_version_is_prerelease\", \"plugins_pluginconfig\".\"deprecated\", \"plugins_pluginconfig\".\"created_at\", \"plugins_pluginconfig\".\"updated_at\" FROM \"plugins_pluginconfig\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668122.7812393,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.7818406
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.833346+00:00",
+          "task_id": null,
+          "sql": "SELECT current_database()",
+          "params": null,
+          "many": false,
+          "began_epoch": 1794668122.8333602,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.833483
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.835017+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"plugins_pluginconfig\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8350341,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8353512
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.836547+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"plugins_pluginrepo\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8365576,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8367677
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.837824+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"dispatcharr_connect_integration\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8378346,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8379943
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.839074+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"dispatcharr_connect_eventsubscription\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8390844,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8392622
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.840321+00:00",
+          "task_id": null,
+          "sql": "SELECT %s AS \"a\" FROM \"dispatcharr_connect_deliverylog\" LIMIT 1",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668122.8403313,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.8405092
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:22.972969+00:00",
+          "task_id": null,
+          "sql": "INSERT INTO \"core_systemnotification\" (\"notification_key\", \"notification_type\", \"priority\", \"source\", \"title\", \"message\", \"action_data\", \"is_active\", \"admin_only\", \"expires_at\", \"created_at\", \"updated_at\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING \"core_systemnotification\".\"id\"",
+          "params": [
+            "version-0.33.0",
+            "version_update",
+            "normal",
+            "system",
+            "Owned obsolete notification",
+            "Owned obsolete notification",
+            "Jsonb({})",
+            true,
+            false,
+            null,
+            "2026-11-14 14:55:22.972857+00:00",
+            "2026-11-14 14:55:22.972864+00:00"
+          ],
+          "many": false,
+          "began_epoch": 1794668122.9729843,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668122.974047
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.008613+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_epgsource\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.008628,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.009042
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.012625+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_epgsource\".\"id\", \"epg_epgsource\".\"name\", \"epg_epgsource\".\"source_type\", \"epg_epgsource\".\"url\", \"epg_epgsource\".\"username\", \"epg_epgsource\".\"password\", \"epg_epgsource\".\"is_active\", \"epg_epgsource\".\"file_path\", \"epg_epgsource\".\"extracted_file_path\", \"epg_epgsource\".\"refresh_interval\", \"epg_epgsource\".\"refresh_task_id\", \"epg_epgsource\".\"custom_properties\", \"epg_epgsource\".\"priority\", \"epg_epgsource\".\"status\", \"epg_epgsource\".\"last_message\", \"epg_epgsource\".\"created_at\", \"epg_epgsource\".\"updated_at\" FROM \"epg_epgsource\" ORDER BY \"epg_epgsource\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.012638,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0129275
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.015815+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_epgdata\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.015828,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0160773
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.018970+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_epgdata\".\"id\", \"epg_epgdata\".\"tvg_id\", \"epg_epgdata\".\"name\", \"epg_epgdata\".\"icon_url\", \"epg_epgdata\".\"epg_source_id\" FROM \"epg_epgdata\" ORDER BY \"epg_epgdata\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0189836,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0191019
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.022216+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_programdata\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.022228,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.022473
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.025295+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_programdata\".\"id\", \"epg_programdata\".\"epg_id\", \"epg_programdata\".\"start_time\", \"epg_programdata\".\"end_time\", \"epg_programdata\".\"title\", \"epg_programdata\".\"sub_title\", \"epg_programdata\".\"description\", \"epg_programdata\".\"tvg_id\", \"epg_programdata\".\"program_id\", \"epg_programdata\".\"custom_properties\" FROM \"epg_programdata\" ORDER BY \"epg_programdata\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0253084,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0254319
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.026569+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"dispatcharr_channels_channel\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0265815,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0269575
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.028517+00:00",
+          "task_id": null,
+          "sql": "SELECT \"dispatcharr_channels_channel\".\"id\", \"dispatcharr_channels_channel\".\"channel_number\", \"dispatcharr_channels_channel\".\"name\", \"dispatcharr_channels_channel\".\"logo_id\", \"dispatcharr_channels_channel\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"uuid\", \"dispatcharr_channels_channel\".\"user_level\", \"dispatcharr_channels_channel\".\"is_adult\", \"dispatcharr_channels_channel\".\"auto_created\", \"dispatcharr_channels_channel\".\"auto_created_by_id\", \"dispatcharr_channels_channel\".\"is_catchup\", \"dispatcharr_channels_channel\".\"catchup_days\", \"dispatcharr_channels_channel\".\"is_radio\", \"dispatcharr_channels_channel\".\"hidden_from_output\", \"dispatcharr_channels_channel\".\"created_at\", \"dispatcharr_channels_channel\".\"updated_at\" FROM \"dispatcharr_channels_channel\" ORDER BY \"dispatcharr_channels_channel\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0285296,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.028864
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.030120+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"dispatcharr_channels_recording\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0301335,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0303264
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.031720+00:00",
+          "task_id": null,
+          "sql": "SELECT \"dispatcharr_channels_recording\".\"id\", \"dispatcharr_channels_recording\".\"channel_id\", \"dispatcharr_channels_recording\".\"start_time\", \"dispatcharr_channels_recording\".\"end_time\", \"dispatcharr_channels_recording\".\"task_id\", \"dispatcharr_channels_recording\".\"custom_properties\" FROM \"dispatcharr_channels_recording\" ORDER BY \"dispatcharr_channels_recording\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0317323,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0318565
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.032983+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemnotification\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0329947,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0331435
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.034464+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" ORDER BY \"core_systemnotification\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.034477,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0346537
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.035829+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_notificationdismissal\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0358415,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0360513
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.037361+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_notificationdismissal\".\"id\", \"core_notificationdismissal\".\"user_id\", \"core_notificationdismissal\".\"notification_id\", \"core_notificationdismissal\".\"dismissed_at\", \"core_notificationdismissal\".\"action_taken\" FROM \"core_notificationdismissal\" ORDER BY \"core_notificationdismissal\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0373728,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0374827
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.038740+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.0387518,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0389755
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.040192+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_systemevent\".\"id\", \"core_systemevent\".\"event_type\", \"core_systemevent\".\"timestamp\", \"core_systemevent\".\"channel_id\", \"core_systemevent\".\"channel_name\", \"core_systemevent\".\"details\" FROM \"core_systemevent\" ORDER BY \"core_systemevent\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.040204,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.0403163
+        },
+        {
+          "pid": 286,
+          "starttime": "38851801",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:23.585622+00:00",
+          "task_id": null,
+          "sql": "SELECT \"plugins_pluginconfig\".\"id\", \"plugins_pluginconfig\".\"key\", \"plugins_pluginconfig\".\"name\", \"plugins_pluginconfig\".\"version\", \"plugins_pluginconfig\".\"description\", \"plugins_pluginconfig\".\"enabled\", \"plugins_pluginconfig\".\"ever_enabled\", \"plugins_pluginconfig\".\"settings\", \"plugins_pluginconfig\".\"owned_tasks\", \"plugins_pluginconfig\".\"suspended_schedules\", \"plugins_pluginconfig\".\"source_repo_id\", \"plugins_pluginconfig\".\"slug\", \"plugins_pluginconfig\".\"installed_version_is_prerelease\", \"plugins_pluginconfig\".\"deprecated\", \"plugins_pluginconfig\".\"created_at\", \"plugins_pluginconfig\".\"updated_at\" FROM \"plugins_pluginconfig\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668123.5856533,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668123.586148
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.188969+00:00",
+          "task_id": null,
+          "sql": "SELECT \"plugins_pluginconfig\".\"id\", \"plugins_pluginconfig\".\"key\", \"plugins_pluginconfig\".\"name\", \"plugins_pluginconfig\".\"version\", \"plugins_pluginconfig\".\"description\", \"plugins_pluginconfig\".\"enabled\", \"plugins_pluginconfig\".\"ever_enabled\", \"plugins_pluginconfig\".\"settings\", \"plugins_pluginconfig\".\"owned_tasks\", \"plugins_pluginconfig\".\"suspended_schedules\", \"plugins_pluginconfig\".\"source_repo_id\", \"plugins_pluginconfig\".\"slug\", \"plugins_pluginconfig\".\"installed_version_is_prerelease\", \"plugins_pluginconfig\".\"deprecated\", \"plugins_pluginconfig\".\"created_at\", \"plugins_pluginconfig\".\"updated_at\" FROM \"plugins_pluginconfig\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.1890197,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.1897566
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.239923+00:00",
+          "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "sql": "SELECT \"core_coresettings\".\"id\", \"core_coresettings\".\"key\", \"core_coresettings\".\"name\", \"core_coresettings\".\"value\" FROM \"core_coresettings\" WHERE \"core_coresettings\".\"key\" = %s LIMIT 21",
+          "params": [
+            "system_settings"
+          ],
+          "many": false,
+          "began_epoch": 1794668124.2399483,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2408535
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.248308+00:00",
+          "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE (\"core_systemnotification\".\"notification_key\" = %s AND \"core_systemnotification\".\"notification_type\" = %s)",
+          "params": [
+            "version-0.33.0",
+            "version_update"
+          ],
+          "many": false,
+          "began_epoch": 1794668124.2483306,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2494142
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.251405+00:00",
+          "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "sql": "DELETE FROM \"core_notificationdismissal\" WHERE \"core_notificationdismissal\".\"notification_id\" IN (%s)",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668124.2514184,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.251848
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.253004+00:00",
+          "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "sql": "DELETE FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"id\" IN (%s)",
+          "params": [
+            1
+          ],
+          "many": false,
+          "began_epoch": 1794668124.2530148,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2532592
+        },
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.265702+00:00",
+          "task_id": "8655c5b2-5571-4bd1-be00-8888afff1d94",
+          "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_type\" = %s",
+          "params": [
+            "version_update"
+          ],
+          "many": false,
+          "began_epoch": 1794668124.265721,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2660418
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.278109+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_epgsource\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2781265,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2783444
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.280468+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_epgsource\".\"id\", \"epg_epgsource\".\"name\", \"epg_epgsource\".\"source_type\", \"epg_epgsource\".\"url\", \"epg_epgsource\".\"username\", \"epg_epgsource\".\"password\", \"epg_epgsource\".\"is_active\", \"epg_epgsource\".\"file_path\", \"epg_epgsource\".\"extracted_file_path\", \"epg_epgsource\".\"refresh_interval\", \"epg_epgsource\".\"refresh_task_id\", \"epg_epgsource\".\"custom_properties\", \"epg_epgsource\".\"priority\", \"epg_epgsource\".\"status\", \"epg_epgsource\".\"last_message\", \"epg_epgsource\".\"created_at\", \"epg_epgsource\".\"updated_at\" FROM \"epg_epgsource\" ORDER BY \"epg_epgsource\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.280481,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2806728
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.282633+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_epgdata\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2826457,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2827568
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.284720+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_epgdata\".\"id\", \"epg_epgdata\".\"tvg_id\", \"epg_epgdata\".\"name\", \"epg_epgdata\".\"icon_url\", \"epg_epgdata\".\"epg_source_id\" FROM \"epg_epgdata\" ORDER BY \"epg_epgdata\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2847328,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2848375
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.286684+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"epg_programdata\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2866964,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2868028
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.288750+00:00",
+          "task_id": null,
+          "sql": "SELECT \"epg_programdata\".\"id\", \"epg_programdata\".\"epg_id\", \"epg_programdata\".\"start_time\", \"epg_programdata\".\"end_time\", \"epg_programdata\".\"title\", \"epg_programdata\".\"sub_title\", \"epg_programdata\".\"description\", \"epg_programdata\".\"tvg_id\", \"epg_programdata\".\"program_id\", \"epg_programdata\".\"custom_properties\" FROM \"epg_programdata\" ORDER BY \"epg_programdata\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2887623,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2888725
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.290217+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"dispatcharr_channels_channel\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2902288,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2903502
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.291734+00:00",
+          "task_id": null,
+          "sql": "SELECT \"dispatcharr_channels_channel\".\"id\", \"dispatcharr_channels_channel\".\"channel_number\", \"dispatcharr_channels_channel\".\"name\", \"dispatcharr_channels_channel\".\"logo_id\", \"dispatcharr_channels_channel\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"uuid\", \"dispatcharr_channels_channel\".\"user_level\", \"dispatcharr_channels_channel\".\"is_adult\", \"dispatcharr_channels_channel\".\"auto_created\", \"dispatcharr_channels_channel\".\"auto_created_by_id\", \"dispatcharr_channels_channel\".\"is_catchup\", \"dispatcharr_channels_channel\".\"catchup_days\", \"dispatcharr_channels_channel\".\"is_radio\", \"dispatcharr_channels_channel\".\"hidden_from_output\", \"dispatcharr_channels_channel\".\"created_at\", \"dispatcharr_channels_channel\".\"updated_at\" FROM \"dispatcharr_channels_channel\" ORDER BY \"dispatcharr_channels_channel\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2917452,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2918832
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.293084+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"dispatcharr_channels_recording\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2930963,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2931871
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.294376+00:00",
+          "task_id": null,
+          "sql": "SELECT \"dispatcharr_channels_recording\".\"id\", \"dispatcharr_channels_recording\".\"channel_id\", \"dispatcharr_channels_recording\".\"start_time\", \"dispatcharr_channels_recording\".\"end_time\", \"dispatcharr_channels_recording\".\"task_id\", \"dispatcharr_channels_recording\".\"custom_properties\" FROM \"dispatcharr_channels_recording\" ORDER BY \"dispatcharr_channels_recording\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2943885,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2945018
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.295645+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemnotification\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2956567,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2957885
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.297020+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" ORDER BY \"core_systemnotification\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.297032,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.29716
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.298285+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_notificationdismissal\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.298296,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.2983992
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.299619+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_notificationdismissal\".\"id\", \"core_notificationdismissal\".\"user_id\", \"core_notificationdismissal\".\"notification_id\", \"core_notificationdismissal\".\"dismissed_at\", \"core_notificationdismissal\".\"action_taken\" FROM \"core_notificationdismissal\" ORDER BY \"core_notificationdismissal\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.2996316,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.299738
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.300854+00:00",
+          "task_id": null,
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.3008664,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.3009694
+        },
+        {
+          "pid": 244,
+          "starttime": "38851723",
+          "thread": 140678513693184,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.302168+00:00",
+          "task_id": null,
+          "sql": "SELECT \"core_systemevent\".\"id\", \"core_systemevent\".\"event_type\", \"core_systemevent\".\"timestamp\", \"core_systemevent\".\"channel_id\", \"core_systemevent\".\"channel_name\", \"core_systemevent\".\"details\" FROM \"core_systemevent\" ORDER BY \"core_systemevent\".\"id\" ASC",
+          "params": [],
+          "many": false,
+          "began_epoch": 1794668124.3021798,
+          "actual_database": "rust_probe_backup_jobs_81a5463b9c",
+          "finished_epoch": 1794668124.302286
+        }
+      ],
+      "HTTP": [
+        {
+          "pid": 323,
+          "starttime": "38851922",
+          "thread": 140249940488704,
+          "PID_namespace": "pid:[4026533898]",
+          "utc": "2026-11-14T14:55:24.260224+00:00",
+          "method": "get",
+          "original_host": "api.github.com",
+          "original_path": "/repos/Dispatcharr/Dispatcharr/releases/latest",
+          "URL_sha256": "52ccdf58adb4665693703a60cc1f0e21d90abf9d014061fac7ce227b195c1d1a",
+          "owned_dependency_route": true
+        }
+      ],
+      "raw_ledger_receipts": [
+        {
+          "path": "m6-prerun.jsonl",
+          "bytes": 426,
+          "sha256": "70fea7eae9f158486b87abb24dab55a9f39b29301881c1a48813a6857b80fd01"
+        },
+        {
+          "path": "m6-postrun.jsonl",
+          "bytes": 380,
+          "sha256": "42b2467c0bfe4d855bde597a3e866ea8fe8419a2cb7b18ff1f8b40ce31a92cb8"
+        },
+        {
+          "path": "m6-publication.jsonl",
+          "bytes": 921,
+          "sha256": "afebf34cc9bef0e718d286b7480bddd3c3589b42de9697f6e1b9b32374ede63c"
+        },
+        {
+          "path": "m6-sql.jsonl",
+          "bytes": 29529,
+          "sha256": "326e4b9f5a3be0504d196940fc966dc8c2cc64feddc33fc272880da06ebab233"
+        },
+        {
+          "path": "m6-HTTP.jsonl",
+          "bytes": 378,
+          "sha256": "a7e0f73d9dc0e88c5d95f90606d4348677673eb8f5b945ea08cdc5bdebc90a8b"
+        }
+      ]
+    },
+    "origin": {
+      "url": "http://127.0.0.1:39959",
+      "requests": [
+        {
+          "began_utc": "2026-11-14T14:55:24.264340+00:00",
+          "method": "GET",
+          "path": "/owned-version",
+          "headers": [
+            [
+              "Host",
+              "127.0.0.1:39959"
+            ],
+            [
+              "User-Agent",
+              "Dispatcharr/0.33.0"
+            ],
+            [
+              "Accept-Encoding",
+              "gzip, deflate"
+            ],
+            [
+              "Accept",
+              "application/vnd.github.v3+json"
+            ],
+            [
+              "Connection",
+              "keep-alive"
+            ]
+          ],
+          "status": 200,
+          "response_bytes": 67,
+          "response_sha256": "b91d9e672934d0ba7ed275bed88d8cbe81971be09baa83a57fcf0fca2981529b",
+          "finished_utc": "2026-11-14T14:55:24.264435+00:00"
+        }
+      ],
+      "observer_thread_alive": true
+    },
+    "cache": [
+      {
+        "key_base64": "OjE6Y29yZXNldHRpbmdzOmdyb3VwOnN5c3RlbV9zZXR0aW5ncw==",
+        "type": "string",
+        "DUMP_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+        "ttl": 300,
+        "raw_values_base64": [
+          "gASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUu"
+        ]
+      },
+      {
+        "key_base64": "YXNnaTpncm91cDp1cGRhdGVz",
+        "type": "zset",
+        "DUMP_base64": "ETs7AAAAAgCfc3BlY2lmaWMubTZfODFhNTQ2M2I5YyFyZWNlaXZlciCRMTc5NDY2ODEyMi44NDM0OTES/w8ABlMuotzUlZk=",
+        "ttl": 86399,
+        "raw_values_base64": [
+          "c3BlY2lmaWMubTZfODFhNTQ2M2I5YyFyZWNlaXZlcg==",
+          "MTc5NDY2ODEyMi44NDM0OTE="
+        ]
+      },
+      {
+        "key_base64": "YXNnaXNwZWNpZmljLm02XzgxYTU0NjNiOWMh",
+        "type": "zset",
+        "DUMP_base64": "BQFAfOfL7lBgJtM69kombIOkdHlwZaZ1cGRhdGWkZGF0YYOnc3VjY2Vzc8OkdHlwZbVub3RpZmljYXRpb25zX2NsZWFyZWSlY291bnQBsF9fYXNnaV9jaGFubmVsX1+Rv3NwZWNpZmljLm02XzgxYTU0NjNiOWMhcmVjZWl2ZXKhlxCXHb7aQQ8AftNEkbM+0R0=",
+        "ttl": 60,
+        "raw_values_base64": [
+          "58vuUGAm0zr2SiZsg6R0eXBlpnVwZGF0ZaRkYXRhg6dzdWNjZXNzw6R0eXBltW5vdGlmaWNhdGlvbnNfY2xlYXJlZKVjb3VudAGwX19hc2dpX2NoYW5uZWxfX5G/c3BlY2lmaWMubTZfODFhNTQ2M2I5YyFyZWNlaXZlcg==",
+          "MS43OTQ2NjgxMjQyNTkyNTQ3ZSs5"
+        ],
+        "Channels_raw_base64": [
+          "58vuUGAm0zr2SiZsg6R0eXBlpnVwZGF0ZaRkYXRhg6dzdWNjZXNzw6R0eXBltW5vdGlmaWNhdGlvbnNfY2xlYXJlZKVjb3VudAGwX19hc2dpX2NoYW5uZWxfX5G/c3BlY2lmaWMubTZfODFhNTQ2M2I5YyFyZWNlaXZlcg=="
+        ],
+        "Channels_decoded": [
+          {
+            "type": "update",
+            "data": {
+              "success": true,
+              "type": "notifications_cleared",
+              "count": 1
+            },
+            "__asgi_channel__": [
+              "specific.m6_81a5463b9c!receiver"
+            ]
+          }
+        ]
+      },
+      {
+        "key_base64": "Y29yZTp2ZXJzaW9uX2NoZWNrX2Rpc3BhdGNoX2xvY2s=",
+        "type": "string",
+        "DUMP_base64": "AMABDwA9/IK6f63sBA==",
+        "ttl": 3598,
+        "raw_values_base64": [
+          "MQ=="
+        ]
+      },
+      {
+        "key_base64": "ZHZyOnJlY292ZXJfZGlzcGF0Y2hfbG9jaw==",
+        "type": "string",
+        "DUMP_base64": "AMABDwA9/IK6f63sBA==",
+        "ttl": 3598,
+        "raw_values_base64": [
+          "MQ=="
+        ]
+      }
+    ]
+  },
+  "expected_declared": {
+    "status": "SUCCESS",
+    "result": null
+  }
+}

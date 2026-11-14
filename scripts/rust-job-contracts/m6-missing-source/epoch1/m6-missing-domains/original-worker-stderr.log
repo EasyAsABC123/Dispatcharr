@@ -1,0 +1,91 @@
+2026-11-14 14:53:49,050 WARNING py.warnings /dispatcharrpy/lib/python3.13/site-packages/celery/platforms.py:841: SecurityWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  warnings.warn(SecurityWarning(ROOT_DISCOURAGED.format(
+
+2026-11-14 14:53:49,129 INFO celery.worker.consumer.connection Connected to redis://:**@localhost:6379/8
+2026-11-14 14:53:49,135 INFO celery.apps.worker m6-whole-source@fixture ready.
+2026-11-14 14:53:49,200 INFO apps.epg.tasks Refreshing program data for tvg_id: m6.batch.owned
+2026-11-14 14:53:49,276 INFO apps.epg.tasks Completed program parsing for tvg_id=m6.batch.owned.
+2026-11-14 14:53:49,420 INFO apps.epg.tasks Refreshing program data for tvg_id: m6.batch.owned
+2026-11-14 14:53:49,472 INFO apps.epg.tasks Completed program parsing for tvg_id=m6.batch.owned.
+2026-11-14 14:53:49,883 INFO apps.epg.tasks No channels matched to EPG m6.batch.unmapped
+2026-11-14 14:53:50,057 INFO apps.epg.tasks Refreshing program data for tvg_id: m6.batch.owned
+2026-11-14 14:53:50,146 ERROR celery.app.trace Task apps.epg.tasks.parse_programs_for_tvg_id[b4794b83-3f9a-43e0-afa8-73f02b83b14f] raised unexpected: ProgrammingError('owned M6 programme insert\nCONTEXT:  PL/pgSQL function m6_a28ec513f9_insert_guard() line 1 at RAISE')
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.RaiseException: owned M6 programme insert
+CONTEXT:  PL/pgSQL function m6_a28ec513f9_insert_guard() line 1 at RAISE
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 585, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 858, in __protected_call__
+    return self.run(*args, **kwargs)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/app/apps/epg/tasks.py", line 2089, in parse_programs_for_tvg_id
+    ProgramData.objects.bulk_create(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        programs_to_create[i:i + _EPG_SWAP_BATCH_SIZE]
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 833, in bulk_create
+    returned_columns = self._batched_insert(
+        objs_without_pk,
+    ...<4 lines>...
+        unique_fields=unique_fields,
+    )
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1956, in _batched_insert
+    self._insert(
+    ~~~~~~~~~~~~^
+        item,
+        ^^^^^
+    ...<5 lines>...
+        returning_fields=returning_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/m6-root/m6_source_observer.py", line 29, in sql
+    return execute(query,params,many,context)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+django.db.utils.ProgrammingError: owned M6 programme insert
+CONTEXT:  PL/pgSQL function m6_a28ec513f9_insert_guard() line 1 at RAISE

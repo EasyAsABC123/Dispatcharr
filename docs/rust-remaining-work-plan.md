@@ -12,7 +12,15 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The delivered opt-in component composition is
+The latest [combined milestone candidate](rust-milestone-batch1.md) is committed
+as `04026c158c8211da123b94ec67b82812f3223321`:904 Rust inputs/five coupled vectors,
+whole-workspace formatting/check/strict lint/default tests passed (872 passed,
+751 ignored). Its Docker image builds and passes production-ELF, UID65532 and
+unchanged React/credit checks. Package/workflow acceptance is still pending.
+The [global batch registry](../scripts/rust-milestone-batches/README.md) replaces
+individual case queues and retains M0/M1/M9 gates as well as all owner cohorts.
+
+The earlier opt-in component composition is
 [current892](../scripts/rust-component-checkpoints/current892/README.md).
 Its unsigned plugin comparisons and recording SQL-rejection correction are
 source-bound component evidence. The selected full package/performance reference
@@ -28,9 +36,9 @@ Main acceptance nor measured performance gains.
 | M3: formats and profiles | Streaming agent (`stream_http`), following M2 dependencies | Complete HLS/fMP4/profile, failover, cancellation and fanout matrix, real decoding and relevant paired measurements. |
 | M4: VOD/timeshift | Protocol/operations agent (`source_contract_finish`), after current plugin ownership gates | Complete ranges, seeks, catchup and session boundaries; retain unresolved counters/finalization/sharing differences and test packaged Main behavior. |
 | M5: control APIs | Core/streaming agent (`stream_http`) | Run the current combined Native special-settings cohorts against Source51, then late-reply/caller-loss/frame/shutdown gates; wire actual Main consumers and test React/account/channel workflows and API performance. |
-| M6: ingestion and jobs | Recording/jobs agent (`store_auth`) | Execute longer audio/video Native recording and held-result gates; finish Source-backed error/recovery/profile/scheduler/Series/default-job families and worker-inclusive measurements. |
+| M6: ingestion and jobs | Jobs agent (`milestone_jobs`) | Use the captured six TVG/four version Source cases; qualify Native TVG composition, implement configured-Series completed-parent handoff and complete scheduler/default families, then worker-inclusive measurements. Longer audio/video scoped evidence is already published. |
 | M7: outputs and integrations | Protocol/operations agent (`source_contract_finish`), with streaming dependencies | Finish Xtream/HDHR/XMLTV/M3U/realtime/WebSocket contracts, missing/stale/refresh behavior and recovery; qualify combined packaged workflows and workload measurements. |
-| M8: operations/plugins | Protocol/operations agent (`source_contract_finish`) | Finish frontend-disconnect, SQL Ready and concurrent-fetch ownership; qualify HTTPS/DNS/signature domains, discovery/install/run, backup/restore/rollback, sessions/CSRF and environment/startup/shutdown workflows. |
+| M8: operations/plugins | Protocol/operations agent (`milestone_ops`) | Qualify the composed Main API and remaining HTTPS/DNS/signature behavior, discovery/install/run, backup/restore/rollback, sessions/CSRF and environment/startup/shutdown. Four finite unsigned ownership cases are published;16 new Source transport observations retain their separate network-gate failure. |
 | M9: final acceptance | Primary agent with all three agents | Assemble the final committed source, complete prerequisites and full workflow/package/SDK checks, then restart/soak/cutover/rollback and representative full-graph paired performance. |
 
 ## Qualified groundwork for the milestone batches

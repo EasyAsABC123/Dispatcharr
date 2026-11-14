@@ -1,0 +1,323 @@
+{
+  "version": 1,
+  "full_milestone": true,
+  "application_execution_authorized": false,
+  "global_max_fixtures": 3,
+  "per_context_sequential_dependency_order": true,
+  "contexts": {
+    "ingestion-api": [
+      {
+        "id": "api202-publication",
+        "authority": "EPG-IMPORT-HTTP.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "scanner-first",
+        "authority": "scanner-logo",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "m3u-groups-single",
+        "authority": "scanner-m3u",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "channel-signal-tvg-programmes",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "refresh-local-positive",
+        "authority": "REFRESH-COMPLETE-WORKFLOW.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "programme-index",
+        "authority": "INDEX-TERMINAL-RESULTS.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "configured-series-positive",
+        "authority": "configured-recordings",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "configured-series-repeat",
+        "authority": "parented-recordings",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "local-logo-artwork-positive-repeat",
+        "authority": "recording-artwork",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "oneoff-beat-publication",
+        "authority": "clocked-recording-source",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "recording61-video-audio",
+        "authority": "recording-audio61",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "guide-current-output",
+        "authority": "REFRESH-COMPLETE-WORKFLOW.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "second-import-replaces-title",
+        "authority": "REFRESH-COMPLETE-WORKFLOW.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "remote-m3u-download-cache-compression",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "xc-stream-import",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "vod-import",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "python-regex-filters-general-hash",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "account-CSV-hash-overrides",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "schedules-direct-guide",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "matching-custom-dummy-offsets",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "stream-rehash-settings-callback",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "dvr-offset-reschedule-settings-callback",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      }
+    ],
+    "scheduler-default": [
+      {
+        "id": "scheduler-install-known-defaults",
+        "authority": "DATABASE-SCHEDULER-KNOWN-NATIVE.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "scheduler-tick-publication",
+        "authority": "DATABASE-SCHEDULER-MULTI-NATIVE.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "recurring-positive-repeat",
+        "authority": "configured-recordings",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "backend-cleanup-expiry",
+        "authority": "DEFAULT-TASKS-PLAN.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "stats-live-ghost",
+        "authority": "DEFAULT-TASKS-PLAN.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "scanner-empty-and-content",
+        "authority": "scanner-logo",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "account-warning-expiration",
+        "authority": "active-notifications",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "version503",
+        "authority": "DEFAULT-TASKS-PLAN.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "version200-update-no-update-malformed",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "scheduler-normal-stop",
+        "authority": "DATABASE-SCHEDULER-DRIVER.md",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "calendar-timezone-boundaries",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "default-job-graph",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      }
+    ],
+    "physical-restart": [
+      {
+        "id": "SQL-ErrorResponse-heldReady",
+        "authority": "recording-artwork",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "cache-reply-held",
+        "authority": "recording-artwork",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "event-reply-held",
+        "authority": "recording-artwork",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "result-reply-postend",
+        "authority": "recording-audio61",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "observer-loss-physical-retention",
+        "authority": "clocked-recording-current-physical",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "shutdown-drain",
+        "authority": "clocked-recording-current-physical",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "unknown-FIFO-head-unchanged",
+        "authority": "parented-recordings",
+        "required": true,
+        "Source_extension_needed": false
+      },
+      {
+        "id": "restart-preserves-unconsumed-head",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "longrunning-poison-recovery",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "import-partial-failure-retention",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "durable-retry-cancel-restart",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      },
+      {
+        "id": "playback-during-refresh",
+        "authority": "SOURCE_REQUIRED",
+        "required": true,
+        "Source_extension_needed": true
+      }
+    ]
+  },
+  "Source_extensions_one_batch": [
+    "per-channel TVG actual worker positive/repeat/missing/dummy/unmapped/refresh-held/owned-INSERT-failure",
+    "owned version endpoint200 update/no-update/malformed; retain existing503 authority",
+    "whole default startup/FIFO and shutdown/restart recovery if readiness permits"
+  ],
+  "no_repeat_old_Source_recording_cases": true,
+  "final_candidate_full_batch_after_integration_changes": true,
+  "unknown_head": "retain exact FIFO and halt dependent suffix",
+  "no_skip_as_pass": true,
+  "observations": [
+    "all task/backend/raw FIFO and clock fields",
+    "actual SQLState only when observed",
+    "model/effects/cache/Channels/events/file/media",
+    "all62tables59sequences501columns198constraints255indexes before/after",
+    "actualCLI/pipes/PIDgenerations/Origin/cleanup90"
+  ],
+  "source_setup_frame": {
+    "artifact": "artifacts/rust/parented-recordings-original-1/source-parented-recordings-private.json",
+    "raw_source_sha256": "50294172571d8e7fe1434756758381d5102f1b1fc425da6027231d82637e9d14",
+    "raw_frame_base64": "eyJib2R5IjogIlcxc3hYU3dnZTMwc0lIc2lZMkZzYkdKaFkydHpJam9nYm5Wc2JDd2dJbVZ5Y21KaFkydHpJam9nYm5Wc2JDd2dJbU5vWVdsdUlqb2diblZzYkN3Z0ltTm9iM0prSWpvZ2JuVnNiSDFkIiwgImNvbnRlbnQtZW5jb2RpbmciOiAidXRmLTgiLCAiY29udGVudC10eXBlIjogImFwcGxpY2F0aW9uL2pzb24iLCAiaGVhZGVycyI6IHsibGFuZyI6ICJweSIsICJ0YXNrIjogImFwcHMuZXBnLnRhc2tzLnBhcnNlX3Byb2dyYW1zX2Zvcl90dmdfaWQiLCAiaWQiOiAiODI1MGM5ZmYtY2ZmNC00MDdlLTk4ZjUtODMzMzdkNzE3MmY3IiwgInNoYWRvdyI6IG51bGwsICJldGEiOiBudWxsLCAiZXhwaXJlcyI6IG51bGwsICJncm91cCI6IG51bGwsICJncm91cF9pbmRleCI6IG51bGwsICJyZXRyaWVzIjogMCwgInRpbWVsaW1pdCI6IFszNjAwLCAzNTAwXSwgInJvb3RfaWQiOiAiODI1MGM5ZmYtY2ZmNC00MDdlLTk4ZjUtODMzMzdkNzE3MmY3IiwgInBhcmVudF9pZCI6IG51bGwsICJhcmdzcmVwciI6ICIoMSwpIiwgImt3YXJnc3JlcHIiOiAie30iLCAib3JpZ2luIjogImdlbjM0N0BlMmU3YmNhM2FkOGUiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fX0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICI4MjUwYzlmZi1jZmY0LTQwN2UtOThmNS04MzMzN2Q3MTcyZjciLCAicmVwbHlfdG8iOiAiNmNlYzJhNDctNDI0MC0zNzY0LTg1MzktZDMwNWRhY2U4NjM2IiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogImNlbGVyeSJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogImY5ZjA5NzRmLTIxYjYtNDc3OC1iYmJlLWJjZTE3NjcxYzgzZCJ9fQ==",
+    "authority": "producer wire only; body/SQL/task-result still unmeasured"
+  },
+  "currently_blocking": [
+    "Native TVG-programme whole task",
+    "version positive Source authority/runtime",
+    "normal defaultqueue configured-Series attachment",
+    "full poisoned-owner recovery/longrunning default worker"
+  ],
+  "ready_for_app": false,
+  "formal_criteria": "docs/rust-milestones.md#M6; full provider/guide/matching/jobs and performance scope, not recording subset",
+  "global_dispatch_owner": "Root, shared across all milestone owners",
+  "owner_private_concurrency_pool": false
+}

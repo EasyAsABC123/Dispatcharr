@@ -1,0 +1,490 @@
+{
+  "scope": "Qualified Source framework/API-key observations only; NOT full network gate, TCP ingress, Native, Main or milestone acceptance",
+  "Original_authors": "Dispatcharr original authors and dependency authors retain full application, algorithm and license credit.",
+  "raw_controller_exit": 1,
+  "raw_controller_passed": false,
+  "capture_only_recorder_passed": false,
+  "actual_Source_requests": 16,
+  "completed_captures": 16,
+  "observation_integrity": true,
+  "default_62_tables_59_sequences_literal_equal": true,
+  "owned_backends_after_Source": [],
+  "actual_direct_GPG_waits": [
+    {
+      "case": 9,
+      "wait_result": 0
+    },
+    {
+      "case": 9,
+      "wait_result": 0
+    },
+    {
+      "case": 10,
+      "wait_result": 0
+    },
+    {
+      "case": 10,
+      "wait_result": 0
+    },
+    {
+      "case": 11,
+      "wait_result": 0
+    },
+    {
+      "case": 11,
+      "wait_result": 256
+    },
+    {
+      "case": 12,
+      "wait_result": 512
+    },
+    {
+      "case": 13,
+      "wait_result": 0
+    },
+    {
+      "case": 13,
+      "wait_result": 512
+    },
+    {
+      "case": 15,
+      "wait_result": 0
+    },
+    {
+      "case": 15,
+      "wait_result": 0
+    },
+    {
+      "case": 16,
+      "wait_result": 0
+    },
+    {
+      "case": 16,
+      "wait_result": 0
+    }
+  ],
+  "GPG_observer_errors": 0,
+  "network": {
+    "full_gate_passed": false,
+    "observed_packets": 12236,
+    "kernel_packets": 12236,
+    "kernel_drops": 0,
+    "unknown_exception_frames": 9,
+    "unknown_frames_retained_in_full": true,
+    "no_reclassification": true
+  },
+  "fresh_exact_cleanup_queries": 5,
+  "all_host_CLI_generations_absent": true,
+  "cleanup_seconds": 12.160388399963267,
+  "raw_capture_sha256": "dbf350a89fcb8ba02ca48fdc451e10fe6735bb41c64fecfb6cc583cdd1684acd",
+  "raw_execution_report_sha256": "aec1e61b1cdacefa0f47c82e68b810352a09bd5c42a1356f04b407fe729acc1d",
+  "network_report_sha256": "db81f492d8e2f7a9f3c69e41262399c3506cf5622018aa7e7381d23ec5653085",
+  "outcomes": [
+    {
+      "index": 1,
+      "name": "trusted-ca-https",
+      "status": 200,
+      "response_body_sha256": "775185a04d1715df1f20252331f1047eba2c8df0ddd48eb4b668e19f456aa2eb",
+      "response_summary": {
+        "valid": true,
+        "signature_verified": null,
+        "errors": [],
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 2,
+      "name": "untrusted-ca-https",
+      "status": 200,
+      "response_body_sha256": "d585b3ec26f9484f8fe5f69830896d719980e4fd53f2120b81469ee9a8161013",
+      "response_summary": {
+        "valid": false,
+        "errors": [
+          "Could not connect to the server. Check the URL and your network connection."
+        ]
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 3,
+      "name": "hostname-mismatch-https",
+      "status": 200,
+      "response_body_sha256": "d585b3ec26f9484f8fe5f69830896d719980e4fd53f2120b81469ee9a8161013",
+      "response_summary": {
+        "valid": false,
+        "errors": [
+          "Could not connect to the server. Check the URL and your network connection."
+        ]
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 4,
+      "name": "https-redirect-trusted",
+      "status": 200,
+      "response_body_sha256": "775185a04d1715df1f20252331f1047eba2c8df0ddd48eb4b668e19f456aa2eb",
+      "response_summary": {
+        "valid": true,
+        "signature_verified": null,
+        "errors": [],
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 5,
+      "name": "dns-public-address",
+      "status": 200,
+      "response_body_sha256": "775185a04d1715df1f20252331f1047eba2c8df0ddd48eb4b668e19f456aa2eb",
+      "response_summary": {
+        "valid": true,
+        "signature_verified": null,
+        "errors": [],
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 6,
+      "name": "dns-loopback-refused",
+      "status": 200,
+      "response_body_sha256": "e2f4f42859d987cad075b7346e89c0d0a22133551b004ed9d4a281930afd69d5",
+      "response_summary": {
+        "valid": false,
+        "errors": [
+          "URL resolves to a non-routable address (127.0.0.1) and cannot be fetched."
+        ]
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 7,
+      "name": "dns-mixed-addresses-refused",
+      "status": 200,
+      "response_body_sha256": "e2f4f42859d987cad075b7346e89c0d0a22133551b004ed9d4a281930afd69d5",
+      "response_summary": {
+        "valid": false,
+        "errors": [
+          "URL resolves to a non-routable address (127.0.0.1) and cannot be fetched."
+        ]
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 8,
+      "name": "dns-second-resolution-rebind",
+      "status": 200,
+      "response_body_sha256": "775185a04d1715df1f20252331f1047eba2c8df0ddd48eb4b668e19f456aa2eb",
+      "response_summary": {
+        "valid": true,
+        "signature_verified": null,
+        "errors": [],
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 9,
+      "name": "gpg-valid-ascii",
+      "status": 200,
+      "response_body_sha256": "ca29afb975e0f5eaa27aec85a6394c38028ce6fa977a82fba967a5a97766a366",
+      "response_summary": {
+        "valid": true,
+        "signature_verified": true,
+        "errors": [],
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 10,
+      "name": "gpg-valid-unicode",
+      "status": 200,
+      "response_body_sha256": "62a4bf08118340d0a93896464ac07ad22e47bcf999a1e988c60a72a80648cc1a",
+      "response_summary": {
+        "valid": true,
+        "signature_verified": true,
+        "errors": [],
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 11,
+      "name": "gpg-invalid-signature",
+      "status": 200,
+      "response_body_sha256": "3a0d9df3193d18c2d592f8d7285c9a1d11aa6c0685f8333fb826e57d6730f5d6",
+      "response_summary": {
+        "valid": true,
+        "signature_verified": false,
+        "errors": [],
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 12,
+      "name": "gpg-invalid-public-key",
+      "status": 200,
+      "response_body_sha256": "775185a04d1715df1f20252331f1047eba2c8df0ddd48eb4b668e19f456aa2eb",
+      "response_summary": {
+        "valid": true,
+        "signature_verified": null,
+        "errors": [],
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 13,
+      "name": "gpg-official-fallback",
+      "status": 200,
+      "response_body_sha256": "3a0d9df3193d18c2d592f8d7285c9a1d11aa6c0685f8333fb826e57d6730f5d6",
+      "response_summary": {
+        "valid": true,
+        "signature_verified": false,
+        "errors": [],
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 14,
+      "name": "flat-shape-ignores-signature",
+      "status": 200,
+      "response_body_sha256": "775185a04d1715df1f20252331f1047eba2c8df0ddd48eb4b668e19f456aa2eb",
+      "response_summary": {
+        "valid": true,
+        "signature_verified": null,
+        "errors": [],
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        900,
+        true
+      ]
+    },
+    {
+      "index": 15,
+      "name": "create-trusted-signed",
+      "status": 201,
+      "response_body_sha256": "427babd59f0d92661e0b16760545e9894a9c2c7aadda313c8dc5ca6d3231aa57",
+      "response_summary": {
+        "signature_verified": true,
+        "id": 901,
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [
+          901
+        ],
+        "deleted_ids": [],
+        "changed_fields": {}
+      },
+      "actual_repo_sequence_before": [
+        900,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        901,
+        true
+      ]
+    },
+    {
+      "index": 16,
+      "name": "refresh-trusted-signed",
+      "status": 200,
+      "response_body_sha256": "5b19b83bd4393c8d695acc6fb9977da65d58409e4638661f34db1adced1bf8d5",
+      "response_summary": {
+        "signature_verified": true,
+        "id": 901,
+        "plugin_count": 0
+      },
+      "repo_changes": {
+        "added_ids": [],
+        "deleted_ids": [],
+        "changed_fields": {
+          "901": [
+            "last_fetched",
+            "updated_at"
+          ]
+        }
+      },
+      "actual_repo_sequence_before": [
+        901,
+        true
+      ],
+      "actual_repo_sequence_after": [
+        901,
+        true
+      ]
+    }
+  ],
+  "performance_measured": false
+}

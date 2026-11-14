@@ -1,0 +1,15 @@
+2026-11-14 14:55:24,093 WARNING py.warnings /dispatcharrpy/lib/python3.13/site-packages/celery/platforms.py:841: SecurityWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  warnings.warn(SecurityWarning(ROOT_DISCOURAGED.format(
+
+2026-11-14 14:55:24,180 INFO celery.worker.consumer.connection Connected to redis://:**@localhost:6379/8
+2026-11-14 14:55:24,187 INFO celery.apps.worker m6-whole-source@fixture ready.
+2026-11-14 14:55:24,342 INFO core.tasks New stable version available: 0.34.0 (current: 0.33.0)
+2026-11-14 14:55:24,351 INFO core.tasks New version notification created and sent via WebSocket
+2026-11-14 14:55:24,423 INFO core.tasks New stable version available: 0.34.0 (current: 0.33.0)
+2026-11-14 14:55:24,507 ERROR core.tasks Error checking for version updates: Invalid version: 'not-a-version'

@@ -1,0 +1,56 @@
+{
+  "passed": false,
+  "report": null,
+  "error": {
+    "type": "NotRegistered",
+    "message": "'core.tasks.check_for_version_update'",
+    "traceback": "Traceback (most recent call last):\n  File \"/m6-root/run_source_extension.py\", line 47, in main\n    report=execute(ctx);ctx.persist_partial('all10-source-cases-before-acceptance',report);accepted=validate(report);report['acceptance']=accepted;report['passed']=True\n  File \"/m6-root/source_extension.py\", line 58, in execute\n    run('version200-'+label,'core.tasks.check_for_version_update',expected={'status':'SUCCESS','result':None})\n    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/m6-root/source_extension.py\", line 34, in run\n    task_id=ctx.actual_natural_task_id(before,'apps.epg.tasks.parse_programs_for_tvg_id')if natural else ctx.enqueue_actual(task,args=list(args),kwargs={})\n                                                                                                         ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/m6-root/source_context.py\", line 60, in enqueue_actual\n    sent=self.app.tasks[task].apply_async(args=args,kwargs=kwargs)\n         ~~~~~~~~~~~~~~^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/registry.py\", line 18, in __missing__\n    raise self.NotRegistered(key)\ncelery.exceptions.NotRegistered: 'core.tasks.check_for_version_update'\n"
+  },
+  "all_actual_worker_settlements": [
+    {
+      "argv": [
+        "/dispatcharrpy/bin/celery",
+        "-A",
+        "m6_source_observer:app",
+        "worker",
+        "--pool=prefork",
+        "--concurrency=1",
+        "--queues=celery",
+        "--without-gossip",
+        "--without-mingle",
+        "--without-heartbeat",
+        "--loglevel=WARNING",
+        "--hostname=m6-whole-source@fixture"
+      ],
+      "pid": 255,
+      "starttime": "38842304",
+      "actual_exit": 0,
+      "actual_wait_completed": true,
+      "pipes_settled": true,
+      "forced": false,
+      "invalid": null,
+      "parent_PID_namespace": "pid:[4026533899]",
+      "worker_PID_namespace": "pid:[4026533899]",
+      "same_PID_namespace_as_observer": true,
+      "known_PID_generations": [
+        {
+          "pid": 255,
+          "starttime": "38842304",
+          "original_absent": true
+        },
+        {
+          "pid": 292,
+          "starttime": "38842417",
+          "original_absent": true
+        }
+      ]
+    }
+  ],
+  "origin_close": {
+    "thread_settled": true,
+    "all_request_records": []
+  },
+  "outer_host_default6259_Docker_CID_PID_cleanup_still_required": true,
+  "performance_verified": false,
+  "fullM6": false
+}

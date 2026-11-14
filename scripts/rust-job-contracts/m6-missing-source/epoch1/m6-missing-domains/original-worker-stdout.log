@@ -1,0 +1,20 @@
+2026-11-14 14:53:48,184 INFO dispatcharr.startup PostgreSQL: standard backend for Celery (Dispatcharr-celery-beat-255)
+2026-11-14 14:53:48,184 INFO dispatcharr.celery Celery configuring loggers with level: DEBUG
+ 
+ -------------- m6-whole-source@fixture v5.6.3 (recovery)
+--- ***** ----- 
+-- ******* ---- Linux-7.3.3-1-cachyos-x86_64-with-glibc2.43 2026-11-14 14:53:49
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         dispatcharr:0x7f075ab37230
+- ** ---------- .> transport:   redis://:**@localhost:6379/8
+- ** ---------- .> results:     redis://:**@localhost:6379/9
+- *** --- * --- .> concurrency: 1 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+
+worker: Warm shutdown (MainProcess)

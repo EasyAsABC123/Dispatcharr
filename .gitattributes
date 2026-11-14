@@ -427,3 +427,15 @@ scripts/rust-pluginrepo-contracts/unsigned-remaining-physical/closure-blobs/b92a
 
 # Preserve the exact whole-workspace test output.
 scripts/rust-integration/milestone-batch1/workspace.stdout whitespace=-blank-at-eof
+
+# Preserve exact captured worker output and pinned Source fixture bytes.
+scripts/rust-job-contracts/m6-missing-source/epoch1/command-012.stdout whitespace=-blank-at-eof
+scripts/rust-job-contracts/m6-missing-source/epoch1/command-019.stdout whitespace=-blank-at-eof
+scripts/rust-job-contracts/m6-missing-source/epoch1/m6-missing-domains/original-worker-stdout.log whitespace=-blank-at-eol
+scripts/rust-job-contracts/m6-missing-source/epoch2/command-012.stdout whitespace=-blank-at-eof
+scripts/rust-job-contracts/m6-missing-source/epoch2/command-019.stdout whitespace=-blank-at-eof
+scripts/rust-job-contracts/m6-missing-source/epoch2/m6-missing-domains/original-worker-stdout.log whitespace=-blank-at-eol
+scripts/rust-milestone-batches/m235/source_workflows/capture_common.py whitespace=-blank-at-eof
+scripts/rust-milestone-batches/m235/source_workflows/inputs/Original/core/api_views.py whitespace=-blank-at-eof
+scripts/rust-milestone-batches/m235/source_workflows/inputs/Original/core/tasks.py whitespace=-blank-at-eof
+scripts/rust-milestone-batches/m235/source_workflows/inputs/Original/dispatcharr/celery.py whitespace=-blank-at-eof

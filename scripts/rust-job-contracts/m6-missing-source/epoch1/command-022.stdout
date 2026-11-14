@@ -1,0 +1,298 @@
+[
+    {
+        "Id": "75911188f595d45f5df1b04bb451ebe8be6561b75b8d7a3d3ad7cce426937b03",
+        "Created": "2026-11-14T14:53:41.123624755Z",
+        "Path": "bash",
+        "Args": [
+            "/special-root/start.sh"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-14T14:53:41.286369743Z",
+            "FinishedAt": "2026-11-14T14:53:53.372277047Z"
+        },
+        "Image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "ResolvConfPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/75911188f595d45f5df1b04bb451ebe8be6561b75b8d7a3d3ad7cce426937b03/resolv.conf",
+        "HostnamePath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/75911188f595d45f5df1b04bb451ebe8be6561b75b8d7a3d3ad7cce426937b03/hostname",
+        "HostsPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/75911188f595d45f5df1b04bb451ebe8be6561b75b8d7a3d3ad7cce426937b03/hosts",
+        "LogPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/75911188f595d45f5df1b04bb451ebe8be6561b75b8d7a3d3ad7cce426937b03/75911188f595d45f5df1b04bb451ebe8be6561b75b8d7a3d3ad7cce426937b03-json.log",
+        "Name": "/dispatcharr-m6-source-a28ec513f9-baseline-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/home/justin/github/Dispatcharr/artifacts/rust/m6-source-missing-domains-1/Original:/app:ro",
+                "/home/justin/github/Dispatcharr/scripts/rust-milestone-batches/m235/source_workflows:/special-root:ro",
+                "/home/justin/github/Dispatcharr/scripts/rust-milestone-batches/m235/source_workflows/inputs:/health-root:ro",
+                "/home/justin/github/Dispatcharr/scripts/rust-milestone-batches/m6:/m6-root:ro",
+                "/home/justin/github/Dispatcharr/artifacts/rust/m6-source-missing-domains-1:/evidence:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 200,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "Tmpfs": {
+                "/data": "mode=1777,size=2147483648",
+                "/tmp": "mode=1777,size=268435456"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 1073741824,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 2147483648,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 256,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m6-source-missing-domains-1/Original",
+                "Destination": "/app",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m6-source-missing-domains-1",
+                "Destination": "/evidence",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/scripts/rust-milestone-batches/m235/source_workflows/inputs",
+                "Destination": "/health-root",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/scripts/rust-milestone-batches/m6",
+                "Destination": "/m6-root",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/scripts/rust-milestone-batches/m235/source_workflows",
+                "Destination": "/special-root",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "75911188f595",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "REDIS_DB=7",
+                "LANG=C.UTF-8",
+                "POSTGRES_DIR=/data/db",
+                "POSTGRES_PORT=5432",
+                "DISPATCHARR_LOG_DIR=/evidence/special-logs/default",
+                "PUID=1000",
+                "REDIS_PORT=6379",
+                "POSTGRES_PASSWORD=playback-fixture-only",
+                "REDIS_PASSWORD=playback-fixture-only",
+                "REDIS_HOST=127.0.0.1",
+                "POSTGRES_HOST=/var/run/postgresql",
+                "DISPATCHARR_ENV=aio",
+                "POSTGRES_DB=dispatcharr",
+                "PGID=1000",
+                "PYTHONPATH=/special-root:/app",
+                "REDIS_URL=redis://:playback-fixture-only@127.0.0.1:6379/7",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "REDISCLI_AUTH=playback-fixture-only",
+                "TZ=UTC",
+                "DJANGO_SECRET_KEY=playback-fixture-only",
+                "POSTGRES_USER=dispatch",
+                "LC_ALL=C.UTF-8",
+                "PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility",
+                "NVIDIA_VISIBLE_DEVICES=all",
+                "LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri",
+                "DEBIAN_FRONTEND=noninteractive",
+                "UV_PROJECT_ENVIRONMENT=/dispatcharrpy",
+                "VIRTUAL_ENV=/dispatcharrpy",
+                "UV_COMPILE_BYTECODE=1",
+                "UV_LINK_MODE=copy"
+            ],
+            "Cmd": null,
+            "Image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "bash",
+                "/special-root/start.sh"
+            ],
+            "Labels": {
+                "build_version": "DispatcharrBase version: base-20261103010601",
+                "com.docker.compose.config-hash": "f041616348475a02e18795fb701d0ca593c5ee8715327788e4073cb86e3c3afc",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "dispatcharr-m6-source-a28ec513f9",
+                "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/m6-source-missing-domains-1/compose.json",
+                "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/m6-source-missing-domains-1",
+                "com.docker.compose.service": "baseline",
+                "com.docker.compose.version": "2.40.3",
+                "maintainer": "SergeantPanda",
+                "org.opencontainers.image.authors": "SergeantPanda",
+                "org.opencontainers.image.created": "20261103010601",
+                "org.opencontainers.image.description": "Your ultimate IPTV & stream Management companion.",
+                "org.opencontainers.image.documentation": "https://dispatcharr.github.io/Dispatcharr-Docs/",
+                "org.opencontainers.image.licenses": "See repository",
+                "org.opencontainers.image.revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "org.opencontainers.image.source": "https://github.com/Dispatcharr/Dispatcharr",
+                "org.opencontainers.image.title": "dispatcharr",
+                "org.opencontainers.image.url": "https://github.com/Dispatcharr/Dispatcharr",
+                "org.opencontainers.image.vendor": "dispatcharr",
+                "org.opencontainers.image.version": "base-20261103010601"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "Networks": {
+                "none": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "5ee4ecd182027eacc0171a033ef6566a40913e574e1cf9e29da03a6b3b362235",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "MacAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "size": 3544,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

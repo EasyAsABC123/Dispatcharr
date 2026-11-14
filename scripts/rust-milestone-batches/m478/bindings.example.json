@@ -1,0 +1,141 @@
+{
+  "candidate": {},
+  "nodes": {
+    "tools/M8-transport-materials": {
+      "argv": [
+        "python",
+        "-B",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/prerequisites/assets/run.py",
+        "--execute-batch",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/prerequisites/asset-tool-output-1"
+      ],
+      "evaluator_argv": [
+        "python",
+        "-B",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/evaluate_tools.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/prerequisites/asset-tool-output-1"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "input_files": {
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/prerequisites/assets/input-index.json": "0de0bb26d489e6d3d635887d515f4e0bd0c086eeff33e1901b36fabd758d91f3"
+      },
+      "normal_seconds": 240,
+      "cleanup_seconds": 90,
+      "output_bytes": 3145728,
+      "environment": {
+        "CARGO_HOME": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/cargo",
+        "RUSTUP_HOME": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/rustup",
+        "RUSTUP_TOOLCHAIN": "1.90.0",
+        "DOCKER_CONFIG": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-config",
+        "DOCKER_HOST": "unix:///tmp/dispatcharr-docker.sock",
+        "PATH": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/cargo/bin:/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker:/home/justin/.codex/packages/standalone/releases/0.167.0-x86_64-unknown-linux-musl/codex-path:/home/justin/.codex/tmp/arg0-linux/codex-arg0Kfl3sV:/home/justin/.codex/packages/standalone/releases/0.167.0-x86_64-unknown-linux-musl/codex-path:/home/justin/.local/share/paseo-runtime/node-v22.23.2-linux-x64/bin:/home/justin/.local/bin:/home/justin/.local/share/paseo-runtime/node-v22.23.2-linux-x64/bin:/home/justin/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/var/lib/flatpak/exports/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
+      }
+    },
+    "source/plugin-TLS-DNS-GPG16": {
+      "argv": [
+        "python",
+        "-B",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/cohort.py",
+        "--execute-batch",
+        "--base-inputs",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m8-pluginrepo-manifest-fetch-source-executor-6/inputs",
+        "--asset-output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/prerequisites/asset-tool-output-1",
+        "--definition",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/plan.json",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-run-1-source16"
+      ],
+      "evaluator_argv": [
+        "python",
+        "-B",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/evaluate.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-run-1-source16"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "new_unmeasured_context_definition": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/plan.json",
+        "sha256": "dce18b09aa11ca02e7cf3665b309c3ecffe80506ad77e47dafa6363898dcae83",
+        "cases": 16,
+        "asset_binding": "actual generated keys from predeclared one-batch recipe; materialized literal body hashes BEFORE Sourcecalls"
+      },
+      "input_files": {
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/materialize.py": "b87294b5352c730449f44569e40fde21ff01b829c32098654c59c8c3657ab7a8",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/cohort.py": "8d4bed9280f8619352fbade124212bb9a1d8684431ea59918a7681fdd53df60a",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/evaluate.py": "4df71fb4917e4ebc1ae32f115a23d851d0a62e6dc27e071de279688b60d3ebf6",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/contract.py": "466c0698db72b5ad2a9a098bc8f2dcb87b74e22c59e9b0ee736a63db44cd1672",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/dns_server.py": "34bfbf20aec7b314b7d40d200ccd29948e46fe4f3f049393efa8de36c8083bd9",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/tls_origin.py": "b3bac20dc4c28532367d05d6cddbca362902bc5158ceded82cbf10850ab4123b",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/loopback_http.py": "959c964e58c413e46fe258fb754b3ad2275db6e7bac02408e57c46b2a9471e55",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/origin_supervisor.py": "e1f769918e94bc037772aef1cdebf509f928ad5994370768429904d076b9a56c",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/gpg_observer.py": "f47b73b847ca5025189edeeb8ff52071285a816af0e17e2ae24ef439b4df719e",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/source_fixture.py": "13caf5a0e53a3d6859b7091f9b39edc67a4b4be1ff8ec79784636ad24c8ec265",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/effects.py": "be26788b9e4efce3bea3a86697eed6ace89e24cf2a53f179303db168d1af5e73",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/seed_effects.py": "7ea9336ec68ebf350e90aae7bf65743e2111914a5af888cba87acb19ea625c34",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/capture_common.py": "84a31c6f5b2f8cbd05c6b43e83e4362dc3c6a967a38f5884cbce7c3752f40b1e",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/public_manifest.py": "851ed0bf77ae41a62f422d2ca78d2f08b0531dc1ee89eea597b29ee1766ce98f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/redis_channels.py": "f6302b2c1370e3d41bf551b9f5da0558a8077afeeb7bbcd7120d47e19fe63720",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/default_audit.py": "d4dd335baf6452e8475a1be4b17f2281b06eeca0bb6a56d145d99d3bafeeb72e",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/fixture_guards.py": "d211690ed2274295a7843759a7feb48da96a4519b7b520e95ed3eeeced3a1f13",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/network_snapshot.py": "31f69388d4e548dad7fb45a2eb7b316b0c2df9769abd966bf7a2e4c4ba139e83",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/bounded_process.py": "0ca7491087ae756d667dbb9dc1655dbb0f8b0fd0c32b8bfa6592b1f7a16f9867",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/bounded_stop.py": "8b1d619c16271a54012f270b9d886b3ef160fe2157ffc238c675cc1188a86a83",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/network_guard.py": "194f42b95824f67dadbc1e4d5d93a86c1c580309119ac66e82aef46755d7bf20",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/input_guards.py": "917db9873454d87c040782738f3804c367a8308373eda89e47ce061c038fed6d",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/tooling_guard.py": "ad8143bacac0d1d4da45d94b3a10df65347877c074be1427310bbd25d6e0fcf5",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/guest_preflight.py": "b63fba9d047be0adff90bd021a6e81a5deec5bfcb50d398194b951cfdca10f1f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/start-storage.sh": "b6dbfef4cab1400ab328a0ee1c53abda23aa7a564f9b4ffd42aa24250fe2f2e7",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/owned-resolv.conf": "38380b2413298bd1dd7691c9ce08e904998b4d01713424aee320fa7df1bb5bc3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/run.py": "dc72748cf147e3c54e094d79735043b7ae53763f333ea040021fe6d9d0772431",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/network_observer.py": "a219c4d1a80c57267a6f934b7b439c8ea5da172fc8e0c41a3955350033afd8f3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/controller/expand_plan.py": "8950304c80ffc95a600bbb758d43f5bc0e1d261f7052d923517ed40ee8e0fc63",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/manifest-ascii.json": "83094b53ad4b19fcf47bd9b2f7575f0cb151c90d26297870fddfe810f90ae6c4",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/manifest-unicode.json": "dd75c7df4bd601951cd36a0397299ecb01b1638ed7753a95f38d327acbed200b",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/plan.json": "dce18b09aa11ca02e7cf3665b309c3ecffe80506ad77e47dafa6363898dcae83",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/contract.py": "466c0698db72b5ad2a9a098bc8f2dcb87b74e22c59e9b0ee736a63db44cd1672",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/test_contract.py": "23dd4d15bf5d8e59977b16f70def8d3a9117ee1d667401be0882b7ec46d30955",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/README.md": "b9e79441100050d0f2561eae7eeac15f62527307a147b60c8ab013b229238ef7",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/dependency-capture-proposal.json": "bc3057af5ca3a0231d7c152cb723bef3c9d60258fc12b4870aff94727d1b0519",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/Original-proof.json": "efce18cf5f6aae2bb6f2338568ee83715fe2faaa2291cf49d83ce262659a1be4",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/seal.json": "074e0869f82b2e7e1651627b858d240b1c76709490993591b8f7d5729a964ce6",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/Original/LICENSE": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/Original/core/http_security.py": "ba765d4d9297bbc708d476eb9309760fdef4ac8242e69a2e457d7f2a4ea09525",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/Original/apps/plugins/api_views.py": "2f948dface3b0bdece923fdaac3d709754f1c6a65c95b3445471b0a2f9e7cb46",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/Original/apps/plugins/api_urls.py": "d3072e42ee78bcc546f390e45f1190885f8b8eec365f82a0ad6ab033ab07ef45",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/Original/apps/plugins/serializers.py": "1623b004a80cb943070cbffde0da9e43f3439b2fe69bd1b9faebf2419b1b7326",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/source/transport16/definition/Original/apps/plugins/models.py": "f013c9a70afd71ffd55cc90406354a694b9b9836d905c58e3869152b13035cf7"
+      },
+      "normal_seconds": 1200,
+      "cleanup_seconds": 90,
+      "output_bytes": 67108864,
+      "environment": {
+        "CARGO_HOME": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/cargo",
+        "RUSTUP_HOME": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/rustup",
+        "RUSTUP_TOOLCHAIN": "1.90.0",
+        "DOCKER_CONFIG": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-config",
+        "DOCKER_HOST": "unix:///tmp/dispatcharr-docker.sock",
+        "PATH": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/cargo/bin:/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker:/home/justin/.codex/packages/standalone/releases/0.167.0-x86_64-unknown-linux-musl/codex-path:/home/justin/.codex/tmp/arg0-linux/codex-arg0Kfl3sV:/home/justin/.codex/packages/standalone/releases/0.167.0-x86_64-unknown-linux-musl/codex-path:/home/justin/.local/share/paseo-runtime/node-v22.23.2-linux-x64/bin:/home/justin/.local/bin:/home/justin/.local/share/paseo-runtime/node-v22.23.2-linux-x64/bin:/home/justin/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/var/lib/flatpak/exports/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
+      }
+    }
+  },
+  "not_an_execution_authorization": "Root merges with one globally reviewed milestone matrix and supplies current candidate/other node bindings",
+  "retained_results": {
+    "tools/M8-transport-materials": {
+      "actual_controller_exit": 0,
+      "independent_evaluator_exit": 0,
+      "result": "/home/justin/github/Dispatcharr/artifacts/rust/m4-m7-m8-wide-batch-1/prerequisites/asset-tool-output-1/execution-report.json",
+      "do_not_repeat_to_green_collector": true
+    },
+    "source/plugin-TLS-DNS-GPG16": {
+      "actual_controller_exit": 1,
+      "actual_calls": 16,
+      "observation_integrity": true,
+      "full_network_gate": false,
+      "result": "artifacts/rust/m4-m7-m8-wide-batch-run-2-source16/execution-report.json",
+      "do_not_repeat_measured_Source": true
+    }
+  }
+}

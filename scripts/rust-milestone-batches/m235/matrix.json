@@ -1,0 +1,1498 @@
+{
+  "schema": 1,
+  "batch": "M2-M3-M5-wide-1",
+  "dispatch_authorized": false,
+  "unit_of_acceptance": "complete required milestone matrix on one recorded integration candidate",
+  "global_scheduling": "Root global dispatcher only, atmost3functionalfixtures acrossallagents; heavy/resourceexclusive. This module never starts its own parallelpool.",
+  "candidate_binding": "ONEnewcombinedcandidate; current892component or oldimage62/882 doesnotestablishMain",
+  "package_template": {
+    "path": "artifacts/rust/image57-package-plan-1/plan.json",
+    "sha256": "b6ea8e63d8d606009fcc4aa42d33a5cc23801afec8eede2994310247905737d5",
+    "groups": 28,
+    "stale_additional_Main55_labels_NOT_inherited": true
+  },
+  "nodes": [
+    {
+      "id": "package/baseline-all",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "baseline-all",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/baseline-all",
+        "--candidate-image",
+        "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--contract-suites",
+        "all"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/baseline-all",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/baseline-all"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/proxy-auth",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "proxy-auth",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/proxy-auth",
+        "--candidate-image",
+        "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--contract-suites",
+        "proxy_auth",
+        "--trusted-proxy-fixture"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/proxy-auth",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/proxy-auth"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/auth-hash",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "auth-hash",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/auth-hash",
+        "--candidate-image",
+        "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--contract-suites",
+        "auth_hash",
+        "--trusted-proxy-fixture"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/auth-hash",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/auth-hash"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/live-react-stats",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "live-react-stats",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-live-browser/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/live-react-stats",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/live-react-stats",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/live-react-stats"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/user-agent",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "user-agent",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/run_user_agent_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/user-agent",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/user-agent",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/user-agent"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/output-profile",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "output-profile",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/run_output_profile_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/output-profile",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/output-profile",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/output-profile"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/profile-restart",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "profile-restart",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/run_output_profile_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/profile-restart",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--redis-restart"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/profile-restart",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/profile-restart"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/guide-grid-packaged",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "guide-grid-packaged",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-epg-contracts/control_reads.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/guide-grid-packaged",
+        "--candidate-image",
+        "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--candidate-grid-wire"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/guide-grid-packaged",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/guide-grid-packaged"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": {
+        "UTC_minute_range_inclusive": [
+          0,
+          35
+        ],
+        "check_before_output_or_fixture": true,
+        "Source_ten_minute_hour_guard_unchanged": true,
+        "Source_five_minute_expiry_unchanged": true,
+        "no_retry_or_clock_normalization": true
+      },
+      "performance": false
+    },
+    {
+      "id": "package/current-packaged",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "current-packaged",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-epg-contracts/control_reads.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/current-packaged",
+        "--candidate-image",
+        "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--candidate-current"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/current-packaged",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/current-packaged"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/m4-functional",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "m4-functional",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-m4-perf/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/m4-functional",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/m4-functional",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/m4-functional"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/clean-install",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "clean-install",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/run_clean_install.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/clean-install",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/clean-install",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/clean-install"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/category-browser",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "category-browser",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/category-browser",
+        "--mode",
+        "http",
+        "--packaged-categories",
+        "--category-closed-gaps",
+        "--category-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/category-browser",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/category-browser"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/unified-HTML-browser",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "unified-HTML-browser",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/unified-HTML-browser",
+        "--mode",
+        "http",
+        "--packaged-unified",
+        "--packaged-html",
+        "--unified-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/unified-HTML-browser",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/unified-HTML-browser"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/complete-refresh-original",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "pinned-Source workflow reference",
+      "runner": "existing-package",
+      "template_group": "complete-refresh-original",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-job-contracts/run_refresh_workflow.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/complete-refresh-original"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/complete-refresh-original",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/complete-refresh-original"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false,
+      "same_global_lease_chain": [
+        "package/complete-refresh-original",
+        "package/complete-refresh"
+      ],
+      "reference_max_age_seconds": 900
+    },
+    {
+      "id": "package/complete-refresh",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "complete-refresh",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-job-contracts/run_refresh_workflow.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/complete-refresh",
+        "--manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--reference",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/complete-refresh-original"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [
+        "package/complete-refresh-original"
+      ],
+      "fixture_group": "isolated-package/complete-refresh",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/complete-refresh"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/static-Chrome-HTML-browser",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "static-Chrome-HTML-browser",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/static-Chrome-HTML-browser",
+        "--mode",
+        "http",
+        "--packaged-unified",
+        "--packaged-html",
+        "--packaged-static",
+        "--unified-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/static-Chrome-HTML-browser",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/static-Chrome-HTML-browser"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/packaged-provider-actions",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "packaged-provider-actions",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-vod-api-contracts/run_provider_actions_packaged.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/packaged-provider-actions",
+        "--mode",
+        "http",
+        "--packaged-provider-actions",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/packaged-provider-actions",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/packaged-provider-actions"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/packaged-cached-provider-info",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "packaged-cached-provider-info",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-vod-api-contracts/run_packaged_cached_info.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/packaged-cached-provider-info",
+        "--mode",
+        "http",
+        "--packaged-cached-info",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/packaged-cached-provider-info",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/packaged-cached-provider-info"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/channel-logos",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "channel-logos",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/run_logo_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/channel-logos",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/channel-logos",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/channel-logos"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/packaged-vod-images",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "packaged-vod-images",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-vod-api-contracts/run_packaged_vod_images.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/packaged-vod-images",
+        "--mode",
+        "http",
+        "--packaged-vod-images",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/packaged-vod-images",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/packaged-vod-images"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/provider-modal-browser",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "provider-modal-browser",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-vod-api-contracts/run_provider_modal_browser.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/provider-modal-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/provider-modal-browser",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/provider-modal-browser"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/fresh-Original17capture",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "pinned-Source CLI authority",
+      "runner": "existing-package",
+      "template_group": "fresh-Original17capture",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-operator-contracts/run_source.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/original17"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/fresh-Original17capture",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/fresh-Original17capture"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false,
+      "source_reuse_allowed": true
+    },
+    {
+      "id": "package/shipped-safe17",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-CLI",
+      "runner": "existing-package",
+      "template_group": "shipped-safe17",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-operator-contracts/run_packaged.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/safe17",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--source-cases",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/original17/operator-cli-source.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [
+        "package/fresh-Original17capture"
+      ],
+      "fixture_group": "isolated-package/shipped-safe17",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/shipped-safe17"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/shipped-createsuperuser22",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-CLI",
+      "runner": "existing-package",
+      "template_group": "shipped-createsuperuser22",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-operator-contracts/createsuperuser-packaged/run_source.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/create22",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/shipped-createsuperuser22",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/shipped-createsuperuser22"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/strict-typed154",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "offline-comparison",
+      "runner": "existing-package",
+      "template_group": "strict-typed154",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-operator-contracts/createsuperuser-native/verify.py",
+        "--source",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-operator-contracts/createsuperuser-native/source-createsuperuser-4.json",
+        "--native",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/create22/operator-cli-source.json"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [
+        "package/shipped-createsuperuser22"
+      ],
+      "fixture_group": "isolated-package/strict-typed154",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": false,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/strict-typed154"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/sharedTS18",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "sharedTS18",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/shared_ts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/sharedTS18",
+        "--candidate-image",
+        "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "stop",
+        "owner-crash",
+        "--require-active-metadata"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [],
+      "fixture_group": "isolated-package/sharedTS18",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": true,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/sharedTS18"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/sharedTS6-all-down",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "sharedTS6-all-down",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/shared_ts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/sharedTS6-all-down",
+        "--candidate-image",
+        "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--backends",
+        "candidate",
+        "--cases",
+        "all-workers-down",
+        "--require-active-metadata"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [
+        "package/sharedTS18"
+      ],
+      "fixture_group": "isolated-package/sharedTS6-all-down",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": true,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/sharedTS6-all-down"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "package/retention100",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "production-Main",
+      "runner": "existing-package",
+      "template_group": "retention100",
+      "template_argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support/scripts/rust-integration/retention_probe.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-packaged-matrix-1/retention100",
+        "--candidate-image",
+        "sha256:fc5ea2aba28f86a3ebf3672f6bf8d874a6f79b2d9dd4c8a1efb8993de680375a",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image57-committed-build-1/build.json",
+        "--expected-local-limit",
+        "4194304",
+        "--late-history-viewers",
+        "100"
+      ],
+      "template_cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image54-package-plan-1/support",
+      "depends_on": [
+        "package/sharedTS6-all-down"
+      ],
+      "fixture_group": "isolated-package/retention100",
+      "reuse_constraint": "Existing controller owns its full Compose lifetime/SQL schema and finally-down; safe reset interface is not exposed. Reuse image/support; retain its many-case cohort.",
+      "exclusive_heavy": true,
+      "implementation": "available",
+      "assertions": "Unchanged controller semantic assertions, original budgets, actual report scopes/counts and independent cleanup; no forced24/14 count.",
+      "input_requires": [
+        "candidate",
+        "package-binding/retention100"
+      ],
+      "evidence_scope": "Current candidate only after actual execution; oldimage57 is template/historical evidence",
+      "clock_guard": null,
+      "performance": false
+    },
+    {
+      "id": "source/cache-and-profile-contexts",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "pinned-Source framework/helpers",
+      "runner": "source-workflow",
+      "implementation": "available-source-capture-adapter",
+      "depends_on": [],
+      "fixture_group": "Source-reference-management",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": false,
+      "assertions": "One genuinely cold TS-first context; relevant cache timestamp expiry; record Base-inherited versus TS-owned state and actual wall/monotonic; newStreamProfile18+owner6. Reuse Source51/32/Output24 authority, not requests. Actual wire hold2.4\u20132.75s; first TS-own pre-load stamp expired while post-load age<10. Literal Source values remain observations; no outcome-basedcases.",
+      "source_authority": "SourceTS1 is Base-first inherited-hit only; cold/actual-expiry unmeasured. SourceOutput24 is output tokenization only.",
+      "input_requires": [
+        "source-workflow-binding"
+      ],
+      "performance": false,
+      "source_scope": "NewAPIClient1 +direct5/accessor6 +StreamProfile18/owner6, no TCP/media/Main",
+      "budgets": {
+        "bootstrap": 180,
+        "cache_guest": 40,
+        "profile_guest": 60,
+        "physical_GET_hold": 2.4,
+        "total": 540,
+        "cleanup": 90,
+        "CLI_each_pipe": 1048576
+      }
+    },
+    {
+      "id": "native/proxy-health",
+      "milestones": [
+        "M2",
+        "M5"
+      ],
+      "entrypoint": "actual Engine hook and shared Core context",
+      "runner": "component-workflow",
+      "implementation": "uncompiled",
+      "depends_on": [
+        "source/cache-and-profile-contexts"
+      ],
+      "fixture_group": "native-control-graph",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": false,
+      "assertions": "Use real Engine health decisions, same-context cache hit with warmBase+three held writers/no fifth token, cold/load-expiry semantics, read/drop, delayedreply/callerloss/shutdown. TypedTS behavior follows actual Source contexts.",
+      "source_authority": "SourceTS1 inheritedBase8/10/60\u21923/4/5, finalage9.71075NOTexpiry; newcold/expiry cells in Source node.",
+      "input_requires": [
+        "component",
+        "workflow-binding/native/proxy-health"
+      ],
+      "performance": false
+    },
+    {
+      "id": "native/core-normal51",
+      "milestones": [
+        "M5"
+      ],
+      "entrypoint": "real Core+RealtimeBus component",
+      "runner": "component-workflow",
+      "implementation": "available",
+      "depends_on": [],
+      "fixture_group": "native-control-graph",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": false,
+      "assertions": "Collect all51 before comparison, actual290controls, real channels/tasks, wholedefault62/59+11/DB7; retain previous49match host1 and new51pass on890, no transfertoMain.",
+      "source_authority": "Source51 actual immutable sixcohorts/onecapture; do not replay.",
+      "input_requires": [
+        "component",
+        "workflow-binding/native/core-normal51"
+      ],
+      "performance": false
+    },
+    {
+      "id": "native/core-late-faults",
+      "milestones": [
+        "M5"
+      ],
+      "entrypoint": "real Core+Redis+PG+Bus component",
+      "runner": "component-workflow",
+      "implementation": "fixture-needed",
+      "depends_on": [],
+      "fixture_group": "native-control-graph",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": false,
+      "assertions": "Actual late Redis protocol reply/lostreply/caller loss/shutdown, same4slots including warmcache1, error-frame clones, physicalReady and broker publication ownership; no replay/inferredsuccess.",
+      "source_authority": "Core32+7 and boundedREST32+6 are distinct historical prefixes; Source51 normal excludes faults.",
+      "input_requires": [
+        "component",
+        "workflow-binding/native/core-late-faults"
+      ],
+      "performance": false
+    },
+    {
+      "id": "Main/core-settings-workflow",
+      "milestones": [
+        "M5"
+      ],
+      "entrypoint": "production-Main+unchangedReact",
+      "runner": "Main-workflow",
+      "implementation": "not-assembled",
+      "depends_on": [
+        "native/proxy-health"
+      ],
+      "fixture_group": "Main-control-and-React",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": false,
+      "assertions": "CollectionGET existingroute + deliberate detailGET replacement, completeSource32+special51 roles/shapes/effects, callbackrealconsumer, actualcacheknobhealth consumer, Reactsettings save/read/change; defaultandownedSQL/bodyclone/SIGTERM.",
+      "source_authority": "Reuse exactSource32/51/Source12; no component-as-Main inference.",
+      "input_requires": [
+        "candidate",
+        "workflow-binding/Main/core-settings-workflow"
+      ],
+      "performance": false
+    },
+    {
+      "id": "Main/active-profile-status-probes",
+      "milestones": [
+        "M2",
+        "M3"
+      ],
+      "entrypoint": "production-Main HTTP",
+      "runner": "safe-known-failure-probes",
+      "implementation": "501-unimplemented",
+      "depends_on": [],
+      "fixture_group": "Main-media-and-React",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": false,
+      "assertions": "Issue real safe activeOutputProfile TS and HLS requests against the bound candidate; compare to retained or newly captured Source status. Preserve501 as failure, never skip/pass.",
+      "source_authority": "Source code predicts successful profile delivery; real active-media Source authority is a required batch cell, not implied by argv24.",
+      "input_requires": [
+        "candidate",
+        "workflow-binding/Main/active-profile-status-probes"
+      ],
+      "performance": false,
+      "safely_collect_even_when_feature_missing": true
+    },
+    {
+      "id": "native/profile-delivery",
+      "milestones": [
+        "M3"
+      ],
+      "entrypoint": "production-Main FFmpeg/VLC process graph",
+      "runner": "Main-workflow",
+      "implementation": "501-unimplemented",
+      "depends_on": [
+        "source/cache-and-profile-contexts",
+        "source/media-profile-and-format-workflows"
+      ],
+      "fixture_group": "Main-media-and-React",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": false,
+      "assertions": "Actual supported argument/process delivery; two equivalent viewers share one(channel,profile) process; distinctprofile getsdistinctpipeline; actualPID/start,pipe/Rediskeys/byteprogress, sourcechange/exit/restart/cancellation/fullA/Vdecode.",
+      "source_authority": "Output24 tokenization; newStream18+owner6 still no delivery. Requires new real Source workflow.",
+      "input_requires": [
+        "candidate",
+        "workflow-binding/native/profile-delivery"
+      ],
+      "performance": false
+    },
+    {
+      "id": "native/HLS-fMP4-workflows",
+      "milestones": [
+        "M3"
+      ],
+      "entrypoint": "production-Main+decoder/player",
+      "runner": "Main-workflow",
+      "implementation": "partly-implemented",
+      "depends_on": [],
+      "fixture_group": "Main-media-and-React",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": false,
+      "assertions": "HLS capability/init/playlist/segment/sessionstop, expiry/reconnect/coldwaiter/discontinuity/ownerrestart; fMP4 init/fragments/EOF/fullbothstreamdecode and heldframe/processshutdown. Profile501 is an explicit failure cell.",
+      "source_authority": "RetainedHLS2145/22decode andfMP4582+oldHTTP6 are component/history, not currentMain.",
+      "input_requires": [
+        "candidate",
+        "workflow-binding/native/HLS-fMP4-workflows"
+      ],
+      "performance": false
+    },
+    {
+      "id": "Main/lifecycle-fault-workflow",
+      "milestones": [
+        "M2"
+      ],
+      "entrypoint": "production-Main two workers+real media",
+      "runner": "Main-workflow",
+      "implementation": "partly-implemented",
+      "depends_on": [],
+      "fixture_group": "Main-media-and-React",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": false,
+      "assertions": "Authmatrix/capacity/siblingclose/rejoin/failover/stall/source death/rollback/cancel/stop plus default counters, timers, physical owner cleanup; no Sourcecounterparity inference.",
+      "source_authority": "Reuse qualified sharedTS24/allDown14/retention100 and Source outage literal limits; execute missing combinations only.",
+      "input_requires": [
+        "candidate",
+        "workflow-binding/Main/lifecycle-fault-workflow"
+      ],
+      "performance": false
+    },
+    {
+      "id": "Main/React-cross-workflows",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "unchanged React on production Main",
+      "runner": "Main-workflow",
+      "implementation": "partly-implemented",
+      "depends_on": [
+        "native/proxy-health"
+      ],
+      "fixture_group": "Main-control-and-React",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": false,
+      "assertions": "Real login/profile/channel/settings and liveview stats/stop/error, format switching, activeprofile selection; no mocked browser backend; all observed source/data versions.",
+      "source_authority": "Existingpackage liveReact/category/unified/staticChrome/providerModal are reused by sharedID, not rerunoncepermilestone.",
+      "input_requires": [
+        "candidate",
+        "workflow-binding/Main/React-cross-workflows"
+      ],
+      "performance": false
+    },
+    {
+      "id": "Main/accounts-auth-and-channels",
+      "milestones": [
+        "M5"
+      ],
+      "entrypoint": "production-Main+unchangedReact",
+      "runner": "Main-workflow",
+      "implementation": "partly-implemented",
+      "depends_on": [],
+      "fixture_group": "Main-control-and-React",
+      "reuse_constraint": "Reuse same SQL/auth/browser cohort with explicit scoped row resets; no boot per case.",
+      "exclusive_heavy": false,
+      "assertions": "Setup/login/proxy-login/logout/APIkeys/JWTrefresh/groups/appdata, role visibility/trustedproxy/timezone/headerprecedence; channel/profile/group/logo/filter/sort/page/default/constraint/validation workflows. Reuse all existing package API/browser cases, then actual missing production interfaces.",
+      "source_authority": "Existing Source register/actual retained API authorities; unmeasured clauses remain batch Source cells, never inferred from tests count.",
+      "input_requires": [
+        "candidate",
+        "workflow-binding/Main/accounts-auth-and-channels"
+      ],
+      "performance": false
+    },
+    {
+      "id": "Main/settings-task-consumers",
+      "milestones": [
+        "M5"
+      ],
+      "entrypoint": "production-Main+unchangedReact",
+      "runner": "Main-workflow",
+      "implementation": "default-workers-unassembled",
+      "depends_on": [
+        "m6/default-job-graph"
+      ],
+      "fixture_group": "Main-control-and-React",
+      "reuse_constraint": "Reuse same SQL/auth/browser cohort with explicit scoped row resets; no boot per case.",
+      "exclusive_heavy": false,
+      "assertions": "Real stream rehash and DVR offset reschedule publication AND actual downstream consumer/effect completion with FIFO order; global policy change/denial/restoration; no no-op.delay/no defaultworkerclaim.",
+      "source_authority": "Existing Source register/actual retained API authorities; unmeasured clauses remain batch Source cells, never inferred from tests count.",
+      "input_requires": [
+        "candidate",
+        "workflow-binding/Main/settings-task-consumers"
+      ],
+      "performance": false
+    },
+    {
+      "id": "Main/SQLite-compatibility",
+      "milestones": [
+        "M5"
+      ],
+      "entrypoint": "production-Main+unchangedReact",
+      "runner": "Main-workflow",
+      "implementation": "unsupported-unresolved",
+      "depends_on": [
+        "external/M9/datastore-scope"
+      ],
+      "fixture_group": "Main-control-and-React",
+      "reuse_constraint": "Reuse same SQL/auth/browser cohort with explicit scoped row resets; no boot per case.",
+      "exclusive_heavy": false,
+      "assertions": "Required SQLite/source datastore behavior or explicit user-approved supported-domain disposition. Postgres component success doesnotcoverSQLite.",
+      "source_authority": "Existing Source register/actual retained API authorities; unmeasured clauses remain batch Source cells, never inferred from tests count.",
+      "input_requires": [
+        "candidate",
+        "workflow-binding/Main/SQLite-compatibility"
+      ],
+      "performance": false
+    },
+    {
+      "id": "source/media-profile-and-format-workflows",
+      "milestones": [
+        "M2",
+        "M3"
+      ],
+      "entrypoint": "pinned-Source production HTTP/media",
+      "runner": "Source-media-workflow",
+      "implementation": "fixture-adapter-needed",
+      "depends_on": [
+        "source/cache-and-profile-contexts"
+      ],
+      "fixture_group": "Source-media-and-React",
+      "reuse_constraint": "One Source live bootstrap for TS/profile/HLS/fMP4 cells, distinct owned channels/profiles where teardown would mutate a sibling; no full app per assertion.",
+      "exclusive_heavy": false,
+      "assertions": "Real FFmpeg/VLC supported argv and codec output, equivalent-viewer sharedPID/perprofilekeys, source switch/processfailure/recovery and physicalstop. Capture method/Range/ContentRange/originactiveGET ledger and actualA/Vdecode; no TCPequalsviewer inference.",
+      "source_authority": "Output24 andStream18/owner6 are not process-delivery authority. ExistingSourceTS references reused; newactiveprofile/formatdomains only.",
+      "input_requires": [
+        "source-media-fixture-binding"
+      ],
+      "performance": false
+    },
+    {
+      "id": "Main/input-profile-and-provider-probes",
+      "milestones": [
+        "M2",
+        "M3"
+      ],
+      "entrypoint": "production-Main HTTP",
+      "runner": "safe-known-failure-probes",
+      "implementation": "501-unimplemented",
+      "depends_on": [],
+      "fixture_group": "Main-media-and-React",
+      "reuse_constraint": "Use distinct preseeded owned channels in the same production fixture; capture independent status failures without restarting the stack.",
+      "exclusive_heavy": false,
+      "assertions": "Actual non-Proxy input profile request, non-STD/credential-transform and credential-scoped provider-capacity domains must expose existing501 refusal as failure against measured Source or explicitly code-derived expectedstatus. Do not hide Store.resolve_channel STD/identity/lockedProxy-only restrictions.",
+      "source_authority": "Store.playback.rs currently supports only active lockedProxy, STD identity mappings and no credential server-group pooling. ExistingSource credential/model authorities are not liveMain acceptance.",
+      "input_requires": [
+        "candidate",
+        "workflow-binding/Main/input-profile-and-provider-probes"
+      ],
+      "performance": false,
+      "safely_collect_even_when_feature_missing": true
+    },
+    {
+      "id": "performance/M2-M3-M5",
+      "milestones": [
+        "M2",
+        "M3",
+        "M5"
+      ],
+      "entrypoint": "whole declared service graph",
+      "runner": "performance",
+      "implementation": "blocked-functional-prerequisites",
+      "depends_on": [
+        "package/baseline-all",
+        "package/proxy-auth",
+        "package/auth-hash",
+        "package/live-react-stats",
+        "package/user-agent",
+        "package/output-profile",
+        "package/profile-restart",
+        "package/guide-grid-packaged",
+        "package/current-packaged",
+        "package/m4-functional",
+        "package/clean-install",
+        "package/category-browser",
+        "package/unified-HTML-browser",
+        "package/complete-refresh-original",
+        "package/complete-refresh",
+        "package/static-Chrome-HTML-browser",
+        "package/packaged-provider-actions",
+        "package/packaged-cached-provider-info",
+        "package/channel-logos",
+        "package/packaged-vod-images",
+        "package/provider-modal-browser",
+        "package/fresh-Original17capture",
+        "package/shipped-safe17",
+        "package/shipped-createsuperuser22",
+        "package/strict-typed154",
+        "package/sharedTS18",
+        "package/sharedTS6-all-down",
+        "package/retention100",
+        "source/cache-and-profile-contexts",
+        "native/proxy-health",
+        "native/core-normal51",
+        "native/core-late-faults",
+        "Main/core-settings-workflow",
+        "Main/active-profile-status-probes",
+        "native/profile-delivery",
+        "native/HLS-fMP4-workflows",
+        "Main/lifecycle-fault-workflow",
+        "Main/React-cross-workflows",
+        "Main/accounts-auth-and-channels",
+        "Main/settings-task-consumers",
+        "Main/SQLite-compatibility",
+        "source/media-profile-and-format-workflows",
+        "Main/input-profile-and-provider-probes"
+      ],
+      "fixture_group": "paired-resource",
+      "reuse_constraint": "Reuse this owned cohort; ordered cells retain before/after state and explicit initialization. No app per case.",
+      "exclusive_heavy": true,
+      "assertions": "Relevant milestone workloads/budgets after functional matrix; every participating API/worker/PG/Redis/media process and useful work. Quiet global lease; no image57 gain transfer.",
+      "source_authority": "Historicalimage57liveTS gains only; no automatic new measurement.",
+      "input_requires": [
+        "candidate",
+        "quiet-resource-admission",
+        "performance-binding"
+      ],
+      "performance": true
+    }
+  ],
+  "criteria": {
+    "M2": [
+      "package/baseline-all",
+      "package/proxy-auth",
+      "package/live-react-stats",
+      "package/current-packaged",
+      "package/sharedTS18",
+      "package/sharedTS6-all-down",
+      "package/retention100",
+      "native/proxy-health",
+      "Main/lifecycle-fault-workflow",
+      "Main/React-cross-workflows",
+      "performance/M2-M3-M5",
+      "Main/input-profile-and-provider-probes"
+    ],
+    "M3": [
+      "package/output-profile",
+      "package/profile-restart",
+      "source/cache-and-profile-contexts",
+      "Main/active-profile-status-probes",
+      "native/profile-delivery",
+      "native/HLS-fMP4-workflows",
+      "Main/React-cross-workflows",
+      "performance/M2-M3-M5",
+      "source/media-profile-and-format-workflows",
+      "Main/input-profile-and-provider-probes"
+    ],
+    "M5": [
+      "package/baseline-all",
+      "package/auth-hash",
+      "package/user-agent",
+      "package/output-profile",
+      "package/category-browser",
+      "package/unified-HTML-browser",
+      "package/static-Chrome-HTML-browser",
+      "package/provider-modal-browser",
+      "native/core-normal51",
+      "native/core-late-faults",
+      "native/proxy-health",
+      "Main/core-settings-workflow",
+      "Main/React-cross-workflows",
+      "performance/M2-M3-M5",
+      "Main/accounts-auth-and-channels",
+      "Main/settings-task-consumers",
+      "Main/SQLite-compatibility"
+    ]
+  },
+  "statuses": [
+    "passed",
+    "failed",
+    "blocked",
+    "not_run",
+    "retained_source_authority"
+  ],
+  "no_ignored_or_unimplemented_pass": true,
+  "source_replay_policy": "Existing qualifiedSource observations reused; only unmeasuredcold/expiry/profiledelivery/consumerdomains captured.",
+  "resource_measurement_authorized": false,
+  "source_reuse": {
+    "package/fresh-Original17capture": "Reuse an exact qualified Source17 corpus when Original/support/inputselector hashes match; legacy name is not instruction to replay.",
+    "package/complete-refresh-original": "Fresh execution required by unchanged actual900-second reference-age predicate; chainNative under SAMEgloballease.",
+    "old_Helper_Source51_Source32_Output24": "Retained authority, not repeat nodes."
+  },
+  "cross_owner_dependencies": [
+    "m6/default-job-graph"
+  ]
+}

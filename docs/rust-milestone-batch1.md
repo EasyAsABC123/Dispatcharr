@@ -39,8 +39,8 @@ version checks, and plugin transport/signature behavior; each keeps its own
 capture, cleanup and failure limits. A component or Source observation does not
 establish production Main acceptance.
 
-Next: build and inspect one immutable Docker image from this committed source,
-bind the package/workflow runners to that image, run the functional matrix and
+The [immutable Docker build and installed-file checks](rust-milestone-batch1-build.md)
+now pass. Next: bind the package/workflow runners to that image, run the functional matrix and
 repair failed/dependent workflows. Complete functional acceptance precedes paired
 whole-service performance, soak and rollback. No new CPU/memory gain or completed
 M0–M9 milestone is claimed here. Historical image57 measurements retain their
