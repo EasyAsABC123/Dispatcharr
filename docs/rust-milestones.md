@@ -7,6 +7,23 @@ A milestone passes only when its implementation, contract tests, container run,
 and performance evidence all pass. A scaffold, unit test, or fast synthetic buffer
 alone does not establish application parity or an application performance gain.
 
+## Current integrated work
+
+The latest runtime is `bfb4086fe6d65a9db5151e95b478f76b2094bc90`:
+[888 default tests pass](rust-milestone-batch3.md), with 751 external-fixture
+tests ignored. Its [Docker image](rust-milestone-batch3-build.md) preserves the
+React assets and original credits. The [packaged job cohort](rust-m6-packaged-main-batch3.md)
+passes 170 assertions, including API-produced descendants, artwork and a failed
+SQL task followed by continued work. These are scoped integration results.
+
+Actual Main still returns 405 for settings writes. The default Series worker
+also needs the Source no-rules branch for fresh installs, and the complete
+scheduler/worker graph remains unfinished. The latest
+[resource preflight](rust-milestone-batch2-resource-preflight.md) failed its
+frozen useful-work checks before any Rust measurement; no new performance gain
+is accepted. All M0–M9 gates below remain open. Older results retain their
+recorded source and workload scope.
+
 The [current Core settings library validation](rust-core-settings-current-validation.md) passes whole-workspace formatting, compilation, strict checks and 725 default tests (736 ignored). Its historical component qualifies 32 requests and seven finite ownership predicates; Main integration and full M5 remain open.
 
 The [bounded REST reader library](rust-rest-read-ownership.md) passes the current 851-input workspace gates (741 tests passed, 737 ignored). Two historical physical read-cancellation cases independently pass; adoption into Core/Main and duplicate-key error compatibility remain open.

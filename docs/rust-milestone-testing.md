@@ -39,19 +39,24 @@ completed operations. Reuse qualified Source observations; capture missing
 Source behavior as grouped prerequisites, without replaying references merely to
 improve a controller status.
 
-The most recent combined892 Rust check passed all eight stages, with860 default
-tests passed and751 external-fixture tests ignored across172 result blocks. The
+The latest combined candidate has929 inputs and passes all four workspace
+checks, with888 default tests passed and751 external-fixture tests ignored across172
+result blocks. Its [packaged Main cohort](rust-m6-packaged-main-batch3.md) passes170
+assertions, including the natural TVG task, descendants and failure continuation.
+Actual settings PATCH405 and fresh-install Series no-rules handling are current
+integration gaps; default scheduler/worker coverage remains incomplete. The
 four plugin ownership cases, corrected51-call settings cohort, bounded61-second
 normal recording and held-result case have separate qualified source epochs.
 Those are preparation for the broader batches, not full milestone acceptance.
-The latest Source TS cache capture establishes inherited Base hits only; cold TS
-and actual expiry remain unmeasured. The jobs audit also found an unsupported
-natural `parse_programs_for_tvg_id` frame before configured Series work. Testing
-only the later descendant cannot establish default FIFO completion.
+The historical Source TS cache capture establishes inherited Base hits only;
+cold TS and actual expiry remain unmeasured. Testing only a later descendant
+cannot establish default FIFO completion.
 
 Paired performance follows the functional batch and uses equivalent useful work,
 fixed budgets and a declared full resource boundary. Include compatibility
 workers and media processes. Correctly distinguish working memory, RSS and PSS.
 Existing image57 results retain their original source/workload scope; they do
-not establish gains for combined892 or the full worker graph. All formal
+not establish gains for the current candidate or the full worker graph. The
+[new resource preflight](rust-milestone-batch2-resource-preflight.md) failed before
+any Native measurement and supplies no accepted comparison. All formal
 milestones retain their current open status until their required criteria pass.
