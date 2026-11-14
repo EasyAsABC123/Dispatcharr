@@ -9,13 +9,13 @@ The delivered opt-in component composition is
 [current882](../scripts/rust-component-checkpoints/current882/README.md).
 Its unsigned plugin comparisons and recording SQL-rejection correction are
 source-bound component evidence. The selected full package/performance reference
-remains [image57](rust-image57-validation.md); [image61](rust-image61-build.md)
-has separate immutable-build evidence. Later library changes inherit neither
+remains [image57](rust-image57-validation.md); [image62](rust-image62-build.md)
+has separate immutable-build and installed-file evidence. Later library changes inherit neither
 Main acceptance nor measured performance gains.
 
 | Milestone | Owner and execution queue | Next acceptance gate |
 | --- | --- | --- |
-| M0: executable baseline contracts | Primary agent, with each component owner | Complete operation/method/role crosswalk and missing Source cases against the fixed inventory; distinguish static candidates, observed dispatch and fully verified behavior. |
+| M0: executable baseline contracts | Primary agent, with each component owner | Extend the 131 partial HTTP Source definitions and eight non-HTTP assignments against the fixed inventory; distinguish static candidates, observed dispatch and fully verified behavior. |
 | M1: bounded streaming core | Primary agent, with streaming owner | Preserve exact-source technical core evidence, complete prerequisites and test relevant changes; do not repeat a benchmark merely to update prose. |
 | M2: live TS | Streaming agent (`stream_http`), after current Core integration | Finish authenticated capacity, upstream sharing, disconnect/rejoin, counter, timer and teardown comparisons with actual media and physical lifecycle evidence. |
 | M3: formats and profiles | Streaming agent (`stream_http`), following M2 dependencies | Complete HLS/fMP4/profile, failover, cancellation and fanout matrix, real decoding and relevant paired measurements. |
@@ -47,14 +47,26 @@ Main acceptance nor measured performance gains.
   media, decoded both streams and recorded four renewals. A pinned deserializer
   verified all282 retained event associations without replay. The private Native61
   composition preserves the existing30-second constructor and prime correction;
-  its full workspace passes826 tests with747 ignored. Fresh positive61 and held
-  post-end result tests remain unexecuted at this checkpoint. Media/clock criteria
-  are declared before output; arbitrary profiles and durations remain open.
+  its full workspace passes826 tests with747 ignored. The first positive61 and
+  held post-end result contexts exited1 while observing capture; the refusal
+  context also exited1. All three fixtures cleaned up. The refusal output exposes
+  the cleanup service's remaining30-second identity restriction; that is a real
+  runtime gap to correct before a new frozen candidate. The two positive runs
+  did not retain the early application result, so their identical cause is an
+  inference, not an observed outcome. Existing media/clock criteria stay fixed;
+  arbitrary profiles and durations remain open.
 - **Primary agent:** review and publish scoped source/evidence, maintain the M0
   crosswalk, integrate each qualified lane, then qualify actual Main/React,
   package/SDK and operational workflows. Performance evidence must be measured
   on the delivered source and workload; image57 gains do not transfer to workers
   or later components.
+
+The [ordinary VOD access-flag cohort](../scripts/rust-contracts/vod-access/README.md)
+adds seven partial Source GET definitions from four exact successful Original
+workflows already retained in the full3,362-test run. This closes no Native gate
+and performs no new Source replay. Baseline prolonged-outage and supplemental
+metric captures already exist; preserve their documented limits and failures
+instead of rerunning them to reconcile stale prose.
 
 A missing authority requires a bounded Source capture. Reuse valid observations;
 never replay a passed Source merely to improve a failed controller's status.

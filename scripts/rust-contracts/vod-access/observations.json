@@ -1,0 +1,60 @@
+{
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_path": "apps/vod/tests/test_vod_rest_access_flag.py",
+  "original_sha256": "1852928f82c6c194626f1401854cc87386e627407692a2082996a37a4af8926e",
+  "full_suite_reference_sha256": "494e9945c39e94c2c05301efed9bba3ba89b5da3b60eb55142f2c701729091c6",
+  "full_suite_log_sha256": "5ce7a671b204e8b1a444e2edbf51313363aaf385989e8268eee011ea1612ad35",
+  "class_AST_sha256": "f813afe308b9fc59d34f1e938474ec481650eed28cabe5a8ffc8ac3721c04c3d",
+  "observations": [
+    {
+      "test_id": "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_absent_flags_keep_rest_access",
+      "method": "test_absent_flags_keep_rest_access",
+      "method_ast_sha256": "78d033d37e970822c59a5f577a51b6e7324d8333e901ccbe3c903309ba55d4bc",
+      "assertion_expressions": [
+        "self.assertIn('REST Gated Movie', movie_names)",
+        "self.assertIn('REST Gated Series', series_names)",
+        "self.assertIn('Pilot', episode_names)"
+      ],
+      "framework_log_block": "test_absent_flags_keep_rest_access (apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_absent_flags_keep_rest_access) ... ok\n",
+      "framework_log_block_sha256": "6db8dc7e2ee9a9de171d35a7f14ba329bb6a4dc92260569f581fda5ea0adb7ee"
+    },
+    {
+      "test_id": "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_movies_flag_hides_movies_but_not_series",
+      "method": "test_movies_flag_hides_movies_but_not_series",
+      "method_ast_sha256": "7fc7ea2aef772eab5cac053644a88ef92f3e88c750edf3f2dd08a93edef47716",
+      "assertion_expressions": [
+        "self.assertEqual(self._results('/api/vod/movies/'), [])",
+        "self.assertEqual(self.client.get(f'/api/vod/movies/{self.movie.id}/').status_code, 404)",
+        "self.assertIn('REST Gated Series', series_names)"
+      ],
+      "framework_log_block": "test_movies_flag_hides_movies_but_not_series (apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_movies_flag_hides_movies_but_not_series) ... 2026-11-09 07:41:07,861 WARNING django.request Not Found: /api/vod/movies/249/\nok\n",
+      "framework_log_block_sha256": "82934bf28c369ce1cd9339acfc6e905be25bf00a2dd5b67d8aa654a36c48765c"
+    },
+    {
+      "test_id": "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_series_flag_hides_series_and_episodes",
+      "method": "test_series_flag_hides_series_and_episodes",
+      "method_ast_sha256": "382b7429fdb90058c0490792b2d4940f2e192c7b6b0a096cf5185eb12dfa22c7",
+      "assertion_expressions": [
+        "self.assertEqual(self._results('/api/vod/series/'), [])",
+        "self.assertEqual(self._results('/api/vod/episodes/'), [])",
+        "self.assertEqual(self.client.get(f'/api/vod/series/{self.series.id}/').status_code, 404)",
+        "self.assertEqual(self.client.get(f'/api/vod/episodes/{self.episode.id}/').status_code, 404)",
+        "self.assertIn('REST Gated Movie', movie_names)"
+      ],
+      "framework_log_block": "test_series_flag_hides_series_and_episodes (apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_series_flag_hides_series_and_episodes) ... 2026-11-09 07:41:07,880 WARNING django.request Not Found: /api/vod/series/105/\n2026-11-09 07:41:07,881 WARNING django.request Not Found: /api/vod/episodes/162/\nok\n",
+      "framework_log_block_sha256": "12f97ae31014a009b3a75bbc17216880875980b9a2c9a9bb91be48b6592ccc65"
+    },
+    {
+      "test_id": "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_categories_are_filtered_by_kind",
+      "method": "test_categories_are_filtered_by_kind",
+      "method_ast_sha256": "067372f53e7f8c657c036d0b21814c5abbfd41ac9646006725b6e5ef5c18ac93",
+      "assertion_expressions": [
+        "self.assertNotIn('movie', types)",
+        "self.assertIn('series', types)"
+      ],
+      "framework_log_block": "test_categories_are_filtered_by_kind (apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_categories_are_filtered_by_kind) ... ok\n",
+      "framework_log_block_sha256": "105b7e06785691aa6645cc6fdcd6cedc51630ea4e7a4931fcb65d2d768888098"
+    }
+  ],
+  "scope": "Four named historical Original workflows; no new execution, TCP or Native claim"
+}

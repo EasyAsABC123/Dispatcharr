@@ -1,0 +1,322 @@
+{
+  "format_version": 1,
+  "binding_kind": "pinned_original_vod_access_tests",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "credit": "Original Dispatcharr and dependency authors retain all application, algorithm and licensing credit.",
+  "scope": "Seven partial ordinary Source GET assignments from four historical workflows; no new execution or acceptance",
+  "operation_count": 7,
+  "fully_verified_added": 0,
+  "Native_coverage_increased": false,
+  "fixtures": {
+    "Original-VOD-access-flags4": {
+      "id": "Original-VOD-access-flags4",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "roles": {
+        "forced_standard": {
+          "source_expression": "User.UserLevel.STANDARD",
+          "transport": "Django APIClient with force_authenticate",
+          "authentication_backend_tested": false,
+          "properties": "Absent, movie-disabled or series-disabled as set by each exact workflow"
+        }
+      },
+      "setup": [
+        "Use the pinned unchanged Original revision and supported disposable baseline runner",
+        "Preserve actual M3U account, both categories, movie/series/episode and relation fixtures, UUIDs and force-authenticated STANDARD users",
+        "Run the four exact labels, retain actual results and remove only the owned fixture"
+      ],
+      "execution": {
+        "entrypoint": "scripts/rust-baseline/run.py",
+        "argv": [
+          "--output",
+          "<fresh-empty-output>",
+          "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_absent_flags_keep_rest_access",
+          "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_movies_flag_hides_movies_but_not_series",
+          "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_series_flag_hides_series_and_episodes",
+          "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_categories_are_filtered_by_kind"
+        ],
+        "fresh_live_replay_qualified_this_task": false
+      },
+      "observations": "scripts/rust-contracts/vod-access/observations.json",
+      "excluded": [
+        "Direct anonymous get_queryset test is not HTTP permission evidence",
+        "Unified all and movie-image workflows have separate existing assignments",
+        "Format aliases and category retrieve are unobserved"
+      ]
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-5f82ae2734b96921aeca:GET",
+      "pattern_exact": "api/vod/^movies/$",
+      "source_handler": "apps.vod.api_views.MovieViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-VOD-access-flags4",
+      "observed_roles": [
+        "forced_standard"
+      ],
+      "source_role_specs": {
+        "forced_standard": {
+          "source_expression": "User.UserLevel.STANDARD",
+          "transport": "Django APIClient with force_authenticate",
+          "authentication_backend_tested": false,
+          "properties": "Absent, movie-disabled or series-disabled as set by each exact workflow"
+        }
+      },
+      "source_test_methods": [
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_absent_flags_keep_rest_access",
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_movies_flag_hides_movies_but_not_series",
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_series_flag_hides_series_and_episodes"
+      ],
+      "assertions": [
+        "Execute the exact named unchanged Original workflows with their original setUp, _user and _results helpers",
+        "Preserve whole-workflow assertions and actual historical success blocks; helper response-status assertions remain in the full class",
+        "List visibility, empty lists and disabled detail 404 have only their exact fixture scope; no unobserved enabled-detail result is inferred",
+        "Forced STANDARD authentication does not test JWT/session backends; aliases, complete permissions, TCP and Native parity remain unverified"
+      ],
+      "result": {
+        "state": "selected_named_Original_tests_passed_in_retained_full3362_suite",
+        "historical_workflows": 3,
+        "new_Source_cases_this_task": 0,
+        "new_Source_runs": 0,
+        "Native_or_TCP_acceptance": false,
+        "complete_role_matrix": false
+      },
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-a459995c757709dbe718:GET",
+      "pattern_exact": "api/vod/^movies/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.vod.api_views.MovieViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-VOD-access-flags4",
+      "observed_roles": [
+        "forced_standard"
+      ],
+      "source_role_specs": {
+        "forced_standard": {
+          "source_expression": "User.UserLevel.STANDARD",
+          "transport": "Django APIClient with force_authenticate",
+          "authentication_backend_tested": false,
+          "properties": "Absent, movie-disabled or series-disabled as set by each exact workflow"
+        }
+      },
+      "source_test_methods": [
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_movies_flag_hides_movies_but_not_series"
+      ],
+      "assertions": [
+        "Execute the exact named unchanged Original workflows with their original setUp, _user and _results helpers",
+        "Preserve whole-workflow assertions and actual historical success blocks; helper response-status assertions remain in the full class",
+        "List visibility, empty lists and disabled detail 404 have only their exact fixture scope; no unobserved enabled-detail result is inferred",
+        "Forced STANDARD authentication does not test JWT/session backends; aliases, complete permissions, TCP and Native parity remain unverified"
+      ],
+      "result": {
+        "state": "selected_named_Original_tests_passed_in_retained_full3362_suite",
+        "historical_workflows": 1,
+        "new_Source_cases_this_task": 0,
+        "new_Source_runs": 0,
+        "Native_or_TCP_acceptance": false,
+        "complete_role_matrix": false
+      },
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-789db48af44156314ebf:GET",
+      "pattern_exact": "api/vod/^episodes/$",
+      "source_handler": "apps.vod.api_views.EpisodeViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-VOD-access-flags4",
+      "observed_roles": [
+        "forced_standard"
+      ],
+      "source_role_specs": {
+        "forced_standard": {
+          "source_expression": "User.UserLevel.STANDARD",
+          "transport": "Django APIClient with force_authenticate",
+          "authentication_backend_tested": false,
+          "properties": "Absent, movie-disabled or series-disabled as set by each exact workflow"
+        }
+      },
+      "source_test_methods": [
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_absent_flags_keep_rest_access",
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_series_flag_hides_series_and_episodes"
+      ],
+      "assertions": [
+        "Execute the exact named unchanged Original workflows with their original setUp, _user and _results helpers",
+        "Preserve whole-workflow assertions and actual historical success blocks; helper response-status assertions remain in the full class",
+        "List visibility, empty lists and disabled detail 404 have only their exact fixture scope; no unobserved enabled-detail result is inferred",
+        "Forced STANDARD authentication does not test JWT/session backends; aliases, complete permissions, TCP and Native parity remain unverified"
+      ],
+      "result": {
+        "state": "selected_named_Original_tests_passed_in_retained_full3362_suite",
+        "historical_workflows": 2,
+        "new_Source_cases_this_task": 0,
+        "new_Source_runs": 0,
+        "Native_or_TCP_acceptance": false,
+        "complete_role_matrix": false
+      },
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-cd82f96ce33a40b0f29d:GET",
+      "pattern_exact": "api/vod/^episodes/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.vod.api_views.EpisodeViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-VOD-access-flags4",
+      "observed_roles": [
+        "forced_standard"
+      ],
+      "source_role_specs": {
+        "forced_standard": {
+          "source_expression": "User.UserLevel.STANDARD",
+          "transport": "Django APIClient with force_authenticate",
+          "authentication_backend_tested": false,
+          "properties": "Absent, movie-disabled or series-disabled as set by each exact workflow"
+        }
+      },
+      "source_test_methods": [
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_series_flag_hides_series_and_episodes"
+      ],
+      "assertions": [
+        "Execute the exact named unchanged Original workflows with their original setUp, _user and _results helpers",
+        "Preserve whole-workflow assertions and actual historical success blocks; helper response-status assertions remain in the full class",
+        "List visibility, empty lists and disabled detail 404 have only their exact fixture scope; no unobserved enabled-detail result is inferred",
+        "Forced STANDARD authentication does not test JWT/session backends; aliases, complete permissions, TCP and Native parity remain unverified"
+      ],
+      "result": {
+        "state": "selected_named_Original_tests_passed_in_retained_full3362_suite",
+        "historical_workflows": 1,
+        "new_Source_cases_this_task": 0,
+        "new_Source_runs": 0,
+        "Native_or_TCP_acceptance": false,
+        "complete_role_matrix": false
+      },
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-e872c1f90698f4c60d0b:GET",
+      "pattern_exact": "api/vod/^series/$",
+      "source_handler": "apps.vod.api_views.SeriesViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-VOD-access-flags4",
+      "observed_roles": [
+        "forced_standard"
+      ],
+      "source_role_specs": {
+        "forced_standard": {
+          "source_expression": "User.UserLevel.STANDARD",
+          "transport": "Django APIClient with force_authenticate",
+          "authentication_backend_tested": false,
+          "properties": "Absent, movie-disabled or series-disabled as set by each exact workflow"
+        }
+      },
+      "source_test_methods": [
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_absent_flags_keep_rest_access",
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_movies_flag_hides_movies_but_not_series",
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_series_flag_hides_series_and_episodes"
+      ],
+      "assertions": [
+        "Execute the exact named unchanged Original workflows with their original setUp, _user and _results helpers",
+        "Preserve whole-workflow assertions and actual historical success blocks; helper response-status assertions remain in the full class",
+        "List visibility, empty lists and disabled detail 404 have only their exact fixture scope; no unobserved enabled-detail result is inferred",
+        "Forced STANDARD authentication does not test JWT/session backends; aliases, complete permissions, TCP and Native parity remain unverified"
+      ],
+      "result": {
+        "state": "selected_named_Original_tests_passed_in_retained_full3362_suite",
+        "historical_workflows": 3,
+        "new_Source_cases_this_task": 0,
+        "new_Source_runs": 0,
+        "Native_or_TCP_acceptance": false,
+        "complete_role_matrix": false
+      },
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-49cb72fffcf3e6da6900:GET",
+      "pattern_exact": "api/vod/^series/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.vod.api_views.SeriesViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-VOD-access-flags4",
+      "observed_roles": [
+        "forced_standard"
+      ],
+      "source_role_specs": {
+        "forced_standard": {
+          "source_expression": "User.UserLevel.STANDARD",
+          "transport": "Django APIClient with force_authenticate",
+          "authentication_backend_tested": false,
+          "properties": "Absent, movie-disabled or series-disabled as set by each exact workflow"
+        }
+      },
+      "source_test_methods": [
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_series_flag_hides_series_and_episodes"
+      ],
+      "assertions": [
+        "Execute the exact named unchanged Original workflows with their original setUp, _user and _results helpers",
+        "Preserve whole-workflow assertions and actual historical success blocks; helper response-status assertions remain in the full class",
+        "List visibility, empty lists and disabled detail 404 have only their exact fixture scope; no unobserved enabled-detail result is inferred",
+        "Forced STANDARD authentication does not test JWT/session backends; aliases, complete permissions, TCP and Native parity remain unverified"
+      ],
+      "result": {
+        "state": "selected_named_Original_tests_passed_in_retained_full3362_suite",
+        "historical_workflows": 1,
+        "new_Source_cases_this_task": 0,
+        "new_Source_runs": 0,
+        "Native_or_TCP_acceptance": false,
+        "complete_role_matrix": false
+      },
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-326e44c9aeb369a38d45:GET",
+      "pattern_exact": "api/vod/^categories/$",
+      "source_handler": "apps.vod.api_views.VODCategoryViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-VOD-access-flags4",
+      "observed_roles": [
+        "forced_standard"
+      ],
+      "source_role_specs": {
+        "forced_standard": {
+          "source_expression": "User.UserLevel.STANDARD",
+          "transport": "Django APIClient with force_authenticate",
+          "authentication_backend_tested": false,
+          "properties": "Absent, movie-disabled or series-disabled as set by each exact workflow"
+        }
+      },
+      "source_test_methods": [
+        "apps.vod.tests.test_vod_rest_access_flag.VodRestAccessFlagTests.test_categories_are_filtered_by_kind"
+      ],
+      "assertions": [
+        "Execute the exact named unchanged Original workflows with their original setUp, _user and _results helpers",
+        "Preserve whole-workflow assertions and actual historical success blocks; helper response-status assertions remain in the full class",
+        "List visibility, empty lists and disabled detail 404 have only their exact fixture scope; no unobserved enabled-detail result is inferred",
+        "Forced STANDARD authentication does not test JWT/session backends; aliases, complete permissions, TCP and Native parity remain unverified"
+      ],
+      "result": {
+        "state": "selected_named_Original_tests_passed_in_retained_full3362_suite",
+        "historical_workflows": 1,
+        "new_Source_cases_this_task": 0,
+        "new_Source_runs": 0,
+        "Native_or_TCP_acceptance": false,
+        "complete_role_matrix": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "non_HTTP_contracts": []
+}

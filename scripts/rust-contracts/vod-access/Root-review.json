@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "scope": "Root actual retained Source and public control review; no new application execution",
+  "base_revision": "d7066cae09a3fdc276ddb802a8f34d24d29eac6d",
+  "partial_HTTP_Source_definitions_before": 124,
+  "partial_HTTP_Source_definitions_after": 131,
+  "changed_operation_ids": [
+    "route-326e44c9aeb369a38d45:GET",
+    "route-49cb72fffcf3e6da6900:GET",
+    "route-5f82ae2734b96921aeca:GET",
+    "route-789db48af44156314ebf:GET",
+    "route-a459995c757709dbe718:GET",
+    "route-cd82f96ce33a40b0f29d:GET",
+    "route-e872c1f90698f4c60d0b:GET"
+  ],
+  "unchanged_operation_dictionaries": 791,
+  "unchanged_route_metadata": 592,
+  "unchanged_non_HTTP_candidates": 250,
+  "unchanged_unresolved_methods": 322,
+  "fully_verified_operations": 0,
+  "new_Source_runs": 0,
+  "Native_coverage_increased": false,
+  "whole_Original_file_git_bound": true,
+  "actual_raw_full_suite_log_sha256": "5ce7a671b204e8b1a444e2edbf51313363aaf385989e8268eee011ea1612ad35",
+  "exact_unique_named_success_blocks": 4,
+  "controls": [
+    {
+      "name": "dispatcharr-vod-access-public-controls.log",
+      "sha256": "0fe3cf28c8d27dcc7f8b8cf9152731b96d6d7f72abcc01c750e2c4ec8a7197c9",
+      "tests": 335,
+      "skipped": 1
+    },
+    {
+      "name": "dispatcharr-vod-access-source-controls-current-register.log",
+      "sha256": "d14255be9ce2024f7b073f36d410acd7953da619b55f61fdd2e8682c0bc15866",
+      "tests": 20,
+      "skipped": 0
+    },
+    {
+      "name": "dispatcharr-vod-access-test_inventory.py.log",
+      "sha256": "361c7910c9083851bd67c5deb48e601a4b5329988b06268274c0424e0f5ec2cb",
+      "tests": 6,
+      "skipped": 0
+    },
+    {
+      "name": "dispatcharr-vod-access-test_source_links.py.log",
+      "sha256": "189e2c99f5ea185935db10d6e0d68572afcadab3b1493efb7343c3f5fea3c0ae",
+      "tests": 17,
+      "skipped": 0
+    }
+  ],
+  "prior_failed_control": {
+    "reason": "idempotency check copied pre-regeneration register; regenerate exact checked-in register then repeat",
+    "log_sha256": "7b40017518a076ccb8783f8b391b21a7bd6d506a5beade197dfabcd203f9c061",
+    "tests": 20,
+    "failures": 1,
+    "application_rerun": false
+  },
+  "generated_register_sha256": "ee23db86d5b93eb86650be8d8177c6c2ba1c0a41b04652c421f9fd860e6ef68a",
+  "M0_complete": false,
+  "M1_formal_pass": false,
+  "performance_verified": false
+}
