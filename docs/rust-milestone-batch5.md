@@ -33,7 +33,8 @@ initializing a database. This prevents silent selection of another backend;
 **SQLite is still unimplemented**, rather than accepted as migrated. The
 [datastore scope](rust-datastore-compatibility.md) remains required.
 
-One Docker image must verify the Core99 producer change, affected job chains,
+The [Docker build and physical probes](rust-milestone-batch5-build.md) pass.
+That one image must verify the Core99 producer change, affected job chains,
 React regression and new PostgreSQL configuration cohort. New queue/scanner/DVR
 proposals are excluded from this candidate until their actual common interfaces
 and Main composition are ready. No full milestone or performance gain follows
