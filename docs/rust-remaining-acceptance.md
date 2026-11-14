@@ -22,11 +22,23 @@ background workers and the rest of the application graph.
 
 The delivered Main correction passes 782 default workspace tests, with 741
 external-fixture tests ignored; [actual waits](rust-main-vod-react-fallback.md)
-identify the exact snapshot. Ignored tests are not acceptance results.
+identify that snapshot. The later scoped DVR composition passed 804 default
+tests, with 744 ignored, before a test-only counter diagnostic correction;
+five affected checks passed on the corrected 878-input source. The
+[current library record](rust-clocked-recording-current-library.md) preserves
+these distinct bindings. Ignored tests are not acceptance results.
 Fresh [Core bounded-reader/error-body cases](rust-core-bounded-rest-component.md)
 and [image59 Main header/HEAD cases](rust-image59-build-worker-header.md) pass
 their selected functional checks. Image59 has no new full package matrix or
 performance acceptance.
+
+The [image61 build](rust-image61-build.md) includes the scoped DVR library and
+preserves the installed React files and original credits. The
+[current DVR physical packet](rust-clocked-recording-current-physical.md)
+qualifies selected ownership observations and retains failed controller
+attempts. Post-claim uncertainty still requires owned process exit; live worker
+recovery and broader recording parity are open. Image61 has no new full package
+matrix or measured performance result.
 
 ## Work and evidence needed
 
@@ -36,7 +48,7 @@ performance acceptance.
 | M1–M3 streaming | Extend qualified streaming components across the remaining formats, profiles, failures and recovery boundaries | Decoder-checked playback, counters, timers, teardown and paired measurements on the same source |
 | M4 VOD | Extend the qualified HEAD correction and malformed-UUID React fallback across remaining ranges, seeks, catchup and session boundaries | Original/Rust status, headers, bytes, origin behavior, ownership and resource comparison |
 | M5 Core and accounts | Extend the fresh qualified combined Core service to special settings keys; reconcile overlapping read routes before Main assembly | Fresh combined-source API, permission, mutation, response-clone and shutdown tests, followed by Compose/React workflows and API measurements |
-| M6 DVR and jobs | Execute the compiled Native DVR candidate against the real Original recording reference; extend remaining job families and configured graph behavior | Actual media/decoder, SQL, Beat, broker/result, event, active-key and child-process comparison, failure recovery and worker-inclusive measurements |
+| M6 DVR and jobs | Extend the scoped Native recording and physical ownership evidence to Source-backed SQL faults, longer recordings with audio, recovery, remaining job families and configured graph behavior | Actual media/decoder, SQL, Beat, broker/result, event, active-key and child-process comparison, failure recovery and worker-inclusive measurements |
 | M7 output and integrations | Assemble the qualified SQL ownership repairs and complete missing/stale/refresh and remaining protocol behavior | Fresh packaged/Main protocol and integration tests with exact source binding and measurements |
 | M8 plugin and operations | Assemble the qualified HTML error correction; resolve or explicitly close the first physical case's missing full post-state audit after publishing the fresh normal/physical results; finish restore, schedules, admin and plugin execution | Source-derived normal/fault tests, database/cache audits, owned cleanup, rollback and full-service resource accounting |
 | M9 final application | Package the final combined source, then run the complete workflow, restart, soak, cutover and rollback rehearsals | All prerequisite milestones accepted on the delivered revision, with reproducible Compose runs and full-graph performance evidence |
