@@ -120,6 +120,11 @@ def validate(nodes, bindings):
     for node in nodes:
         visit(node["id"])
     for bound in bindings.values():
+        if "exclusive_heavy" in bound and type(bound["exclusive_heavy"]) is not bool:
+            raise ValueError("exclusive_heavy must be a boolean resource upgrade")
+        extra_resources = bound.get("exclusive_resources", [])
+        if not isinstance(extra_resources, list) or not all(isinstance(v, str) and v for v in extra_resources):
+            raise ValueError("exclusive_resources must be literal resource names")
         for key in ("argv", "evaluator_argv", "cleanup_argv"):
             value = bound[key]
             if not isinstance(value, list) or not value or not all(isinstance(v, str) and v and "\0" not in v for v in value):
@@ -470,6 +475,12 @@ def _reference_age(node, bound, now):
 def schedule(nodes, bindings, output, candidate, worker=execute, authorities=None,
              utc_minute=None, wall_clock=time.time):
     validate(nodes, bindings)
+    # A larger diagnostic cohort can require more isolation than its original
+    # inventory probe. Bindings can strengthen reservations, never downgrade them.
+    nodes = [{**n,
+              'heavy': n['heavy'] or bindings.get(n['id'], {}).get('exclusive_heavy', False),
+              'resources': sorted(set(n['resources']) | set(bindings.get(n['id'], {}).get('exclusive_resources', [])))}
+             for n in nodes]
     utc_minute = utc_minute or (lambda: time.gmtime().tm_min)
     output.mkdir(parents=True, exist_ok=False)
     results, running = dict(authorities or {}), {}

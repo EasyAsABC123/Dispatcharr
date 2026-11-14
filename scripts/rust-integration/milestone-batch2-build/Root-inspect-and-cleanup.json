@@ -1,0 +1,60 @@
+[
+  {
+    "argv": [
+      "docker",
+      "container",
+      "ls",
+      "--all",
+      "--filter",
+      "name=^/dispatcharr-milestone-batch2-credit-probe-1dc16f$",
+      "--format",
+      "{{.ID}}"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "image",
+      "inspect",
+      "sha256:e88cc73fb054d6b285a99018e70b60b072ea0b32d96408374e2109e6692ece65"
+    ],
+    "actual_exit": 0,
+    "stdout": "[\n    {\n        \"Id\": \"sha256:e88cc73fb054d6b285a99018e70b60b072ea0b32d96408374e2109e6692ece65\",\n        \"RepoTags\": [\n            \"dispatcharr-rust-candidate:milestone-batch2\"\n        ],\n        \"RepoDigests\": [\n            \"dispatcharr-rust-candidate@sha256:e88cc73fb054d6b285a99018e70b60b072ea0b32d96408374e2109e6692ece65\"\n        ],\n        \"Comment\": \"buildkit.dockerfile.v0\",\n        \"Created\": \"2026-11-14T11:40:44.344727506-05:00\",\n        \"Config\": {\n            \"User\": \"65532:65532\",\n            \"ExposedPorts\": {\n                \"9192/tcp\": {}\n            },\n            \"Env\": [\n                \"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\n                \"RUST_BIND=0.0.0.0:9192\",\n                \"RUST_FRONTEND_DIR=/opt/dispatcharr-frontend\"\n            ],\n            \"Entrypoint\": [\n                \"/usr/local/bin/dispatcharr-rs\"\n            ],\n            \"Labels\": {\n                \"org.opencontainers.image.description\": \"Original Dispatcharr credit belongs to its original authors and contributors; see /usr/share/doc/dispatcharr/ATTRIBUTION.md. Migration parity is incomplete.\",\n                \"org.opencontainers.image.licenses\": \"AGPL-3.0-only\",\n                \"org.opencontainers.image.source-tree-sha256\": \"c039869f1b521ab7518731dc49e0bcd277679f373c02d0aa5a53fadff8f07a39\",\n                \"org.opencontainers.image.title\": \"Dispatcharr derivative Rust backend port\"\n            }\n        },\n        \"Architecture\": \"amd64\",\n        \"Os\": \"linux\",\n        \"Size\": 452390731,\n        \"RootFS\": {\n            \"Type\": \"layers\",\n            \"Layers\": [\n                \"sha256:1d7b9dd8778ebc4d9bf2f64436dd358640718cb349f5640b33bebaea4ffd62c2\",\n                \"sha256:6764f6e9a44bc794d64bbf749ba85b5234f1a96e973877b4162f324a821ebd27\",\n                \"sha256:b3a93c4d623bc463342c7cfafa3bd478b6b4c3bf088413655438330a81b0d24a\",\n                \"sha256:5c9983308a72c8a4380d6e8e4e630cce398ee1fd4ca8ede67609a2459249c60d\",\n                \"sha256:b927ae40ccd410acaedc09cde086dd886f00a82fa08c822f210c322989a809de\",\n                \"sha256:306adf274de2a2993a1098885d59ae66f628f387b515d1481e3bfc4a948254a3\",\n                \"sha256:258cef6a5d10f22346070e549e02e314d1864565ad8cee5ee7551d6b9ba6c159\",\n                \"sha256:41d02400be53493b0ef91f7d69d429849ef3145210a47074214be818ec8977bf\",\n                \"sha256:73eb1cd4e089aa3f14d832b7317123bad44d3636aa747b5a1f62427a538491fc\",\n                \"sha256:bede353c5140c208fa8b475dda867e9981859b5a2af18947b3d956c99f8d10f0\",\n                \"sha256:1bdb6d79d92f3a70934e86e9a9b39d22adf0242cbc903bddde8df6f2da031f3b\"\n            ]\n        },\n        \"Metadata\": {\n            \"LastTagTime\": \"2026-11-14T16:40:48.39801139Z\"\n        },\n        \"Descriptor\": {\n            \"mediaType\": \"application/vnd.oci.image.index.v1+json\",\n            \"digest\": \"sha256:e88cc73fb054d6b285a99018e70b60b072ea0b32d96408374e2109e6692ece65\",\n            \"size\": 856\n        },\n        \"Identity\": {\n            \"Build\": [\n                {\n                    \"Ref\": \"hw872wsfquct2u35ie8gjmxx6\",\n                    \"CreatedAt\": \"2026-11-14T11:40:49.928297801-05:00\"\n                }\n            ]\n        }\n    }\n]\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "container",
+      "ls",
+      "--all",
+      "--no-trunc",
+      "--filter",
+      "id=80843a4933266473502f56fce302b91321be569654553bdcc51516a9bdd335a4",
+      "--format",
+      "{{.ID}}"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "container",
+      "ls",
+      "--all",
+      "--no-trunc",
+      "--filter",
+      "name=^/dispatcharr-milestone-batch2-credit-probe-1dc16f$",
+      "--format",
+      "{{.ID}}"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

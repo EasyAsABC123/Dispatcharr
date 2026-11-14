@@ -26,6 +26,12 @@ dispatch. There are no automatic application retries. The process-level lock
 prevents a second coordinator from creating another three-slot pool. Do not run
 owner fixtures alongside a coordinator invocation.
 
+A binding may strengthen isolation with `exclusive_heavy: true` or additional
+`exclusive_resources`. The scheduler combines these with inventory reservations;
+it never downgrades a heavy cohort or removes a declared resource. Replacing a
+small HTTP probe with a full media cohort therefore retains the real workload's
+exclusive requirement.
+
 An execution binding contains one immutable candidate and a `nodes` map keyed
 by exported IDs. The candidate uses the M478 adapter's source-map, committed Git,
 archive and actual successful image-build fields. Each node supplies literal

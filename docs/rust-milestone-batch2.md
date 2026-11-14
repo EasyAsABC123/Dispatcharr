@@ -34,9 +34,10 @@ The candidate adds these composed behaviors:
   lifecycle events come from the production executable; they contain no key,
   signature or argument data.
 
-These are SDK/source results, not packaged workflow acceptance. The next step is
-one Docker build followed by the combined transport/signature, job and profile
-cohorts. Original Source observations are reused. Unmeasured process, restart,
+The [single Docker build and installed-file probes](rust-milestone-batch2-build.md)
+now pass. Combined transport/signature, job and profile cohorts use this image;
+their workflow acceptance remains separate. Original Source observations are
+reused. Unmeasured process, restart,
 handler-drain, OutputProfile, VLC, provider-transform and numeric-signing domains
 remain open. Uncertain ownership is not reported as drained.
 

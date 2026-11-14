@@ -14,7 +14,7 @@ SPEC.loader.exec_module(c)
 
 
 class Scheduling(unittest.TestCase):
-    def run_graph(self, nodes, failures=(), uncertain=()):
+    def run_graph(self, nodes, failures=(), uncertain=(), overrides=None):
         active, observed = [], []
         lock = threading.Lock()
 
@@ -35,7 +35,7 @@ class Scheduling(unittest.TestCase):
                    "seconds": 1, "cleanup_seconds": 1, "output_bytes": 1024,
                    "input_sha256": {str(Path(__file__)): digest}}
         with tempfile.TemporaryDirectory() as directory:
-            report = c.schedule(nodes, {n["id"]: binding for n in nodes}, Path(directory) / "run", {}, work)
+            report = c.schedule(nodes, {n["id"]: {**binding, **(overrides or {}).get(n["id"], {})} for n in nodes}, Path(directory) / "run", {}, work)
         return report, observed
 
     def node(self, key, deps=(), heavy=False, resources=()):
@@ -50,6 +50,19 @@ class Scheduling(unittest.TestCase):
 
     def test_shared_fixture_serializes(self):
         _, observed = self.run_graph([self.node(str(i), resources=["db"]) for i in range(4)])
+        self.assertTrue(all(len(group) == 1 for group in observed))
+
+    def test_binding_can_upgrade_heavy_but_cannot_downgrade(self):
+        nodes = [self.node("ordinary"), self.node("upgrade"), self.node("already-heavy", heavy=True)]
+        _, observed = self.run_graph(nodes, overrides={"upgrade": {"exclusive_heavy": True}, "already-heavy": {"exclusive_heavy": False}})
+        for group in observed:
+            if any(n["id"] in ("upgrade", "already-heavy") for n in group):
+                self.assertEqual(len(group), 1)
+                self.assertTrue(group[0]["heavy"])
+
+    def test_binding_resource_upgrade_serializes_original_resource_user(self):
+        _, observed = self.run_graph([self.node("a", resources=["db"]), self.node("b")],
+                                     overrides={"b": {"exclusive_resources": ["db"]}})
         self.assertTrue(all(len(group) == 1 for group in observed))
 
     def test_failure_blocks_only_descendant(self):
