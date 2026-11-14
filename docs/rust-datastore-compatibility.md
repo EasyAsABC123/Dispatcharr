@@ -9,14 +9,15 @@ feature: `dispatcharr/settings.py:288` selects Django SQLite at
 `/data/dispatcharr.db` when `DB_ENGINE=sqlite`. The alternative configures
 PostgreSQL. Lines281–286 and329–347 also configure PostgreSQL TLS mode, CA and
 client certificate/key from `POSTGRES_SSL*` variables. These facts come from
-the pinned Git source; no new database application or performance test ran for
-this audit.
+the pinned Git source. The initial audit was static; the subsequent
+[candidate5 Source/Native comparison](rust-batch5-ops-acceptance.md) records actual
+driver and Main executions. No datastore performance gain is accepted.
 
 | Supported configuration | Current Rust implementation | Remaining acceptance |
 | --- | --- | --- |
 | PostgreSQL | SQLx PgPool, existing-schema workflows and fresh schema initialization; current Compose cohort uses PostgreSQL17 | Full required API/job/backup/restore/rollback matrix and version/error compatibility |
-| SQLite selected by DB_ENGINE | Missing: Store uses PgPool, Cargo enables only the PostgreSQL SQLx driver, and Main's database_url ignores DB_ENGINE | Backend selection, schema/migrations, every required SQL/JSON/time/constraint behavior, existing dispatcharr.db, backup/restore and concurrent API/job workflows |
-| PostgreSQL TLS environment | Original POSTGRES_SSL* translation is absent in Main's URL construction; a caller-supplied DATABASE_URL is a separate configuration path | Verify all retained environment settings, TLS modes, certificate trust, client authentication and errors against pinned Source |
+| SQLite selected by DB_ENGINE | Missing: Store uses PgPool and Cargo enables only PostgreSQL. Main now rejects explicit SQLite selection before connection or DDL; this guard does not implement SQLite | Backend selection, schema/migrations, every required SQL/JSON/time/constraint behavior, existing dispatcharr.db, backup/restore and concurrent API/job workflows |
+| PostgreSQL TLS environment | Main now translates POSTGRES_SSL* settings and validates certificate paths. Candidate5 matches 8 of 11 measured PostgreSQL cases; verify-ca hostname/IPv6 and allow TLS fallback remain mismatched | Repair the three measured mismatches; verify the prepared fixes through actual Main, including measured allow plaintext preference. Complete remaining modes, certificate and error branches against pinned Source |
 
 The 1:1 requirement already determines that these supported configurations must
 be preserved; no new product-scope decision is needed. Passing PostgreSQL-only

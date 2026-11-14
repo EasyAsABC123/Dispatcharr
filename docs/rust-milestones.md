@@ -10,15 +10,15 @@ alone does not establish application parity or an application performance gain.
 ## Current integrated work
 
 The latest packaged runtime is `95da37d9f0bd6dcca5f678d114bdac994de9b8de`:
-[896 default tests pass](rust-milestone-batch5.md), with751 external-fixture
+[896 default tests pass](rust-milestone-batch5.md), with 751 external-fixture
 tests ignored. Its [Docker image](rust-milestone-batch5-build.md) preserves the
-React assets and original credits; [all11 clean-install/React checks pass](rust-milestone-batch5-clean-install.md).
-The [packaged job cohort](rust-m6-packaged-main-batch5.md) passes191 assertions:
+React assets and original credits; [all 11 clean-install/React checks pass](rust-milestone-batch5-clean-install.md).
+The [packaged job cohort](rust-m6-packaged-main-batch5.md) passes 191 assertions:
 configured-rule artwork, actual settings PATCH200, a second real import with
 empty rules, and a failed SQL task followed by continued work.
 
-The [candidate5 Core99 cohort](rust-batch5-ops-acceptance.md) passes99 business
-HTTP cases,2,257 effect checks,643 row/task checks and93 additional transport
+The [candidate5 Core99 cohort](rust-batch5-ops-acceptance.md) passes 99 business
+HTTP cases, 2,257 effect checks, 643 row/task checks and 93 additional transport
 metadata checks. Five actual publications now include the retained Source
 headers; downstream execution and complete property equality remain unqualified.
 These are scoped integration results, not full milestone completion.
@@ -26,12 +26,12 @@ These are scoped integration results, not full milestone completion.
 The complete scheduler/worker graph and normal recording HTTP workflows remain
 unfinished. New normal-queue, startup recovery, clocked scheduling, pidbox and
 DVR code is under joint validation and is absent from this packaged image.
-The [default worker audit](rust-default-worker-graph.md) lists the selected14
+The [default worker audit](rust-default-worker-graph.md) lists the selected 14
 task families and missing Main integrations. The [Source task audit](rust-source-task-coverage.md)
-finds47 static application task declarations; producers and callbacks outside
+finds 47 static application task declarations; producers and callbacks outside
 the selected graph still need an executable coverage crosswalk.
 
-The [actual datastore comparison](rust-batch5-ops-acceptance.md) finds8/11
+The [actual datastore comparison](rust-batch5-ops-acceptance.md) finds 8 of 11
 PostgreSQL cases compatible. Three mismatches remain: verify-ca hostname and
 IPv6 handling, and allow's TLS fallback. A new Source observation also confirms
 allow's plaintext preference. SQLite remains unsupported in Native; explicit
@@ -59,7 +59,7 @@ The [inert plugin metadata service](rust-plugin-repositories-current-validation.
 
 The [Core retained-reader and error-body composition](rust-core-rest-owner-validation.md) passes 768 tests (738 ignored) on the plugin-inclusive 854-input library. Fresh HTTP/physical acceptance and Main assembly remain open.
 
-[Image58](rust-image58-build-validation.md) builds the newer 854-input library composition from exact committed source and preserves all114 installed React/credit hashes. This is build-only evidence; selected functional and measured acceptance remains image57.
+[Image58](rust-image58-build-validation.md) builds the newer 854-input library composition from exact committed source and preserves all 114 installed React/credit hashes. This is build-only evidence; selected functional and measured acceptance remains image57.
 
 The [Source-derived HTML error correction](rust-source500-correction.md) passes the combined 854-input workspace (769 tests, 739 ignored). Its fresh two-request Native acceptance now passes exact HTML status/body/content-type and unchanged SQL/authentication-history checks; earlier historical results are unchanged.
 
@@ -272,7 +272,7 @@ Image25 frozen workspace validation passes strict all-target Clippy and 296 defa
 
 M8 now has actual [Source result/exception contracts](../scripts/rust-job-contracts/verified-original-job-results-2.json), [native publication with the original worker](../scripts/rust-job-contracts/verified-native-source-interop-1.json), and [two delayed-reply/cancellation/drain tests](../scripts/rust-job-contracts/verified-native-job-resources-1.json). Native workers, scheduler and job202/status routes remain disabled. Original authors and contributors retain full application and algorithm credit.
 
-The [retained image23 guide experiment](../scripts/rust-guide-perf/verified-guide-experiment23-recovery-1.json) failed on its tenth pair: hot XMLTV with one viewer had a completion-p95 Rust/Source ratio of 1.16275, above the frozen 1.10 ceiling. The experiment stopped with its raw qualification and measurement evidence retained; the complete matrix was not accepted. The fresh image25 experiment kept the same workload and budgets: Current and cold1 each passed three pairs, then cold10 trial1 failed CPU (ratio1.03209), completion p95 (1.59665) and TTFB. All14 measured phases and18 original qualification phases remain evidence; the complete matrix is unaccepted. Earlier performance evidence remains bound to its historical image and workload.
+The [retained image23 guide experiment](../scripts/rust-guide-perf/verified-guide-experiment23-recovery-1.json) failed on its tenth pair: hot XMLTV with one viewer had a completion-p95 Rust/Source ratio of 1.16275, above the frozen 1.10 ceiling. The experiment stopped with its raw qualification and measurement evidence retained; the complete matrix was not accepted. The fresh image25 experiment kept the same workload and budgets: Current and cold1 each passed three pairs, then cold10 trial1 failed CPU (ratio1.03209), completion p95 (1.59665) and TTFB. All14 measured phases and 18 original qualification phases remain evidence; the complete matrix is unaccepted. Earlier performance evidence remains bound to its historical image and workload.
 
 
 Post-image23 [grid helper evidence](../scripts/rust-epg-contracts/verified-grid-window-components-17.json) matches861 original cases, including557 window/date parsing cases; three component tests and strict Store Clippy pass. These helper cases do not themselves accept the later guide HTTP/database/resource or performance gates.
@@ -743,7 +743,7 @@ Source restart observations [176](../scripts/rust-redis-restart-contracts/verifi
 [The strict image48 stale-provider React gate](../scripts/rust-vod-api-contracts/verified-stale-modal-image48-2.json) passes independent exact18-model/sequence resets before each backend, normal login and both providers for Movie/Series modals. Ordered visible results and XC request method/rawURI/header values match; twelve real images decode. All SQL fields/types compare strictly except30 changed datetime paths validated within each own browser interval and four new Episode UUIDv4 paths. Source-only restore/reseed qualification and nine type/clock/identity controls pass. The Source modal calls synchronously; this gate does not infer Celery worker or default graph acceptance. [Reproduction and preserved history](../scripts/rust-vod-api-contracts/STALE-MODAL.md) describe the first selector error, initial positive run and stronger final consumer. All owned projects are independently absent; no runtime/React changes or new performance gains follow from this test gate.
 
 
-[The first sealed M0 idle/churn run](../scripts/rust-baseline/idle-churn/verified-original-three-repetitions-negative-1.json) is recorded as failed, not baseline acceptance. All102 readers and18 workload phases pass; repetitions1/3 fail the declared process/FD/socket growth limits, predominantly in common infrastructure. Retained UID/PID aggregates cannot establish a causal leak. Repetition2 loses observer coverage on a permission-denied proc-FD read and supports no later growth inference. All owned projects are independently removed. A separate observer correction/qualification and a fresh unchanged-policy run remain required; M0 and later milestone statuses stay open.
+[The first sealed M0 idle/churn run](../scripts/rust-baseline/idle-churn/verified-original-three-repetitions-negative-1.json) is recorded as failed, not baseline acceptance. All102 readers and 18 workload phases pass; repetitions1/3 fail the declared process/FD/socket growth limits, predominantly in common infrastructure. Retained UID/PID aggregates cannot establish a causal leak. Repetition2 loses observer coverage on a permission-denied proc-FD read and supports no later growth inference. All owned projects are independently removed. A separate observer correction/qualification and a fresh unchanged-policy run remain required; M0 and later milestone statuses stay open.
 
 
 [The denied-proc observer correction](../scripts/rust-baseline/idle-churn/verified-observer-denial-contract-1.json) passes28 controls, actual Source idle/playback/churn functionality and a separate real-kernel control. Seven denied samples remain explicitly incomplete, followed by five stable complete samples after the bounded helper exits; unrelated errors still stop sampling. The kernel helper uses only hash-checked committed support, without private fallback or application privilege changes. The full workload and growth budgets are unchanged. The prior failed three-repetition baseline remains authoritative; a fresh full run and remaining M0 accounting still await execution/review.
@@ -851,7 +851,7 @@ The [combined791 runtime checkpoint](rust-union791-validation.md) is now committ
 
 The [full combined SDK checkpoint](../scripts/rust-integration/sdk9175/README.md) passes one Docker Compose run on the exact archived `9175d2c5` source: 578 Rust tests, 316 Python tests plus one existing skip, 1,806 byte-exact TS-helper cases and 6,158 unchanged source files. The 705 fixture-dependent Rust tests remain explicitly ignored there. Independent review verifies copied inputs, raw execution/image events and owned cleanup; auxiliary review negatives remain separate. This qualifies the current SDK tooling without accepting Main, application performance or whole milestones.
 
-The [Original notification mutation capture](rust-notification-mutations-source.md) adds 48 actual PUT/PATCH/DELETE framework observations and 1,449 passing checks, with Source/controller exit0, unchanged named default audits and independent cleanup. The earlier preflight serialization exit1 is retained beside the reporting-only correction. Portable validation, 17 corruption controls and exact 44-input reconstruction pass independent review. This does not change the 117 assigned HTTP Source operations, add Native parity or performance gains, or close M0/M5.
+The [Original notification mutation capture](rust-notification-mutations-source.md) adds 48 actual PUT/PATCH/DELETE framework observations and 1,449 passing checks, with Source/controller exit 0, unchanged named default audits and independent cleanup. The earlier preflight serialization exit1 is retained beside the reporting-only correction. Portable validation, 17 corruption controls and exact 44-input reconstruction pass independent review. This does not change the 117 assigned HTTP Source operations, add Native parity or performance gains, or close M0/M5.
 
 The current selected functional checkpoint is [image53](rust-image53-validation.md): all 28 package groups and scoped Main4s/header/notification gates pass, retaining both failed fixture attempts. Fresh live functional checks cover 222 authenticated readers; Source-only qualification covers 111 readers and 177 in-window samples. Comparative image53 resource gains remain pending; image52 gains remain historical and source-bound. The [three Source48 detail-method assignments](../scripts/rust-contracts/notification-mutation-assignments.md) increase partial HTTP definitions from 117 to 120, preserving all 795 unselected operations and existing non-HTTP definitions. No whole milestone or Native CRUD application acceptance is added.
 
