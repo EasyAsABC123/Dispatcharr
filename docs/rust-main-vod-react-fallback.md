@@ -22,7 +22,7 @@ file ownership through response drop, and converter boundaries.
 [Actual workspace verification](../scripts/rust-vod-contracts/react-fallback-qa/Root-review.json)
 passes formatting, compilation, strict Clippy and 782 default tests, with 741
 external-fixture tests ignored. The tested snapshot contains 856 Rust inputs and
-five coupled inputs. A fresh immutable-image Main witness is still required.
+five coupled inputs. A fresh [image60 Main witness](rust-image60-build-spa.md) now returns the exact selected Source858-byte page, with full default and owned request-phase SQL audits unchanged.
 Full M4, complete route/header/body parity and new performance gains remain open.
 All Dispatcharr application and algorithm credit belongs to the original authors
 and contributors.

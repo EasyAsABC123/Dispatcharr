@@ -1,0 +1,121 @@
+{
+  "cases": [
+    {
+      "id": 1,
+      "name": "malformed_UUID_GET_NormalMain_SPA",
+      "method": "GET",
+      "path": "/proxy/vod/movie/not-a-uuid/owned-method-route",
+      "request_headers": {
+        "User-Agent": "owned-source-method-1"
+      },
+      "request_body_hex": "",
+      "began_monotonic": 333753.924808797,
+      "status": 200,
+      "headers": [
+        [
+          "content-type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "content-length",
+          "858"
+        ],
+        [
+          "last-modified",
+          "Tue, 10 Nov 2026 03:37:22 GMT"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "referrer-policy",
+          "same-origin"
+        ],
+        [
+          "cross-origin-opener-policy",
+          "same-origin"
+        ],
+        [
+          "vary",
+          "origin"
+        ],
+        [
+          "date",
+          "Fri, 13 Nov 2026 23:42:38 GMT"
+        ]
+      ],
+      "body_hex": "3c21646f63747970652068746d6c3e0a3c68746d6c206c616e673d22656e223e0a20203c686561643e0a202020203c6d65746120636861727365743d225554462d3822202f3e0a202020203c6c696e6b2072656c3d2269636f6e2220747970653d22696d6167652f706e672220687265663d222f6c6f676f2e706e6722202f3e0a0a202020203c6c696e6b0a20202020202072656c3d226170706c652d746f7563682d69636f6e220a20202020202073697a65733d2231383078313830220a202020202020687265663d222f7374617469632f6170706c652d746f7563682d69636f6e2e706e67220a202020202f3e0a202020203c6c696e6b0a20202020202072656c3d2269636f6e220a202020202020747970653d22696d6167652f706e67220a20202020202073697a65733d223332783332220a202020202020687265663d222f7374617469632f66617669636f6e2d33327833322e706e67220a202020202f3e0a202020203c6c696e6b0a20202020202072656c3d2269636f6e220a202020202020747970653d22696d6167652f706e67220a20202020202073697a65733d223136783136220a202020202020687265663d222f7374617469632f66617669636f6e2d31367831362e706e67220a202020202f3e0a202020203c6c696e6b2072656c3d226d616e69666573742220687265663d222f7374617469632f736974652e7765626d616e696665737422202f3e0a0a202020203c6d657461206e616d653d2276696577706f72742220636f6e74656e743d2277696474683d6465766963652d77696474682c20696e697469616c2d7363616c653d312e3022202f3e0a202020203c7469746c653e44697370617463686172723c2f7469746c653e0a202020203c73637269707420747970653d226d6f64756c65222063726f73736f726967696e207372633d222f6173736574732f696e6465782d6d736d3871454f692e6a73223e3c2f7363726970743e0a202020203c6c696e6b2072656c3d227374796c657368656574222063726f73736f726967696e20687265663d222f6173736574732f696e6465782d447335714c6b4d4b2e637373223e0a20203c2f686561643e0a20203c626f64793e0a202020203c6469762069643d22726f6f74223e3c2f6469763e0a20203c2f626f64793e0a3c2f68746d6c3e0a",
+      "body_bytes": 858,
+      "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+      "absolute_observation": {
+        "deadline": 333768.924726094,
+        "completed": 333753.925554058,
+        "timer_joined": true
+      },
+      "physical_close": {
+        "fd_after": -1,
+        "original_inode_absent": true,
+        "timer_joined": true,
+        "request_worker": "calling thread; returned after actual I/O unwind"
+      },
+      "completed_monotonic": 333753.925608439
+    }
+  ],
+  "actual_business_request_invocations": 1,
+  "Source_replay": 0,
+  "origin_before": {
+    "rows": [],
+    "invalid": [],
+    "nonce_sha256": "32e0cae1fcfebfb8529092068b71309f2799882fb5f8c5315c40da0b671c20cb",
+    "PID": 1,
+    "starttime": "33374576",
+    "listener_ready_actual": true,
+    "active_handler_threads": 1,
+    "connections": [
+      {
+        "id": 1,
+        "accepted_monotonic": 333753.92208574,
+        "socket_closed": false,
+        "requests": 1,
+        "controls": 1
+      }
+    ],
+    "accepted_TCP_total": 1,
+    "control_requests": 1,
+    "unclassified_connections": 0
+  },
+  "origin_after": {
+    "rows": [],
+    "invalid": [],
+    "nonce_sha256": "32e0cae1fcfebfb8529092068b71309f2799882fb5f8c5315c40da0b671c20cb",
+    "PID": 1,
+    "starttime": "33374576",
+    "listener_ready_actual": true,
+    "active_handler_threads": 1,
+    "connections": [
+      {
+        "id": 1,
+        "accepted_monotonic": 333753.92208574,
+        "socket_closed": true,
+        "requests": 1,
+        "controls": 1
+      },
+      {
+        "id": 2,
+        "accepted_monotonic": 333753.925959019,
+        "socket_closed": false,
+        "requests": 1,
+        "controls": 1
+      }
+    ],
+    "accepted_TCP_total": 2,
+    "control_requests": 2,
+    "unclassified_connections": 0
+  },
+  "capture_elapsed_seconds": 0.004778453963808715
+}

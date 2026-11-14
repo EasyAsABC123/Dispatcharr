@@ -1,0 +1,127 @@
+{
+  "state": "BLOCKED_COMPLETE_EXECUTOR_ROOT_REVIEW",
+  "action": "image60-vod-converter-spa-GET-once-correction2",
+  "candidate_binding": {
+    "state": "BOUND_BUILD_AND_INSTALLED_REVIEW_FULL_HOST_AND_ROOT_CUE_STILL_REQUIRED",
+    "manifest": "artifacts/rust/image60-committed-build-1/build.json",
+    "manifest_sha256": "b408966cacef65e372ef1074fa204acb77f6f9ef26e3416ca6a1eb661c5c993e",
+    "archive": "artifacts/rust/image60-committed-build-1/source.tar",
+    "archive_sha256": "79efb8958960737c255eeedb629d6ccc7fb6602a43c1345429c7f75a89934909",
+    "image_id": "sha256:1a184fd3f62c794f1be5fb44f750606217a620bd07134a8a6e0b0ea63208259e",
+    "tag": "dispatcharr-rust-candidate:image60",
+    "Git": "2dd210cf37877d9e132c864a54889fc66d6dd3b1",
+    "tree": "e5a88d2cbe20412819cdb6e049c3dea4004b57c5ad6b9693fdb176d85743e5d2",
+    "Rust_inputs": 856,
+    "app_inputs": 1353,
+    "qualified_full_input_map": "artifacts/rust/root-main-react-fallback-qa-1/source-inputs.json",
+    "qualified_full_input_map_sha256": "e549f0ecad6a9a2072a9e210c96bbc31070c97cb402a934ee45c54647929d2fb",
+    "full_inputs": 861,
+    "expected_runtime_map_sha256": "0b5928f425dc1e04ed452db488c6ae29a70782d4a8305cbfef33029ca566d90f",
+    "Root_credit_review_required": "artifacts/rust/image60-committed-build-1/Root-build-review.json",
+    "Root_installed_probe_required": "artifacts/rust/image60-committed-build-1/Root-credit-frontend-probe.json",
+    "Root_review_hashes": {
+      "build": {
+        "path": "artifacts/rust/image60-committed-build-1/Root-build-review.json",
+        "sha256": "e43fef4eceec8cfe391f0b48d641460a1cc44c2b2a40585743e64ace200b5c58"
+      },
+      "installed": {
+        "path": "artifacts/rust/image60-committed-build-1/Root-credit-frontend-probe.json",
+        "sha256": "141c65b3cb2beee11c8fd3ba23525cb6a107544a2a27c00834e9c725f87969e4"
+      }
+    }
+  },
+  "Source_business_requests": 0,
+  "Native_business_requests": 1,
+  "source_case_id": 1,
+  "Native_case": {
+    "id": 1,
+    "name": "malformed_UUID_GET_NormalMain_SPA",
+    "method": "GET",
+    "path": "/proxy/vod/movie/not-a-uuid/owned-method-route",
+    "headers": {
+      "User-Agent": "owned-source-method-1"
+    },
+    "body_hex": "",
+    "Authorization": null,
+    "Cookie": null
+  },
+  "readiness_controls": "Native /health/ready only, bounded120s; no retry after business dispatch starts",
+  "Origin_controls": "nonce-authorized no-media trap state/terminal only; no preflight media GET",
+  "expected_actual_Source_fields": {
+    "status": 200,
+    "body_bytes": 858,
+    "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+    "content_type": "text/html; charset=utf-8",
+    "X_Worker_ID_absent": true
+  },
+  "code_derived_not_new_Source_app_observations": [
+    "classification before auth/provider supported by eight qualified router/converter/file-body tests",
+    "matching VOD and API paths are unaffected; not replayed by this single request",
+    "encoded/rawnonASCII paths explicitly unchanged, no encoded-path parity claim",
+    "Range/conditional behavior code-derived only, not exercised by this request",
+    "file body has existing ServeFile ownership/16KiB chunks; no new capacity pool"
+  ],
+  "no_internal_trace_absence_claim": "No provider contact is measured by owned trap; absence of internal auth/helper calls is code/router-test evidence, not an invented Main trace.",
+  "configured_frontend": "normal installed /opt/dispatcharr-frontend/index.html; do not bind donor/template override",
+  "real_packaged_Main": {
+    "UID": 65532,
+    "PID": 1,
+    "process": "dispatcharr-rs",
+    "image": "sha256:1a184fd3f62c794f1be5fb44f750606217a620bd07134a8a6e0b0ea63208259e",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_graph_or_default_workers": true
+  },
+  "setup": "owned Original management-only PG/Redis migrate; no Source web/tasks/requests; preserve exact migration-owned active locked custom account/default profile/refresh task and interval, no configured external URL/file/credentials; no User/Movie rows and no fixture seed/deletion",
+  "default_SQL": "full62 tables/59 sequences before owned clone creation and after Main stop, unchanged; local Unix observer, no unauthenticated TCP psql",
+  "owned_SQL": "full62/59 after Main readiness/before request and after body/socket settlement before Main stop, unchanged; startup effects explicitly outside request comparison",
+  "request_absolute_seconds": 15,
+  "request_IO_seconds": 15,
+  "request_header_cap": 65536,
+  "response_body_cap": 1048576,
+  "Native_capture_phase_seconds": 40,
+  "host_total_seconds": 600,
+  "cleanup_seconds": 90,
+  "host_command_output_cap": 1048576,
+  "origin_journal_entries": 128,
+  "origin_concurrency": 8,
+  "origin_socket_timeout_seconds": 3,
+  "new_output": "artifacts/rust/m4-vod-spa-native-main-image60-2",
+  "new_cue": "artifacts/rust/m4-vod-spa-native-main-image60-execution-cue-2.json",
+  "once_guards": [
+    "exact Root candidate/credit/runtime/source archive/closure hashes",
+    "fresh UTC issue/expiry <=1200s and boot",
+    "nonempty32hex nonce, exact action/case/output",
+    "exclusive fsynced claim before output/children",
+    "controlled safe tooling exports and stripped ambient fixture/Git overrides",
+    "no boolean/env bypass, no old cue reuse, no outcome-dependent inputs/retry"
+  ],
+  "cleanup": [
+    "retain first failure and partial capture",
+    "cancel/settle owned HTTP/timer/FD identity",
+    "normal stop Main with exact CID/PID-start scope and physical wait",
+    "collect post-stop owned backend absence and default audit",
+    "owned origin handler/socket acknowledgement then process wait",
+    "normal PG/Redis exit receipts or literal classified forced teardown",
+    "compose down volumes/orphans with fresh exact CID/project C/N/V inventories",
+    "all CLI PID/start/pipes recorded and physically gone; no global prune"
+  ],
+  "performance_or_resource_acceptance": false,
+  "SDK_or_package28_or_full_M4": false,
+  "controller_implementation_state": "complete bounded host/bootstrap/active-origin/once/cleanup executor; HARD_BLOCKED=True; Root review/flag-only copy/fresh cue required",
+  "origin_observation_required": "Actual owned listener PID/start/nonce readiness before request, matching nonce digest on before/after/terminal ledger, then shutdown/listener/socket/handler acknowledgements and process wait. Empty rows alone never establish an active trap.",
+  "host_work_seconds": 510,
+  "host_budget_partition": "510 work + at most90 cleanup within600 total; no outcome-based extension",
+  "prior_attempt": {
+    "output": "artifacts/rust/m4-vod-spa-native-main-image60-1",
+    "actual_host_exit": 1,
+    "first_failure": "NoUserMovieProviderSeedOrExistingRows",
+    "Native_business_requests": 0,
+    "Source_requests": 0,
+    "candidate_created": false,
+    "default_full6259_unchanged": true,
+    "earlier_inactive_or_disabled_hypothesis": "incorrect; pinned0003 sets active True and0006 leaves enabled to installed default; preserved as hypothesis negative"
+  }
+}

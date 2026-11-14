@@ -1,0 +1,11 @@
+--- blocked/run.py
++++ Root-flag-only/run.py
+@@ -10,7 +10,7 @@
+ from execution_validation import validate as qualify
+ from bootstrap_context import validate as builtin_validate
+ import tooling_guard as T
+-HARD_BLOCKED=True
++HARD_BLOCKED=False
+ HERE=Path(__file__).resolve().parent
+ ROOT=Path('/home/justin/github/Dispatcharr')
+ ORIGINAL='ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'

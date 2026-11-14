@@ -1,0 +1,233 @@
+{
+  "Original_Git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "files": [
+    {
+      "path": "apps/m3u/migrations/0001_initial.py",
+      "Git_blob": "58c1f473e5440d874d1f0d4b3b96696770430e90",
+      "sha256": "44b71e779d5b8601813dde0bd0334c8fbb01680bc41f4b9cca7e331626b742de",
+      "relevant_lines": [
+        {
+          "line": 28,
+          "text": "                ('server_url', models.URLField(blank=True, help_text='The base URL of the M3U server (optional if a file is uploaded)', null=True)),"
+        },
+        {
+          "line": 29,
+          "text": "                ('uploaded_file', models.FileField(blank=True, null=True, upload_to='m3u_uploads/')),"
+        },
+        {
+          "line": 34,
+          "text": "                ('user_agent', models.ForeignKey(blank=True, help_text='The User-Agent associated with this M3U account.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='m3u_accounts', to='core.useragent')),"
+        },
+        {
+          "line": 35,
+          "text": "                ('server_group', models.ForeignKey(blank=True, help_text='The server group this M3U account belongs to', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='m3u_accounts', to='m3u.servergroup')),"
+        }
+      ]
+    },
+    {
+      "path": "apps/m3u/migrations/0003_create_custom_account.py",
+      "Git_blob": "cdc40cda23d38bd7457601e824c37e4af02375cb",
+      "sha256": "c23e715b7ed30fe66fe9da4ccb4e84236512bd0406d010936f8e423ee67efbae",
+      "relevant_lines": [
+        {
+          "line": 12,
+          "text": "        name=\"custom\","
+        },
+        {
+          "line": 13,
+          "text": "        max_streams=0,"
+        },
+        {
+          "line": 14,
+          "text": "        is_active=True,"
+        },
+        {
+          "line": 16,
+          "text": "        locked=True,"
+        },
+        {
+          "line": 24,
+          "text": "        is_default=True,"
+        },
+        {
+          "line": 25,
+          "text": "        is_active=True,"
+        },
+        {
+          "line": 26,
+          "text": "        search_pattern=\"^(.*)$\","
+        },
+        {
+          "line": 27,
+          "text": "        replace_pattern=\"$1\","
+        }
+      ]
+    },
+    {
+      "path": "apps/m3u/migrations/0006_populate_periodic_tasks.py",
+      "Git_blob": "bc387979688a187a606dba83cf4cd49c388545e9",
+      "sha256": "807c952711f157c6098a024b2267211af7aa8e2edd619bd04ea96c3f06a6f297",
+      "relevant_lines": [
+        {
+          "line": 13,
+          "text": "        every=24,"
+        },
+        {
+          "line": 14,
+          "text": "        period=\"hours\","
+        },
+        {
+          "line": 21,
+          "text": "        task_name = f\"m3u_account-refresh-{account.id}\""
+        },
+        {
+          "line": 26,
+          "text": "            task=\"apps.m3u.tasks.refresh_single_m3u_account\","
+        },
+        {
+          "line": 27,
+          "text": "            kwargs=json.dumps({\"account_id\": account.id}),"
+        }
+      ]
+    },
+    {
+      "path": "apps/m3u/migrations/0007_remove_m3uaccount_uploaded_file_m3uaccount_file_path.py",
+      "Git_blob": "086eff29c0c37397cc99e24af0e08ca053f0d2f3",
+      "sha256": "0fa01b053852e55db87e792d42fd6f74c7c0282f701ddbba1d39deb9dea44c0e",
+      "relevant_lines": [
+        {
+          "line": 19,
+          "text": "            name='file_path',"
+        },
+        {
+          "line": 20,
+          "text": "            field=models.CharField(blank=True, max_length=255, null=True),"
+        }
+      ]
+    },
+    {
+      "path": "apps/m3u/migrations/0009_m3uaccount_account_type_m3uaccount_password_and_more.py",
+      "Git_blob": "d57f7ccd0d4283da763aee00dd5a5f4a7c97df70",
+      "sha256": "8868f57396bba73773f6e6b0c69a9cdf5cf122319d07beac5ec8ce36abe072c1",
+      "relevant_lines": [
+        {
+          "line": 20,
+          "text": "            name='password',"
+        },
+        {
+          "line": 21,
+          "text": "            field=models.CharField(blank=True, max_length=255, null=True),"
+        },
+        {
+          "line": 25,
+          "text": "            name='username',"
+        },
+        {
+          "line": 26,
+          "text": "            field=models.CharField(blank=True, max_length=255, null=True),"
+        }
+      ]
+    },
+    {
+      "path": "apps/m3u/models.py",
+      "Git_blob": "6638ad5f398bec99bb322ec47dab4877778993fc",
+      "sha256": "f8e0cd0862d9c576cbd7ac6af71c195a1fde8eaa1b3ea5f225c3b8b56ead7219",
+      "relevant_lines": [
+        {
+          "line": 33,
+          "text": "    server_url = models.URLField("
+        },
+        {
+          "line": 36,
+          "text": "        null=True,"
+        },
+        {
+          "line": 39,
+          "text": "    file_path = models.CharField(max_length=255, blank=True, null=True)"
+        },
+        {
+          "line": 43,
+          "text": "        null=True,"
+        },
+        {
+          "line": 58,
+          "text": "        null=True,"
+        },
+        {
+          "line": 66,
+          "text": "        null=True,"
+        },
+        {
+          "line": 73,
+          "text": "        null=True,"
+        },
+        {
+          "line": 84,
+          "text": "        null=True,"
+        },
+        {
+          "line": 89,
+          "text": "    username = models.CharField(max_length=255, null=True, blank=True)"
+        },
+        {
+          "line": 90,
+          "text": "    password = models.CharField(max_length=255, null=True, blank=True)"
+        },
+        {
+          "line": 91,
+          "text": "    custom_properties = models.JSONField(default=dict, blank=True, null=True)"
+        },
+        {
+          "line": 94,
+          "text": "        PeriodicTask, on_delete=models.SET_NULL, null=True, blank=True"
+        },
+        {
+          "line": 132,
+          "text": "        return cls.objects.get(name=CUSTOM_M3U_ACCOUNT_NAME, locked=True)"
+        },
+        {
+          "line": 213,
+          "text": "    custom_properties = models.JSONField(default=dict, blank=True, null=True)"
+        },
+        {
+          "line": 281,
+          "text": "        null=True,"
+        },
+        {
+          "line": 285,
+          "text": "        null=True,"
+        },
+        {
+          "line": 413,
+          "text": "            is_default=True,"
+        },
+        {
+          "line": 414,
+          "text": "            is_active=True,"
+        },
+        {
+          "line": 415,
+          "text": "            search_pattern=\"^(.*)$\","
+        },
+        {
+          "line": 416,
+          "text": "            replace_pattern=\"$1\","
+        },
+        {
+          "line": 426,
+          "text": "        is_default=True,"
+        }
+      ]
+    }
+  ],
+  "guard_scope": "Source-backed static identity/default fields only, exact actual full SQL row hash correlation; no forced IDs/dates, no disabled assumption, no changes to migration rows/task or settings",
+  "actual_old_rows_unmeasured_except_count_hash": true,
+  "previous_actual_counts": {
+    "account": 1,
+    "profile": 1,
+    "task": 1,
+    "interval": 1
+  },
+  "old_run_negative": "NoUserMovieProviderSeedOrExistingRows before any candidate/clone/business request",
+  "earlier_hypothesis_negative": "inactive and disabled wording was incorrect; literal0003 active=True and0006 does not explicitly set enabled"
+}
