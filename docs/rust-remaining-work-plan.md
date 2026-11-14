@@ -13,7 +13,7 @@ failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
 The delivered opt-in component composition is
-[current882](../scripts/rust-component-checkpoints/current882/README.md).
+[current892](../scripts/rust-component-checkpoints/current892/README.md).
 Its unsigned plugin comparisons and recording SQL-rejection correction are
 source-bound component evidence. The selected full package/performance reference
 remains [image57](rust-image57-validation.md); [image62](rust-image62-build.md)
@@ -33,7 +33,20 @@ Main acceptance nor measured performance gains.
 | M8: operations/plugins | Protocol/operations agent (`source_contract_finish`) | Finish frontend-disconnect, SQL Ready and concurrent-fetch ownership; qualify HTTPS/DNS/signature domains, discovery/install/run, backup/restore/rollback, sessions/CSRF and environment/startup/shutdown workflows. |
 | M9: final acceptance | Primary agent with all three agents | Assemble the final committed source, complete prerequisites and full workflow/package/SDK checks, then restart/soak/cutover/rollback and representative full-graph paired performance. |
 
-## Current executable queues
+## Qualified groundwork for the milestone batches
+
+The combined892 source passes860 default Rust tests with751 external-fixture
+tests ignored. The [Core51 batch](rust-core-special-settings-source51-native51.md),
+[four plugin ownership cases](../scripts/rust-pluginrepo-contracts/unsigned-remaining-physical/README.md)
+and [bounded audio/video recording](rust-recording-audio61.md) now have published
+source-bound evidence, including failed attempts. Main/default workers, broader
+formats/profiles and whole-milestone performance remain open. These results do
+not transfer to a full combined application acceptance.
+
+The following queues describe the earlier component checkpoint; the current
+execution units are the milestone-wide batches linked above.
+
+## Historical component queues
 
 - **Plugin/protocol owner:** the portable Source25/Native25 and two selected
   physical cases are published in the
