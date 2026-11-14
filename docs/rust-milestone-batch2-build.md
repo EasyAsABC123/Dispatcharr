@@ -29,7 +29,8 @@ python3 scripts/rust-integration/build.py \
   --output /absolute/path/to/fresh-build --timeout 1800
 ```
 
-One shared image is used for the prepared plugin41, job and input-profile
-functional cohorts. Build/version checks alone do not establish signature,
+The [native fresh-install/React restart regression](rust-milestone-batch2-clean-install.md)
+passes11 checks on this image. One shared image is used for the prepared plugin41,
+job and input-profile functional cohorts. Build/version checks alone do not establish signature,
 worker, media, shutdown or performance acceptance. Those actual results remain
 separate; no historical resource gain transfers to this candidate.

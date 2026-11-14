@@ -1,0 +1,124 @@
+{
+  "services": {
+    "baseline": {
+      "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "pull_policy": "never",
+      "platform": "linux/amd64",
+      "network_mode": "none",
+      "working_dir": "/app",
+      "entrypoint": [
+        "bash",
+        "/special-root/start.sh"
+      ],
+      "environment": {
+        "DISPATCHARR_ENV": "aio",
+        "DJANGO_SECRET_KEY": "playback-fixture-only",
+        "POSTGRES_DB": "dispatcharr",
+        "POSTGRES_USER": "dispatch",
+        "POSTGRES_PASSWORD": "playback-fixture-only",
+        "POSTGRES_HOST": "/var/run/postgresql",
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_DIR": "/data/db",
+        "REDIS_HOST": "127.0.0.1",
+        "REDIS_PORT": "6379",
+        "REDIS_DB": "7",
+        "REDIS_URL": "redis://:playback-fixture-only@127.0.0.1:6379/7",
+        "REDIS_PASSWORD": "playback-fixture-only",
+        "REDISCLI_AUTH": "playback-fixture-only",
+        "DISPATCHARR_LOG_DIR": "/evidence/special-logs/default",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONPATH": "/special-root:/app",
+        "PUID": "1000",
+        "PGID": "1000",
+        "TZ": "UTC",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8"
+      },
+      "volumes": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2/Original:/app:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2/frozen-shared-tools:/special-root:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2/frozen-shared-tools/inputs:/health-root:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2/frozen-m6-tools:/m6-tools:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2/main-data:/app/media",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2:/evidence"
+      ],
+      "tmpfs": [
+        "/data:mode=1777,size=2147483648",
+        "/tmp:mode=1777,size=268435456"
+      ],
+      "mem_limit": "1g",
+      "pids_limit": 256
+    },
+    "native": {
+      "image": "sha256:e88cc73fb054d6b285a99018e70b60b072ea0b32d96408374e2109e6692ece65",
+      "pull_policy": "never",
+      "platform": "linux/amd64",
+      "network_mode": "service:baseline",
+      "user": "65532:65532",
+      "entrypoint": [
+        "/usr/local/bin/dispatcharr-rs"
+      ],
+      "environment": {
+        "DISPATCHARR_ENV": "aio",
+        "DJANGO_SECRET_KEY": "playback-fixture-only",
+        "POSTGRES_DB": "rust_probe_backup_jobs_c029e74a6e",
+        "POSTGRES_USER": "dispatch",
+        "POSTGRES_PASSWORD": "playback-fixture-only",
+        "POSTGRES_HOST": "127.0.0.1",
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_DIR": "/data/db",
+        "REDIS_HOST": "127.0.0.1",
+        "REDIS_PORT": "6379",
+        "REDIS_DB": "0",
+        "REDIS_URL": "redis://:playback-fixture-only@127.0.0.1:6379/0",
+        "REDIS_PASSWORD": "playback-fixture-only",
+        "REDISCLI_AUTH": "playback-fixture-only",
+        "DISPATCHARR_LOG_DIR": "/evidence/special-logs/default",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONPATH": "/special-root:/app",
+        "PUID": "1000",
+        "PGID": "1000",
+        "TZ": "UTC",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "CELERY_BROKER_URL": "redis://:playback-fixture-only@127.0.0.1:6379/8",
+        "CELERY_RESULT_BACKEND": "redis://:playback-fixture-only@127.0.0.1:6379/9",
+        "RUST_BIND": "127.0.0.1:9192",
+        "RUST_EPG_REFRESH_ENABLED": "1",
+        "RUST_EPG_SOURCE_CWD": "/app",
+        "RUST_EPG_MEDIA_ROOT": "/app/media",
+        "RUST_EPG_CACHE_DIR": "/app/media/cached_epg",
+        "RUST_VERSION_TASKS_ENABLED": "1",
+        "RUST_VERSION_HTTP_ORIGIN": "http://127.0.0.1:9193",
+        "JOB_DISPOSABLE_FIXTURE": "playback-fixture-only",
+        "DISPATCHARR_PLUGINS_DIR": "/evidence/empty-plugins",
+        "RUST_SHUTDOWN_SECONDS": "12"
+      },
+      "volumes": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2/Original:/app:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2/main-data:/app/media",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2:/evidence"
+      ],
+      "mem_limit": "768m",
+      "pids_limit": 256
+    },
+    "origin": {
+      "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "pull_policy": "never",
+      "network_mode": "service:baseline",
+      "entrypoint": [
+        "/dispatcharrpy/bin/python",
+        "/m6-tools/origin.py"
+      ],
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "volumes": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2/frozen-m6-tools:/m6-tools:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2:/evidence"
+      ],
+      "mem_limit": "128m",
+      "pids_limit": 64
+    }
+  }
+}

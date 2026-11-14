@@ -1,0 +1,108 @@
+{
+  "Original_authors_retain_full_credit": true,
+  "candidate": {
+    "git": "1dc16f8da8b04a0b119afebef16649b837c6e928",
+    "source_map_file": "/home/justin/github/Dispatcharr/scripts/rust-integration/milestone-batch2/source-inputs.json",
+    "source_map_sha256": "5216dbb20c56e7f4eff45afa176b64b46a8e3fc2d3d9bb498da86a5a3c23a95c",
+    "build_manifest_file": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch2-build-1/build.json",
+    "build_manifest_sha256": "939c8c5104597591ba67c30aa9a0280529376914f23fc1435031bc633474507c",
+    "source_archive_file": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch2-build-1/source.tar",
+    "source_archive_sha256": "55faa17ac4c1e208ec7bf185480e470d0f34a7e53652b51c7949ba529dafc627",
+    "image_id": "sha256:e88cc73fb054d6b285a99018e70b60b072ea0b32d96408374e2109e6692ece65"
+  },
+  "actual_controller_exit": 0,
+  "actual_cleanup_exit": 0,
+  "actual_evaluator_exit": 0,
+  "outer_global_exit": 2,
+  "broader_node_status": "failed",
+  "full_required_workflow": false,
+  "current_custom_input_subset_passed": true,
+  "full_M3_passed": false,
+  "performance_gain_claimed": false,
+  "Source18_model_calls_replayed": false,
+  "Source_media_authority": "blocked/not_measured",
+  "actual_checks": 33,
+  "actual_media_cases": 3,
+  "exclusive_heavy": true,
+  "actual_execution_seconds": 87.3974973000004,
+  "exact_owned_cleanup_verified": true,
+  "all_process_groups_and_pipes_settled": true,
+  "cases": [
+    {
+      "case": "shared-demand",
+      "actual_profile_processes": 1,
+      "actual_clients": 2,
+      "actual_provider_slots": 1,
+      "origin_and_provider_assertion_passed": true,
+      "decoder_frames": [
+        74,
+        74
+      ],
+      "all_decoders_have_audio_and_video": true,
+      "cleanup_seconds": 5.471186408016365
+    },
+    {
+      "case": "stop",
+      "actual_profile_processes": 1,
+      "actual_clients": 2,
+      "actual_provider_slots": 1,
+      "origin_and_provider_assertion_passed": true,
+      "decoder_frames": [
+        74,
+        74
+      ],
+      "all_decoders_have_audio_and_video": true,
+      "cleanup_seconds": 0.5083411890082061
+    },
+    {
+      "case": "owner-crash",
+      "actual_profile_processes": 1,
+      "actual_clients": 2,
+      "actual_provider_slots": 1,
+      "origin_and_provider_assertion_passed": true,
+      "decoder_frames": [
+        74,
+        74
+      ],
+      "all_decoders_have_audio_and_video": true,
+      "cleanup_seconds": 28.503941325994674
+    }
+  ],
+  "resolver_boundaries": {
+    "32_supported": true,
+    "33_status_and_error_JSON": {
+      "status": 503,
+      "body": {
+        "error": "Stream candidate capacity reached"
+      },
+      "actual_candidate_rows": 33
+    },
+    "33_no_upstream_or_reservation": true
+  },
+  "unmeasured_required_domains": [
+    "Source-media-authority",
+    "VLC-runtime",
+    "active-OutputProfile-delivery",
+    "provider-regex",
+    "credential-pool",
+    "custom-input-HLS-fMP4"
+  ],
+  "driver_paths": [
+    "artifacts/rust/m3-input-profile-main-cohort-1/shared_ts.py",
+    "artifacts/rust/m3-input-profile-main-cohort-1/profile_input_fixture.py",
+    "artifacts/rust/m3-input-profile-main-cohort-1/profile_bound_fixture.py",
+    "artifacts/rust/m3-input-profile-main-cohort-1/result.py",
+    "artifacts/rust/m3-input-profile-main-cohort-1/prepare_binding.py"
+  ],
+  "raw_sha256": {
+    "shared-ts.json": "ec401dd9f349111128e3bfe00cb70e9053adce99e250f9420e6d0046e1d2536c",
+    "global-report.json": "0e708dcb509a2dbf8f443f263dd34b81910df0b06f72f8afc300dbfc6c0392a3"
+  },
+  "driver_sha256": {
+    "artifacts/rust/m3-input-profile-main-cohort-1/shared_ts.py": "fef672246cf047ca8841c32007c2b9e92bd82449627050ee7dd27c8918618742",
+    "artifacts/rust/m3-input-profile-main-cohort-1/profile_input_fixture.py": "f4d194621ea9450055ac4b44ab24acd6ce3f3333bc493496becce2d7721b03f0",
+    "artifacts/rust/m3-input-profile-main-cohort-1/profile_bound_fixture.py": "35aee78e8d3bc63b37faf8cb3cc6f0664f6da79bf878029a0c87e32fb4cc74a8",
+    "artifacts/rust/m3-input-profile-main-cohort-1/result.py": "510eb7c9000310bffd29407d21d9904ba08b33459308ce7cfa39ab791e889bcf",
+    "artifacts/rust/m3-input-profile-main-cohort-1/prepare_binding.py": "8c0e8cde6952c9345ebf297022db9fdae68a6ad223b64d3203407529b34ff3ee"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+    "compose",
+    "-p",
+    "dispatcharr-m6-main-c029e74a6e",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m6-packaged-main-actual-2/compose.json",
+    "exec",
+    "-T",
+    "baseline",
+    "/dispatcharrpy/bin/python",
+    "-c",
+    "import urllib.request,time\nend=time.monotonic()+45\nwhile True:\n try:\n  r=urllib.request.urlopen('http://127.0.0.1:9192/',timeout=2);assert r.status==200;break\n except Exception:\n  assert time.monotonic()<end;time.sleep(.1)"
+  ],
+  "cwd": "/home/justin/github/Dispatcharr",
+  "observer_PID_namespace": "pid:[4026531836]",
+  "PID": 2370503,
+  "starttime": "39579443",
+  "began_epoch": 1794675399.3939593,
+  "completed_epoch": 1794675399.505237,
+  "actual_exit": 0,
+  "invalid": null,
+  "physically_settled": true,
+  "pipe_threads_settled": true,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
