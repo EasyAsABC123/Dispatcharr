@@ -55,6 +55,7 @@ async fn shutdown_deadline_covers_all_sessions_and_managers_when_redis_stalls() 
     for _ in 0..40 {
         gateway
             .mint(PlaybackSource {
+                input_command: None,
                 channel_id: channel.clone(),
                 channel_name: "shutdown".into(),
                 stream_id: 1,

@@ -6,8 +6,19 @@ use dispatcharr_contracts::{
 use sqlx::Row;
 use std::time::Duration;
 
+// Match the production engine's existing primary+alternate capacity, before
+// transferring/expanding profile commands for an unbounded provider join.
+const MAX_CANDIDATES: usize = 32;
+fn playback_capacity() -> StoreError {
+    StoreError::StatusBody(
+        503,
+        serde_json::json!({"error":"Stream candidate capacity reached"}),
+    )
+}
+
 #[derive(Debug)]
 pub struct ProviderStream {
+    pub input_command: Option<dispatcharr_contracts::StreamCommand>,
     pub stream_id: i64,
     pub provider_profile_id: i64,
     pub provider_max_streams: u32,
@@ -41,22 +52,68 @@ impl Store {
         let profile_id: Option<i64> = channel.try_get("profile_id")?;
         let profile_id =
             profile_id.ok_or(StoreError::Unsupported("No stream profile configured"))?;
-        let profile = sqlx::query("SELECT name,locked,is_active,user_agent_id::bigint AS user_agent_id FROM core_streamprofile WHERE id=$1")
+        // CASE bounds the actual SQL wire values, not merely an already
+        // allocated Rust String. An oversize value is explicit, never truncated.
+        let profile = sqlx::query(r#"SELECT
+            CASE WHEN octet_length(name)<=4096 THEN name END AS name,
+            CASE WHEN octet_length(command)<=262144 THEN command END AS command,
+            CASE WHEN octet_length(parameters)<=262144 THEN parameters END AS parameters,
+            (octet_length(name)>4096 OR octet_length(command)>262144 OR octet_length(parameters)>262144) AS oversized,
+            locked,is_active,user_agent_id::bigint AS user_agent_id
+            FROM core_streamprofile WHERE id=$1"#)
             .bind(profile_id).fetch_optional(self.pool()).await?.ok_or(StoreError::Unsupported("Stream profile not found"))?;
-        if !profile.try_get::<bool, _>("is_active")?
-            || !profile.try_get::<bool, _>("locked")?
-            || profile.try_get::<String, _>("name")? != "Proxy"
-        {
+        if profile.try_get::<bool, _>("oversized")? {
+            return Err(playback_capacity());
+        }
+        if !profile.try_get::<bool, _>("is_active")? {
+            return Err(StoreError::Unsupported("Stream profile is inactive"));
+        }
+        let profile_name: String = profile.try_get("name")?;
+        let profile_locked: bool = profile.try_get("locked")?;
+        if profile_locked && profile_name == "Redirect" {
             return Err(StoreError::Unsupported(
-                "Only the native locked Proxy profile is implemented",
+                "Redirect stream profiles are not migrated",
             ));
         }
+        let profile_command: String = profile.try_get("command")?;
+        let profile_parameters: String = profile.try_get("parameters")?;
         let profile_ua: Option<i64> = profile.try_get("user_agent_id")?;
         let default_ua = settings
             .get("default_user_agent")
             .and_then(|value| value.as_i64().or_else(|| value.as_str()?.parse().ok()));
-        let rows = sqlx::query(r#"SELECT s.id::bigint AS stream_id,s.name AS stream_name,s.url,a.account_type,a.server_group_id::bigint AS server_group_id,a.user_agent_id::bigint AS account_ua,p.id::bigint AS provider_profile_id,p.name AS provider_profile_name,p.max_streams,p.search_pattern,p.replace_pattern FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id JOIN m3u_m3uaccount a ON a.id=s.m3u_account_id JOIN m3u_m3uaccountprofile p ON p.m3u_account_id=a.id WHERE cs.channel_id=$1 AND a.is_active AND p.is_active AND EXISTS(SELECT 1 FROM m3u_m3uaccountprofile d WHERE d.m3u_account_id=a.id AND d.is_default AND d.is_active) ORDER BY cs."order",cs.id,p.is_default DESC,p.id"#)
-            .bind(id).fetch_all(self.pool()).await?;
+        // Project every potentially large text value through a byte bound in
+        // this SELECT, including the selected UA. This replaces per-row UA reads.
+        // The chosen UA ID and empty/missing-UA fallback are unchanged.
+        let rows = sqlx::query(r#"SELECT s.id::bigint AS stream_id,
+            CASE WHEN octet_length(s.name)<=4096 THEN s.name END AS stream_name,
+            CASE WHEN octet_length(s.url)<=65536 THEN s.url END AS url,
+            a.account_type,a.server_group_id::bigint AS server_group_id,
+            p.id::bigint AS provider_profile_id,
+            CASE WHEN octet_length(p.name)<=4096 THEN p.name END AS provider_profile_name,
+            p.max_streams,
+            CASE WHEN octet_length(p.search_pattern)<=65536 THEN p.search_pattern END AS search_pattern,
+            CASE WHEN octet_length(p.replace_pattern)<=65536 THEN p.replace_pattern END AS replace_pattern,
+            CASE WHEN octet_length(ua.user_agent)<=65536 THEN ua.user_agent END AS user_agent,
+            (COALESCE(octet_length(s.name),0)>4096 OR COALESCE(octet_length(s.url),0)>65536
+             OR COALESCE(octet_length(p.name),0)>4096 OR COALESCE(octet_length(p.search_pattern),0)>65536
+             OR COALESCE(octet_length(p.replace_pattern),0)>65536 OR COALESCE(octet_length(ua.user_agent),0)>65536) AS oversized
+            FROM dispatcharr_channels_channelstream cs
+            JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id
+            JOIN m3u_m3uaccount a ON a.id=s.m3u_account_id
+            JOIN m3u_m3uaccountprofile p ON p.m3u_account_id=a.id
+            LEFT JOIN core_useragent ua ON ua.id=COALESCE($2::bigint,a.user_agent_id::bigint,$3::bigint)
+            WHERE cs.channel_id=$1 AND a.is_active AND p.is_active
+            AND EXISTS(SELECT 1 FROM m3u_m3uaccountprofile d WHERE d.m3u_account_id=a.id AND d.is_default AND d.is_active)
+            ORDER BY cs."order",cs.id,p.is_default DESC,p.id LIMIT 33"#)
+            .bind(id).bind(profile_ua).bind(default_ua).fetch_all(self.pool()).await?;
+        if rows.len() > MAX_CANDIDATES {
+            return Err(playback_capacity());
+        }
+        for row in &rows {
+            if row.try_get::<bool, _>("oversized")? {
+                return Err(playback_capacity());
+            }
+        }
         let mut streams = Vec::new();
         let mut unsupported = false;
         for row in rows {
@@ -79,17 +136,29 @@ impl Store {
                 unsupported = true;
                 continue;
             }
-            let account_ua: Option<i64> = row.try_get("account_ua")?;
-            let ua_id = profile_ua.or(account_ua).or(default_ua);
-            let user_agent = if let Some(ua_id) = ua_id {
-                sqlx::query_scalar::<_, String>("SELECT user_agent FROM core_useragent WHERE id=$1")
-                    .bind(ua_id)
-                    .fetch_optional(self.pool())
-                    .await?
-                    .filter(|value| !value.is_empty())
-                    .unwrap_or_else(|| "Dispatcharr/0.33.0".into())
+            let user_agent = row
+                .try_get::<Option<String>, _>("user_agent")?
+                .filter(|value| !value.is_empty())
+                .unwrap_or_else(|| "Dispatcharr/0.33.0".into());
+            // Original StreamManager supplies Channel.id (numeric), not its UUID.
+            let command = dispatcharr_contracts::StreamCommand::build(
+                &profile_name,
+                profile_locked,
+                &profile_command,
+                &profile_parameters,
+                Some(&url),
+                Some(&user_agent),
+                &serde_json::json!(id),
+            )
+            .map_err(|_| {
+                StoreError::Unsupported(
+                    "Input profile command is outside the supported argument domain",
+                )
+            })?;
+            let input_command = if command.argv.is_empty() {
+                None
             } else {
-                "Dispatcharr/0.33.0".into()
+                Some(command)
             };
             let maximum: i32 = row.try_get("max_streams")?;
             let server_group: Option<i64> = row.try_get("server_group_id")?;
@@ -116,6 +185,7 @@ impl Store {
                 metadata.push(("logo_id".into(), logo.to_string()));
             }
             streams.push(ProviderStream {
+                input_command,
                 stream_id: row.try_get("stream_id")?,
                 provider_profile_id: row.try_get("provider_profile_id")?,
                 provider_max_streams: u32::try_from(maximum).unwrap_or(u32::MAX),
@@ -282,6 +352,7 @@ impl AuthService {
             .next()
             .ok_or_else(|| PlaybackError::new(503, "No active stream available"))?;
         Ok(PlaybackSource {
+            input_command: stream.input_command,
             channel_id: channel.id,
             channel_name: channel.name,
             stream_id: stream.stream_id,
@@ -301,6 +372,7 @@ impl AuthService {
             startup_behind: channel.startup_behind,
             alternates: streams
                 .map(|stream| PlaybackCandidate {
+                    input_command: stream.input_command,
                     stream_id: stream.stream_id,
                     provider_profile_id: Some(stream.provider_profile_id),
                     provider_max_streams: stream.provider_max_streams,

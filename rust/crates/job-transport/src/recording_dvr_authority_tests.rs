@@ -42,7 +42,7 @@ async fn command<R: tokio::io::AsyncBufRead + Unpin>(
     Ok(Some(args))
 }
 #[tokio::test]
-async fn actual_all_thirteen_generic_methods_refuse_dvr_before_application_network() {
+async fn actual_all_fourteen_generic_methods_refuse_dvr_before_application_network() {
     let listener = TcpListener::bind("127.0.0.1:0")
         .await
         .expect("owned listener");
@@ -195,6 +195,20 @@ async fn actual_all_thirteen_generic_methods_refuse_dvr_before_application_netwo
             caller
         )
         .await,
+        Err(Error::UnsupportedTask)
+    ));
+    let refresh = crate::refresh_protocol::RefreshMessage {
+        task_id,
+        source_id: 11,
+        force: false,
+        retry: 0,
+        root: task_id,
+        parent: None,
+        eta: None,
+        call: crate::refresh_protocol::RefreshCall::initial(11),
+    };
+    assert!(matches!(
+        jobs.read_refresh_lineage(&refresh, Arc::new(())).await,
         Err(Error::UnsupportedTask)
     ));
     assert_eq!(

@@ -1,3 +1,5 @@
+#[path = "profile_process.rs"]
+mod profile_process;
 use axum::{body::Body, http::Response};
 use bytes::Bytes;
 use dispatcharr_clients::{ClientLease, ClientStore};
@@ -513,11 +515,8 @@ impl StreamEngine {
         if created {
             let weak = Arc::downgrade(&self.inner);
             let running = session.clone();
-            let worker = WorkerCount(self.inner.clone());
-            tokio::spawn(async move {
-                let _worker = worker;
-                run_upstream(weak, key, running).await
-            });
+            let worker = Arc::new(WorkerCount(self.inner.clone()));
+            tokio::spawn(async move { run_upstream(weak, key, running, worker).await });
         }
         let mut startup = session.startup.subscribe();
         let ready = async {
@@ -1161,7 +1160,12 @@ impl Drop for WorkerCount {
     }
 }
 
-async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
+async fn run_upstream(
+    weak: Weak<Inner>,
+    key: String,
+    session: Arc<Session>,
+    worker: Arc<WorkerCount>,
+) {
     let Some(inner) = weak.upgrade() else { return };
     let mut stop = session.stop.subscribe();
     // Ownership remains fenced across provider switches. A provider reservation
@@ -1175,7 +1179,7 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
             }) => result,
         };
         match acquired {
-            Ok(lease) => Some(lease),
+            Ok(lease) => Some(Arc::new(lease)),
             Err(dispatcharr_coordination::Error::OwnerHeld) if inner.inputs.is_some() => {
                 session.following.store(true, Ordering::Release);
                 let failure = run_follower(&inner, &session, &mut stop).await;
@@ -1333,6 +1337,8 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
                     drive_candidate(
                         &inner,
                         &session,
+                        &worker,
+                        lease.as_ref(),
                         candidate,
                         current,
                         discontinuity,
@@ -1736,7 +1742,9 @@ impl InputAccumulator {
 #[allow(clippy::too_many_arguments)]
 async fn drive_candidate(
     inner: &Inner,
-    session: &Session,
+    session: &Arc<Session>,
+    worker: &Arc<WorkerCount>,
+    provider: Option<&Arc<dispatcharr_coordination::Lease>>,
     candidate: &PlaybackCandidate,
     current: usize,
     discontinuity: bool,
@@ -1763,31 +1771,74 @@ async fn drive_candidate(
         }
         input.arm_switch();
     }
-    let Ok(attempt) =
-        crate::upstream::Attempt::new(inner.config.connect_timeout, inner.config.read_timeout)
-    else {
-        return;
-    };
-    let Ok(request) = attempt.request(&candidate.url, &candidate.user_agent, &candidate.headers)
-    else {
-        return;
-    };
-    {
-        let mut health = session.health.lock().unwrap();
-        health.arm(epoch_seconds());
-        health.connected = true;
-    }
     let _connection_clock = ConnectionClock(session);
-    let response = tokio::select! {
-        _ = stop.changed() => return, _ = lost.changed() => return,
-        response = request.send() => response,
-    };
-    let Ok(response) = response else { return };
-    if response.status() != reqwest::StatusCode::OK || attempt.cookie_budget_exceeded() {
-        return;
+    enum CandidateBytes {
+        Http {
+            bytes: dispatcharr_upstream_http::ByteStream,
+            _attempt: crate::upstream::Attempt,
+        },
+        Process(profile_process::InputProcess),
     }
-    let Ok(mut bytes) = crate::upstream::body(response) else {
-        return;
+    impl CandidateBytes {
+        async fn next(&mut self) -> Option<io::Result<Bytes>> {
+            match self {
+                Self::Http { bytes, .. } => bytes.next().await,
+                Self::Process(process) => process.next().await,
+            }
+        }
+        async fn finish(self) {
+            if let Self::Process(process) = self {
+                let _ = process.finish().await;
+            }
+        }
+    }
+    let mut bytes = if let Some(command) = &candidate.input_command {
+        let scope: Arc<dyn Send + Sync> =
+            Arc::new((session.clone(), worker.clone(), provider.cloned()));
+        match profile_process::InputProcess::start(command, inner.config.read_timeout, scope) {
+            Ok(process) => {
+                {
+                    let mut health = session.health.lock().unwrap();
+                    health.arm(epoch_seconds());
+                    health.connected = true;
+                }
+                CandidateBytes::Process(process)
+            }
+            Err(_) => return,
+        }
+    } else {
+        let Ok(attempt) =
+            crate::upstream::Attempt::new(inner.config.connect_timeout, inner.config.read_timeout)
+        else {
+            return;
+        };
+        let Ok(request) =
+            attempt.request(&candidate.url, &candidate.user_agent, &candidate.headers)
+        else {
+            return;
+        };
+        {
+            let mut health = session.health.lock().unwrap();
+            health.arm(epoch_seconds());
+            health.connected = true;
+        }
+        let response = tokio::select! {
+            _ = stop.changed() => return, _ = lost.changed() => return,
+            response = request.send() => response,
+        };
+        let Ok(response) = response else {
+            return;
+        };
+        if response.status() != reqwest::StatusCode::OK || attempt.cookie_budget_exceeded() {
+            return;
+        }
+        let Ok(body) = crate::upstream::body(response) else {
+            return;
+        };
+        CandidateBytes::Http {
+            bytes: body,
+            _attempt: attempt,
+        }
     };
     let InputAccumulator {
         assembler,
@@ -1872,6 +1923,7 @@ async fn drive_candidate(
             session.request_ready(inner);
         }
     }
+    bytes.finish().await;
 }
 
 fn coordination_error(error: dispatcharr_coordination::Error) -> PlaybackError {

@@ -4,6 +4,7 @@ mod combined_statistics_html;
 mod combined_statistics_wire;
 mod control;
 mod playback;
+mod plugin_gpg_trace;
 mod proxy_health;
 mod realtime;
 mod response_headers;
@@ -671,6 +672,45 @@ async fn run() -> Result<(), String> {
         Ok("1") => true,
         _ => return Err("RUST_EPG_REFRESH_ENABLED must be 0 or 1".into()),
     };
+    let version_tasks_enabled = match env::var("RUST_VERSION_TASKS_ENABLED").as_deref() {
+        Ok("0") | Err(_) => false,
+        Ok("1") => true,
+        _ => return Err("RUST_VERSION_TASKS_ENABLED must be 0 or 1".into()),
+    };
+    let version_tasks = if version_tasks_enabled {
+        let cache = env::var("REDIS_URL").map_err(|_| "Enabled version tasks require REDIS_URL")?;
+        let bus = realtime_bus
+            .as_ref()
+            .ok_or("Enabled version tasks require the realtime publisher")?;
+        let broker = env::var("CELERY_BROKER_URL").unwrap_or_else(|_| cache.clone());
+        let backend = env::var("CELERY_RESULT_BACKEND").unwrap_or_else(|_| broker.clone());
+        let endpoint = env::var("RUST_VERSION_HTTP_ORIGIN")
+            .map(|origin| format!("{}/owned-version", origin.trim_end_matches('/')))
+            .unwrap_or_else(|_| {
+                "https://api.github.com/repos/Dispatcharr/Dispatcharr/releases/latest".into()
+            });
+        // Coupled to the pinned Original version.py stable build. Development
+        // timestamp checks require their own Source scope and are not implied.
+        let app = dispatcharr_job_transport::version_application::Application::prepare(
+            store.clone(),
+            Arc::new(bus.clone()),
+            &broker,
+            &backend,
+            dispatcharr_job_transport::version_service::Options {
+                version: "0.33.0".into(),
+                endpoint,
+                ca_bundle: std::path::PathBuf::from(
+                    env::var("RUST_VERSION_CA_BUNDLE")
+                        .unwrap_or_else(|_| "/opt/dispatcharr-crypto/trust/cacert.pem".into()),
+                ),
+            },
+        )
+        .await
+        .map_err(|_| "Version task initialization failed (credentials omitted)")?;
+        Some(app)
+    } else {
+        None
+    };
     let mut epg_index = None;
     let mut epg_series = None;
     let mut epg_tvg = None;
@@ -699,17 +739,6 @@ async fn run() -> Result<(), String> {
             .metadata()
             .map_err(|_| "EPG media root metadata unavailable")?
             .uid();
-        let series = dispatcharr_job_transport::series_application::SeriesApplication::prepare(
-            store.clone(),
-            dispatcharr_job_transport::series_application::Options {
-                broker: broker.clone(),
-                backend: backend.clone(),
-                cache: cache.clone(),
-                poll_interval: Duration::from_millis(100),
-            },
-        )
-        .await
-        .map_err(|_| "Series worker initialization failed (credentials omitted)")?;
         // Prepare without intake, so a later constructor failure cannot consume
         // an existing index task before all application dependencies are ready.
         let index = dispatcharr_job_transport::index_application::IndexApplication::connect(
@@ -745,20 +774,19 @@ async fn run() -> Result<(), String> {
         {
             Ok(service) => service,
             Err(error) => {
-                let _ = series.shutdown(Duration::from_secs(4)).await;
                 let _ = index.shutdown(Duration::from_secs(4)).await;
                 return Err(error.into());
             }
         };
-        let refresh =
-            match dispatcharr_job_transport::refresh_application::RefreshApplication::prepare(
+        let (refresh, series_handoff) =
+            match dispatcharr_job_transport::refresh_application::RefreshApplication::prepare_configured(
                 store.clone(),
                 auth.clone(),
                 Arc::new(bus.clone()),
                 dispatcharr_job_transport::refresh_application::RefreshApplicationOptions {
-                    broker,
-                    backend,
-                    cache,
+                    broker: broker.clone(),
+                    backend: backend.clone(),
+                    cache: cache.clone(),
                     cache_dir,
                 },
             )
@@ -767,9 +795,30 @@ async fn run() -> Result<(), String> {
                 Ok(service) => service,
                 Err(_) => {
                     let _ = tvg.shutdown(Duration::from_secs(4)).await;
-                    let _ = series.shutdown(Duration::from_secs(4)).await;
                     let _ = index.shutdown(Duration::from_secs(4)).await;
                     return Err("EPG refresh initialization failed (credentials omitted)".into());
+                }
+            };
+        let series =
+            match dispatcharr_job_transport::configured_series_application::Application::prepare(
+                store.clone(),
+                Arc::new(bus.clone()),
+                series_handoff,
+                dispatcharr_job_transport::configured_series_application::Options {
+                    broker,
+                    backend,
+                    cache,
+                    poll_interval: Duration::from_millis(100),
+                },
+            )
+            .await
+            {
+                Ok(service) => service,
+                Err(error) => {
+                    let _ = refresh.shutdown(Duration::from_secs(4)).await;
+                    let _ = tvg.shutdown(Duration::from_secs(4)).await;
+                    let _ = index.shutdown(Duration::from_secs(4)).await;
+                    return Err(error.into());
                 }
             };
         if index.start(Arc::new(())).is_err()
@@ -945,6 +994,12 @@ async fn run() -> Result<(), String> {
         .map_err(|_| "Cannot bind HTTP listener")?;
     eprintln!("Dispatcharr Rust port listening on {bind}; migration parity is incomplete");
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
+    if let Some(version) = &version_tasks {
+        if version.start().is_err() {
+            let _ = version.shutdown(Duration::from_secs(4)).await;
+            return Err("Version task intake failed".into());
+        }
+    }
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
     let services = ShutdownServices {
         proxy_health_core,
@@ -966,6 +1021,7 @@ async fn run() -> Result<(), String> {
         epg_index,
         epg_series,
         epg_tvg,
+        version_tasks,
         vod_reads,
         grid,
         hdhr,
@@ -1042,8 +1098,9 @@ struct ShutdownServices {
     epg_programs: dispatcharr_store::EpgProgramReads,
     epg_refresh: Option<dispatcharr_job_transport::refresh_application::RefreshApplication>,
     epg_index: Option<dispatcharr_job_transport::index_application::IndexApplication>,
-    epg_series: Option<dispatcharr_job_transport::series_application::SeriesApplication>,
+    epg_series: Option<dispatcharr_job_transport::configured_series_application::Application>,
     epg_tvg: Option<dispatcharr_job_transport::tvg_programme_application::Application>,
+    version_tasks: Option<dispatcharr_job_transport::version_application::Application>,
     vod_reads: dispatcharr_store::VodReads,
     grid: dispatcharr_output_http::GridGateway,
     hdhr: dispatcharr_hdhr_http::HdhrGateway,
@@ -1071,6 +1128,7 @@ async fn shutdown_components(services: ShutdownServices) {
         epg_index,
         epg_series,
         epg_tvg,
+        version_tasks,
         vod_reads,
         grid,
         hdhr,
@@ -1081,6 +1139,24 @@ async fn shutdown_components(services: ShutdownServices) {
     combined_statistics.close_admission();
     // Refresh reporter work retains the realtime publisher until actual drain.
     // A bounded incomplete drain is reported honestly before other shutdowns.
+    // Version work retains SQL, HTTP runtime and realtime owners through its
+    // actual completion; a bounded timeout is reported without closing Jobs.
+    let version_drained = match version_tasks {
+        Some(version) => version.shutdown(Duration::from_secs(4)).await,
+        None => true,
+    };
+    if !version_drained {
+        eprintln!("Version task remains physically unsettled");
+    }
+    // Series can still be reading a completed Refresh parent. Stop and settle
+    // that intake before Refresh shutdown closes the shared parent reader.
+    let series_parent_reads_drained = match &epg_series {
+        Some(series) => series.drain_intake(Duration::from_secs(4)).await,
+        None => true,
+    };
+    if !series_parent_reads_drained {
+        eprintln!("Configured Series parent reads remain physically unsettled");
+    }
     let (refresh_drained, index_intake_drained, series_drained, tvg_drained) = tokio::join!(
         async {
             match epg_refresh {
@@ -1243,6 +1319,10 @@ async fn shutdown_components(services: ShutdownServices) {
 
 #[tokio::main]
 async fn main() {
+    if let Err(error) = plugin_gpg_trace::install_from_environment() {
+        eprintln!("Dispatcharr Rust startup failed: {error}");
+        std::process::exit(1);
+    }
     if let Err(error) = run().await {
         eprintln!("Dispatcharr Rust startup failed: {error}");
         std::process::exit(1);

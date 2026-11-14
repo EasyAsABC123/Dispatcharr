@@ -229,3 +229,12 @@ pub mod tvg_programme_protocol;
 pub mod tvg_programme_worker;
 
 pub mod tvg_programme_application;
+
+pub mod configured_series_application;
+pub mod refresh_series_handoff;
+
+pub mod version_application;
+mod version_protocol;
+pub mod version_service;
+
+pub mod version_worker;

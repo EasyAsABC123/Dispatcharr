@@ -1,0 +1,400 @@
+{
+  "Original_authors_retain_credit": true,
+  "Source_capture_sha256": "1ec78150899f1baba04c43de2fd33ef97add20c8ec93e36c8853612595ea315f",
+  "scope": "18actual model argument observations; no process/media authority",
+  "cases": [
+    {
+      "name": "locked-Proxy-short-circuit",
+      "input": {
+        "name": "locked-Proxy-short-circuit",
+        "command": "ffmpeg",
+        "parameters": "'unterminated",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": null,
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": true,
+        "use_Source_Proxy_name": true
+      },
+      "actual_profile_name": "Proxy",
+      "observed": {
+        "kind": "return",
+        "argv": []
+      }
+    },
+    {
+      "name": "unlocked-Proxy-is-command",
+      "input": {
+        "name": "unlocked-Proxy-is-command",
+        "command": "ffmpeg",
+        "parameters": "-i {streamUrl}",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": true
+      },
+      "actual_profile_name": "Proxy",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "-i",
+          "http://owned.invalid/media"
+        ]
+      }
+    },
+    {
+      "name": "FFmpeg-quoted-placeholders",
+      "input": {
+        "name": "FFmpeg-quoted-placeholders",
+        "command": "ffmpeg",
+        "parameters": "-user_agent \"{userAgent}\" -i \"{streamUrl}\" -metadata channel=\"{channelId}\" -f mpegts pipe:1",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-3",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "-user_agent",
+          "Owned Agent/1.0",
+          "-i",
+          "http://owned.invalid/media",
+          "-metadata",
+          "channel=0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+          "-f",
+          "mpegts",
+          "pipe:1"
+        ]
+      }
+    },
+    {
+      "name": "VLC-command-literal",
+      "input": {
+        "name": "VLC-command-literal",
+        "command": "vlc",
+        "parameters": "-I dummy \"{streamUrl}\" --http-user-agent=\"{userAgent}\" --sout \"#std{access=file,mux=ts,dst=-}\"",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-4",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "vlc",
+          "-I",
+          "dummy",
+          "http://owned.invalid/media",
+          "--http-user-agent=Owned Agent/1.0",
+          "--sout",
+          "#std{access=file,mux=ts,dst=-}"
+        ]
+      }
+    },
+    {
+      "name": "insert-spaces-and-shell-data",
+      "input": {
+        "name": "insert-spaces-and-shell-data",
+        "command": "ffmpeg",
+        "parameters": "-i \"{streamUrl}\" -metadata \"agent={userAgent}\"",
+        "stream_url": "http://owned.invalid/two words;$HOME",
+        "user_agent": "Owned \"quoted\" ; $(false)",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-5",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "-i",
+          "http://owned.invalid/two words;$HOME",
+          "-metadata",
+          "agent=Owned \"quoted\" ; $(false)"
+        ]
+      }
+    },
+    {
+      "name": "replacement-order-cascade",
+      "input": {
+        "name": "replacement-order-cascade",
+        "command": "ffmpeg",
+        "parameters": "{streamUrl} {userAgent} {channelId}",
+        "stream_url": "http://owned.invalid/{userAgent}",
+        "user_agent": "owned-{channelId}-{streamUrl}",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-6",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "http://owned.invalid/owned-0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30-{streamUrl}",
+          "owned-0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30-{streamUrl}",
+          "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30"
+        ]
+      }
+    },
+    {
+      "name": "channel-None",
+      "input": {
+        "name": "channel-None",
+        "command": "ffmpeg",
+        "parameters": "id={channelId}",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": null,
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-7",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "id="
+        ]
+      }
+    },
+    {
+      "name": "channel-int-zero",
+      "input": {
+        "name": "channel-int-zero",
+        "command": "ffmpeg",
+        "parameters": "id={channelId}",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": 0,
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-8",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "id="
+        ]
+      }
+    },
+    {
+      "name": "channel-string-zero",
+      "input": {
+        "name": "channel-string-zero",
+        "command": "ffmpeg",
+        "parameters": "id={channelId}",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-9",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "id=0"
+        ]
+      }
+    },
+    {
+      "name": "channel-UUID",
+      "input": {
+        "name": "channel-UUID",
+        "command": "ffmpeg",
+        "parameters": "id={channelId}",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-10",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "id=0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30"
+        ]
+      }
+    },
+    {
+      "name": "command-space-not-split",
+      "input": {
+        "name": "command-space-not-split",
+        "command": "ffmpeg -nostdin",
+        "parameters": "-i {streamUrl}",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-11",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg -nostdin",
+          "-i",
+          "http://owned.invalid/media"
+        ]
+      }
+    },
+    {
+      "name": "repeat-placeholders",
+      "input": {
+        "name": "repeat-placeholders",
+        "command": "ffmpeg",
+        "parameters": "{streamUrl}|{streamUrl}|{userAgent}|{userAgent}",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-12",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "http://owned.invalid/media|http://owned.invalid/media|Owned Agent/1.0|Owned Agent/1.0"
+        ]
+      }
+    },
+    {
+      "name": "outer-braces",
+      "input": {
+        "name": "outer-braces",
+        "command": "ffmpeg",
+        "parameters": "{{streamUrl}} {{channelId}}",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-13",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "{http://owned.invalid/media}",
+          "{0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30}"
+        ]
+      }
+    },
+    {
+      "name": "empty-parameters",
+      "input": {
+        "name": "empty-parameters",
+        "command": "ffmpeg",
+        "parameters": "",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-14",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg"
+        ]
+      }
+    },
+    {
+      "name": "Unicode-values",
+      "input": {
+        "name": "Unicode-values",
+        "command": "ffmpeg",
+        "parameters": "-i {streamUrl}",
+        "stream_url": "http://owned.invalid/\u00e9/\u6771\u4eac",
+        "user_agent": "Owned \u03b1 Agent",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-15",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "-i",
+          "http://owned.invalid/\u00e9/\u6771\u4eac"
+        ]
+      }
+    },
+    {
+      "name": "unclosed-quote",
+      "input": {
+        "name": "unclosed-quote",
+        "command": "ffmpeg",
+        "parameters": "-i \"{streamUrl}",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-16",
+      "observed": {
+        "kind": "exception",
+        "exception_type": "builtins.ValueError",
+        "message": "No closing quotation"
+      }
+    },
+    {
+      "name": "None-agent-not-coerced",
+      "input": {
+        "name": "None-agent-not-coerced",
+        "command": "ffmpeg",
+        "parameters": "-i {streamUrl}",
+        "stream_url": "http://owned.invalid/media",
+        "user_agent": null,
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-17",
+      "observed": {
+        "kind": "exception",
+        "exception_type": "builtins.TypeError",
+        "message": "replace() argument 2 must be str, not None"
+      }
+    },
+    {
+      "name": "NUL-is-recorded-never-executed",
+      "input": {
+        "name": "NUL-is-recorded-never-executed",
+        "command": "ffmpeg",
+        "parameters": "-i {streamUrl}",
+        "stream_url": "http://owned.invalid/a\u0000b",
+        "user_agent": "Owned Agent/1.0",
+        "channel_id": "0bd6295a-8e4a-4fa4-afd3-5df8f8aebd30",
+        "locked": false,
+        "use_Source_Proxy_name": false
+      },
+      "actual_profile_name": "owned-profile-e12a38b9dc-18",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "-i",
+          "http://owned.invalid/a\u0000b"
+        ]
+      }
+    }
+  ]
+}

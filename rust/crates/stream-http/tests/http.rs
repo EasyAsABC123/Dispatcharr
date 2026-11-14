@@ -210,6 +210,7 @@ async fn source_mode_retains_partial_packets_and_full_chunk_accumulation_across_
 
 fn source(url: String, channel: &str) -> PlaybackSource {
     PlaybackSource {
+        input_command: None,
         channel_id: channel.into(),
         channel_name: "Fixture".into(),
         stream_id: 1,
@@ -988,6 +989,7 @@ async fn real_redis_lost_owner_stops_upstream_and_preserves_replacement_owner() 
 
 fn candidate(url: String, stream_id: i64) -> PlaybackCandidate {
     PlaybackCandidate {
+        input_command: None,
         stream_id,
         provider_profile_id: None,
         provider_max_streams: 0,
@@ -1763,6 +1765,7 @@ async fn native_source_switch_retains_stamp_in_pending_packet_from_same_http_bat
     playback.startup_behind = Duration::from_secs(1);
     for path in ["second", "third"] {
         playback.alternates.push(PlaybackCandidate {
+            input_command: None,
             stream_id: 2,
             provider_profile_id: None,
             provider_max_streams: 0,

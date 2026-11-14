@@ -62,6 +62,7 @@ pub struct ChildPublisher {
     parent: Uuid,
     owner: Arc<dyn Send + Sync>,
     children: ChildRecords,
+    series_children: Arc<Mutex<Vec<Uuid>>>,
     child_slots: Arc<Semaphore>,
     failed: Arc<AtomicBool>,
 }
@@ -77,9 +78,17 @@ impl ChildPublisher {
             parent: message.task_id,
             owner,
             children: Arc::new(Mutex::new(Vec::new())),
+            series_children: Arc::new(Mutex::new(Vec::new())),
             child_slots: Arc::new(Semaphore::new(64)),
             failed: Arc::new(AtomicBool::new(false)),
         }
+    }
+    pub(crate) fn completed_series_children(&self) -> Result<Vec<Uuid>, Error> {
+        self.completed_children()?;
+        self.series_children
+            .lock()
+            .map(|children| children.clone())
+            .map_err(|_| Error::Execution)
     }
     pub(crate) fn completed_children(&self) -> Result<Vec<Uuid>, Error> {
         if self.failed.load(Ordering::Acquire) {
@@ -145,6 +154,12 @@ impl RefreshPublisher for ChildPublisher {
                     }
                 }
                 context.ensure_active()?;
+                if matches!(child.child, ChildPublication::SeriesRules) {
+                    self.series_children
+                        .lock()
+                        .map_err(|_| ImportError::Worker)?
+                        .push(id);
+                }
                 self.children.lock().unwrap().push((id, budget));
                 Ok(())
             }

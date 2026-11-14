@@ -63,6 +63,7 @@ struct Inner {
     jobs: Jobs,
     driver: Mutex<Option<ScheduledRefreshDriver>>,
     executor: Arc<dyn RefreshExecutor>,
+    series_handoff: Option<crate::refresh_series_handoff::Handoff>,
     runner: FileJobRunner,
     reporter: GuideReporter,
     channels: ChannelImporter,
@@ -96,6 +97,30 @@ impl RefreshApplication {
         auth: AuthService,
         sink: Arc<dyn UpdateEventSink>,
         options: RefreshApplicationOptions,
+    ) -> Result<Self, &'static str> {
+        Self::prepare_inner(store, auth, sink, options, false).await
+    }
+    /// Explicit paired consumer assembly. Legacy standalone preparation does
+    /// not retain child handoffs when no configured consumer is attached.
+    pub async fn prepare_configured(
+        store: Store,
+        auth: AuthService,
+        sink: Arc<dyn UpdateEventSink>,
+        options: RefreshApplicationOptions,
+    ) -> Result<(Self, crate::refresh_series_handoff::Handoff), &'static str> {
+        let service = Self::prepare_inner(store, auth, sink, options, true).await?;
+        let Some(handoff) = service.inner.series_handoff.clone() else {
+            let _ = service.shutdown(Duration::from_secs(4)).await;
+            return Err("Missing configured Series handoff");
+        };
+        Ok((service, handoff))
+    }
+    async fn prepare_inner(
+        store: Store,
+        auth: AuthService,
+        sink: Arc<dyn UpdateEventSink>,
+        options: RefreshApplicationOptions,
+        configured_series: bool,
     ) -> Result<Self, &'static str> {
         let broker = options.broker.as_str();
         let backend = options.backend.as_str();
@@ -150,8 +175,17 @@ impl RefreshApplication {
         )
         .await
         .map_err(|_| "Refresh service initialization failed")?;
-        let executor: Arc<dyn RefreshExecutor> =
+        let series_handoff = configured_series
+            .then(|| crate::refresh_series_handoff::Handoff::prepare(jobs.clone()));
+        let service: Arc<dyn RefreshExecutor> =
             Arc::new(ServiceExecutor::new(runner.clone(), store.clone(), clock));
+        let executor: Arc<dyn RefreshExecutor> = match &series_handoff {
+            Some(handoff) => Arc::new(crate::refresh_series_handoff::Executor {
+                inner: service,
+                handoff: handoff.clone(),
+            }),
+            None => service,
+        };
         Ok(Self {
             inner: Arc::new(Inner {
                 auth,
@@ -159,6 +193,7 @@ impl RefreshApplication {
                 jobs,
                 driver: Mutex::new(None),
                 executor,
+                series_handoff,
                 runner,
                 reporter,
                 channels,
@@ -201,6 +236,9 @@ impl RefreshApplication {
         let deadline = tokio::time::Instant::now() + grace;
         let left = || deadline.saturating_duration_since(tokio::time::Instant::now());
         self.inner.closed.store(true, Ordering::Release);
+        if let Some(handoff) = &self.inner.series_handoff {
+            handoff.close_admission();
+        }
         let Ok(Ok(_http)) =
             tokio::time::timeout_at(deadline, self.inner.http.clone().acquire_many_owned(4)).await
         else {

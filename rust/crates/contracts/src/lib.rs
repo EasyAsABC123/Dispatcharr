@@ -1,5 +1,7 @@
 //! Backend boundaries for the derivative Dispatcharr port. Original authorship
 //! belongs to the upstream Dispatcharr authors; see ../../../ATTRIBUTION.md.
+mod profile_command;
+pub use profile_command::{CommandError, StreamCommand};
 mod source_ip;
 pub use source_ip::SourceIpAddr;
 use std::{future::Future, net::IpAddr, pin::Pin, time::Duration};
@@ -112,6 +114,7 @@ impl PlaybackRequest {
 
 #[derive(Clone, Debug)]
 pub struct PlaybackCandidate {
+    pub input_command: Option<StreamCommand>,
     pub stream_id: i64,
     pub provider_profile_id: Option<i64>,
     pub provider_max_streams: u32,
@@ -160,6 +163,7 @@ pub struct PlaybackViewer {
 
 #[derive(Clone, Debug)]
 pub struct PlaybackSource {
+    pub input_command: Option<StreamCommand>,
     pub channel_id: String,
     pub channel_name: String,
     pub stream_id: i64,
@@ -183,6 +187,7 @@ pub struct PlaybackSource {
 impl PlaybackSource {
     pub fn primary(&self) -> PlaybackCandidate {
         PlaybackCandidate {
+            input_command: self.input_command.clone(),
             stream_id: self.stream_id,
             provider_profile_id: self.provider_profile_id,
             provider_max_streams: self.provider_max_streams,

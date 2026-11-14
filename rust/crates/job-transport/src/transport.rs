@@ -476,6 +476,33 @@ impl Jobs {
             _ => Err(Error::Corrupt),
         }
     }
+    /// Narrow read-only parent metadata port for same-process Series handoff.
+    pub(crate) async fn read_refresh_lineage(
+        &self,
+        message: &crate::refresh_protocol::RefreshMessage,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Vec<u8>>, Error> {
+        if !self.allows_refresh() {
+            return Err(Error::UnsupportedTask);
+        }
+        let lease = self.lease(caller)?;
+        let keys = vec![format!("celery-tasks:celery-task-meta-{}", message.task_id)];
+        let (reply, _held) = self
+            .inner
+            .result
+            .command_classified::<(i64, Vec<u8>), _>(READ, &keys, &[], lease)
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(None),
+            1 => {
+                crate::refresh_result::parse_success(&reply.1, message.task_id, message.source_id)
+                    .map_err(|_| Error::Protocol)?;
+                Ok(Some(reply.1))
+            }
+            _ => Err(Error::Corrupt),
+        }
+    }
     pub(crate) async fn publish_refresh_child_fixture(
         &self,
         message: &crate::refresh_dispatch::ChildMessage,
@@ -1585,3 +1612,7 @@ pub use tvg_programme_transport::{Normal as TvgNormal, TvgJobs};
 #[path = "stats_normal_transport.rs"]
 mod stats_normal_transport;
 pub use stats_normal_transport::StatsJobs;
+
+#[path = "version_transport.rs"]
+mod version_transport;
+pub use version_transport::VersionJobs;

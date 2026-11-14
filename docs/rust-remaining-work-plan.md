@@ -16,9 +16,18 @@ The latest [combined milestone candidate](rust-milestone-batch1.md) is committed
 as `04026c158c8211da123b94ec67b82812f3223321`:904 Rust inputs/five coupled vectors,
 whole-workspace formatting/check/strict lint/default tests passed (872 passed,
 751 ignored). Its Docker image builds and passes production-ELF, UID65532 and
-unchanged React/credit checks. Package/workflow acceptance is still pending.
+unchanged React/credit checks. The [native fresh-install/React restart](rust-milestone-batch1-clean-install.md)
+and [packaged safe17 CLI](rust-milestone-batch1-safe17.md) workflows pass;
+the remaining package/workflow acceptance is pending.
 The [global batch registry](../scripts/rust-milestone-batches/README.md) replaces
 individual case queues and retains M0/M1/M9 gates as well as all owner cohorts.
+
+The next [combined worker/profile/plugin candidate](rust-milestone-batch2.md)
+passes whole-workspace checks with882 tests passed/751 ignored. Its36-path
+integration adds configured-Series lineage, the normal version worker, shared
+input-profile processes, resolver memory bounds and HTTPS/GPG paths. Packaged
+functional checks on this candidate remain pending; earlier image results do
+not transfer to it.
 
 The earlier opt-in component composition is
 [current892](../scripts/rust-component-checkpoints/current892/README.md).

@@ -3,6 +3,10 @@
 //! The measured transport domain is literal-IP plain HTTP, uncompressed,
 //! non-chunked UTF-8 JSON. Other transports/signatures are explicitly guarded.
 use super::*;
+#[path = "plugin_manifest_signature.rs"]
+mod manifest_signature;
+#[path = "plugin_repository_tls.rs"]
+mod tls_transport;
 use md5::{Digest, Md5};
 use std::{
     collections::BTreeMap,
@@ -104,11 +108,6 @@ fn policy(url: &reqwest::Url) -> Result<IpAddr, Failure> {
 fn unsigned(data: Value) -> Result<Value, Failure> {
     if let Some(inner) = data.get("manifest") {
         if inner.get("plugins").is_some() {
-            if crate::channels::truthy(data.get("signature")) {
-                return Err(Failure::Unqualified(
-                    "Signed manifests/GPG remain unqualified",
-                ));
-            }
             return Ok(data);
         }
     }
@@ -273,7 +272,7 @@ async fn read_bytes(
         })?
         .map_err(|_| Failure::Connect)
 }
-async fn one_get(url: &reqwest::Url) -> Result<(u16, Option<String>, Vec<u8>), Failure> {
+async fn one_get_literal(url: &reqwest::Url) -> Result<(u16, Option<String>, Vec<u8>), Failure> {
     let ip = policy(url)?;
     let socket = SocketAddr::new(ip, url.port_or_known_default().unwrap_or(80));
     let mut stream = tokio::time::timeout(INACTIVITY, tokio::net::TcpStream::connect(socket))
@@ -330,6 +329,19 @@ async fn one_get(url: &reqwest::Url) -> Result<(u16, Option<String>, Vec<u8>), F
     }
     result
 }
+async fn one_get(url: &reqwest::Url) -> Result<(u16, Option<String>, Vec<u8>), Failure> {
+    let literal = url
+        .host_str()
+        .and_then(|h| h.trim_matches(['[', ']']).parse::<IpAddr>().ok());
+    if url.scheme() == "http" && literal.is_some() {
+        return one_get_literal(url).await;
+    }
+    let bundle = std::env::var_os("REQUESTS_CA_BUNDLE")
+        .filter(|v| !v.is_empty())
+        .or_else(|| std::env::var_os("CURL_CA_BUNDLE").filter(|v| !v.is_empty()))
+        .map(std::path::PathBuf::from);
+    tls_transport::one_get(url, bundle.as_deref()).await
+}
 async fn fetch(raw: &str) -> Result<Value, Failure> {
     if [
         "HTTP_PROXY",
@@ -363,6 +375,11 @@ async fn fetch(raw: &str) -> Result<Value, Failure> {
         return decoded_manifest(&body);
     }
     Err(Failure::Policy("Exceeded maximum of 5 redirects.".into()))
+}
+async fn fetch_verified(raw: &str, key: Option<&str>) -> Result<(Value, Option<bool>), Failure> {
+    let data = fetch(raw).await?;
+    let verified = manifest_signature::verify(inner(&data), data.get("signature"), key).await?;
+    Ok((data, verified))
 }
 fn friendly(error: &Failure) -> String {
     match error {
@@ -440,11 +457,12 @@ fn ordered_repo(row: &Value) -> Result<Value, StoreError> {
     Ok(Value::Object(out))
 }
 const INSERT:&str="INSERT INTO plugins_pluginrepo(name,url,is_official,enabled,cached_manifest,public_key,signature_verified,last_fetched,last_fetch_status,created_at,updated_at) VALUES('',$1,false,$2,'{}'::jsonb,$3,NULL,NULL,'',$4,$5) RETURNING id";
-const SAVE:&str="UPDATE plugins_pluginrepo AS r SET name=$2,cached_manifest=$3,signature_verified=NULL,last_fetched=$4,last_fetch_status='200',updated_at=$5 WHERE id=$1 AND octet_length((to_jsonb(r)||jsonb_build_object('name',$2,'cached_manifest',$3,'signature_verified',NULL,'last_fetched',$4,'last_fetch_status','200','updated_at',$5))::text)<=65536 RETURNING octet_length(to_jsonb(r)::text) AS bytes,CASE WHEN octet_length(to_jsonb(r)::text)<=65536 THEN to_jsonb(r)::text END AS raw";
+const SAVE:&str="UPDATE plugins_pluginrepo AS r SET name=$2,cached_manifest=$3,signature_verified=$6,last_fetched=$4,last_fetch_status='200',updated_at=$5 WHERE id=$1 AND octet_length((to_jsonb(r)||jsonb_build_object('name',$2,'cached_manifest',$3,'signature_verified',$6::boolean,'last_fetched',$4,'last_fetch_status','200','updated_at',$5))::text)<=65536 RETURNING octet_length(to_jsonb(r)::text) AS bytes,CASE WHEN octet_length(to_jsonb(r)::text)<=65536 THEN to_jsonb(r)::text END AS raw";
 async fn save(
     connection: &mut sqlx::PgConnection,
     id: i64,
     data: &Value,
+    verification: Option<bool>,
 ) -> Result<Value, StoreError> {
     let name = text(inner(data).get("registry_name"))?;
     let fetched = Utc::now();
@@ -460,6 +478,7 @@ async fn save(
             .bind(sqlx::types::Json(data))
             .bind(fetched)
             .bind(updated)
+            .bind(verification)
             .fetch_optional(&mut *connection)
             .await?
             .ok_or_else(capacity)?,
@@ -616,7 +635,7 @@ pub(super) async fn execute(
     };
     // Refuse explicitly unqualified transport domains BEFORE creating a row.
     let parsed_url = reqwest::Url::parse(&url).map_err(|_| field("url", "Enter a valid URL."))?;
-    domain(&parsed_url).map_err(|e| match e {
+    tls_transport::request_domain(&parsed_url).map_err(|e| match e {
         Failure::Unqualified(v) => unqualified(v),
         _ => field("url", "Enter a valid URL."),
     })?;
@@ -651,7 +670,11 @@ pub(super) async fn execute(
                 .await?,
         );
     }
-    let data = match fetch(&url).await {
+    let verification_key = match &target {
+        Some((_, row)) => raw_text(row.get("public_key"))?,
+        None => text(fields.get("public_key"))?,
+    };
+    let (data, verification) = match fetch_verified(&url, Some(&verification_key)).await {
         Ok(value) => value,
         Err(error) => {
             if let Some(id) = created {
@@ -700,7 +723,7 @@ pub(super) async fn execute(
         if exists {
             errors.push("This manifest URL has already been added.".to_owned());
         }
-        return Ok(Json(json!({"valid":errors.is_empty(),"registry_name":name,"registry_url":registry,"signature_verified":Value::Null,"plugin_count":count,"errors":errors})).into_response());
+        return Ok(Json(json!({"valid":errors.is_empty(),"registry_name":name,"registry_url":registry,"signature_verified":verification,"plugin_count":count,"errors":errors})).into_response());
     }
     if let Some(error) = name_error(&data)? {
         if let Some(id) = created {
@@ -714,7 +737,7 @@ pub(super) async fn execute(
     let id = created
         .or_else(|| target.as_ref().map(|v| v.0))
         .ok_or_else(framework_shape)?;
-    let saved = save(connection, id, &data).await?;
+    let saved = save(connection, id, &data, verification).await?;
     if created.is_none() {
         refresh_children(auth, connection, id, &data).await?;
     }
@@ -787,11 +810,8 @@ mod tests {
         ));
     }
     #[test]
-    fn signatures_never_invoke_or_fabricate_gpg() {
-        assert!(matches!(
-            unsigned(json!({"manifest":{"plugins":[]},"signature":"signature"})),
-            Err(Failure::Unqualified(_))
-        ));
+    fn signed_envelope_structure_is_retained() {
+        assert!(unsigned(json!({"manifest":{"plugins":[]},"signature":"signature"})).is_ok());
         assert!(unsigned(json!({"manifest":{"plugins":[]},"signature":null})).is_ok());
     }
     #[test]
