@@ -10,7 +10,7 @@ use std::{
         atomic::{AtomicUsize, Ordering},
         Arc, Mutex,
     },
-    time::{Duration, Instant},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
 use tokio::sync::OwnedSemaphorePermit;
 
@@ -45,8 +45,59 @@ impl ProxySettingsRead {
         &self.entry.value
     }
 }
+/// Only three copied health scalars. It never retains a cached Value/permit.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ProxyHealthKnobs {
+    pub startup: Duration,
+    pub connection: Duration,
+    pub initialization: Duration,
+}
+impl ProxyHealthKnobs {
+    pub(crate) fn from_value(value: &Value) -> Result<Self, StoreError> {
+        if !value.is_object() {
+            return Err(StoreError::Unsupported(
+                "Uncaptured proxy health settings shape",
+            ));
+        }
+        let field = |key: &str, default: f64| -> Result<Duration, StoreError> {
+            let seconds = match value.get(key) {
+                None => default,
+                Some(Value::Number(v)) => v
+                    .as_f64()
+                    .ok_or(StoreError::Unsupported("Uncaptured proxy health number"))?,
+                // Python bool participates in numeric health comparisons.
+                Some(Value::Bool(v)) => f64::from(u8::from(*v)),
+                _ => return Err(StoreError::Unsupported("Uncaptured proxy health scalar")),
+            };
+            Duration::try_from_secs_f64(seconds).map_err(|_| {
+                StoreError::Unsupported("Proxy health duration outside supported finite range")
+            })
+        };
+        Ok(Self {
+            startup: field("stream_startup_timeout", 8.0)?,
+            connection: field("connection_timeout", 10.0)?,
+            initialization: field("channel_init_grace_period", 60.0)?,
+        })
+    }
+}
+impl ProxySettingsRead {
+    /// Copy before dropping this read; no frame or session retains the tree.
+    pub fn health_knobs(&self) -> Result<ProxyHealthKnobs, StoreError> {
+        ProxyHealthKnobs::from_value(&self.entry.value)
+    }
+}
+fn wall_seconds() -> f64 {
+    match SystemTime::now().duration_since(UNIX_EPOCH) {
+        Ok(d) => d.as_secs_f64(),
+        Err(e) => -e.duration().as_secs_f64(),
+    }
+}
+fn cache_fresh(now: f64, sampled_before_load: f64) -> bool {
+    now.is_finite() && sampled_before_load.is_finite() && now - sampled_before_load < 10.0
+}
+
 struct ProxySlot {
-    at: Instant,
+    at: f64,
     entry: Arc<ProxyEntry>,
 }
 struct Inner {
@@ -86,6 +137,20 @@ impl CoreSettingsSpecialEffects {
                 entry: s.entry.clone(),
             })
     }
+    /// A production cache hit must check Source's strict wall-time TTL. This
+    /// adds no permit: the cloned entry retains its original actual token.
+    pub(crate) fn fresh_proxy_read(&self) -> Option<ProxySettingsRead> {
+        let now = wall_seconds();
+        self.inner
+            .proxy
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .as_ref()
+            .filter(|slot| cache_fresh(now, slot.at))
+            .map(|slot| ProxySettingsRead {
+                entry: slot.entry.clone(),
+            })
+    }
     pub(crate) fn clear_proxy(&self) {
         let mut slot = self.inner.proxy.lock().unwrap_or_else(|e| e.into_inner());
         self.inner.generation.fetch_add(1, Ordering::AcqRel);
@@ -101,10 +166,11 @@ impl CoreSettingsSpecialEffects {
         &self,
         auth: &AuthService,
     ) -> Result<ProxySettingsRead, StoreError> {
+        let sampled_before_load = wall_seconds();
         {
             let cache = self.inner.proxy.lock().unwrap_or_else(|e| e.into_inner());
             if let Some(slot) = cache.as_ref() {
-                if slot.at.elapsed() < Duration::from_secs(10) {
+                if cache_fresh(sampled_before_load, slot.at) {
                     return Ok(ProxySettingsRead {
                         entry: slot.entry.clone(),
                     });
@@ -150,7 +216,7 @@ impl CoreSettingsSpecialEffects {
             let mut cache = this.inner.proxy.lock().unwrap_or_else(|e| e.into_inner());
             if this.inner.generation.load(Ordering::Acquire) == generation {
                 cache.replace(ProxySlot {
-                    at: Instant::now(),
+                    at: sampled_before_load,
                     entry: entry.clone(),
                 });
             }
@@ -268,7 +334,7 @@ async fn finish(
     drop(connection);
     Ok(())
 }
-async fn load_proxy(auth: &AuthService) -> Result<Value, StoreError> {
+pub(crate) async fn load_proxy(auth: &AuthService) -> Result<Value, StoreError> {
     let defaults = json!({"buffering_timeout":15,"buffering_speed":1.0,"redis_chunk_ttl":60,"channel_shutdown_delay":0,"channel_init_grace_period":60,"channel_client_wait_period":5,"new_client_behind_seconds":5,"stream_startup_timeout":8,"connection_timeout":10,"validate_redirect_urls":true});
     load_group(auth, "proxy_settings", defaults).await
 }
@@ -399,7 +465,7 @@ mod tests {
             active: effects.inner.cache_entries.clone(),
         });
         effects.inner.proxy.lock().unwrap().replace(ProxySlot {
-            at: Instant::now(),
+            at: wall_seconds(),
             entry: entry.clone(),
         });
         let reader = ProxySettingsRead { entry };
@@ -424,5 +490,89 @@ mod tests {
         drop(cloned);
         assert_eq!(effects.retained_cache_entries(), 0);
         assert_eq!(permits.available_permits(), 4);
+    }
+    #[tokio::test]
+    async fn warm_read_reuses_existing_token_when_all_four_are_occupied() {
+        let effects = CoreSettingsSpecialEffects::new(std::env::current_dir().unwrap()).unwrap();
+        let permits = Arc::new(tokio::sync::Semaphore::new(4));
+        let cached_permit = Arc::new(permits.clone().try_acquire_owned().unwrap());
+        let others: Vec<_> = (0..3)
+            .map(|_| permits.clone().try_acquire_owned().unwrap())
+            .collect();
+        effects.inner.cache_entries.store(1, Ordering::Release);
+        effects.inner.proxy.lock().unwrap().replace(ProxySlot {
+            at: wall_seconds(),
+            entry: Arc::new(ProxyEntry {
+                value: json!({"connection_timeout":4}),
+                _permit: cached_permit,
+                active: effects.inner.cache_entries.clone(),
+            }),
+        });
+        assert_eq!(permits.available_permits(), 0);
+        let read = effects
+            .fresh_proxy_read()
+            .expect("warm hit needs no fifth token");
+        assert_eq!(
+            read.health_knobs().unwrap().connection,
+            Duration::from_secs(4)
+        );
+        assert_eq!(permits.available_permits(), 0);
+        effects.clear_proxy();
+        assert_eq!(permits.available_permits(), 0);
+        drop(read);
+        assert_eq!(permits.available_permits(), 1);
+        drop(others);
+        assert_eq!(permits.available_permits(), 4);
+    }
+    #[test]
+    fn preload_wall_timestamp_is_not_completion_time() {
+        let pre_load = 100.0;
+        assert!(cache_fresh(102.4, pre_load));
+        assert!(!cache_fresh(110.0, pre_load));
+        assert!(!cache_fresh(112.4, pre_load));
+        assert!(cache_fresh(99.0, pre_load));
+        assert!(!cache_fresh(f64::NAN, pre_load));
+        assert!(!cache_fresh(102.0, f64::INFINITY));
+    }
+    #[test]
+    fn typed_health_copy_does_not_retain_the_original_cache_owner() {
+        let permits = Arc::new(tokio::sync::Semaphore::new(4));
+        let active = Arc::new(AtomicUsize::new(1));
+        let read = ProxySettingsRead {
+            entry: Arc::new(ProxyEntry {
+                value: json!({"stream_startup_timeout":3,"connection_timeout":4,"channel_init_grace_period":5}),
+                _permit: Arc::new(permits.clone().try_acquire_owned().unwrap()),
+                active: active.clone(),
+            }),
+        };
+        let copied = read.health_knobs().unwrap();
+        drop(read);
+        assert_eq!(permits.available_permits(), 4);
+        assert_eq!(active.load(Ordering::Acquire), 0);
+        assert_eq!(copied.startup, Duration::from_secs(3));
+        assert_eq!(copied.connection, Duration::from_secs(4));
+        assert_eq!(copied.initialization, Duration::from_secs(5));
+    }
+    #[test]
+    fn typed_health_rejects_unsupported_shapes_and_preserves_python_bool() {
+        assert_eq!(
+            ProxyHealthKnobs::from_value(&json!({})).unwrap().startup,
+            Duration::from_secs(8)
+        );
+        assert_eq!(
+            ProxyHealthKnobs::from_value(&json!({"connection_timeout":false}))
+                .unwrap()
+                .connection,
+            Duration::ZERO
+        );
+        for value in [
+            json!([]),
+            json!({"connection_timeout":"4"}),
+            json!({"connection_timeout":null}),
+            json!({"connection_timeout":-1}),
+            json!({"connection_timeout":1e100}),
+        ] {
+            assert!(ProxyHealthKnobs::from_value(&value).is_err());
+        }
     }
 }

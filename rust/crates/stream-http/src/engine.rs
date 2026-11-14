@@ -31,6 +31,47 @@ use tokio::{
     time::{self, Instant},
 };
 
+/// Three bounded copied values; no settings tree or cache permit is retained.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct HealthTimeouts {
+    pub startup: Duration,
+    pub connection: Duration,
+    pub initialization: Duration,
+}
+impl Default for HealthTimeouts {
+    fn default() -> Self {
+        Self {
+            startup: Duration::from_secs(8),
+            connection: Duration::from_secs(10),
+            initialization: Duration::from_secs(60),
+        }
+    }
+}
+/// Optional real consumer capability. The existing static engine is unchanged
+/// unless the owner explicitly supplies a source before creating any clones.
+pub trait HealthSettingsSource: Send + Sync {
+    fn snapshot(
+        &self,
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<HealthTimeouts, PlaybackError>> + Send + '_>>;
+}
+async fn effective_health_timing(
+    base: health::Timing,
+    source: Option<&Arc<dyn HealthSettingsSource>>,
+) -> Result<health::Timing, PlaybackError> {
+    let Some(source) = source else {
+        return Ok(base);
+    };
+    // Unsupported shapes and physical read errors stay explicit. In particular,
+    // a decode refusal must never be silently treated as valid default settings.
+    let value = source.snapshot().await?;
+    Ok(health::Timing {
+        startup: value.startup,
+        connection: value.connection,
+        initialization: value.initialization,
+        interval: base.interval,
+    })
+}
+
 #[derive(Clone, Debug)]
 pub struct EngineConfig {
     pub max_channels: usize,
@@ -138,6 +179,7 @@ pub type MediaStream =
 
 pub(crate) struct Inner {
     config: EngineConfig,
+    health_settings: Option<Arc<dyn HealthSettingsSource>>,
     sessions: Mutex<HashMap<String, Arc<Session>>>,
     slots: Arc<Semaphore>,
     coordinator: Option<Coordinator>,
@@ -280,6 +322,7 @@ impl StreamEngine {
         Ok(Self {
             inner: Arc::new(Inner {
                 config,
+                health_settings: None,
                 sessions: Mutex::new(HashMap::new()),
                 slots,
                 coordinator,
@@ -290,6 +333,19 @@ impl StreamEngine {
                 statistics_reader: Mutex::new(None),
             }),
         })
+    }
+
+    /// Bind before cloning/starting the engine. Main must construct the Core
+    /// reader from its pre-engine AuthService, avoiding an EngineControl cycle.
+    pub fn with_health_settings(
+        mut self,
+        source: Arc<dyn HealthSettingsSource>,
+    ) -> Result<Self, PlaybackError> {
+        let inner = Arc::get_mut(&mut self.inner).ok_or_else(|| {
+            PlaybackError::new(500, "Health settings must be bound before engine sharing")
+        })?;
+        inner.health_settings = Some(source);
+        Ok(self)
     }
 
     /// Authorization/resolution must run before calling this method for each viewer.
@@ -1171,8 +1227,17 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
             .map_or(String::new(), |lease| lease.token().to_owned());
         let shared = inner.inputs.is_some();
         let health_timing = inner.config.health_timing();
+        let health_settings = inner.health_settings.clone();
         tokio::spawn(async move {
-            channel_metadata_worker(clients, session, owner, shared, health_timing).await
+            channel_metadata_worker(
+                clients,
+                session,
+                owner,
+                shared,
+                health_timing,
+                health_settings,
+            )
+            .await
         })
     });
     let (_unleased_guard, unleased_watch) = watch::channel(false);
@@ -1451,7 +1516,8 @@ async fn channel_metadata_worker(
     session: Arc<Session>,
     owner: String,
     shared: bool,
-    health_timing: health::Timing,
+    mut health_timing: health::Timing,
+    health_settings: Option<Arc<dyn HealthSettingsSource>>,
 ) {
     let fence = if owner.is_empty() {
         uuid_fence()
@@ -1478,10 +1544,24 @@ async fn channel_metadata_worker(
             _=timer.tick()=>{},
             _=session.metadata_wake.notified()=>{},
             _=time::sleep(health_delay)=>{
+                health_timing = tokio::select! {
+                    _=stop.changed()=>break,
+                    value=effective_health_timing(health_timing, health_settings.as_ref())=>match value {
+                        Ok(timing)=>timing,
+                        Err(_)=>{session.stop.send_replace(true);session.channel.stop();break;},
+                    },
+                };
                 session.health.lock().unwrap().tick_if_due(epoch_seconds(),session.buffer_index.load(Ordering::Relaxed),health_timing);
                 continue;
             },
         }
+        health_timing = tokio::select! {
+            _=stop.changed()=>break,
+            value=effective_health_timing(health_timing, health_settings.as_ref())=>match value {
+                        Ok(timing)=>timing,
+                        Err(_)=>{session.stop.send_replace(true);session.channel.stop();break;},
+                    },
+        };
         session.health.lock().unwrap().tick_if_due(
             epoch_seconds(),
             session.buffer_index.load(Ordering::Relaxed),
@@ -1850,3 +1930,90 @@ mod core_buffer_peer;
 #[cfg(test)]
 #[path = "core_trace_peer.rs"]
 mod core_trace_peer;
+
+#[cfg(test)]
+mod dynamic_health_settings_tests {
+    use super::*;
+    struct Source(AtomicU64);
+    impl HealthSettingsSource for Source {
+        fn snapshot(
+            &self,
+        ) -> Pin<
+            Box<
+                dyn std::future::Future<Output = Result<HealthTimeouts, PlaybackError>> + Send + '_,
+            >,
+        > {
+            Box::pin(async {
+                Ok(HealthTimeouts {
+                    startup: Duration::from_secs(self.0.load(Ordering::Acquire)),
+                    ..HealthTimeouts::default()
+                })
+            })
+        }
+    }
+    fn base() -> health::Timing {
+        health::Timing {
+            startup: Duration::from_secs(8),
+            connection: Duration::from_secs(10),
+            initialization: Duration::from_secs(60),
+            interval: Duration::from_secs(5),
+        }
+    }
+    #[tokio::test]
+    async fn next_real_health_decision_uses_new_copied_timeout() {
+        let concrete = Arc::new(Source(AtomicU64::new(8)));
+        let source: Arc<dyn HealthSettingsSource> = concrete.clone();
+        let mut state = health::Health::new(0.0);
+        state.connected = true;
+        state.tick(
+            4.0,
+            0,
+            effective_health_timing(base(), Some(&source))
+                .await
+                .unwrap(),
+        );
+        assert!(state.healthy);
+        assert!(!state.needs_switch);
+        concrete.0.store(3, Ordering::Release);
+        state.tick(
+            4.0,
+            0,
+            effective_health_timing(base(), Some(&source))
+                .await
+                .unwrap(),
+        );
+        assert!(!state.healthy);
+        assert!(state.needs_switch);
+    }
+    #[tokio::test]
+    async fn settings_error_is_not_silently_replaced_with_default_health() {
+        struct Refused;
+        impl HealthSettingsSource for Refused {
+            fn snapshot(
+                &self,
+            ) -> Pin<
+                Box<
+                    dyn std::future::Future<Output = Result<HealthTimeouts, PlaybackError>>
+                        + Send
+                        + '_,
+                >,
+            > {
+                Box::pin(async { Err(PlaybackError::new(503, "Unsupported health settings")) })
+            }
+        }
+        let source: Arc<dyn HealthSettingsSource> = Arc::new(Refused);
+        assert!(effective_health_timing(base(), Some(&source))
+            .await
+            .is_err());
+    }
+    #[tokio::test]
+    async fn no_hook_retains_static_config_and_late_binding_is_refused() {
+        let timing = effective_health_timing(base(), None).await.unwrap();
+        assert_eq!(timing.startup, Duration::from_secs(8));
+        let engine = StreamEngine::new(EngineConfig::default()).unwrap();
+        let _clone = engine.clone();
+        assert!(engine
+            .with_health_settings(Arc::new(Source(AtomicU64::new(3))))
+            .is_err());
+    }
+}

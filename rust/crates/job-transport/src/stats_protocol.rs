@@ -26,6 +26,7 @@ pub(crate) fn parse(bytes: &[u8]) -> Result<Message, protocol::ProtocolError> {
         .map_err(|_| InvalidArgument)?;
     Ok(Message { task_id: id })
 }
+#[cfg(test)]
 pub(crate) fn encode(id: Uuid) -> Result<Vec<u8>, protocol::ProtocolError> {
     let encoded = protocol::encode(
         &protocol::Task::CreateBackup,

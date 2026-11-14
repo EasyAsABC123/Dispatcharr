@@ -77,10 +77,8 @@ mod periodic_headers;
 
 #[cfg(test)]
 mod stats_peer;
-#[cfg(test)]
-mod stats_protocol;
-#[cfg(test)]
-mod stats_worker;
+pub mod stats_protocol;
+pub mod stats_worker;
 
 #[cfg(test)]
 mod stats_resources;
@@ -218,3 +216,16 @@ mod recording_dvr_peer;
 
 #[cfg(test)]
 mod recording_dvr_physical_peer;
+
+// Integrated milestone worker composition; intake is prepared explicitly.
+pub mod configured_series_attachment;
+pub mod milestone_adapters;
+pub mod milestone_application;
+pub mod milestone_dispatch;
+pub mod tvg_programme_cache;
+pub mod tvg_programme_files;
+pub mod tvg_programme_plan;
+pub mod tvg_programme_protocol;
+pub mod tvg_programme_worker;
+
+pub mod tvg_programme_application;

@@ -5,7 +5,10 @@ mod retry;
 mod routes;
 mod upstream;
 
-pub use engine::{EngineConfig, MediaFrame, MediaStream, StreamEngine, StreamStatus};
+pub use engine::{
+    EngineConfig, HealthSettingsSource, HealthTimeouts, MediaFrame, MediaStream, StreamEngine,
+    StreamStatus,
+};
 
 mod status;
 

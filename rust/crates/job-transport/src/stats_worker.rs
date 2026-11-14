@@ -1,6 +1,8 @@
 //! Fixture-only fetch-statistics execution using the shared native scanner/sink.
 //! Original Dispatcharr authors retain application/algorithm credit and AGPL.
-use crate::transport::{Error as TransportError, Jobs};
+use crate::transport::Error as TransportError;
+#[cfg(test)]
+use crate::transport::Jobs;
 use dispatcharr_contracts::{BoxFuture, UpdateEventError, UpdateEventSink};
 use serde_json::{json, Value};
 use std::{
@@ -15,7 +17,7 @@ use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub(crate) enum Error {
+pub enum Error {
     Configuration,
     Closed,
     Capacity,
@@ -25,13 +27,13 @@ pub(crate) enum Error {
     Transport(TransportError),
     Panic,
 }
-pub(crate) trait Source: Send + Sync {
+pub trait Source: Send + Sync {
     /// Implementations retain this scope through actual scan replies, including
     /// a logical timeout; returning an error is not permission for task SUCCESS.
     fn build(&self, caller: Arc<dyn Send + Sync>) -> BoxFuture<'_, Result<Value, Error>>;
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub(crate) enum Run {
+pub enum Run {
     Empty,
     Completed(Uuid),
     AlreadySucceeded(Uuid),
@@ -51,8 +53,36 @@ impl Drop for Attempt {
         }
     }
 }
+enum Port {
+    #[cfg(test)]
+    Fixture(Jobs),
+    Normal(crate::transport::StatsJobs),
+}
+impl Port {
+    async fn claim_stats_fixture(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<crate::stats_protocol::Message>, TransportError> {
+        match self {
+            #[cfg(test)]
+            Self::Fixture(jobs) => jobs.claim_stats_fixture(caller).await,
+            Self::Normal(jobs) => jobs.claim(caller).await,
+        }
+    }
+    async fn write_stats_success_fixture(
+        &self,
+        message: &crate::stats_protocol::Message,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, TransportError> {
+        match self {
+            #[cfg(test)]
+            Self::Fixture(jobs) => jobs.write_stats_success_fixture(message, caller).await,
+            Self::Normal(jobs) => jobs.write(message, caller).await,
+        }
+    }
+}
 struct Inner {
-    jobs: Jobs,
+    jobs: Port,
     source: Arc<dyn Source>,
     sink: Arc<dyn UpdateEventSink>,
     slots: Arc<Semaphore>,
@@ -60,10 +90,11 @@ struct Inner {
     maximum: usize,
 }
 #[derive(Clone)]
-pub(crate) struct StatsWorker {
+pub struct StatsWorker {
     inner: Arc<Inner>,
 }
 impl StatsWorker {
+    #[cfg(test)]
     pub fn new_fixture(
         jobs: Jobs,
         source: Arc<dyn Source>,
@@ -80,7 +111,28 @@ impl StatsWorker {
         }
         Ok(Self {
             inner: Arc::new(Inner {
-                jobs,
+                jobs: Port::Fixture(jobs),
+                source,
+                sink,
+                maximum,
+                slots: Arc::new(Semaphore::new(1)),
+                closed: AtomicBool::new(false),
+            }),
+        })
+    }
+    /// Explicit normal port, prepares only; no publication/poller/Main starts.
+    pub fn new(
+        jobs: crate::transport::StatsJobs,
+        source: Arc<dyn Source>,
+        sink: Arc<dyn UpdateEventSink>,
+        maximum: usize,
+    ) -> Result<Self, Error> {
+        if maximum == 0 || maximum > 3 * 1024 * 1024 {
+            return Err(Error::Configuration);
+        }
+        Ok(Self {
+            inner: Arc::new(Inner {
+                jobs: Port::Normal(jobs),
                 source,
                 sink,
                 maximum,

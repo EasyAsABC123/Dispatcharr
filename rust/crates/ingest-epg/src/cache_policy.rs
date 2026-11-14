@@ -307,6 +307,20 @@ impl CachedSwapPolicy {
     ) -> Result<Value, ConfiguredSettingsError> {
         self.configured_group(Group::Dvr, context).await
     }
+    /// Per-channel programme task only: Source clock is sampled before its
+    /// settings I/O; the existing configured-group path fences SQL Ready/close.
+    /// Outer family receipt must still wait for all retained cache operations.
+    pub async fn retained_tvg_history_policy(
+        &self,
+        context: SwapPolicyContext,
+    ) -> Result<crate::SwapPolicy, ConfiguredSettingsError> {
+        let now = (self.clock)();
+        let value = self.configured_group(Group::Epg, context).await?;
+        let history = source_epg_history_policy(&value).map_err(|_| {
+            ConfiguredSettingsError::at(ConfiguredSettingsStage::Decode, ImportError::Parser)
+        })?;
+        Ok(crate::SwapPolicy { now, history })
+    }
     async fn configured_group(
         &self,
         group: Group,

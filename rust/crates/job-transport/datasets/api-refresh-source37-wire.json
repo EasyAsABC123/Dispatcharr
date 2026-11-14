@@ -1,0 +1,73 @@
+{
+  "Source_HTTP_private_sha256": "d92268c5212686770d8f739cc25237efc4b6cfb179fc9024fa07c0a9de374841",
+  "Source_case": "normal",
+  "actual_status": 202,
+  "actual_envelope_projection": {
+    "body": "W1sxXSwgeyJmb3JjZSI6IGZhbHNlfSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+    "content-encoding": "utf-8",
+    "content-type": "application/json",
+    "headers": {
+      "lang": "py",
+      "task": "apps.epg.tasks.refresh_epg_data",
+      "id": "497bd54b-df07-4679-8a3a-87fed855bda5",
+      "shadow": null,
+      "eta": null,
+      "expires": null,
+      "group": null,
+      "group_index": null,
+      "retries": 0,
+      "timelimit": [
+        14400,
+        null
+      ],
+      "root_id": "497bd54b-df07-4679-8a3a-87fed855bda5",
+      "parent_id": null,
+      "argsrepr": "(1,)",
+      "kwargsrepr": "{'force': False}",
+      "origin": "gen406@13efd0ecf387",
+      "ignore_result": false,
+      "replaced_task_nesting": 0,
+      "stamped_headers": null,
+      "stamps": {}
+    },
+    "properties": {
+      "correlation_id": "497bd54b-df07-4679-8a3a-87fed855bda5",
+      "reply_to": "4d690414-b04d-3544-a035-9cd94e5153a7",
+      "delivery_mode": 2,
+      "delivery_info": {
+        "exchange": "",
+        "routing_key": "celery"
+      },
+      "priority": 0,
+      "body_encoding": "base64",
+      "delivery_tag": "5bea197d-06a9-4793-8365-a186df61f337"
+    }
+  },
+  "Source_worker_in_HTTP_reference_executed": false,
+  "Source_parented_private_sha256": "50294172571d8e7fe1434756758381d5102f1b1fc425da6027231d82637e9d14",
+  "actual_parented_refresh_backend": {
+    "status": "SUCCESS",
+    "result": null,
+    "traceback": null,
+    "children": [
+      [
+        [
+          "0f08d53e-afed-4e73-91bf-d211547ceec4",
+          null
+        ],
+        null
+      ],
+      [
+        [
+          "9f7c6077-8205-4e75-883e-098c181747c9",
+          null
+        ],
+        null
+      ]
+    ],
+    "date_done": "2026-11-13T07:06:36.436298+00:00",
+    "task_id": "cb78e036-04f3-40d0-a07c-591ed05ef09c"
+  },
+  "actual_parented_series_task_id": "9f7c6077-8205-4e75-883e-098c181747c9",
+  "test_mapping": "only replace backend task_id with actual Source37 producer ID; decision test is composed/counterfactual, NOT an executed Source API-configured workflow"
+}

@@ -701,3 +701,5 @@ mod tests;
 
 // Source orphan79/native125 helper; no application/default consumer authority.
 pub mod orphan_cleanup;
+
+pub mod tvg_programme_file;

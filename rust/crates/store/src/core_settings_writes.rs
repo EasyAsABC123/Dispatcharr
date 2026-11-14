@@ -196,6 +196,24 @@ impl CoreSettingsWrites {
     /// Trusted internal consumer seam. This reserves an existing real token;
     /// it does not authenticate an HTTP user or register a public route.
     pub async fn proxy_settings(&self) -> Result<crate::ProxySettingsRead, StoreError> {
+        {
+            let _admission = self
+                .state
+                .admission
+                .lock()
+                .unwrap_or_else(|e| e.into_inner());
+            if self.state.stopped.load(Ordering::Acquire) {
+                return Err(capacity());
+            }
+            if let Some(read) = self
+                .state
+                .special
+                .as_ref()
+                .and_then(|s| s.fresh_proxy_read())
+            {
+                return Ok(read);
+            }
+        }
         let lease = self.reserve()?;
         let auth = self
             .state
@@ -209,6 +227,55 @@ impl CoreSettingsWrites {
             .ok_or(StoreError::Unsupported("Special context not configured"))?
             .proxy_settings(&auth)
             .await
+    }
+    pub async fn proxy_health_knobs(&self) -> Result<crate::ProxyHealthKnobs, StoreError> {
+        let read = self.proxy_settings().await?;
+        let copy = read.health_knobs()?;
+        drop(read);
+        Ok(copy)
+    }
+    /// The Source TSConfig loader calls CoreSettings directly, not BaseConfig's
+    /// separate process cache. Return only copied scalars after physical Ready.
+    /// TS may inherit a fresh Base slot until it performs its own cold load.
+    /// Copy that inherited value without installing a separate TS slot/token.
+    pub fn inherited_proxy_health_knobs(
+        &self,
+    ) -> Result<Option<crate::ProxyHealthKnobs>, StoreError> {
+        let _admission = self
+            .state
+            .admission
+            .lock()
+            .unwrap_or_else(|e| e.into_inner());
+        if self.state.stopped.load(Ordering::Acquire) {
+            return Err(capacity());
+        }
+        self.state
+            .special
+            .as_ref()
+            .ok_or(StoreError::Unsupported("Special context not configured"))?
+            .fresh_proxy_read()
+            .map(|read| read.health_knobs())
+            .transpose()
+    }
+    pub fn proxy_health_reads_open(&self) -> bool {
+        !self.state.stopped.load(Ordering::Acquire)
+    }
+    pub async fn proxy_ts_health_knobs(&self) -> Result<crate::ProxyHealthKnobs, StoreError> {
+        let lease = self.reserve()?;
+        let auth = self
+            .state
+            .auth
+            .clone()
+            .with_request_writer_permit(lease._permit.clone())?
+            .with_retained_scope(lease);
+        let task = tokio::spawn(async move {
+            let value = crate::core_settings_special_effects::load_proxy(&auth).await?;
+            let copied = crate::ProxyHealthKnobs::from_value(&value)?;
+            drop(value);
+            Ok::<_, StoreError>(copied)
+        });
+        task.await
+            .map_err(|_| StoreError::Unsupported("Owned TS health loader did not settle"))?
     }
     /// Component-only drain, never a claim that unrelated AuthService users stopped.
     pub async fn shutdown(&self) -> bool {

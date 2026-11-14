@@ -461,4 +461,8 @@ mod core_settings_special_broker;
 mod core_settings_special_budget;
 mod core_settings_special_effects;
 mod core_settings_special_network;
-pub use core_settings_special_effects::{CoreSettingsSpecialEffects, ProxySettingsRead};
+pub use core_settings_special_effects::{
+    CoreSettingsSpecialEffects, ProxyHealthKnobs, ProxySettingsRead,
+};
+
+pub mod tvg_programme;

@@ -4,6 +4,7 @@ mod combined_statistics_html;
 mod combined_statistics_wire;
 mod control;
 mod playback;
+mod proxy_health;
 mod realtime;
 mod response_headers;
 mod static_assets;
@@ -210,6 +211,30 @@ async fn run() -> Result<(), String> {
     } else {
         auth
     };
+    // Temporary migration capability while exceptional settings shapes and
+    // live Main transitions remain outside the measured numeric Source cohort.
+    let dynamic_health = match env::var("RUST_DYNAMIC_PROXY_HEALTH_ENABLED").as_deref() {
+        Ok("1") => true,
+        Ok("0") | Err(_) => false,
+        _ => return Err("RUST_DYNAMIC_PROXY_HEALTH_ENABLED must be 0 or 1".into()),
+    };
+    // Construct from pre-engine AuthService to avoid a Core -> EngineControl ->
+    // engine -> health-source -> Core cycle. All share the original four slots.
+    let proxy_health_core = if dynamic_health {
+        let effects = dispatcharr_store::CoreSettingsSpecialEffects::new(std::path::PathBuf::from(
+            env::var("DISPATCHARR_LOG_DIR").unwrap_or_else(|_| "/data/logs".into()),
+        ))
+        .map_err(|_| "Invalid proxy health effects directory")?;
+        Some(
+            dispatcharr_store::CoreSettingsWrites::new(auth.clone())
+                .and_then(|core| core.with_special_effects(effects))
+                .map_err(|_| {
+                    "Dynamic proxy health requires the shared cache and realtime publisher"
+                })?,
+        )
+    } else {
+        None
+    };
     let mut config = EngineConfig::default();
     config.initial_buffer_chunks = 4;
     config.flush_partial_chunks = false;
@@ -337,6 +362,14 @@ async fn run() -> Result<(), String> {
     let engine =
         StreamEngine::new_with_shared_inputs(config, coordinator.clone(), clients.clone(), inputs)
             .map_err(|_| "Invalid streaming configuration")?;
+    let engine = match &proxy_health_core {
+        Some(core) => engine
+            .with_health_settings(Arc::new(proxy_health::CoreProxyHealthSource::new(
+                core.clone(),
+            )))
+            .map_err(|_| "Dynamic proxy health must be bound before engine sharing")?,
+        None => engine,
+    };
     let live_statistics = statistics::start(&engine, clients.as_ref(), realtime_bus.as_ref())?;
     let auth = auth.with_channel_control(Arc::new(control::EngineControl(engine.clone())));
     let realtime = realtime::gateway(auth.clone(), realtime_bus.clone())?;
@@ -640,6 +673,7 @@ async fn run() -> Result<(), String> {
     };
     let mut epg_index = None;
     let mut epg_series = None;
+    let mut epg_tvg = None;
     let epg_refresh = if refresh_enabled {
         let cache = env::var("REDIS_URL").map_err(|_| "Enabled EPG jobs require REDIS_URL")?;
         let bus = realtime_bus
@@ -660,6 +694,11 @@ async fn run() -> Result<(), String> {
         let cache_dir = env::var("RUST_EPG_CACHE_DIR")
             .map(std::path::PathBuf::from)
             .unwrap_or_else(|_| cache_root.clone());
+        use std::os::unix::fs::MetadataExt;
+        let input_uid = media_root
+            .metadata()
+            .map_err(|_| "EPG media root metadata unavailable")?
+            .uid();
         let series = dispatcharr_job_transport::series_application::SeriesApplication::prepare(
             store.clone(),
             dispatcharr_job_transport::series_application::Options {
@@ -680,7 +719,7 @@ async fn run() -> Result<(), String> {
                 backend: backend.clone(),
                 cache: cache.clone(),
                 source_cwd,
-                media_root,
+                media_root: media_root.clone(),
                 cache_dir: cache_dir.clone(),
             },
         )
@@ -689,6 +728,28 @@ async fn run() -> Result<(), String> {
         epg_programs = epg_programs
             .with_current_file_lookup(index.lookup(), cache_root)
             .map_err(|_| "Invalid EPG current-file path configuration")?;
+        // The natural Channel post-save task precedes configured descendants
+        // in the real default FIFO. Consume it with its own retained worker;
+        // never skip it to reach a later Index or Series task.
+        let tvg = match dispatcharr_job_transport::tvg_programme_application::Application::prepare(
+            store.clone(),
+            dispatcharr_job_transport::tvg_programme_application::Options {
+                broker: broker.clone(),
+                backend: backend.clone(),
+                cache: cache.clone(),
+                input_roots: vec![media_root],
+                input_uid,
+            },
+        )
+        .await
+        {
+            Ok(service) => service,
+            Err(error) => {
+                let _ = series.shutdown(Duration::from_secs(4)).await;
+                let _ = index.shutdown(Duration::from_secs(4)).await;
+                return Err(error.into());
+            }
+        };
         let refresh =
             match dispatcharr_job_transport::refresh_application::RefreshApplication::prepare(
                 store.clone(),
@@ -705,20 +766,26 @@ async fn run() -> Result<(), String> {
             {
                 Ok(service) => service,
                 Err(_) => {
+                    let _ = tvg.shutdown(Duration::from_secs(4)).await;
                     let _ = series.shutdown(Duration::from_secs(4)).await;
                     let _ = index.shutdown(Duration::from_secs(4)).await;
                     return Err("EPG refresh initialization failed (credentials omitted)".into());
                 }
             };
-        if index.start(Arc::new(())).is_err() || series.start().is_err() || refresh.start().is_err()
+        if index.start(Arc::new(())).is_err()
+            || series.start().is_err()
+            || tvg.start(Arc::new(())).is_err()
+            || refresh.start().is_err()
         {
             let _ = refresh.shutdown(Duration::from_secs(4)).await;
+            let _ = tvg.shutdown(Duration::from_secs(4)).await;
             let _ = series.shutdown(Duration::from_secs(4)).await;
             let _ = index.shutdown(Duration::from_secs(4)).await;
             return Err("EPG index intake initialization failed".into());
         }
         epg_index = Some(index);
         epg_series = Some(series);
+        epg_tvg = Some(tvg);
         Some(refresh)
     } else {
         None
@@ -756,6 +823,11 @@ async fn run() -> Result<(), String> {
     )
     .await
     .map_err(|_| "Combined statistics initialization failed (credentials omitted)")?;
+    // Preserve the shared AuthService admission pool when repository routes join
+    // Core and the other application APIs. The fetch adapter still rejects its
+    // explicitly unsupported transports and signatures.
+    let plugin_repositories =
+        dispatcharr_store::PluginRepositories::new(auth.clone()).with_unsigned_manifest_fetches();
     let mut app = Router::new()
         .route("/health/ready", get(health))
         .with_state(store)
@@ -764,6 +836,7 @@ async fn run() -> Result<(), String> {
         .route("/proxy/stats", any(combined_stats_legacy_alias))
         .merge(output_profiles.clone().router())
         .merge(backup_files.clone().router())
+        .merge(plugin_repositories.router())
         .merge(epg_programs.clone().router())
         .merge(epg_programs.clone().current_router())
         .merge(vod_reads.router())
@@ -874,6 +947,7 @@ async fn run() -> Result<(), String> {
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
     let services = ShutdownServices {
+        proxy_health_core,
         engine,
         clients,
         hls,
@@ -891,6 +965,7 @@ async fn run() -> Result<(), String> {
         epg_refresh,
         epg_index,
         epg_series,
+        epg_tvg,
         vod_reads,
         grid,
         hdhr,
@@ -950,6 +1025,7 @@ async fn shutdown_signal() {
 }
 #[derive(Clone)]
 struct ShutdownServices {
+    proxy_health_core: Option<dispatcharr_store::CoreSettingsWrites>,
     engine: StreamEngine,
     clients: Option<ClientStore>,
     hls: Option<dispatcharr_hls_http::HlsGateway>,
@@ -967,6 +1043,7 @@ struct ShutdownServices {
     epg_refresh: Option<dispatcharr_job_transport::refresh_application::RefreshApplication>,
     epg_index: Option<dispatcharr_job_transport::index_application::IndexApplication>,
     epg_series: Option<dispatcharr_job_transport::series_application::SeriesApplication>,
+    epg_tvg: Option<dispatcharr_job_transport::tvg_programme_application::Application>,
     vod_reads: dispatcharr_store::VodReads,
     grid: dispatcharr_output_http::GridGateway,
     hdhr: dispatcharr_hdhr_http::HdhrGateway,
@@ -975,6 +1052,7 @@ struct ShutdownServices {
 }
 async fn shutdown_components(services: ShutdownServices) {
     let ShutdownServices {
+        proxy_health_core,
         engine,
         clients,
         hls,
@@ -992,6 +1070,7 @@ async fn shutdown_components(services: ShutdownServices) {
         epg_refresh,
         epg_index,
         epg_series,
+        epg_tvg,
         vod_reads,
         grid,
         hdhr,
@@ -1002,7 +1081,7 @@ async fn shutdown_components(services: ShutdownServices) {
     combined_statistics.close_admission();
     // Refresh reporter work retains the realtime publisher until actual drain.
     // A bounded incomplete drain is reported honestly before other shutdowns.
-    let (refresh_drained, index_intake_drained, series_drained) = tokio::join!(
+    let (refresh_drained, index_intake_drained, series_drained, tvg_drained) = tokio::join!(
         async {
             match epg_refresh {
                 Some(refresh) => refresh.shutdown(Duration::from_secs(4)).await,
@@ -1021,7 +1100,16 @@ async fn shutdown_components(services: ShutdownServices) {
                 None => true,
             }
         },
+        async {
+            match epg_tvg {
+                Some(tvg) => tvg.shutdown(Duration::from_secs(4)).await,
+                None => true,
+            }
+        },
     );
+    if !tvg_drained {
+        eprintln!("Per-channel EPG worker remains physically unsettled");
+    }
     let (
         live,
         _,
@@ -1109,6 +1197,10 @@ async fn shutdown_components(services: ShutdownServices) {
         vod_reads.shutdown(Duration::from_secs(8)),
         combined_statistics.shutdown(Duration::from_secs(8)),
     );
+    let proxy_health_drained = match proxy_health_core {
+        Some(core) => core.shutdown().await,
+        None => true,
+    };
     // Accepted HTTP reads have now drained or explicitly timed out. Close the
     // file/publication services last; late missing-index publications remain
     // durable for the next startup rather than losing their transport owner.
@@ -1116,7 +1208,8 @@ async fn shutdown_components(services: ShutdownServices) {
         Some(index) => index.shutdown(Duration::from_secs(4)).await,
         None => true,
     };
-    if !combined_stats_drained
+    if !proxy_health_drained
+        || !combined_stats_drained
         || !refresh_drained
         || !index_intake_drained
         || !series_drained

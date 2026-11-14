@@ -1,0 +1,163 @@
+{
+  "scope": "Source model/cache characterization only; no Main/media/performance acceptance",
+  "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_authorship_retained": true,
+  "actual_controller_exit": 0,
+  "capture_and_domain_valid": true,
+  "failures": [],
+  "actual_PATCH_status": 200,
+  "actual_helper_values": [
+    {
+      "label": "TS_initial",
+      "value": {
+        "connection_timeout": 10,
+        "stream_startup_timeout": 8,
+        "channel_init_grace_period": 60
+      }
+    },
+    {
+      "label": "Base_initial",
+      "value": {
+        "connection_timeout": 10,
+        "stream_startup_timeout": 8,
+        "channel_init_grace_period": 60
+      }
+    },
+    {
+      "label": "Base_after_write",
+      "value": {
+        "connection_timeout": 4,
+        "stream_startup_timeout": 3,
+        "channel_init_grace_period": 5
+      }
+    },
+    {
+      "label": "TS_after_write",
+      "value": {
+        "connection_timeout": 10,
+        "stream_startup_timeout": 8,
+        "channel_init_grace_period": 60
+      }
+    },
+    {
+      "label": "TS_after_fixed_expiry",
+      "value": {
+        "connection_timeout": 4,
+        "stream_startup_timeout": 3,
+        "channel_init_grace_period": 5
+      }
+    }
+  ],
+  "actual_relevant_TS_age_seconds": 10.275288820266724,
+  "actual_first_reply_hold_seconds": 2.400140081997961,
+  "profile_argument_cases": 18,
+  "profile_owner_calls": 6,
+  "actual_Source_requests": 1,
+  "actual_Native_requests": 0,
+  "cleanup": [
+    {
+      "name": "discover_partial_owned_baseline",
+      "passed": true,
+      "value": {
+        "exact_CID_observed": "00eacad19021ed46c65d96d030e0b4365735b29fc3fc1256d295c84055667bab"
+      }
+    },
+    {
+      "name": "default_after_full_audit",
+      "passed": true,
+      "value": {
+        "default_SQL_full6259_and11_equal": true,
+        "default_cache_DB7_keys_type_bytes_equal": true,
+        "PTTL_exact_equality_not_required": true,
+        "PTTL_refresh_or_persistence_change_refused": true,
+        "no_expiry_or_source_write_causality_assumed": true
+      }
+    },
+    {
+      "name": "owned_backend_absence_Unix",
+      "passed": true,
+      "value": true
+    },
+    {
+      "name": "normal_management_PGRedis_stop",
+      "passed": true,
+      "value": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-11-14T14:49:19.671339477Z",
+        "FinishedAt": "2026-11-14T14:49:41.728976722Z"
+      }
+    },
+    {
+      "name": "owned_compose_down",
+      "passed": true,
+      "value": ""
+    },
+    {
+      "name": "fresh_exact_project_and_CID_absence",
+      "passed": true,
+      "value": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "name": "physical_CLI_container_settlement",
+      "passed": true,
+      "value": {
+        "CLI_identities": 26,
+        "container_identities": 1
+      }
+    },
+    {
+      "name": "final_frozen_input_recheck",
+      "passed": true,
+      "value": true
+    }
+  ],
+  "actual_commands": 26,
+  "actual_command_exits": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "raw_sha256": {
+    "execution-private.json": "3e803881d3ec4ca8c6f5017aef85e0cb9c848d177d7b22653ff8ad89992c2aed",
+    "ts-cache-source-private.json": "3c49009525f44e609f0b7c9844806169cac155f17de6448226e6820b2c1eede3",
+    "profile-arguments-owner-private.json": "1ec78150899f1baba04c43de2fd33ef97add20c8ec93e36c8853612595ea315f"
+  },
+  "qualification_sha256": "fe103ce69c3cb36302314024d291bf433bdcd499b0636e2109bd4489e7c8f308",
+  "performance_gain_claimed": false,
+  "milestone_passed": false
+}

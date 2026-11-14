@@ -1,7 +1,8 @@
 //! Inert bounded PluginRepo metadata adapter from retained Original Source24.
 //! Dispatcharr authors retain application/algorithm credit; see ATTRIBUTION.md.
 //! Default remains metadata-only; explicit finite unsigned fetch opt-in below.
-//! No discovery, installation, execution or Main activation.
+//! Main composes this adapter with its shared AuthService. Discovery,
+//! installation and execution remain outside this metadata/fetch adapter.
 use crate::{
     admin_writes::{boolean, character},
     AuthService, StoreError,
@@ -247,7 +248,7 @@ impl PluginRepositories {
         manifest_fetch::DOMAIN
     }
     /// Explicit finite library opt-in: literal-IP plain HTTP unsigned manifests.
-    /// HTTPS/DNS/transfer codecs/signatures remain guarded. No Main activation.
+    /// HTTPS/DNS/transfer codecs/signatures remain guarded.
     pub fn with_unsigned_manifest_fetches(mut self) -> Self {
         self.unsigned_manifests = true;
         self
@@ -257,7 +258,7 @@ impl PluginRepositories {
         self.original_writer_observer = Some(observer);
         self
     }
-    /// Separate opt-in router only. AuthService::router/Main remain unchanged.
+    /// Separate router, composed explicitly by Main with its shared AuthService.
     pub fn router(self) -> Router {
         let mut router = Router::new()
             .route("/api/plugins/repos/", any(collection))

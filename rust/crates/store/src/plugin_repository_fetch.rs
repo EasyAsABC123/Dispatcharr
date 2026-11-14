@@ -1,5 +1,5 @@
 //! Opt-in finite unsigned manifest adapter. Original Dispatcharr authors retain
-//! application/algorithm credit. Main/default metadata remain separate.
+//! application/algorithm credit. Main composes the same shared-owner adapter.
 //! The measured transport domain is literal-IP plain HTTP, uncompressed,
 //! non-chunked UTF-8 JSON. Other transports/signatures are explicitly guarded.
 use super::*;
@@ -11,7 +11,7 @@ use std::{
     time::Duration,
 };
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
-pub(super) const DOMAIN: &str = "Opt-in measured Source25: literal-IP plain HTTP unsigned UTF8 JSON; headers/body<=65536, JSON nodes<=2048/depth<=32/work<=4MiB, existing four original request owners. HTTPS/hostname DNS/URL credentials/chunked/compressed/signed manifests and cache-failure rendering remain unqualified. No Main/default router activation or whole-request physical qualification until actual held-wire tests.";
+pub(super) const DOMAIN: &str = "Opt-in measured Source25: literal-IP plain HTTP unsigned UTF8 JSON; headers/body<=65536, JSON nodes<=2048/depth<=32/work<=4MiB, existing four original request owners. HTTPS/hostname DNS/URL credentials/chunked/compressed/signed manifests and cache-failure rendering remain unqualified. Main composition requires separate current application acceptance; library evidence does not establish it.";
 const INACTIVITY: Duration = Duration::from_secs(15);
 const HEADERS: usize = 65536;
 #[derive(Clone)]

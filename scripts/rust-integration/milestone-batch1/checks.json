@@ -1,0 +1,66 @@
+[
+  {
+    "name": "fmt",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "actual_exit": 0,
+    "seconds": 1.9935569763183594,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_unchanged": true
+  },
+  {
+    "name": "check",
+    "argv": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--offline",
+      "--locked"
+    ],
+    "actual_exit": 0,
+    "seconds": 0.6926572322845459,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "570262e8cfbef611648157bc0aa5731bb980e10c2959c1827b8061961d052fc3",
+    "source_unchanged": true
+  },
+  {
+    "name": "strict",
+    "argv": [
+      "cargo",
+      "clippy",
+      "--workspace",
+      "--all-targets",
+      "--offline",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "actual_exit": 0,
+    "seconds": 43.81525659561157,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "49f1eda4924e9f34a4d211290d6cf459c1011a1792035204d678b8d4d6b13d20",
+    "source_unchanged": true
+  },
+  {
+    "name": "workspace",
+    "argv": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--offline",
+      "--locked"
+    ],
+    "actual_exit": 0,
+    "seconds": 120.68958020210266,
+    "stdout_sha256": "bef587d48e930d61f508c4c66d69b625d49aa6d8aa128a507be5d8cc88d0a459",
+    "stderr_sha256": "997a3c2200e54f74ae671de3f2bd002931f35363110bce540947c1a60c7074f4",
+    "source_unchanged": true
+  }
+]

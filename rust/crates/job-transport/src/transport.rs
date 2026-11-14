@@ -1578,3 +1578,10 @@ pub(crate) use parented_series_fixture::{
 #[cfg(test)]
 #[path = "recording_dvr_authority_tests.rs"]
 mod recording_dvr_authority_tests;
+
+#[path = "tvg_programme_transport.rs"]
+mod tvg_programme_transport;
+pub use tvg_programme_transport::{Normal as TvgNormal, TvgJobs};
+#[path = "stats_normal_transport.rs"]
+mod stats_normal_transport;
+pub use stats_normal_transport::StatsJobs;

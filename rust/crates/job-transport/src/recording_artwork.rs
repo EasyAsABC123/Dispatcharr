@@ -113,6 +113,27 @@ impl RefreshSeriesChild {
             },
         })
     }
+    /// Explicit captured API producer spelling; preserves the model/list-only
+    /// constructor above. Source import view passes force=False explicitly.
+    /// No general kwargs, force, ETA/retry or arbitrary-parent authority.
+    pub fn from_completed_refresh_api(
+        refresh: &crate::refresh_protocol::RefreshMessage,
+        backend: &[u8],
+        child: &crate::series_protocol::SeriesMessage,
+    ) -> Option<Self> {
+        if refresh.force
+            || refresh.call.list_args
+            || refresh.call.args != vec![json!(refresh.source_id)]
+            || refresh.call.kwargs != json!({"force":false}).as_object()?.clone()
+        {
+            return None;
+        }
+        // Validation-only clone changes exactly the already-checked redundant
+        // false argument. Never rewrites retained FIFO/CAS/publication bytes.
+        let mut validation = refresh.clone();
+        validation.call = crate::refresh_protocol::RefreshCall::initial(refresh.source_id);
+        Self::from_completed_refresh(&validation, backend, child)
+    }
     pub(crate) fn admit(
         self,
         message: &crate::series_protocol::SeriesMessage,
@@ -590,5 +611,57 @@ mod parented_refusals {
                 task
             ));
         }
+    }
+}
+
+#[cfg(test)]
+mod api_producer_tests {
+    use super::*;
+    use serde_json::Value;
+    fn source_composition() -> (
+        crate::refresh_protocol::RefreshMessage,
+        Vec<u8>,
+        crate::series_protocol::SeriesMessage,
+    ) {
+        let source: Value =
+            serde_json::from_str(include_str!("../datasets/api-refresh-source37-wire.json"))
+                .unwrap();
+        let raw = serde_json::to_vec(&source["actual_envelope_projection"]).unwrap();
+        let parent = crate::refresh_protocol::parse(&raw).unwrap();
+        let mut metadata = source["actual_parented_refresh_backend"].clone();
+        metadata["task_id"] = json!(parent.task_id.to_string());
+        let child = crate::series_protocol::SeriesMessage {
+            task_id: Uuid::parse_str(source["actual_parented_series_task_id"].as_str().unwrap())
+                .unwrap(),
+            root: parent.task_id,
+            parent: Some(parent.task_id),
+        };
+        (parent, serde_json::to_vec(&metadata).unwrap(), child)
+    }
+    #[test]
+    fn actual_source37_false_kwarg_has_explicit_api_constructor_only() {
+        let (parent, backend, child) = source_composition();
+        assert!(RefreshSeriesChild::from_completed_refresh(&parent, &backend, &child).is_none());
+        assert!(
+            RefreshSeriesChild::from_completed_refresh_api(&parent, &backend, &child).is_some()
+        );
+    }
+    #[test]
+    fn api_scope_rejects_missing_force_true_and_list_producer() {
+        let (parent, backend, child) = source_composition();
+        let mut missing = parent.clone();
+        missing.call.kwargs.clear();
+        assert!(
+            RefreshSeriesChild::from_completed_refresh_api(&missing, &backend, &child).is_none()
+        );
+        let mut forced = parent.clone();
+        forced.force = true;
+        forced.call.kwargs.insert("force".into(), json!(true));
+        assert!(
+            RefreshSeriesChild::from_completed_refresh_api(&forced, &backend, &child).is_none()
+        );
+        let mut list = parent;
+        list.call.list_args = true;
+        assert!(RefreshSeriesChild::from_completed_refresh_api(&list, &backend, &child).is_none());
     }
 }
