@@ -45,6 +45,7 @@ struct Inner {
     artwork: Arc<Publisher>,
     events: Arc<dyn UpdateEventSink>,
     handoff: Handoff,
+    completions: Option<crate::ArtworkCompletions>,
     direct: Worker,
     poll: Duration,
     lifecycle: Mutex<Lifecycle>,
@@ -86,6 +87,25 @@ impl Application {
         handoff: Handoff,
         options: Options,
     ) -> Result<Self, &'static str> {
+        Self::prepare_inner(store, events, handoff, options, None).await
+    }
+    /// Explicit normal Main artwork composition. Legacy prepare remains unchanged.
+    pub async fn prepare_with_artwork(
+        store: Store,
+        events: Arc<dyn UpdateEventSink>,
+        handoff: Handoff,
+        options: Options,
+        completions: crate::ArtworkCompletions,
+    ) -> Result<Self, &'static str> {
+        Self::prepare_inner(store, events, handoff, options, Some(completions)).await
+    }
+    async fn prepare_inner(
+        store: Store,
+        events: Arc<dyn UpdateEventSink>,
+        handoff: Handoff,
+        options: Options,
+        completions: Option<crate::ArtworkCompletions>,
+    ) -> Result<Self, &'static str> {
         if !(Duration::from_millis(25)..=Duration::from_secs(5)).contains(&options.poll_interval) {
             return Err("Invalid configured Series poll interval");
         }
@@ -95,11 +115,14 @@ impl Application {
         let locks = TaskLocks::connect(&options.cache, TaskLockConfig::default())
             .await
             .map_err(|_| "Configured Series locks initialization failed")?;
-        let artwork = Arc::new(
-            Publisher::connect(&options.broker, &options.backend, Config::default())
-                .await
-                .map_err(|_| "Configured Series artwork publisher initialization failed")?,
-        );
+        let publisher = Publisher::connect(&options.broker, &options.backend, Config::default())
+            .await
+            .map_err(|_| "Configured Series artwork publisher initialization failed")?;
+        let artwork = Arc::new(if completions.is_some() {
+            publisher.retain_normal_publications()
+        } else {
+            publisher
+        });
         let direct = Worker::new(Assembly {
             jobs: jobs.clone(),
             locks: locks.clone(),
@@ -120,6 +143,7 @@ impl Application {
                 artwork,
                 events,
                 handoff,
+                completions,
                 direct,
                 poll: options.poll_interval,
                 lifecycle: Mutex::new(Lifecycle {
@@ -240,11 +264,23 @@ async fn run(inner: &Arc<Inner>, owner: Arc<dyn Send + Sync>) -> Result<State, E
     // Capability is derived from the original retained parent and actual
     // completed backend, not from an arbitrary parented envelope alone.
     let worker = Worker::new_refresh_series_child(inner.assembly(), pending.child)?;
-    let result = worker.run_once(owner).await;
+    let result = worker.run_once_completed(owner.clone()).await;
     // This worker is scoped to one capability. Do not detach physical work on
     // an observer result; its one slot must actually drain before handoff removal.
     worker.shutdown(Duration::from_secs(4)).await?;
-    let run = result?;
+    let (run, report) = result?;
+    if let (Some(completions), Some(report)) = (&inner.completions, report) {
+        let backend = inner
+            .jobs
+            .read_series_lineage(&message, owner)
+            .await
+            .map_err(Error::Transport)?
+            .ok_or(Error::Transport(TransportError::Protocol))?;
+        completions
+            .record(message.clone(), pending.child, report, backend)
+            .await
+            .map_err(Error::Transport)?;
+    }
     match run {
         Run::Completed(id) | Run::AlreadySucceeded(id) => {
             inner

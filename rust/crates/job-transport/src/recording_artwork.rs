@@ -222,6 +222,11 @@ pub(crate) fn encode(
 pub struct Publisher {
     jobs: Jobs,
     reply: Uuid,
+    proofs: Option<
+        std::sync::Mutex<
+            std::collections::BTreeMap<Uuid, crate::recording_artwork_protocol::Message>,
+        >,
+    >,
     #[cfg(test)]
     owned_parented_route: bool,
 }
@@ -235,6 +240,7 @@ impl Publisher {
         Ok(Self {
             jobs,
             reply: Uuid::new_v4(),
+            proofs: None,
             #[cfg(test)]
             owned_parented_route: false,
         })
@@ -251,14 +257,23 @@ impl Publisher {
         Ok(Self {
             jobs,
             reply: Uuid::new_v4(),
+            proofs: None,
             owned_parented_route: true,
         })
+    }
+    pub(crate) fn retain_normal_publications(mut self) -> Self {
+        self.proofs = Some(std::sync::Mutex::new(std::collections::BTreeMap::new()));
+        self
     }
     pub async fn shutdown(&self, timeout: Duration) -> Result<(), crate::transport::Error> {
         self.jobs.shutdown(timeout).await
     }
 }
 impl ArtworkSink for Publisher {
+    fn take_publication(&self, id: Uuid) -> Option<crate::recording_artwork_protocol::Message> {
+        self.proofs.as_ref()?.lock().ok()?.remove(&id)
+    }
+
     fn publish<'a>(
         &'a self,
         recording: i64,
@@ -286,10 +301,29 @@ impl ArtworkSink for Publisher {
                     .map_err(|_| ArtworkError::Uncertain)?;
                 return Ok(id);
             }
+            let proof = if self.proofs.is_some() && task.parent().is_some() {
+                Some(
+                    crate::recording_artwork_protocol::parse(&bytes)
+                        .ok_or(ArtworkError::Uncertain)?,
+                )
+            } else {
+                None
+            };
             self.jobs
                 .publish_configured_artwork(&bytes, id, owner)
                 .await
                 .map_err(|_| ArtworkError::Uncertain)?;
+            if let Some(proof) = proof {
+                let mut proofs = self
+                    .proofs
+                    .as_ref()
+                    .ok_or(ArtworkError::Uncertain)?
+                    .lock()
+                    .map_err(|_| ArtworkError::Uncertain)?;
+                if proofs.len() >= 64 || proofs.insert(id, proof).is_some() {
+                    return Err(ArtworkError::Uncertain);
+                }
+            }
             Ok(id)
         })
     }

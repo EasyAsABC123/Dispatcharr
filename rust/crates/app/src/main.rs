@@ -204,6 +204,9 @@ async fn run() -> Result<(), String> {
     } else {
         auth
     };
+    // Original startup warms the system group before HTTP, leaving the
+    // display-zone debounce untouched until the first real request.
+    auth.startup_system_settings_group().await;
     let realtime_bus = realtime::bus().await?;
     // Attach before every resolver/environment/XC clone so original producers
     // publish through the same bounded process transport.
@@ -713,6 +716,7 @@ async fn run() -> Result<(), String> {
     };
     let mut epg_index = None;
     let mut epg_series = None;
+    let mut epg_artwork = None;
     let mut epg_tvg = None;
     let epg_refresh = if refresh_enabled {
         let cache = env::var("REDIS_URL").map_err(|_| "Enabled EPG jobs require REDIS_URL")?;
@@ -799,8 +803,20 @@ async fn run() -> Result<(), String> {
                     return Err("EPG refresh initialization failed (credentials omitted)".into());
                 }
             };
+        let artwork_completions = dispatcharr_job_transport::ArtworkCompletions::new();
+        let artwork=match dispatcharr_job_transport::recording_existing_artwork_application::Application::prepare(
+            store.pool().clone(),Arc::new(bus.clone()),artwork_completions.clone(),&broker,&backend,Duration::from_millis(100),
+        ).await{
+            Ok(service)=>service,
+            Err(error)=>{
+                let _=refresh.shutdown(Duration::from_secs(4)).await;
+                let _=tvg.shutdown(Duration::from_secs(4)).await;
+                let _=index.shutdown(Duration::from_secs(4)).await;
+                return Err(error.into());
+            }
+        };
         let series =
-            match dispatcharr_job_transport::configured_series_application::Application::prepare(
+            match dispatcharr_job_transport::configured_series_application::Application::prepare_with_artwork(
                 store.clone(),
                 Arc::new(bus.clone()),
                 series_handoff,
@@ -810,30 +826,36 @@ async fn run() -> Result<(), String> {
                     cache,
                     poll_interval: Duration::from_millis(100),
                 },
+                artwork_completions,
             )
             .await
             {
                 Ok(service) => service,
                 Err(error) => {
+                    let _ = artwork.shutdown(Duration::from_secs(4)).await;
                     let _ = refresh.shutdown(Duration::from_secs(4)).await;
                     let _ = tvg.shutdown(Duration::from_secs(4)).await;
                     let _ = index.shutdown(Duration::from_secs(4)).await;
                     return Err(error.into());
                 }
             };
-        if index.start(Arc::new(())).is_err()
+        if artwork.start().is_err()
+            || index.start(Arc::new(())).is_err()
             || series.start().is_err()
             || tvg.start(Arc::new(())).is_err()
             || refresh.start().is_err()
         {
             let _ = refresh.shutdown(Duration::from_secs(4)).await;
             let _ = tvg.shutdown(Duration::from_secs(4)).await;
+            artwork.close_producer_admission();
             let _ = series.shutdown(Duration::from_secs(4)).await;
+            let _ = artwork.shutdown(Duration::from_secs(4)).await;
             let _ = index.shutdown(Duration::from_secs(4)).await;
             return Err("EPG index intake initialization failed".into());
         }
         epg_index = Some(index);
         epg_series = Some(series);
+        epg_artwork = Some(artwork);
         epg_tvg = Some(tvg);
         Some(refresh)
     } else {
@@ -1020,6 +1042,7 @@ async fn run() -> Result<(), String> {
         epg_refresh,
         epg_index,
         epg_series,
+        epg_artwork,
         epg_tvg,
         version_tasks,
         vod_reads,
@@ -1099,6 +1122,8 @@ struct ShutdownServices {
     epg_refresh: Option<dispatcharr_job_transport::refresh_application::RefreshApplication>,
     epg_index: Option<dispatcharr_job_transport::index_application::IndexApplication>,
     epg_series: Option<dispatcharr_job_transport::configured_series_application::Application>,
+    epg_artwork:
+        Option<dispatcharr_job_transport::recording_existing_artwork_application::Application>,
     epg_tvg: Option<dispatcharr_job_transport::tvg_programme_application::Application>,
     version_tasks: Option<dispatcharr_job_transport::version_application::Application>,
     vod_reads: dispatcharr_store::VodReads,
@@ -1127,6 +1152,7 @@ async fn shutdown_components(services: ShutdownServices) {
         epg_refresh,
         epg_index,
         epg_series,
+        epg_artwork,
         epg_tvg,
         version_tasks,
         vod_reads,
@@ -1150,12 +1176,26 @@ async fn shutdown_components(services: ShutdownServices) {
     }
     // Series can still be reading a completed Refresh parent. Stop and settle
     // that intake before Refresh shutdown closes the shared parent reader.
+    if let Some(artwork) = &epg_artwork {
+        artwork.close_producer_admission();
+    }
     let series_parent_reads_drained = match &epg_series {
         Some(series) => series.drain_intake(Duration::from_secs(4)).await,
         None => true,
     };
     if !series_parent_reads_drained {
         eprintln!("Configured Series parent reads remain physically unsettled");
+    }
+    let artwork_drained = if series_parent_reads_drained {
+        match epg_artwork {
+            Some(artwork) => artwork.shutdown(Duration::from_secs(4)).await.is_ok(),
+            None => true,
+        }
+    } else {
+        false
+    };
+    if !artwork_drained {
+        eprintln!("Recording artwork remains physically unsettled");
     }
     let (refresh_drained, index_intake_drained, series_drained, tvg_drained) = tokio::join!(
         async {

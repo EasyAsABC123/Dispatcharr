@@ -92,6 +92,21 @@ impl Failure {
             diagnostic,
         })
     }
+    /// Same qualified Django/psycopg DTO, with truthful task-specific native
+    /// diagnostics. This does not claim Original Python frames executed.
+    pub(crate) fn tvg_programme_insert(message: &str) -> Result<Self, FailureError> {
+        let mut failure = Self::new(
+            FailureKind::Programming,
+            vec![json!(message)],
+            "programme_insert",
+            message,
+        )?;
+        failure.diagnostic = format!("Native Dispatcharr per-channel programme task diagnostic [programme_insert]: {message}");
+        if failure.diagnostic.len() > MAX_DIAGNOSTIC {
+            return Err(FailureError::Capacity);
+        }
+        Ok(failure)
+    }
     pub fn kind(&self) -> FailureKind {
         self.kind
     }

@@ -85,6 +85,7 @@ impl Handler for crate::tvg_programme_worker::Worker {
                 Ok(Run::Empty) => Ok(Disposition::Empty),
                 Ok(Run::UnsupportedHead) => Ok(Disposition::UnsupportedHead),
                 Ok(Run::Completed(id)) => Ok(Disposition::Completed(id)),
+                Ok(Run::Failed(id)) => Ok(Disposition::TaskFailed(id)),
                 Err(e) => Err(Disposition::Operational(format!("{e:?}"))),
             }
         })

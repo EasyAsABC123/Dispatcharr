@@ -30,6 +30,12 @@ pub enum ArtworkError {
 /// authority. Implementation must await physical publication settlement and
 /// retain owner through actual reply. Arbitrary task names/options are absent.
 pub trait ArtworkSink: Send + Sync {
+    /// Optional sealed publication proof for the explicit normal Main graph.
+    /// Legacy sinks and existing tests retain their original behavior.
+    fn take_publication(&self, _id: Uuid) -> Option<crate::recording_artwork_protocol::Message> {
+        None
+    }
+
     fn publish<'a>(
         &'a self,
         recording: i64,
@@ -59,9 +65,37 @@ pub struct SeriesReport {
     tvg: String,
     created: u32,
     children: Vec<Uuid>,
+    artwork_targets: Vec<(Uuid, i64)>,
+    artwork_frames: Vec<crate::recording_artwork_protocol::Message>,
     caught_insert_errors: Vec<String>,
 }
 impl SeriesReport {
+    #[cfg(test)]
+    pub(crate) fn provenance_control(
+        parent: &crate::series_protocol::SeriesMessage,
+        title: String,
+        tvg: String,
+        frames: Vec<crate::recording_artwork_protocol::Message>,
+    ) -> Self {
+        Self {
+            task: parent.task_id,
+            root: parent.root,
+            parent: parent.parent,
+            title,
+            tvg,
+            created: frames.len() as u32,
+            children: frames.iter().map(|m| m.task_id).collect(),
+            artwork_targets: frames.iter().map(|m| (m.task_id, m.recording)).collect(),
+            artwork_frames: frames,
+            caught_insert_errors: vec![],
+        }
+    }
+    pub(crate) fn artwork_frames(&self) -> &[crate::recording_artwork_protocol::Message] {
+        &self.artwork_frames
+    }
+    pub(crate) fn artwork_targets(&self) -> &[(Uuid, i64)] {
+        &self.artwork_targets
+    }
     pub(crate) fn matches(&self, message: &crate::series_protocol::SeriesMessage) -> bool {
         self.task_id() == message.task_id
             && self.root == message.root
@@ -106,6 +140,8 @@ impl RecurringReport {
 struct IntentOutcome {
     created: u32,
     children: Vec<Uuid>,
+    artwork_targets: Vec<(Uuid, i64)>,
+    artwork_frames: Vec<crate::recording_artwork_protocol::Message>,
     caught_insert_errors: Vec<recording_schedule::KnownInsertFailure>,
 }
 pub struct PreparedRecurring {
@@ -369,6 +405,8 @@ impl Service {
         let mut created = 0;
         let mut children = Vec::new();
         let mut caught_insert_errors = Vec::new();
+        let mut artwork_targets = Vec::new();
+        let mut artwork_frames = Vec::new();
         for intent in intents {
             let input = FutureRecording::new(
                 intent.channel_id,
@@ -402,7 +440,13 @@ impl Service {
                     .publish(row.recording_id, task, owner.clone())
                     .await
                 {
-                    Ok(id) => children.push(id),
+                    Ok(id) => {
+                        children.push(id);
+                        artwork_targets.push((id, row.recording_id));
+                        if let Some(frame) = self.artwork.take_publication(id) {
+                            artwork_frames.push(frame);
+                        }
+                    }
                     Err(ArtworkError::SettledUnavailable) => {}
                     Err(ArtworkError::Uncertain) => return Err(Error::ArtworkUncertain),
                 }
@@ -412,6 +456,8 @@ impl Service {
         Ok(IntentOutcome {
             created,
             children,
+            artwork_targets,
+            artwork_frames,
             caught_insert_errors,
         })
     }
@@ -468,6 +514,8 @@ impl Service {
                 tvg: prepared.tvg,
                 created: outcome.created,
                 children: outcome.children,
+                artwork_targets: outcome.artwork_targets,
+                artwork_frames: outcome.artwork_frames,
                 caught_insert_errors: outcome
                     .caught_insert_errors
                     .into_iter()
@@ -529,6 +577,8 @@ mod caught_insert_tests {
                     tvg: "rust.owned.configured".into(),
                     created: 0,
                     children: Vec::new(),
+                    artwork_targets: Vec::new(),
+                    artwork_frames: Vec::new(),
                     caught_insert_errors: vec![value["details"][0]["error"]
                         .as_str()
                         .unwrap()

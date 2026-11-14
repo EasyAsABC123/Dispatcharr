@@ -119,6 +119,24 @@ impl Jobs {
             Err(e) => Err(map(e)),
         }
     }
+    pub(crate) async fn write_existing_artwork(
+        &self,
+        message: &Message,
+        completed: &dispatcharr_store::recording_existing_artwork::Completed,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if !self.local_artwork_authorized() || completed.recording != message.recording {
+            return Err(Error::UnsupportedTask);
+        }
+        self.write_result(
+            message.task_id,
+            serde_json::json!(completed.value),
+            Some(message.parent),
+            vec![],
+            caller,
+        )
+        .await
+    }
     pub(crate) async fn write_local_artwork(
         &self,
         message: &Message,

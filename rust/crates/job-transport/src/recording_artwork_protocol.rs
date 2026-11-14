@@ -142,6 +142,83 @@ impl SeriesArtworkChild {
             message: child.clone(),
         })
     }
+    /// Additive normal execution authority: exact actual report child/recording
+    /// pair plus read-back SUCCESS, rather than the legacy fixture result literal.
+    pub(crate) fn from_completed_report(
+        refresh: RefreshSeriesChild,
+        parent: &SeriesMessage,
+        report: &crate::configured_recording_service::SeriesReport,
+        backend: &[u8],
+        child: &Message,
+    ) -> Option<Self> {
+        refresh.admit(parent)?;
+        if !report.matches(parent)
+            || child.root != parent.root
+            || child.parent != parent.task_id
+            || !report
+                .artwork_targets()
+                .contains(&(child.task_id, child.recording))
+            || !report.artwork_frames().contains(child)
+        {
+            return None;
+        }
+        let record = decode::decode(backend, parent.task_id).ok()?;
+        if record.state != decode::State::Success
+            || record.traceback.is_some()
+            || record.date_done.is_none()
+            || !record.tagged_values.is_empty()
+            || record.result != report.value()
+        {
+            return None;
+        }
+        let raw: Value = serde_json::from_slice(backend).ok()?;
+        let fields = raw.as_object()?;
+        let allowed = [
+            "status",
+            "result",
+            "traceback",
+            "children",
+            "date_done",
+            "task_id",
+            "parent_id",
+        ];
+        if fields.len() != allowed.len()
+            || fields.keys().any(|k| !allowed.contains(&k.as_str()))
+            || raw["task_id"] != parent.task_id.to_string()
+            || raw["parent_id"] != parent.root.to_string()
+        {
+            return None;
+        }
+        let children = report.children();
+        if children.len() != report.artwork_targets().len()
+            || children.len() != report.artwork_frames().len()
+            || children.len() > 64
+        {
+            return None;
+        }
+        let mut unique = std::collections::BTreeSet::new();
+        for (id, recording) in report.artwork_targets() {
+            if !children.contains(id)
+                || !unique.insert(*id)
+                || *id == parent.task_id
+                || *id == parent.root
+                || !(1..=i64::from(i32::MAX)).contains(recording)
+            {
+                return None;
+            }
+        }
+        if raw["children"]
+            != json!(children
+                .iter()
+                .map(|id| json!([[id.to_string(), null], null]))
+                .collect::<Vec<_>>())
+        {
+            return None;
+        }
+        Some(Self {
+            message: child.clone(),
+        })
+    }
     pub(crate) fn admits(&self, message: &Message) -> bool {
         self.message == *message
     }
@@ -255,6 +332,66 @@ mod controls {
         changed["properties"]["delivery_info"]["routing_key"] = json!("unknown");
         assert!(parse(&serde_json::to_vec(&changed).unwrap()).is_none());
         assert!(parse(&vec![0; protocol::MAX_ENVELOPE + 1]).is_none());
+    }
+    #[test]
+    fn normal_completion_uses_actual_report_recording_and_exact_eta_without_fixture_literals() {
+        let (refresh, parent) = lineage();
+        // Synthetic structural controls, never labelled new Source authority.
+        for (title, tvg, recording) in [
+            ("Another Series", "scope.first", 17),
+            ("A Different Programme", "scope.other", 345),
+        ] {
+            let child = Message {
+                task_id: Uuid::new_v4(),
+                root: parent.root,
+                parent: parent.task_id,
+                recording,
+                eta: chrono::Utc::now(),
+            };
+            let report = crate::configured_recording_service::SeriesReport::provenance_control(
+                &parent,
+                title.into(),
+                tvg.into(),
+                vec![child.clone()],
+            );
+            let backend = json!({"status":"SUCCESS","result":report.value(),"traceback":null,"children":[[[child.task_id.to_string(),null],null]],"date_done":"2026-11-14T00:00:00.000000+00:00","task_id":parent.task_id.to_string(),"parent_id":parent.root.to_string()});
+            let bytes = serde_json::to_vec(&backend).unwrap();
+            assert!(SeriesArtworkChild::from_completed_report(
+                refresh, &parent, &report, &bytes, &child
+            )
+            .is_some());
+            for case in 0..4 {
+                let mut wrong = child.clone();
+                match case {
+                    0 => wrong.recording += 1,
+                    1 => wrong.task_id = Uuid::new_v4(),
+                    2 => wrong.eta += chrono::Duration::microseconds(1),
+                    _ => wrong.root = Uuid::new_v4(),
+                };
+                assert!(
+                    SeriesArtworkChild::from_completed_report(
+                        refresh, &parent, &report, &bytes, &wrong
+                    )
+                    .is_none(),
+                    "case {case}"
+                );
+            }
+            for field in ["children", "result", "parent_id"] {
+                let mut wrong = backend.clone();
+                wrong[field] = json!(null);
+                assert!(
+                    SeriesArtworkChild::from_completed_report(
+                        refresh,
+                        &parent,
+                        &report,
+                        &serde_json::to_vec(&wrong).unwrap(),
+                        &child
+                    )
+                    .is_none(),
+                    "field {field}"
+                );
+            }
+        }
     }
     #[test]
     fn missing_duplicate_wrong_parent_failed_or_uncaptured_result_cannot_mint_child() {

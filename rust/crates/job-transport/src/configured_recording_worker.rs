@@ -188,6 +188,12 @@ impl Worker {
         self.inner.slots.available_permits()
     }
     pub async fn run_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Run, Error> {
+        self.run_once_completed(caller).await.map(|(run, _)| run)
+    }
+    pub(crate) async fn run_once_completed(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<(Run, Option<configured_recording_service::SeriesReport>), Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -208,7 +214,7 @@ impl Worker {
         tokio::spawn(async move {
             match inner.family {
                 Family::Series => series(inner, owner).await,
-                Family::Recurring => recurring(inner, owner).await,
+                Family::Recurring => recurring(inner, owner).await.map(|run| (run, None)),
             }
         })
         .await
@@ -347,16 +353,19 @@ async fn settings(
     rx.await.map_err(|_| Error::Operational)?;
     observed.map_err(Error::Policy)
 }
-async fn series(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {
+async fn series(
+    inner: Arc<Inner>,
+    owner: Arc<Owner>,
+) -> Result<(Run, Option<configured_recording_service::SeriesReport>), Error> {
     let pending = match peek(&inner, owner.clone()).await {
         Ok(Some(v)) => v,
-        Ok(None) => return Ok(Run::Empty),
-        Err(TransportError::UnsupportedTask) => return Ok(Run::UnsupportedHead),
+        Ok(None) => return Ok((Run::Empty, None)),
+        Err(TransportError::UnsupportedTask) => return Ok((Run::UnsupportedHead, None)),
         Err(e) => return Err(Error::Transport(e)),
     };
     let message = match &pending.message {
         Message::Series(v) => v.clone(),
-        _ => return Ok(Run::UnsupportedHead),
+        _ => return Ok((Run::UnsupportedHead, None)),
     };
     // Check explicit admission before lease/cache/ACK/SQL. The legacy constructor
     // retains its direct-only authority; configured descendants need a capability.
@@ -384,8 +393,8 @@ async fn series(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {
                 .await
                 .map_err(Error::Transport)?
             {
-                true => Ok(Run::Completed(message.task_id)),
-                false => Ok(Run::AlreadySucceeded(message.task_id)),
+                true => Ok((Run::Completed(message.task_id), None)),
+                false => Ok((Run::AlreadySucceeded(message.task_id), None)),
             };
         }
         Err(_) => return Err(Error::Operational),
@@ -422,8 +431,8 @@ async fn series(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {
         .await
         .map_err(Error::Transport)?
     {
-        true => Ok(Run::Completed(message.task_id)),
-        false => Ok(Run::AlreadySucceeded(message.task_id)),
+        true => Ok((Run::Completed(message.task_id), Some(report))),
+        false => Ok((Run::AlreadySucceeded(message.task_id), Some(report))),
     }
 }
 async fn recurring(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {

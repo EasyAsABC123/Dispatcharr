@@ -102,6 +102,25 @@ impl TvgJobs {
             .write_result(claimed.message.task_id, result, None, Vec::new(), owner)
             .await
     }
+    pub(crate) async fn write_insert_failure(
+        &self,
+        claimed: Claimed,
+        failure: crate::tvg_programme_terminal::InsertFailure,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if !Arc::ptr_eq(&claimed.origin, &self.jobs.inner) {
+            return Err(Error::UnsupportedTask);
+        }
+        let date = chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.6f+00:00")
+            .to_string();
+        let bytes = failure
+            .metadata(claimed.message.task_id, &date)
+            .map_err(|_| Error::Protocol)?;
+        self.jobs
+            .write_metadata(claimed.message.task_id, bytes, owner)
+            .await
+    }
     pub async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
         self.jobs.shutdown(timeout).await
     }

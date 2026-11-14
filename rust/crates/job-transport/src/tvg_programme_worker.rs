@@ -37,6 +37,7 @@ pub enum Run {
     Empty,
     UnsupportedHead,
     Completed(uuid::Uuid),
+    Failed(uuid::Uuid),
 }
 struct Owner {
     _caller: Arc<dyn Send + Sync>,
@@ -272,6 +273,30 @@ async fn run(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {
                 .map_err(Error::Cache);
             match (body, release, leave) {
                 (Ok(normal), Ok(()), Ok(())) => normal,
+                (Err(Error::Store(store_error)), Ok(()), Ok(())) => {
+                    // Only an actual known insert P0001 with completed SQL
+                    // rollback/Ready/close AND successful Source finally steps
+                    // becomes FAILURE. Other errors remain operational.
+                    let Some(failure) =
+                        crate::tvg_programme_terminal::InsertFailure::classify(&store_error)
+                    else {
+                        return Err(Error::AfterBody {
+                            body: Some(Box::new(Error::Store(store_error))),
+                            release: None,
+                            leave: None,
+                        });
+                    };
+                    let written = inner
+                        .jobs
+                        .write_insert_failure(claimed, failure, owner)
+                        .await
+                        .map_err(Error::Transport)?;
+                    return Ok(if written {
+                        Run::Failed(task)
+                    } else {
+                        Run::Completed(task)
+                    });
+                }
                 (body, release, leave) => {
                     return Err(Error::AfterBody {
                         body: body.err().map(Box::new),

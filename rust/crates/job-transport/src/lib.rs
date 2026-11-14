@@ -238,3 +238,9 @@ mod version_protocol;
 pub mod version_service;
 
 pub mod version_worker;
+
+mod recording_artwork_completion;
+pub use recording_artwork_completion::Completions as ArtworkCompletions;
+pub mod recording_existing_artwork_application;
+
+mod tvg_programme_terminal;

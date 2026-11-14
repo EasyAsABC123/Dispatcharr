@@ -32,7 +32,7 @@ impl Drop for Home {
 
 /// Python json.dumps(..., separators=(',', ':')) preserves insertion order,
 /// escapes non-ASCII including surrogate pairs, and the caller appends LF.
-/// Floats are guarded until Python's number rendering is characterized.
+/// Finite numbers reuse the existing Python JSON compatibility formatter.
 fn canonical(value: &Value) -> Result<Vec<u8>, Failure> {
     fn check(value: &Value, nodes: &mut usize, depth: usize) -> Result<(), Failure> {
         *nodes += 1;
@@ -40,11 +40,6 @@ fn canonical(value: &Value) -> Result<Vec<u8>, Failure> {
             return Err(Failure::Unqualified("Signature JSON capacity unavailable"));
         }
         match value {
-            Value::Number(n) if n.to_string().contains(['.', 'e', 'E']) => {
-                return Err(Failure::Unqualified(
-                    "Python floating-point signing bytes remain unqualified",
-                ))
-            }
             Value::Array(values) => {
                 for v in values {
                     check(v, nodes, depth + 1)?;
@@ -61,24 +56,15 @@ fn canonical(value: &Value) -> Result<Vec<u8>, Failure> {
     }
     check(value, &mut 0, 0)?;
     let mut normalized = value.clone();
-    fn integers(v: &mut Value) {
-        match v {
-            Value::Number(n) if n.to_string() == "-0" => *n = 0.into(),
-            Value::Array(a) => {
-                for v in a {
-                    integers(v);
-                }
-            }
-            Value::Object(o) => {
-                for v in o.values_mut() {
-                    integers(v);
-                }
-            }
-            _ => (),
-        }
-    }
-    integers(&mut normalized);
-    let json = serde_json::to_string(&normalized).map_err(|_| Failure::Json)?;
+    // Reuse the existing independently qualified Python numeric grammar:
+    // parse finite decimals as binary64 and normalize arbitrary integer spelling.
+    crate::json_compat::normalize_input_numbers(&mut normalized).map_err(|_| {
+        Failure::Unqualified("Nonfinite or oversized signature numbers remain unqualified")
+    })?;
+    let json = String::from_utf8(
+        crate::json_compat::compact_json_bytes(&normalized).map_err(|_| Failure::Json)?,
+    )
+    .map_err(|_| Failure::Json)?;
     if json.len() > RAW_LIMIT {
         return Err(Failure::Unqualified("Signature JSON capacity unavailable"));
     }
@@ -332,6 +318,14 @@ mod tests {
             canonical(&value).unwrap(),
             b"{\"registry_name\":\"Owned caf\\u00e9 \\ud83d\\udca1 fixture\",\"plugins\":[]}\n"
         );
+    }
+    #[test]
+    fn finite_numeric_signing_uses_python_grammar_and_order() {
+        let value: Value = serde_json::from_str(
+            r#"{"one":1.0,"negative_zero":-0.0,"small":1e-6,"large":1e16,"fixed":0.0001,"integer":18446744073709551616,"name":"café"}"#,
+        ).unwrap();
+        assert_eq!(canonical(&value).unwrap(),
+            b"{\"one\":1.0,\"negative_zero\":-0.0,\"small\":1e-06,\"large\":1e+16,\"fixed\":0.0001,\"integer\":18446744073709551616,\"name\":\"caf\\u00e9\"}\n");
     }
     #[test]
     fn source_ascii_bytes_and_del() {

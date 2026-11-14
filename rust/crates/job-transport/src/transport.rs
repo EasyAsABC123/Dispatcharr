@@ -503,6 +503,33 @@ impl Jobs {
             _ => Err(Error::Corrupt),
         }
     }
+    /// Actual readback for normal Series completion provenance; no ACK authority.
+    pub(crate) async fn read_series_lineage(
+        &self,
+        message: &crate::series_protocol::SeriesMessage,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Vec<u8>>, Error> {
+        if !self.allows_series() {
+            return Err(Error::UnsupportedTask);
+        }
+        let lease = self.lease(caller)?;
+        let (reply, _held) = self
+            .inner
+            .result
+            .command_classified::<(i64, Vec<u8>), _>(
+                READ,
+                &[format!("celery-tasks:celery-task-meta-{}", message.task_id)],
+                &[],
+                lease,
+            )
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(None),
+            1 => Ok(Some(reply.1)),
+            _ => Err(Error::Corrupt),
+        }
+    }
     pub(crate) async fn publish_refresh_child_fixture(
         &self,
         message: &crate::refresh_dispatch::ChildMessage,
