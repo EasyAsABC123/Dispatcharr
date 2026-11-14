@@ -27,6 +27,9 @@ recorded source and workload scope.
 The [default worker graph audit](rust-default-worker-graph.md) lists all fourteen
 task families, the eight missing Main integrations, reusable implementations,
 and the grouped acceptance workflow needed before enabling scheduling.
+The [datastore compatibility audit](rust-datastore-compatibility.md) confirms
+SQLite and Original PostgreSQL TLS environment settings remain required and
+unimplemented/unverified; PostgreSQL-only tests cannot close that gate.
 
 The earlier [PATCH405 and plugin attempts](../scripts/rust-milestone-batches/m478/batch3_evidence/README.md)
 remain attached to their original image; the subsequent passing setter workflow
