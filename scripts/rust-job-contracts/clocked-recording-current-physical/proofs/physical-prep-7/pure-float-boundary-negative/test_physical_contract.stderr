@@ -1,0 +1,22 @@
+.E........................................................
+======================================================================
+ERROR: test_all_seven_full_synthetic_paths_not_actual (__main__.Controls.test_all_seven_full_synthetic_paths_not_actual)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/physical-prep-7/test_physical_contract.py", line 46, in test_all_seven_full_synthetic_paths_not_actual
+    for mode in MODES:self.assertTrue(validate_capture(0,sample(mode),mode)['passed'])
+                                      ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/physical-prep-7/tools/physical_contract.py", line 21, in validate_capture
+    return validate_effects(report,mode)
+  File "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/physical-prep-7/tools/physical_contract.py", line 69, in validate_effects
+    require(number(stage['target_probe_deadline_monotonic'])and 15<=stage['target_probe_deadline_monotonic']-stage['actual_end_wait_complete_monotonic']<=15.1 and anchor>=stage['end_monotonic']and anchor<=stage['target_probe_deadline_monotonic'],'NoEarlyResultAndActualTargetWithin15sAfterEnd')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/physical-prep-7/tools/physical_contract.py", line 5, in require
+    if not ok:raise ValueError(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: NoEarlyResultAndActualTargetWithin15sAfterEnd
+
+----------------------------------------------------------------------
+Ran 58 tests in 0.012s
+
+FAILED (errors=1)

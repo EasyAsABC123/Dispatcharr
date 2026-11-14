@@ -1,0 +1,47 @@
+--- physical2/physical_pg_proxy.py
++++ physical3/physical_pg_proxy.py
+@@ -4,6 +4,7 @@
+ """
+ import argparse,hashlib,json,select,socket,socketserver,struct,sys,threading,time,traceback
+ from pathlib import Path
++from owned_nodelay import configure as configure_nodelay
+ CAP=2097152
+ GATE_SAFETY_SECONDS=45  # fixed before measurement; actual hold remains <=25
+ 
+@@ -99,13 +100,14 @@
+    if ident>=16:raise ValueError('OwnedConnectionBound16')
+    row={'id':ident,'backend_pid':None,'front_eof':False,'back_eof':False,'closed':False,'up_joined':False,'queries':[]};self.connections[ident]=(row,front,None)
+   try:
++   front_nodelay=configure_nodelay(front,'native-downstream');self.event('actual-owned-TCP_NODELAY',connection=ident,side='downstream',receipt=front_nodelay)
+    f=front.makefile('rb')
+    while True:
+     header=exact(f,4);n=struct.unpack('!I',header)[0];body=exact(f,n-4)
+     if n==8 and body==struct.pack('!I',80877103):front.sendall(b'N');continue
+     if body[:4]in(struct.pack('!I',80877102),struct.pack('!I',80877104)):raise ValueError('NoCancelOrGSSStartup')
+     break
+-   back=socket.create_connection(self.backend,timeout=5);back.settimeout(None)
++   back=socket.create_connection(self.backend,timeout=5);back.settimeout(None);back_nodelay=configure_nodelay(back,'postgres-upstream');self.event('actual-owned-TCP_NODELAY',connection=ident,side='upstream',receipt=back_nodelay)
+    with self.lock:self.connections[ident]=(row,front,back)
+    back.sendall(header+body)
+    state={'sql':None,'execute':False,'rows':0,'commands':[],'errors':[]};statements={};portals={}
+--- physical2/redis_reply_proxy.py
++++ physical3/redis_reply_proxy.py
+@@ -2,6 +2,7 @@
+ Authentication arguments never logged. Small disposable fixture only.
+ """
+ import base64,hashlib,json,socket,socketserver,threading,time
++from owned_nodelay import configure as configure_nodelay
+ MAX=1048576
+ 
+ def frame(stream,budget=None,depth=0):
+@@ -54,7 +55,9 @@
+      if len(owner.handlers)>=64:owner.errors.append('RESPHistoricalConnectionCapacity');owner.slots.release();return
+      owner.handlers.append(threading.current_thread());owner.active[identity]=[self.request]
+     try:
+-     remote=socket.create_connection(('127.0.0.1',6379),timeout=5);remote.settimeout(None)
++     front_nodelay=configure_nodelay(self.request,'redis-downstream')
++     remote=socket.create_connection(('127.0.0.1',6379),timeout=5);remote.settimeout(None);back_nodelay=configure_nodelay(remote,'redis-upstream')
++     with owner.lock:owner.receipts.append({'stage':'actual-owned-TCP_NODELAY','downstream':front_nodelay,'upstream':back_nodelay})
+      with owner.lock:owner.active[identity].append(remote)
+      incoming=self.request.makefile('rb');response=remote.makefile('rb')
+      while True:

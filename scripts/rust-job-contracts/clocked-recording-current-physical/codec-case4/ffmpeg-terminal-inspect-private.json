@@ -1,0 +1,263 @@
+{
+  "Id": "e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353",
+  "Created": "2026-11-14T00:09:31.696956076Z",
+  "Path": "ffmpeg",
+  "Args": [
+    "-threads",
+    "1",
+    "-filter_threads",
+    "1",
+    "-v",
+    "error",
+    "-i",
+    "/tmp/owned-recording.mkv",
+    "-map",
+    "0:v",
+    "-f",
+    "null",
+    "-"
+  ],
+  "State": {
+    "Status": "exited",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-14T00:09:31.796319174Z",
+    "FinishedAt": "2026-11-14T00:09:31.891080991Z"
+  },
+  "Image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "ResolvConfPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353/resolv.conf",
+  "HostnamePath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353/hostname",
+  "HostsPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353/hosts",
+  "LogPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353/e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353-json.log",
+  "Name": "/dispatcharr-dvr4-codec-a4e830555c-ffmpeg",
+  "RestartCount": 0,
+  "Driver": "overlayfs",
+  "Platform": "linux",
+  "MountLabel": "",
+  "ProcessLabel": "",
+  "AppArmorProfile": "",
+  "ExecIDs": null,
+  "HostConfig": {
+    "Binds": null,
+    "ContainerIDFile": "",
+    "LogConfig": {
+      "Type": "json-file",
+      "Config": {}
+    },
+    "NetworkMode": "none",
+    "PortBindings": {},
+    "RestartPolicy": {
+      "Name": "no",
+      "MaximumRetryCount": 0
+    },
+    "AutoRemove": false,
+    "VolumeDriver": "",
+    "VolumesFrom": null,
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "CapAdd": null,
+    "CapDrop": [
+      "ALL"
+    ],
+    "CgroupnsMode": "private",
+    "Dns": null,
+    "DnsOptions": [],
+    "DnsSearch": [],
+    "ExtraHosts": null,
+    "GroupAdd": null,
+    "IpcMode": "private",
+    "Cgroup": "",
+    "Links": null,
+    "OomScoreAdj": 200,
+    "PidMode": "",
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyRootfs": true,
+    "SecurityOpt": [
+      "no-new-privileges"
+    ],
+    "UTSMode": "",
+    "UsernsMode": "",
+    "ShmSize": 67108864,
+    "Runtime": "runc",
+    "Isolation": "",
+    "CpuShares": 0,
+    "Memory": 134217728,
+    "NanoCpus": 0,
+    "CgroupParent": "",
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": [],
+    "BlkioDeviceReadBps": [],
+    "BlkioDeviceWriteBps": [],
+    "BlkioDeviceReadIOps": [],
+    "BlkioDeviceWriteIOps": [],
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "Devices": [],
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "MemoryReservation": 0,
+    "MemorySwap": 268435456,
+    "MemorySwappiness": null,
+    "OomKillDisable": null,
+    "PidsLimit": 64,
+    "Ulimits": null,
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "IOMaximumIOps": 0,
+    "IOMaximumBandwidth": 0,
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/home/justin/github/Dispatcharr/artifacts/rust/current-dvr-case4-codec-agent-review-1/owned-input.mkv",
+        "Target": "/tmp/owned-recording.mkv",
+        "ReadOnly": true
+      }
+    ],
+    "MaskedPaths": [
+      "/proc/acpi",
+      "/proc/asound",
+      "/proc/interrupts",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/sys/devices/virtual/powercap",
+      "/sys/firmware"
+    ],
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ]
+  },
+  "Storage": {
+    "RootFS": {
+      "Snapshot": {
+        "Name": "overlayfs"
+      }
+    }
+  },
+  "Mounts": [
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/current-dvr-case4-codec-agent-review-1/owned-input.mkv",
+      "Destination": "/tmp/owned-recording.mkv",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    }
+  ],
+  "Config": {
+    "Hostname": "e58c748335f9",
+    "Domainname": "",
+    "User": "65532:65532",
+    "AttachStdin": false,
+    "AttachStdout": true,
+    "AttachStderr": true,
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "LANG=C.UTF-8",
+      "LC_ALL=C.UTF-8",
+      "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility",
+      "NVIDIA_VISIBLE_DEVICES=all",
+      "LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri",
+      "DEBIAN_FRONTEND=noninteractive",
+      "UV_PROJECT_ENVIRONMENT=/dispatcharrpy",
+      "VIRTUAL_ENV=/dispatcharrpy",
+      "UV_COMPILE_BYTECODE=1",
+      "UV_LINK_MODE=copy"
+    ],
+    "Cmd": [
+      "-threads",
+      "1",
+      "-filter_threads",
+      "1",
+      "-v",
+      "error",
+      "-i",
+      "/tmp/owned-recording.mkv",
+      "-map",
+      "0:v",
+      "-f",
+      "null",
+      "-"
+    ],
+    "Image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "Volumes": null,
+    "WorkingDir": "",
+    "Entrypoint": [
+      "ffmpeg"
+    ],
+    "Labels": {
+      "build_version": "DispatcharrBase version: base-20261103010601",
+      "com.docker.compose.project": "dispatcharr-dvr4-codec-a4e830555c",
+      "com.docker.compose.service": "ffmpeg",
+      "maintainer": "SergeantPanda",
+      "org.opencontainers.image.authors": "SergeantPanda",
+      "org.opencontainers.image.created": "20261103010601",
+      "org.opencontainers.image.description": "Your ultimate IPTV & stream Management companion.",
+      "org.opencontainers.image.documentation": "https://dispatcharr.github.io/Dispatcharr-Docs/",
+      "org.opencontainers.image.licenses": "See repository",
+      "org.opencontainers.image.revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "org.opencontainers.image.source": "https://github.com/Dispatcharr/Dispatcharr",
+      "org.opencontainers.image.title": "dispatcharr",
+      "org.opencontainers.image.url": "https://github.com/Dispatcharr/Dispatcharr",
+      "org.opencontainers.image.vendor": "dispatcharr",
+      "org.opencontainers.image.version": "base-20261103010601"
+    }
+  },
+  "NetworkSettings": {
+    "SandboxID": "",
+    "SandboxKey": "",
+    "Ports": {},
+    "Networks": {
+      "none": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": null,
+        "DriverOpts": null,
+        "GwPriority": 0,
+        "NetworkID": "5ee4ecd182027eacc0171a033ef6566a40913e574e1cf9e29da03a6b3b362235",
+        "EndpointID": "",
+        "Gateway": "",
+        "IPAddress": "",
+        "MacAddress": "",
+        "IPPrefixLen": 0,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": null
+      }
+    }
+  },
+  "ImageManifestDescriptor": {
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "digest": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "size": 3544,
+    "platform": {
+      "architecture": "amd64",
+      "os": "linux"
+    }
+  }
+}

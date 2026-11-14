@@ -1,0 +1,71 @@
+--- executed6/physical_case.py
++++ remaining7/physical_case.py
+@@ -63,11 +63,18 @@
+   case['actual_config']=native;case['actual_command_began_utc']=context['utc']();save()
+   env=dict(os.environ,DVR_NATIVE_MODE='physical-once');argv=['/native-peer/native-job-tests','recording_dvr_physical_peer::actual_retained_dvr_gate_peer','--exact','--ignored','--nocapture','--test-threads=1'];peer=Peer(argv,env,stop_actual_peer);holder.update(process=peer.process,starttime=identity(peer.process.pid))
+   if not holder['starttime']or not holder['starttime'].isdigit():raise ValueError('ObservedNativePIDStartRequired')
+-  case['actual_peer']={'argv':argv,'pid':peer.process.pid,'starttime':holder['starttime'],'actual_pgid':os.getpgid(peer.process.pid)};peer.send(native);started=peer.receive(20);case['actual_started']=started;save()
++  case['actual_peer']={'argv':argv,'pid':peer.process.pid,'starttime':holder['starttime'],'actual_pgid':os.getpgid(peer.process.pid)};peer.send(native);started=peer.receive(20);case['actual_started']=started;command_monotonic=time.monotonic();save()
+   if started.get('stage')!='started'or started.get('mode')!=mode:raise ValueError('ActualFixedModeStarted')
+   if mode=='preexisting-active':response('finish',35)
+   else:
++   if mode=='result-reply':
++    # Result cannot precede the real configured end and capture/remux settlement.
++    # This is a stage wait, not an increased target-probe or task budget.
++    from result_stage import stage_wait, settled_media
++    stage=stage_wait(context['end_time'],context['timezone'].now(),time.monotonic(),command_monotonic)
++    case['result_stage']=stage;save();wait_until(stage['end_monotonic']);stage['actual_end_wait_complete_monotonic']=time.monotonic();save()
+    deadline=time.monotonic()+15;anchor=None
++   if mode=='result-reply':case['result_stage']['target_probe_deadline_monotonic']=deadline;save()
+    while time.monotonic()<deadline:
+     if sql is not None:
+      stats=sql.stats();held=stats['held']
+@@ -75,13 +82,21 @@
+       events=[e for e in stats['events']if e['kind']=='ready-held'and e['backend_pid']==held['backend_pid']and e['connection']==held['connection']];anchor=events[-1]['monotonic']if len(events)==1 else None
+       if anchor is not None:case['actual_gate']={'kind':'PGReady','held':held,'held_monotonic':anchor,'events':stats['events']};break
+     elif relay is not None:
+-     if relay.held.is_set():anchor=relay.held_at;case['actual_gate']={'kind':'RedisReply','held_monotonic':anchor,'receipts':list(relay.receipts)};break
++     if relay.held.is_set():
++      anchor=relay.held_at
++      if mode=='result-reply':
++       point=response('sample');point['purpose']='actual-capture-remux-settled-before-result-hold'
++       settled_media(point['reply']['diagnostics']['processes']['rows'])
++       if anchor<case['result_stage']['end_monotonic']:raise ValueError('NoResultWriteBeforeActualConfiguredEnd')
++       case['result_stage']['actual_settlement_observed_monotonic']=point['received_monotonic'];save()
++      case['actual_gate']={'kind':'RedisReply','held_monotonic':anchor,'receipts':list(relay.receipts)};break
+     else:
+      point=response('sample');rows=point['reply']['diagnostics']['processes']['rows'];running=[r for r in rows if r['settled_utc']is None and type(r.get('identity'))is dict]
+      if running:anchor=point['received_monotonic'];case['actual_gate']={'kind':'OwnedCaptureChild','held_monotonic':anchor,'children':running};break
+     if peer.process.poll()is not None:raise RuntimeError('ActualPeerExitedBeforePhysicalGate')
+     time.sleep(.05)
+    if anchor is None:raise TimeoutError('ActualPhysicalTarget15s')
++   if time.monotonic()-command_monotonic>=180:raise TimeoutError('UnchangedActualTask180')
+    save();wait_until(anchor+2.2);first=response('sample');first['purpose']='held-sample1'
+    if mode in('cache-preack','sql-preack-ready','capture-observer-loss'):response('abort-observer')
+    wait_until(max(anchor+2.55,time.monotonic()+.27));second=response('sample');second['purpose']='held-sample2';save()
+--- executed6/run_source.py
++++ remaining7/run_source.py
+@@ -8,7 +8,7 @@
+ BASE='1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
+ ARCHIVE='f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff'
+ IMAGE='ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'
+-REQUIRED={'physical_case.py', 'owned_worker.py', 'roles.py', 'observe.py', 'ledger_io.py', 'pg-policy.json', 'media_files.py', 'redis_reply_proxy.py', 'source_configured.py', 'support-inputs.json', 'process_observer.py', 'seed_spec.py', 'interactive_peer.py', 'fresh_context.py', 'sibling_frames.py', 'run_source.py', 'owned_nodelay.py', 'physical_pg_proxy.py', 'bounded_process.py', 'physical_contract.py', 'beat-static-authority.json', 'verify_roles.py', 'origin.py', 'redis-policy.json'}
++REQUIRED={'pg-policy.json', 'origin.py', 'physical_pg_proxy.py', 'beat-static-authority.json', 'media_files.py', 'ledger_io.py', 'physical_contract.py', 'physical_case.py', 'run_source.py', 'owned_worker.py', 'owned_nodelay.py', 'interactive_peer.py', 'source_configured.py', 'process_observer.py', 'observe.py', 'redis_reply_proxy.py', 'verify_roles.py', 'support-inputs.json', 'seed_spec.py', 'result_stage.py', 'bounded_process.py', 'sibling_frames.py', 'fresh_context.py', 'roles.py', 'redis-policy.json'}
+ SAFE=('PATH','DOCKER_HOST','DOCKER_CONFIG','CARGO_HOME','RUSTUP_HOME','RUSTUP_TOOLCHAIN')
+ def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+ def require(ok,label):
+--- executed6/physical_contract.py
++++ remaining7/physical_contract.py
+@@ -64,6 +64,12 @@
+    holds=[x for x in relay['receipts']if x['stage']=='actual-target-reply-held'];forwards=[x for x in relay['receipts']if x['stage']=='actual-target-reply-forwarded'];require(len(holds)==len(forwards)==1 and number(forwards[0]['monotonic'])and forwards[0]['monotonic']>=release and holds[0]['reply_sha256']==forwards[0]['reply_sha256'],'ActualServerReplyHeldThenSuccessfullyForwarded')
+   if mode=='channels-reply':
+    late=[s for s in samples if s['purpose']in('after-3s-deadline-sample1','after-3s-deadline-sample2')];require(all(s['reply']['observer_finished']is False and integer(s['reply']['event_connections_available'],native['event_connections_before'],native['event_connections_before'])and integer(s['reply']['event_bytes_available'],0,native['event_bytes_before']-1)for s in late),'ActualMembershipUnchangedAndPublishBytesHeldAfterLogicalDeadline');require(len(late)==2 and late[0]['received_monotonic']>=anchor+3.3 and late[1]['received_monotonic']-late[0]['received_monotonic']>=.25 and late[1]['reply']['monotonic_elapsed_seconds']-late[0]['reply']['monotonic_elapsed_seconds']>=.25 and all(s['reply']['same_original_caller_weak_alive']is True and s['reply']['available_slots']==0 for s in late),'ActualOriginalOwnerAfterConfigured3sRealtimeDeadline')
++ if mode=='result-reply':
++  stage=case['result_stage'];require(stage['target_probe_seconds']==15 and stage['task_seconds']==180 and number(stage['end_monotonic'])and number(stage['actual_end_wait_complete_monotonic'])and stage['actual_end_wait_complete_monotonic']>=stage['end_monotonic'],'ActualEndStageBeforeUnchangedTargetProbe')
++  require(number(stage['target_probe_deadline_monotonic'])and 15<=stage['target_probe_deadline_monotonic']-stage['actual_end_wait_complete_monotonic']<=15.1 and anchor>=stage['end_monotonic']and anchor<=stage['target_probe_deadline_monotonic'],'NoEarlyResultAndActualTargetWithin15sAfterEnd')
++  points=[s for s in samples if s['purpose']=='actual-capture-remux-settled-before-result-hold'];require(len(points)==1 and number(stage['actual_settlement_observed_monotonic'])and points[0]['received_monotonic']==stage['actual_settlement_observed_monotonic'],'ActualUniqueObservedMediaSettlement')
++  from result_stage import settled_media
++  settled_media(points[0]['reply']['diagnostics']['processes']['rows'])
+  finish=samples[-1]['reply'];require(finish['action']=='finish','ActualFinalPeerCommand')
+  if mode in('cache-preack','sql-preack-ready','capture-observer-loss','preexisting-active'):
+   require(finish['same_original_caller_weak_alive']is False and finish['available_slots']==1 and finish['drained']is True,'ActualOwnerReleasedOnlyAfterUnderlyingWork')

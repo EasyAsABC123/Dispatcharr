@@ -1,0 +1,47 @@
+--- normal3/source_configured.py
++++ physical3/source_configured.py
+@@ -28,8 +28,9 @@
+ from sibling_frames import validate as validate_siblings,validate_intervals
+ from ledger_io import append_receipt
+ from owned_worker import OwnedJob
+-from native_job import NativeJob
+-from normal_pg_proxy import Proxy
++from physical_case import execute as execute_physical
++from physical_contract import validate_capture
++
+ from bounded_process import Collected
+ from seed_spec import *
+ import media_files
+@@ -192,29 +193,9 @@
+  check('actual-dvr-routing-key',dispatch['frame']['properties']['delivery_info']['routing_key']==QUEUE_RECORD)
+  beat_start=next(row for row in report['worker_starts']if row['role']=='beat');beat_end=next(row for row in report['worker_exit_receipts']if row['role']=='beat')['finished_utc'];report['unconsumed_Beat_siblings']=validate_siblings(report['after_beat']['queues'][QUEUE_ARTWORK],read('publications'),report['after_beat']['periodic'],app.conf.beat_schedule,beat_start,beat_end);report['sibling_interval_rows']=validate_intervals(report['after_beat']['periodic'],report['after_beat']['intervals'],report['unconsumed_Beat_siblings'],app.conf.beat_schedule);known.extend(report['unconsumed_Beat_siblings']['ids']);write_report()
+  check('known-static-Beat-siblings-retained-unconsumed',report['unconsumed_Beat_siblings']['passed']is True)
+- native_proxy_ledger=(ROOT/'native-pg-events.jsonl').open('x');native_proxy=Proxy(('127.0.0.1',5432),[],json.loads(Path('/job-tools/normal-pg-contracts.json').read_text())['contracts'],native_proxy_ledger)
+- native_config={'database_url':os.environ['DATABASE_URL'].replace('@localhost:5432/','@localhost:62130/'),'broker_url':os.environ['CELERY_BROKER_URL'],'result_url':os.environ['CELERY_RESULT_BACKEND'],'cache_url':'redis://:playback-fixture-only@localhost:6379/0','media_uid':os.getuid()}
+- report['native_config']=native_config;report['recordings_root_context_before_native']={'exists':Path('/data/recordings').exists(),'is_symlink':Path('/data/recordings').is_symlink(),'actual_source_process_uid':os.getuid(),'parent_uid':os.stat('/data').st_uid,'preprovisioned_by_fixture':False};report['native_command_began_utc']=utc();write_report()
+- job=NativeJob(native_config,ROOT,dict(os.environ));jobs['native-dvr']=job
+- report.setdefault('worker_starts',[]).append({'role':'native-dvr','argv':job.argv,'pid':job.pid,'starttime':job.starttime,'actual_initial_pgid':job.actual_initial_pgid,'utc':utc()});write_report()
+- def native_observe():
+-  point=snapshot('NativeRecording180-progress');key=base64.b64encode(('dvr:recording-active:'+str(rec.id)).encode()).decode()
+-  report.setdefault('native_functional_observations',[]).append({'utc':point['utc'],'monotonic':point['monotonic'],'recordings':point['recordings'],'active_rows':[row for row in point['cache']if row['key_base64']==key],'backend':point['backend'][record_id],'dvr_FIFO':point['queues'][QUEUE_RECORD]});write_report()
+- receipt=job.wait(TASK_DEADLINE_SECONDS,native_observe);report['worker_exit_receipts'].append(receipt);jobs.pop('native-dvr');report['native_command_finished_utc']=utc();write_report()
+- check('actual-native-process-wait0',type(receipt['actual_exit'])is int and receipt['actual_exit']==0 and receipt['actual_wait_completed']is True and receipt['pipes_settled']is True and receipt['writer_settled']is True and receipt['invalid']is None and receipt['forced']is False)
+- report['native_dvr']=json.loads((ROOT/'native-dvr-private.json').read_text());write_report()
+- wait(lambda:all(row['closed']and row['up_joined']for row in native_proxy.stats()['connections']),3,'NativeSQLNaturallyDrained')
+- report['native_pg_before_listener_stop']=native_proxy.stats();report['native_pg']=native_proxy.close();native_proxy=None;native_proxy_ledger.flush();os.fsync(native_proxy_ledger.fileno());native_proxy_ledger.close();native_proxy_ledger=None;write_report()
+- report['recording_task']=observed_task(record_id);report['final']=snapshot('dvr-settled-before-file-copy');report['retained_media']=media_files.snapshot(ROOT/'retained-recordings');report['all_publications']=read('publications');report['all_prerun']=read('prerun');report['all_postrun']=read('postrun');report['all_HTTP_attempts']=read('HTTP-attempts');report['all_SQL']=read('sql');report['all_subprocess']=read('subprocess');report['subprocess_postrun']=read('subprocess-postrun');report['guest_process_observer']=process_observer.snapshot();write_report()
+- check('actual-native-result-Original-AsyncResult-success-null',report['recording_task']['raw_result']['metadata']['status']=='SUCCESS'and report['recording_task']['raw_result']['metadata']['result']is None and report['recording_task']['Original_AsyncResult_get']['actual_state']=='SUCCESS'and report['recording_task']['Original_AsyncResult_get']['type']=='builtins.NoneType'and report['recording_task']['Original_AsyncResult_get']['value']is None)
+- check('no-unexpected-Python-provider-attempts',report['all_HTTP_attempts']==[])
+- check('dvr-drained-default-sibling-FIFO-byte-order-preserved',report['final']['queues'][QUEUE_RECORD]==[]and report['final']['queues'][QUEUE_ARTWORK]==report['unconsumed_Beat_siblings']['raw_FIFO_base64'])
+- candidates=[row for row in report['retained_media']['files']if row.get('relative','').endswith('.mkv')and row.get('bytes',0)>0 and row.get('stable_across_this_read')is True]
+- check('one-actual-stable-MKV',len(candidates)==1)
+- path=candidates[0]['retained_copy'];probe=media_command(['ffprobe','-v','error','-show_format','-show_streams','-of','json',path],'actual-ffprobe');report['ffprobe']=json.loads(probe);write_report()
+- check('actual-video-stream',any(row.get('codec_type')=='video'for row in report['ffprobe'].get('streams',[])))
+- media_command(['ffmpeg','-nostdin','-hide_banner','-v','error','-i',path,'-map','0:v:0','-f','null','-'],'actual-full-decode')
+- report['cases']=[{'name':'future-clocked-normal','Recording_id':rec.id,'channel_id':channel.id,'artwork_task_id':art_id,'recording_task_id':record_id,'anchor_utc':anchor.isoformat(),'finished_utc':utc(),'roles':['artwork','beat','native-dvr']}];report['passed']=True;report['Source_verified']=False;report['Native_verified']=True;report['Original_model_artwork_Beat_prefix_observed']=True;write_report()
++ report['physical']=execute_physical(globals());report['recording_task']=observed_task(record_id);report['all_publications']=read('publications');report['all_prerun']=read('prerun');report['all_postrun']=read('postrun');report['all_HTTP_attempts']=read('HTTP-attempts');report['all_SQL']=read('sql');report['all_subprocess']=read('subprocess');report['guest_process_observer']=process_observer.snapshot();write_report()
++ report['physical_acceptance']=validate_capture(0,report,os.environ['DVR_PHYSICAL_MODE']);report['cases']=[{'mode':os.environ['DVR_PHYSICAL_MODE'],'recording':rec.id,'channel':channel.id,'task':record_id}];report.update(passed=True,Source_verified=False,Native_verified=False,physical_verified=True);write_report()
++
+ except BaseException as error:
+  report.update(passed=False,Source_verified=False,error_type=type(error).__name__,error=str(error)[:4096]);write_report();raise
+ finally:

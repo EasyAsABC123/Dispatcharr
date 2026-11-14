@@ -1,0 +1,28 @@
+--- executed-prep4/physical_contract.py
++++ remaining-prep5/physical_contract.py
+@@ -17,7 +17,11 @@
+  require(receipt['role']==role and type(receipt['actual_TCP_NODELAY_before'])is int and receipt['actual_TCP_NODELAY_before']in(0,1) and type(receipt['actual_TCP_NODELAY_after'])is int and receipt['actual_TCP_NODELAY_after']==1 and receipt['local'][0]==receipt['peer'][0]=='127.0.0.1'and number(receipt['observed_monotonic']),'ActualOwnedLoopbackTCP_NODELAYReadback')
+ 
+ def validate_capture(exit_code,report,mode):
+- require(type(exit_code)is int and exit_code==0 and mode in MODES,'ActualFixedGuest0')
++ require(type(exit_code)is int and exit_code==0,'ActualFixedGuest0')
++ return validate_effects(report,mode)
++
++def validate_effects(report,mode):
++ require(mode in MODES,'FixedModeEffectsOnly')
+  require(report['Source_verified']is report['performance_verified']is False,'NoSourceFaultOrPerformanceClaim')
+  case=report['physical'];require(case['mode']==mode and case['capture_only']is True and case['capture_complete']is True and case['cleanup_errors']==[],'ActualCaptureAndAttemptAllSettlement')
+  child=case['peer_collection'];require(type(child['actual_exit'])is int and child['actual_exit']==0 and child['physically_settled']is child['pipes_settled']is child['writer_settled']is child['original_process_absent']is True and child['invalid']is child['writer_error']is None,'ActualNativeWaitPipesAndIdentity')
+@@ -73,9 +77,9 @@
+  initial_raw=before['Channels_raw_base64'];final_raw=after['Channels_raw_base64'];require(len(final_raw)==len(after['Channels_decoded'])and len(initial_raw)==len(before['Channels_decoded']),'CompleteActualRawAndDecodedChannelsObservations')
+  new_events=[value for raw,value in zip(final_raw,after['Channels_decoded'])if raw not in initial_raw]
+  channel=next(row for row in before['channels']if row['id']==report['seed']['channel_id'])['name']
+- start_event={'type':'update','data':{'success':True,'type':'recording_started','channel':channel}}
+- update_event={'type':'update','data':{'success':True,'type':'recording_updated','recording_id':record}}
+- end_event={'type':'update','data':{'success':True,'type':'recording_ended','channel':channel}}
++ start_event={'type':'update','data':{'success':True,'type':'recording_started','channel':channel},'__asgi_channel__':['specific.rust_owned_clocked!receiver']}
++ update_event={'type':'update','data':{'success':True,'type':'recording_updated','recording_id':record},'__asgi_channel__':['specific.rust_owned_clocked!receiver']}
++ end_event={'type':'update','data':{'success':True,'type':'recording_ended','channel':channel},'__asgi_channel__':['specific.rust_owned_clocked!receiver']}
+  if mode in('sql-update-error-ready','channels-reply'):
+   require(exact(before['recordings'],after['recordings']),'ActualPrimeFailureOrPreAuditErrorKeepsScheduledRow')
+   periodic=[row for row in before['periodic']if row['name']=='dvr-recording-'+str(record)];require(len(periodic)==1,'ExactInitialOwnedPeriodic')

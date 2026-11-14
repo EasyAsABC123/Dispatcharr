@@ -14,7 +14,7 @@ change passes its five affected checks and job tests; full defaults were not
 repeated on that test-only snapshot. Both receipts are retained in the
 [verification packet](../scripts/rust-job-contracts/clocked-recording-current-library-qa/Root-review.json).
 
-Actual current-source physical cases pass for pre-ACK cache and SQL ownership,
+The [current physical packet](rust-clocked-recording-current-physical.md) records actual cases for pre-ACK cache and SQL ownership,
 recording continuation after observer cancellation, result-reply retention, and
 preexisting-owner refusal. SQL-write-error and Channels cases retain their
 original host/guest failures; separate known-error-gated comparisons qualify

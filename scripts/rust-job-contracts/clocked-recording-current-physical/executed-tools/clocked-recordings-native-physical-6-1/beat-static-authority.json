@@ -1,0 +1,23 @@
+{
+  "fetch-channel-statuses": {
+    "task": "apps.proxy.tasks.fetch_channel_stats",
+    "schedule": 2.0,
+    "enabled": false
+  },
+  "scan-files": {
+    "task": "core.tasks.scan_and_process_files",
+    "schedule": 20.0
+  },
+  "maintain-recurring-recordings": {
+    "task": "apps.channels.tasks.maintain_recurring_recordings",
+    "schedule": 3600.0
+  },
+  "check-version-updates": {
+    "task": "core.tasks.check_for_version_update",
+    "schedule": 86400.0
+  },
+  "check-account-expirations": {
+    "task": "apps.m3u.tasks.check_account_expirations",
+    "schedule": 86400.0
+  }
+}

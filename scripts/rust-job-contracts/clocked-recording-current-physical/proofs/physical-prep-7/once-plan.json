@@ -1,0 +1,67 @@
+{
+  "status": "BLOCKED_ROOT_REVIEW_UNEXECUTED",
+  "cwd": "/home/justin/github/Dispatcharr",
+  "prelude": "source artifacts/rust/tooling/environment.sh; strip inherited GIT_; HOME/CODEX_HOME unchanged",
+  "commands": [
+    {
+      "mode": "result-reply",
+      "proposed_inputs": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/physical-prep-7/proposed-execution-inputs-6.json",
+      "proposed_inputs_sha256": "e0431ec9c441d51aa6d9c362b3aee8a7c5e5711d5b396cf7656291ef5a7610c0",
+      "output": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recordings-native-physical-6-2",
+      "argv": [
+        "python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/physical-prep-7/tools/run_source.py",
+        "--repo",
+        "/home/justin/github/Dispatcharr",
+        "--support-root",
+        "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-support-f0-1",
+        "--mode",
+        "result-reply",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recordings-native-physical-6-2",
+        "--execution-inputs",
+        "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/physical-prep-7/Root-execution-inputs-6.json"
+      ],
+      "case_index": 6
+    },
+    {
+      "mode": "preexisting-active",
+      "proposed_inputs": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/physical-prep-7/proposed-execution-inputs-7.json",
+      "proposed_inputs_sha256": "0692a29caf2defd6bf867bdf62c6d1705b239fba44018764e422b6d65459a63f",
+      "output": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recordings-native-physical-7-1",
+      "argv": [
+        "python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/physical-prep-7/tools/run_source.py",
+        "--repo",
+        "/home/justin/github/Dispatcharr",
+        "--support-root",
+        "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-support-f0-1",
+        "--mode",
+        "preexisting-active",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recordings-native-physical-7-1",
+        "--execution-inputs",
+        "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/physical-prep-7/Root-execution-inputs-7.json"
+      ],
+      "case_index": 7
+    }
+  ],
+  "sequence": "seven independent modes sequentially once each in one ordinary slot; stop on uncertain cleanup/infrastructure failure, no replay of passed prefixes",
+  "authorized_copy_rule": "Root-reviewed percase authorized false\u2192true only; retain proposed bytes/hash",
+  "ordinary_slots": 1,
+  "no_retry": true,
+  "no_global_empty_requirement": "own exact namespace only; otherRoot approved ordinary app may coexist",
+  "no_SourceDVR_replay_Main_defaultgraph_or_performance": true,
+  "remaining_indices": [
+    6,
+    7
+  ],
+  "passed_or_retained_prefix_not_replayed": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "case3": "HOST1/guest1/peer0 retained; separate strict known-error pure body review only"
+}

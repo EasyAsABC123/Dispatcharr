@@ -1,0 +1,29 @@
+{
+  "cache_read": {
+    "source_path": "rust/crates/ingest-epg/src/cache_policy.rs",
+    "source_sha256": "3fcf3f6d76f2397205e665f5f3f4eacdb3e5c0e6c1c8b775f48c10e207899b79",
+    "constant": "GET",
+    "script": "\nlocal kind=redis.call('TYPE',KEYS[1]).ok\nif kind~='none' and kind~='string' then return {-1,false} end\nif redis.call('STRLEN',KEYS[1])>1048576 then return {-2,false} end\nlocal value=redis.call('GET',KEYS[1])\nif not value then return {0,false} end\nreturn {1,value}\n",
+    "sha1": "b9bb840e513d1b679cdc39d656206ddc49785fad"
+  },
+  "result_write": {
+    "source_path": "rust/crates/job-transport/src/transport.rs",
+    "source_sha256": "91c1e08314cf00273abf814858f0b8ceff917ccb6ee769f77986137a6fa62e2d",
+    "constant": "WRITE_SUCCESS",
+    "script": "\nlocal t=redis.call('TYPE',KEYS[1]).ok\nif t~='none'and t~='string'then return -1 end\nif #ARGV[1]>262144 then return -1 end\nif t=='string'then\n if redis.call('STRLEN',KEYS[1])>262144 then return -1 end\n local ok,old=pcall(cjson.decode,redis.call('GET',KEYS[1]))\n if not ok or type(old)~='table'then return -1 end\n if old.status=='SUCCESS'then return 0 end\nend\nredis.call('SETEX',KEYS[1],3600,ARGV[1]);redis.call('PUBLISH',KEYS[1],ARGV[1]);return 1\n",
+    "sha1": "fce9b39b58ad3c271e70b21db9c428b48e04b169"
+  },
+  "channels_publish": {
+    "source_path": "rust/crates/realtime/src/bus.rs",
+    "source_sha256": "1a045ce6b82b8a102c8120daf06a7e05fc8d443c98789e34caa6740eec375513",
+    "constant": "PUBLISH",
+    "script": "\nfor _,key in ipairs(KEYS) do local t=redis.call('TYPE',key).ok;if t~='none' and t~='zset' then return redis.error_reply('CORRUPT channel type') end end\nlocal dropped=0;for index,key in ipairs(KEYS) do\n redis.call('ZREMRANGEBYSCORE',key,0,tonumber(ARGV[1])-60)\n if redis.call('ZCARD',key)<tonumber(ARGV[2]) then redis.call('ZADD',key,ARGV[1],ARGV[index+2]);redis.call('EXPIRE',key,60) else dropped=dropped+1 end\nend;return dropped\n",
+    "sha1": "dc636bb6a59a35eef552c31c01a0448129998548"
+  },
+  "known_channel_key": "asgispecific.rust_owned_clocked!",
+  "cache_group_key": ":1:coresettings:group:dvr_settings",
+  "result_key_prefix": "celery-tasks:celery-task-meta-",
+  "actual_SETEX_seconds": 3600,
+  "serial_response_gate_scope": "Forward exact subject request/reply; no claim later pipelined writes reached Redis while subject reply held",
+  "schema15_source_map_sha256": "b8c467e2cc154f4fe14c2f81004ce86d8f6720a8f731c1518d55a83ea52a7b58"
+}

@@ -1,0 +1,9 @@
+{
+  "source_path": "rust/crates/store/src/recording_capture.rs",
+  "source_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+  "snapshot": "SELECT r.id::bigint AS recording,r.channel_id::bigint AS channel,r.start_time,r.end_time,r.task_id,CASE WHEN octet_length(r.custom_properties::text)<=8192 THEN r.custom_properties ELSE NULL END AS properties,(r.custom_properties IS NOT NULL AND octet_length(r.custom_properties::text)<=8192) AS properties_supported,c.uuid AS channel_uuid,CASE WHEN octet_length(c.name)<=255 THEN c.name ELSE NULL END AS channel_name,c.epg_data_id::bigint AS epg_data_id,(c.stream_profile_id IS NULL AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.channel_id=c.id)) AS profile_supported,CASE WHEN octet_length(s.value::text)<=8192 THEN s.value ELSE NULL END AS dvr_settings,(s.value IS NOT NULL AND octet_length(s.value::text)<=8192) AS settings_supported FROM dispatcharr_channels_recording r JOIN dispatcharr_channels_channel c ON c.id=r.channel_id LEFT JOIN core_coresettings s ON s.key='dvr_settings' WHERE r.id=$1 LIMIT 1",
+  "prime_update": "UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1 AND custom_properties=$3",
+  "full_parameters_always_retained": true,
+  "query_field": null,
+  "schema15_source_map_sha256": "b8c467e2cc154f4fe14c2f81004ce86d8f6720a8f731c1518d55a83ea52a7b58"
+}

@@ -1,0 +1,89 @@
+{
+  "source_map_sha256": "b5b58fdf2450711cf7c01c3a47ae15a5ead569de1a68dfeb06a960b4e56ecd40",
+  "commands": [
+    {
+      "stage": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "PID": 3226120,
+      "actual_wait_exit": 0,
+      "began_epoch": 1794609832.0657208,
+      "completed_epoch": 1794609834.0892277,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 3226207,
+      "actual_wait_exit": 0,
+      "began_epoch": 1794609834.1266832,
+      "completed_epoch": 1794609843.526608,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 3226969,
+      "actual_wait_exit": 0,
+      "began_epoch": 1794609843.5649278,
+      "completed_epoch": 1794609885.6583526,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "job-tests",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-job-transport",
+        "--offline",
+        "--locked",
+        "--lib"
+      ],
+      "PID": 3230111,
+      "actual_wait_exit": 0,
+      "began_epoch": 1794609885.696137,
+      "completed_epoch": 1794609917.7938075,
+      "source_inputs_unchanged": true
+    },
+    {
+      "stage": "job-no-run",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-job-transport",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "PID": 3236037,
+      "actual_wait_exit": 0,
+      "began_epoch": 1794609917.832078,
+      "completed_epoch": 1794609917.9978104,
+      "source_inputs_unchanged": true
+    }
+  ]
+}

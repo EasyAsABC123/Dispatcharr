@@ -1,0 +1,41 @@
+{
+  "Source3_public_commit": "f0a816919b967073fbddae52eb43ee6cff1ea6d9",
+  "Source3_raw_sha256": "323c396c00b88fa48459a61a63799c5f2529919554b529778aa3b7a221b0a7b8",
+  "actual_Source_envelopes": [
+    {
+      "type": "update",
+      "data": {
+        "success": true,
+        "type": "recording_started",
+        "channel": "Owned Parented Channel"
+      },
+      "__asgi_channel__": [
+        "specific.rust_owned_clocked!receiver"
+      ]
+    },
+    {
+      "type": "update",
+      "data": {
+        "success": true,
+        "type": "recording_updated",
+        "recording_id": 1
+      },
+      "__asgi_channel__": [
+        "specific.rust_owned_clocked!receiver"
+      ]
+    },
+    {
+      "type": "update",
+      "data": {
+        "success": true,
+        "type": "recording_ended",
+        "channel": "Owned Parented Channel"
+      },
+      "__asgi_channel__": [
+        "specific.rust_owned_clocked!receiver"
+      ]
+    }
+  ],
+  "compiled_bus_file_sha256": "1a045ce6b82b8a102c8120daf06a7e05fc8d443c98789e34caa6740eec375513",
+  "correction_scope": "only exact actual __asgi_channel__ recipient wrapper, no raw-field stripping/workload/runtime/clock/budget change"
+}

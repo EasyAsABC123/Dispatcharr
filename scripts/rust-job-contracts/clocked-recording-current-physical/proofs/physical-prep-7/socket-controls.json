@@ -1,0 +1,79 @@
+{
+  "actual_exit": 0,
+  "tests_run": 6,
+  "elapsed_seconds": 0.0007410600082948804,
+  "pid": 3126788,
+  "original_starttime": "32874558",
+  "actual_owned_socket_readbacks": [
+    {
+      "role": "native-downstream",
+      "family": 2,
+      "type": 1,
+      "local": [
+        "127.0.0.1",
+        49545
+      ],
+      "peer": [
+        "127.0.0.1",
+        41114
+      ],
+      "actual_TCP_NODELAY_before": 0,
+      "actual_TCP_NODELAY_after": 1,
+      "observed_monotonic": 328745.617783763,
+      "scope": "owned fixture socket only; does not measure latency or retroactively explain old timings"
+    },
+    {
+      "role": "postgres-upstream",
+      "family": 2,
+      "type": 1,
+      "local": [
+        "127.0.0.1",
+        41114
+      ],
+      "peer": [
+        "127.0.0.1",
+        49545
+      ],
+      "actual_TCP_NODELAY_before": 0,
+      "actual_TCP_NODELAY_after": 1,
+      "observed_monotonic": 328745.617796894,
+      "scope": "owned fixture socket only; does not measure latency or retroactively explain old timings"
+    },
+    {
+      "role": "redis-downstream",
+      "family": 2,
+      "type": 1,
+      "local": [
+        "127.0.0.1",
+        49545
+      ],
+      "peer": [
+        "127.0.0.1",
+        41114
+      ],
+      "actual_TCP_NODELAY_before": 1,
+      "actual_TCP_NODELAY_after": 1,
+      "observed_monotonic": 328745.617805574,
+      "scope": "owned fixture socket only; does not measure latency or retroactively explain old timings"
+    },
+    {
+      "role": "redis-upstream",
+      "family": 2,
+      "type": 1,
+      "local": [
+        "127.0.0.1",
+        41114
+      ],
+      "peer": [
+        "127.0.0.1",
+        49545
+      ],
+      "actual_TCP_NODELAY_before": 1,
+      "actual_TCP_NODELAY_after": 1,
+      "observed_monotonic": 328745.617812144,
+      "scope": "owned fixture socket only; does not measure latency or retroactively explain old timings"
+    }
+  ],
+  "scope": "bounded owned IPv4 loopback socket pair only; no app/PG/Redis/media/task; no latency benchmark or historical causal proof",
+  "kernel_sockets_closed_before_receipt": true
+}

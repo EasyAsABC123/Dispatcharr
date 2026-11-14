@@ -1,0 +1,1176 @@
+import contextlib
+import importlib
+import importlib.machinery
+import importlib.util
+import inspect
+import json
+import logging
+import os
+import re
+import sys
+import threading
+import types
+from dataclasses import dataclass, field
+from typing import Any, Dict, Iterator, List, Optional, Tuple
+
+from django.db import close_old_connections, connection, transaction
+from django.db.models import Case, DateTimeField, Value, When
+from django.utils import timezone
+
+from .models import PluginConfig
+
+logger = logging.getLogger(__name__)
+
+
+class _PluginSourceLoader(importlib.machinery.SourceFileLoader):
+    def get_code(self, fullname):
+        return self.source_to_code(self.get_data(self.path), self.path)
+
+
+def _use_plugin_sources(path):
+    # Same-size edits within one timestamp tick can leave valid-looking bytecode.
+    # Keep source-only finders for lazy imports too, without changing bytecode
+    # files or requiring write access to user-managed plugin files.
+    for directory, subdirs, _ in os.walk(os.path.abspath(path)):
+        subdirs[:] = [name for name in subdirs if name != "__pycache__"]
+        sys.path_importer_cache[directory] = importlib.machinery.FileFinder(
+            directory,
+            (importlib.machinery.ExtensionFileLoader, importlib.machinery.EXTENSION_SUFFIXES),
+            (_PluginSourceLoader, importlib.machinery.SOURCE_SUFFIXES),
+            (importlib.machinery.SourcelessFileLoader, importlib.machinery.BYTECODE_SUFFIXES),
+        )
+
+
+@dataclass
+class LoadedPlugin:
+    key: str
+    name: str
+    version: str = ""
+    description: str = ""
+    author: str = ""
+    help_url: str = ""
+    module: Any = None
+    instance: Any = None
+    fields: List[Dict[str, Any]] = field(default_factory=list)
+    actions: List[Dict[str, Any]] = field(default_factory=list)
+    trusted: bool = False
+    loaded: bool = False
+    path: Optional[str] = None
+    folder_name: Optional[str] = None
+    legacy: bool = False
+
+
+class PluginManager:
+    """Singleton manager that discovers and runs plugins from /data/plugins."""
+
+    _instance: Optional["PluginManager"] = None
+
+    @classmethod
+    def get(cls) -> "PluginManager":
+        if not cls._instance:
+            cls._instance = PluginManager()
+        return cls._instance
+
+    def __init__(self) -> None:
+        self.plugins_dir = os.environ.get("DISPATCHARR_PLUGINS_DIR", "/data/plugins")
+        self._registry: Dict[str, LoadedPlugin] = {}
+        self._package_names: Dict[str, str] = {}
+        self._alias_names: Dict[str, str] = {}
+        self._reload_token_path = os.path.join(self.plugins_dir, ".reload_token")
+        self._last_reload_token = 0.0
+        self._discovery_completed = False
+        self._lock = threading.RLock()
+
+        # Ensure plugins directory exists
+        os.makedirs(self.plugins_dir, exist_ok=True)
+        if self.plugins_dir not in sys.path:
+            sys.path.append(self.plugins_dir)
+
+    def discover_plugins(
+        self,
+        *,
+        sync_db: bool = True,
+        force_reload: bool = False,
+        use_cache: bool = False,
+        release_connections: bool = True,
+    ) -> Dict[str, LoadedPlugin]:
+        # Only an explicit caller force_reload broadcasts via the shared token.
+        # Reacting to a newer token must reload locally without re-touching it;
+        # otherwise every consumer becomes a producer and multi-worker setups
+        # never converge.
+        caller_force_reload = force_reload
+        token = self._get_reload_token()
+        if use_cache and not force_reload:
+            with self._lock:
+                if self._discovery_completed and token <= self._last_reload_token:
+                    return self._registry
+        if token > self._last_reload_token:
+            force_reload = True
+        if caller_force_reload:
+            self._touch_reload_token()
+            token = self._get_reload_token()
+
+        if sync_db:
+            logger.info(f"Discovering plugins in {self.plugins_dir}")
+        else:
+            logger.debug(f"Discovering plugins (no DB sync) in {self.plugins_dir}")
+
+        with self._lock:
+            previous_packages = dict(self._package_names)
+            previous_aliases = dict(self._alias_names)
+            previous_paths = {
+                key: lp.path for key, lp in self._registry.items() if lp and lp.path
+            }
+
+        try:
+            return self._discover_plugins_impl(
+                sync_db=sync_db,
+                force_reload=force_reload,
+                previous_packages=previous_packages,
+                previous_aliases=previous_aliases,
+                previous_paths=previous_paths,
+                token=token,
+            )
+        finally:
+            # Discovery runs outside Django's request/task cycle (boot, worker_ready).
+            if release_connections:
+                close_old_connections()
+
+    def _discover_plugins_impl(
+        self,
+        *,
+        sync_db: bool,
+        force_reload: bool,
+        previous_packages: Dict[str, str],
+        previous_aliases: Dict[str, str],
+        previous_paths: Dict[str, str],
+        token: int,
+    ) -> Dict[str, LoadedPlugin]:
+        try:
+            configs: Optional[Dict[str, PluginConfig]] = None
+            try:
+                configs = {c.key: c for c in PluginConfig.objects.all()}
+            except Exception:
+                # DB might not be ready; treat all plugins as untrusted
+                configs = None
+
+            new_registry: Dict[str, LoadedPlugin] = {}
+            new_packages: Dict[str, str] = {}
+            new_aliases: Dict[str, str] = {}
+            for entry in sorted(os.listdir(self.plugins_dir)):
+                path = os.path.join(self.plugins_dir, entry)
+                if not os.path.isdir(path):
+                    continue
+
+                has_pkg = os.path.exists(os.path.join(path, "__init__.py"))
+                has_pluginpy = os.path.exists(os.path.join(path, "plugin.py"))
+                if not (has_pkg or has_pluginpy):
+                    continue
+
+                plugin_key = entry.replace(" ", "_").lower()
+                alias_name = self._resolve_alias_name(entry, path)
+
+                if force_reload:
+                    prev_alias = previous_aliases.get(plugin_key)
+                    if prev_alias:
+                        self._unload_alias(prev_alias)
+                    prev_path = previous_paths.get(plugin_key)
+                    if prev_path:
+                        self._unload_path_modules(prev_path)
+
+                cfg = configs.get(plugin_key) if configs else None
+                enabled = bool(cfg and cfg.enabled)
+                trusted = bool(cfg and (cfg.ever_enabled or cfg.enabled))
+
+                manifest, has_manifest = self._read_manifest(path)
+                legacy = not has_manifest
+                manifest_name = None
+                manifest_version = None
+                manifest_description = None
+                manifest_author = None
+                manifest_help_url = None
+                manifest_fields: List[Dict[str, Any]] = []
+                manifest_actions: List[Dict[str, Any]] = []
+                if has_manifest and isinstance(manifest, dict):
+                    manifest_name = manifest.get("name") if isinstance(manifest.get("name"), str) else None
+                    manifest_version = manifest.get("version") if isinstance(manifest.get("version"), str) else None
+                    manifest_description = manifest.get("description") if isinstance(manifest.get("description"), str) else None
+                    manifest_author = manifest.get("author") if isinstance(manifest.get("author"), str) else None
+                    manifest_help_url = manifest.get("help_url") if isinstance(manifest.get("help_url"), str) else None
+                    manifest_fields = self._normalize_fields(manifest.get("fields", []))
+                    manifest_actions = self._normalize_actions(manifest.get("actions", []))
+
+                display_name = manifest_name or entry
+                display_version = (
+                    manifest_version if manifest_version is not None else (cfg.version if cfg else "")
+                )
+                display_description = (
+                    manifest_description if manifest_description is not None else (cfg.description if cfg else "")
+                )
+
+                def _make_placeholder() -> LoadedPlugin:
+                    return LoadedPlugin(
+                        key=plugin_key,
+                        name=display_name,
+                        version=display_version,
+                        description=display_description,
+                        author=manifest_author or "",
+                        help_url=manifest_help_url or "",
+                        fields=manifest_fields if has_manifest else [],
+                        actions=manifest_actions if has_manifest else [],
+                        trusted=trusted,
+                        loaded=False,
+                        path=path,
+                        folder_name=entry,
+                        legacy=legacy,
+                    )
+
+                if not enabled:
+                    new_registry[plugin_key] = _make_placeholder()
+                    continue
+
+                try:
+                    lp, package_name = self._load_plugin(
+                        plugin_key,
+                        path,
+                        folder_name=entry,
+                        force_reload=force_reload,
+                        previous_package=previous_packages.get(plugin_key),
+                    )
+                    if lp:
+                        if manifest_name and (not lp.name or lp.name == plugin_key):
+                            lp.name = manifest_name
+                        if manifest_version is not None and not lp.version:
+                            lp.version = manifest_version
+                        if manifest_description is not None and not lp.description:
+                            lp.description = manifest_description
+                        if manifest_author is not None and not lp.author:
+                            lp.author = manifest_author
+                        if manifest_help_url is not None and not lp.help_url:
+                            lp.help_url = manifest_help_url
+                        if manifest_fields and not lp.fields:
+                            lp.fields = manifest_fields
+                        if manifest_actions and not lp.actions:
+                            lp.actions = manifest_actions
+                        lp.trusted = trusted
+                        lp.loaded = True
+                        lp.path = path
+                        lp.folder_name = entry
+                        lp.legacy = legacy
+                        new_registry[plugin_key] = lp
+                        if package_name:
+                            new_packages[plugin_key] = package_name
+                        if alias_name:
+                            new_aliases[plugin_key] = alias_name
+                    else:
+                        new_registry[plugin_key] = _make_placeholder()
+                except Exception:
+                    logger.exception(f"Failed to load plugin '{plugin_key}' from {path}")
+                    new_registry[plugin_key] = _make_placeholder()
+
+            if force_reload:
+                # Remove stale modules for plugins that no longer exist
+                removed_keys = (set(previous_packages) | set(previous_paths)) - set(new_packages)
+                for key in removed_keys:
+                    prev_package = previous_packages.get(key)
+                    if prev_package:
+                        self._unload_package(prev_package)
+                    prev_alias = previous_aliases.get(key)
+                    if prev_alias:
+                        self._unload_alias(prev_alias)
+                    prev_path = previous_paths.get(key)
+                    if prev_path:
+                        self._unload_path_modules(prev_path)
+
+            retirement_results = []
+            retirement_count = 0
+            registered_paths = self._registered_plugin_paths()
+            if force_reload and configs is not None:
+                # Retained Task objects survive failed discovery and rolled-back cleanup.
+                paths = set(previous_paths.items()) | registered_paths
+                for key, path in paths:
+                    if key not in configs and not os.path.exists(path):
+                        retirement_count += 1
+
+                        def retire(key=key, path=path):
+                            retirement_results.append(self._retire_missing_plugin_tasks(key, path))
+
+                        transaction.on_commit(retire)
+
+            with self._lock:
+                self._registry = new_registry
+                self._package_names = new_packages
+                self._alias_names = new_aliases
+                complete = (
+                    (configs is not None or not (new_registry or registered_paths))
+                    and len(retirement_results) == retirement_count
+                    and all(retirement_results)
+                )
+                if complete and token > self._last_reload_token:
+                    self._last_reload_token = token
+                self._discovery_completed = complete
+
+            for plugin_key, lp in new_registry.items():
+                if lp.loaded:
+                    self._record_owned_tasks(plugin_key, configs.get(plugin_key) if configs else None)
+
+            (logger.info if new_registry else logger.debug)(
+                f"Discovered {len(new_registry)} plugin(s)"
+            )
+        except FileNotFoundError:
+            logger.warning(f"Plugins directory not found: {self.plugins_dir}")
+
+        # Sync DB records (optional)
+        if sync_db:
+            try:
+                self._sync_db_with_registry(new_registry if 'new_registry' in locals() else None)
+            except Exception:
+                # Defer sync if database is not ready (e.g., first startup before migrate)
+                logger.exception("Deferring plugin DB sync; database not ready yet")
+        return self._registry
+
+    def iter_actions_for_event(self, event_name: str) -> Iterator[Tuple[str, str]]:
+        """Yield (plugin_key, action_id) pairs from the in-memory registry."""
+        with self._lock:
+            registry = list(self._registry.items())
+        for key, lp in registry:
+            for action in lp.actions or []:
+                if not isinstance(action, dict):
+                    continue
+                action_id = action.get("id")
+                events = action.get("events")
+                if (
+                    action_id
+                    and isinstance(events, (list, tuple))
+                    and event_name in events
+                ):
+                    yield key, action_id
+
+    def _own_alias(self, key: str) -> Optional[str]:
+        """The plugin's folder name, if sys.modules holds a package rooted in this plugin's directory."""
+        with self._lock:
+            lp = self._registry.get(key)
+        if not lp or not lp.folder_name or not lp.path or not self._is_valid_identifier(lp.folder_name):
+            return None
+        module = sys.modules.get(lp.folder_name)
+        plugin_dir = os.path.abspath(lp.path)
+        if any(os.path.abspath(entry) == plugin_dir for entry in getattr(module, "__path__", None) or ()):
+            return lp.folder_name
+        return None
+
+    def _registered_task_names(self, key: str) -> set:
+        """Celery tasks whose callable is defined in this plugin's directory."""
+        # Different folder names can resolve to the same internal package name.
+        return self._task_names_from_path(self.get_plugin_path(key))
+
+    def _record_owned_tasks(self, key: str, cfg: Optional[PluginConfig]) -> None:
+        if cfg is None:
+            return
+        try:
+            registered = self._registered_task_names(key)
+            stored = PluginConfig.objects.filter(key=key).values_list("owned_tasks", flat=True).first()
+            if registered <= set(stored or []):
+                return
+            # Re-read under the lock: other processes may have recorded different names since the read above.
+            with transaction.atomic():
+                locked = PluginConfig.objects.select_for_update().filter(key=key).first()
+                if locked is None:
+                    return
+                names = sorted(set(locked.owned_tasks or []) | registered)
+                PluginConfig.objects.filter(pk=locked.pk).update(owned_tasks=names)
+        except Exception:
+            logger.exception("Could not record Celery tasks owned by plugin '%s'", key)
+
+    def _owned_task_names(self, cfg: PluginConfig, *, path: Optional[str] = None) -> set:
+        from dispatcharr.celery import app as celery_app
+
+        names = set(cfg.owned_tasks or [])
+        root = os.path.abspath(path or self.get_plugin_path(cfg.key))
+        try:
+            names |= self._task_names_from_path(root)
+        except Exception:
+            logger.exception("Could not read registered Celery tasks for plugin '%s'", cfg.key)
+        for name in list(names):
+            task = celery_app.tasks.get(name)
+            source = self._task_source_path(task) if task is not None else None
+            # A current callable outside the plugin overrides recorded ownership.
+            if source and not os.path.abspath(source).startswith(f"{root}{os.sep}"):
+                names.discard(name)
+        return names
+
+    @staticmethod
+    def _task_source_path(task):
+        run = inspect.unwrap(task.run)
+        return getattr(run, "__globals__", {}).get("__file__")
+
+    def _task_names_from_path(self, path: str) -> set:
+        from dispatcharr.celery import app as celery_app
+
+        root = os.path.abspath(path)
+        names = set()
+        for name, task in celery_app.tasks.copy().items():
+            source = self._task_source_path(task)
+            if source and os.path.abspath(source).startswith(f"{root}{os.sep}"):
+                names.add(name)
+        return names
+
+    def _unregister_tasks_from_path(self, path: str) -> None:
+        from dispatcharr.celery import app as celery_app
+
+        with self._lock:
+            for name in self._task_names_from_path(path):
+                celery_app.tasks.pop(name, None)
+
+    def _registered_plugin_paths(self) -> set:
+        from dispatcharr.celery import app as celery_app
+
+        root = os.path.abspath(self.plugins_dir)
+        paths = set()
+        for task in celery_app.tasks.copy().values():
+            source = self._task_source_path(task)
+            if not source or not os.path.abspath(source).startswith(f"{root}{os.sep}"):
+                continue
+            folder, separator, _ = os.path.relpath(os.path.abspath(source), root).partition(os.sep)
+            if separator:
+                paths.add((folder.replace(" ", "_").lower(), os.path.join(root, folder)))
+        return paths
+
+    def _retire_missing_plugin_tasks(self, key: str, path: str) -> bool:
+        try:
+            if PluginConfig.objects.filter(key=key).exists() or os.path.exists(path):
+                return True
+            self._unregister_tasks_from_path(path)
+            return True
+        except Exception:
+            with self._lock:
+                self._discovery_completed = False
+            logger.exception("Could not retire Celery tasks for removed plugin '%s'", key)
+            return False
+
+    def refresh_task_ownership(self) -> None:
+        with self._lock:
+            warm_registry = bool(self._registry)
+        # A cold process can clean recorded history without importing enabled code.
+        if warm_registry or self._registered_plugin_paths():
+            self.discover_plugins(sync_db=False, use_cache=True)
+
+    def _load_current_task_names(self, cfg: PluginConfig) -> set:
+        """Load only this plugin before deciding which schedules can resume."""
+        from dispatcharr.celery import app as celery_app
+
+        with self._lock:
+            path = self.get_plugin_path(cfg.key)
+            folder = os.path.basename(path)
+            package = self._resolve_package_name(cfg.key)
+            old_tasks = {
+                name: celery_app.tasks[name]
+                for name in self._task_names_from_path(path)
+            }
+            # Callable globals retain the source path after alias modules unload.
+            # Remove only this plugin's task objects before importing current code.
+            for name in old_tasks:
+                celery_app.tasks.pop(name, None)
+            self._unload_package(package)
+            self._unload_path_modules(path)
+            try:
+                loaded, package = self._load_plugin(
+                    cfg.key, path, folder_name=folder, force_reload=True,
+                    previous_package=package,
+                )
+                if loaded is None:
+                    raise ValueError(f"Plugin '{cfg.key}' could not be loaded")
+            except Exception:
+                celery_app.tasks.update(old_tasks)
+                raise
+            loaded.loaded = True
+            loaded.trusted = True
+            self._registry[cfg.key] = loaded
+            self._package_names[cfg.key] = package
+            alias = self._own_alias(cfg.key)
+            if alias:
+                self._alias_names[cfg.key] = alias
+            else:
+                self._alias_names.pop(cfg.key, None)
+            names = self._task_names_from_path(path)
+            cfg.owned_tasks = sorted(set(cfg.owned_tasks or []) | names)
+            cfg.save(update_fields=["owned_tasks", "updated_at"])
+            return names
+
+    def suspend_schedules(self, cfg: PluginConfig) -> int:
+        """Disable the plugin's enabled PeriodicTask rows and record their pks.
+
+        `cfg` must be row-locked by the caller's transaction.
+        """
+        from django_celery_beat.models import PeriodicTask, PeriodicTasks
+
+        with transaction.atomic():
+            names = self._owned_task_names(cfg)
+            pks = list(
+                PeriodicTask.objects.select_for_update().filter(
+                    task__in=names, enabled=True
+                ).order_by("pk").values_list("pk", flat=True)
+            )
+            if not pks:
+                return 0
+            PeriodicTask.objects.filter(pk__in=pks, task__in=names, enabled=True).update(
+                enabled=False, last_run_at=None, date_changed=timezone.now()
+            )
+            PeriodicTasks.update_changed()
+            cfg.suspended_schedules = sorted(set(cfg.suspended_schedules or []) | set(pks))
+            cfg.save(update_fields=["suspended_schedules", "updated_at"])
+        return len(pks)
+
+    def restore_schedules(self, cfg: PluginConfig) -> int:
+        """Re-enable suspended rows that still run one of the plugin's tasks.
+
+        `cfg` must be row-locked by the caller's transaction.
+        """
+        from django_celery_beat.models import PeriodicTask, PeriodicTasks
+
+        pks = list(cfg.suspended_schedules or [])
+        if not pks:
+            return 0
+        with transaction.atomic():
+            names = self._load_current_task_names(cfg)
+            now = timezone.now()
+            # Beat backdates an unset last_run_at when start_time is set, making the row
+            # due at once. Leave it unset only for rows that have not reached start_time.
+            restored = PeriodicTask.objects.filter(
+                pk__in=pks, task__in=names, enabled=False
+            ).update(
+                enabled=True,
+                last_run_at=Case(
+                    When(start_time__gt=now, then=None),
+                    default=Value(now),
+                    output_field=DateTimeField(),
+                ),
+                date_changed=now,
+            )
+            PeriodicTasks.update_changed()
+            cfg.suspended_schedules = []
+            cfg.save(update_fields=["suspended_schedules", "updated_at"])
+        return restored
+
+    def delete_plugin_periodic_tasks(self, key: str, *, path: Optional[str] = None) -> int:
+        """Delete the PeriodicTask rows of a plugin being removed.
+
+        Rows are matched only by exact Celery task name, from the names recorded
+        while the plugin was enabled plus those registered in this process. Must
+        run before its PluginConfig row is deleted.
+        """
+        from django_celery_beat.models import PeriodicTask
+
+        cfg = PluginConfig.objects.filter(key=key).first()
+        names = (
+            self._owned_task_names(cfg, path=path) if cfg
+            else self._task_names_from_path(path or self.get_plugin_path(key))
+        )
+        if not names:
+            logger.info("No Celery tasks recorded for plugin '%s'; its schedules are left untouched", key)
+            return 0
+        with transaction.atomic():
+            pks = list(
+                PeriodicTask.objects.select_for_update().filter(
+                    task__in=names
+                ).order_by("pk").values_list("pk", flat=True)
+            )
+            # Schedule definitions may be shared with a concurrent task writer.
+            # Remove only these tasks; leave interval and crontab rows intact.
+            _, deleted = PeriodicTask.objects.filter(pk__in=pks, task__in=names).delete()
+        return deleted.get(PeriodicTask._meta.label, 0)
+
+    def _load_plugin(
+        self,
+        key: str,
+        path: str,
+        *,
+        folder_name: str,
+        force_reload: bool,
+        previous_package: Optional[str],
+    ) -> tuple[Optional[LoadedPlugin], Optional[str]]:
+        path = os.path.abspath(path)
+        # Plugin can be a package and/or contain plugin.py. Prefer plugin.py when present.
+        has_pkg = os.path.exists(os.path.join(path, "__init__.py"))
+        has_pluginpy = os.path.exists(os.path.join(path, "plugin.py"))
+        if not (has_pkg or has_pluginpy):
+            logger.debug(f"Skipping {path}: no plugin.py or package")
+            return None, None
+
+        _use_plugin_sources(path)
+        package_name = self._resolve_package_name(key)
+        alias_name = self._resolve_alias_name(folder_name, path)
+
+        if force_reload and previous_package:
+            self._unload_package(previous_package)
+
+        module = None
+        plugin_cls = None
+        last_error = None
+
+        # Ensure a package context exists for plugin.py (even without __init__.py)
+        if has_pluginpy:
+            self._ensure_namespace_package(package_name, path, alias=alias_name)
+
+            module_name = f"{package_name}.plugin"
+            plugin_path = os.path.join(path, "plugin.py")
+            try:
+                logger.debug(f"Importing plugin module {module_name} from {plugin_path}")
+                module = self._load_module_from_path(module_name, plugin_path, is_package=False)
+                if alias_name:
+                    self._register_alias_module(f"{alias_name}.plugin", module, path)
+                plugin_cls = getattr(module, "Plugin", None)
+                if plugin_cls is None:
+                    logger.warning(f"Module {module_name} has no Plugin class")
+            except Exception as e:
+                last_error = e
+                logger.exception(f"Error importing module {module_name}")
+
+        if plugin_cls is None and has_pkg:
+            module_name = package_name
+            init_path = os.path.join(path, "__init__.py")
+            try:
+                logger.debug(f"Importing plugin package {module_name} from {init_path}")
+                module = self._load_module_from_path(module_name, init_path, is_package=True)
+                self._register_alias_module(alias_name, module, path)
+                plugin_cls = getattr(module, "Plugin", None)
+                if plugin_cls is None:
+                    logger.warning(f"Module {module_name} has no Plugin class")
+            except Exception as e:
+                last_error = e
+                logger.exception(f"Error importing module {module_name}")
+
+        if plugin_cls is None:
+            if last_error:
+                raise last_error
+            logger.warning(f"No Plugin class found for {key}; skipping")
+            return None, package_name
+
+        instance = plugin_cls()
+
+        name = getattr(instance, "name", key)
+        version = getattr(instance, "version", "")
+        description = getattr(instance, "description", "")
+        author = getattr(instance, "author", "")
+        help_url = getattr(instance, "help_url", "")
+        fields = getattr(instance, "fields", [])
+        actions = getattr(instance, "actions", [])
+        fields = self._normalize_fields(fields)
+        actions = self._normalize_actions(actions)
+
+        lp = LoadedPlugin(
+            key=key,
+            name=name,
+            version=version,
+            description=description,
+            author=author or "",
+            help_url=help_url or "",
+            module=module,
+            instance=instance,
+            fields=fields,
+            actions=actions,
+            path=path,
+            folder_name=folder_name,
+        )
+        return lp, package_name
+
+    def _sync_db_with_registry(self, registry: Optional[Dict[str, LoadedPlugin]] = None):
+        if registry is None:
+            with self._lock:
+                registry = dict(self._registry)
+        with transaction.atomic():
+            for key, lp in registry.items():
+                obj, _ = PluginConfig.objects.get_or_create(
+                    key=key,
+                    defaults={
+                        "name": lp.name,
+                        "version": lp.version,
+                        "description": lp.description,
+                        "settings": {},
+                    },
+                )
+                # Update meta if changed
+                changed = False
+                if obj.name != lp.name:
+                    obj.name = lp.name
+                    changed = True
+                if obj.version != lp.version:
+                    obj.version = lp.version
+                    changed = True
+                if obj.description != lp.description:
+                    obj.description = lp.description
+                    changed = True
+                if changed:
+                    obj.save(update_fields=["name", "version", "description", "updated_at"])
+
+    def list_plugins(self) -> List[Dict[str, Any]]:
+        from .models import PluginConfig, PluginRepo
+
+        plugins: List[Dict[str, Any]] = []
+        with self._lock:
+            registry_snapshot = dict(self._registry)
+        try:
+            configs = {c.key: c for c in PluginConfig.objects.select_related("source_repo").all()}
+        except Exception as e:
+            # Database might not be migrated yet; fall back to registry only
+            logger.warning("PluginConfig table unavailable; listing registry only: %s", e)
+            configs = {}
+
+        # Build repo latest-version lookup from cached manifests
+        repo_latest = {}  # slug -> latest_version
+        try:
+            for repo in PluginRepo.objects.filter(enabled=True):
+                manifest_data = repo.cached_manifest or {}
+                manifest = manifest_data.get("manifest", manifest_data)
+                for rp in manifest.get("plugins", []):
+                    s = rp.get("slug", "")
+                    if s:
+                        repo_latest[s] = rp.get("latest_version", "")
+        except Exception:
+            pass
+
+        # First, include all discovered plugins
+        for key, lp in registry_snapshot.items():
+            conf = configs.get(key)
+            conf_slug = conf.slug if conf else ""
+            trusted = bool(conf and (conf.ever_enabled or conf.enabled))
+            logo_url = self._get_logo_url(key, path=lp.path)
+            plugins.append(
+                {
+                    "key": key,
+                    "name": lp.name,
+                    "version": lp.version,
+                    "description": lp.description,
+                    "author": getattr(lp, "author", "") or "",
+                    "help_url": getattr(lp, "help_url", "") or "",
+                    "enabled": conf.enabled if conf else False,
+                    "ever_enabled": conf.ever_enabled if conf else False,
+                    "fields": lp.fields or [],
+                    "settings": (conf.settings if conf else {}),
+                    "actions": lp.actions or [],
+                    "missing": False,
+                    "trusted": trusted,
+                    "loaded": bool(lp.loaded),
+                    "legacy": bool(getattr(lp, "legacy", False)),
+                    "logo_url": logo_url,
+                    "source_repo": conf.source_repo_id if conf else None,
+                    "source_repo_name": conf.source_repo.name if conf and conf.source_repo else None,
+                    "is_official_repo": bool(conf and conf.source_repo and conf.source_repo.is_official),
+                    "slug": conf_slug,
+                    "is_managed": bool(conf and conf.source_repo_id),
+                    "installed_version_is_prerelease": bool(
+                        conf and conf.installed_version_is_prerelease
+                    ),
+                    "update_available": bool(
+                        conf_slug and conf and conf.source_repo_id
+                        and not (conf and conf.installed_version_is_prerelease)
+                        and repo_latest.get(conf_slug)
+                        and lp.version != repo_latest.get(conf_slug)
+                    ),
+                    "latest_version": repo_latest.get(conf_slug, ""),
+                    "deprecated": conf.deprecated if conf else False,
+                }
+            )
+
+        # Then, include any DB-only configs (files missing or failed to load)
+        discovered_keys = set(registry_snapshot.keys())
+        for key, conf in configs.items():
+            if key in discovered_keys:
+                continue
+            plugins.append(
+                {
+                    "key": key,
+                    "name": conf.name,
+                    "version": conf.version,
+                    "description": conf.description,
+                    "author": "",
+                    "help_url": "",
+                    "enabled": conf.enabled,
+                    "ever_enabled": getattr(conf, "ever_enabled", False),
+                    "fields": [],
+                    "settings": conf.settings or {},
+                    "actions": [],
+                    "missing": True,
+                    "trusted": bool(conf.ever_enabled or conf.enabled),
+                    "loaded": False,
+                    "legacy": False,
+                    "logo_url": self._get_logo_url(key),
+                    "source_repo": conf.source_repo_id,
+                    "source_repo_name": conf.source_repo.name if conf.source_repo else None,
+                    "is_official_repo": bool(conf.source_repo and conf.source_repo.is_official),
+                    "slug": conf.slug,
+                    "is_managed": bool(conf.source_repo_id),
+                    "installed_version_is_prerelease": bool(
+                        conf.installed_version_is_prerelease
+                    ),
+                    "update_available": bool(
+                        conf.slug and conf.source_repo_id
+                        and not conf.installed_version_is_prerelease
+                        and repo_latest.get(conf.slug)
+                        and conf.version != repo_latest.get(conf.slug)
+                    ),
+                    "latest_version": repo_latest.get(conf.slug or "", ""),
+                    "deprecated": conf.deprecated,
+                }
+            )
+
+        return plugins
+
+    def get_plugin(self, key: str) -> Optional[LoadedPlugin]:
+        with self._lock:
+            return self._registry.get(key)
+
+    def get_plugin_path(self, key: str) -> str:
+        with self._lock:
+            plugin = self._registry.get(key)
+            if plugin and plugin.path:
+                return plugin.path
+        path = os.path.join(self.plugins_dir, key)
+        for entry in sorted(os.listdir(self.plugins_dir)):
+            candidate = os.path.join(self.plugins_dir, entry)
+            if entry.replace(" ", "_").lower() == key and os.path.isdir(candidate):
+                path = candidate
+        if os.path.isdir(path):
+            return path
+
+        # A failed cleanup can remove files before its database transaction rolls back.
+        with self._lock:
+            candidates = {path for owner, path in self._registered_plugin_paths() if owner == key}
+        if len(candidates) == 1:
+            return candidates.pop()
+        return path
+
+    def update_settings(self, key: str, settings: Dict[str, Any]) -> Dict[str, Any]:
+        cfg = PluginConfig.objects.get(key=key)
+        cfg.settings = settings or {}
+        cfg.save(update_fields=["settings", "updated_at"])
+        return cfg.settings
+
+    def run_action(self, key: str, action_id: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        try:
+            lp = self.get_plugin(key)
+            if not lp or not lp.instance:
+                # Attempt a lightweight re-discovery in case the registry was rebuilt
+                self.discover_plugins(sync_db=False, force_reload=False, use_cache=False)
+                lp = self.get_plugin(key)
+                if not lp or not lp.instance:
+                    raise ValueError(f"Plugin '{key}' not found")
+
+            cfg = PluginConfig.objects.get(key=key)
+            if not cfg.enabled:
+                raise PermissionError(f"Plugin '{key}' is disabled")
+            params = params or {}
+
+            context = self._build_context(lp, cfg)
+
+            run_method = getattr(lp.instance, "run", None)
+            if not callable(run_method):
+                raise ValueError(f"Plugin '{key}' has no runnable 'run' method")
+
+            try:
+                result = run_method(action_id, params, context)
+            except Exception:
+                logger.exception(f"Plugin '{key}' action '{action_id}' failed")
+                raise
+
+            if isinstance(result, dict):
+                return result
+            return {"status": "ok", "result": result}
+        finally:
+            # Return geventpool checkouts for this greenlet/thread after every action,
+            # including Connect event hooks and manual UI runs.
+            close_old_connections()
+
+    def stop_plugin(self, key: str, reason: Optional[str] = None) -> bool:
+        try:
+            lp = self.get_plugin(key)
+            if not lp or not lp.instance:
+                return False
+            try:
+                cfg = PluginConfig.objects.get(key=key)
+            except PluginConfig.DoesNotExist:
+                return False
+            if not cfg.enabled:
+                return False
+
+            context = self._build_context(lp, cfg)
+            if reason:
+                context["reason"] = reason
+
+            # A savepoint keeps a database error in plugin code from aborting the caller's transaction.
+            savepoint = transaction.atomic if connection.in_atomic_block else contextlib.nullcontext
+
+            stop_method = getattr(lp.instance, "stop", None)
+            if callable(stop_method):
+                try:
+                    with savepoint():
+                        stop_method(context)
+                    return True
+                except TypeError:
+                    try:
+                        with savepoint():
+                            stop_method()
+                        return True
+                    except Exception:
+                        logger.exception("Plugin '%s' stop() failed", key)
+                        return False
+                except Exception:
+                    logger.exception("Plugin '%s' stop() failed", key)
+                    return False
+
+            run_method = getattr(lp.instance, "run", None)
+            if callable(run_method):
+                actions = {a.get("id") for a in (lp.actions or []) if isinstance(a, dict)}
+                if "stop" in actions:
+                    try:
+                        with savepoint():
+                            run_method("stop", {}, context)
+                        return True
+                    except Exception:
+                        logger.exception("Plugin '%s' stop action failed", key)
+                        return False
+            return False
+        finally:
+            # Closing the connection inside an atomic block would abort the caller's transaction.
+            if not connection.in_atomic_block:
+                close_old_connections()
+
+    def stop_all_plugins(self, reason: Optional[str] = None) -> int:
+        stopped = 0
+        with self._lock:
+            registry_snapshot = dict(self._registry)
+        for key in registry_snapshot.keys():
+            if self.stop_plugin(key, reason=reason):
+                stopped += 1
+        return stopped
+
+    def _resolve_package_name(self, key: str) -> str:
+        safe_key = self._safe_module_name(key)
+        return f"_dispatcharr_plugin_{safe_key}"
+
+    def _resolve_alias_name(self, folder_name: str, path: str) -> Optional[str]:
+        if not self._is_valid_identifier(folder_name):
+            return None
+        if self._is_reserved_module_name(folder_name, path):
+            return None
+        return folder_name
+
+    def _is_valid_identifier(self, name: str) -> bool:
+        return re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", name) is not None
+
+    def _safe_module_name(self, value: str) -> str:
+        safe = re.sub(r"[^0-9A-Za-z_]", "_", value)
+        if not safe or safe[0].isdigit():
+            safe = f"p_{safe}"
+        return safe
+
+    def _normalize_fields(self, fields: Any) -> List[Dict[str, Any]]:
+        try:
+            from .serializers import PluginFieldSerializer
+        except Exception:
+            return fields if isinstance(fields, list) else []
+        if not isinstance(fields, list):
+            return []
+        serializer = PluginFieldSerializer(data=fields, many=True)
+        if serializer.is_valid():
+            return serializer.validated_data
+        normalized: List[Dict[str, Any]] = []
+        for item in fields:
+            item_ser = PluginFieldSerializer(data=item)
+            if item_ser.is_valid():
+                normalized.append(item_ser.validated_data)
+            else:
+                logger.warning("Invalid plugin field entry ignored: %s", item_ser.errors)
+        return normalized
+
+    def _normalize_actions(self, actions: Any) -> List[Dict[str, Any]]:
+        try:
+            from .serializers import PluginActionSerializer
+        except Exception:
+            return actions if isinstance(actions, list) else []
+        if not isinstance(actions, list):
+            return []
+        serializer = PluginActionSerializer(data=actions, many=True)
+        if serializer.is_valid():
+            return serializer.validated_data
+        normalized: List[Dict[str, Any]] = []
+        for item in actions:
+            item_ser = PluginActionSerializer(data=item)
+            if item_ser.is_valid():
+                normalized.append(item_ser.validated_data)
+            else:
+                logger.warning("Invalid plugin action entry ignored: %s", item_ser.errors)
+        return normalized
+
+    def _merge_settings_with_defaults(self, settings: Dict[str, Any], fields: List[Dict[str, Any]]) -> Dict[str, Any]:
+        merged = dict(settings or {})
+        for field_def in fields or []:
+            field_id = field_def.get("id")
+            if not field_id:
+                continue
+            if field_id not in merged and "default" in field_def:
+                merged[field_id] = field_def.get("default")
+        return merged
+
+    def _build_context(self, lp: LoadedPlugin, cfg: PluginConfig) -> Dict[str, Any]:
+        settings = self._merge_settings_with_defaults(cfg.settings or {}, lp.fields or [])
+        return {
+            "settings": settings,
+            "logger": logger,
+            "actions": {a.get("id"): a for a in (lp.actions or [])},
+        }
+
+    def _read_manifest(self, path: str) -> tuple[Optional[Dict[str, Any]], bool]:
+        manifest_path = os.path.join(path, "plugin.json")
+        if not os.path.isfile(manifest_path):
+            return None, False
+        try:
+            with open(manifest_path, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except Exception:
+            logger.warning("Invalid plugin.json for plugin at %s", path)
+            return None, False
+        if not isinstance(data, dict):
+            logger.warning("plugin.json must be an object for plugin at %s", path)
+            return None, False
+        return data, True
+
+    def _get_logo_url(self, key: str, *, path: Optional[str] = None) -> Optional[str]:
+        logo_path = os.path.join(self.plugins_dir, key, "logo.png")
+        if path:
+            logo_path = os.path.join(path, "logo.png")
+        try:
+            if os.path.isfile(logo_path):
+                return f"/api/plugins/plugins/{key}/logo/"
+        except Exception:
+            return None
+        return None
+
+    def _ensure_namespace_package(self, package_name: str, path: str, *, alias: Optional[str] = None) -> None:
+        existing = sys.modules.get(package_name)
+        if existing and getattr(existing, "__path__", None):
+            return
+        pkg = types.ModuleType(package_name)
+        pkg.__path__ = [path]
+        pkg.__package__ = package_name
+        sys.modules[package_name] = pkg
+        self._register_alias_module(alias, pkg, path)
+
+    def _register_alias_module(
+        self,
+        alias_name: Optional[str],
+        module: Any,
+        path: str,
+        *,
+        force: bool = False,
+    ) -> None:
+        if not alias_name:
+            return
+        if self._is_reserved_module_name(alias_name, path):
+            return
+        if alias_name in sys.modules:
+            if not force:
+                return
+            self._unload_alias(alias_name)
+        sys.modules[alias_name] = module
+
+    def _is_reserved_module_name(self, name: str, path: str) -> bool:
+        if name in sys.builtin_module_names:
+            return True
+        if hasattr(sys, "stdlib_module_names") and name in sys.stdlib_module_names:
+            return True
+        existing = sys.modules.get(name)
+        if existing:
+            origin = getattr(existing, "__file__", None)
+            if origin is None:
+                return True
+            try:
+                if not os.path.abspath(origin).startswith(os.path.abspath(path)):
+                    return True
+            except Exception:
+                return True
+        try:
+            spec = importlib.util.find_spec(name)
+        except Exception:
+            spec = None
+        if spec:
+            if spec.origin is None:
+                return True
+            try:
+                if not os.path.abspath(spec.origin).startswith(os.path.abspath(path)):
+                    return True
+            except Exception:
+                return True
+        return False
+
+    def _load_module_from_path(self, module_name: str, path: str, *, is_package: bool) -> Any:
+        importlib.invalidate_caches()
+        spec = importlib.util.spec_from_file_location(
+            module_name,
+            path,
+            submodule_search_locations=[os.path.dirname(path)] if is_package else None,
+            loader=_PluginSourceLoader(module_name, path),
+        )
+        if spec is None or spec.loader is None:
+            raise ImportError(f"Could not load spec for {module_name} from {path}")
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = module
+        spec.loader.exec_module(module)
+        return module
+
+    def _get_reload_token(self) -> float:
+        try:
+            return os.path.getmtime(self._reload_token_path)
+        except FileNotFoundError:
+            return 0.0
+        except Exception:
+            return 0.0
+
+    def _touch_reload_token(self) -> None:
+        try:
+            os.makedirs(self.plugins_dir, exist_ok=True)
+            with open(self._reload_token_path, "a", encoding="utf-8"):
+                pass
+            os.utime(self._reload_token_path, None)
+        except Exception:
+            logger.debug("Failed to update plugin reload token", exc_info=True)
+
+    def _unload_package(self, package_name: str) -> None:
+        if not package_name:
+            return
+        for name in list(sys.modules.keys()):
+            if name == package_name or name.startswith(f"{package_name}."):
+                sys.modules.pop(name, None)
+
+    def _unload_alias(self, alias_name: str) -> None:
+        if not alias_name:
+            return
+        for name in list(sys.modules.keys()):
+            if name == alias_name or name.startswith(f"{alias_name}."):
+                sys.modules.pop(name, None)
+
+    def _unload_path_modules(self, path: str) -> None:
+        if not path:
+            return
+        root = os.path.abspath(path)
+        for name, module in sorted(sys.modules.items(), reverse=True):
+            if not module:
+                continue
+            mod_path = getattr(module, "__file__", None)
+            if mod_path:
+                try:
+                    abs_path = os.path.abspath(mod_path)
+                    if abs_path == root or abs_path.startswith(f"{root}{os.sep}"):
+                        sys.modules.pop(name, None)
+                        continue
+                except Exception:
+                    pass
+            try:
+                mod_paths = getattr(module, "__path__", None)
+                if mod_paths is not None:
+                    for pkg_path in mod_paths:
+                        abs_pkg = os.path.abspath(pkg_path)
+                        if abs_pkg == root or abs_pkg.startswith(f"{root}{os.sep}"):
+                            sys.modules.pop(name, None)
+                            break
+            except Exception:
+                continue

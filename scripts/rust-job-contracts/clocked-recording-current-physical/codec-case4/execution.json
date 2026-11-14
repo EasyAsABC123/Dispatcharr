@@ -1,0 +1,832 @@
+{
+  "passed": true,
+  "application_task_recording_replays": 0,
+  "resource_or_performance_measurement": false,
+  "Source_duration_equality_or_causal_gain_claim": false,
+  "pinned_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source": "artifacts/rust/clocked-recordings-native-physical-4-1/retained-physical-recordings/TV_Shows/Owned Parented Artwork/S01E01.mkv",
+  "expected_input_sha256": "a65b9199bbc047f4009a9ddbd3cac6b44e45ffbd705f53a491f12bb7b68928ef",
+  "commands": [
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "image",
+        "inspect",
+        "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492375,
+      "starttime": "33536634",
+      "began_epoch": 1794614971.3009686,
+      "completed_epoch": 1794614971.331994,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "f0b399b980ac0818752ceda37ced9c185cee37dce06fb12b514d33f52134f82a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-dvr4-codec-a4e830555c",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492392,
+      "starttime": "33536637",
+      "began_epoch": 1794614971.3323646,
+      "completed_epoch": 1794614971.3429644,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "create",
+        "--pull",
+        "never",
+        "--name",
+        "dispatcharr-dvr4-codec-a4e830555c-ffprobe",
+        "--label",
+        "com.docker.compose.project=dispatcharr-dvr4-codec-a4e830555c",
+        "--label",
+        "com.docker.compose.service=ffprobe",
+        "--network",
+        "none",
+        "--read-only",
+        "--user",
+        "65532:65532",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "--memory",
+        "128m",
+        "--pids-limit",
+        "64",
+        "--mount",
+        "type=bind,src=/home/justin/github/Dispatcharr/artifacts/rust/current-dvr-case4-codec-agent-review-1/owned-input.mkv,dst=/tmp/owned-recording.mkv,readonly",
+        "--entrypoint",
+        "ffprobe",
+        "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "-v",
+        "error",
+        "-show_format",
+        "-show_streams",
+        "-of",
+        "json",
+        "/tmp/owned-recording.mkv"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492410,
+      "starttime": "33536638",
+      "began_epoch": 1794614971.3431983,
+      "completed_epoch": 1794614971.4242177,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "41dc7cf73cff68ea3c6c2d11ecc4a3bffee7f7577bb4a2cf9ec0bfde5a673949",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "inspect",
+        "807c2ed59d815343e959b264f35c912088c2db0bc4b8cf0410741c5653bc80e7"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492430,
+      "starttime": "33536647",
+      "began_epoch": 1794614971.424644,
+      "completed_epoch": 1794614971.435282,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "517582f4396809701ad1db6bedea7c3ea25570b9ea0d8acc89c348b275e42458",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "start",
+        "--attach",
+        "807c2ed59d815343e959b264f35c912088c2db0bc4b8cf0410741c5653bc80e7"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492448,
+      "starttime": "33536648",
+      "began_epoch": 1794614971.435822,
+      "completed_epoch": 1794614971.5873737,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "935a765a9bce685dfbf515305224b671816d73b863120f5cc99b53679f34c586",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "inspect",
+        "807c2ed59d815343e959b264f35c912088c2db0bc4b8cf0410741c5653bc80e7"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492537,
+      "starttime": "33536663",
+      "began_epoch": 1794614971.5878203,
+      "completed_epoch": 1794614971.59843,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "49aca72cac6bf0da57ea94d92ebe1fd85298b94f8f1fee90c513678e1f99b134",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "wait",
+        "807c2ed59d815343e959b264f35c912088c2db0bc4b8cf0410741c5653bc80e7"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492556,
+      "starttime": "33536664",
+      "began_epoch": 1794614971.5989122,
+      "completed_epoch": 1794614971.609419,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "rm",
+        "807c2ed59d815343e959b264f35c912088c2db0bc4b8cf0410741c5653bc80e7"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492575,
+      "starttime": "33536665",
+      "began_epoch": 1794614971.609814,
+      "completed_epoch": 1794614971.6705902,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "41dc7cf73cff68ea3c6c2d11ecc4a3bffee7f7577bb4a2cf9ec0bfde5a673949",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=807c2ed59d815343e959b264f35c912088c2db0bc4b8cf0410741c5653bc80e7",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492593,
+      "starttime": "33536671",
+      "began_epoch": 1794614971.6709888,
+      "completed_epoch": 1794614971.6815658,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "create",
+        "--pull",
+        "never",
+        "--name",
+        "dispatcharr-dvr4-codec-a4e830555c-ffmpeg",
+        "--label",
+        "com.docker.compose.project=dispatcharr-dvr4-codec-a4e830555c",
+        "--label",
+        "com.docker.compose.service=ffmpeg",
+        "--network",
+        "none",
+        "--read-only",
+        "--user",
+        "65532:65532",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "--memory",
+        "128m",
+        "--pids-limit",
+        "64",
+        "--mount",
+        "type=bind,src=/home/justin/github/Dispatcharr/artifacts/rust/current-dvr-case4-codec-agent-review-1/owned-input.mkv,dst=/tmp/owned-recording.mkv,readonly",
+        "--entrypoint",
+        "ffmpeg",
+        "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "-threads",
+        "1",
+        "-filter_threads",
+        "1",
+        "-v",
+        "error",
+        "-i",
+        "/tmp/owned-recording.mkv",
+        "-map",
+        "0:v",
+        "-f",
+        "null",
+        "-"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492609,
+      "starttime": "33536672",
+      "began_epoch": 1794614971.681928,
+      "completed_epoch": 1794614971.7629468,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "d459ec0aec47b94a44b41feb7da9332a75c7398aec02af01c5681d778b2f9864",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "inspect",
+        "e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492627,
+      "starttime": "33536680",
+      "began_epoch": 1794614971.7633936,
+      "completed_epoch": 1794614971.7741158,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "8f581bb84c17cf6c087895832d5d10dcbfd06f93b2f0648efb55470bce48535c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "start",
+        "--attach",
+        "e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492645,
+      "starttime": "33536682",
+      "began_epoch": 1794614971.7747023,
+      "completed_epoch": 1794614971.946243,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "inspect",
+        "e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492741,
+      "starttime": "33536699",
+      "began_epoch": 1794614971.9466643,
+      "completed_epoch": 1794614971.9673345,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "0c885100879038961ff22b361d637f7507b07d77fdd0bc0938dd9ecdc9d7f2fa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "wait",
+        "e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492757,
+      "starttime": "33536701",
+      "began_epoch": 1794614971.9678965,
+      "completed_epoch": 1794614971.9785137,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "rm",
+        "e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492775,
+      "starttime": "33536702",
+      "began_epoch": 1794614971.9789371,
+      "completed_epoch": 1794614972.039848,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "d459ec0aec47b94a44b41feb7da9332a75c7398aec02af01c5681d778b2f9864",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492792,
+      "starttime": "33536708",
+      "began_epoch": 1794614972.0402935,
+      "completed_epoch": 1794614972.0508747,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-dvr4-codec-a4e830555c",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492811,
+      "starttime": "33536709",
+      "began_epoch": 1794614972.0512455,
+      "completed_epoch": 1794614972.0619786,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=807c2ed59d815343e959b264f35c912088c2db0bc4b8cf0410741c5653bc80e7",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492829,
+      "starttime": "33536710",
+      "began_epoch": 1794614972.0623248,
+      "completed_epoch": 1794614972.0729337,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=807c2ed59d815343e959b264f35c912088c2db0bc4b8cf0410741c5653bc80e7",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492847,
+      "starttime": "33536711",
+      "began_epoch": 1794614972.073291,
+      "completed_epoch": 1794614972.0838377,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "name=^/dispatcharr-dvr4-codec-a4e830555c-ffprobe$",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492865,
+      "starttime": "33536712",
+      "began_epoch": 1794614972.0842059,
+      "completed_epoch": 1794614972.0947793,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492884,
+      "starttime": "33536714",
+      "began_epoch": 1794614972.095131,
+      "completed_epoch": 1794614972.1057336,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492902,
+      "starttime": "33536715",
+      "began_epoch": 1794614972.1061025,
+      "completed_epoch": 1794614972.1166775,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "name=^/dispatcharr-dvr4-codec-a4e830555c-ffmpeg$",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492921,
+      "starttime": "33536716",
+      "began_epoch": 1794614972.1170478,
+      "completed_epoch": 1794614972.1275873,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-dvr4-codec-a4e830555c",
+        "--format",
+        "{{.ID}}"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr",
+      "PID": 3492939,
+      "starttime": "33536717",
+      "began_epoch": 1794614972.1279814,
+      "completed_epoch": 1794614972.138556,
+      "actual_exit": 0,
+      "collection_invalid": null,
+      "physically_settled": true,
+      "pipe_threads_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "project": "dispatcharr-dvr4-codec-a4e830555c",
+  "budgets": {
+    "overall_seconds": 60,
+    "work_seconds": 45,
+    "cleanup_reserved_seconds": 15,
+    "per_stream_inflight_bytes": 1048576,
+    "memory_bytes": 134217728,
+    "pids": 64
+  },
+  "sidecars": {
+    "ffprobe": {
+      "CID": "807c2ed59d815343e959b264f35c912088c2db0bc4b8cf0410741c5653bc80e7",
+      "name": "dispatcharr-dvr4-codec-a4e830555c-ffprobe",
+      "args": [
+        "-v",
+        "error",
+        "-show_format",
+        "-show_streams",
+        "-of",
+        "json",
+        "/tmp/owned-recording.mkv"
+      ],
+      "attached_command": 5,
+      "elapsed_seconds": 0.15198073803912848,
+      "terminal_state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-11-14T00:09:31.456740864Z",
+        "FinishedAt": "2026-11-14T00:09:31.543479236Z"
+      }
+    },
+    "ffmpeg": {
+      "CID": "e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353",
+      "name": "dispatcharr-dvr4-codec-a4e830555c-ffmpeg",
+      "args": [
+        "-threads",
+        "1",
+        "-filter_threads",
+        "1",
+        "-v",
+        "error",
+        "-i",
+        "/tmp/owned-recording.mkv",
+        "-map",
+        "0:v",
+        "-f",
+        "null",
+        "-"
+      ],
+      "attached_command": 12,
+      "elapsed_seconds": 0.1719593810266815,
+      "terminal_state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-11-14T00:09:31.796319174Z",
+        "FinishedAt": "2026-11-14T00:09:31.891080991Z"
+      }
+    }
+  },
+  "input": {
+    "bytes": 980283,
+    "sha256": "a65b9199bbc047f4009a9ddbd3cac6b44e45ffbd705f53a491f12bb7b68928ef",
+    "copy_mode": "0444",
+    "original_device": 54,
+    "original_inode": 25271002,
+    "original_mode": "0o666",
+    "single_bind_copy": true
+  },
+  "actual_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "media": {
+    "format_duration_seconds": "27.480000",
+    "format_name": "matroska,webm",
+    "video_streams": [
+      {
+        "index": 0,
+        "codec_name": "mpeg2video",
+        "codec_long_name": "MPEG-2 video",
+        "profile": "Main",
+        "width": 160,
+        "height": 90,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "duration": null,
+        "nb_frames": null
+      }
+    ]
+  },
+  "full_video_decode": {
+    "actual_exit": 0,
+    "maps_all_video_streams": true,
+    "seek_or_duration_limit_or_frame_limit": false,
+    "stderr_bytes": 0,
+    "full_to_EOF": true,
+    "audio_decode_claim": false
+  },
+  "project_containers_empty": true,
+  "original_CLI_identity_absence": [
+    {
+      "PID": 3492375,
+      "starttime": "33536634",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492392,
+      "starttime": "33536637",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492410,
+      "starttime": "33536638",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492430,
+      "starttime": "33536647",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492448,
+      "starttime": "33536648",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492537,
+      "starttime": "33536663",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492556,
+      "starttime": "33536664",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492575,
+      "starttime": "33536665",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492593,
+      "starttime": "33536671",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492609,
+      "starttime": "33536672",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492627,
+      "starttime": "33536680",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492645,
+      "starttime": "33536682",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492741,
+      "starttime": "33536699",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492757,
+      "starttime": "33536701",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492775,
+      "starttime": "33536702",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492792,
+      "starttime": "33536708",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492811,
+      "starttime": "33536709",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492829,
+      "starttime": "33536710",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492847,
+      "starttime": "33536711",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492865,
+      "starttime": "33536712",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492884,
+      "starttime": "33536714",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492902,
+      "starttime": "33536715",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492921,
+      "starttime": "33536716",
+      "current_starttime": null
+    },
+    {
+      "PID": 3492939,
+      "starttime": "33536717",
+      "current_starttime": null
+    }
+  ],
+  "input_hashes_unchanged": true,
+  "cleanup": [
+    {
+      "role": "ffprobe",
+      "CID": "807c2ed59d815343e959b264f35c912088c2db0bc4b8cf0410741c5653bc80e7",
+      "name": "dispatcharr-dvr4-codec-a4e830555c-ffprobe",
+      "absent": true
+    },
+    {
+      "role": "ffmpeg",
+      "CID": "e58c748335f9019ad3ffc641b273fa7406909a4e660c7efa62ab49ed209f9353",
+      "name": "dispatcharr-dvr4-codec-a4e830555c-ffmpeg",
+      "absent": true
+    }
+  ],
+  "elapsed_seconds": 0.9139170580310747,
+  "controller_exit": 0
+}

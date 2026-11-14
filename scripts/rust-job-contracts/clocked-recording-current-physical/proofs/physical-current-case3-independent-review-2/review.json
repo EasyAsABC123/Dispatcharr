@@ -1,0 +1,161 @@
+{
+  "passed": true,
+  "reviewed_output": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recordings-native-physical-3-1",
+  "mode": "sql-update-error-ready",
+  "actual_host_exit_preserved": 1,
+  "actual_guest_exit_preserved": 1,
+  "actual_Native_peer_exit": 0,
+  "offline_known_validator_failure_classification": true,
+  "sealed_raw_acceptance": {
+    "passed": true,
+    "mode": "sql-update-error-ready",
+    "scope": "conditional offline retained effect/ownership predicates only; expected0 argument is NOT actual guest status",
+    "strict_result_TTL_seconds": 3600,
+    "raw_all_fields_retained": true
+  },
+  "independent_extra": {
+    "actual_ErrorResponse_fields": {
+      "S": "ERROR",
+      "V": "ERROR",
+      "C": "P0001",
+      "M": "owned-dvr-physical-prime",
+      "W": "PL/pgSQL function rust_owned_dvr_prime_failure() line 1 at RAISE",
+      "F": "pl_exec.c",
+      "L": "3897",
+      "R": "exec_stmt_raise"
+    },
+    "actual_same_backend_pid": 581,
+    "actual_ErrorResponse_before_held_Ready": true,
+    "actual_Ready_hold_seconds": 6.235202088020742,
+    "observer_pending_while_ready_held": true,
+    "retained_unknown_postACK_owner_not_falsely_freed": true,
+    "no_terminal_failure_or_Source_fault_parity": true
+  },
+  "strict_samepeer_held_samples": [
+    {
+      "received_monotonic": 331683.933730251,
+      "actual_peer_elapsed": 2.447234091,
+      "original_Weak": true,
+      "slots": 0
+    },
+    {
+      "received_monotonic": 331684.300666372,
+      "actual_peer_elapsed": 2.81412586,
+      "original_Weak": true,
+      "slots": 0
+    }
+  ],
+  "default6259_bytes_equal": true,
+  "default_scope": {
+    "columns": 501,
+    "constraints": 198,
+    "indexes": 255,
+    "sequences": 59,
+    "tables": 62
+  },
+  "actual_host_commands_settled": 49,
+  "original_host_namespace_PID_records_absent": 11,
+  "actual_native_peer_PID_scope": "same guest namespace wait/pipe/absence receipt; not falsely compared to unrelated host PID number",
+  "cleanup_seconds": 1.9361208319896832,
+  "fresh_exact_owned_queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-30b61f0916"
+      ],
+      "pid": 3324096,
+      "starttime": "33201555",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-30b61f0916"
+      ],
+      "pid": 3324114,
+      "starttime": "33201556",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--format",
+        "{{.Name}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-30b61f0916"
+      ],
+      "pid": 3324132,
+      "starttime": "33201557",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "id=3028ce27f23c0e7719c600d3c7f69a1ef7c943f687f7a4d7f0276ba5069952a2"
+      ],
+      "pid": 3324150,
+      "starttime": "33201558",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "id=f918e5c93b530a5895097f99df534b732b7ff2cf6cf93234d198d769b554047b"
+      ],
+      "pid": 3324168,
+      "starttime": "33201559",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "raw_sha256": {
+    "integration.json": "f668fa093d73376790fa9a9ba84d29650ad184240ec4e1618015b728d13127f2",
+    "native-clocked-recording-private.json": "41b6de6e6e7d31ba8cef77fe0d5f72c3e68e7ab04e6404db2fdd093c6e65bccd",
+    "native-dvr-physical-private.json": "8f436f45e7cdf16b9c04d6c2bfa6ea2948c062c492b2898d0df9d0ececfa306f"
+  },
+  "all24_executed_tool_hashes_and_current878_ELF_verified": true,
+  "no_replay_or_frozen_mutation": true,
+  "no_Main_Sourcefault_defaultgraph_performance_claim": true
+}

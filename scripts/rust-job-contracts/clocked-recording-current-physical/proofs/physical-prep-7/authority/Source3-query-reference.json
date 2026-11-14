@@ -1,0 +1,370 @@
+{
+  "scope": "Actual Source3 query ledger; no new DB execution",
+  "whole_ledger_sha256": "dbc534a93536ec6b765a8ebb3c17ed42484b82dfca346d0a5772bc48a76e95d7",
+  "selected_unmodified_records": [
+    {
+      "original_ordinal": 1303,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SELECT \"django_celery_beat_periodictask\".\"id\", \"django_celery_beat_periodictask\".\"name\", \"django_celery_beat_periodictask\".\"task\", \"django_celery_beat_periodictask\".\"interval_id\", \"django_celery_beat_periodictask\".\"crontab_id\", \"django_celery_beat_periodictask\".\"solar_id\", \"django_celery_beat_periodictask\".\"clocked_id\", \"django_celery_beat_periodictask\".\"args\", \"django_celery_beat_periodictask\".\"kwargs\", \"django_celery_beat_periodictask\".\"queue\", \"django_celery_beat_periodictask\".\"exchange\", \"django_celery_beat_periodictask\".\"routing_key\", \"django_celery_beat_periodictask\".\"headers\", \"django_celery_beat_periodictask\".\"priority\", \"django_celery_beat_periodictask\".\"expires\", \"django_celery_beat_periodictask\".\"expire_seconds\", \"django_celery_beat_periodictask\".\"one_off\", \"django_celery_beat_periodictask\".\"start_time\", \"django_celery_beat_periodictask\".\"enabled\", \"django_celery_beat_periodictask\".\"last_run_at\", \"django_celery_beat_periodictask\".\"total_run_count\", \"django_celery_beat_periodictask\".\"date_changed\", \"django_celery_beat_periodictask\".\"description\" FROM \"django_celery_beat_periodictask\" WHERE \"django_celery_beat_periodictask\".\"name\" = %s LIMIT 21",
+        "params": [
+          "dvr-recording-1"
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7276766,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7282972
+      }
+    },
+    {
+      "original_ordinal": 1304,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SELECT \"django_celery_beat_clockedschedule\".\"id\", \"django_celery_beat_clockedschedule\".\"clocked_time\" FROM \"django_celery_beat_clockedschedule\" WHERE \"django_celery_beat_clockedschedule\".\"id\" = %s LIMIT 21",
+        "params": [
+          1
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7297618,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7299178
+      }
+    },
+    {
+      "original_ordinal": 1305,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SAVEPOINT \"s140155994113728_x1\"",
+        "params": null,
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7316484,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.731747
+      }
+    },
+    {
+      "original_ordinal": 1306,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SELECT \"django_celery_beat_periodictasks\".\"ident\", \"django_celery_beat_periodictasks\".\"last_update\" FROM \"django_celery_beat_periodictasks\" WHERE \"django_celery_beat_periodictasks\".\"ident\" = %s LIMIT 21 FOR UPDATE",
+        "params": [
+          1
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7330132,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7332306
+      }
+    },
+    {
+      "original_ordinal": 1307,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "UPDATE \"django_celery_beat_periodictasks\" SET \"last_update\" = %s WHERE \"django_celery_beat_periodictasks\".\"ident\" = %s",
+        "params": [
+          "2026-11-13 16:06:44.731573+00:00",
+          1
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7344725,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7346396
+      }
+    },
+    {
+      "original_ordinal": 1308,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "RELEASE SAVEPOINT \"s140155994113728_x1\"",
+        "params": null,
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7356856,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.73573
+      }
+    },
+    {
+      "original_ordinal": 1309,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "UPDATE \"epg_epgsource\" SET \"refresh_task_id\" = NULL WHERE \"epg_epgsource\".\"refresh_task_id\" IN (%s)",
+        "params": [
+          2
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7368307,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7370725
+      }
+    },
+    {
+      "original_ordinal": 1310,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "UPDATE \"m3u_m3uaccount\" SET \"refresh_task_id\" = NULL WHERE \"m3u_m3uaccount\".\"refresh_task_id\" IN (%s)",
+        "params": [
+          2
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7381942,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7384338
+      }
+    },
+    {
+      "original_ordinal": 1311,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "DELETE FROM \"django_celery_beat_periodictask\" WHERE \"django_celery_beat_periodictask\".\"id\" IN (%s)",
+        "params": [
+          2
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.73956,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7397003
+      }
+    },
+    {
+      "original_ordinal": 1312,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SELECT \"django_celery_beat_periodictasks\".\"ident\", \"django_celery_beat_periodictasks\".\"last_update\" FROM \"django_celery_beat_periodictasks\" WHERE \"django_celery_beat_periodictasks\".\"ident\" = %s LIMIT 21 FOR UPDATE",
+        "params": [
+          1
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.741248,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.741377
+      }
+    },
+    {
+      "original_ordinal": 1313,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "UPDATE \"django_celery_beat_periodictasks\" SET \"last_update\" = %s WHERE \"django_celery_beat_periodictasks\".\"ident\" = %s",
+        "params": [
+          "2026-11-13 16:06:44.741020+00:00",
+          1
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7426124,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7427378
+      }
+    },
+    {
+      "original_ordinal": 1314,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SELECT %s AS \"a\" FROM \"django_celery_beat_periodictask\" WHERE \"django_celery_beat_periodictask\".\"clocked_id\" = %s LIMIT 1",
+        "params": [
+          1,
+          1
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7441552,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.744286
+      }
+    },
+    {
+      "original_ordinal": 1315,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SELECT \"django_celery_beat_periodictask\".\"id\", \"django_celery_beat_periodictask\".\"name\", \"django_celery_beat_periodictask\".\"task\", \"django_celery_beat_periodictask\".\"interval_id\", \"django_celery_beat_periodictask\".\"crontab_id\", \"django_celery_beat_periodictask\".\"solar_id\", \"django_celery_beat_periodictask\".\"clocked_id\", \"django_celery_beat_periodictask\".\"args\", \"django_celery_beat_periodictask\".\"kwargs\", \"django_celery_beat_periodictask\".\"queue\", \"django_celery_beat_periodictask\".\"exchange\", \"django_celery_beat_periodictask\".\"routing_key\", \"django_celery_beat_periodictask\".\"headers\", \"django_celery_beat_periodictask\".\"priority\", \"django_celery_beat_periodictask\".\"expires\", \"django_celery_beat_periodictask\".\"expire_seconds\", \"django_celery_beat_periodictask\".\"one_off\", \"django_celery_beat_periodictask\".\"start_time\", \"django_celery_beat_periodictask\".\"enabled\", \"django_celery_beat_periodictask\".\"last_run_at\", \"django_celery_beat_periodictask\".\"total_run_count\", \"django_celery_beat_periodictask\".\"date_changed\", \"django_celery_beat_periodictask\".\"description\" FROM \"django_celery_beat_periodictask\" WHERE \"django_celery_beat_periodictask\".\"clocked_id\" IN (%s)",
+        "params": [
+          1
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.74561,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7457602
+      }
+    },
+    {
+      "original_ordinal": 1316,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "DELETE FROM \"django_celery_beat_clockedschedule\" WHERE \"django_celery_beat_clockedschedule\".\"id\" IN (%s)",
+        "params": [
+          1
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7470002,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7471225
+      }
+    },
+    {
+      "original_ordinal": 1317,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SAVEPOINT \"s140155994113728_x2\"",
+        "params": null,
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.748161,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.748201
+      }
+    },
+    {
+      "original_ordinal": 1318,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SELECT \"django_celery_beat_periodictasks\".\"ident\", \"django_celery_beat_periodictasks\".\"last_update\" FROM \"django_celery_beat_periodictasks\" WHERE \"django_celery_beat_periodictasks\".\"ident\" = %s LIMIT 21 FOR UPDATE",
+        "params": [
+          1
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.749324,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7494206
+      }
+    },
+    {
+      "original_ordinal": 1319,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "UPDATE \"django_celery_beat_periodictasks\" SET \"last_update\" = %s WHERE \"django_celery_beat_periodictasks\".\"ident\" = %s",
+        "params": [
+          "2026-11-13 16:06:44.748114+00:00",
+          1
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7505908,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7506897
+      }
+    },
+    {
+      "original_ordinal": 1320,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "RELEASE SAVEPOINT \"s140155994113728_x2\"",
+        "params": null,
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.751692,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.751733
+      }
+    },
+    {
+      "original_ordinal": 1335,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SELECT \"dispatcharr_channels_channeloverride\".\"id\", \"dispatcharr_channels_channeloverride\".\"channel_id\", \"dispatcharr_channels_channeloverride\".\"name\", \"dispatcharr_channels_channeloverride\".\"channel_number\", \"dispatcharr_channels_channeloverride\".\"channel_group_id\", \"dispatcharr_channels_channeloverride\".\"logo_id\", \"dispatcharr_channels_channeloverride\".\"tvg_id\", \"dispatcharr_channels_channeloverride\".\"tvc_guide_stationid\", \"dispatcharr_channels_channeloverride\".\"epg_data_id\", \"dispatcharr_channels_channeloverride\".\"stream_profile_id\", \"dispatcharr_channels_channeloverride\".\"is_radio\", \"dispatcharr_channels_channeloverride\".\"created_at\", \"dispatcharr_channels_channeloverride\".\"updated_at\" FROM \"dispatcharr_channels_channeloverride\" WHERE \"dispatcharr_channels_channeloverride\".\"channel_id\" = %s LIMIT 21",
+        "params": [
+          2
+        ],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7841015,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7843854
+      }
+    },
+    {
+      "original_ordinal": 1336,
+      "raw_record": {
+        "actual_thread_task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+        "task_context_available": true,
+        "sql": "SELECT \"core_streamprofile\".\"id\", \"core_streamprofile\".\"name\", \"core_streamprofile\".\"command\", \"core_streamprofile\".\"parameters\", \"core_streamprofile\".\"locked\", \"core_streamprofile\".\"is_active\", \"core_streamprofile\".\"user_agent_id\" FROM \"core_streamprofile\" WHERE \"core_streamprofile\".\"id\" IS NULL LIMIT 21",
+        "params": [],
+        "many": false,
+        "pid": 541,
+        "thread": 140155994113728,
+        "thread_name": "ThreadPoolExecutor-1_0",
+        "began_epoch": 1794586004.7857554,
+        "actual_database": "rust_probe_backup_jobs_a2ec5aa2da",
+        "finished_epoch": 1794586004.7858913
+      }
+    }
+  ],
+  "actual_tracking_updates": 3,
+  "actual_savepoints": 2,
+  "BEGIN_COMMIT_observed": false,
+  "atomic_grouping": "Code-derived from Django Collector/model calls; not observed transaction packets",
+  "recording_id": 1,
+  "periodic_id": 2,
+  "clocked_id": 1,
+  "channel_id": 2,
+  "foreign_key_SET_NULL_statements_observed": true,
+  "profile_lookup_actual_id_is_null": true
+}
