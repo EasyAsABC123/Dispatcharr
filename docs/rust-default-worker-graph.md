@@ -5,6 +5,12 @@ application, algorithm and protocol credit. This is a source audit, not new
 runtime acceptance. Current runtime is bfb4086; public evidence is 3143f9a.
 Do not edit the protected legacy scheduler/EPG/DVR work in progress.
 
+This is the selected14-family integration graph, not the complete Source task
+registry. The [Source task coverage audit](rust-source-task-coverage.md) finds47
+static application task declarations and requires a producer/callback crosswalk.
+Core rehash and recording-offset rescheduling are already observed natural
+producers outside this selected graph. Its completion cannot alone close M6.
+
 | Family / canonical task | Actual Main route | Reusable implementation and remaining composition |
 |---|---|---|
 | Scanner / core.tasks.scan_and_process_files | absent | scanner_files::Worker, logo_scanner/LogoApplication and scanner_index_helper exist. Their mapped-file and logo-only domains refuse mixed populated roots; combine Original scan ordering, first-scan state, actual child provenance and totals into one normal service. Native image/data-init currently creates only logos, while Original watches /data/m3us, /data/epgs and /data/logos. |

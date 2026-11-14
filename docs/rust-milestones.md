@@ -27,9 +27,12 @@ frozen useful-work checks before any Rust measurement; no new performance gain
 is accepted. All M0–M9 gates below remain open. Older results retain their
 recorded source and workload scope.
 
-The [default worker graph audit](rust-default-worker-graph.md) lists all fourteen
+The [default worker graph audit](rust-default-worker-graph.md) lists the selected fourteen
 task families, the eight missing Main integrations, reusable implementations,
 and the grouped acceptance workflow needed before enabling scheduling.
+The [Source task audit](rust-source-task-coverage.md) finds47 static application
+task declarations; required producers/callbacks outside the selected graph still
+need a complete executable coverage crosswalk.
 The [datastore compatibility audit](rust-datastore-compatibility.md) confirms
 SQLite and Original PostgreSQL TLS environment settings remain required and
 unimplemented/unverified; PostgreSQL-only tests cannot close that gate.
