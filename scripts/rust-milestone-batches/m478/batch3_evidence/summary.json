@@ -1,0 +1,2626 @@
+{
+  "Original_authors_credit": "All application authorship and credit remain with the Original Dispatcharr authors. See ATTRIBUTION.md and LICENSE.",
+  "candidate": {
+    "git": "bfb4086fe6d65a9db5151e95b478f76b2094bc90",
+    "source_map_file": "/home/justin/github/Dispatcharr/scripts/rust-integration/milestone-batch3/source-inputs.json",
+    "source_map_sha256": "2be119f1bf8face901cf4521b492d44f0f572664ef109521a295b2fa5279601f",
+    "build_manifest_file": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch3-build-1/build.json",
+    "build_manifest_sha256": "d2e3eec046cabb345d6526e0b2ed4810b133b2cb75fd352a67076ce377dba524",
+    "image_id": "sha256:29f68ba847b3b8e083e9e77e28a2a8446273a420a0c78887c6dba1bffcacbee9",
+    "source_archive_file": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch3-build-1/source.tar",
+    "source_archive_sha256": "23c69295275da902ac0aae47d091f2f11dd0b7ff31106a5e4d5218e72ffa29ac",
+    "plugin_numeric_mode": "finite-v1"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "raw_report": {
+        "path": "artifacts/rust/milestone-batch3-plugin48-1/report.json",
+        "sha256": "abc83b8f9524113a82ce606a193217949f2606552baf36f55174eed27ca23570",
+        "bytes": 84739
+      },
+      "actual_controller_exit": 2,
+      "no_Source_API_replay": true,
+      "normal_capture_or_cleanup_errors": {
+        "error": {
+          "type": "KeyError",
+          "message": "'actual-settings-setter'"
+        },
+        "cleanup_errors": [
+          {
+            "stage": "loopback actual wait",
+            "message": "CommandExit137"
+          }
+        ]
+      },
+      "independent_cleanup": {
+        "exact_owned_absence": true,
+        "PID_namespace_checked": true,
+        "host_generations_absent": 93,
+        "fresh_project_queries": 3,
+        "fresh_CID_queries": 6,
+        "normal_cleanup_report_valid": false,
+        "Source_API_calls": 0,
+        "Main_adversarial_handler_drain_qualified": false
+      },
+      "normal_cleanup_flag": false,
+      "actual_CLI_receipts": [
+        {
+          "pid": 2604866,
+          "observed_starttime": "39899684",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2604884,
+          "observed_starttime": "39899685",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2604885,
+          "observed_starttime": "39899685",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2604902,
+          "observed_starttime": "39899687",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2604917,
+          "observed_starttime": "39899688",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2605355,
+          "observed_starttime": "39899813",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2605408,
+          "observed_starttime": "39899819",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2605459,
+          "observed_starttime": "39899823",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2605475,
+          "observed_starttime": "39899825",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2605492,
+          "observed_starttime": "39899826",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2605563,
+          "observed_starttime": "39899833",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2605630,
+          "observed_starttime": "39899839",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2605698,
+          "observed_starttime": "39899846",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2605792,
+          "observed_starttime": "39899853",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2605995,
+          "observed_starttime": "39899886",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606070,
+          "observed_starttime": "39899896",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606139,
+          "observed_starttime": "39899913",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606209,
+          "observed_starttime": "39899929",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606275,
+          "observed_starttime": "39899955",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606348,
+          "observed_starttime": "39899982",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606460,
+          "observed_starttime": "39900011",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606477,
+          "observed_starttime": "39900013",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606513,
+          "observed_starttime": "39900016",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606547,
+          "observed_starttime": "39900020",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606582,
+          "observed_starttime": "39900027",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606809,
+          "observed_starttime": "39900232",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606825,
+          "observed_starttime": "39900241",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606861,
+          "observed_starttime": "39900245",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606906,
+          "observed_starttime": "39900253",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606922,
+          "observed_starttime": "39900254",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2606994,
+          "observed_starttime": "39900262",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607038,
+          "observed_starttime": "39900266",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607124,
+          "observed_starttime": "39900276",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607196,
+          "observed_starttime": "39900293",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607270,
+          "observed_starttime": "39900309",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607337,
+          "observed_starttime": "39900336",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607442,
+          "observed_starttime": "39900366",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607557,
+          "observed_starttime": "39900388",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607575,
+          "observed_starttime": "39900389",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607611,
+          "observed_starttime": "39900393",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607830,
+          "observed_starttime": "39900702",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607846,
+          "observed_starttime": "39900714",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607882,
+          "observed_starttime": "39900718",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607926,
+          "observed_starttime": "39900727",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2607942,
+          "observed_starttime": "39900728",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608012,
+          "observed_starttime": "39900736",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608027,
+          "observed_starttime": "39900740",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608101,
+          "observed_starttime": "39900750",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608208,
+          "observed_starttime": "39900767",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608276,
+          "observed_starttime": "39900783",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608344,
+          "observed_starttime": "39900805",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608413,
+          "observed_starttime": "39900830",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608529,
+          "observed_starttime": "39900851",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608546,
+          "observed_starttime": "39900852",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608580,
+          "observed_starttime": "39900856",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608663,
+          "observed_starttime": "39900899",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608679,
+          "observed_starttime": "39900902",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608714,
+          "observed_starttime": "39900905",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608758,
+          "observed_starttime": "39900912",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608774,
+          "observed_starttime": "39900913",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608846,
+          "observed_starttime": "39900921",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608863,
+          "observed_starttime": "39900925",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2608936,
+          "observed_starttime": "39900937",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609005,
+          "observed_starttime": "39900952",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609079,
+          "observed_starttime": "39900974",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609168,
+          "observed_starttime": "39900994",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609235,
+          "observed_starttime": "39901024",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609349,
+          "observed_starttime": "39901046",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609368,
+          "observed_starttime": "39901047",
+          "actual_wait_exit": 1,
+          "actual_poll_exit": 1,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609488,
+          "observed_starttime": "39901083",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609562,
+          "observed_starttime": "39901091",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609579,
+          "observed_starttime": "39901092",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609595,
+          "observed_starttime": "39901096",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2609663,
+          "observed_starttime": "39901105",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2610349,
+          "observed_starttime": "39902141",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2610365,
+          "observed_starttime": "39902142",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2610379,
+          "observed_starttime": "39902143",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2610395,
+          "observed_starttime": "39902144",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2610410,
+          "observed_starttime": "39902145",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2610427,
+          "observed_starttime": "39902146",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2610444,
+          "observed_starttime": "39902147",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2610459,
+          "observed_starttime": "39902148",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2610476,
+          "observed_starttime": "39902149",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        }
+      ],
+      "cohorts": {
+        "transport16": {
+          "actual_calls": 16,
+          "completed_calls": 16,
+          "HTTP_SQL": {
+            "passed": true,
+            "actual_Main_API_cases": 16,
+            "selected_SQL_tables": 7,
+            "all59_sequence_effects": true,
+            "foreign_Native_tables_and_schema_unchanged": true,
+            "initial_all_foreign_Source_rows_equivalent": false,
+            "cache_parity_qualified": false,
+            "literal_API_body_equal_by_case": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              false,
+              false
+            ],
+            "top_level_JSON_order_equal_by_case": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "Source_original_TCP_authority": false,
+            "full_M8_accepted": false,
+            "performance_measured": false
+          },
+          "GPG": {
+            "passed": true,
+            "actual_children": 13,
+            "actual_homes_removed": 7,
+            "children": [
+              {
+                "pid": 27,
+                "generation": "39900135",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 28,
+                "generation": "39900135",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 29,
+                "generation": "39900146",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 30,
+                "generation": "39900146",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 31,
+                "generation": "39900157",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 32,
+                "generation": "39900157",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 33,
+                "generation": "39900169",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 34,
+                "generation": "39900181",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 35,
+                "generation": "39900181",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 36,
+                "generation": "39900205",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 37,
+                "generation": "39900206",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 38,
+                "generation": "39900218",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 39,
+                "generation": "39900219",
+                "PID_namespace": "pid:[4026534807]"
+              }
+            ],
+            "observed_waits": [
+              {
+                "pid": 27,
+                "generation": "39900135",
+                "exit": 0,
+                "signal": null
+              },
+              {
+                "pid": 28,
+                "generation": "39900135",
+                "exit": 0,
+                "signal": null
+              },
+              {
+                "pid": 29,
+                "generation": "39900146",
+                "exit": 0,
+                "signal": null
+              },
+              {
+                "pid": 30,
+                "generation": "39900146",
+                "exit": 0,
+                "signal": null
+              },
+              {
+                "pid": 31,
+                "generation": "39900157",
+                "exit": 0,
+                "signal": null
+              },
+              {
+                "pid": 32,
+                "generation": "39900157",
+                "exit": 1,
+                "signal": null
+              },
+              {
+                "pid": 33,
+                "generation": "39900169",
+                "exit": 2,
+                "signal": null
+              },
+              {
+                "pid": 34,
+                "generation": "39900181",
+                "exit": 0,
+                "signal": null
+              },
+              {
+                "pid": 35,
+                "generation": "39900181",
+                "exit": 2,
+                "signal": null
+              },
+              {
+                "pid": 36,
+                "generation": "39900205",
+                "exit": 0,
+                "signal": null
+              },
+              {
+                "pid": 37,
+                "generation": "39900206",
+                "exit": 0,
+                "signal": null
+              },
+              {
+                "pid": 38,
+                "generation": "39900218",
+                "exit": 0,
+                "signal": null
+              },
+              {
+                "pid": 39,
+                "generation": "39900219",
+                "exit": 0,
+                "signal": null
+              }
+            ]
+          },
+          "Origin": {
+            "passed": true,
+            "actual_application_requests": 12,
+            "literal_response_bytes_equal": true,
+            "actual_request_header_bytes_equal_by_request": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "TLS_header_byte_parity_qualified": false,
+            "passive_whole_network_clean_claim": false
+          },
+          "actual_Main_exit": 0,
+          "functional_error": {
+            "type": "ValueError",
+            "message": "ExactSourceRedisKeySetNoWarmImportOrMissingVersions"
+          }
+        },
+        "retained24": {
+          "actual_calls": 24,
+          "completed_calls": 24,
+          "HTTP_SQL": {
+            "passed": true,
+            "actual_Main_API_cases": 24,
+            "selected_SQL_tables": 7,
+            "all59_sequence_effects": true,
+            "foreign_Native_tables_and_schema_unchanged": true,
+            "initial_all_foreign_Source_rows_equivalent": false,
+            "cache_parity_qualified": false,
+            "literal_API_body_equal_by_case": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              false,
+              true,
+              true,
+              true,
+              true,
+              false,
+              false,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "top_level_JSON_order_equal_by_case": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "Source_original_TCP_authority": false,
+            "full_M8_accepted": false,
+            "performance_measured": false
+          },
+          "GPG": {
+            "passed": true,
+            "actual_children": 0,
+            "actual_homes_removed": 0,
+            "children": [],
+            "observed_waits": []
+          },
+          "Origin": {
+            "passed": true,
+            "actual_unsigned_reference_requests": 17,
+            "additional_numeric_requests": 0,
+            "retained_header_order_values_equal": true,
+            "Source24_old_planned18_not_relabelled": true,
+            "passive_whole_network_clean_claim": false
+          },
+          "actual_Main_exit": 0,
+          "functional_error": {
+            "type": "ValueError",
+            "message": "ExactSourceRedisKeySetNoWarmImportOrMissingVersions"
+          }
+        },
+        "fresh404": {
+          "actual_calls": 1,
+          "completed_calls": 1,
+          "HTTP_SQL": {
+            "passed": true,
+            "actual_Main_API_cases": 1,
+            "selected_SQL_tables": 7,
+            "all59_sequence_effects": true,
+            "foreign_Native_tables_and_schema_unchanged": true,
+            "initial_all_foreign_Source_rows_equivalent": false,
+            "cache_parity_qualified": false,
+            "literal_API_body_equal_by_case": [
+              true
+            ],
+            "top_level_JSON_order_equal_by_case": [
+              true
+            ],
+            "Source_original_TCP_authority": false,
+            "full_M8_accepted": false,
+            "performance_measured": false
+          },
+          "GPG": {
+            "passed": true,
+            "actual_children": 2,
+            "actual_homes_removed": 1,
+            "children": [
+              {
+                "pid": 15,
+                "generation": "39900891",
+                "PID_namespace": "pid:[4026534807]"
+              },
+              {
+                "pid": 16,
+                "generation": "39900892",
+                "PID_namespace": "pid:[4026534807]"
+              }
+            ],
+            "observed_waits": [
+              {
+                "pid": 15,
+                "generation": "39900891",
+                "exit": 0,
+                "signal": null
+              },
+              {
+                "pid": 16,
+                "generation": "39900892",
+                "exit": 1,
+                "signal": null
+              }
+            ]
+          },
+          "Origin": {
+            "passed": true,
+            "actual_unsigned_reference_requests": 1,
+            "additional_numeric_requests": 1,
+            "retained_header_order_values_equal": true,
+            "Source24_old_planned18_not_relabelled": true,
+            "passive_whole_network_clean_claim": false
+          },
+          "actual_Main_exit": 0,
+          "functional_error": {
+            "type": "ValueError",
+            "message": "ExactSourceRedisKeySetNoWarmImportOrMissingVersions"
+          }
+        }
+      },
+      "reference_requests_complete": 41,
+      "stale_numeric": 200,
+      "loopback_actual_wait_exit": 137,
+      "observer_failure": "Fourth Main PATCH response metadata was not persisted before JSON parsing failed. Do not infer its status from the later attempt."
+    },
+    {
+      "attempt": 2,
+      "raw_report": {
+        "path": "artifacts/rust/milestone-batch3-plugin-startup-finite6-2/report.json",
+        "sha256": "3926e279e6588350cefaa6ce85296198afa0be08d743d540a0cf67610e1bc220",
+        "bytes": 18576
+      },
+      "actual_controller_exit": 2,
+      "no_Source_API_replay": true,
+      "normal_capture_or_cleanup_errors": {
+        "error": {
+          "type": "ValueError",
+          "message": "ActualCommand0"
+        }
+      },
+      "independent_cleanup": {
+        "passed": true,
+        "fresh_queries": 5,
+        "known_host_generations": [
+          {
+            "pid": 2619324,
+            "generation": "39922017",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2619340,
+            "generation": "39922018",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2619634,
+            "generation": "39922126",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2619690,
+            "generation": "39922131",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2619706,
+            "generation": "39922132",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2619776,
+            "generation": "39922143",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2619887,
+            "generation": "39922167",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2619958,
+            "generation": "39922195",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2620077,
+            "generation": "39922216",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2620134,
+            "generation": "39922221",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2620150,
+            "generation": "39922222",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2620517,
+            "generation": "39922827",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2620967,
+            "generation": "39923854",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2620984,
+            "generation": "39923855",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2621000,
+            "generation": "39923856",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2621017,
+            "generation": "39923857",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2621033,
+            "generation": "39923858",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2625665,
+            "generation": "39934620",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2625680,
+            "generation": "39934621",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2625696,
+            "generation": "39934622",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2625712,
+            "generation": "39934623",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2625729,
+            "generation": "39934624",
+            "current": null,
+            "absent": true
+          }
+        ],
+        "receipts": [
+          {
+            "pid": 2625665,
+            "observed_starttime": "39934620",
+            "actual_wait_exit": 0,
+            "actual_poll_exit": 0,
+            "physical_pipes_closed": true,
+            "both_actual_EOF_observed": true,
+            "forced_termination": false,
+            "elapsed_seconds": 0.010122055013198406,
+            "invalid": null,
+            "PID_namespace": "pid:[4026531836]",
+            "capture_complete": true
+          },
+          {
+            "pid": 2625680,
+            "observed_starttime": "39934621",
+            "actual_wait_exit": 0,
+            "actual_poll_exit": 0,
+            "physical_pipes_closed": true,
+            "both_actual_EOF_observed": true,
+            "forced_termination": false,
+            "elapsed_seconds": 0.008585839997977018,
+            "invalid": null,
+            "PID_namespace": "pid:[4026531836]",
+            "capture_complete": true
+          },
+          {
+            "pid": 2625696,
+            "observed_starttime": "39934622",
+            "actual_wait_exit": 0,
+            "actual_poll_exit": 0,
+            "physical_pipes_closed": true,
+            "both_actual_EOF_observed": true,
+            "forced_termination": false,
+            "elapsed_seconds": 0.009656281967181712,
+            "invalid": null,
+            "PID_namespace": "pid:[4026531836]",
+            "capture_complete": true
+          },
+          {
+            "pid": 2625712,
+            "observed_starttime": "39934623",
+            "actual_wait_exit": 0,
+            "actual_poll_exit": 0,
+            "physical_pipes_closed": true,
+            "both_actual_EOF_observed": true,
+            "forced_termination": false,
+            "elapsed_seconds": 0.009181686968076974,
+            "invalid": null,
+            "PID_namespace": "pid:[4026531836]",
+            "capture_complete": true
+          },
+          {
+            "pid": 2625729,
+            "observed_starttime": "39934624",
+            "actual_wait_exit": 0,
+            "actual_poll_exit": 0,
+            "physical_pipes_closed": true,
+            "both_actual_EOF_observed": true,
+            "forced_termination": false,
+            "elapsed_seconds": 0.00982561701675877,
+            "invalid": null,
+            "PID_namespace": "pid:[4026531836]",
+            "capture_complete": true
+          }
+        ]
+      },
+      "normal_cleanup_flag": true,
+      "actual_CLI_receipts": [
+        {
+          "pid": 2619324,
+          "observed_starttime": "39922017",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2619340,
+          "observed_starttime": "39922018",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2619634,
+          "observed_starttime": "39922126",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2619690,
+          "observed_starttime": "39922131",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2619706,
+          "observed_starttime": "39922132",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2619776,
+          "observed_starttime": "39922143",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2619887,
+          "observed_starttime": "39922167",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2619958,
+          "observed_starttime": "39922195",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2620077,
+          "observed_starttime": "39922216",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2620134,
+          "observed_starttime": "39922221",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2620150,
+          "observed_starttime": "39922222",
+          "actual_wait_exit": 1,
+          "actual_poll_exit": 1,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2620517,
+          "observed_starttime": "39922827",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2620967,
+          "observed_starttime": "39923854",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2620984,
+          "observed_starttime": "39923855",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2621000,
+          "observed_starttime": "39923856",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2621017,
+          "observed_starttime": "39923857",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2621033,
+          "observed_starttime": "39923858",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        }
+      ],
+      "capture_complete": false,
+      "actual_HTTP_invocations": 5,
+      "HTTP": [
+        {
+          "label": "first-request",
+          "method": "GET",
+          "path": "/api/plugins/repos/",
+          "status": 200,
+          "body_sha256": "8bb2b7ebc246000e536f40c651f035aa215a5bf69244c5a8f85c088f7e881699",
+          "json": [
+            {
+              "id": 1,
+              "name": "Dispatcharr Official",
+              "url": "https://dispatcharr.github.io/Plugins/manifest.json",
+              "is_official": true,
+              "enabled": true,
+              "public_key": "",
+              "signature_verified": null,
+              "last_fetch_status": "",
+              "last_fetched": null,
+              "created_at": "2026-11-14T17:53:46.100216Z",
+              "updated_at": "2026-11-14T17:53:46.100216Z",
+              "registry_url": "",
+              "plugin_count": 0
+            }
+          ],
+          "physical_close": {
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "timer_joined": true,
+            "request_worker": "calling thread; returned after actual I/O unwind"
+          },
+          "began_monotonic": 399222.45565472,
+          "completed_monotonic": 399222.486386784
+        },
+        {
+          "label": "actual-settings-setter",
+          "method": "PATCH",
+          "path": "/api/core/settings/16/",
+          "status": 405,
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "json": null,
+          "physical_close": {
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "timer_joined": true,
+            "request_worker": "calling thread; returned after actual I/O unwind"
+          },
+          "began_monotonic": 399222.534692551,
+          "completed_monotonic": 399222.54104392
+        },
+        {
+          "label": "immediate-after-setter",
+          "method": "GET",
+          "path": "/api/plugins/repos/",
+          "status": 200,
+          "body_sha256": "8bb2b7ebc246000e536f40c651f035aa215a5bf69244c5a8f85c088f7e881699",
+          "json": [
+            {
+              "id": 1,
+              "name": "Dispatcharr Official",
+              "url": "https://dispatcharr.github.io/Plugins/manifest.json",
+              "is_official": true,
+              "enabled": true,
+              "public_key": "",
+              "signature_verified": null,
+              "last_fetch_status": "",
+              "last_fetched": null,
+              "created_at": "2026-11-14T17:53:46.100216Z",
+              "updated_at": "2026-11-14T17:53:46.100216Z",
+              "registry_url": "",
+              "plugin_count": 0
+            }
+          ],
+          "physical_close": {
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "timer_joined": true,
+            "request_worker": "calling thread; returned after actual I/O unwind"
+          },
+          "began_monotonic": 399222.588532085,
+          "completed_monotonic": 399222.596587351
+        },
+        {
+          "label": "expired-after-setter",
+          "method": "GET",
+          "path": "/api/plugins/repos/",
+          "status": 200,
+          "body_sha256": "8bb2b7ebc246000e536f40c651f035aa215a5bf69244c5a8f85c088f7e881699",
+          "json": [
+            {
+              "id": 1,
+              "name": "Dispatcharr Official",
+              "url": "https://dispatcharr.github.io/Plugins/manifest.json",
+              "is_official": true,
+              "enabled": true,
+              "public_key": "",
+              "signature_verified": null,
+              "last_fetch_status": "",
+              "last_fetched": null,
+              "created_at": "2026-11-14T17:53:46.100216Z",
+              "updated_at": "2026-11-14T17:53:46.100216Z",
+              "registry_url": "",
+              "plugin_count": 0
+            }
+          ],
+          "physical_close": {
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "timer_joined": true,
+            "request_worker": "calling thread; returned after actual I/O unwind"
+          },
+          "began_monotonic": 399227.641111688,
+          "completed_monotonic": 399227.651107899
+        },
+        {
+          "label": "finite-signed-valid",
+          "method": "POST",
+          "path": "/api/plugins/repos/preview/",
+          "status": 200,
+          "body_sha256": "e2f4f42859d987cad075b7346e89c0d0a22133551b004ed9d4a281930afd69d5",
+          "json": {
+            "valid": false,
+            "errors": [
+              "URL resolves to a non-routable address (127.0.0.1) and cannot be fetched."
+            ]
+          },
+          "physical_close": {
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "timer_joined": true,
+            "request_worker": "calling thread; returned after actual I/O unwind"
+          },
+          "began_monotonic": 399227.704138419,
+          "completed_monotonic": 399227.71448325
+        }
+      ],
+      "default6259_unchanged": true,
+      "cache_steps": [
+        {
+          "label": "before-Main-start",
+          "monotonic": 399221.869929744,
+          "system_cache": {
+            "present": false,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773"
+          }
+        },
+        {
+          "label": "after-Main-start-before-HTTP",
+          "monotonic": 399222.330783199,
+          "system_cache": {
+            "present": true,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+            "type": "string",
+            "pttl": 299719,
+            "typed_value": {
+              "time_zone": "UTC"
+            },
+            "value_sha256": "8269f85b5aaac04f8a1dd4508abd81289b7da1431813ee813b54d84515b7bf69",
+            "dump_sha256": "cb8f0ed249101a6694320a0d27edfe07429943506164f51d419df76070e279ae"
+          }
+        },
+        {
+          "label": "first-request",
+          "monotonic": 399222.489314126,
+          "system_cache": {
+            "present": true,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+            "type": "string",
+            "pttl": 299640,
+            "typed_value": {
+              "time_zone": "UTC"
+            },
+            "value_sha256": "8269f85b5aaac04f8a1dd4508abd81289b7da1431813ee813b54d84515b7bf69",
+            "dump_sha256": "cb8f0ed249101a6694320a0d27edfe07429943506164f51d419df76070e279ae"
+          }
+        },
+        {
+          "label": "actual-settings-setter",
+          "monotonic": 399222.543667414,
+          "system_cache": {
+            "present": true,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+            "type": "string",
+            "pttl": 299587,
+            "typed_value": {
+              "time_zone": "UTC"
+            },
+            "value_sha256": "8269f85b5aaac04f8a1dd4508abd81289b7da1431813ee813b54d84515b7bf69",
+            "dump_sha256": "cb8f0ed249101a6694320a0d27edfe07429943506164f51d419df76070e279ae"
+          }
+        },
+        {
+          "label": "immediate-after-setter",
+          "monotonic": 399222.600569023,
+          "system_cache": {
+            "present": true,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+            "type": "string",
+            "pttl": 299529,
+            "typed_value": {
+              "time_zone": "UTC"
+            },
+            "value_sha256": "8269f85b5aaac04f8a1dd4508abd81289b7da1431813ee813b54d84515b7bf69",
+            "dump_sha256": "cb8f0ed249101a6694320a0d27edfe07429943506164f51d419df76070e279ae"
+          }
+        },
+        {
+          "label": "expired-after-setter",
+          "monotonic": 399227.654933946,
+          "system_cache": {
+            "present": true,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+            "type": "string",
+            "pttl": 294473,
+            "typed_value": {
+              "time_zone": "UTC"
+            },
+            "value_sha256": "8269f85b5aaac04f8a1dd4508abd81289b7da1431813ee813b54d84515b7bf69",
+            "dump_sha256": "cb8f0ed249101a6694320a0d27edfe07429943506164f51d419df76070e279ae"
+          }
+        },
+        {
+          "label": "finite-signed-valid",
+          "monotonic": 399227.719707537,
+          "system_cache": {
+            "present": true,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+            "type": "string",
+            "pttl": 294409,
+            "typed_value": {
+              "time_zone": "UTC"
+            },
+            "value_sha256": "8269f85b5aaac04f8a1dd4508abd81289b7da1431813ee813b54d84515b7bf69",
+            "dump_sha256": "cb8f0ed249101a6694320a0d27edfe07429943506164f51d419df76070e279ae"
+          }
+        }
+      ],
+      "raw_capture": {
+        "path": "artifacts/rust/milestone-batch3-plugin-startup-finite6-2/native-startup.json",
+        "sha256": "3309ae8a7bcaecd4cef17b2be41e351e9cd67322e394c020d378c10d100a79f1",
+        "bytes": 1842645
+      },
+      "observer_failure": "Loopback URL correctly rejected by production non-routable guard; observer expected signature_verified and aborted. Changed-signature request was not run."
+    },
+    {
+      "attempt": 3,
+      "raw_report": {
+        "path": "artifacts/rust/milestone-batch3-plugin-finite2-3/report.json",
+        "sha256": "76f8e2d01b7804f80c72cf4a3c5cf073c17c830ce9a58069306f202117c23b0c",
+        "bytes": 23831
+      },
+      "actual_controller_exit": 0,
+      "no_Source_API_replay": true,
+      "normal_capture_or_cleanup_errors": {},
+      "independent_cleanup": {
+        "passed": true,
+        "fresh_queries": 5,
+        "known_host_generations": [
+          {
+            "pid": 2626737,
+            "generation": "39937255",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2626738,
+            "generation": "39937255",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2626755,
+            "generation": "39937256",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2626771,
+            "generation": "39937257",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2626787,
+            "generation": "39937258",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627051,
+            "generation": "39937376",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627107,
+            "generation": "39937381",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627124,
+            "generation": "39937384",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627199,
+            "generation": "39937395",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627268,
+            "generation": "39937419",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627341,
+            "generation": "39937448",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627452,
+            "generation": "39937468",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627507,
+            "generation": "39937473",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627523,
+            "generation": "39937474",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627707,
+            "generation": "39937588",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627723,
+            "generation": "39937590",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627792,
+            "generation": "39937594",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627874,
+            "generation": "39937604",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2627890,
+            "generation": "39937606",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2628594,
+            "generation": "39938639",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2628611,
+            "generation": "39938640",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2628627,
+            "generation": "39938641",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2628643,
+            "generation": "39938642",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2628659,
+            "generation": "39938643",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2631440,
+            "generation": "39944461",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2631456,
+            "generation": "39944462",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2631471,
+            "generation": "39944463",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2631487,
+            "generation": "39944464",
+            "current": null,
+            "absent": true
+          },
+          {
+            "pid": 2631502,
+            "generation": "39944465",
+            "current": null,
+            "absent": true
+          }
+        ],
+        "receipts": [
+          {
+            "pid": 2631440,
+            "observed_starttime": "39944461",
+            "actual_wait_exit": 0,
+            "actual_poll_exit": 0,
+            "physical_pipes_closed": true,
+            "both_actual_EOF_observed": true,
+            "forced_termination": false,
+            "elapsed_seconds": 0.01015879400074482,
+            "invalid": null,
+            "PID_namespace": "pid:[4026531836]",
+            "capture_complete": true
+          },
+          {
+            "pid": 2631456,
+            "observed_starttime": "39944462",
+            "actual_wait_exit": 0,
+            "actual_poll_exit": 0,
+            "physical_pipes_closed": true,
+            "both_actual_EOF_observed": true,
+            "forced_termination": false,
+            "elapsed_seconds": 0.010040060966275632,
+            "invalid": null,
+            "PID_namespace": "pid:[4026531836]",
+            "capture_complete": true
+          },
+          {
+            "pid": 2631471,
+            "observed_starttime": "39944463",
+            "actual_wait_exit": 0,
+            "actual_poll_exit": 0,
+            "physical_pipes_closed": true,
+            "both_actual_EOF_observed": true,
+            "forced_termination": false,
+            "elapsed_seconds": 0.009561115992255509,
+            "invalid": null,
+            "PID_namespace": "pid:[4026531836]",
+            "capture_complete": true
+          },
+          {
+            "pid": 2631487,
+            "observed_starttime": "39944464",
+            "actual_wait_exit": 0,
+            "actual_poll_exit": 0,
+            "physical_pipes_closed": true,
+            "both_actual_EOF_observed": true,
+            "forced_termination": false,
+            "elapsed_seconds": 0.010274236963596195,
+            "invalid": null,
+            "PID_namespace": "pid:[4026531836]",
+            "capture_complete": true
+          },
+          {
+            "pid": 2631502,
+            "observed_starttime": "39944465",
+            "actual_wait_exit": 0,
+            "actual_poll_exit": 0,
+            "physical_pipes_closed": true,
+            "both_actual_EOF_observed": true,
+            "forced_termination": false,
+            "elapsed_seconds": 0.015556010999716818,
+            "invalid": null,
+            "PID_namespace": "pid:[4026531836]",
+            "capture_complete": true
+          }
+        ]
+      },
+      "normal_cleanup_flag": true,
+      "actual_CLI_receipts": [
+        {
+          "pid": 2626737,
+          "observed_starttime": "39937255",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2626738,
+          "observed_starttime": "39937255",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2626755,
+          "observed_starttime": "39937256",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2626771,
+          "observed_starttime": "39937257",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2626787,
+          "observed_starttime": "39937258",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627051,
+          "observed_starttime": "39937376",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627107,
+          "observed_starttime": "39937381",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627124,
+          "observed_starttime": "39937384",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627199,
+          "observed_starttime": "39937395",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627268,
+          "observed_starttime": "39937419",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627341,
+          "observed_starttime": "39937448",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627452,
+          "observed_starttime": "39937468",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627507,
+          "observed_starttime": "39937473",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627523,
+          "observed_starttime": "39937474",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627707,
+          "observed_starttime": "39937588",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627723,
+          "observed_starttime": "39937590",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627792,
+          "observed_starttime": "39937594",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627874,
+          "observed_starttime": "39937604",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2627890,
+          "observed_starttime": "39937606",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2628594,
+          "observed_starttime": "39938639",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2628611,
+          "observed_starttime": "39938640",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2628627,
+          "observed_starttime": "39938641",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2628643,
+          "observed_starttime": "39938642",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        },
+        {
+          "pid": 2628659,
+          "observed_starttime": "39938643",
+          "actual_wait_exit": 0,
+          "actual_poll_exit": 0,
+          "both_actual_EOF_observed": true,
+          "forced_termination": false,
+          "invalid": null,
+          "PID_namespace": "pid:[4026531836]"
+        }
+      ],
+      "capture_complete": true,
+      "actual_HTTP_invocations": 2,
+      "HTTP": [
+        {
+          "label": "finite-signed-valid",
+          "method": "POST",
+          "path": "/api/plugins/repos/preview/",
+          "status": 200,
+          "body_sha256": "1100c9730ccbd36ecc6f1fb87b0121c74b16938aba84e9f09c5e86e5564172b8",
+          "json": {
+            "valid": true,
+            "registry_name": "Owned finite signing fixture",
+            "registry_url": "",
+            "signature_verified": true,
+            "plugin_count": 0,
+            "errors": []
+          },
+          "physical_close": {
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "timer_joined": true,
+            "request_worker": "calling thread; returned after actual I/O unwind"
+          },
+          "began_monotonic": 399375.247388551,
+          "completed_monotonic": 399375.264720995
+        },
+        {
+          "label": "finite-signed-changed",
+          "method": "POST",
+          "path": "/api/plugins/repos/preview/",
+          "status": 200,
+          "body_sha256": "ebe393e6f9eda0037eab0d0ba343a2a3a114597b8fe26fd932cfe743cdb4d9d7",
+          "json": {
+            "valid": true,
+            "registry_name": "Owned changed finite signing fixture",
+            "registry_url": "",
+            "signature_verified": false,
+            "plugin_count": 0,
+            "errors": []
+          },
+          "physical_close": {
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "timer_joined": true,
+            "request_worker": "calling thread; returned after actual I/O unwind"
+          },
+          "began_monotonic": 399375.312765163,
+          "completed_monotonic": 399375.32642549
+        }
+      ],
+      "default6259_unchanged": true,
+      "cache_steps": [
+        {
+          "label": "before-Main-start",
+          "monotonic": 399374.389668055,
+          "system_cache": {
+            "present": false,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773"
+          }
+        },
+        {
+          "label": "after-Main-start-before-HTTP",
+          "monotonic": 399374.850064046,
+          "system_cache": {
+            "present": true,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+            "type": "string",
+            "pttl": 299714,
+            "typed_value": {
+              "time_zone": "UTC"
+            },
+            "value_sha256": "8269f85b5aaac04f8a1dd4508abd81289b7da1431813ee813b54d84515b7bf69",
+            "dump_sha256": "cb8f0ed249101a6694320a0d27edfe07429943506164f51d419df76070e279ae"
+          }
+        },
+        {
+          "label": "finite-signed-valid",
+          "monotonic": 399375.267445554,
+          "system_cache": {
+            "present": true,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+            "type": "string",
+            "pttl": 299382,
+            "typed_value": {
+              "time_zone": "UTC"
+            },
+            "value_sha256": "8269f85b5aaac04f8a1dd4508abd81289b7da1431813ee813b54d84515b7bf69",
+            "dump_sha256": "cb8f0ed249101a6694320a0d27edfe07429943506164f51d419df76070e279ae"
+          }
+        },
+        {
+          "label": "finite-signed-changed",
+          "monotonic": 399375.330025914,
+          "system_cache": {
+            "present": true,
+            "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+            "type": "string",
+            "pttl": 299321,
+            "typed_value": {
+              "time_zone": "UTC"
+            },
+            "value_sha256": "8269f85b5aaac04f8a1dd4508abd81289b7da1431813ee813b54d84515b7bf69",
+            "dump_sha256": "cb8f0ed249101a6694320a0d27edfe07429943506164f51d419df76070e279ae"
+          }
+        }
+      ],
+      "raw_capture": {
+        "path": "artifacts/rust/milestone-batch3-plugin-finite2-3/native-startup.json",
+        "sha256": "76c3cccfb609f8920be13d04e7a0de6ea0bc4d55347a2957eb0a137c76f59058",
+        "bytes": 1204368
+      },
+      "actual_normal_Main_exit": 0,
+      "GPG": {
+        "passed": true,
+        "actual_children": 4,
+        "actual_homes_removed": 2,
+        "children": [
+          {
+            "pid": 9,
+            "generation": "39937525",
+            "PID_namespace": "pid:[4026534226]"
+          },
+          {
+            "pid": 10,
+            "generation": "39937525",
+            "PID_namespace": "pid:[4026534226]"
+          },
+          {
+            "pid": 11,
+            "generation": "39937531",
+            "PID_namespace": "pid:[4026534226]"
+          },
+          {
+            "pid": 12,
+            "generation": "39937532",
+            "PID_namespace": "pid:[4026534226]"
+          }
+        ],
+        "observed_waits": [
+          {
+            "pid": 9,
+            "generation": "39937525",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 10,
+            "generation": "39937525",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 11,
+            "generation": "39937531",
+            "exit": 0,
+            "signal": null
+          },
+          {
+            "pid": 12,
+            "generation": "39937532",
+            "exit": 1,
+            "signal": null
+          }
+        ],
+        "reference_scope": "Import success required; verify statuses from actual owned tool GPG over Python Original canonical bytes, not Source application/API replay"
+      },
+      "actual_live_Main_namespace_absence": {
+        "passed": true,
+        "actual_children": [
+          {
+            "pid": 9,
+            "generation": "39937525",
+            "PID_namespace": "pid:[4026534226]"
+          },
+          {
+            "pid": 10,
+            "generation": "39937525",
+            "PID_namespace": "pid:[4026534226]"
+          },
+          {
+            "pid": 11,
+            "generation": "39937531",
+            "PID_namespace": "pid:[4026534226]"
+          },
+          {
+            "pid": 12,
+            "generation": "39937532",
+            "PID_namespace": "pid:[4026534226]"
+          }
+        ],
+        "stdout": "",
+        "inside_actual_Main_PID_namespace": true
+      },
+      "asset_reuse": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch3-plugin48-1/finite-assets",
+        "report_sha256": "fe6d113c828263e909ab48435ab6cad19fa1faa2928d9ca4943512d85f0ce62e",
+        "private_home_already_removed": true,
+        "new_key_generations": 0
+      },
+      "production_finite_capability_scope": "Positive Python canonical finite numeric/arbitrary integer/Unicode signature and changed-document negative; no Source API invocation"
+    }
+  ],
+  "conclusions": {
+    "retained_reference41_HTTP_SQL_GPG_Origin_current_image_passed": true,
+    "stale_numeric200_false_current_finite_mode": true,
+    "actual_preHTTP_Main_cache_warm_matches_Source_normal_startup": true,
+    "actual_Main_settings_PATCH": 405,
+    "Main_Core51_composition_required": true,
+    "fresh_finite_positive200_true_and_changed200_false": true,
+    "all_owned_resources_and_generations_independently_absent": true,
+    "normal_cleanup_loopback137_preserved": true,
+    "prior_e88_strict_controller2_preserved": true,
+    "Source41_API_replays": 0,
+    "new_performance_claims": false,
+    "full_M8_accepted": false,
+    "adversarial_Plugin_drain_qualified": false
+  },
+  "provenance_limit": "Attempt2 exact guest/tool bytes retained; its host controller was changed for finite-only resumption before a separate immutable host copy was made. Do not claim a complete exact host-tool closure for that negative attempt."
+}

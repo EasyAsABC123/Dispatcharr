@@ -30,7 +30,8 @@ and the grouped acceptance workflow needed before enabling scheduling.
 
 The [next combined fix](rust-milestone-batch4.md) now passes all workspace checks
 and 890 default tests. It assembles settings writes and the no-rules branch;
-its Docker/Main acceptance is pending. The failed runtime observations above
+its Docker build and all11 clean-install/React checks also pass. Affected
+job/settings Main acceptance is pending. The failed runtime observations above
 remain attached to their original image.
 
 The [current Core settings library validation](rust-core-settings-current-validation.md) passes whole-workspace formatting, compilation, strict checks and 725 default tests (736 ignored). Its historical component qualifies 32 requests and seven finite ownership predicates; Main integration and full M5 remain open.

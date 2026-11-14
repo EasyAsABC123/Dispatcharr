@@ -31,6 +31,9 @@ Finite signing numbers reuse the existing Python-compatible normalization and
 formatting before ASCII/surrogate escaping and LF. Nonfinite/capacity domains
 remain explicit. Subsequent Docker execution verified a fresh Python-signed
 finite numeric/Unicode manifest and rejected its changed counterpart.
+The [actual plugin/cache attempts](../scripts/rust-milestone-batches/m478/batch3_evidence/README.md)
+preserve the passing reference/signature scope, PATCH405 and original controller
+and cleanup failures with independent absence checks.
 
 The [single Docker build and installed-file probes](rust-milestone-batch3-build.md)
 pass. The [packaged M6 cohort](rust-m6-packaged-main-batch3.md) subsequently passed
