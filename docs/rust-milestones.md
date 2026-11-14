@@ -9,16 +9,16 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The latest runtime is `bfb4086fe6d65a9db5151e95b478f76b2094bc90`:
-[888 default tests pass](rust-milestone-batch3.md), with 751 external-fixture
-tests ignored. Its [Docker image](rust-milestone-batch3-build.md) preserves the
-React assets and original credits. The [packaged job cohort](rust-m6-packaged-main-batch3.md)
-passes 170 assertions, including API-produced descendants, artwork and a failed
-SQL task followed by continued work. These are scoped integration results.
+The latest runtime is `9440a31973978e6c8efe144912525c59fa3f260f`:
+[890 default tests pass](rust-milestone-batch4.md), with 751 external-fixture
+tests ignored. Its [Docker image](rust-milestone-batch4-build.md) preserves the
+React assets and original credits, and [all11 clean-install/React checks pass](rust-milestone-batch4-clean-install.md).
+The [packaged job cohort](rust-m6-packaged-main-batch4.md) passes191 assertions:
+configured-rule artwork, actual settings PATCH200, a second real import with
+empty rules, and a failed SQL task followed by continued work. These are scoped
+integration results; full settings/plugin acceptance remains pending.
 
-Actual Main still returns 405 for settings writes. The default Series worker
-also needs the Source no-rules branch for fresh installs, and the complete
-scheduler/worker graph remains unfinished. The latest
+The complete scheduler/worker graph remains unfinished. The latest
 [resource preflight](rust-milestone-batch2-resource-preflight.md) failed its
 frozen useful-work checks before any Rust measurement; no new performance gain
 is accepted. All M0–M9 gates below remain open. Older results retain their
@@ -28,11 +28,9 @@ The [default worker graph audit](rust-default-worker-graph.md) lists all fourtee
 task families, the eight missing Main integrations, reusable implementations,
 and the grouped acceptance workflow needed before enabling scheduling.
 
-The [next combined fix](rust-milestone-batch4.md) now passes all workspace checks
-and 890 default tests. It assembles settings writes and the no-rules branch;
-its Docker build and all11 clean-install/React checks also pass. Affected
-job/settings Main acceptance is pending. The failed runtime observations above
-remain attached to their original image.
+The earlier [PATCH405 and plugin attempts](../scripts/rust-milestone-batches/m478/batch3_evidence/README.md)
+remain attached to their original image; the subsequent passing setter workflow
+does not rewrite those failures.
 
 The [current Core settings library validation](rust-core-settings-current-validation.md) passes whole-workspace formatting, compilation, strict checks and 725 default tests (736 ignored). Its historical component qualifies 32 requests and seven finite ownership predicates; Main integration and full M5 remain open.
 

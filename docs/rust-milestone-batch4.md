@@ -27,11 +27,10 @@ configured preflight.
 
 The [shared Docker build and physical probes](rust-milestone-batch4-build.md)
 pass, as does the [complete clean-install/React regression](rust-milestone-batch4-clean-install.md).
-Remaining runtime acceptance covers the complete configured-rule job cohort,
-then an actual settings PATCH and a second import with no rules, using packaged
-data paths without a Source tree mounted in Main. Run the full settings/plugin
-cohort and clean-install React regression against that same committed image.
-The previous Main PATCH405 remains failed evidence until this candidate passes
-the actual workflow. The [default worker audit](rust-default-worker-graph.md)
+The [affected job cohort](rust-m6-packaged-main-batch4.md) passes191 assertions:
+the configured-rule chain, actual settings PATCH200 and second real import with
+no rules, using packaged data paths without a Source tree mounted in Main.
+Full settings/plugin acceptance remains pending. The previous Main PATCH405
+remains failed evidence on its original image. The [default worker audit](rust-default-worker-graph.md)
 records the broader missing graph. No full milestone or performance gain is
 accepted by these SDK results.

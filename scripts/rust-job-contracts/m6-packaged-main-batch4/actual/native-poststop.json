@@ -1,0 +1,337 @@
+{
+  "utc": "2026-11-14T18:15:45.083633+00:00",
+  "native_stopped_before_capture": true,
+  "media_files": {
+    "m6-tvg/input.xml": {
+      "bytes": 241,
+      "sha256": "743df3f94f4e139c854f0eb1a8ff3183eb1aa52ee5db6ae0eeb73059e0f62826"
+    },
+    "rust-owned-parented-artwork/guide.xml": {
+      "bytes": 377,
+      "sha256": "d0a945475600484ab7a183c2aae3e364ce719c0f1fc2af990c0e19dfa6c93027"
+    },
+    "rust-owned-parented-artwork/logo.png": {
+      "bytes": 68,
+      "sha256": "9f81650ff972f04ecb98e05d93c4cc65f22fb721385b8529d3ae3c00d479f786"
+    }
+  },
+  "queues": {
+    "celery": []
+  },
+  "backend": {
+    "celery-tasks:celery-task-meta-0550fe55-1ae1-4dd0-836c-bd0343f8f9a1": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MS43MDQ0MzYrMDA6MDAiLCJwYXJlbnRfaWQiOiI1MWQ4MTU3OC00NzlhLTRmNzItYmM3ZC00YmY4MGQ0OGJmODIiLCJ0YXNrX2lkIjoiMDU1MGZlNTUtMWFlMS00ZGQwLTgzNmMtYmQwMzQzZjhmOWExIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:41.704436+00:00",
+        "parent_id": "51d81578-479a-4f72-bc7d-4bf80d48bf82",
+        "task_id": "0550fe55-1ae1-4dd0-836c-bd0343f8f9a1"
+      },
+      "ttl": 3597
+    },
+    "celery-tasks:celery-task-meta-06aae506-ef5a-45a9-b04c-a7c212f1d046": {
+      "raw_base64": "eyJzdGF0dXMiOiJGQUlMVVJFIiwicmVzdWx0Ijp7ImV4Y190eXBlIjoiUHJvZ3JhbW1pbmdFcnJvciIsImV4Y19tZXNzYWdlIjpbIm93bmVkIE02IHByb2dyYW1tZSBpbnNlcnRcbkNPTlRFWFQ6ICBQTC9wZ1NRTCBmdW5jdGlvbiBtNl9jODkyM2UyMTA2X2luc2VydF9ndWFyZCgpIGxpbmUgMSBhdCBSQUlTRSJdLCJleGNfbW9kdWxlIjoiZGphbmdvLmRiLnV0aWxzIn0sInRyYWNlYmFjayI6Ik5hdGl2ZSBEaXNwYXRjaGFyciBwZXItY2hhbm5lbCBwcm9ncmFtbWUgdGFzayBkaWFnbm9zdGljIFtwcm9ncmFtbWVfaW5zZXJ0XTogb3duZWQgTTYgcHJvZ3JhbW1lIGluc2VydFxuQ09OVEVYVDogIFBML3BnU1FMIGZ1bmN0aW9uIG02X2M4OTIzZTIxMDZfaW5zZXJ0X2d1YXJkKCkgbGluZSAxIGF0IFJBSVNFIiwiY2hpbGRyZW4iOltdLCJkYXRlX2RvbmUiOiIyMDI2LTExLTE0VDE4OjE1OjQxLjQzNjM5MiswMDowMCIsInRhc2tfaWQiOiIwNmFhZTUwNi1lZjVhLTQ1YTktYjA0Yy1hN2MyMTJmMWQwNDYifQ==",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "ProgrammingError",
+          "exc_message": [
+            "owned M6 programme insert\nCONTEXT:  PL/pgSQL function m6_c8923e2106_insert_guard() line 1 at RAISE"
+          ],
+          "exc_module": "django.db.utils"
+        },
+        "traceback": "Native Dispatcharr per-channel programme task diagnostic [programme_insert]: owned M6 programme insert\nCONTEXT:  PL/pgSQL function m6_c8923e2106_insert_guard() line 1 at RAISE",
+        "children": [],
+        "date_done": "2026-11-14T18:15:41.436392+00:00",
+        "task_id": "06aae506-ef5a-45a9-b04c-a7c212f1d046"
+      },
+      "ttl": 3596
+    },
+    "celery-tasks:celery-task-meta-0b6f7317-0f31-44f4-ac6c-06f805133c0b": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MS4yMzExMjIrMDA6MDAiLCJ0YXNrX2lkIjoiMGI2ZjczMTctMGYzMS00NGY0LWFjNmMtMDZmODA1MTMzYzBiIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:41.231122+00:00",
+        "task_id": "0b6f7317-0f31-44f4-ac6c-06f805133c0b"
+      },
+      "ttl": 3596
+    },
+    "celery-tasks:celery-task-meta-0d510df9-ea49-4cef-ba7c-55f525350573": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MS4xMTY2MjcrMDA6MDAiLCJ0YXNrX2lkIjoiMGQ1MTBkZjktZWE0OS00Y2VmLWJhN2MtNTVmNTI1MzUwNTczIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:41.116627+00:00",
+        "task_id": "0d510df9-ea49-4cef-ba7c-55f525350573"
+      },
+      "ttl": 3596
+    },
+    "celery-tasks:celery-task-meta-37de5d73-2c5c-477c-a9a1-1b3c3a5687d3": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbW1siNTdlYTVkZTgtMGZjNC00ZDg0LWIzOTMtMWFiZTk1MzlkNzk4IixudWxsXSxudWxsXSxbWyJlYWZlOGE4Mi1jZmJjLTQ4NDAtYWVmMC0zOThkNDc3MTBkYmIiLG51bGxdLG51bGxdXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0My4wMzg4OTgrMDA6MDAiLCJ0YXNrX2lkIjoiMzdkZTVkNzMtMmM1Yy00NzdjLWE5YTEtMWIzYzNhNTY4N2QzIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "57ea5de8-0fc4-4d84-b393-1abe9539d798",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "eafe8a82-cfbc-4840-aef0-398d47710dbb",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-14T18:15:43.038898+00:00",
+        "task_id": "37de5d73-2c5c-477c-a9a1-1b3c3a5687d3"
+      },
+      "ttl": 3598
+    },
+    "celery-tasks:celery-task-meta-3b4bbc83-b2c3-430a-ae77-d28a5e267c28": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0Ijoib2siLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0Mi44MjI4MjcrMDA6MDAiLCJwYXJlbnRfaWQiOiI5ZGU4NTFhNy0yNWNjLTRjODItOGM0MC1jY2YyZTk0ZGM0OGIiLCJ0YXNrX2lkIjoiM2I0YmJjODMtYjJjMy00MzBhLWFlNzctZDI4YTVlMjY3YzI4In0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "ok",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:42.822827+00:00",
+        "parent_id": "9de851a7-25cc-4c82-8c40-ccf2e94dc48b",
+        "task_id": "3b4bbc83-b2c3-430a-ae77-d28a5e267c28"
+      },
+      "ttl": 3598
+    },
+    "celery-tasks:celery-task-meta-4db5d734-d18a-4e73-8d1b-ce4536860080": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MC42MDA5NjIrMDA6MDAiLCJ0YXNrX2lkIjoiNGRiNWQ3MzQtZDE4YS00ZTczLThkMWItY2U0NTM2ODYwMDgwIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:40.600962+00:00",
+        "task_id": "4db5d734-d18a-4e73-8d1b-ce4536860080"
+      },
+      "ttl": 3596
+    },
+    "celery-tasks:celery-task-meta-51d81578-479a-4f72-bc7d-4bf80d48bf82": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbW1siMDU1MGZlNTUtMWFlMS00ZGQwLTgzNmMtYmQwMzQzZjhmOWExIixudWxsXSxudWxsXSxbWyI5ZGU4NTFhNy0yNWNjLTRjODItOGM0MC1jY2YyZTk0ZGM0OGIiLG51bGxdLG51bGxdXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MS42MjM2NDcrMDA6MDAiLCJ0YXNrX2lkIjoiNTFkODE1NzgtNDc5YS00ZjcyLWJjN2QtNGJmODBkNDhiZjgyIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "0550fe55-1ae1-4dd0-836c-bd0343f8f9a1",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "9de851a7-25cc-4c82-8c40-ccf2e94dc48b",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-14T18:15:41.623647+00:00",
+        "task_id": "51d81578-479a-4f72-bc7d-4bf80d48bf82"
+      },
+      "ttl": 3597
+    },
+    "celery-tasks:celery-task-meta-57ea5de8-0fc4-4d84-b393-1abe9539d798": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0My4xMjA3MjUrMDA6MDAiLCJwYXJlbnRfaWQiOiIzN2RlNWQ3My0yYzVjLTQ3N2MtYTlhMS0xYjNjM2E1Njg3ZDMiLCJ0YXNrX2lkIjoiNTdlYTVkZTgtMGZjNC00ZDg0LWIzOTMtMWFiZTk1MzlkNzk4In0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:43.120725+00:00",
+        "parent_id": "37de5d73-2c5c-477c-a9a1-1b3c3a5687d3",
+        "task_id": "57ea5de8-0fc4-4d84-b393-1abe9539d798"
+      },
+      "ttl": 3598
+    },
+    "celery-tasks:celery-task-meta-735c373e-44ee-44e8-b4a0-f665979a0c7e": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0Ijoib2siLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0Mi45MjkyMjErMDA6MDAiLCJwYXJlbnRfaWQiOiI5ZGU4NTFhNy0yNWNjLTRjODItOGM0MC1jY2YyZTk0ZGM0OGIiLCJ0YXNrX2lkIjoiNzM1YzM3M2UtNDRlZS00NGU4LWI0YTAtZjY2NTk3OWEwYzdlIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "ok",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:42.929221+00:00",
+        "parent_id": "9de851a7-25cc-4c82-8c40-ccf2e94dc48b",
+        "task_id": "735c373e-44ee-44e8-b4a0-f665979a0c7e"
+      },
+      "ttl": 3598
+    },
+    "celery-tasks:celery-task-meta-7ebba38b-1dda-4a80-9c3f-4ef40de84627": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MS4wMDI0NTgrMDA6MDAiLCJ0YXNrX2lkIjoiN2ViYmEzOGItMWRkYS00YTgwLTljM2YtNGVmNDBkZTg0NjI3In0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:41.002458+00:00",
+        "task_id": "7ebba38b-1dda-4a80-9c3f-4ef40de84627"
+      },
+      "ttl": 3596
+    },
+    "celery-tasks:celery-task-meta-926b8e74-79b2-4e29-a22e-fe54b33c7a0c": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MS41NTAyMTMrMDA6MDAiLCJ0YXNrX2lkIjoiOTI2YjhlNzQtNzliMi00ZTI5LWEyMmUtZmU1NGIzM2M3YTBjIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:41.550213+00:00",
+        "task_id": "926b8e74-79b2-4e29-a22e-fe54b33c7a0c"
+      },
+      "ttl": 3596
+    },
+    "celery-tasks:celery-task-meta-9bddcec8-8ec7-4096-8559-8a6f670ce46c": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MS4zMzczNjUrMDA6MDAiLCJ0YXNrX2lkIjoiOWJkZGNlYzgtOGVjNy00MDk2LTg1NTktOGE2ZjY3MGNlNDZjIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:41.337365+00:00",
+        "task_id": "9bddcec8-8ec7-4096-8559-8a6f670ce46c"
+      },
+      "ttl": 3596
+    },
+    "celery-tasks:celery-task-meta-9de851a7-25cc-4c82-8c40-ccf2e94dc48b": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0Ijp7InNjaGVkdWxlZCI6MSwiZGV0YWlscyI6W3sidHZnX2lkIjoicnVzdC5vd25lZC5wYXJlbnRlZC5hcnR3b3JrIiwidGl0bGUiOiJPd25lZCBQYXJlbnRlZCBBcnR3b3JrIiwic3RhdHVzIjoib2siLCJjcmVhdGVkIjoxfV19LCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbW1siM2I0YmJjODMtYjJjMy00MzBhLWFlNzctZDI4YTVlMjY3YzI4IixudWxsXSxudWxsXSxbWyI3MzVjMzczZS00NGVlLTQ0ZTgtYjRhMC1mNjY1OTc5YTBjN2UiLG51bGxdLG51bGxdXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MS44MTQ0MzMrMDA6MDAiLCJwYXJlbnRfaWQiOiI1MWQ4MTU3OC00NzlhLTRmNzItYmM3ZC00YmY4MGQ0OGJmODIiLCJ0YXNrX2lkIjoiOWRlODUxYTctMjVjYy00YzgyLThjNDAtY2NmMmU5NGRjNDhiIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": {
+          "scheduled": 1,
+          "details": [
+            {
+              "tvg_id": "rust.owned.parented.artwork",
+              "title": "Owned Parented Artwork",
+              "status": "ok",
+              "created": 1
+            }
+          ]
+        },
+        "traceback": null,
+        "children": [
+          [
+            [
+              "3b4bbc83-b2c3-430a-ae77-d28a5e267c28",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "735c373e-44ee-44e8-b4a0-f665979a0c7e",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-14T18:15:41.814433+00:00",
+        "parent_id": "51d81578-479a-4f72-bc7d-4bf80d48bf82",
+        "task_id": "9de851a7-25cc-4c82-8c40-ccf2e94dc48b"
+      },
+      "ttl": 3597
+    },
+    "celery-tasks:celery-task-meta-b0c520d8-c8e7-4393-afe4-abc9627d3255": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MC44MTE0MTArMDA6MDAiLCJ0YXNrX2lkIjoiYjBjNTIwZDgtYzhlNy00MzkzLWFmZTQtYWJjOTYyN2QzMjU1In0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:40.811410+00:00",
+        "task_id": "b0c520d8-c8e7-4393-afe4-abc9627d3255"
+      },
+      "ttl": 3596
+    },
+    "celery-tasks:celery-task-meta-b81fe082-1fbc-4b72-a683-c9e98a9cf14b": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjoiRVBHIG5vdCBmb3VuZCIsInRyYWNlYmFjayI6bnVsbCwiY2hpbGRyZW4iOltdLCJkYXRlX2RvbmUiOiIyMDI2LTExLTE0VDE4OjE1OjQwLjcwNjE0OSswMDowMCIsInRhc2tfaWQiOiJiODFmZTA4Mi0xZmJjLTRiNzItYTY4My1jOWU5OGE5Y2YxNGIifQ==",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG not found",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:40.706149+00:00",
+        "task_id": "b81fe082-1fbc-4b72-a683-c9e98a9cf14b"
+      },
+      "ttl": 3596
+    },
+    "celery-tasks:celery-task-meta-eafe8a82-cfbc-4840-aef0-398d47710dbb": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0Ijp7InNjaGVkdWxlZCI6MCwiZGV0YWlscyI6W119LCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0My4xMjg0NzQrMDA6MDAiLCJwYXJlbnRfaWQiOiIzN2RlNWQ3My0yYzVjLTQ3N2MtYTlhMS0xYjNjM2E1Njg3ZDMiLCJ0YXNrX2lkIjoiZWFmZThhODItY2ZiYy00ODQwLWFlZjAtMzk4ZDQ3NzEwZGJiIn0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": {
+          "scheduled": 0,
+          "details": []
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:43.128474+00:00",
+        "parent_id": "37de5d73-2c5c-477c-a9a1-1b3c3a5687d3",
+        "task_id": "eafe8a82-cfbc-4840-aef0-398d47710dbb"
+      },
+      "ttl": 3598
+    },
+    "celery-tasks:celery-task-meta-f8dbb52b-70fa-428f-b1df-f93d7cd2f3c5": {
+      "raw_base64": "eyJzdGF0dXMiOiJTVUNDRVNTIiwicmVzdWx0IjpudWxsLCJ0cmFjZWJhY2siOm51bGwsImNoaWxkcmVuIjpbXSwiZGF0ZV9kb25lIjoiMjAyNi0xMS0xNFQxODoxNTo0MC45MTY3NjArMDA6MDAiLCJ0YXNrX2lkIjoiZjhkYmI1MmItNzBmYS00MjhmLWIxZGYtZjkzZDdjZDJmM2M1In0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-14T18:15:40.916760+00:00",
+        "task_id": "f8dbb52b-70fa-428f-b1df-f93d7cd2f3c5"
+      },
+      "ttl": 3596
+    }
+  },
+  "recordings": [
+    {
+      "id": 1,
+      "channel_id": 2,
+      "start_time": "2026-11-14 22:15:39+00:00",
+      "end_time": "2026-11-14 23:15:39+00:00",
+      "task_id": "dvr-recording-1",
+      "custom_properties": {
+        "season": 1,
+        "episode": 1,
+        "program": {
+          "id": 4,
+          "title": "Owned Parented Artwork",
+          "season": 1,
+          "tvg_id": "rust.owned.parented.artwork",
+          "episode": 1,
+          "end_time": "2026-11-14T23:15:39+00:00",
+          "sub_title": "Owned Episode One",
+          "start_time": "2026-11-14T22:15:39+00:00",
+          "description": null,
+          "epg_source_id": 3,
+          "onscreen_episode": null,
+          "original_air_date": ""
+        },
+        "poster_logo_id": 1
+      }
+    }
+  ]
+}
