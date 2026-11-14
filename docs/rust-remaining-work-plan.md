@@ -26,8 +26,13 @@ The next [combined worker/profile/plugin candidate](rust-milestone-batch2.md)
 passes whole-workspace checks with882 tests passed/751 ignored. Its36-path
 integration adds configured-Series lineage, the normal version worker, shared
 input-profile processes, resolver memory bounds and HTTPS/GPG paths. Packaged
-functional checks on this candidate remain pending; earlier image results do
-not transfer to it.
+results now include the [new-image React regression](rust-milestone-batch2-clean-install.md),
+[33 shared-input media checks](rust-milestone-batch2-profile.md),
+[nine job consumers and a real API parent chain](rust-m6-packaged-main-batch2.md),
+and [41 plugin HTTP/SQL comparisons](rust-m478-batch-progress.md). These qualify
+their stated subsets. P0001 failure completion, queued artwork, full cache/request
+context, broader formats and other matrix cells remain open. No whole milestone
+or new performance gain is accepted; earlier image results do not transfer.
 
 The earlier opt-in component composition is
 [current892](../scripts/rust-component-checkpoints/current892/README.md).
