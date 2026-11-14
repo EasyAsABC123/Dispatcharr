@@ -448,3 +448,9 @@ pub mod recording_local_artwork;
 
 mod core_settings_writes;
 pub use core_settings_writes::CoreSettingsWrites;
+
+pub mod recording_beat_cleanup;
+pub mod recording_capture;
+
+#[cfg(test)]
+mod recording_sql_schema_peer;

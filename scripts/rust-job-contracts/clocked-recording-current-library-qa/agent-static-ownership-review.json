@@ -1,0 +1,28 @@
+{
+  "review": "static adversarial production-only ownership read; no app/build/tests",
+  "source_map_sha256": "b5b58fdf2450711cf7c01c3a47ae15a5ead569de1a68dfeb06a960b4e56ecd40",
+  "read_sources": {
+    "rust/crates/job-transport/src/recording_dvr.rs": "25966d199911166bc9d421faf0477393820016d3eec0fd17dcd8c4ad1017f971",
+    "rust/crates/job-transport/src/recording_root.rs": "a60aa8764e3de8a02a9d289a496492868c68808dba11b5efad7428275856037b",
+    "rust/crates/job-transport/src/recording_process.rs": "723ab9affae85718b2d93ae35b9890f30a1b25fc3e2c7b08b7add2e7c42d0cde",
+    "rust/crates/job-transport/src/recording_files.rs": "3c4f665ed80abd09348e64074e836bf64ff6cfcd24a5e3316d2be23b30c40c56"
+  },
+  "concrete_new_blockers_within_declared_owned_namespace_normal_domain": [],
+  "checked": [
+    "root read-only admission; parent/root inode+UID+nofollow descriptor revalidation; mkdir only at owned task boundary, EEXIST not adopted",
+    "signal actual unreaped Child only, positive pid/start/pgid; no envelope process id",
+    "OS wait and stderr drain/join under original owner; emergency drop never normal success",
+    "detached operation owner survives outer observer loss",
+    "postclaim operational error poisons and retains exact actor self-reference/original owner/transcript"
+  ],
+  "explicit_limits": [
+    "root descriptor pins directory but later FFmpeg absolute paths require exclusively owned no-concurrent-rename namespace; no hostile namespace proof",
+    "postclaim uncertainty requires owned process exit; no recovery/drained live/defaultworker-ready claim",
+    "remux loop internal deadline30minutes; captured short normalfixture task180 is not a universal production runtime/cleanup bound",
+    "blocking pipe joins/wait may exceed logical deadline; physical retention rather than fabricated bounded settlement",
+    "SIGINT ESRCH remains negative then actual wait/join; no terminal success inferred",
+    "no panic/process-crash general recovery qualification",
+    "same-value foreign literal active key ambiguity remains refused/open"
+  ],
+  "runtime_changed": false
+}

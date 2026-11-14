@@ -203,3 +203,18 @@ mod recording_artwork_peer;
 
 // Producer-envelope data only; no task registry, ACK or execution authority.
 pub mod clocked_recording_envelope;
+
+mod recording_active;
+mod recording_cleanup;
+pub mod recording_dvr;
+mod recording_events;
+mod recording_files;
+mod recording_normal;
+mod recording_process;
+mod recording_settings;
+
+#[cfg(test)]
+mod recording_dvr_peer;
+
+#[cfg(test)]
+mod recording_dvr_physical_peer;

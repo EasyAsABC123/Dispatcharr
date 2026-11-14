@@ -2,6 +2,8 @@
 //! Original Dispatcharr authors retain application credit and AGPL licensing.
 #[path = "recording_artwork_transport.rs"]
 mod recording_artwork_transport;
+#[path = "recording_dvr_transport.rs"]
+mod recording_dvr_transport;
 #[cfg(test)]
 pub(crate) use recording_artwork_transport::parse_fixture as parse_local_artwork_fixture;
 #[cfg(test)]
@@ -104,6 +106,7 @@ fn endpoint(raw: &str, db: i64) -> Result<(), Error> {
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Authority {
+    Dvr,
     LocalArtwork,
     #[cfg(test)]
     LocalArtworkFixture,
@@ -115,6 +118,23 @@ enum Authority {
     Backup,
 }
 impl Jobs {
+    // Positive allowlist preserves every old role truth table, including the
+    // existing cfgtest LocalArtworkFixture behavior. New DVR is never admitted
+    // to any of the13 generic Index/ETA methods merely by adding an enum variant.
+    fn generic_index_authorized(&self) -> bool {
+        if matches!(
+            self.inner.authority,
+            Authority::Fixture | Authority::Index | Authority::Refresh
+        ) {
+            return true;
+        }
+        #[cfg(test)]
+        if self.inner.authority == Authority::LocalArtworkFixture {
+            return true;
+        }
+        false
+    }
+
     /// Test-only authority: copied DB + isolated loopback RedisDB8/9. There is
     /// deliberately no production constructor or implicit default namespace.
     pub async fn connect_fixture(
@@ -290,13 +310,7 @@ impl Jobs {
         &self,
         limits: crate::eta::Limits,
     ) -> Result<Arc<crate::eta::Pool>, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         if self.inner.closed.load(Ordering::Acquire) {
@@ -743,13 +757,7 @@ impl Jobs {
         id: Uuid,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller)?;
@@ -784,13 +792,7 @@ impl Jobs {
         id: Uuid,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<crate::index_protocol::IndexResult>, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller)?;
@@ -870,13 +872,7 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<Option<crate::eta::Candidate>, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         let pool = self.eta_pool(limits)?;
@@ -910,13 +906,7 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<crate::eta::Reservation, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         let pool = self.eta_pool(limits)?;
@@ -937,13 +927,7 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<crate::eta::Reservation, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         let expected = crate::eta::Reservation::new_shared(
@@ -1123,13 +1107,7 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<Option<crate::eta::Reservation>, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         let Some(candidate) = self.peek_index_candidate(caller.clone(), limits).await? else {
@@ -1148,13 +1126,7 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<Option<crate::eta::Reservation>, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         let pool = self.eta_pool(limits)?;
@@ -1184,13 +1156,7 @@ impl Jobs {
         reservation: &crate::eta::Reservation,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<(), Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         self.owns_reservation(reservation)?;
@@ -1226,13 +1192,7 @@ impl Jobs {
         reservation: &crate::eta::Reservation,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<(), Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         self.owns_reservation(reservation)?;
@@ -1308,13 +1268,7 @@ impl Jobs {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<crate::index_protocol::IndexMessage>, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller.clone())?;
@@ -1357,13 +1311,7 @@ impl Jobs {
         children: Vec<Uuid>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         if children.len() > 1 {
@@ -1389,13 +1337,7 @@ impl Jobs {
         terminal: crate::index_terminal::Terminal,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        if matches!(
-            self.inner.authority,
-            Authority::LocalArtwork
-                | Authority::Series
-                | Authority::DefaultServices
-                | Authority::Backup
-        ) {
+        if !self.generic_index_authorized() {
             return Err(Error::UnsupportedTask);
         }
         match terminal {
@@ -1632,3 +1574,7 @@ mod parented_series_fixture;
 pub(crate) use parented_series_fixture::{
     parse_frame as parse_parented_series_fixture, Candidate as ParentedSeriesCandidate,
 };
+
+#[cfg(test)]
+#[path = "recording_dvr_authority_tests.rs"]
+mod recording_dvr_authority_tests;

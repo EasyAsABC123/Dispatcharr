@@ -1,0 +1,199 @@
+{
+  "status": "PRIVATE_PRELIGHT_ONLY_NOT_SHIPPING",
+  "current_base": "2dd210cf37877d9e132c864a54889fc66d6dd3b1",
+  "DVR_ancestor": "7e62363e06a3119c45436db7d2b01887317d279c",
+  "source_inputs": 878,
+  "Rust_inputs": 873,
+  "coupled": 5,
+  "QA15_runtime_only_and_5_QA_newpaths": true,
+  "QA16_counter_peer_delta_NOT_INCLUDED": true,
+  "changes": [
+    {
+      "path": "rust/Cargo.lock",
+      "base_sha256": "fb06215cf3ea06811face8905f8015a9992376e9c992a2ce5887e220432f167e",
+      "Native_QA15_sha256": "380d1097e3b320e7354074f7ca9d25995dd40d68a5e732b76fa8eca3e02d4ed9",
+      "current_preimage": "e24f49bde209c26caf63fb996b7eed39979252be4537ef4b4841dd4d15f3519c",
+      "union_sha256": "93a1676f424c6338ffed182cf74bd89b180f912a3241d1056a664924de0b814e",
+      "strategy": "clean-threeway"
+    },
+    {
+      "path": "rust/crates/ingest-epg/src/cache_policy.rs",
+      "base_sha256": "ea4569b9aa822645afc1d6e870d1538492f2afc848cc09eb3d815f33e74e32ed",
+      "Native_QA15_sha256": "3fcf3f6d76f2397205e665f5f3f4eacdb3e5c0e6c1c8b775f48c10e207899b79",
+      "current_preimage": "ea4569b9aa822645afc1d6e870d1538492f2afc848cc09eb3d815f33e74e32ed",
+      "union_sha256": "3fcf3f6d76f2397205e665f5f3f4eacdb3e5c0e6c1c8b775f48c10e207899b79",
+      "strategy": "clean-threeway"
+    },
+    {
+      "path": "rust/crates/job-transport/Cargo.toml",
+      "base_sha256": "aeab8d68c9f389c6bc14a553c66851e7487970e730cea5ab24cf7abad4bb2dad",
+      "Native_QA15_sha256": "bbf404d296607eef2d7ba1eaee36e52978010238e8a72b4b76d6dca6c6e732de",
+      "current_preimage": "aeab8d68c9f389c6bc14a553c66851e7487970e730cea5ab24cf7abad4bb2dad",
+      "union_sha256": "bbf404d296607eef2d7ba1eaee36e52978010238e8a72b4b76d6dca6c6e732de",
+      "strategy": "clean-threeway"
+    },
+    {
+      "path": "rust/crates/job-transport/src/lib.rs",
+      "base_sha256": "8b8aa0389cd8381ca1363b08a0154643ed8ef8260972f6910769a7e870d38513",
+      "Native_QA15_sha256": "3571e199e390fa7b0c2662b106f97753cb45e49fcb24a6ced6cd0561febf461a",
+      "current_preimage": "8b8aa0389cd8381ca1363b08a0154643ed8ef8260972f6910769a7e870d38513",
+      "union_sha256": "3571e199e390fa7b0c2662b106f97753cb45e49fcb24a6ced6cd0561febf461a",
+      "strategy": "clean-threeway"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_active.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "54603963ef96e23a9c27493e5448e1ab5a8fd57b7a5ceaa978ee3aca10c419c1",
+      "current_preimage": null,
+      "union_sha256": "54603963ef96e23a9c27493e5448e1ab5a8fd57b7a5ceaa978ee3aca10c419c1",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_cleanup.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "3809e22245a524f09e0f2d199f1ff7a4d22ff80fa34e7f9958d31ce14d8db1e1",
+      "current_preimage": null,
+      "union_sha256": "3809e22245a524f09e0f2d199f1ff7a4d22ff80fa34e7f9958d31ce14d8db1e1",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_dvr.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "25966d199911166bc9d421faf0477393820016d3eec0fd17dcd8c4ad1017f971",
+      "current_preimage": null,
+      "union_sha256": "25966d199911166bc9d421faf0477393820016d3eec0fd17dcd8c4ad1017f971",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_dvr_transport.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "a629659bea2f4fd28a70176e387c1c6e25153ddbfe9cfa0f4f8849dd96e3f79f",
+      "current_preimage": null,
+      "union_sha256": "a629659bea2f4fd28a70176e387c1c6e25153ddbfe9cfa0f4f8849dd96e3f79f",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_events.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "225b2c6cc03a37bb092020970c015555397fd0393017627663f192e338a05694",
+      "current_preimage": null,
+      "union_sha256": "225b2c6cc03a37bb092020970c015555397fd0393017627663f192e338a05694",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_files.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "3c4f665ed80abd09348e64074e836bf64ff6cfcd24a5e3316d2be23b30c40c56",
+      "current_preimage": null,
+      "union_sha256": "3c4f665ed80abd09348e64074e836bf64ff6cfcd24a5e3316d2be23b30c40c56",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_normal.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "7ee30758265fa8d23f6036b580bdc071f141a5c9ea13d3f4006974452deb578e",
+      "current_preimage": null,
+      "union_sha256": "7ee30758265fa8d23f6036b580bdc071f141a5c9ea13d3f4006974452deb578e",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_process.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "723ab9affae85718b2d93ae35b9890f30a1b25fc3e2c7b08b7add2e7c42d0cde",
+      "current_preimage": null,
+      "union_sha256": "723ab9affae85718b2d93ae35b9890f30a1b25fc3e2c7b08b7add2e7c42d0cde",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_settings.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "b70e98763a9477c3dbb4735eb09ce006353a17d8a37733424167216ea670b417",
+      "current_preimage": null,
+      "union_sha256": "b70e98763a9477c3dbb4735eb09ce006353a17d8a37733424167216ea670b417",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/transport.rs",
+      "base_sha256": "93c71688a8390f1e1f1fcbe43659dcd1ee238a9c65554addce722f9c5c5de7d4",
+      "Native_QA15_sha256": "91c1e08314cf00273abf814858f0b8ceff917ccb6ee769f77986137a6fa62e2d",
+      "current_preimage": "93c71688a8390f1e1f1fcbe43659dcd1ee238a9c65554addce722f9c5c5de7d4",
+      "union_sha256": "91c1e08314cf00273abf814858f0b8ceff917ccb6ee769f77986137a6fa62e2d",
+      "strategy": "clean-threeway"
+    },
+    {
+      "path": "rust/crates/store/src/lib.rs",
+      "base_sha256": "d97356c1a785355884b333f4b29743a71070b7308d90d964fbaa5d5e053b4728",
+      "Native_QA15_sha256": "39517cb82a2fb46bf5a3675dab6499cbee60510d9feb1de07658017895c50807",
+      "current_preimage": "3632c5eb8620c45a988e04216daf6ef35a2b79b54127335aec684f083c3ebf84",
+      "union_sha256": "0e45eea02c37f81a3c2dd78112fd71d65077ff0166196e70221d7f7767c3d54a",
+      "strategy": "exact-native-append-after-current-Core-exports"
+    },
+    {
+      "path": "rust/crates/store/src/recording_beat_cleanup.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+      "current_preimage": null,
+      "union_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/store/src/recording_capture.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+      "current_preimage": null,
+      "union_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_dvr_authority_tests.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "58edda990cd58ad166d9a8959541dde5fe077d7ed6a4a689a219e0da73e962dc",
+      "current_preimage": null,
+      "union_sha256": "58edda990cd58ad166d9a8959541dde5fe077d7ed6a4a689a219e0da73e962dc",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_dvr_peer.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "67b922699e0ee8cd7464839ca487e3363d7b6440e490d3129f567ff053069e99",
+      "current_preimage": null,
+      "union_sha256": "67b922699e0ee8cd7464839ca487e3363d7b6440e490d3129f567ff053069e99",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_process_owned_tests.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "746559afde7b5740f5a4567fb23686e3ab09151b2fe1b7dff322cfd8c47c0c05",
+      "current_preimage": null,
+      "union_sha256": "746559afde7b5740f5a4567fb23686e3ab09151b2fe1b7dff322cfd8c47c0c05",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_root.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "a60aa8764e3de8a02a9d289a496492868c68808dba11b5efad7428275856037b",
+      "current_preimage": null,
+      "union_sha256": "a60aa8764e3de8a02a9d289a496492868c68808dba11b5efad7428275856037b",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/job-transport/src/recording_dvr_physical_peer.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "efa8d23d73472aa45a04455e701a30a52ffebd448b1c81bcd6219df6a2d41a52",
+      "current_preimage": null,
+      "union_sha256": "efa8d23d73472aa45a04455e701a30a52ffebd448b1c81bcd6219df6a2d41a52",
+      "strategy": "exact-new-file"
+    },
+    {
+      "path": "rust/crates/store/src/recording_sql_schema_peer.rs",
+      "base_sha256": null,
+      "Native_QA15_sha256": "7a4a7050d2eda20a860706575a324d6e176a08daa27a163bb5c44841844ae2f1",
+      "current_preimage": null,
+      "union_sha256": "7a4a7050d2eda20a860706575a324d6e176a08daa27a163bb5c44841844ae2f1",
+      "strategy": "exact-new-file"
+    }
+  ],
+  "production_activation": false,
+  "historical_component_acceptance_transfer": false,
+  "physical7_unexecuted": true
+}

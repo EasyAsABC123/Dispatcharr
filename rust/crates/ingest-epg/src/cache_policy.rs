@@ -13,6 +13,7 @@ use std::{sync::Arc, time::Duration};
 use tokio::sync::{Mutex, OwnedSemaphorePermit, Semaphore};
 #[derive(Clone, Copy)]
 enum Group {
+    Stream,
     Epg,
     System,
     Dvr,
@@ -23,6 +24,7 @@ impl Group {
             Self::Epg => "epg_settings",
             Self::System => "system_settings",
             Self::Dvr => "dvr_settings",
+            Self::Stream => "stream_settings",
         }
     }
     fn defaults(self) -> Value {
@@ -30,6 +32,9 @@ impl Group {
             Self::Epg => defaults(),
             Self::System => source_system_settings_defaults(),
             Self::Dvr => dvr_defaults(),
+            Self::Stream => {
+                json!({"default_user_agent":null,"default_stream_profile":null,"m3u_hash_key":"","default_output_format":"mpegts","hdhr_output_profile_id":null})
+            }
         }
     }
     fn key(self) -> String {
@@ -131,7 +136,83 @@ fn database_value(row: Option<sqlx::postgres::PgRow>, group: Group) -> Result<Va
         group.defaults()
     })
 }
+#[derive(Clone, Copy)]
+pub enum DvrSettingsGroup {
+    Dvr,
+    System,
+    Stream,
+}
 impl CachedSwapPolicy {
+    /// DVR admission-only cache-authoritative groups. No cache fill before a
+    /// task's complete domain has been accepted. Old getters remain unchanged.
+    pub async fn retained_dvr_preflight_settings(
+        &self,
+        requested: DvrSettingsGroup,
+        context: SwapPolicyContext,
+    ) -> Result<Value, ConfiguredSettingsError> {
+        context.ensure_active().map_err(|error| {
+            ConfiguredSettingsError::at(ConfiguredSettingsStage::Admission, error)
+        })?;
+        let permit = self.admission.clone().try_acquire_owned().map_err(|_| {
+            ConfiguredSettingsError::at(
+                ConfiguredSettingsStage::Admission,
+                ImportError::Capacity("policy physical work"),
+            )
+        })?;
+        let context = SwapPolicyContext {
+            cancelled: context.cancelled,
+            retained: Arc::new(PolicyWork {
+                _caller: context.retained,
+                _permit: permit,
+            }),
+        };
+        let group = match requested {
+            DvrSettingsGroup::Dvr => Group::Dvr,
+            DvrSettingsGroup::System => Group::System,
+            DvrSettingsGroup::Stream => Group::Stream,
+        };
+        let uncertain =
+            || ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, ImportError::Incomplete);
+        match self
+            .read(&group.key(), &context)
+            .await
+            .map_err(|error| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, error))?
+        {
+            Read::Value(Some(value)) if value.is_object() => return Ok(value),
+            Read::Backend => return Err(uncertain()),
+            _ => {}
+        }
+        let before = match self
+            .read(&group.version(), &context)
+            .await
+            .map_err(|error| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, error))?
+        {
+            Read::Value(value) => value.unwrap_or(Value::Null),
+            Read::Backend => return Err(uncertain()),
+        };
+        let value = self.database_settled(group, &context).await?;
+        let after = match self
+            .read(&group.version(), &context)
+            .await
+            .map_err(|error| ConfiguredSettingsError::at(ConfiguredSettingsStage::Cache, error))?
+        {
+            Read::Value(value) => value.unwrap_or(Value::Null),
+            Read::Backend => return Err(uncertain()),
+        };
+        if !source_cache_values_equal(&before, &after) {
+            return Err(uncertain());
+        }
+        Ok(value)
+    }
+    /// Actual post-admission Source stream getter at the FFmpeg UA boundary.
+    /// Only the captured missing/null profile fallback is admitted by DVR.
+    pub async fn retained_normal_dvr_stream_settings(
+        &self,
+        context: SwapPolicyContext,
+    ) -> Result<Value, ConfiguredSettingsError> {
+        self.configured_group(Group::Stream, context).await
+    }
+
     /// None explicitly bypasses cache, matching DISPATCHARR_SKIP_REDIS_CACHE.
     /// Connections are acquired lazily inside an already-admitted physical job.
     pub fn new(store: Store, redis_url: Option<String>) -> Self {
