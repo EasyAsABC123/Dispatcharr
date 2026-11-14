@@ -25,7 +25,8 @@ Existing legacy constructors retain their previous bounded behavior. A grouped
 control verifies the no-effect branch and that dictionary rules still reach
 configured preflight.
 
-Docker acceptance is the next gate: run the complete configured-rule job cohort,
+The [shared Docker build and physical probes](rust-milestone-batch4-build.md)
+pass. Runtime acceptance is the next gate: run the complete configured-rule job cohort,
 then an actual settings PATCH and a second import with no rules, using packaged
 data paths without a Source tree mounted in Main. Run the full settings/plugin
 cohort and clean-install React regression against that same committed image.
