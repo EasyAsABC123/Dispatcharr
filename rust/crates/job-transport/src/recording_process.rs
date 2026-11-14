@@ -528,11 +528,58 @@ pub(crate) fn capture(
     original_owner: Arc<dyn Send + Sync>,
     transcript: Arc<Transcript>,
 ) -> Result<ProcessReceipt, Error> {
+    capture_inner(
+        channel,
+        recording,
+        paths,
+        origin,
+        end,
+        shutdown,
+        original_owner,
+        transcript,
+        Duration::from_secs(30),
+    )
+}
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn capture_captured61(
+    channel: Uuid,
+    recording: i64,
+    paths: NormalPaths,
+    origin: ObservedLocalOrigin,
+    end: DateTime<Utc>,
+    shutdown: Arc<AtomicBool>,
+    original_owner: Arc<dyn Send + Sync>,
+    transcript: Arc<Transcript>,
+) -> Result<ProcessReceipt, Error> {
+    capture_inner(
+        channel,
+        recording,
+        paths,
+        origin,
+        end,
+        shutdown,
+        original_owner,
+        transcript,
+        Duration::from_secs(61),
+    )
+}
+#[allow(clippy::too_many_arguments)]
+fn capture_inner(
+    channel: Uuid,
+    recording: i64,
+    paths: NormalPaths,
+    origin: ObservedLocalOrigin,
+    end: DateTime<Utc>,
+    shutdown: Arc<AtomicBool>,
+    original_owner: Arc<dyn Send + Sync>,
+    transcript: Arc<Transcript>,
+    maximum_remaining: Duration,
+) -> Result<ProcessReceipt, Error> {
     let _owner = original_owner.clone();
     let now = Utc::now();
     // Only the observed short normal window; no hours-long claim from Source3.
     let remaining = (end - now).to_std().map_err(|_| Error::Unsupported)?;
-    if remaining.is_zero() || remaining > Duration::from_secs(30) {
+    if remaining.is_zero() || remaining > maximum_remaining {
         return Err(Error::Unsupported);
     }
     let args = capture_argv(channel, recording, &paths, &origin)?;

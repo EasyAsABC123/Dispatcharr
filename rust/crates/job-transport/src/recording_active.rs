@@ -36,6 +36,87 @@ pub(crate) struct Observation<T> {
     pub issued_monotonic: Instant,
     pub physically_completed: Instant,
 }
+/// Move-only actual literal-value confirmation for explicit captured61 only.
+/// No foreign same-value replacement/unique-owner proof is granted.
+pub(crate) struct LiteralConfirmation {
+    recording: i64,
+    origin: Arc<()>,
+    issued_monotonic: Instant,
+    physically_completed: Instant,
+}
+pub(crate) struct ConfirmedSet {
+    pub observation: Observation<bool>,
+    pub confirmation: Option<LiteralConfirmation>,
+}
+pub(crate) struct ConfirmedRefresh {
+    pub observation: Observation<i64>,
+    pub confirmation: LiteralConfirmation,
+}
+fn valid_literal(
+    proof: &LiteralConfirmation,
+    recording: i64,
+    origin: &Arc<()>,
+    now: Instant,
+) -> Result<(), Error> {
+    if proof.recording != recording
+        || !Arc::ptr_eq(origin, &proof.origin)
+        || proof.physically_completed < proof.issued_monotonic
+        || now < proof.physically_completed
+        || now
+            .checked_duration_since(proof.issued_monotonic)
+            .is_none_or(|age| age >= Duration::from_secs(45))
+    {
+        return Err(Error::Uncertain);
+    }
+    Ok(())
+}
+fn initial_literal(
+    recording: i64,
+    origin: &Arc<()>,
+    actual: &Observation<bool>,
+    now: Instant,
+) -> Result<Option<LiteralConfirmation>, Error> {
+    if !actual.value {
+        return Ok(None);
+    }
+    let proof = LiteralConfirmation {
+        recording: actual.recording,
+        origin: actual.origin.clone(),
+        issued_monotonic: actual.issued_monotonic,
+        physically_completed: actual.physically_completed,
+    };
+    valid_literal(&proof, recording, origin, now)?;
+    Ok(Some(proof))
+}
+fn advance_literal(
+    prior: LiteralConfirmation,
+    recording: i64,
+    origin: &Arc<()>,
+    actual: &Observation<i64>,
+    now: Instant,
+) -> Result<LiteralConfirmation, Error> {
+    // The prior must remain valid through the actual reply; a late 1 is not
+    // authority to reset its age or revive an expired/uncertain operation.
+    valid_literal(&prior, recording, origin, now)?;
+    if actual.recording != recording
+        || !Arc::ptr_eq(origin, &actual.origin)
+        || actual.value != 1
+        || actual.issued_monotonic < prior.physically_completed
+        || actual.physically_completed < actual.issued_monotonic
+        || actual.physically_completed > now
+    {
+        return Err(Error::Uncertain);
+    }
+    let next = LiteralConfirmation {
+        recording: actual.recording,
+        origin: actual.origin.clone(),
+        // Earliest issuance of the ACTUAL confirmed EXPIRE, never reply time.
+        issued_monotonic: actual.issued_monotonic,
+        physically_completed: actual.physically_completed,
+    };
+    valid_literal(&next, recording, origin, now)?;
+    Ok(next)
+}
 #[derive(Debug)]
 pub(crate) struct AuxiliaryObservation {
     pub absent: bool,
@@ -134,6 +215,58 @@ impl Operations {
         })
         .await
         .map_err(|_| Error::Supervisor)?
+    }
+    /// Exactly the existing one SET, then create an unforgeable move-only local
+    /// confirmation INSIDE the operation. NX false never produces authority.
+    pub(crate) async fn set_once_captured61(
+        &self,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<ConfirmedSet, Error> {
+        let observation = self.set_once(recording, owner).await?;
+        let confirmation =
+            initial_literal(recording, &self.identity, &observation, Instant::now())?;
+        Ok(ConfirmedSet {
+            observation,
+            confirmation,
+        })
+    }
+    /// Explicit61 only. Consume the prior; only one same-origin actual integer1
+    /// reply within prior45 can derive the next earliest-issued confirmation.
+    pub(crate) async fn refresh_captured61(
+        &self,
+        recording: i64,
+        prior: LiteralConfirmation,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<ConfirmedRefresh, Error> {
+        valid_literal(&prior, recording, &self.identity, Instant::now())?;
+        let observation = self.script(recording, REFRESH, owner).await?;
+        let confirmation = advance_literal(
+            prior,
+            recording,
+            &self.identity,
+            &observation,
+            Instant::now(),
+        )?;
+        Ok(ConfirmedRefresh {
+            observation,
+            confirmation,
+        })
+    }
+    /// Latest actual confirmation, no Drop/delete retry and no TTL increase.
+    pub(crate) async fn remove_captured61(
+        &self,
+        recording: i64,
+        prior: LiteralConfirmation,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Observation<i64>, Error> {
+        valid_literal(&prior, recording, &self.identity, Instant::now())?;
+        let observation = self.script(recording, REMOVE, owner).await?;
+        valid_literal(&prior, recording, &self.identity, Instant::now())?;
+        if observation.value != 1 {
+            return Err(Error::Uncertain);
+        }
+        Ok(observation)
     }
     /// Atomic bounded TYPE/STRLEN/value/TTL observation. No bulk data beyond the
     /// literal one-byte value is transferred and wrong types aren't projected
@@ -281,5 +414,231 @@ mod tests {
         for id in [0, -1, i64::from(i32::MAX) + 1, i64::MAX] {
             assert!(Operations::key(id).is_err());
         }
+    }
+}
+
+#[cfg(test)]
+mod captured61_literal_confirmation_controls {
+    use super::*;
+    fn receipt<T>(
+        origin: &Arc<()>,
+        recording: i64,
+        value: T,
+        issue: Instant,
+        complete: Instant,
+    ) -> Observation<T> {
+        Observation {
+            recording,
+            origin: origin.clone(),
+            value,
+            before_utc: Utc::now(),
+            after_utc: Utc::now(),
+            issued_monotonic: issue,
+            physically_completed: complete,
+        }
+    }
+    fn seed(origin: &Arc<()>, base: Instant) -> LiteralConfirmation {
+        initial_literal(
+            1,
+            origin,
+            &receipt(origin, 1, true, base, base + Duration::from_millis(1)),
+            base + Duration::from_millis(2),
+        )
+        .expect("actual-shape valid initial1")
+        .expect("true produces private confirmation")
+    }
+    #[test]
+    fn nx_false_never_produces_confirmation() {
+        let origin = Arc::new(());
+        let base = Instant::now();
+        assert!(
+            initial_literal(1, &origin, &receipt(&origin, 1, false, base, base), base)
+                .expect("confirmed NX miss")
+                .is_none()
+        );
+    }
+    #[test]
+    fn initial_wrong_origin_or_record_cannot_create_confirmation() {
+        let origin = Arc::new(());
+        let foreign = Arc::new(());
+        let base = Instant::now();
+        assert!(
+            initial_literal(1, &origin, &receipt(&foreign, 1, true, base, base), base).is_err()
+        );
+        assert!(initial_literal(1, &origin, &receipt(&origin, 2, true, base, base), base).is_err());
+    }
+    #[test]
+    fn initial_late_reply_or_reversed_clock_is_uncertain() {
+        let origin = Arc::new(());
+        let base = Instant::now();
+        assert!(initial_literal(
+            1,
+            &origin,
+            &receipt(&origin, 1, true, base, base),
+            base + Duration::from_secs(45)
+        )
+        .is_err());
+        assert!(initial_literal(
+            1,
+            &origin,
+            &receipt(&origin, 1, true, base + Duration::from_millis(1), base),
+            base + Duration::from_millis(2)
+        )
+        .is_err());
+        assert!(initial_literal(
+            1,
+            &origin,
+            &receipt(&origin, 1, true, base, base + Duration::from_millis(2)),
+            base + Duration::from_millis(1)
+        )
+        .is_err());
+    }
+    #[test]
+    fn exact15_30_45_60_chain_advances_from_actual_issue_not_reply() {
+        let origin = Arc::new(());
+        let base = Instant::now();
+        let mut prior = seed(&origin, base);
+        for seconds in [15, 30, 45, 60] {
+            let issued = base + Duration::from_secs(seconds);
+            let complete = issued + Duration::from_millis(10);
+            prior = advance_literal(
+                prior,
+                1,
+                &origin,
+                &receipt(&origin, 1, 1, issued, complete),
+                complete + Duration::from_millis(1),
+            )
+            .expect("timely actual1 chain");
+            assert_eq!(prior.issued_monotonic, issued);
+            assert_ne!(prior.issued_monotonic, complete);
+        }
+        assert!(valid_literal(&prior, 1, &origin, base + Duration::from_millis(104_999)).is_ok());
+        assert!(valid_literal(&prior, 1, &origin, base + Duration::from_secs(105)).is_err());
+    }
+    #[test]
+    fn zero_or_negative_refresh_never_advances() {
+        let origin = Arc::new(());
+        let base = Instant::now();
+        let at = base + Duration::from_secs(15);
+        for value in [0, -1] {
+            assert!(advance_literal(
+                seed(&origin, base),
+                1,
+                &origin,
+                &receipt(&origin, 1, value, at, at),
+                at
+            )
+            .is_err());
+        }
+    }
+    #[test]
+    fn foreign_refresh_origin_or_record_never_advances() {
+        let origin = Arc::new(());
+        let foreign = Arc::new(());
+        let base = Instant::now();
+        let at = base + Duration::from_secs(15);
+        assert!(advance_literal(
+            seed(&origin, base),
+            1,
+            &origin,
+            &receipt(&foreign, 1, 1, at, at),
+            at
+        )
+        .is_err());
+        assert!(advance_literal(
+            seed(&origin, base),
+            1,
+            &origin,
+            &receipt(&origin, 2, 1, at, at),
+            at
+        )
+        .is_err());
+        assert!(advance_literal(
+            seed(&foreign, base),
+            1,
+            &origin,
+            &receipt(&origin, 1, 1, at, at),
+            at
+        )
+        .is_err());
+    }
+    #[test]
+    fn prior_expired_before_command_cannot_be_revived_by_integer1() {
+        let origin = Arc::new(());
+        let base = Instant::now();
+        let at = base + Duration::from_secs(46);
+        assert!(valid_literal(&seed(&origin, base), 1, &origin, at).is_err());
+        assert!(advance_literal(
+            seed(&origin, base),
+            1,
+            &origin,
+            &receipt(&origin, 1, 1, at, at),
+            at
+        )
+        .is_err());
+    }
+    #[test]
+    fn late_success_after_prior45_is_not_reset_authority() {
+        let origin = Arc::new(());
+        let base = Instant::now();
+        let issued = base + Duration::from_secs(44);
+        let complete = base + Duration::from_millis(45_001);
+        assert!(advance_literal(
+            seed(&origin, base),
+            1,
+            &origin,
+            &receipt(&origin, 1, 1, issued, complete),
+            complete
+        )
+        .is_err());
+    }
+    #[test]
+    fn refresh_bad_clock_or_overlap_before_prior_completion_is_uncertain() {
+        let origin = Arc::new(());
+        let base = Instant::now();
+        let at = base + Duration::from_secs(15);
+        assert!(advance_literal(
+            seed(&origin, base),
+            1,
+            &origin,
+            &receipt(&origin, 1, 1, base, at),
+            at
+        )
+        .is_err());
+        assert!(advance_literal(
+            seed(&origin, base),
+            1,
+            &origin,
+            &receipt(&origin, 1, 1, at + Duration::from_millis(1), at),
+            at + Duration::from_millis(2)
+        )
+        .is_err());
+        assert!(advance_literal(
+            seed(&origin, base),
+            1,
+            &origin,
+            &receipt(&origin, 1, 1, at, at + Duration::from_millis(2)),
+            at + Duration::from_millis(1)
+        )
+        .is_err());
+    }
+    #[test]
+    fn latest_removal_confirmation_still_has_exact45_cap_and_origin() {
+        let origin = Arc::new(());
+        let foreign = Arc::new(());
+        let base = Instant::now();
+        let at = base + Duration::from_secs(30);
+        let last = advance_literal(
+            seed(&origin, base),
+            1,
+            &origin,
+            &receipt(&origin, 1, 1, at, at),
+            at,
+        )
+        .expect("actual1 before prior45");
+        assert!(valid_literal(&last, 1, &origin, base + Duration::from_millis(74_999)).is_ok());
+        assert!(valid_literal(&last, 1, &origin, base + Duration::from_secs(75)).is_err());
+        assert!(valid_literal(&last, 2, &origin, at).is_err());
+        assert!(valid_literal(&last, 1, &foreign, at).is_err());
     }
 }

@@ -3,6 +3,7 @@
 //! No Main registration, new pool, default worker or task-coupled write exists.
 use crate::{admin_writes::character, AuthService, RestReadLimits, StoreError, XcUserReadLimits};
 use axum::{
+    body::HttpBody,
     extract::{ConnectInfo, Path, Request, State},
     http::{HeaderMap, StatusCode},
     response::{IntoResponse, Response},
@@ -36,16 +37,30 @@ const OBSERVER: Duration = Duration::from_secs(15);
 pub struct CoreSettingsWrites {
     state: Arc<StateData>,
 }
+/// Bounded internal group result retaining the SAME real request owner.
+/// It is not a Main route, static observation cache or uncharged JSON value.
+pub struct CoreSettingsGroupRead {
+    value: Value,
+    _owner: Arc<Lease>,
+}
+impl CoreSettingsGroupRead {
+    pub fn value(&self) -> &Value {
+        &self.value
+    }
+}
 struct StateData {
     auth: AuthService,
     active: AtomicUsize,
     stopped: AtomicBool,
     done: Notify,
     admission: std::sync::Mutex<()>,
+    special: Option<crate::core_settings_special_effects::CoreSettingsSpecialEffects>,
 }
 struct Lease {
     _permit: Arc<OwnedSemaphorePermit>,
     state: Arc<StateData>,
+    scratch: crate::core_settings_special_budget::Scratch,
+    _emergency: Arc<crate::core_settings_special_budget::Charge>,
 }
 impl Drop for Lease {
     fn drop(&mut self) {
@@ -56,6 +71,7 @@ impl Drop for Lease {
 struct Frame {
     bytes: Bytes,
     _lease: Arc<Lease>,
+    _charge: Option<Arc<crate::core_settings_special_budget::Charge>>,
 }
 impl AsRef<[u8]> for Frame {
     fn as_ref(&self) -> &[u8] {
@@ -91,8 +107,26 @@ impl CoreSettingsWrites {
                 stopped: AtomicBool::new(false),
                 done: Notify::new(),
                 admission: std::sync::Mutex::new(()),
+                special: None,
             }),
         })
+    }
+    /// Explicit component capability. Default construction retains all six
+    /// guards; no Main router or default worker is enabled by this method.
+    pub fn with_special_effects(
+        mut self,
+        effects: crate::CoreSettingsSpecialEffects,
+    ) -> Result<Self, StoreError> {
+        let state = Arc::get_mut(&mut self.state).ok_or(StoreError::Unsupported(
+            "Configure special groups before cloning service",
+        ))?;
+        if state.auth.event_sink.is_none() {
+            return Err(StoreError::Unsupported(
+                "Special groups require a real Channels publisher",
+            ));
+        }
+        state.special = Some(effects);
+        Ok(self)
     }
     /// Deliberately unassembled. A future Main must reconcile the existing read
     /// router's detail GET instead of merging duplicate method handlers blindly.
@@ -109,6 +143,73 @@ impl CoreSettingsWrites {
     pub fn active_requests(&self) -> usize {
         self.state.active.load(Ordering::Acquire)
     }
+    pub async fn settings_group(&self, key: &str) -> Result<CoreSettingsGroupRead, StoreError> {
+        if crate::core_settings_special::Group::parse(key).is_none() {
+            return Err(StoreError::Unsupported("Only six reviewed special groups"));
+        }
+        let lease = self.reserve()?;
+        let auth = self
+            .state
+            .auth
+            .clone()
+            .with_request_writer_permit(lease._permit.clone())?
+            .with_retained_scope(lease.clone());
+        let key = key.to_owned();
+        let task = tokio::spawn(async move {
+            let value =
+                crate::core_settings_special_effects::load_group(&auth, &key, json!({})).await?;
+            Ok::<_, StoreError>(CoreSettingsGroupRead {
+                value,
+                _owner: lease,
+            })
+        });
+        task.await
+            .map_err(|_| StoreError::Unsupported("Owned group loader did not settle"))?
+    }
+    pub async fn default_user_agent(&self) -> Result<CoreSettingsGroupRead, StoreError> {
+        let lease = self.reserve()?;
+        let charge = lease.scratch.charge(512 * 1024)?;
+        let auth = self
+            .state
+            .auth
+            .clone()
+            .with_request_writer_permit(lease._permit.clone())?
+            .with_retained_scope(lease.clone())
+            .with_retained_scope(charge);
+        let task = tokio::spawn(async move {
+            let value = crate::core_settings_special_effects::default_user_agent(&auth).await?;
+            Ok::<_, StoreError>(CoreSettingsGroupRead {
+                value: Value::String(value),
+                _owner: lease,
+            })
+        });
+        task.await
+            .map_err(|_| StoreError::Unsupported("Owned default-UA loader did not settle"))?
+    }
+    pub fn cached_proxy_settings(&self) -> Option<crate::ProxySettingsRead> {
+        self.state.special.as_ref()?.cached_proxy_read()
+    }
+    /// Literal component ownership state, not a resource sampler or Main API.
+    pub fn ownership_state(&self) -> Value {
+        json!({"active":self.active_requests(),"available_writer_permits":self.state.auth.user_agent_workers.available_permits(),"retained_proxy_entries":self.state.special.as_ref().map_or(0,|s|s.retained_cache_entries()),"admission_closed":self.state.stopped.load(Ordering::Acquire),"display_zone":self.state.auth.display_timezone_name()})
+    }
+    /// Trusted internal consumer seam. This reserves an existing real token;
+    /// it does not authenticate an HTTP user or register a public route.
+    pub async fn proxy_settings(&self) -> Result<crate::ProxySettingsRead, StoreError> {
+        let lease = self.reserve()?;
+        let auth = self
+            .state
+            .auth
+            .clone()
+            .with_request_writer_permit(lease._permit.clone())?
+            .with_retained_scope(lease);
+        self.state
+            .special
+            .as_ref()
+            .ok_or(StoreError::Unsupported("Special context not configured"))?
+            .proxy_settings(&auth)
+            .await
+    }
     /// Component-only drain, never a claim that unrelated AuthService users stopped.
     pub async fn shutdown(&self) -> bool {
         {
@@ -118,14 +219,17 @@ impl CoreSettingsWrites {
                 .lock()
                 .unwrap_or_else(|e| e.into_inner());
             self.state.stopped.store(true, Ordering::Release);
+            if let Some(effects) = &self.state.special {
+                effects.clear_proxy();
+            }
         }
         tokio::time::timeout(Duration::from_secs(5), async {
             loop {
                 let notified = self.state.done.notified();
-                if self.active_requests() == 0 {
+                if self.active_requests() == 0 && self.state.special.as_ref().is_none_or(|s|s.retained_cache_entries()==0) {
                     break;
                 }
-                notified.await
+                tokio::select!{_ = notified => {}, _ = tokio::time::sleep(Duration::from_millis(10)) => {}}
             }
         })
         .await
@@ -147,10 +251,14 @@ impl CoreSettingsWrites {
             .clone()
             .try_acquire_owned()
             .map_err(|_| capacity())?;
+        let scratch = crate::core_settings_special_budget::Scratch::new();
+        let emergency = scratch.charge(256)?;
         self.state.active.fetch_add(1, Ordering::AcqRel);
         Ok(Arc::new(Lease {
             _permit: Arc::new(permit),
             state: self.state.clone(),
+            scratch,
+            _emergency: emergency,
         }))
     }
     async fn run(
@@ -214,29 +322,47 @@ async fn retained_error(error: StoreError, lease: Arc<Lease>) -> Response {
 }
 async fn retained_error_response(response: Response, lease: Arc<Lease>) -> Response {
     let (parts, body) = response.into_parts();
-    let (parts, bytes) = match axum::body::to_bytes(body, OUTPUT_LIMIT).await {
-        Ok(bytes) => (parts, bytes),
-        Err(_) => {
-            // Unknown over-cap/error bodies cannot escape the existing response
-            // quote. The small typed capacity error still retains this lease.
+    let bound = body
+        .size_hint()
+        .upper()
+        .and_then(|n| usize::try_from(n).ok())
+        .filter(|n| *n <= OUTPUT_LIMIT);
+    let reserved = bound.and_then(|n| lease.scratch.charge(n).ok());
+    let (parts, bytes, charge) = match reserved {
+        Some(charge) => match axum::body::to_bytes(body, bound.unwrap()).await {
+            Ok(bytes) => (parts, bytes, Some(charge)),
+            Err(_) => {
+                let (parts, _) = capacity().into_response().into_parts();
+                (
+                    parts,
+                    Bytes::from_static(
+                        b"{\"detail\":\"CoreSettings resource capacity is unavailable.\"}",
+                    ),
+                    None,
+                )
+            }
+        },
+        None => {
             let (parts, _) = capacity().into_response().into_parts();
             (
                 parts,
                 Bytes::from_static(
                     b"{\"detail\":\"CoreSettings resource capacity is unavailable.\"}",
                 ),
+                None,
             )
         }
     };
-    // Wrap the existing Bytes allocation, without copying it into another Vec
-    // or charging another allowance. All status/headers and bounded body bytes
-    // remain exact; clones retain the same real permit until their last drop.
+    // Error and late physical transport buffers share one existing scratch
+    // quote. The emergency static body is covered by this lease's 256 bytes.
     let bytes = Bytes::from_owner(Frame {
         bytes,
         _lease: lease,
+        _charge: charge,
     });
     Response::from_parts(parts, axum::body::Body::from(bytes))
 }
+
 fn missing() -> StoreError {
     StoreError::StatusBody(
         404,
@@ -413,7 +539,16 @@ fn fields(mut input: Map<String, Value>, partial: bool) -> Draft {
     }
     d
 }
-fn complete(mut d: Draft, old: Option<Setting>, duplicate: bool) -> Result<Setting, StoreError> {
+#[cfg(test)]
+fn complete(d: Draft, old: Option<Setting>, duplicate: bool) -> Result<Setting, StoreError> {
+    complete_inner(d, old, duplicate, false)
+}
+fn complete_inner(
+    mut d: Draft,
+    old: Option<Setting>,
+    duplicate: bool,
+    special: bool,
+) -> Result<Setting, StoreError> {
     if duplicate {
         d.errors.insert(
             "key".into(),
@@ -438,13 +573,20 @@ fn complete(mut d: Draft, old: Option<Setting>, duplicate: bool) -> Result<Setti
     });
     let oldkey = row.key.clone();
     if let Some(key) = d.key {
-        supported(&key)?;
+        if !special {
+            supported(&key)?;
+        }
         row.key = key
     }
     if let Some(name) = d.name {
         row.name = name
     }
     if let Some(mut v) = d.value {
+        if special && !creation {
+            if let Some(group) = crate::core_settings_special::Group::parse(&oldkey) {
+                crate::core_settings_special::normalize_update(group, &mut v, clamped)?;
+            }
+        }
         if (creation && row.key == "epg_settings") || (!creation && oldkey == "epg_settings") {
             clamp_epg(&mut v)
         }
@@ -511,6 +653,7 @@ async fn validate(
     input: Map<String, Value>,
     old: Option<Setting>,
     partial: bool,
+    special: bool,
 ) -> Result<Setting, StoreError> {
     let d = fields(input, partial);
     let duplicate = if let Some(key) = d.key.as_ref() {
@@ -521,7 +664,7 @@ async fn validate(
     } else {
         false
     };
-    complete(d, old, duplicate)
+    complete_inner(d, old, duplicate, special)
 }
 fn checked_network(
     auth: &AuthService,
@@ -589,6 +732,20 @@ async fn invalidate(auth: &AuthService, key: &str) -> Result<(), StoreError> {
     })?;
     cache.invalidate_settings_group(key, &n.to_string()).await
 }
+struct Count(usize);
+impl Write for Count {
+    fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+        self.0 = self
+            .0
+            .checked_add(bytes.len())
+            .filter(|n| *n <= OUTPUT_LIMIT)
+            .ok_or_else(|| io::Error::other("capacity"))?;
+        Ok(bytes.len())
+    }
+    fn flush(&mut self) -> io::Result<()> {
+        Ok(())
+    }
+}
 struct Output {
     bytes: Vec<u8>,
 }
@@ -612,7 +769,7 @@ impl Write for Output {
         Ok(())
     }
 }
-fn encoded(v: &Value, out: &mut Output) -> Result<(), StoreError> {
+fn encoded(v: &Value, out: &mut impl Write) -> Result<(), StoreError> {
     let io = |_: io::Error| capacity();
     match v {
         Value::Number(n) => {
@@ -663,11 +820,17 @@ fn reply(
     lease: Arc<Lease>,
 ) -> Result<Response, StoreError> {
     if let Some(v) = value {
-        let mut out = Output { bytes: Vec::new() };
+        let mut counter = Count(0);
+        encoded(&v, &mut counter)?;
+        let charge = lease.scratch.charge(counter.0)?;
+        let mut out = Output {
+            bytes: Vec::with_capacity(counter.0),
+        };
         encoded(&v, &mut out)?;
         let bytes = Bytes::from_owner(Frame {
             bytes: Bytes::from(out.bytes),
             _lease: lease,
+            _charge: Some(charge),
         });
         Ok((
             status,
@@ -711,8 +874,11 @@ async fn act(
             lease,
         );
     }
-    if let Some(row) = old.as_ref() {
-        supported(&row.key)?;
+    let special = lease.state.special.clone();
+    if special.is_none() {
+        if let Some(row) = old.as_ref() {
+            supported(&row.key)?;
+        }
     }
     if matches!(kind, Kind::Delete) {
         drop(request);
@@ -727,13 +893,27 @@ async fn act(
             .bind(row.id)
             .execute(&mut *c)
             .await;
-        let effect = match deleted {
-            Ok(result) if result.rows_affected() == 1 => invalidate(&auth, &row.key).await,
-            Ok(_) => Err(StoreError::Unsupported(
-                "Concurrent CoreSettings deletion is outside Source32",
-            )),
-            Err(error) => Err(error.into()),
-        };
+        let effect = async {
+            match deleted {
+                Ok(result) if result.rows_affected() == 1 => {
+                    invalidate(&auth, &row.key).await?;
+                    if row.key == "proxy_settings" {
+                        if let Some(effects) = &special {
+                            effects.clear_proxy();
+                        }
+                    }
+                    if special.is_some() && row.key == "stream_settings" {
+                        invalidate_user_agent(&auth).await?;
+                    }
+                    Ok(())
+                }
+                Ok(_) => Err(StoreError::Unsupported(
+                    "Concurrent CoreSettings deletion is outside Source32",
+                )),
+                Err(error) => Err(error.into()),
+            }
+        }
+        .await;
         if let Err(error) = effect {
             let rollback = sqlx::query("ROLLBACK").execute(&mut *c).await;
             if let Err(rollback_error) = rollback {
@@ -754,7 +934,44 @@ async fn act(
         return reply(StatusCode::NO_CONTENT, None, lease);
     }
     let partial = matches!(kind, Kind::Update(true));
-    let row = validate(&auth, body(request).await?, old, partial).await?;
+    let input = body(request).await?;
+    let old_key = old.as_ref().map(|r| r.key.clone());
+    let new_key = input
+        .get("key")
+        .and_then(Value::as_str)
+        .or(old_key.as_deref());
+    let dispatch = crate::core_settings_special::Dispatch::new(old_key.as_deref(), new_key);
+    let empty = json!({});
+    let incoming = input.get("value").unwrap_or(&empty);
+    let dvr = special.is_some()
+        && crate::core_settings_special::dvr_publish(
+            dispatch,
+            old.as_ref().map(|r| &r.value),
+            incoming,
+        );
+    let mut pending = None;
+    let mut keys = None;
+    if special.is_some() && dispatch.old == Some(crate::core_settings_special::Group::Stream) {
+        if let (Some(old_value), Some(new_value)) = (
+            old.as_ref().and_then(|r| r.value.as_object()),
+            incoming.as_object(),
+        ) {
+            let before = crate::core_settings_special::hash_fields(old_value.get("m3u_hash_key"))?;
+            let after = crate::core_settings_special::hash_fields(new_value.get("m3u_hash_key"))?;
+            if crate::core_settings_special_broker::changed(&before, &after) {
+                pending = Some(
+                    crate::core_settings_special_broker::RehashLocks::acquire(
+                        &auth,
+                        &lease.scratch,
+                    )
+                    .await?,
+                );
+                keys = Some(after);
+            }
+        }
+    }
+    let outcome=async {
+    let row = validate(&auth, input, old, partial,special.is_some()).await?;
     let creation = matches!(kind, Kind::Create);
     let mut row = row;
     let mut c = auth.store.pool().acquire().await?;
@@ -787,7 +1004,28 @@ async fn act(
     }
     // Source post_save runs after an autocommitted save; a cache command error
     // must not invent a rollback of the already saved row.
+    if let Some(effects)=&special {
+        if row.key=="system_settings" {effects.system_save(&auth,&row.value,&lease.scratch).await?;}
+    }
     invalidate(&auth, &row.key).await?;
+    if let Some(effects)=&special {
+        match row.key.as_str() {
+            "proxy_settings"=>effects.clear_proxy(),
+            "stream_settings"=>invalidate_user_agent(&auth).await?,
+            "network_access"=>crate::core_settings_special_network::save(&auth,&lease.scratch).await,
+            _=>{}
+        }
+        if let Some(fields)=keys {
+            let locks=pending.as_ref().ok_or_else(capacity)?;
+            crate::core_settings_special_broker::publish(&auth,&lease.scratch,"core.tasks.rehash_streams",json!([fields]),json!({"locks_preacquired":true,"preacquired_lock_ids":locks.ids,"preacquired_lock_token":locks.token})).await?;
+            pending.take(); // only actual successful LPUSH hands off owned locks
+        }
+        if dvr {
+            // Source's synchronous reschedule fallback on publication error is
+            // a separate unqualified downstream gate. Never invent its effects.
+            crate::core_settings_special_broker::publish(&auth,&lease.scratch,"apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",json!([]),json!({})).await?;
+        }
+    }
     reply(
         if creation {
             StatusCode::CREATED
@@ -795,8 +1033,25 @@ async fn act(
             StatusCode::OK
         },
         Some(serde_json::to_value(row).map_err(|_| capacity())?),
-        lease,
+        lease.clone(),
     )
+    }.await;
+    if let Some(locks) = pending {
+        locks.release(&auth).await?;
+    }
+    outcome
+}
+async fn invalidate_user_agent(auth: &AuthService) -> Result<(), StoreError> {
+    let version = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|_| capacity())?
+        .as_nanos()
+        .to_string();
+    auth.notification_cache
+        .as_ref()
+        .ok_or_else(capacity)?
+        .invalidate_user_agent(&version)
+        .await
 }
 async fn create(
     State(s): State<CoreSettingsWrites>,
@@ -988,6 +1243,49 @@ mod tests {
         assert_eq!(r["cases"].as_array().unwrap().len(), 32);
         assert!(r["scope"].as_str().unwrap().contains("no Native"));
     }
+    #[test]
+    fn actual_source51_old_key_serializer_creation_and_errors() {
+        let source: Value =
+            serde_json::from_str(include_str!("core_settings_special_vectors.json")).unwrap();
+        let mut checked = 0;
+        for case in source["cases"].as_array().unwrap() {
+            let status = case["status"].as_u64().unwrap();
+            if ![200, 201, 400].contains(&status)
+                || !["PUT", "PATCH", "POST"].contains(&case["method"].as_str().unwrap())
+            {
+                continue;
+            }
+            let old = case
+                .get("old")
+                .filter(|v| !v.is_null())
+                .map(|v| serde_json::from_value::<Setting>(v.clone()).unwrap());
+            let draft = fields(
+                case["input"].as_object().unwrap().clone(),
+                case["method"] == "PATCH",
+            );
+            match complete_inner(draft, old, false, true) {
+                Ok(mut row) => {
+                    assert_ne!(status, 400, "case{}", case["id"]);
+                    if status == 201 {
+                        row.id = case["json"]["id"].as_i64().unwrap();
+                    }
+                    assert_eq!(
+                        serde_json::to_value(row).unwrap(),
+                        case["json"],
+                        "case{}",
+                        case["id"]
+                    );
+                }
+                Err(StoreError::InvalidInput(value)) => {
+                    assert_eq!(status, 400, "case{}", case["id"]);
+                    assert_eq!(value, case["json"], "case{}", case["id"]);
+                }
+                Err(error) => panic!("case{}: {error:?}", case["id"]),
+            }
+            checked += 1;
+        }
+        assert_eq!(checked, 30);
+    }
     fn local_service() -> CoreSettingsWrites {
         let pool = sqlx::postgres::PgPoolOptions::new()
             .max_connections(4)
@@ -1006,8 +1304,60 @@ mod tests {
                 stopped: AtomicBool::new(false),
                 done: Notify::new(),
                 admission: std::sync::Mutex::new(()),
+                special: None,
             }),
         }
+    }
+    #[tokio::test]
+    async fn internal_group_read_keeps_original_quote_until_retired() {
+        let service = local_service();
+        let mut held = Vec::new();
+        for _ in 0..4 {
+            held.push(CoreSettingsGroupRead {
+                value: json!({"owned":true}),
+                _owner: service.reserve().unwrap(),
+            });
+        }
+        assert_eq!(service.active_requests(), 4);
+        assert!(service.reserve().is_err());
+        assert_eq!(held[0].value(), &json!({"owned":true}));
+        drop(held.remove(0));
+        let replaced = service.reserve().unwrap();
+        assert_eq!(service.active_requests(), 4);
+        drop(replaced);
+        drop(held);
+        assert_eq!(service.active_requests(), 0);
+        assert_eq!(service.state.auth.user_agent_workers.available_permits(), 4);
+    }
+    #[tokio::test]
+    async fn shared_budget_refuses_plugin_with_one_external_and_three_core_owners() {
+        use tower::ServiceExt;
+        let core = local_service();
+        let auth = core.state.auth.clone();
+        let plugin = crate::PluginRepositories::new(auth.clone());
+        // A REAL existing semaphore owner, not a dummy cache observation.
+        // Actual cache-warm composition still requires the physical fixture.
+        let external = auth.user_agent_workers.clone().try_acquire_owned().unwrap();
+        let mut held = (0..3).map(|_| core.reserve().unwrap()).collect::<Vec<_>>();
+        assert_eq!(auth.user_agent_workers.available_permits(), 0);
+        let mut request = Request::builder()
+            .uri("/api/plugins/repos/")
+            .body(axum::body::Body::empty())
+            .unwrap();
+        request
+            .extensions_mut()
+            .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 2], 12345))));
+        let response = plugin.router().oneshot(request).await.unwrap();
+        assert_eq!(response.status(), StatusCode::SERVICE_UNAVAILABLE);
+        assert_eq!(core.state.auth.store.pool().size(), 0);
+        assert_eq!(core.active_requests(), 3);
+        assert_eq!(auth.user_agent_workers.available_permits(), 0);
+        drop(held.pop());
+        let reused = core.reserve().unwrap();
+        drop(reused);
+        drop(held);
+        drop(external);
+        assert_eq!(auth.user_agent_workers.available_permits(), 4);
     }
     #[tokio::test]
     async fn same_actual_writer_token_and_response_owner_survive_shutdown() {

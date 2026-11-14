@@ -43,46 +43,64 @@ impl Resource {
         )
     }
     fn serialize(self, row: PgRow) -> Result<Value, sqlx::Error> {
+        if matches!(self, Self::Settings) {
+            return Ok(settings_value(
+                row.try_get("id")?,
+                row.try_get("key")?,
+                row.try_get("name")?,
+                row.try_get("value")?,
+            ));
+        }
         let mut value =
             json!({"id":row.try_get::<i64,_>("id")?,"name":row.try_get::<String,_>("name")?});
-        if matches!(self, Self::Settings) {
-            value["key"] = row.try_get::<String, _>("key")?.into();
-            value["value"] = row.try_get::<Value, _>("value")?;
+        value["is_active"] = row.try_get::<bool, _>("is_active")?.into();
+        if matches!(self, Self::UserAgents) {
+            for field in ["user_agent", "description"] {
+                value[field] = row.try_get::<String, _>(field)?.into();
+            }
+            for field in ["created_at", "updated_at"] {
+                let date: DateTime<Utc> = row.try_get(field)?;
+                value[field] = date
+                    .to_rfc3339_opts(
+                        if date.timestamp_subsec_micros() == 0 {
+                            SecondsFormat::Secs
+                        } else {
+                            SecondsFormat::Micros
+                        },
+                        true,
+                    )
+                    .into();
+            }
         } else {
-            value["is_active"] = row.try_get::<bool, _>("is_active")?.into();
-            if matches!(self, Self::UserAgents) {
-                for field in ["user_agent", "description"] {
-                    value[field] = row.try_get::<String, _>(field)?.into();
-                }
-                for field in ["created_at", "updated_at"] {
-                    let date: DateTime<Utc> = row.try_get(field)?;
-                    value[field] = date
-                        .to_rfc3339_opts(
-                            if date.timestamp_subsec_micros() == 0 {
-                                SecondsFormat::Secs
-                            } else {
-                                SecondsFormat::Micros
-                            },
-                            true,
-                        )
-                        .into();
-                }
-            } else {
-                for field in ["command", "parameters"] {
-                    value[field] = row.try_get::<String, _>(field)?.into();
-                }
-                value["locked"] = row.try_get::<bool, _>("locked")?.into();
-                if matches!(self, Self::StreamProfiles) {
-                    value["user_agent"] = row
-                        .try_get::<Option<i64>, _>("user_agent")?
-                        .map_or(Value::Null, Value::from);
-                }
+            for field in ["command", "parameters"] {
+                value[field] = row.try_get::<String, _>(field)?.into();
+            }
+            value["locked"] = row.try_get::<bool, _>("locked")?.into();
+            if matches!(self, Self::StreamProfiles) {
+                value["user_agent"] = row
+                    .try_get::<Option<i64>, _>("user_agent")?
+                    .map_or(Value::Null, Value::from);
             }
         }
         Ok(value)
     }
 }
 
+fn settings_value(id: i64, key: String, name: String, value: Value) -> Value {
+    // Actual Source51 case16 ModelSerializer order, not map alphabetization.
+    json!({"id":id,"key":key,"name":name,"value":value})
+}
+impl AuthService {
+    /// Existing collection GET only, for explicit route composition alongside
+    /// CoreSettingsWrites. It does NOT inherit the new bounded writer/reader
+    /// ownership contract; other legacy read routes and Main are unchanged.
+    #[doc(hidden)]
+    pub fn core_settings_collection_router(self) -> Router {
+        Router::new()
+            .route("/api/core/settings/", get(settings))
+            .with_state(self)
+    }
+}
 pub(crate) async fn user_agent_value(auth: &AuthService, id: i64) -> Result<Value, StoreError> {
     let resource = Resource::UserAgents;
     let row = sqlx::query(resource.query())
@@ -178,4 +196,42 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route("/api/core/outputprofiles/", get(outputprofiles))
         .route("/api/core/outputprofiles/{id}/", get(outputprofile))
         .with_state(auth)
+}
+
+#[cfg(test)]
+mod special_source16_order_tests {
+    use super::*;
+    #[test]
+    fn existing_collection_dto_preserves_actual_source16_literal_bytes() {
+        use sha2::{Digest, Sha256};
+        let vectors: Value =
+            serde_json::from_str(include_str!("core_settings_special_vectors.json")).unwrap();
+        let case = vectors["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|v| v["id"] == 16)
+            .unwrap();
+        let rows = case["json"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|row| {
+                settings_value(
+                    row["id"].as_i64().unwrap(),
+                    row["key"].as_str().unwrap().into(),
+                    row["name"].as_str().unwrap().into(),
+                    row["value"].clone(),
+                )
+            })
+            .collect::<Vec<_>>();
+        let raw = serde_json::to_vec(&rows).unwrap();
+        let hex = raw.iter().map(|b| format!("{b:02x}")).collect::<String>();
+        assert_eq!(hex, case["response_body_hex"]);
+        assert_eq!(
+            format!("{:x}", Sha256::digest(&raw)),
+            case["response_body_sha256"].as_str().unwrap()
+        );
+        assert_eq!(raw.len(), 1147);
+    }
 }

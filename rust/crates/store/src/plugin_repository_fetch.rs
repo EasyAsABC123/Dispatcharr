@@ -875,3 +875,7 @@ mod tests {
 #[cfg(test)]
 #[path = "plugin_repository_fetch_peers.rs"]
 mod peers;
+
+#[cfg(test)]
+#[path = "plugin_repository_fetch_remaining_peers.rs"]
+mod remaining_peers;

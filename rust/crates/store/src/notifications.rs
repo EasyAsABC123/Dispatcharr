@@ -119,6 +119,24 @@ impl NotificationCache {
             .await
             .map_err(|_| unavailable())
     }
+    /// Opt-in mutating settings producer: preserve the physical reply result
+    /// under the original request scope. The Core actor owns its observer;
+    /// this layer must not forget a late SET NX/LPUSH result and replay it.
+    /// Existing ordinary command() retains its independent two-second policy.
+    pub(crate) async fn command_settled<T: FromRedisValue + Send + 'static>(
+        &self,
+        cmd: redis::Cmd,
+    ) -> Result<T, StoreError> {
+        let permit = self.admit().await.map_err(|_| unavailable())?;
+        let mut connection = self.connection.clone();
+        let scope = self.retained_scope.clone();
+        let task = tokio::spawn(async move {
+            let result = cmd.query_async::<T>(&mut connection).await;
+            (result, permit, scope)
+        });
+        let (result, _permit, _scope) = task.await.map_err(|_| unavailable())?;
+        result.map_err(|_| unavailable())
+    }
     #[cfg(test)]
     pub(crate) fn physical_operations(&self) -> usize {
         16 - self.permits.available_permits()
@@ -243,30 +261,65 @@ impl NotificationCache {
         F: FnOnce() -> Fut,
         Fut: std::future::Future<Output = Result<Value, StoreError>>,
     {
+        self.settings_group_inner(key, load, false).await
+    }
+    pub(crate) async fn settings_group_bounded<F, Fut>(
+        &self,
+        key: &str,
+        load: F,
+    ) -> Result<Value, StoreError>
+    where
+        F: FnOnce() -> Fut,
+        Fut: std::future::Future<Output = Result<Value, StoreError>>,
+    {
+        self.settings_group_inner(key, load, true).await
+    }
+    async fn settings_group_inner<F, Fut>(
+        &self,
+        key: &str,
+        load: F,
+        bounded: bool,
+    ) -> Result<Value, StoreError>
+    where
+        F: FnOnce() -> Fut,
+        Fut: std::future::Future<Output = Result<Value, StoreError>>,
+    {
+        let decode = |raw: &[u8]| {
+            if bounded {
+                decode_settings_cache(raw)
+            } else {
+                decode_cache(raw)
+            }
+        };
+        let get = |key: String| async move {
+            if bounded {
+                let mut cmd = redis::cmd("EVAL");
+                cmd.arg("if redis.call('STRLEN',KEYS[1])>65536 then return redis.error_reply('cache value exceeds limit') end return redis.call('GET',KEYS[1])").arg(1).arg(key);
+                self.command::<Option<Vec<u8>>>(cmd).await
+            } else {
+                self.get(&key).await
+            }
+        };
         let group_key = format!(":1:coresettings:group:{key}");
         let version_key = format!(":1:coresettings:groupver:{key}");
         // _get_group falls through to DB without filling on a backend outage.
-        let cached = match self.get(&group_key).await {
+        let cached = match get(group_key.clone()).await {
             Ok(value) => value,
             Err(_) => return load().await,
         };
         if let Some(raw) = cached {
-            let value = decode_cache(&raw).ok_or_else(failed)?;
+            let value = decode(&raw).ok_or_else(failed)?;
             if value.is_object() {
                 return Ok(value);
             }
         }
-        let before = match self.get(&version_key).await {
-            Ok(raw) => raw
-                .map(|raw| decode_cache(&raw).ok_or_else(failed))
-                .transpose()?,
+        let before = match get(version_key.clone()).await {
+            Ok(raw) => raw.map(|raw| decode(&raw).ok_or_else(failed)).transpose()?,
             Err(_) => return load().await,
         };
         let value = load().await?;
-        let after = match self.get(&version_key).await {
-            Ok(raw) => raw
-                .map(|raw| decode_cache(&raw).ok_or_else(failed))
-                .transpose()?,
+        let after = match get(version_key.clone()).await {
+            Ok(raw) => raw.map(|raw| decode(&raw).ok_or_else(failed)).transpose()?,
             Err(_) => return Ok(value),
         };
         if crate::json_compat::python_equal(
@@ -312,6 +365,24 @@ impl NotificationCache {
         self.set(&key, &Value::Bool(show)).await?;
         Ok(show)
     }
+}
+pub(crate) fn decode_settings_cache(raw: &[u8]) -> Option<Value> {
+    // Same direct integer representation as django_redis, before restricted
+    // pickle. A version stamp is not necessarily a pickle protocol frame.
+    if let Ok(text) = std::str::from_utf8(raw) {
+        if !text.is_empty()
+            && text.len() <= 4301
+            && text.trim() == text
+            && text
+                .strip_prefix('-')
+                .unwrap_or(text)
+                .bytes()
+                .all(|v| v.is_ascii_digit())
+        {
+            return serde_json::from_str(text).ok();
+        }
+    }
+    django_pickle::decode_settings(raw)
 }
 pub(crate) fn decode_cache(raw: &[u8]) -> Option<Value> {
     // django_redis stores integer values directly and pickles all bools/JSON.
@@ -1191,6 +1262,66 @@ mod tests {
         assert!(cache.get(&key("oversized")).await.is_err());
     }
 
+    // Explicit future physical gates: not executed by default/local suite.
+    #[tokio::test]
+    #[ignore = "requires reviewed isolated Redis pause fixture"]
+    async fn settled_mutation_retains_late_reply_and_original_scope() {
+        let (cache, mut control, key) = scoped_fixture().await;
+        let owner = Arc::new(Semaphore::new(1));
+        let scoped = cache
+            .clone()
+            .with_retained_scope(Arc::new(owner.clone().acquire_owned().await.unwrap()));
+        pause_scope(&mut control, 2600).await;
+        let began = std::time::Instant::now();
+        let mut cmd = redis::cmd("SET");
+        cmd.arg(&key).arg("one").arg("NX");
+        let task = tokio::spawn(async move { scoped.command_settled::<Option<String>>(cmd).await });
+        wait_scope(&cache, 1).await;
+        tokio::time::sleep(Duration::from_millis(2100)).await;
+        assert!(!task.is_finished());
+        assert_eq!(cache.physical_operations(), 1);
+        assert_eq!(owner.available_permits(), 0);
+        assert_eq!(task.await.unwrap().unwrap(), Some("OK".to_owned()));
+        assert!(began.elapsed() >= Duration::from_millis(2500));
+        wait_scope(&cache, 0).await;
+        assert_eq!(owner.available_permits(), 1);
+        let _: i64 = redis::cmd("DEL")
+            .arg(key)
+            .query_async(&mut control)
+            .await
+            .unwrap();
+    }
+    #[tokio::test]
+    #[ignore = "requires reviewed isolated Redis caller-loss fixture"]
+    async fn settled_caller_loss_keeps_slot_and_scope_until_actual_reply() {
+        let (cache, mut control, key) = scoped_fixture().await;
+        let owner = Arc::new(Semaphore::new(1));
+        let scoped = cache
+            .clone()
+            .with_retained_scope(Arc::new(owner.clone().acquire_owned().await.unwrap()));
+        pause_scope(&mut control, 600).await;
+        let mut cmd = redis::cmd("SET");
+        cmd.arg(&key).arg("one").arg("NX");
+        let task = tokio::spawn(async move { scoped.command_settled::<Option<String>>(cmd).await });
+        wait_scope(&cache, 1).await;
+        task.abort();
+        let _ = task.await;
+        assert_eq!(cache.physical_operations(), 1);
+        assert_eq!(owner.available_permits(), 0);
+        wait_scope(&cache, 0).await;
+        assert_eq!(owner.available_permits(), 1);
+        let actual: Option<String> = redis::cmd("GET")
+            .arg(&key)
+            .query_async(&mut control)
+            .await
+            .unwrap();
+        assert_eq!(actual.as_deref(), Some("one"));
+        let _: i64 = redis::cmd("DEL")
+            .arg(key)
+            .query_async(&mut control)
+            .await
+            .unwrap();
+    }
     // Prepared during GRID quiet; do not execute until the coordinator's
     // explicit release. These require actual paused disposable Redis replies.
     async fn scoped_fixture() -> (NotificationCache, redis::aio::MultiplexedConnection, String) {
@@ -1422,3 +1553,23 @@ mod forms_sql_tests;
 #[cfg(test)]
 #[path = "notifications_callback_sql_tests.rs"]
 mod callback_sql_tests;
+
+#[cfg(test)]
+mod special_cache_representation_tests {
+    use super::*;
+    #[test]
+    fn source_django_redis_versions_preserve_direct_integer_and_pickle_shapes() {
+        let ns = b"1794619266940842951";
+        assert_eq!(decode_settings_cache(ns), decode_cache(ns));
+        assert_eq!(
+            decode_settings_cache(ns),
+            Some(json!(1794619266940842951i64))
+        );
+        assert_eq!(decode_settings_cache(b"-7"), Some(json!(-7)));
+        assert!(decode_settings_cache(b" 7").is_none());
+        let object = json!({"buffering_timeout":31});
+        let raw = crate::django_pickle::encode(&object).unwrap();
+        assert_eq!(decode_settings_cache(&raw), Some(object));
+        assert!(decode_settings_cache(&vec![b'x'; 65537]).is_none());
+    }
+}

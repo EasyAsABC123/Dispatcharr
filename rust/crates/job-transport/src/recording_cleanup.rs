@@ -12,6 +12,11 @@ impl Component {
             store: Arc::new(sql::Store::source3_normal(pool)),
         }
     }
+    pub(crate) fn source61_local_video_audio(pool: sqlx::PgPool) -> Self {
+        Self {
+            store: Arc::new(sql::Store::source61_local_video_audio(pool)),
+        }
+    }
     pub(crate) async fn prepare(
         &self,
         identity: RecordingIdentity,

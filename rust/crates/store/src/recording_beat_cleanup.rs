@@ -91,13 +91,29 @@ pub struct Prepared {
     expected: RecordingIdentity,
     snapshot: Snapshot,
 }
+#[derive(Clone, Copy)]
+enum CapturedWindow {
+    Thirty,
+    SixtyOneLocalVideoAudio,
+}
 pub struct Store {
+    window: CapturedWindow,
     pool: PgPool,
     origin: Arc<()>,
 }
 impl Store {
     pub fn source3_normal(pool: PgPool) -> Self {
         Self {
+            window: CapturedWindow::Thirty,
+            pool,
+            origin: Arc::new(()),
+        }
+    }
+    /// Additive exact captured61 owned-local domain; same SQL/physical fences.
+    /// Source61 model cleanup is measured; no arbitrary-duration authority.
+    pub fn source61_local_video_audio(pool: PgPool) -> Self {
+        Self {
+            window: CapturedWindow::SixtyOneLocalVideoAudio,
             pool,
             origin: Arc::new(()),
         }
@@ -109,10 +125,17 @@ impl Store {
     ) -> Result<Prepared, Error> {
         if !(1..=i64::from(i32::MAX)).contains(&expected.recording)
             || !(1..=i64::from(i32::MAX)).contains(&expected.channel)
-            || expected.end - expected.start != chrono::Duration::seconds(30)
+            || expected.end - expected.start
+                != chrono::Duration::seconds(match self.window {
+                    CapturedWindow::Thirty => 30,
+                    CapturedWindow::SixtyOneLocalVideoAudio => 61,
+                })
             || expected.start.timestamp_subsec_nanos() != 0
         {
-            return Err(Error::Unsupported("Source3 future-clocked identity"));
+            return Err(Error::Unsupported(match self.window {
+                CapturedWindow::Thirty => "Source3 future-clocked identity",
+                CapturedWindow::SixtyOneLocalVideoAudio => "Source61 future-clocked identity",
+            }));
         }
         tokio::spawn(async move {
             let _owner = owner;
@@ -366,6 +389,87 @@ async fn settle<T>(
                 return Err(sql(Stage::Ready, source, prefix));
             }
             Ok(value)
+        }
+    }
+}
+
+#[cfg(test)]
+mod captured_cleanup_window_controls {
+    use super::*;
+    fn identity(seconds: i64) -> RecordingIdentity {
+        let start = "2026-11-14T01:19:48+00:00"
+            .parse::<chrono::DateTime<Utc>>()
+            .unwrap();
+        RecordingIdentity {
+            recording: 1,
+            channel: 2,
+            start,
+            end: start + chrono::Duration::seconds(seconds),
+        }
+    }
+    async fn closed_pool() -> PgPool {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgres://owned:fixture@127.0.0.1/owned_unopened")
+            .unwrap();
+        pool.close().await;
+        pool
+    }
+    #[tokio::test]
+    async fn exact61_factory_reaches_actual_prepare_acquire_while_old30_refuses61() {
+        let pool = closed_pool().await;
+        let old = Arc::new(Store::source3_normal(pool.clone()));
+        assert!(matches!(
+            old.prepare(identity(61), Arc::new(())).await,
+            Err(Error::Unsupported("Source3 future-clocked identity"))
+        ));
+        let current = Arc::new(Store::source61_local_video_audio(pool));
+        assert!(matches!(
+            current.prepare(identity(61), Arc::new(())).await,
+            Err(Error::Sql {
+                stage: Stage::Acquire,
+                source: sqlx::Error::PoolClosed,
+                ..
+            })
+        ));
+    }
+    #[tokio::test]
+    async fn old30_stays30_and_new61_never_accepts_other_durations() {
+        let pool = closed_pool().await;
+        let old = Arc::new(Store::source3_normal(pool.clone()));
+        assert!(matches!(
+            old.prepare(identity(30), Arc::new(())).await,
+            Err(Error::Sql {
+                stage: Stage::Acquire,
+                source: sqlx::Error::PoolClosed,
+                ..
+            })
+        ));
+        for seconds in [-1, 30, 60, 62] {
+            let current = Arc::new(Store::source61_local_video_audio(pool.clone()));
+            assert!(matches!(
+                current.prepare(identity(seconds), Arc::new(())).await,
+                Err(Error::Unsupported("Source61 future-clocked identity"))
+            ));
+        }
+    }
+    #[tokio::test]
+    async fn captured61_keeps_identity_and_whole_second_refusals_before_acquire() {
+        let pool = closed_pool().await;
+        for case in 0..3 {
+            let mut expected = identity(61);
+            if case == 0 {
+                expected.recording = 0;
+            } else if case == 1 {
+                expected.channel = 0;
+            } else {
+                expected.start += chrono::Duration::nanoseconds(1);
+                expected.end += chrono::Duration::nanoseconds(1);
+            }
+            let current = Arc::new(Store::source61_local_video_audio(pool.clone()));
+            assert!(matches!(
+                current.prepare(expected, Arc::new(())).await,
+                Err(Error::Unsupported("Source61 future-clocked identity"))
+            ));
         }
     }
 }

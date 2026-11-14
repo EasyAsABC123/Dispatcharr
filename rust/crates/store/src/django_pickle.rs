@@ -11,6 +11,17 @@ use std::{
 const MAX_BYTES: usize = 1024 * 1024;
 const MAX_NODES: usize = 16384;
 const MAX_DEPTH: usize = 64;
+#[derive(Clone, Copy)]
+struct Limits {
+    bytes: usize,
+    nodes: usize,
+    depth: usize,
+}
+const DEFAULT_LIMITS: Limits = Limits {
+    bytes: MAX_BYTES,
+    nodes: MAX_NODES,
+    depth: MAX_DEPTH,
+};
 type Node = Rc<RefCell<Primitive>>;
 enum Primitive {
     Scalar(Value),
@@ -23,6 +34,7 @@ enum Item {
 }
 struct Reader<'a> {
     data: &'a [u8],
+    limits: Limits,
     at: usize,
     stack: Vec<Item>,
     memo: Vec<Option<Node>>,
@@ -44,7 +56,7 @@ impl<'a> Reader<'a> {
         bytes[..n].copy_from_slice(self.bytes(n)?);
         usize::try_from(u64::from_le_bytes(bytes))
             .ok()
-            .filter(|n| *n <= MAX_BYTES)
+            .filter(|n| *n <= self.limits.bytes)
     }
     fn top(&self) -> Option<Node> {
         match self.stack.last()? {
@@ -54,7 +66,7 @@ impl<'a> Reader<'a> {
     }
     fn push(&mut self, value: Primitive) -> Option<()> {
         self.nodes += 1;
-        if self.nodes > MAX_NODES {
+        if self.nodes > self.limits.nodes {
             return None;
         }
         self.stack.push(Item::Node(Rc::new(RefCell::new(value))));
@@ -117,7 +129,7 @@ impl<'a> Reader<'a> {
         Some(())
     }
     fn memo(&mut self, index: usize) -> Option<()> {
-        if index >= MAX_NODES {
+        if index >= self.limits.nodes {
             return None;
         }
         let top = self.top()?;
@@ -128,7 +140,7 @@ impl<'a> Reader<'a> {
     }
     fn read(mut self) -> Option<Value> {
         for _ in 0..65536 {
-            if self.stack.len() > MAX_NODES {
+            if self.stack.len() > self.limits.nodes {
                 return None;
             }
             match self.byte()? {
@@ -148,7 +160,7 @@ impl<'a> Reader<'a> {
                         return None;
                     }
                     let node = self.top()?;
-                    return convert(&node, 0, &mut HashSet::new(), &mut 0);
+                    return convert(&node, 0, &mut HashSet::new(), &mut 0, self.limits);
                 }
                 b'(' => self.stack.push(Item::Mark),
                 b'N' => self.push(Primitive::Scalar(Value::Null))?,
@@ -265,8 +277,9 @@ fn convert(
     depth: usize,
     path: &mut HashSet<usize>,
     budget: &mut usize,
+    limits: Limits,
 ) -> Option<Value> {
-    if depth > MAX_DEPTH {
+    if depth > limits.depth {
         return None;
     }
     let id = Rc::as_ptr(node) as usize;
@@ -274,7 +287,7 @@ fn convert(
         return None;
     }
     *budget = budget.checked_add(1)?;
-    if *budget > MAX_NODES {
+    if *budget > limits.nodes {
         return None;
     }
     let value = match &*node.borrow() {
@@ -283,7 +296,7 @@ fn convert(
                 Value::String(value) => value.len(),
                 _ => 1,
             })?;
-            if *budget > MAX_BYTES {
+            if *budget > limits.bytes {
                 return None;
             }
             value.clone()
@@ -291,17 +304,17 @@ fn convert(
         Primitive::List(items) => Value::Array(
             items
                 .iter()
-                .map(|item| convert(item, depth + 1, path, budget))
+                .map(|item| convert(item, depth + 1, path, budget, limits))
                 .collect::<Option<_>>()?,
         ),
         Primitive::Dict(items) => {
             let mut map = Map::new();
             for (key, item) in items {
                 *budget = budget.checked_add(key.len())?;
-                if *budget > MAX_BYTES {
+                if *budget > limits.bytes {
                     return None;
                 }
-                map.insert(key.clone(), convert(item, depth + 1, path, budget)?);
+                map.insert(key.clone(), convert(item, depth + 1, path, budget, limits)?);
             }
             Value::Object(map)
         }
@@ -310,11 +323,28 @@ fn convert(
     Some(value)
 }
 pub(crate) fn decode(data: &[u8]) -> Option<Value> {
-    if data.len() > MAX_BYTES {
+    decode_limited(data, DEFAULT_LIMITS)
+}
+/// Opt-in bounded cache reader. The ordinary codec keeps its historical limits.
+/// Before decoding, bound raw, graph nodes and expanded primitive work; reject
+/// amplification instead of building a tree and subtracting it afterwards.
+pub(crate) fn decode_settings(data: &[u8]) -> Option<Value> {
+    decode_limited(
+        data,
+        Limits {
+            bytes: 65536,
+            nodes: 2048,
+            depth: 32,
+        },
+    )
+}
+fn decode_limited(data: &[u8], limits: Limits) -> Option<Value> {
+    if data.len() > limits.bytes {
         return None;
     }
     Reader {
         data,
+        limits,
         at: 0,
         stack: vec![],
         memo: vec![],
@@ -410,5 +440,22 @@ mod tests {
     fn primitive_round_trip_keeps_large_integer_and_float_types() {
         let value:Value=serde_json::from_str(r#"{"M3U_EPG":"::/0","nested":[null,true,1,1.0,-123456789012345678901234567890],"unicode":"東京"}"#).unwrap();
         assert_eq!(decode(&encode(&value).unwrap()), Some(value));
+    }
+}
+
+#[cfg(test)]
+mod settings_limits_tests {
+    use super::*;
+    use serde_json::json;
+    #[test]
+    fn settings_reader_has_narrow_limits_without_changing_ordinary_codec() {
+        let small = json!({"buffering_timeout":31});
+        let raw = encode(&small).unwrap();
+        assert_eq!(decode_settings(&raw), Some(small));
+        let ordinary = json!({"literal":"x".repeat(70000)});
+        let raw = encode(&ordinary).unwrap();
+        assert_eq!(decode(&raw), Some(ordinary));
+        assert!(decode_settings(&raw).is_none());
+        assert!(decode_settings(&vec![0; 65537]).is_none());
     }
 }

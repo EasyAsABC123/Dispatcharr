@@ -1,0 +1,1480 @@
+{
+  "scope": "Actual Source51 metadata projections only; no private auth/role rows/nonce/cue material; no Native HTTP result",
+  "pins": {
+    "artifacts/rust/m5-core-special-source-1/system_settings-source-private.json": "561e0af1dbe846fd68f961bff928984c4f37894187dbfd00b7e2469e8f7fef68",
+    "artifacts/rust/m5-core-special-source-1/network_access-source-private.json": "9da4a6bbab3e437204f1eee8bfd32db6dc9dd028ab00b332500831de663b9325",
+    "artifacts/rust/m5-core-special-source-1/reverse_proxy_auth-source-private.json": "1353bff5a006a8b66cd24451f18b028b05549f0b127598351e26e49fa5f36e2c",
+    "artifacts/rust/m5-core-special-source-1/proxy_settings-source-private.json": "eac0c0b670f5a2ae1bde0db19d8cdb0d01ade5473228ad23beb8d88a86ff3430",
+    "artifacts/rust/m5-core-special-source-1/stream_settings-source-private.json": "8c62b9692a464330d530a6f065dffa29d153b307b410c542b37a1cc88ae1c75f",
+    "artifacts/rust/m5-core-special-source-1/dvr_settings-source-private.json": "c7701e0e1a07a1cede1c78e465d309c19053e890287e4fb0a5135b9b7365a078"
+  },
+  "cases": [
+    {
+      "id": 1,
+      "method": "PATCH",
+      "status": 401,
+      "json": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "input": {
+        "value": {
+          "time_zone": "UTC",
+          "log_max_mb": 5,
+          "log_keep": 5,
+          "log_persist": false,
+          "enable_ip_lookup": false
+        }
+      },
+      "old": {
+        "id": 16,
+        "key": "system_settings",
+        "name": "Owned baseline system_settings",
+        "value": {
+          "log_keep": 5,
+          "time_zone": "UTC",
+          "log_max_mb": 5,
+          "log_persist": false,
+          "enable_ip_lookup": false
+        }
+      }
+    },
+    {
+      "id": 2,
+      "method": "PATCH",
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "input": {
+        "value": {
+          "time_zone": "UTC",
+          "log_max_mb": 5,
+          "log_keep": 5,
+          "log_persist": false,
+          "enable_ip_lookup": false
+        }
+      },
+      "old": {
+        "id": 16,
+        "key": "system_settings",
+        "name": "Owned baseline system_settings",
+        "value": {
+          "log_keep": 5,
+          "time_zone": "UTC",
+          "log_max_mb": 5,
+          "log_persist": false,
+          "enable_ip_lookup": false
+        }
+      }
+    },
+    {
+      "id": 3,
+      "method": "PUT",
+      "status": 200,
+      "json": {
+        "id": 16,
+        "key": "system_settings",
+        "name": "Owned system_settings",
+        "value": {
+          "time_zone": "Europe/London",
+          "log_max_mb": 1,
+          "log_keep": 50,
+          "log_persist": true
+        }
+      },
+      "input": {
+        "key": "system_settings",
+        "name": "Owned system_settings",
+        "value": {
+          "time_zone": "Europe/London",
+          "log_max_mb": "0",
+          "log_keep": "999999",
+          "log_persist": null
+        }
+      },
+      "old": {
+        "id": 16,
+        "key": "system_settings",
+        "name": "Owned baseline system_settings",
+        "value": {
+          "log_keep": 5,
+          "time_zone": "UTC",
+          "log_max_mb": 5,
+          "log_persist": false,
+          "enable_ip_lookup": false
+        }
+      }
+    },
+    {
+      "id": 4,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 16,
+        "key": "system_settings",
+        "name": "Owned system_settings",
+        "value": {
+          "time_zone": "Invalid/Owned",
+          "log_max_mb": 5,
+          "log_keep": 2,
+          "log_persist": true
+        }
+      },
+      "input": {
+        "value": {
+          "time_zone": "Invalid/Owned",
+          "log_max_mb": "not-an-int",
+          "log_keep": false,
+          "log_persist": 0
+        }
+      },
+      "old": {
+        "id": 16,
+        "key": "system_settings",
+        "name": "Owned system_settings",
+        "value": {
+          "log_keep": 50,
+          "time_zone": "Europe/London",
+          "log_max_mb": 1,
+          "log_persist": true
+        }
+      }
+    },
+    {
+      "id": 5,
+      "method": "DELETE",
+      "status": 204,
+      "json": null,
+      "input": {},
+      "old": {
+        "id": 16,
+        "key": "system_settings",
+        "name": "Owned system_settings",
+        "value": {
+          "log_keep": 2,
+          "time_zone": "Invalid/Owned",
+          "log_max_mb": 5,
+          "log_persist": true
+        }
+      }
+    },
+    {
+      "id": 6,
+      "method": "POST",
+      "status": 201,
+      "json": {
+        "id": 19,
+        "key": "system_settings",
+        "name": "Owned system_settings",
+        "value": {
+          "time_zone": "UTC",
+          "log_max_mb": "0",
+          "log_keep": "1",
+          "log_persist": false
+        }
+      },
+      "input": {
+        "key": "system_settings",
+        "name": "Owned system_settings",
+        "value": {
+          "time_zone": "UTC",
+          "log_max_mb": "0",
+          "log_keep": "1",
+          "log_persist": false
+        }
+      },
+      "old": null
+    },
+    {
+      "id": 7,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "owned.special.renamed.system_settings",
+        "name": "Owned owned.special.renamed.system_settings",
+        "value": {
+          "time_zone": "Europe/Paris",
+          "log_max_mb": 1,
+          "log_keep": 2,
+          "log_persist": true
+        }
+      },
+      "input": {
+        "key": "owned.special.renamed.system_settings",
+        "name": "Owned owned.special.renamed.system_settings",
+        "value": {
+          "time_zone": "Europe/Paris",
+          "log_max_mb": "0",
+          "log_keep": "1",
+          "log_persist": 0
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "system_settings",
+        "name": "Owned system_settings",
+        "value": {
+          "log_keep": "1",
+          "time_zone": "UTC",
+          "log_max_mb": "0",
+          "log_persist": false
+        }
+      }
+    },
+    {
+      "id": 8,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "system_settings",
+        "name": "Owned system_settings",
+        "value": {
+          "time_zone": "UTC",
+          "log_max_mb": "0",
+          "log_keep": "1",
+          "log_persist": false
+        }
+      },
+      "input": {
+        "key": "system_settings",
+        "name": "Owned system_settings",
+        "value": {
+          "time_zone": "UTC",
+          "log_max_mb": "0",
+          "log_keep": "1",
+          "log_persist": false
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "owned.special.renamed.system_settings",
+        "name": "Owned owned.special.renamed.system_settings",
+        "value": {
+          "log_keep": 2,
+          "time_zone": "Europe/Paris",
+          "log_max_mb": 1,
+          "log_persist": true
+        }
+      }
+    },
+    {
+      "id": 9,
+      "method": "PATCH",
+      "status": 401,
+      "json": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "input": {
+        "value": {
+          "UI": "127.0.0.0/8",
+          "STREAMS": "127.0.0.0/8"
+        }
+      },
+      "old": {
+        "id": 6,
+        "key": "network_access",
+        "name": "Owned baseline network_access",
+        "value": {
+          "UI": "127.0.0.0/8",
+          "STREAMS": "127.0.0.0/8"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "method": "PATCH",
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "input": {
+        "value": {
+          "UI": "127.0.0.0/8",
+          "STREAMS": "127.0.0.0/8"
+        }
+      },
+      "old": {
+        "id": 6,
+        "key": "network_access",
+        "name": "Owned baseline network_access",
+        "value": {
+          "UI": "127.0.0.0/8",
+          "STREAMS": "127.0.0.0/8"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "method": "PUT",
+      "status": 200,
+      "json": {
+        "id": 6,
+        "key": "network_access",
+        "name": "Owned network_access",
+        "value": {
+          "UI": "127.0.0.2/32",
+          "STREAMS": "127.0.0.0/8"
+        }
+      },
+      "input": {
+        "key": "network_access",
+        "name": "Owned network_access",
+        "value": {
+          "UI": "127.0.0.2/32",
+          "STREAMS": "127.0.0.0/8"
+        }
+      },
+      "old": {
+        "id": 6,
+        "key": "network_access",
+        "name": "Owned baseline network_access",
+        "value": {
+          "UI": "127.0.0.0/8",
+          "STREAMS": "127.0.0.0/8"
+        }
+      }
+    },
+    {
+      "id": 12,
+      "method": "GET",
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "input": {},
+      "old": null
+    },
+    {
+      "id": 13,
+      "method": "PATCH",
+      "status": 400,
+      "json": {
+        "message": "Invalid CIDRs",
+        "value": {
+          "UI": [
+            "127.0.0.1/33"
+          ]
+        }
+      },
+      "input": {
+        "value": {
+          "UI": "127.0.0.1/33",
+          "STREAMS": "0.0.0.0/0"
+        }
+      },
+      "old": {
+        "id": 6,
+        "key": "network_access",
+        "name": "Owned network_access",
+        "value": {
+          "UI": "127.0.0.2/32",
+          "STREAMS": "127.0.0.0/8"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "method": "DELETE",
+      "status": 204,
+      "json": null,
+      "input": {},
+      "old": {
+        "id": 6,
+        "key": "network_access",
+        "name": "Owned network_access",
+        "value": {
+          "UI": "127.0.0.2/32",
+          "STREAMS": "127.0.0.0/8"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "method": "POST",
+      "status": 201,
+      "json": {
+        "id": 19,
+        "key": "network_access",
+        "name": "Owned network_access",
+        "value": {
+          "UI": "127.0.0.0/8",
+          "STREAMS": "127.0.0.0/8"
+        }
+      },
+      "input": {
+        "key": "network_access",
+        "name": "Owned network_access",
+        "value": {
+          "UI": "127.0.0.0/8",
+          "STREAMS": "127.0.0.0/8"
+        }
+      },
+      "old": null
+    },
+    {
+      "id": 16,
+      "method": "GET",
+      "status": 200,
+      "json": [
+        {
+          "id": 15,
+          "key": "backup_settings",
+          "name": "Backup Settings",
+          "value": {
+            "schedule_time": "03:00",
+            "retention_count": 3,
+            "schedule_enabled": true,
+            "schedule_frequency": "daily",
+            "schedule_day_of_week": 0,
+            "schedule_cron_expression": ""
+          }
+        },
+        {
+          "id": 17,
+          "key": "user_limit_settings",
+          "name": "User Limit Settings",
+          "value": {}
+        },
+        {
+          "id": 16,
+          "key": "system_settings",
+          "name": "Owned baseline system_settings",
+          "value": {
+            "log_keep": 5,
+            "time_zone": "UTC",
+            "log_max_mb": 5,
+            "log_persist": false,
+            "enable_ip_lookup": false
+          }
+        },
+        {
+          "id": 18,
+          "key": "reverse_proxy_auth",
+          "name": "Owned baseline reverse_proxy_auth",
+          "value": {
+            "header": "",
+            "enabled": false
+          }
+        },
+        {
+          "id": 7,
+          "key": "proxy_settings",
+          "name": "Owned baseline proxy_settings",
+          "value": {
+            "buffering_speed": 1.0,
+            "buffering_timeout": 15
+          }
+        },
+        {
+          "id": 13,
+          "key": "stream_settings",
+          "name": "Owned baseline stream_settings",
+          "value": {
+            "m3u_hash_key": "name,url",
+            "default_user_agent": null,
+            "default_output_format": "mpegts"
+          }
+        },
+        {
+          "id": 14,
+          "key": "dvr_settings",
+          "name": "Owned baseline dvr_settings",
+          "value": {
+            "series_rules": [],
+            "pre_offset_minutes": 0,
+            "post_offset_minutes": 0
+          }
+        },
+        {
+          "id": 19,
+          "key": "network_access",
+          "name": "Owned network_access",
+          "value": {
+            "UI": "127.0.0.0/8",
+            "STREAMS": "127.0.0.0/8"
+          }
+        }
+      ],
+      "input": {},
+      "old": null,
+      "response_body_hex": "5b7b226964223a31352c226b6579223a226261636b75705f73657474696e6773222c226e616d65223a224261636b75702053657474696e6773222c2276616c7565223a7b227363686564756c655f74696d65223a2230333a3030222c22726574656e74696f6e5f636f756e74223a332c227363686564756c655f656e61626c6564223a747275652c227363686564756c655f6672657175656e6379223a226461696c79222c227363686564756c655f6461795f6f665f7765656b223a302c227363686564756c655f63726f6e5f65787072657373696f6e223a22227d7d2c7b226964223a31372c226b6579223a22757365725f6c696d69745f73657474696e6773222c226e616d65223a2255736572204c696d69742053657474696e6773222c2276616c7565223a7b7d7d2c7b226964223a31362c226b6579223a2273797374656d5f73657474696e6773222c226e616d65223a224f776e656420626173656c696e652073797374656d5f73657474696e6773222c2276616c7565223a7b226c6f675f6b656570223a352c2274696d655f7a6f6e65223a22555443222c226c6f675f6d61785f6d62223a352c226c6f675f70657273697374223a66616c73652c22656e61626c655f69705f6c6f6f6b7570223a66616c73657d7d2c7b226964223a31382c226b6579223a22726576657273655f70726f78795f61757468222c226e616d65223a224f776e656420626173656c696e6520726576657273655f70726f78795f61757468222c2276616c7565223a7b22686561646572223a22222c22656e61626c6564223a66616c73657d7d2c7b226964223a372c226b6579223a2270726f78795f73657474696e6773222c226e616d65223a224f776e656420626173656c696e652070726f78795f73657474696e6773222c2276616c7565223a7b22627566666572696e675f7370656564223a312e302c22627566666572696e675f74696d656f7574223a31357d7d2c7b226964223a31332c226b6579223a2273747265616d5f73657474696e6773222c226e616d65223a224f776e656420626173656c696e652073747265616d5f73657474696e6773222c2276616c7565223a7b226d33755f686173685f6b6579223a226e616d652c75726c222c2264656661756c745f757365725f6167656e74223a6e756c6c2c2264656661756c745f6f75747075745f666f726d6174223a226d7065677473227d7d2c7b226964223a31342c226b6579223a226476725f73657474696e6773222c226e616d65223a224f776e656420626173656c696e65206476725f73657474696e6773222c2276616c7565223a7b227365726965735f72756c6573223a5b5d2c227072655f6f66667365745f6d696e75746573223a302c22706f73745f6f66667365745f6d696e75746573223a307d7d2c7b226964223a31392c226b6579223a226e6574776f726b5f616363657373222c226e616d65223a224f776e6564206e6574776f726b5f616363657373222c2276616c7565223a7b225549223a223132372e302e302e302f38222c2253545245414d53223a223132372e302e302e302f38227d7d5d",
+      "response_body_sha256": "c75a26374070863fa2db3e21df40bdb034a6adcdebea16885b6325ee354aa656"
+    },
+    {
+      "id": 17,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "owned.special.renamed.network_access",
+        "name": "Owned owned.special.renamed.network_access",
+        "value": {
+          "UI": "127.0.0.2/32",
+          "STREAMS": "127.0.0.0/8"
+        }
+      },
+      "input": {
+        "key": "owned.special.renamed.network_access",
+        "name": "Owned owned.special.renamed.network_access",
+        "value": {
+          "UI": "127.0.0.2/32",
+          "STREAMS": "127.0.0.0/8"
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "network_access",
+        "name": "Owned network_access",
+        "value": {
+          "UI": "127.0.0.0/8",
+          "STREAMS": "127.0.0.0/8"
+        }
+      }
+    },
+    {
+      "id": 18,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "network_access",
+        "name": "Owned network_access",
+        "value": {
+          "UI": "not-a-cidr",
+          "STREAMS": "127.0.0.0/8"
+        }
+      },
+      "input": {
+        "key": "network_access",
+        "name": "Owned network_access",
+        "value": {
+          "UI": "not-a-cidr",
+          "STREAMS": "127.0.0.0/8"
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "owned.special.renamed.network_access",
+        "name": "Owned owned.special.renamed.network_access",
+        "value": {
+          "UI": "127.0.0.2/32",
+          "STREAMS": "127.0.0.0/8"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "method": "PATCH",
+      "status": 401,
+      "json": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "input": {
+        "value": {
+          "enabled": false,
+          "header": ""
+        }
+      },
+      "old": {
+        "id": 18,
+        "key": "reverse_proxy_auth",
+        "name": "Owned baseline reverse_proxy_auth",
+        "value": {
+          "header": "",
+          "enabled": false
+        }
+      }
+    },
+    {
+      "id": 20,
+      "method": "PATCH",
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "input": {
+        "value": {
+          "enabled": false,
+          "header": ""
+        }
+      },
+      "old": {
+        "id": 18,
+        "key": "reverse_proxy_auth",
+        "name": "Owned baseline reverse_proxy_auth",
+        "value": {
+          "header": "",
+          "enabled": false
+        }
+      }
+    },
+    {
+      "id": 21,
+      "method": "PUT",
+      "status": 200,
+      "json": {
+        "id": 18,
+        "key": "reverse_proxy_auth",
+        "name": "Owned reverse_proxy_auth",
+        "value": {
+          "enabled": true,
+          "header": "X-Owned-Forwarded-User"
+        }
+      },
+      "input": {
+        "key": "reverse_proxy_auth",
+        "name": "Owned reverse_proxy_auth",
+        "value": {
+          "enabled": true,
+          "header": "  X-Owned-Forwarded-User  "
+        }
+      },
+      "old": {
+        "id": 18,
+        "key": "reverse_proxy_auth",
+        "name": "Owned baseline reverse_proxy_auth",
+        "value": {
+          "header": "",
+          "enabled": false
+        }
+      }
+    },
+    {
+      "id": 22,
+      "method": "PATCH",
+      "status": 400,
+      "json": {
+        "message": "Invalid header name. Use letters, digits and dashes only (for example X-Forwarded-User).",
+        "value": "X Owned Invalid"
+      },
+      "input": {
+        "value": {
+          "enabled": true,
+          "header": "X Owned Invalid"
+        }
+      },
+      "old": {
+        "id": 18,
+        "key": "reverse_proxy_auth",
+        "name": "Owned reverse_proxy_auth",
+        "value": {
+          "header": "X-Owned-Forwarded-User",
+          "enabled": true
+        }
+      }
+    },
+    {
+      "id": 23,
+      "method": "DELETE",
+      "status": 204,
+      "json": null,
+      "input": {},
+      "old": {
+        "id": 18,
+        "key": "reverse_proxy_auth",
+        "name": "Owned reverse_proxy_auth",
+        "value": {
+          "header": "X-Owned-Forwarded-User",
+          "enabled": true
+        }
+      }
+    },
+    {
+      "id": 24,
+      "method": "POST",
+      "status": 201,
+      "json": {
+        "id": 19,
+        "key": "reverse_proxy_auth",
+        "name": "Owned reverse_proxy_auth",
+        "value": {
+          "enabled": true,
+          "header": "   "
+        }
+      },
+      "input": {
+        "key": "reverse_proxy_auth",
+        "name": "Owned reverse_proxy_auth",
+        "value": {
+          "enabled": true,
+          "header": "   "
+        }
+      },
+      "old": null
+    },
+    {
+      "id": 25,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "owned.special.renamed.reverse_proxy_auth",
+        "name": "Owned owned.special.renamed.reverse_proxy_auth",
+        "value": {
+          "enabled": false,
+          "header": "X-Owned-Forwarded-User"
+        }
+      },
+      "input": {
+        "key": "owned.special.renamed.reverse_proxy_auth",
+        "name": "Owned owned.special.renamed.reverse_proxy_auth",
+        "value": {
+          "enabled": false,
+          "header": "  X-Owned-Forwarded-User  "
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "reverse_proxy_auth",
+        "name": "Owned reverse_proxy_auth",
+        "value": {
+          "header": "   ",
+          "enabled": true
+        }
+      }
+    },
+    {
+      "id": 26,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "reverse_proxy_auth",
+        "name": "Owned reverse_proxy_auth",
+        "value": {
+          "enabled": true,
+          "header": "Bad Header"
+        }
+      },
+      "input": {
+        "key": "reverse_proxy_auth",
+        "name": "Owned reverse_proxy_auth",
+        "value": {
+          "enabled": true,
+          "header": "Bad Header"
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "owned.special.renamed.reverse_proxy_auth",
+        "name": "Owned owned.special.renamed.reverse_proxy_auth",
+        "value": {
+          "header": "X-Owned-Forwarded-User",
+          "enabled": false
+        }
+      }
+    },
+    {
+      "id": 27,
+      "method": "PATCH",
+      "status": 401,
+      "json": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "input": {
+        "value": {
+          "buffering_timeout": 15,
+          "buffering_speed": 1.0
+        }
+      },
+      "old": {
+        "id": 7,
+        "key": "proxy_settings",
+        "name": "Owned baseline proxy_settings",
+        "value": {
+          "buffering_speed": 1.0,
+          "buffering_timeout": 15
+        }
+      }
+    },
+    {
+      "id": 28,
+      "method": "PATCH",
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "input": {
+        "value": {
+          "buffering_timeout": 15,
+          "buffering_speed": 1.0
+        }
+      },
+      "old": {
+        "id": 7,
+        "key": "proxy_settings",
+        "name": "Owned baseline proxy_settings",
+        "value": {
+          "buffering_speed": 1.0,
+          "buffering_timeout": 15
+        }
+      }
+    },
+    {
+      "id": 29,
+      "method": "PUT",
+      "status": 200,
+      "json": {
+        "id": 7,
+        "key": "proxy_settings",
+        "name": "Owned proxy_settings",
+        "value": {
+          "buffering_timeout": 17,
+          "buffering_speed": 1.5
+        }
+      },
+      "input": {
+        "key": "proxy_settings",
+        "name": "Owned proxy_settings",
+        "value": {
+          "buffering_timeout": 17,
+          "buffering_speed": 1.5
+        }
+      },
+      "old": {
+        "id": 7,
+        "key": "proxy_settings",
+        "name": "Owned baseline proxy_settings",
+        "value": {
+          "buffering_speed": 1.0,
+          "buffering_timeout": 15
+        }
+      }
+    },
+    {
+      "id": 30,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 7,
+        "key": "proxy_settings",
+        "name": "Owned proxy_settings",
+        "value": [
+          1,
+          {
+            "buffering_timeout": -10
+          }
+        ]
+      },
+      "input": {
+        "value": [
+          1,
+          {
+            "buffering_timeout": -10
+          }
+        ]
+      },
+      "old": {
+        "id": 7,
+        "key": "proxy_settings",
+        "name": "Owned proxy_settings",
+        "value": {
+          "buffering_speed": 1.5,
+          "buffering_timeout": 17
+        }
+      }
+    },
+    {
+      "id": 31,
+      "method": "DELETE",
+      "status": 204,
+      "json": null,
+      "input": {},
+      "old": {
+        "id": 7,
+        "key": "proxy_settings",
+        "name": "Owned proxy_settings",
+        "value": [
+          1,
+          {
+            "buffering_timeout": -10
+          }
+        ]
+      }
+    },
+    {
+      "id": 32,
+      "method": "POST",
+      "status": 201,
+      "json": {
+        "id": 19,
+        "key": "proxy_settings",
+        "name": "Owned proxy_settings",
+        "value": {
+          "buffering_timeout": 31
+        }
+      },
+      "input": {
+        "key": "proxy_settings",
+        "name": "Owned proxy_settings",
+        "value": {
+          "buffering_timeout": 31
+        }
+      },
+      "old": null
+    },
+    {
+      "id": 33,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "owned.special.renamed.proxy_settings",
+        "name": "Owned owned.special.renamed.proxy_settings",
+        "value": {
+          "buffering_timeout": 44
+        }
+      },
+      "input": {
+        "key": "owned.special.renamed.proxy_settings",
+        "name": "Owned owned.special.renamed.proxy_settings",
+        "value": {
+          "buffering_timeout": 44
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "proxy_settings",
+        "name": "Owned proxy_settings",
+        "value": {
+          "buffering_timeout": 31
+        }
+      }
+    },
+    {
+      "id": 34,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "proxy_settings",
+        "name": "Owned proxy_settings",
+        "value": {
+          "buffering_timeout": 55
+        }
+      },
+      "input": {
+        "key": "proxy_settings",
+        "name": "Owned proxy_settings",
+        "value": {
+          "buffering_timeout": 55
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "owned.special.renamed.proxy_settings",
+        "name": "Owned owned.special.renamed.proxy_settings",
+        "value": {
+          "buffering_timeout": 44
+        }
+      }
+    },
+    {
+      "id": 35,
+      "method": "PATCH",
+      "status": 401,
+      "json": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "input": {
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "name,url",
+          "default_output_format": "mpegts"
+        }
+      },
+      "old": {
+        "id": 13,
+        "key": "stream_settings",
+        "name": "Owned baseline stream_settings",
+        "value": {
+          "m3u_hash_key": "name,url",
+          "default_user_agent": null,
+          "default_output_format": "mpegts"
+        }
+      }
+    },
+    {
+      "id": 36,
+      "method": "PATCH",
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "input": {
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "name,url",
+          "default_output_format": "mpegts"
+        }
+      },
+      "old": {
+        "id": 13,
+        "key": "stream_settings",
+        "name": "Owned baseline stream_settings",
+        "value": {
+          "m3u_hash_key": "name,url",
+          "default_user_agent": null,
+          "default_output_format": "mpegts"
+        }
+      }
+    },
+    {
+      "id": 37,
+      "method": "PUT",
+      "status": 200,
+      "json": {
+        "id": 13,
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "url,name",
+          "default_output_format": "mpegts"
+        }
+      },
+      "input": {
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "url,name",
+          "default_output_format": "mpegts"
+        }
+      },
+      "old": {
+        "id": 13,
+        "key": "stream_settings",
+        "name": "Owned baseline stream_settings",
+        "value": {
+          "m3u_hash_key": "name,url",
+          "default_user_agent": null,
+          "default_output_format": "mpegts"
+        }
+      }
+    },
+    {
+      "id": 38,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 13,
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "url",
+          "default_output_format": "mpegts"
+        }
+      },
+      "input": {
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "url",
+          "default_output_format": "mpegts"
+        }
+      },
+      "old": {
+        "id": 13,
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "m3u_hash_key": "url,name",
+          "default_user_agent": null,
+          "default_output_format": "mpegts"
+        }
+      }
+    },
+    {
+      "id": 39,
+      "method": "DELETE",
+      "status": 204,
+      "json": null,
+      "input": {},
+      "old": {
+        "id": 13,
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "m3u_hash_key": "url",
+          "default_user_agent": null,
+          "default_output_format": "mpegts"
+        }
+      }
+    },
+    {
+      "id": 40,
+      "method": "POST",
+      "status": 201,
+      "json": {
+        "id": 19,
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "url",
+          "default_output_format": "mpegts"
+        }
+      },
+      "input": {
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "url",
+          "default_output_format": "mpegts"
+        }
+      },
+      "old": null
+    },
+    {
+      "id": 41,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "owned.special.renamed.stream_settings",
+        "name": "Owned owned.special.renamed.stream_settings",
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "url",
+          "default_output_format": "mpegts"
+        }
+      },
+      "input": {
+        "key": "owned.special.renamed.stream_settings",
+        "name": "Owned owned.special.renamed.stream_settings",
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "url",
+          "default_output_format": "mpegts"
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "m3u_hash_key": "url",
+          "default_user_agent": null,
+          "default_output_format": "mpegts"
+        }
+      }
+    },
+    {
+      "id": 42,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "name",
+          "default_output_format": "mpegts"
+        }
+      },
+      "input": {
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "default_user_agent": null,
+          "m3u_hash_key": "name",
+          "default_output_format": "mpegts"
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "owned.special.renamed.stream_settings",
+        "name": "Owned owned.special.renamed.stream_settings",
+        "value": {
+          "m3u_hash_key": "url",
+          "default_user_agent": null,
+          "default_output_format": "mpegts"
+        }
+      }
+    },
+    {
+      "id": 43,
+      "method": "PATCH",
+      "status": 409,
+      "json": {
+        "detail": "Cannot change the M3U Hash Key while one or more accounts that use the global default are refreshing. Wait for those refreshes to finish, then try again.",
+        "m3u_hash_key": [
+          "One or more M3U accounts are currently refreshing. Try again later."
+        ],
+        "blocked_accounts": [
+          1
+        ]
+      },
+      "input": {
+        "value": {
+          "m3u_hash_key": "url"
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "stream_settings",
+        "name": "Owned stream_settings",
+        "value": {
+          "m3u_hash_key": "name",
+          "default_user_agent": null,
+          "default_output_format": "mpegts"
+        }
+      }
+    },
+    {
+      "id": 44,
+      "method": "PATCH",
+      "status": 401,
+      "json": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "input": {
+        "value": {
+          "pre_offset_minutes": 0,
+          "post_offset_minutes": 0,
+          "series_rules": []
+        }
+      },
+      "old": {
+        "id": 14,
+        "key": "dvr_settings",
+        "name": "Owned baseline dvr_settings",
+        "value": {
+          "series_rules": [],
+          "pre_offset_minutes": 0,
+          "post_offset_minutes": 0
+        }
+      }
+    },
+    {
+      "id": 45,
+      "method": "PATCH",
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "input": {
+        "value": {
+          "pre_offset_minutes": 0,
+          "post_offset_minutes": 0,
+          "series_rules": []
+        }
+      },
+      "old": {
+        "id": 14,
+        "key": "dvr_settings",
+        "name": "Owned baseline dvr_settings",
+        "value": {
+          "series_rules": [],
+          "pre_offset_minutes": 0,
+          "post_offset_minutes": 0
+        }
+      }
+    },
+    {
+      "id": 46,
+      "method": "PUT",
+      "status": 200,
+      "json": {
+        "id": 14,
+        "key": "dvr_settings",
+        "name": "Owned dvr_settings",
+        "value": {
+          "pre_offset_minutes": 1,
+          "post_offset_minutes": 2,
+          "series_rules": []
+        }
+      },
+      "input": {
+        "key": "dvr_settings",
+        "name": "Owned dvr_settings",
+        "value": {
+          "pre_offset_minutes": 1,
+          "post_offset_minutes": 2,
+          "series_rules": []
+        }
+      },
+      "old": {
+        "id": 14,
+        "key": "dvr_settings",
+        "name": "Owned baseline dvr_settings",
+        "value": {
+          "series_rules": [],
+          "pre_offset_minutes": 0,
+          "post_offset_minutes": 0
+        }
+      }
+    },
+    {
+      "id": 47,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 14,
+        "key": "dvr_settings",
+        "name": "Owned dvr_settings",
+        "value": {
+          "series_rules": [
+            {},
+            {
+              "owned": true
+            }
+          ]
+        }
+      },
+      "input": {
+        "value": {
+          "series_rules": [
+            {},
+            "bad",
+            null,
+            7,
+            {
+              "owned": true
+            }
+          ]
+        }
+      },
+      "old": {
+        "id": 14,
+        "key": "dvr_settings",
+        "name": "Owned dvr_settings",
+        "value": {
+          "series_rules": [],
+          "pre_offset_minutes": 1,
+          "post_offset_minutes": 2
+        }
+      }
+    },
+    {
+      "id": 48,
+      "method": "DELETE",
+      "status": 204,
+      "json": null,
+      "input": {},
+      "old": {
+        "id": 14,
+        "key": "dvr_settings",
+        "name": "Owned dvr_settings",
+        "value": {
+          "series_rules": [
+            {},
+            {
+              "owned": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": 49,
+      "method": "POST",
+      "status": 201,
+      "json": {
+        "id": 19,
+        "key": "dvr_settings",
+        "name": "Owned dvr_settings",
+        "value": {
+          "pre_offset_minutes": 3,
+          "post_offset_minutes": 4,
+          "series_rules": [
+            "not-sanitized-on-create",
+            {}
+          ]
+        }
+      },
+      "input": {
+        "key": "dvr_settings",
+        "name": "Owned dvr_settings",
+        "value": {
+          "pre_offset_minutes": 3,
+          "post_offset_minutes": 4,
+          "series_rules": [
+            "not-sanitized-on-create",
+            {}
+          ]
+        }
+      },
+      "old": null
+    },
+    {
+      "id": 50,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "owned.special.renamed.dvr_settings",
+        "name": "Owned owned.special.renamed.dvr_settings",
+        "value": {
+          "series_rules": [
+            {}
+          ]
+        }
+      },
+      "input": {
+        "key": "owned.special.renamed.dvr_settings",
+        "name": "Owned owned.special.renamed.dvr_settings",
+        "value": {
+          "series_rules": [
+            "sanitize-on-old-DVR-key",
+            {}
+          ]
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "dvr_settings",
+        "name": "Owned dvr_settings",
+        "value": {
+          "series_rules": [
+            "not-sanitized-on-create",
+            {}
+          ],
+          "pre_offset_minutes": 3,
+          "post_offset_minutes": 4
+        }
+      }
+    },
+    {
+      "id": 51,
+      "method": "PATCH",
+      "status": 200,
+      "json": {
+        "id": 19,
+        "key": "dvr_settings",
+        "name": "Owned dvr_settings",
+        "value": {
+          "series_rules": [
+            "old-ordinary-not-sanitized",
+            {}
+          ]
+        }
+      },
+      "input": {
+        "key": "dvr_settings",
+        "name": "Owned dvr_settings",
+        "value": {
+          "series_rules": [
+            "old-ordinary-not-sanitized",
+            {}
+          ]
+        }
+      },
+      "old": {
+        "id": 19,
+        "key": "owned.special.renamed.dvr_settings",
+        "name": "Owned owned.special.renamed.dvr_settings",
+        "value": {
+          "series_rules": [
+            {}
+          ]
+        }
+      }
+    }
+  ]
+}

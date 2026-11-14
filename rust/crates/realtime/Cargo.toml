@@ -21,3 +21,7 @@ tokio-tungstenite = {version="0.29",default-features=false,features=["handshake"
 tracing = "0.1"
 url = "2"
 uuid = {version="1",features=["v4"]}
+
+[dev-dependencies]
+tower = {version="0.5",features=["util"]}
+sqlx = {version="0.8",default-features=false,features=["runtime-tokio-rustls","postgres"]}

@@ -75,6 +75,28 @@ impl Drop for Receipt {
     }
 }
 type UncertainOwner = (Arc<Owner>, Arc<Inner>, Arc<recording_process::Transcript>);
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum CapturedWindow {
+    ThirtyVideo,
+    SixtyOneLocalVideoAudio,
+}
+impl CapturedWindow {
+    fn accepts(self, duration: chrono::Duration) -> bool {
+        duration
+            == chrono::Duration::seconds(match self {
+                Self::ThirtyVideo => 30,
+                Self::SixtyOneLocalVideoAudio => 61,
+            })
+    }
+}
+fn cleanup_for(window: CapturedWindow, pool: sqlx::PgPool) -> recording_cleanup::Component {
+    match window {
+        CapturedWindow::ThirtyVideo => recording_cleanup::Component::source3_normal(pool),
+        CapturedWindow::SixtyOneLocalVideoAudio => {
+            recording_cleanup::Component::source61_local_video_audio(pool)
+        }
+    }
+}
 struct Inner {
     jobs: Jobs,
     store: Arc<CaptureStore>,
@@ -83,6 +105,7 @@ struct Inner {
     events: Arc<dyn UpdateEventSink>,
     explicit_origin: String,
     media_uid: u32,
+    captured_window: CapturedWindow,
     cleanup: recording_cleanup::Component,
     slot: Arc<Semaphore>,
     closed: AtomicBool,
@@ -130,8 +153,7 @@ impl Dvr {
                 .await
                 .map_err(Error::Active)?;
             let store = Arc::new(CaptureStore::source3_local(assembly.store.pool().clone()));
-            let cleanup =
-                recording_cleanup::Component::source3_normal(assembly.store.pool().clone());
+            let cleanup = cleanup_for(CapturedWindow::ThirtyVideo, assembly.store.pool().clone());
             let settings = recording_settings::Settings::new(assembly.store, assembly.cache);
             Ok(Self {
                 inner: Arc::new(Inner {
@@ -142,6 +164,7 @@ impl Dvr {
                     events: assembly.events,
                     explicit_origin: assembly.explicit_internal_ts_base,
                     media_uid: assembly.media_uid,
+                    captured_window: CapturedWindow::ThirtyVideo,
                     cleanup,
                     slot: Arc::new(Semaphore::new(1)),
                     closed: AtomicBool::new(false),
@@ -154,6 +177,22 @@ impl Dvr {
         })
         .await
         .map_err(|_| Error::Supervisor)?
+    }
+    /// Additive captured61s owned-local context, NOT codec or general duration
+    /// authority. Old connect stays exactly the captured30s admission policy.
+    /// No worker registry, Main route or generic transport accepts this domain.
+    pub async fn connect_captured_61_local(
+        assembly: Assembly,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Self, Error> {
+        let window = CapturedWindow::SixtyOneLocalVideoAudio;
+        let cleanup = cleanup_for(window, assembly.store.pool().clone());
+        let mut prepared = Self::connect(assembly, owner).await?;
+        let inner = Arc::get_mut(&mut prepared.inner)
+            .ok_or(Error::Unsupported("fresh unshared captured61 assembly"))?;
+        inner.captured_window = window;
+        inner.cleanup = cleanup;
+        Ok(prepared)
     }
     pub async fn run_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Run, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
@@ -242,13 +281,22 @@ fn trace(inner: &Inner, kind: &str, observation: Value) -> Result<(), Error> {
     log.push(json!({"kind":kind,"observation":observation}));
     Ok(())
 }
-fn due(message: &ObservedProducerEnvelope) -> Result<(), Error> {
-    let now = Utc::now();
-    if message.end() - message.start() != chrono::Duration::seconds(30)
+fn due(message: &ObservedProducerEnvelope, window: CapturedWindow) -> Result<(), Error> {
+    due_at(message, window, Utc::now())
+}
+fn due_at(
+    message: &ObservedProducerEnvelope,
+    window: CapturedWindow,
+    now: chrono::DateTime<Utc>,
+) -> Result<(), Error> {
+    if !window.accepts(message.end() - message.start())
         || now < message.start()
         || now >= message.end()
     {
-        return Err(Error::Unsupported("captured current due30s domain"));
+        return Err(Error::Unsupported(match window {
+            CapturedWindow::ThirtyVideo => "captured current due30s domain",
+            CapturedWindow::SixtyOneLocalVideoAudio => "captured current due61s owned local domain",
+        }));
     }
     Ok(())
 }
@@ -272,7 +320,7 @@ async fn execute(
         Err(error) => return Err(error),
     };
     let message = candidate.message.clone();
-    due(&message)?;
+    due(&message, inner.captured_window)?;
     let expected = RecordingIdentity {
         recording: message.recording_id(),
         channel: message.channel_id(),
@@ -331,7 +379,7 @@ async fn execute(
             "initial Source3 has no viewers/proxy metadata",
         ));
     }
-    due(&message)?;
+    due(&message, inner.captured_window)?;
     if inner.closed.load(Ordering::Acquire) {
         return Err(Error::Closed);
     }
@@ -349,11 +397,24 @@ async fn execute(
         }
         return Err(error);
     }
-    let lease = inner
-        .active
-        .set_once(message.recording_id(), owner.clone())
-        .await
-        .map_err(Error::Active)?;
+    let (lease, mut confirmation61) = match inner.captured_window {
+        CapturedWindow::ThirtyVideo => (
+            inner
+                .active
+                .set_once(message.recording_id(), owner.clone())
+                .await
+                .map_err(Error::Active)?,
+            None,
+        ),
+        CapturedWindow::SixtyOneLocalVideoAudio => {
+            let confirmed = inner
+                .active
+                .set_once_captured61(message.recording_id(), owner.clone())
+                .await
+                .map_err(Error::Active)?;
+            (confirmed.observation, confirmed.confirmation)
+        }
+    };
     trace(&inner, "acquired", lease.receipt(json!(lease.value)))?;
     if !lease.value {
         return Err(Error::Unsupported("post-admission other active owner"));
@@ -480,8 +541,9 @@ async fn execute(
     let end = message.end();
     let channel = current.channel_uuid;
     let recording = message.recording_id();
-    let mut media = tokio::task::spawn_blocking(move || {
-        recording_process::capture(
+    let captured_window = inner.captured_window;
+    let mut media = tokio::task::spawn_blocking(move || match captured_window {
+        CapturedWindow::ThirtyVideo => recording_process::capture(
             channel,
             recording,
             media_paths,
@@ -490,7 +552,17 @@ async fn execute(
             shutdown,
             held,
             log,
-        )
+        ),
+        CapturedWindow::SixtyOneLocalVideoAudio => recording_process::capture_captured61(
+            channel,
+            recording,
+            media_paths,
+            origin,
+            end,
+            shutdown,
+            held,
+            log,
+        ),
     });
     let mut renewal = tokio::time::interval(Duration::from_secs(15));
     renewal.tick().await;
@@ -499,7 +571,17 @@ async fn execute(
             result=&mut media=>{result.map_err(|_|Error::Supervisor)?.map_err(Error::Media)?;break;},
             _=renewal.tick()=>{
                 if Utc::now()>=message.end() {continue;}
-                match inner.active.refresh_confirmed(recording,&lease,owner.clone()).await {
+                let refreshed = match captured_window {
+                    CapturedWindow::ThirtyVideo => inner.active.refresh_confirmed(recording, &lease, owner.clone()).await,
+                    CapturedWindow::SixtyOneLocalVideoAudio => match confirmation61.take() {
+                        Some(prior) => match inner.active.refresh_captured61(recording, prior, owner.clone()).await {
+                            Ok(confirmed) => { confirmation61 = Some(confirmed.confirmation); Ok(confirmed.observation) },
+                            Err(error) => Err(error),
+                        },
+                        None => Err(recording_active::Error::Uncertain),
+                    },
+                };
+                match refreshed {
                     Ok(value)=>trace(&inner,"renewed",value.receipt(json!(value.value)))?,
                     Err(error)=>{
                     inner.shutdown.store(true,Ordering::Release);
@@ -625,11 +707,24 @@ async fn execute(
     )
     .await
     .map_err(Error::Events)?;
-    let removed = inner
-        .active
-        .remove_confirmed(recording, &lease, owner.clone())
-        .await
-        .map_err(Error::Active)?;
+    let removed = match captured_window {
+        CapturedWindow::ThirtyVideo => {
+            inner
+                .active
+                .remove_confirmed(recording, &lease, owner.clone())
+                .await
+        }
+        CapturedWindow::SixtyOneLocalVideoAudio => match confirmation61.take() {
+            Some(prior) => {
+                inner
+                    .active
+                    .remove_captured61(recording, prior, owner.clone())
+                    .await
+            }
+            None => Err(recording_active::Error::Uncertain),
+        },
+    }
+    .map_err(Error::Active)?;
     trace(&inner, "removed", removed.receipt(json!(removed.value)))?;
     let (records, poisoned, pending) = transcript.snapshot();
     if poisoned
@@ -665,4 +760,145 @@ async fn execute(
         processes: records.iter().map(|row| row.receipt()).collect(),
         active_observations,
     })
+}
+
+#[cfg(test)]
+mod captured_window_source_controls {
+    use super::*;
+    use base64::{engine::general_purpose::STANDARD, Engine};
+    fn actual_frames() -> Vec<Vec<u8>> {
+        let data: Value =
+            serde_json::from_str(include_str!("../datasets/dvr-captured-windows.json"))
+                .expect("actual Source frames");
+        data["cases"]
+            .as_array()
+            .expect("two actual Source observations")
+            .iter()
+            .map(|row| {
+                STANDARD
+                    .decode(row["raw_frame_base64"].as_str().expect("raw Source wire"))
+                    .expect("Source rawframebase64")
+            })
+            .collect()
+    }
+    #[test]
+    fn actual_source30_and61_wires_have_separate_admission_not_parser_authority() {
+        let frames = actual_frames();
+        assert_eq!(frames.len(), 2);
+        let thirty =
+            crate::clocked_recording_envelope::parse_head(&frames[0]).expect("actualSource30 wire");
+        let sixtyone =
+            crate::clocked_recording_envelope::parse_head(&frames[1]).expect("actualSource61 wire");
+        assert_eq!(thirty.raw_frame(), frames[0]);
+        assert_eq!(sixtyone.raw_frame(), frames[1]);
+        assert!(due_at(
+            &thirty,
+            CapturedWindow::ThirtyVideo,
+            thirty.start() + chrono::Duration::seconds(1)
+        )
+        .is_ok());
+        assert!(due_at(
+            &sixtyone,
+            CapturedWindow::ThirtyVideo,
+            sixtyone.start() + chrono::Duration::seconds(1)
+        )
+        .is_err());
+        assert!(due_at(
+            &sixtyone,
+            CapturedWindow::SixtyOneLocalVideoAudio,
+            sixtyone.start() + chrono::Duration::seconds(1)
+        )
+        .is_ok());
+        assert!(due_at(
+            &thirty,
+            CapturedWindow::SixtyOneLocalVideoAudio,
+            thirty.start() + chrono::Duration::seconds(1)
+        )
+        .is_err());
+        assert!(sixtyone.require_due_execution().is_err());
+    }
+    #[test]
+    fn finite_domain_refuses60_62_negative_or_expired_even_if_frame_is_wellformed() {
+        for seconds in [-1, 0, 30, 60, 62, 3600] {
+            assert!(!CapturedWindow::SixtyOneLocalVideoAudio
+                .accepts(chrono::Duration::seconds(seconds)));
+        }
+        let frames = actual_frames();
+        let frame =
+            crate::clocked_recording_envelope::parse_head(&frames[1]).expect("actualSource61 wire");
+        assert!(due_at(
+            &frame,
+            CapturedWindow::SixtyOneLocalVideoAudio,
+            frame.start() - chrono::Duration::seconds(1)
+        )
+        .is_err());
+        assert!(due_at(&frame, CapturedWindow::SixtyOneLocalVideoAudio, frame.end()).is_err());
+        assert!(due_at(
+            &frame,
+            CapturedWindow::SixtyOneLocalVideoAudio,
+            frame.end() + chrono::Duration::seconds(1)
+        )
+        .is_err());
+    }
+    #[test]
+    fn changed_actual61_parent_or_periodic_identity_still_refuses_before_due_admission() {
+        let frames = actual_frames();
+        let original: Value = serde_json::from_slice(&frames[1]).expect("actual Source JSON");
+        let mut parented = original.clone();
+        parented["headers"]["parent_id"] = json!(uuid::Uuid::new_v4().to_string());
+        assert!(crate::clocked_recording_envelope::parse_head(
+            &serde_json::to_vec(&parented).expect("finite mutation")
+        )
+        .is_err());
+        let mut named = original;
+        named["headers"]["periodic_task_name"] = json!("arbitrary");
+        assert!(crate::clocked_recording_envelope::parse_head(
+            &serde_json::to_vec(&named).expect("finite mutation")
+        )
+        .is_err());
+    }
+}
+
+#[cfg(test)]
+mod captured61_cleanup_wiring_controls {
+    use super::*;
+    #[tokio::test]
+    async fn real_dvr_cleanup_factory_reaches_acquire_for61_with_profile_rules_separate() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgres://owned:fixture@127.0.0.1/owned_unopened")
+            .unwrap();
+        pool.close().await;
+        let start = "2026-11-14T01:19:48+00:00"
+            .parse::<chrono::DateTime<Utc>>()
+            .unwrap();
+        for profile in [serde_json::Value::Null, json!(1)] {
+            let expected = RecordingIdentity {
+                recording: 1,
+                channel: 2,
+                start,
+                end: start + chrono::Duration::seconds(61),
+            };
+            let cleanup = cleanup_for(CapturedWindow::SixtyOneLocalVideoAudio, pool.clone());
+            assert!(matches!(
+                cleanup.prepare(expected, Arc::new(())).await,
+                Err(dispatcharr_store::recording_beat_cleanup::Error::Sql {
+                    stage: dispatcharr_store::recording_beat_cleanup::Stage::Acquire,
+                    source: sqlx::Error::PoolClosed,
+                    ..
+                })
+            ));
+            let groups = recording_normal::EffectiveGroups {
+                dvr: json!({"output_profile_id":profile.clone()}),
+                system: json!({"time_zone":"UTC","max_system_events":100}),
+                stream: json!({"default_stream_profile":null}),
+            };
+            let props = json!({"status":"scheduled","program":{"title":"Owned Parented Artwork"},"season":1,"episode":1,"poster_logo_id":1});
+            let paths = recording_normal::paths(1, &props, &groups, 0);
+            if profile.is_null() {
+                assert!(paths.is_ok());
+            } else {
+                assert!(matches!(paths, Err(recording_normal::Refusal::Settings)));
+            }
+        }
+    }
 }

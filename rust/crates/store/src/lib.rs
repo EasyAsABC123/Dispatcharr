@@ -447,10 +447,18 @@ pub mod recording_schedule;
 pub mod recording_local_artwork;
 
 mod core_settings_writes;
-pub use core_settings_writes::CoreSettingsWrites;
+pub use core_settings_writes::{CoreSettingsGroupRead, CoreSettingsWrites};
 
 pub mod recording_beat_cleanup;
 pub mod recording_capture;
 
 #[cfg(test)]
 mod recording_sql_schema_peer;
+
+// Private opt-in Source51 prototype. No Main/default router registration.
+mod core_settings_special;
+mod core_settings_special_broker;
+mod core_settings_special_budget;
+mod core_settings_special_effects;
+mod core_settings_special_network;
+pub use core_settings_special_effects::{CoreSettingsSpecialEffects, ProxySettingsRead};
