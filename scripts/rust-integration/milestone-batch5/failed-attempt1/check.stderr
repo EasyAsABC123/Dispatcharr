@@ -1,0 +1,34 @@
+    Checking dispatcharr-upstream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/upstream-http)
+    Checking dispatcharr-contracts v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/contracts)
+    Checking dispatcharr-ingest-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/ingest-core)
+    Checking dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/output-store)
+    Checking dispatcharr-coordination v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/coordination)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/store)
+    Checking dispatcharr-clients v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/clients)
+   Compiling dispatcharr-xmltv-parser v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/xmltv-parser)
+    Checking dispatcharr-stream-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/stream-core)
+    Checking dispatcharr-stream-runtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/stream-runtime)
+    Checking dispatcharr-input-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/input-store)
+    Checking dispatcharr-stream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/stream-http)
+    Checking dispatcharr-timeshift-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/timeshift-core)
+    Checking dispatcharr-backups v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/backups)
+    Checking dispatcharr-fmp4-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/fmp4-core)
+    Checking dispatcharr-hls-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/hls-core)
+    Checking dispatcharr-hls-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/hls-http)
+    Checking dispatcharr-fmp4-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/fmp4-http)
+    Checking dispatcharr-ingest-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch5-candidate-1/source/rust/crates/ingest-http)
+error[E0277]: the `?` operator can only be applied to values that implement `Try`
+   --> crates/store/src/celery_metadata.rs:102:17
+    |
+102 | /                 crate::json_compat::float_string(
+103 | |                     number
+104 | |                         .as_f64()
+105 | |                         .filter(|v| v.is_finite())
+106 | |                         .ok_or_else(unavailable)?,
+107 | |                 )?
+    | |__________________^ the `?` operator cannot be applied to type `std::string::String`
+    |
+    = help: the trait `Try` is not implemented for `std::string::String`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `dispatcharr-store` (lib) due to 1 previous error

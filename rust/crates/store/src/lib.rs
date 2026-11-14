@@ -456,6 +456,7 @@ pub mod recording_capture;
 mod recording_sql_schema_peer;
 
 // Private opt-in Source51 prototype. No Main/default router registration.
+mod celery_metadata;
 mod core_settings_special;
 mod core_settings_special_broker;
 mod core_settings_special_budget;

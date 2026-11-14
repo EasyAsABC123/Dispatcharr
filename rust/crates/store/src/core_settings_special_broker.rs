@@ -5,7 +5,7 @@ use crate::{AuthService, StoreError};
 use serde::Serialize;
 use serde_json::{json, Value};
 use sqlx::{Connection, Row};
-use std::collections::BTreeSet;
+use std::{collections::BTreeSet, sync::Arc};
 
 fn unavailable() -> StoreError {
     StoreError::StatusBody(
@@ -158,7 +158,13 @@ struct Headers<'a> {
     timelimit: [Option<u8>; 2],
     root_id: &'a str,
     parent_id: Option<()>,
+    argsrepr: String,
+    kwargsrepr: String,
+    origin: String,
     ignore_result: bool,
+    replaced_task_nesting: u8,
+    stamped_headers: Option<()>,
+    stamps: serde_json::Map<String, Value>,
 }
 #[derive(Serialize)]
 struct Properties<'a> {
@@ -204,14 +210,19 @@ pub(crate) async fn publish(
     let charge = scratch.charge(
         count
             .0
-            .checked_mul(8)
-            .and_then(|n| n.checked_add(8192))
+            .checked_mul(12)
+            .and_then(|n| n.checked_add(16384))
             .ok_or_else(unavailable)?,
     )?;
     let mut body = Vec::with_capacity(count.0);
     serde_json::to_writer(&mut body, &envelope).map_err(|_| unavailable())?;
     let id = uuid::Uuid::new_v4().to_string();
-    let reply = uuid::Uuid::new_v4().to_string();
+    // One actual shared application budget is the stable publisher-instance
+    // identity across Auth/cache scope clones, never a request or fixture ID.
+    let identity =
+        crate::celery_metadata::identity(Arc::as_ptr(&auth.user_agent_workers) as usize)?;
+    let argsrepr = crate::celery_metadata::arguments(&args)?;
+    let kwargsrepr = crate::celery_metadata::keywords(&kwargs)?;
     let delivery = uuid::Uuid::new_v4().to_string();
     let message = Message {
         body: base64::engine::general_purpose::STANDARD.encode(&body),
@@ -230,11 +241,17 @@ pub(crate) async fn publish(
             timelimit: [None, None],
             root_id: &id,
             parent_id: None,
+            argsrepr,
+            kwargsrepr,
+            origin: identity.origin,
             ignore_result: false,
+            replaced_task_nesting: 0,
+            stamped_headers: None,
+            stamps: serde_json::Map::new(),
         },
         properties: Properties {
             correlation_id: &id,
-            reply_to: &reply,
+            reply_to: &identity.reply_to,
             delivery_mode: 2,
             delivery_info: Delivery {
                 exchange: "",

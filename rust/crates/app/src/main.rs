@@ -3,6 +3,7 @@ mod combined_statistics;
 mod combined_statistics_html;
 mod combined_statistics_wire;
 mod control;
+mod database_config;
 mod playback;
 mod plugin_gpg_trace;
 mod proxy_health;
@@ -38,29 +39,7 @@ fn positive(name: &str, default: usize) -> Result<usize, String> {
 }
 
 fn database_url() -> Result<String, String> {
-    if let Ok(value) = env::var("DATABASE_URL") {
-        return Ok(value);
-    }
-    let mut url = url::Url::parse("postgresql://localhost/dispatcharr").unwrap();
-    url.set_host(Some(
-        &env::var("POSTGRES_HOST").unwrap_or_else(|_| "localhost".into()),
-    ))
-    .map_err(|_| "Invalid POSTGRES_HOST")?;
-    url.set_port(Some(
-        env::var("POSTGRES_PORT")
-            .unwrap_or_else(|_| "5432".into())
-            .parse()
-            .map_err(|_| "Invalid POSTGRES_PORT")?,
-    ))
-    .map_err(|_| "Invalid POSTGRES_PORT")?;
-    url.set_username(&env::var("POSTGRES_USER").unwrap_or_else(|_| "dispatch".into()))
-        .map_err(|_| "Invalid POSTGRES_USER")?;
-    url.set_password(Some(
-        &env::var("POSTGRES_PASSWORD").map_err(|_| "POSTGRES_PASSWORD is required")?,
-    ))
-    .map_err(|_| "Invalid POSTGRES_PASSWORD")?;
-    url.set_path(&env::var("POSTGRES_DB").unwrap_or_else(|_| "dispatcharr".into()));
-    Ok(url.into())
+    database_config::url()
 }
 
 async fn health(State(store): State<Store>) -> (StatusCode, Json<serde_json::Value>) {
