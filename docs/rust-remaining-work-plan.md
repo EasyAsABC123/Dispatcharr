@@ -5,6 +5,13 @@ algorithm and licensing credit. React remains unchanged. This work allocation
 records open acceptance gates; it does not declare any complete M0–M9 milestone.
 The authoritative ledger is [rust-milestones.md](rust-milestones.md).
 
+**Current execution policy:** [milestone-wide validation](rust-milestone-testing.md)
+supersedes the per-case execution/admission queues below. Owners combine the
+remaining work into complete milestone batches, reuse existing runners and
+fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
+failures; they are no longer the unit of delivery. The rows below remain a
+capability inventory and historical component checkpoint.
+
 The delivered opt-in component composition is
 [current882](../scripts/rust-component-checkpoints/current882/README.md).
 Its unsigned plugin comparisons and recording SQL-rejection correction are
