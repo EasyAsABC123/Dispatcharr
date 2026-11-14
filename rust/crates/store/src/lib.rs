@@ -458,6 +458,12 @@ mod recording_sql_schema_peer;
 // Private opt-in Source51 prototype. No Main/default router registration.
 mod celery_metadata;
 mod core_settings_special;
+mod task_sql_executor;
+pub use task_sql_executor::TaskSqlExecutor;
+mod producer_identity;
+pub use producer_identity::{ProducerIdentity, ProducerIdentitySource};
+mod task_sql_session;
+pub use task_sql_session::TaskSqlSession;
 mod core_settings_special_broker;
 mod core_settings_special_budget;
 mod core_settings_special_effects;

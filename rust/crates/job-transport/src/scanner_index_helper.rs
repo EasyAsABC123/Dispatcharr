@@ -37,6 +37,7 @@ pub(crate) struct Helper {
     pool: PgPool,
     jobs: Jobs,
     publication: Option<(Uuid, &'static str)>,
+    identity: Option<dispatcharr_store::ProducerIdentitySource>,
 }
 impl Helper {
     pub(crate) fn new_scoped(pool: PgPool, jobs: Jobs, reply: Uuid, origin: &'static str) -> Self {
@@ -44,6 +45,19 @@ impl Helper {
             pool,
             jobs,
             publication: Some((reply, origin)),
+            identity: None,
+        }
+    }
+    pub(crate) fn new_normal(
+        pool: PgPool,
+        jobs: Jobs,
+        identity: dispatcharr_store::ProducerIdentitySource,
+    ) -> Self {
+        Self {
+            pool,
+            jobs,
+            publication: None,
+            identity: Some(identity),
         }
     }
     async fn sources(&self, receipt: Arc<Receipt>) -> Result<Option<Vec<i64>>, Error> {
@@ -122,24 +136,44 @@ impl FirstScanHook for Execution {
             for source in ids {
                 // Preserve database iteration; the Source query has no global ORDER BY.
                 // The same receipt remains owned through each actual Redis reply.
-                let publication = match self.helper.publication {
-                    Some((reply, origin)) => {
-                        self.helper
-                            .jobs
-                            .publish_scanner_index_scoped(
-                                self.parent,
-                                source,
-                                reply,
-                                origin,
-                                receipt.clone(),
-                            )
-                            .await
-                    }
-                    None => {
-                        self.helper
-                            .jobs
-                            .publish_scanner_index(self.parent, source, receipt.clone())
-                            .await
+                let actual = self
+                    .helper
+                    .identity
+                    .as_ref()
+                    .map(|source| source.current())
+                    .transpose()
+                    .map_err(|_| Error::Operational)?;
+                let publication = if let Some(actual) = actual {
+                    self.helper
+                        .jobs
+                        .publish_scanner_index_scoped(
+                            self.parent,
+                            source,
+                            actual.reply_to,
+                            &actual.origin,
+                            receipt.clone(),
+                        )
+                        .await
+                } else {
+                    match self.helper.publication {
+                        Some((reply, origin)) => {
+                            self.helper
+                                .jobs
+                                .publish_scanner_index_scoped(
+                                    self.parent,
+                                    source,
+                                    reply,
+                                    origin,
+                                    receipt.clone(),
+                                )
+                                .await
+                        }
+                        None => {
+                            self.helper
+                                .jobs
+                                .publish_scanner_index(self.parent, source, receipt.clone())
+                                .await
+                        }
                     }
                 };
                 match publication {
@@ -259,6 +293,7 @@ impl IndexedLogoApplication {
             pool,
             jobs: jobs.clone(),
             publication: None,
+            identity: None,
         });
         let domain = Arc::new(Domain {
             scanner: scanner.clone(),
@@ -292,6 +327,7 @@ impl IndexedLogoApplication {
             pool,
             jobs: jobs.clone(),
             publication: None,
+            identity: None,
         });
         let domain = Arc::new(Domain {
             scanner: scanner.clone(),

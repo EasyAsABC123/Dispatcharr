@@ -244,3 +244,28 @@ pub use recording_artwork_completion::Completions as ArtworkCompletions;
 pub mod recording_existing_artwork_application;
 
 mod tvg_programme_terminal;
+
+mod normal_default_families;
+pub mod normal_queue;
+
+pub mod normal_recording_publication;
+
+pub mod normal_named_recording;
+
+pub mod normal_recording_recovery;
+
+pub mod normal_revocation;
+
+pub mod normal_recording_scheduler;
+pub mod normal_scanner;
+pub mod scanner_parents;
+
+pub mod normal_control;
+
+pub mod recording_dvr_normal;
+
+mod recording_normal_policy;
+
+mod recording_normal_task;
+
+mod recording_normal_capture;

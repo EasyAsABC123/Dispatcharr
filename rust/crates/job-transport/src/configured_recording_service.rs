@@ -131,8 +131,16 @@ pub struct RecurringReport {
     task: Uuid,
     created: u32,
     children: Vec<Uuid>,
+    artwork_targets: Vec<(Uuid, i64)>,
+    artwork_frames: Vec<crate::recording_artwork_protocol::Message>,
 }
 impl RecurringReport {
+    pub(crate) fn artwork_targets(&self) -> &[(Uuid, i64)] {
+        &self.artwork_targets
+    }
+    pub(crate) fn artwork_frames(&self) -> &[crate::recording_artwork_protocol::Message] {
+        &self.artwork_frames
+    }
     pub(crate) fn task_id(&self) -> Uuid {
         self.task
     }
@@ -432,6 +440,8 @@ impl Service {
                 task: task.id(),
                 created: 0,
                 children: Vec::new(),
+                artwork_targets: Vec::new(),
+                artwork_frames: Vec::new(),
             }),
         }
     }
@@ -606,6 +616,8 @@ impl Service {
                 task: task.id(),
                 created: outcome.created,
                 children: outcome.children,
+                artwork_targets: outcome.artwork_targets,
+                artwork_frames: outcome.artwork_frames,
             })
         })
         .await
@@ -647,6 +659,8 @@ mod caught_insert_tests {
                 assert_eq!(case["event_delta"].as_array().unwrap().len(), 1);
             } else {
                 let report = RecurringReport {
+                    artwork_targets: Vec::new(),
+                    artwork_frames: Vec::new(),
                     task: Uuid::parse_str(case["backend"]["task_id"].as_str().unwrap()).unwrap(),
                     created: 0,
                     children: Vec::new(),

@@ -52,14 +52,18 @@ fn parameter_types(index: usize) -> Vec<PgTypeInfo> {
     let time = <DateTime<Utc> as Type<sqlx::Postgres>>::type_info();
     let uuid = <Uuid as Type<sqlx::Postgres>>::type_info();
     match index {
-        2 | 4 | 11 | 12 | 17 | 19 => vec![int],
-        3 | 25 | 28 => vec![text],
-        5 => vec![int, value.clone(), value],
-        7 => vec![text.clone(), time, uuid, text, value],
-        13 => vec![int.clone(), text, int],
-        24 => vec![time],
-        26 => vec![int.clone(), int],
-        0 | 1 | 6 | 8 | 9 | 10 | 14 | 15 | 16 | 18 | 20 | 21 | 22 | 23 | 27 => vec![],
+        2 | 4 | 6 | 9 | 10 | 12 | 13 | 14 | 17 | 18 | 25 | 26 | 31 | 33 | 40 | 41 | 46 | 48 => {
+            vec![int]
+        }
+        3 | 21 | 55 | 58 => vec![text],
+        11 | 15 => vec![int, value.clone(), value],
+        7 => vec![text, time.clone(), time],
+        8 | 56 => vec![int.clone(), int],
+        16 | 20 => vec![text.clone(), time, uuid, text, value],
+        27 | 42 => vec![int.clone(), text, int],
+        52 | 54 => vec![time],
+        0 | 1 | 5 | 19 | 22 | 23 | 24 | 28 | 29 | 30 | 32 | 34 | 35 | 36 | 37 | 38 | 39 | 43
+        | 44 | 45 | 47 | 49 | 50 | 51 | 53 | 57 => vec![],
         _ => panic!("unreviewed production statement index"),
     }
 }
@@ -67,8 +71,8 @@ fn parameter_types(index: usize) -> Vec<PgTypeInfo> {
 #[test]
 fn compiled_statement_inventory_and_actual_bound_types() {
     let statements = actual_statements();
-    assert_eq!(statements.len(), 29);
-    assert_eq!(statements[0].1, statements[6].1);
+    assert_eq!(statements.len(), 59);
+    assert_eq!(statements[0].1, statements[19].1);
     assert!(statements[0]
         .1
         .contains("FROM dispatcharr_connect_integration)"));
@@ -88,8 +92,8 @@ fn compiled_statement_inventory_and_actual_bound_types() {
             "statement {index}: actual source ordinal/type authority"
         );
     }
-    assert_eq!(parameter_types(7)[2].name(), "UUID");
-    assert_eq!(parameter_types(5)[1].name(), "JSONB");
+    assert_eq!(parameter_types(16)[2].name(), "UUID");
+    assert_eq!(parameter_types(11)[1].name(), "JSONB");
 }
 
 #[tokio::test]
@@ -118,7 +122,7 @@ async fn actual_compiled_dvr_schema_prepare_only() {
         .expect("actual read-only setting");
     assert_eq!(readonly, "on");
     let statements = actual_statements();
-    assert_eq!(statements.len(), 29);
+    assert_eq!(statements.len(), 59);
     let mut rows = Vec::new();
     for (index, (source, sql)) in statements.into_iter().enumerate() {
         let types = parameter_types(index);

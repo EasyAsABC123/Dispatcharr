@@ -10,7 +10,7 @@ use std::{
     io::{self, Read},
     process::{Child, Command, ExitStatus, Stdio},
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool, AtomicI64, AtomicU8, Ordering},
         Arc, Mutex,
     },
     thread::{self, JoinHandle},
@@ -72,6 +72,8 @@ struct Records {
     rows: Vec<ProcessRecord>,
     poisoned: bool,
     pending_owner: Option<Arc<dyn Send + Sync>>,
+    normal: bool,
+    retired_records: u64,
 }
 pub(crate) struct Transcript {
     records: Mutex<Records>,
@@ -83,8 +85,15 @@ impl Transcript {
                 rows: Vec::new(),
                 poisoned: false,
                 pending_owner: None,
+                normal: false,
+                retired_records: 0,
             }),
         }
+    }
+    pub(crate) fn new_normal() -> Self {
+        let value = Self::new();
+        value.change(|state| state.normal = true);
+        value
     }
     fn change<T>(&self, operation: impl FnOnce(&mut Records) -> T) -> T {
         match self.records.lock() {
@@ -96,9 +105,34 @@ impl Transcript {
             }
         }
     }
+    pub(crate) fn settled_spawn_failure(&self) -> bool {
+        let Ok(state) = self.records.lock() else {
+            return false;
+        };
+        !state.poisoned
+            && state.pending_owner.is_none()
+            && state.rows.last().is_some_and(|r| {
+                r.pid.is_none()
+                    && r.settled_utc.is_some()
+                    && r.command_error.is_some()
+                    && !r.emergency
+                    && r.reader_error.is_none()
+            })
+    }
     fn begin(&self, argv: Vec<String>, started_utc: DateTime<Utc>) -> Result<usize, Error> {
         self.change(|state| {
-            if state.poisoned || state.rows.len() >= 2 {
+            if state.normal && state.rows.len() >= 16 {
+                if state.pending_owner.is_some()
+                    || state.rows.iter().any(|r| r.settled_utc.is_none())
+                {
+                    return Err(Error::Unsupported);
+                }
+                state.retired_records = state
+                    .retired_records
+                    .saturating_add(state.rows.len() as u64);
+                state.rows.clear();
+            }
+            if state.poisoned || (!state.normal && state.rows.len() >= 2) {
                 return Err(Error::Unsupported);
             }
             let index = state.rows.len();
@@ -159,14 +193,40 @@ pub enum Error {
 /// Explicit configured Source override, never inferred from the task. Only the
 /// actually observed local-origin URL is currently qualified; normal AIO/web
 /// defaults and arbitrary providers remain separate domains.
-pub(crate) struct ObservedLocalOrigin;
+pub(crate) struct ObservedLocalOrigin {
+    normal_base: Option<String>,
+}
 impl ObservedLocalOrigin {
     pub(crate) fn from_explicit_setting(value: &str) -> Result<Self, Error> {
         if value.trim_end_matches('/') == "http://origin:8080" {
-            Ok(Self)
+            Ok(Self { normal_base: None })
         } else {
             Err(Error::Unsupported)
         }
+    }
+    /// Explicit trusted Main configuration for its same-process HTTP listener.
+    /// Not inferred from a task/header/provider URL. Captured origin is unchanged.
+    pub(crate) fn from_normal_internal_base(value: &str) -> Result<Self, Error> {
+        let url = reqwest::Url::parse(value).map_err(|_| Error::Unsupported)?;
+        let host = url.host_str().ok_or(Error::Unsupported)?;
+        let local = host == "localhost"
+            || host
+                .trim_matches(['[', ']'])
+                .parse::<std::net::IpAddr>()
+                .is_ok_and(|ip| ip.is_loopback());
+        if url.scheme() != "http"
+            || !local
+            || !url.username().is_empty()
+            || url.password().is_some()
+            || url.query().is_some()
+            || url.fragment().is_some()
+            || !matches!(url.path(), "" | "/")
+        {
+            return Err(Error::Unsupported);
+        }
+        Ok(Self {
+            normal_base: Some(value.trim_end_matches('/').into()),
+        })
     }
 }
 
@@ -453,7 +513,7 @@ fn capture_argv(
     channel: Uuid,
     recording: i64,
     paths: &NormalPaths,
-    _origin: &ObservedLocalOrigin,
+    origin: &ObservedLocalOrigin,
 ) -> Result<Vec<String>, Error> {
     if !(1..=i64::from(i32::MAX)).contains(&recording) {
         return Err(Error::Unsupported);
@@ -480,7 +540,13 @@ fn capture_argv(
             .into_iter()
             .map(str::to_owned),
     );
-    args.push(format!("http://origin:8080/proxy/ts/stream/{channel}"));
+    args.push(format!(
+        "{}/proxy/ts/stream/{channel}",
+        origin
+            .normal_base
+            .as_deref()
+            .unwrap_or("http://origin:8080")
+    ));
     args.extend(
         [
             "-map",
@@ -563,6 +629,133 @@ pub(crate) fn capture_captured61(
         Duration::from_secs(61),
     )
 }
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub(crate) enum NormalStop {
+    End = 1,
+    Stopped = 2,
+    Deleted = 3,
+    HlsRemoved = 4,
+    Shutdown = 5,
+    NoSegments = 6,
+    Stall = 7,
+}
+pub(crate) struct NormalControl {
+    reason: AtomicU8,
+    end: AtomicI64,
+}
+impl NormalControl {
+    pub(crate) fn new(end: DateTime<Utc>) -> Self {
+        Self {
+            reason: AtomicU8::new(0),
+            end: AtomicI64::new(end.timestamp_micros()),
+        }
+    }
+    pub(crate) fn request(&self, reason: NormalStop) {
+        let _ = self
+            .reason
+            .compare_exchange(0, reason as u8, Ordering::AcqRel, Ordering::Acquire);
+    }
+    pub(crate) fn reason(&self) -> Option<NormalStop> {
+        match self.reason.load(Ordering::Acquire) {
+            1 => Some(NormalStop::End),
+            2 => Some(NormalStop::Stopped),
+            3 => Some(NormalStop::Deleted),
+            4 => Some(NormalStop::HlsRemoved),
+            5 => Some(NormalStop::Shutdown),
+            6 => Some(NormalStop::NoSegments),
+            7 => Some(NormalStop::Stall),
+            _ => None,
+        }
+    }
+    pub(crate) fn extend(&self, end: DateTime<Utc>) {
+        self.end.fetch_max(end.timestamp_micros(), Ordering::AcqRel);
+    }
+    pub(crate) fn end(&self) -> DateTime<Utc> {
+        DateTime::from_timestamp_micros(self.end.load(Ordering::Acquire))
+            .expect("actual bounded SQLdatetime")
+    }
+}
+pub(crate) struct NormalAttempt {
+    pub receipt: ProcessReceipt,
+    pub stopped: Option<NormalStop>,
+}
+/// One physically owned attempt; async normal policy decides retry only after
+/// this child and stderr have actually joined. No fallback of unknown scopes.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn capture_normal_attempt(
+    channel: Uuid,
+    recording: i64,
+    paths: NormalPaths,
+    origin: ObservedLocalOrigin,
+    start_number: u64,
+    control: Arc<NormalControl>,
+    shutdown: Arc<AtomicBool>,
+    owner: Arc<dyn Send + Sync>,
+    transcript: Arc<Transcript>,
+) -> Result<NormalAttempt, Error> {
+    let mut args = capture_argv(channel, recording, &paths, &origin)?;
+    let index = args
+        .iter()
+        .position(|v| v == "-start_number")
+        .ok_or(Error::Unsupported)?;
+    args[index + 1] = start_number.to_string();
+    let (mut owned, started, argv) = OwnedChild::spawn(&args, transcript, owner)?;
+    let identity = owned.identity()?;
+    loop {
+        if let Some(status) = owned.try_wait()? {
+            let receipt = owned.receipt(status, identity, argv, started, false, false)?;
+            return Ok(NormalAttempt {
+                receipt,
+                stopped: control.reason(),
+            });
+        }
+        if shutdown.load(Ordering::Acquire) {
+            control.request(NormalStop::Shutdown);
+        }
+        if Utc::now() >= control.end() {
+            control.request(NormalStop::End);
+        }
+        if let Some(reason) = control.reason() {
+            if reason == NormalStop::NoSegments {
+                owned.kill()?;
+                let status = owned.wait()?;
+                let receipt = owned.receipt(status, identity, argv, started, false, true)?;
+                return Ok(NormalAttempt {
+                    receipt,
+                    stopped: Some(reason),
+                });
+            }
+            if let Err(error) = signal_int(&mut owned.child, &identity) {
+                if let Some(status) = owned.try_wait()? {
+                    let receipt = owned.receipt(status, identity, argv, started, false, false)?;
+                    return Ok(NormalAttempt {
+                        receipt,
+                        stopped: Some(reason),
+                    });
+                }
+                return Err(error);
+            }
+            let deadline = Instant::now() + Duration::from_secs(10);
+            let (status, forced) = loop {
+                if let Some(status) = owned.try_wait()? {
+                    break (status, false);
+                }
+                if Instant::now() >= deadline {
+                    owned.kill()?;
+                    break (owned.wait()?, true);
+                }
+                thread::sleep(Duration::from_millis(25));
+            };
+            let receipt = owned.receipt(status, identity, argv, started, true, forced)?;
+            return Ok(NormalAttempt {
+                receipt,
+                stopped: Some(reason),
+            });
+        }
+        thread::sleep(Duration::from_millis(500));
+    }
+}
 #[allow(clippy::too_many_arguments)]
 fn capture_inner(
     channel: Uuid,
@@ -583,7 +776,9 @@ fn capture_inner(
         return Err(Error::Unsupported);
     }
     let args = capture_argv(channel, recording, &paths, &origin)?;
-    let deadline = Instant::now() + remaining;
+    let deadline = Instant::now()
+        .checked_add(remaining)
+        .ok_or(Error::Unsupported)?;
     let (mut owned, started, argv) = OwnedChild::spawn(&args, transcript, original_owner)?;
     let identity = owned.identity()?;
     loop {
@@ -683,6 +878,164 @@ pub(crate) fn remux(
             };
         }
         thread::sleep(Duration::from_millis(25));
+    }
+}
+
+/// All normal remux attempts share Source's single 1800-second budget. A
+/// settled nonzero exit/timeout is a failed remux result, not unknown ownership.
+/// Capture shutdown has already been handled; Source does not cancel remux on
+/// the global shutdown flag. Diagnostic stdout is discarded, stderr drained.
+pub(crate) fn remux_normal(
+    paths: NormalPaths,
+    recording: i64,
+    owner: Arc<dyn Send + Sync>,
+    transcript: Arc<Transcript>,
+) -> Result<bool, Error> {
+    fn present(path: &std::path::Path) -> Result<bool, Error> {
+        match fs::symlink_metadata(path) {
+            Ok(m) if m.is_file() && !m.file_type().is_symlink() => Ok(m.len() > 0),
+            Ok(_) => Err(Error::Unsupported),
+            Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(false),
+            Err(e) => Err(Error::Identity(e)),
+        }
+    }
+    fn remove(path: &std::path::Path) -> Result<(), Error> {
+        match fs::symlink_metadata(path) {
+            Ok(m) if m.is_file() && !m.file_type().is_symlink() => {
+                fs::remove_file(path).map_err(Error::Identity)
+            }
+            Ok(_) => Err(Error::Unsupported),
+            Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(()),
+            Err(e) => Err(Error::Identity(e)),
+        }
+    }
+    fn step(
+        args: Vec<String>,
+        deadline: Instant,
+        owner: Arc<dyn Send + Sync>,
+        transcript: Arc<Transcript>,
+    ) -> Result<bool, Error> {
+        if Instant::now() >= deadline {
+            return Ok(false);
+        }
+        let spawned = OwnedChild::spawn(&args, transcript.clone(), owner);
+        let (mut owned, started, argv) = match spawned {
+            Ok(value) => value,
+            Err(Error::Spawn(_)) if transcript.settled_spawn_failure() => return Ok(false),
+            Err(error) => return Err(error),
+        };
+        let identity = owned.identity()?;
+        loop {
+            if let Some(status) = owned.try_wait()? {
+                let receipt = owned.receipt(status, identity, argv, started, false, false)?;
+                if receipt.stderr.read_error.is_some() {
+                    return Err(Error::UnexpectedExit(Box::new(receipt)));
+                }
+                return Ok(receipt.code == Some(0));
+            }
+            if Instant::now() >= deadline {
+                owned.kill()?;
+                let status = owned.wait()?;
+                let receipt = owned.receipt(status, identity, argv, started, false, true)?;
+                if receipt.stderr.read_error.is_some() {
+                    return Err(Error::UnexpectedExit(Box::new(receipt)));
+                }
+                return Ok(false);
+            }
+            thread::sleep(Duration::from_millis(25));
+        }
+    }
+    fn hls(input: &str, output: &str, mp4: bool) -> Vec<String> {
+        let mut args = [
+            "-y",
+            "-fflags",
+            "+genpts+discardcorrupt",
+            "-err_detect",
+            "ignore_err",
+            "-i",
+            input,
+            "-map",
+            "0:v?",
+            "-map",
+            "0:a?",
+            "-c",
+            "copy",
+            "-avoid_negative_ts",
+            "make_zero",
+        ]
+        .into_iter()
+        .map(str::to_owned)
+        .collect::<Vec<_>>();
+        if mp4 {
+            args.extend(["-bsf:a".into(), "aac_adtstoasc".into()]);
+        }
+        args.push(output.into());
+        args
+    }
+    if recording <= 0 {
+        return Err(Error::Unsupported);
+    }
+    // Caller has validated and ENDLIST-updated this exact owned playlist.
+    if !present(&paths.playlist)? {
+        return Ok(false);
+    }
+    let input = paths.playlist.to_str().ok_or(Error::Unsupported)?;
+    let output = paths.final_path.to_str().ok_or(Error::Unsupported)?;
+    let deadline = Instant::now() + Duration::from_secs(1800);
+    if step(
+        hls(input, output, false),
+        deadline,
+        owner.clone(),
+        transcript.clone(),
+    )? && present(&paths.final_path)?
+    {
+        return Ok(true);
+    }
+    remove(&paths.final_path)?;
+    let intermediate = paths
+        .hls_dir
+        .join(format!(".dvr_{recording}_intermediate.mp4"));
+    remove(&intermediate)?;
+    let work = (|| {
+        let mp4 = intermediate.to_str().ok_or(Error::Unsupported)?;
+        if !step(
+            hls(input, mp4, true),
+            deadline,
+            owner.clone(),
+            transcript.clone(),
+        )? || !present(&intermediate)?
+        {
+            return Ok(false);
+        }
+        let args = [
+            "-y",
+            "-err_detect",
+            "ignore_err",
+            "-i",
+            mp4,
+            "-map",
+            "0:v?",
+            "-map",
+            "0:a?",
+            "-c",
+            "copy",
+            output,
+        ]
+        .into_iter()
+        .map(str::to_owned)
+        .collect();
+        if step(args, deadline, owner, transcript)? && present(&paths.final_path)? {
+            return Ok(true);
+        }
+        remove(&paths.final_path)?;
+        Ok(false)
+    })();
+    // Source finally removes its intermediate. Cleanup failure is not success;
+    // preserve both actual process outcome and ownership via the caller.
+    let cleanup = remove(&intermediate);
+    match (work, cleanup) {
+        (Ok(value), Ok(())) => Ok(value),
+        (Err(e), _) | (_, Err(e)) => Err(e),
     }
 }
 

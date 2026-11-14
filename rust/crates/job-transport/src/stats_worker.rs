@@ -59,6 +59,20 @@ enum Port {
     Normal(crate::transport::StatsJobs),
 }
 impl Port {
+    async fn claim_selected(
+        &self,
+        expected: Option<&[u8]>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<crate::stats_protocol::Message>, TransportError> {
+        match expected {
+            None => self.claim_stats_fixture(caller).await,
+            Some(raw) => match self {
+                Self::Normal(jobs) => jobs.claim_selected(Some(raw), caller).await,
+                #[cfg(test)]
+                Self::Fixture(_) => Err(TransportError::Configuration),
+            },
+        }
+    }
     async fn claim_stats_fixture(
         &self,
         caller: Arc<dyn Send + Sync>,
@@ -145,6 +159,13 @@ impl StatsWorker {
         self.inner.slots.available_permits()
     }
     pub async fn run_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Run, Error> {
+        self.run_expected(None, caller).await
+    }
+    pub(crate) async fn run_expected(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Run, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -163,7 +184,7 @@ impl StatsWorker {
         });
         let inner = self.inner.clone();
         tokio::spawn(async move {
-            let Some(message) = inner.jobs.claim_stats_fixture(owner.clone()).await.map_err(Error::Transport)? else { return Ok(Run::Empty) };
+            let Some(message) = inner.jobs.claim_selected(expected.as_deref(),owner.clone()).await.map_err(Error::Transport)? else { return Ok(Run::Empty) };
             let value = source_event_projection(inner.source.build(owner.clone()).await?)?;
             let text = python_json(&value, inner.maximum)?;
             drop(value);

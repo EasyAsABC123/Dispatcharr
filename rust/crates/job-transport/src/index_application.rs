@@ -63,6 +63,7 @@ struct Inner {
     lookup: CurrentLookup,
     service: IndexService,
     driver: Mutex<Option<IndexDriver>>,
+    normal_dispatch: AtomicBool,
     closed: AtomicBool,
 }
 #[derive(Clone)]
@@ -142,13 +143,49 @@ impl IndexApplication {
                 lookup,
                 service,
                 driver: Mutex::new(None),
+                normal_dispatch: AtomicBool::new(false),
                 closed: AtomicBool::new(false),
             }),
         })
     }
+    pub fn into_normal_handler(
+        self,
+    ) -> Result<Arc<dyn crate::milestone_dispatch::Handler>, &'static str> {
+        {
+            let driver = self
+                .inner
+                .driver
+                .lock()
+                .map_err(|_| "normal lifecycle poisoned")?;
+            if driver.is_some()
+                || self.inner.closed.load(Ordering::Acquire)
+                || self.inner.normal_dispatch.swap(true, Ordering::AcqRel)
+            {
+                return Err("family already started/closed");
+            }
+        }
+        let config = DriverConfig::default();
+        self.inner
+            .jobs
+            .eta_pool(config.reservations)
+            .map_err(|_| "normal reservation pool")?;
+        let worker = crate::scheduled_index::ScheduledIndexWorker::new(
+            self.inner.jobs.clone(),
+            Arc::new(ServiceExecutor::new(self.inner.service.clone())),
+            config.scheduling,
+        )
+        .map_err(|_| "normal scheduled worker")?;
+        Ok(Arc::new(NormalHandler {
+            app: self,
+            worker,
+            limits: config.reservations,
+        }))
+    }
     pub fn start(&self, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
         let mut driver = self.inner.driver.lock().unwrap();
-        if self.inner.closed.load(Ordering::Acquire) {
+        if self.inner.closed.load(Ordering::Acquire)
+            || self.inner.normal_dispatch.load(Ordering::Acquire)
+        {
             return Err(Error::Closed);
         }
         if driver.is_some() {
@@ -210,5 +247,122 @@ impl IndexApplication {
             return false;
         }
         self.inner.jobs.shutdown(left()).await.is_ok()
+    }
+}
+
+struct NormalHandler {
+    app: IndexApplication,
+    worker: crate::scheduled_index::ScheduledIndexWorker,
+    limits: crate::eta::Limits,
+}
+impl crate::milestone_dispatch::Lifecycle for NormalHandler {
+    fn stop_admission(&self) {
+        self.worker.stop_admission();
+    }
+    fn shutdown(
+        &self,
+        timeout: Duration,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), crate::milestone_dispatch::Disposition>>
+    {
+        Box::pin(async move {
+            let deadline = tokio::time::Instant::now() + timeout;
+            self.worker.shutdown(timeout).await.map_err(|error| {
+                crate::milestone_dispatch::Disposition::Operational(format!(
+                    "scheduled family drain {error:?}"
+                ))
+            })?;
+            if self
+                .app
+                .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+                .await
+            {
+                Ok(())
+            } else {
+                Err(crate::milestone_dispatch::Disposition::Operational(
+                    "normal app drain incomplete".into(),
+                ))
+            }
+        })
+    }
+}
+impl crate::milestone_dispatch::Handler for NormalHandler {
+    fn supports_selected_head(&self) -> bool {
+        true
+    }
+    fn run_once(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>,
+    > {
+        Box::pin(self.execute(None, owner))
+    }
+    fn run_selected(
+        &self,
+        expected: Arc<[u8]>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>,
+    > {
+        Box::pin(self.execute(Some(expected), owner))
+    }
+}
+impl NormalHandler {
+    async fn execute(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>
+    {
+        use crate::milestone_dispatch::Disposition as D;
+        let candidate = match self
+            .app
+            .inner
+            .jobs
+            .peek_index_candidate(owner.clone(), self.limits)
+            .await
+        {
+            Ok(Some(value)) => value,
+            Ok(None) => {
+                return Ok(if expected.is_some() {
+                    D::HeadChanged
+                } else {
+                    D::Empty
+                })
+            }
+            Err(crate::transport::Error::UnsupportedTask) => return Ok(D::UnsupportedHead),
+            Err(error) => return Err(D::Operational(format!("normal scheduled peek {error:?}"))),
+        };
+        if expected
+            .as_ref()
+            .is_some_and(|selected| selected.as_ref() != candidate.receipt.queued_bytes.as_slice())
+        {
+            return Ok(D::HeadChanged);
+        }
+        let receipt = self
+            .app
+            .inner
+            .jobs
+            .reserve_index_candidate_settled(candidate, owner.clone(), self.limits)
+            .await
+            .map_err(|error| match error {
+                crate::transport::Error::ClaimRace => D::HeadChanged,
+                crate::transport::Error::Capacity => D::Capacity,
+                other => D::Operational(format!("normal reservation {other:?}")),
+            })?;
+        let outcome = self
+            .worker
+            .start(&receipt, owner)
+            .map_err(|error| D::Operational(format!("normal scheduled admission {error:?}")))?
+            .wait()
+            .await
+            .map_err(|error| D::Operational(format!("normal scheduled execution {error:?}")))?;
+        Ok(match outcome {
+            crate::scheduled_index::Outcome::Completed(id)
+            | crate::scheduled_index::Outcome::AlreadySucceeded(id) => D::Completed(id),
+            crate::scheduled_index::Outcome::Restored(id) => D::Restored(id),
+        })
     }
 }

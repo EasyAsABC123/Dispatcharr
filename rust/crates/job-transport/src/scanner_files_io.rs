@@ -27,6 +27,7 @@ pub struct ScannerServer {
 }
 #[derive(Debug)]
 pub enum ScannerIoError {
+    HeadChanged,
     Operational,
     Unsupported,
     Capacity,
@@ -52,6 +53,8 @@ struct PortsInner {
     route: ScannerRoute,
     reply: Uuid,
     attempts: std::sync::Mutex<Vec<Value>>,
+    identity: Option<dispatcharr_store::ProducerIdentitySource>,
+    committed: std::sync::Mutex<Vec<ScannerPublication>>,
 }
 /// Opaque capability: accepts only scanner parent frames and three observed
 /// child names. It never grants old DefaultWorker/Index broader authority.
@@ -65,6 +68,11 @@ pub(crate) struct ScannerCandidate {
     held: Arc<Lease>,
     origin: Arc<Inner>,
     route: ScannerRoute,
+}
+impl ScannerCandidate {
+    pub(crate) fn matches_raw(&self, expected: &[u8]) -> bool {
+        self.bytes == expected
+    }
 }
 impl ScannerFilesPorts {
     pub async fn connect(
@@ -126,11 +134,75 @@ impl ScannerFilesPorts {
                 route,
                 reply: Uuid::new_v4(),
                 attempts: std::sync::Mutex::new(Vec::new()),
+                identity: None,
+                committed: std::sync::Mutex::new(Vec::new()),
             }),
         })
     }
+    /// Normal shared queue/cache assembly: configured Redis addresses are not
+    /// restricted to the historical loopback fixture, and no second Jobs exists.
+    pub async fn connect_shared(
+        jobs: Jobs,
+        broker: &str,
+        cache: &str,
+        config: Config,
+        identity: dispatcharr_store::ProducerIdentitySource,
+    ) -> Result<Self, ScannerIoError> {
+        let make = |url: &str| redis::Client::open(url).map_err(|_| ScannerIoError::Unsupported);
+        let manager = ConnectionManagerConfig::new()
+            .set_number_of_retries(0)
+            .set_connection_timeout(config.command_timeout);
+        let broker = make(broker)?
+            .get_connection_manager_with_config(manager.clone())
+            .await
+            .map_err(known)?;
+        let cache_connection = make(cache)?
+            .get_connection_manager_with_config(manager)
+            .await
+            .map_err(known)?;
+        let markers = RedisTransport::connect(
+            cache,
+            TransportConfig {
+                max_operations: config.operations,
+                max_queued_operations: config.operations,
+                command_timeout: config.command_timeout,
+            },
+        )
+        .await
+        .map_err(|_| ScannerIoError::Operational)?;
+        Ok(Self {
+            inner: Arc::new(PortsInner {
+                jobs,
+                broker,
+                cache: cache_connection,
+                markers,
+                route: ScannerRoute::Default,
+                reply: Uuid::new_v4(),
+                attempts: std::sync::Mutex::new(Vec::new()),
+                identity: Some(identity),
+                committed: std::sync::Mutex::new(Vec::new()),
+            }),
+        })
+    }
+    pub(crate) fn identity_source(&self) -> Option<dispatcharr_store::ProducerIdentitySource> {
+        self.inner.identity.clone()
+    }
+    pub(crate) fn committed_publications(&self) -> Result<Vec<ScannerPublication>, ScannerIoError> {
+        self.inner
+            .committed
+            .lock()
+            .map(|v| v.clone())
+            .map_err(|_| ScannerIoError::Operational)
+    }
     pub(crate) async fn peek(
         &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<ScannerCandidate>, ScannerIoError> {
+        self.peek_expected(None, owner).await
+    }
+    pub(crate) async fn peek_expected(
+        &self,
+        expected: Option<Arc<[u8]>>,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Option<ScannerCandidate>, ScannerIoError> {
         let jobs = &self.inner.jobs;
@@ -146,6 +218,12 @@ impl ScannerFilesPorts {
             )
             .await
             .map_err(|_| ScannerIoError::Operational)?;
+        if expected
+            .as_ref()
+            .is_some_and(|selected| state != 1 || selected.as_ref() != bytes.as_slice())
+        {
+            return Err(ScannerIoError::HeadChanged);
+        }
         if state == 0 {
             return Ok(None);
         }
@@ -224,7 +302,7 @@ impl ScannerFilesPorts {
         let _physical = self
             .inner
             .jobs
-            .lease(owner)
+            .lease(owner.clone())
             .map_err(ScannerIoError::Transport)?;
         let mut cache = self.inner.cache.clone();
         let reply: String = redis::cmd("SET")
@@ -250,7 +328,7 @@ impl ScannerFilesPorts {
         let _physical = self
             .inner
             .jobs
-            .lease(owner)
+            .lease(owner.clone())
             .map_err(ScannerIoError::Transport)?;
         let message = scanner_files_protocol::Message {
             kind,
@@ -258,51 +336,109 @@ impl ScannerFilesPorts {
             parent,
             id: Uuid::new_v4(),
         };
+        let actual = match &self.inner.identity {
+            Some(source) => Some(source.current().map_err(|_| ScannerIoError::Operational)?),
+            None => None,
+        };
         let bytes = scanner_files_protocol::encode(
             message,
-            self.inner.reply,
+            actual.as_ref().map_or(self.inner.reply, |v| v.reply_to),
             Uuid::new_v4(),
-            "rust@mapped-scanner",
+            actual
+                .as_ref()
+                .map_or("rust@mapped-scanner", |v| v.origin.as_str()),
         )
         .map_err(|_| ScannerIoError::Unsupported)?;
         scanner_files_protocol::parse_native(&bytes).map_err(|_| ScannerIoError::Unsupported)?;
-        let mut broker = self.inner.broker.clone();
-        let n: usize = redis::cmd("LLEN")
-            .arg("celery")
-            .query_async(&mut broker)
-            .await
-            .map_err(known)?;
-        // The initial domain has one scanner publisher and no concurrent external
-        // producers. Broader atomic admission requires its own contract/gate.
-        if n >= self.inner.jobs.inner.config.max_queued_jobs {
-            return Err(ScannerIoError::Capacity);
-        }
-        let _: i64 = redis::cmd("SADD")
-            .arg("_kombu.binding.celery")
-            .arg("celery\x06\x16\x06\x16celery")
-            .query_async(&mut broker)
-            .await
-            .map_err(known)?;
-        {
-            let mut attempts = self
+        if self.inner.identity.is_some() {
+            use sha2::Digest;
+            {
+                let committed = self
+                    .inner
+                    .committed
+                    .lock()
+                    .map_err(|_| ScannerIoError::Operational)?;
+                if committed.len() >= 32 {
+                    return Err(ScannerIoError::Capacity);
+                }
+            }
+            let lease = self
                 .inner
-                .attempts
+                .jobs
+                .lease(owner.clone())
+                .map_err(ScannerIoError::Transport)?;
+            let limit = self.inner.jobs.inner.config.max_queued_jobs.to_string();
+            let (reply, _held) = self
+                .inner
+                .jobs
+                .inner
+                .broker
+                .command_classified::<i64, _>(
+                    PUBLISH,
+                    &["celery".into(), "_kombu.binding.celery".into()],
+                    &[&bytes, limit.as_bytes()],
+                    lease,
+                )
+                .await
+                .map_err(|error| ScannerIoError::Transport(map(error)))?;
+            match reply {
+                n if n > 0 => {}
+                -2 => return Err(ScannerIoError::Capacity),
+                _ => return Err(ScannerIoError::Operational),
+            }
+            self.inner
+                .committed
                 .lock()
-                .map_err(|_| ScannerIoError::Operational)?;
-            if attempts.len() == 32 {
+                .map_err(|_| ScannerIoError::Operational)?
+                .push(ScannerPublication {
+                    message,
+                    digest: sha2::Sha256::digest(&bytes).into(),
+                });
+        } else {
+            let mut broker = self.inner.broker.clone();
+            let n: usize = redis::cmd("LLEN")
+                .arg("celery")
+                .query_async(&mut broker)
+                .await
+                .map_err(known)?;
+            // The initial domain has one scanner publisher and no concurrent external
+            // producers. Broader atomic admission requires its own contract/gate.
+            if n >= self.inner.jobs.inner.config.max_queued_jobs {
                 return Err(ScannerIoError::Capacity);
             }
-            attempts.push(serde_json::from_slice(&bytes).map_err(|_| ScannerIoError::Operational)?);
+            let _: i64 = redis::cmd("SADD")
+                .arg("_kombu.binding.celery")
+                .arg("celery\x06\x16\x06\x16celery")
+                .query_async(&mut broker)
+                .await
+                .map_err(known)?;
+            {
+                let mut attempts = self
+                    .inner
+                    .attempts
+                    .lock()
+                    .map_err(|_| ScannerIoError::Operational)?;
+                if attempts.len() == 32 {
+                    return Err(ScannerIoError::Capacity);
+                }
+                attempts
+                    .push(serde_json::from_slice(&bytes).map_err(|_| ScannerIoError::Operational)?);
+            }
+            let _: i64 = redis::cmd("LPUSH")
+                .arg("celery")
+                .arg(bytes)
+                .query_async(&mut broker)
+                .await
+                .map_err(known)?;
         }
-        let _: i64 = redis::cmd("LPUSH")
-            .arg("celery")
-            .arg(bytes)
-            .query_async(&mut broker)
-            .await
-            .map_err(known)?;
         Ok(message.id)
     }
     pub(crate) fn begin_run(&self) -> Result<(), ScannerIoError> {
+        self.inner
+            .committed
+            .lock()
+            .map_err(|_| ScannerIoError::Operational)?
+            .clear();
         self.inner
             .attempts
             .lock()
@@ -316,6 +452,9 @@ impl ScannerFilesPorts {
             .lock()
             .map(|v| v.clone())
             .map_err(|_| ScannerIoError::Operational)
+    }
+    pub(crate) fn marker_transport(&self) -> RedisTransport {
+        self.inner.markers.clone()
     }
     pub(crate) fn reply_id(&self) -> Uuid {
         self.inner.reply

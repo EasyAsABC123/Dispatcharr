@@ -28,6 +28,7 @@ pub enum State {
     Empty,
     UnsupportedHead,
     NotDue,
+    HeadChanged,
     WaitingForCompletedSeries,
     Completed { task_id: Uuid, changed: bool },
     AlreadySucceeded { task_id: Uuid, changed: bool },
@@ -108,6 +109,24 @@ impl Application {
             _lifetime: Arc::new(Lifetime(stop)),
         })
     }
+    /// Reserve this prepared application for the single normal queue shell;
+    /// a cloned public handle cannot also start its legacy polling loop.
+    pub fn into_normal_handler(
+        self,
+    ) -> Result<Arc<dyn crate::milestone_dispatch::Handler>, &'static str> {
+        {
+            let mut lifecycle = self
+                .inner
+                .lifecycle
+                .lock()
+                .map_err(|_| "normal family lifecycle poisoned")?;
+            if lifecycle.started || lifecycle.closed {
+                return Err("family already started/closed");
+            }
+            lifecycle.started = true;
+        }
+        Ok(Arc::new(NormalHandler { app: self }))
+    }
     pub fn state(&self) -> State {
         self.inner.state.borrow().clone()
     }
@@ -182,22 +201,47 @@ impl Application {
     }
 }
 async fn run(inner: &Arc<Inner>, owner: Arc<dyn Send + Sync>) -> Result<State, Error> {
-    let candidate = match inner.jobs.peek_local_artwork(owner.clone()).await {
+    run_mode(inner, owner, false, None).await
+}
+async fn run_mode(
+    inner: &Arc<Inner>,
+    owner: Arc<dyn Send + Sync>,
+    adopt: bool,
+    expected: Option<Arc<[u8]>>,
+) -> Result<State, Error> {
+    let peeked = match expected {
+        Some(raw) => {
+            inner
+                .jobs
+                .peek_selected_normal_artwork(&raw, owner.clone())
+                .await
+        }
+        None => inner.jobs.peek_normal_artwork(owner.clone()).await,
+    };
+    let candidate = match peeked {
         Ok(Some(v)) => v,
         Ok(None) => return Ok(State::Empty),
         Err(transport::Error::UnsupportedTask) => return Ok(State::UnsupportedHead),
+        Err(transport::Error::ClaimRace) => return Ok(State::HeadChanged),
         Err(error) => return Err(Error::Transport(error)),
     };
-    let Some(cap) = inner
+    let cap = inner
         .completions
         .admit(&candidate.message)
-        .map_err(Error::Transport)?
-    else {
-        return Ok(State::WaitingForCompletedSeries);
-    };
-    if !cap.admits(&candidate.message) {
+        .map_err(Error::Transport)?;
+    if cap
+        .as_ref()
+        .is_some_and(|proof| !proof.admits(&candidate.message))
+    {
         return Err(Error::Transport(transport::Error::Protocol));
     }
+    if cap.is_none() && !adopt {
+        return Ok(State::WaitingForCompletedSeries);
+    }
+    // For normal intake the sealed authenticated broker candidate plus bounded
+    // actual Recording domain preflight is admission. Parent SUCCESS/in-memory
+    // Native producer witness remains optional provenance, never Source authority.
+
     if candidate.message.eta > chrono::Utc::now() {
         return Ok(State::NotDue);
     }
@@ -241,10 +285,12 @@ async fn run(inner: &Arc<Inner>, owner: Arc<dyn Send + Sync>) -> Result<State, E
         .write_existing_artwork(&message, &completed, owner)
         .await
         .map_err(Error::Transport)?;
-    inner
-        .completions
-        .complete(&message)
-        .map_err(Error::Transport)?;
+    if cap.is_some() {
+        inner
+            .completions
+            .complete(&message)
+            .map_err(Error::Transport)?;
+    }
     Ok(if written {
         State::Completed {
             task_id: message.task_id,
@@ -256,4 +302,75 @@ async fn run(inner: &Arc<Inner>, owner: Arc<dyn Send + Sync>) -> Result<State, E
             changed: completed.changed,
         }
     })
+}
+
+struct NormalHandler {
+    app: Application,
+}
+impl crate::milestone_dispatch::Lifecycle for NormalHandler {
+    fn stop_admission(&self) {
+        self.app.close_producer_admission();
+    }
+    fn shutdown(
+        &self,
+        timeout: Duration,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), crate::milestone_dispatch::Disposition>>
+    {
+        Box::pin(async move {
+            if self.app.shutdown(timeout).await.is_ok() {
+                Ok(())
+            } else {
+                Err(crate::milestone_dispatch::Disposition::Operational(
+                    "normal family drain incomplete".into(),
+                ))
+            }
+        })
+    }
+}
+impl crate::milestone_dispatch::Handler for NormalHandler {
+    fn supports_selected_head(&self) -> bool {
+        true
+    }
+    fn run_once(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>,
+    > {
+        Box::pin(self.execute(None, owner))
+    }
+    fn run_selected(
+        &self,
+        expected: Arc<[u8]>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>,
+    > {
+        Box::pin(self.execute(Some(expected), owner))
+    }
+}
+impl NormalHandler {
+    async fn execute(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>
+    {
+        use crate::milestone_dispatch::Disposition as D;
+        let inner = self.app.inner.clone();
+        match run_mode(&inner, owner, true, expected).await {
+            Ok(State::Empty) => Ok(D::Empty),
+            Ok(State::HeadChanged) => Ok(D::HeadChanged),
+            Ok(State::UnsupportedHead) => Ok(D::UnsupportedHead),
+            Ok(State::NotDue) => Ok(D::NotDue),
+            Ok(State::WaitingForCompletedSeries) => Ok(D::UnsupportedDomain),
+            Ok(State::Completed { task_id, .. } | State::AlreadySucceeded { task_id, .. }) => {
+                Ok(D::Completed(task_id))
+            }
+            Ok(_) => Err(D::Operational("unexpected normal artwork state".into())),
+            Err(error) => Err(D::Operational(format!("normal artwork {error:?}"))),
+        }
+    }
 }

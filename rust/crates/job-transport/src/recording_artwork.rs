@@ -32,6 +32,26 @@ impl DirectTask {
             parent: None,
         })
     }
+    /// Called only after an authenticated normal broker peek. Domain SQL and
+    /// exact raw CAS still occur in the worker; parent completion is not a
+    /// prerequisite in Source Celery.
+    pub(crate) fn observed_series(message: &crate::series_protocol::SeriesMessage) -> Option<Self> {
+        let canonical =
+            |id: Uuid| id.get_version_num() == 4 && id.get_variant() == uuid::Variant::RFC4122;
+        if !canonical(message.task_id)
+            || !canonical(message.root)
+            || message
+                .parent
+                .is_some_and(|id| !canonical(id) || id == message.task_id)
+        {
+            return None;
+        }
+        Some(Self {
+            id: message.task_id,
+            root: message.root,
+            parent: message.parent,
+        })
+    }
     pub(crate) fn recurring(message: &crate::default_protocol::Message) -> Option<Self> {
         if message.kind != crate::default_protocol::Kind::RecurringMaintenance
             || message.expires.is_some()
@@ -301,9 +321,9 @@ impl ArtworkSink for Publisher {
                     .map_err(|_| ArtworkError::Uncertain)?;
                 return Ok(id);
             }
-            let proof = if self.proofs.is_some() && task.parent().is_some() {
+            let proof = if self.proofs.is_some() {
                 Some(
-                    crate::recording_artwork_protocol::parse(&bytes)
+                    crate::recording_artwork_protocol::parse_normal(&bytes)
                         .ok_or(ArtworkError::Uncertain)?,
                 )
             } else {

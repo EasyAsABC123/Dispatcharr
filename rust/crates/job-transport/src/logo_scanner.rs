@@ -114,6 +114,7 @@ pub struct Scanner {
     limits: Limits,
     slot: Arc<Semaphore>,
     first: Arc<AtomicBool>,
+    mapped_parent: bool,
     spool: Option<SpoolConfig>,
 }
 /// Explicit managed scratch profile; the legacy constructor remains128 files.
@@ -280,6 +281,7 @@ impl Scanner {
             limits,
             slot: Arc::new(Semaphore::new(1)),
             first: Arc::new(AtomicBool::new(false)),
+            mapped_parent: false,
             spool,
         })
     }
@@ -291,13 +293,18 @@ impl Scanner {
         let roots = self.roots.clone();
         let limits = self.limits;
         let spool = self.spool.clone();
+        let mapped_parent = self.mapped_parent;
         let keep: Owner = Arc::new((owner, slot));
         tokio::task::spawn_blocking(move || match spool {
             Some(config) => spool::Disk::enumerate(roots, limits, config, keep)
                 .map(|v| Inspected::Disk(Some(v))),
             None => {
                 let _keep = keep;
-                let files = inspect(roots, limits)?;
+                let files = if mapped_parent {
+                    inspect_domain(roots, limits, true)?
+                } else {
+                    inspect(roots, limits)?
+                };
                 let count = files.len();
                 Ok(Inspected::Memory {
                     files: files.into_iter(),
@@ -307,6 +314,15 @@ impl Scanner {
         })
         .await
         .map_err(|_| Error::Operational)?
+    }
+    /// Only the mixed scanner assembly may share its actual first-scan state.
+    pub(crate) fn with_mapped_parent(mut self, first: Arc<AtomicBool>) -> Result<Self, Error> {
+        if self.spool.is_some() {
+            return Err(Error::Unsupported);
+        }
+        self.first = first;
+        self.mapped_parent = true;
+        Ok(self)
     }
     pub fn first_scan_completed(&self) -> bool {
         self.first.load(Ordering::Acquire)
@@ -544,8 +560,11 @@ fn marker_bytes(value: f64) -> String {
         .expect("filesystem preflight bounds finite epoch")
 }
 fn inspect(roots: Roots, limits: Limits) -> Result<Vec<File>, Error> {
+    inspect_domain(roots, limits, false)
+}
+fn inspect_domain(roots: Roots, limits: Limits, mapped_parent: bool) -> Result<Vec<File>, Error> {
     let mut files = Vec::new();
-    inspect_into(roots, limits, |file| {
+    inspect_into_domain(roots, limits, mapped_parent, |file| {
         files.push(file);
         Ok(())
     })?;
@@ -554,6 +573,14 @@ fn inspect(roots: Roots, limits: Limits) -> Result<Vec<File>, Error> {
 fn inspect_into<F: FnMut(File) -> Result<(), Error>>(
     roots: Roots,
     limits: Limits,
+    emit: F,
+) -> Result<usize, Error> {
+    inspect_into_domain(roots, limits, false, emit)
+}
+fn inspect_into_domain<F: FnMut(File) -> Result<(), Error>>(
+    roots: Roots,
+    limits: Limits,
+    mapped_parent: bool,
     mut emit: F,
 ) -> Result<usize, Error> {
     fn empty(path: &Path) -> Result<bool, Error> {
@@ -573,7 +600,7 @@ fn inspect_into<F: FnMut(File) -> Result<(), Error>>(
             }
         }
     }
-    if !empty(&roots.m3u)? || !empty(&roots.epg)? {
+    if !mapped_parent && (!empty(&roots.m3u)? || !empty(&roots.epg)?) {
         return Err(Error::Unsupported);
     }
     let mut count = 0;

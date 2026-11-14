@@ -54,7 +54,7 @@ impl Jobs {
         }
         let message =
             crate::refresh_protocol::parse(&reply.1).map_err(|_| Error::UnsupportedTask)?;
-        if !scope.accepts(&message) {
+        if !scope.accepts_raw(&message, &reply.1) {
             return Err(Error::UnsupportedTask);
         }
         let parent_keys = vec![format!("celery-tasks:celery-task-meta-{}", scope.parent())];

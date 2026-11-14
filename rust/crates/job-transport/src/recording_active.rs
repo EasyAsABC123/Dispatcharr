@@ -141,6 +141,10 @@ pub(crate) struct Operations {
     commands: Arc<Semaphore>,
     identity: Arc<()>,
 }
+pub(crate) enum NormalAcquire {
+    Acquired(ConfirmedSet),
+    HeldElsewhere(Observation<bool>),
+}
 impl Operations {
     pub(crate) async fn connect(url: String, owner: Arc<dyn Send + Sync>) -> Result<Self, Error> {
         tokio::spawn(async move {
@@ -162,6 +166,14 @@ impl Operations {
         })
         .await
         .map_err(|_| Error::Supervisor)?
+    }
+    pub(crate) async fn connect_normal(
+        url: String,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Self, Error> {
+        let mut operations = Self::connect(url, owner).await?;
+        operations.commands = Arc::new(Semaphore::new(20));
+        Ok(operations)
     }
     fn key(recording: i64) -> Result<String, Error> {
         if !(1..=i64::from(i32::MAX)).contains(&recording) {
@@ -267,6 +279,119 @@ impl Operations {
             return Err(Error::Uncertain);
         }
         Ok(observation)
+    }
+    /// Normal DVR uses the same real literalNX/EX45 wire algorithm and
+    /// move-only same-connection confirmation chain; elapsed recording duration
+    /// never grants ownership. Every refresh needs its actual settled reply.
+    pub(crate) async fn set_once_normal(
+        &self,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<NormalAcquire, Error> {
+        let observation = self.set_once(recording, owner).await?;
+        if !observation.value {
+            return Ok(NormalAcquire::HeldElsewhere(observation));
+        }
+        let confirmation =
+            initial_literal(recording, &self.identity, &observation, Instant::now())?;
+        Ok(NormalAcquire::Acquired(ConfirmedSet {
+            observation,
+            confirmation,
+        }))
+    }
+    pub(crate) async fn refresh_normal(
+        &self,
+        recording: i64,
+        prior: LiteralConfirmation,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<ConfirmedRefresh, Error> {
+        self.refresh_captured61(recording, prior, owner).await
+    }
+    /// Source stops refreshing after capture. Finalizer may outlive45s; DEL0
+    /// after expiry is an actual successful no-op, not guessed lease ownership.
+    /// Call only after the task's physical capture/remux/file scopes settle.
+    pub(crate) async fn remove_normal_retired(
+        &self,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Observation<i64>, Error> {
+        let observed = self
+            .script(recording, "return redis.call('DEL',KEYS[1])", owner)
+            .await?;
+        if !matches!(observed.value, 0 | 1) {
+            return Err(Error::Uncertain);
+        }
+        Ok(observed)
+    }
+    /// Only actual Source metadata fields are projected; no decoder-derived
+    /// substitute is manufactured when the proxy did not publish them.
+    pub(crate) async fn normal_stream_info(
+        &self,
+        channel: uuid::Uuid,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<serde_json::Value>, Error> {
+        let permit = self
+            .commands
+            .clone()
+            .acquire_owned()
+            .await
+            .map_err(|_| Error::Capacity)?;
+        let mut connection = self.connection.clone();
+        tokio::spawn(async move{
+            let (_owner,_permit)=(owner,permit);
+            let fields=["video_codec","resolution","width","height","source_fps","pixel_format","video_bitrate","audio_codec","sample_rate","audio_channels","audio_bitrate"];
+            let script="local out={}; for i=1,#ARGV do if redis.call('HSTRLEN',KEYS[1],ARGV[i])>4096 then return {0,{}} end;out[i]=redis.call('HGET',KEYS[1],ARGV[i]) or false end;return {1,out}";
+            let (bounded,values):(i64,Vec<Option<String>>)=Script::new(script).key(format!("live:channel:{channel}:metadata")).arg(&fields)
+                .invoke_async(&mut connection).await.map_err(Error::Backend)?;
+            if bounded!=1||values.len()!=fields.len(){return Err(Error::Unsupported);}
+            let mut out=serde_json::Map::new();
+            for (key,value) in fields.into_iter().zip(values){
+                let Some(value)=value else{continue;};
+                if matches!(key,"width"|"height"|"source_fps"|"video_bitrate"|"sample_rate"|"audio_bitrate") {
+                    if let Ok(number)=value.trim().parse::<f64>(){
+                        let number=serde_json::Number::from_f64(number).ok_or(Error::Unsupported)?;
+                        out.insert(key.into(),serde_json::Value::Number(number));
+                    }
+                }else{out.insert(key.into(),serde_json::Value::String(value));}
+            }
+            Ok((!out.is_empty()).then_some(serde_json::Value::Object(out)))
+        }).await.map_err(|_|Error::Supervisor)?
+    }
+    pub(crate) async fn normal_viewer_absent(
+        &self,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<AuxiliaryObservation, Error> {
+        Self::key(recording)?;
+        let viewer = format!("dvr:hls_viewer:{recording}");
+        let permit = self
+            .commands
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| Error::Capacity)?;
+        let mut connection = self.connection.clone();
+        tokio::spawn(async move {
+            let (_owner, _permit) = (owner, permit);
+            let before_utc = Utc::now();
+            let result: i64 =
+                Script::new("if redis.call('EXISTS',KEYS[1])==0 then return 1 else return 0 end")
+                    .key(viewer)
+                    .invoke_async(&mut connection)
+                    .await
+                    .map_err(Error::Backend)?;
+            let absent = match result {
+                0 => false,
+                1 => true,
+                _ => return Err(Error::Uncertain),
+            };
+            Ok(AuxiliaryObservation {
+                absent,
+                before_utc,
+                after_utc: Utc::now(),
+            })
+        })
+        .await
+        .map_err(|_| Error::Supervisor)?
     }
     /// Atomic bounded TYPE/STRLEN/value/TTL observation. No bulk data beyond the
     /// literal one-byte value is transferred and wrong types aren't projected

@@ -56,6 +56,13 @@ impl Worker {
         }
     }
     pub async fn run_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Run, Error> {
+        self.run_expected(None, caller).await
+    }
+    pub(crate) async fn run_expected(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Run, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -74,7 +81,11 @@ impl Worker {
         });
         let inner = self.inner.clone();
         tokio::spawn(async move {
-            let message = match inner.jobs.claim(owner.clone()).await {
+            let claimed = match expected {
+                Some(raw) => inner.jobs.claim_selected(Some(&raw), owner.clone()).await,
+                None => inner.jobs.claim(owner.clone()).await,
+            };
+            let message = match claimed {
                 Ok(Some(m)) => m,
                 Ok(None) => return Ok(Run::Empty),
                 Err(TransportError::UnsupportedTask) => return Ok(Run::UnsupportedHead),

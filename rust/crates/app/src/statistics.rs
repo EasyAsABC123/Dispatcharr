@@ -14,6 +14,29 @@ impl LiveStatsSnapshotSource for Source {
         Box::pin(self.0.global_live_statistics())
     }
 }
+/// Periodic Celery task source uses the real live scanner already owned by Main.
+/// It deliberately returns live channels/count, not the combined HTTP payload.
+struct LiveTaskSource(StreamEngine);
+impl dispatcharr_job_transport::stats_worker::Source for LiveTaskSource {
+    fn build(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<Value, dispatcharr_job_transport::stats_worker::Error>> {
+        Box::pin(async move {
+            self.0
+                .global_live_statistics_retained(owner)
+                .await
+                .map_err(|_| dispatcharr_job_transport::stats_worker::Error::Build)
+        })
+    }
+}
+/// Attach this adapter to the same Main engine and real realtime event sink.
+/// The queue handler owns task admission/drain; this creates no pools or worker.
+pub fn task_source(
+    engine: &StreamEngine,
+) -> Arc<dyn dispatcharr_job_transport::stats_worker::Source> {
+    Arc::new(LiveTaskSource(engine.clone()))
+}
 pub fn start(
     engine: &StreamEngine,
     clients: Option<&ClientStore>,

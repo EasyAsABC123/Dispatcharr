@@ -116,31 +116,13 @@ fn refreshed_properties(raw: &Value, incoming: &Map<String, Value>) -> Value {
         raw.clone()
     }
 }
-impl Store {
-    /// Caller supplies the same account-settings snapshot and scan timestamp as
-    /// the source task. Group creation and relation writes retain the original
-    /// separate bulk-write boundaries; this is not one invented transaction.
-    /// No model-save hooks, manual-group marking or refresh jobs are invoked.
-    pub async fn import_m3u_groups(
-        &self,
-        account_id: i64,
-        account_properties: &Value,
-        groups: Vec<ImportedGroup>,
-        scan_time: DateTime<Utc>,
-    ) -> Result<GroupImportCounts, StoreError> {
-        self.import_m3u_groups_report(account_id, account_properties, groups, scan_time)
-            .await
-            .map_err(|failure| failure.source)
-    }
-    /// Same mutation engine as the legacy public API; this additive result only
-    /// preserves statement provenance. It introduces no retry or transaction.
-    pub async fn import_m3u_groups_report(
-        &self,
-        account_id: i64,
-        account_properties: &Value,
-        groups: Vec<ImportedGroup>,
-        scan_time: DateTime<Utc>,
-    ) -> Result<GroupImportCounts, M3uGroupImportFailure> {
+// One mutation engine supports both legacy pool and explicit owned-session paths.
+macro_rules! owned_group_import {
+    ($executor:expr, $account_id:expr, $account_properties:expr, $groups:expr, $scan_time:expr) => {{
+        let account_id = $account_id;
+        let account_properties = $account_properties;
+        let groups = $groups;
+        let scan_time = $scan_time;
         if groups.len() > MAX_IMPORT_GROUPS {
             return Err(invalid().into());
         }
@@ -158,7 +140,7 @@ impl Store {
             .map(|group| group.name.as_str())
             .collect::<Vec<_>>();
         let existing=sqlx::query("SELECT id::bigint AS id,name FROM dispatcharr_channels_channelgroup WHERE name=ANY($1)")
-            .bind(&names).fetch_all(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadGroups, e))?;
+            .bind(&names).fetch_all($executor).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadGroups, e))?;
         let mut all = existing
             .into_iter()
             .map(|row| {
@@ -183,21 +165,21 @@ impl Store {
         };
         if !missing.is_empty() {
             sqlx::query("INSERT INTO dispatcharr_channels_channelgroup(name) SELECT value FROM jsonb_array_elements_text($1) AS names(value)")
-                .bind(json!(missing)).execute(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::CreateGroups, e))?;
+                .bind(json!(missing)).execute($executor).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::CreateGroups, e))?;
             let created=sqlx::query("SELECT id::bigint AS id,name FROM dispatcharr_channels_channelgroup WHERE name=ANY($1)")
-                .bind(&missing).fetch_all(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadCreatedGroups, e))?;
+                .bind(&missing).fetch_all($executor).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadCreatedGroups, e))?;
             for row in created {
                 all.push((row.try_get("id")?, row.try_get("name")?));
             }
         }
         let ids = all.iter().map(|(id, _)| *id).collect::<Vec<_>>();
         let existing_bytes:i64=sqlx::query_scalar("SELECT COALESCE(sum(octet_length(custom_properties::text)),0)::bigint FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND channel_group_id=ANY($2)")
-            .bind(account_id).bind(&ids).fetch_one(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadRelationBytes, e))?;
+            .bind(account_id).bind(&ids).fetch_one($executor).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadRelationBytes, e))?;
         if existing_bytes > MAX_IMPORT_GROUP_BYTES as i64 {
             return Err(invalid().into());
         }
         let existing=sqlx::query("SELECT id::bigint AS id,channel_group_id::bigint AS channel_group_id,custom_properties FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND channel_group_id=ANY($2)")
-            .bind(account_id).bind(&ids).fetch_all(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadRelations, e))?;
+            .bind(account_id).bind(&ids).fetch_all($executor).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::ReadRelations, e))?;
         let existing = existing
             .into_iter()
             .map(|row| Ok((row.try_get::<i64, _>("channel_group_id")?, row)))
@@ -231,13 +213,68 @@ impl Store {
         counts.updated_relationships = updates.len();
         if !creates.is_empty() {
             sqlx::query("INSERT INTO dispatcharr_channels_channelgroupm3uaccount(channel_group_id,m3u_account_id,custom_properties,enabled,auto_channel_sync,last_seen,is_stale) SELECT channel_group_id,m3u_account_id,custom_properties,enabled,auto_channel_sync,last_seen,is_stale FROM jsonb_populate_recordset(NULL::dispatcharr_channels_channelgroupm3uaccount,$1) ON CONFLICT DO NOTHING")
-            .bind(json!(creates)).execute(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::CreateRelations, e))?;
+            .bind(json!(creates)).execute($executor).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::CreateRelations, e))?;
         }
         if !updates.is_empty() {
             sqlx::query("UPDATE dispatcharr_channels_channelgroupm3uaccount AS target SET custom_properties=incoming.custom_properties,last_seen=incoming.last_seen,is_stale=false FROM jsonb_populate_recordset(NULL::dispatcharr_channels_channelgroupm3uaccount,$1) AS incoming WHERE target.id=incoming.id")
-            .bind(json!(updates)).execute(&self.pool).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::UpdateRelations, e))?;
+            .bind(json!(updates)).execute($executor).await.map_err(|e| M3uGroupImportFailure::sql(M3uGroupImportStage::UpdateRelations, e))?;
         }
         Ok(counts)
+
+    }};
+}
+
+impl Store {
+    /// Caller supplies the same account-settings snapshot and scan timestamp as
+    /// the source task. Group creation and relation writes retain the original
+    /// separate bulk-write boundaries; this is not one invented transaction.
+    /// No model-save hooks, manual-group marking or refresh jobs are invoked.
+    pub async fn import_m3u_groups(
+        &self,
+        account_id: i64,
+        account_properties: &Value,
+        groups: Vec<ImportedGroup>,
+        scan_time: DateTime<Utc>,
+    ) -> Result<GroupImportCounts, StoreError> {
+        self.import_m3u_groups_report(account_id, account_properties, groups, scan_time)
+            .await
+            .map_err(|failure| failure.source)
+    }
+    /// Same mutation engine as the legacy public API; this additive result only
+    /// preserves statement provenance. It introduces no retry or transaction.
+    pub async fn import_m3u_groups_report(
+        &self,
+        account_id: i64,
+        account_properties: &Value,
+        groups: Vec<ImportedGroup>,
+        scan_time: DateTime<Utc>,
+    ) -> Result<GroupImportCounts, M3uGroupImportFailure> {
+        owned_group_import!(
+            &self.pool,
+            account_id,
+            account_properties,
+            groups,
+            scan_time
+        )
+    }
+
+    /// Same statement engine on the caller-owned session; no pool lookup or
+    /// additional transaction. The caller retains physical settlement/closure.
+    pub async fn import_m3u_groups_report_on_connection(
+        &self,
+        connection: &mut sqlx::PgConnection,
+        account_id: i64,
+        account_properties: &Value,
+        groups: Vec<ImportedGroup>,
+        scan_time: DateTime<Utc>,
+    ) -> Result<GroupImportCounts, M3uGroupImportFailure> {
+        owned_group_import!(
+            &mut *connection,
+            account_id,
+            account_properties,
+            groups,
+            scan_time
+        )
     }
 }
 #[cfg(test)]

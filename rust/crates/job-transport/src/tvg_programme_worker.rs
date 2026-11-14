@@ -92,6 +92,13 @@ impl Worker {
         }
     }
     pub async fn run_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Run, Error> {
+        self.run_expected(None, caller).await
+    }
+    pub(crate) async fn run_expected(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Run, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -109,7 +116,7 @@ impl Worker {
             _slot: slot,
         });
         let inner = self.inner.clone();
-        tokio::spawn(async move { run(inner, owner).await })
+        tokio::spawn(async move { run(inner, owner, expected).await })
             .await
             .map_err(|_| Error::Supervisor)?
     }
@@ -126,8 +133,16 @@ impl Worker {
         Ok(())
     }
 }
-async fn run(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {
-    let candidate = match inner.jobs.peek(owner.clone()).await {
+async fn run(
+    inner: Arc<Inner>,
+    owner: Arc<Owner>,
+    expected: Option<Arc<[u8]>>,
+) -> Result<Run, Error> {
+    let candidate = match inner
+        .jobs
+        .peek_selected(expected.as_deref(), owner.clone())
+        .await
+    {
         Ok(Some(v)) => v,
         Ok(None) => return Ok(Run::Empty),
         Err(crate::transport::Error::UnsupportedTask) => return Ok(Run::UnsupportedHead),

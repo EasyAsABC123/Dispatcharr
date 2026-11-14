@@ -95,6 +95,7 @@ pub struct Prepared {
 enum CapturedWindow {
     Thirty,
     SixtyOneLocalVideoAudio,
+    Normal,
 }
 pub struct Store {
     window: CapturedWindow,
@@ -118,6 +119,63 @@ impl Store {
             origin: Arc::new(()),
         }
     }
+    /// Normal periodic-row cleanup validates the actual recording interval,
+    /// identity and same SQL fences, without an observed-duration admission list.
+    pub fn normal(pool: PgPool) -> Self {
+        Self {
+            window: CapturedWindow::Normal,
+            pool,
+            origin: Arc::new(()),
+        }
+    }
+    /// Source revoke_task/run_recording exact-name deletion, independent of a
+    /// fixture's duration, schedule arguments or assumed absent FK references.
+    /// False means no actual PeriodicTask; only that permits pidbox fallback.
+    pub async fn delete_by_name(
+        self: Arc<Self>,
+        name: String,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if !matches!(self.window, CapturedWindow::Normal) || name.is_empty() || name.len() > 255 {
+            return Err(Error::Unsupported("normal periodic task name"));
+        }
+        tokio::spawn(async move{
+            let _owner=owner;let mut connection=self.pool.acquire().await.map_err(|e|sql(Stage::Acquire,e,Prefix::default()))?;
+            let mut prefix=Prefix::default();let mut transaction_attempted=false;
+            let result=async{
+                let row:Option<(i64,Option<i64>)>=sqlx::query_as("SELECT id::bigint,clocked_id::bigint FROM django_celery_beat_periodictask WHERE name=$1 LIMIT 1")
+                    .bind(&name).fetch_optional(&mut *connection).await.map_err(|e|sql(Stage::Read,e,prefix))?;
+                let Some((id,clocked))=row else{return Ok(false);};
+                transaction_attempted=true;
+                command(&mut connection,"BEGIN",Stage::BeginPeriodic,prefix).await?;
+                command(&mut connection,"SAVEPOINT native_normal_predelete",Stage::PreDeleteTracking,prefix).await?;
+                normal_touch(&mut connection,Stage::PreDeleteTracking,prefix).await?;
+                command(&mut connection,"RELEASE SAVEPOINT native_normal_predelete",Stage::PreDeleteTracking,prefix).await?;
+                for (q,stage) in [("UPDATE epg_epgsource SET refresh_task_id=NULL WHERE refresh_task_id=$1",Stage::ClearEpg),("UPDATE m3u_m3uaccount SET refresh_task_id=NULL WHERE refresh_task_id=$1",Stage::ClearM3u)]{
+                    sqlx::query(q).bind(id).execute(&mut *connection).await.map_err(|e|sql(stage,e,prefix))?;
+                }
+                let rows=sqlx::query("DELETE FROM django_celery_beat_periodictask WHERE id=$1 AND name=$2 AND clocked_id IS NOT DISTINCT FROM $3")
+                    .bind(id).bind(&name).bind(clocked).execute(&mut *connection).await.map_err(|e|sql(Stage::DeletePeriodic,e,prefix))?.rows_affected();
+                if rows!=1{return Err(Error::Unsupported("normal periodic changed before delete"));}
+                prefix.periodic=Commit::Unknown;command(&mut connection,"COMMIT",Stage::CommitPeriodic,prefix).await?;prefix.periodic=Commit::Acknowledged;
+                command(&mut connection,"BEGIN",Stage::BeginOverride,prefix).await?;
+                normal_touch(&mut connection,Stage::OverrideTracking,prefix).await?;
+                prefix.override_touch=Commit::Unknown;command(&mut connection,"COMMIT",Stage::CommitOverride,prefix).await?;prefix.override_touch=Commit::Acknowledged;transaction_attempted=false;
+                if let Some(clocked)=clocked {
+                    let used:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)").bind(clocked).fetch_one(&mut *connection).await.map_err(|e|sql(Stage::UnusedClocked,e,prefix))?;
+                    if !used {
+                        transaction_attempted=true;command(&mut connection,"BEGIN",Stage::BeginClocked,prefix).await?;
+                        let rows=sqlx::query("DELETE FROM django_celery_beat_clockedschedule WHERE id=$1 AND NOT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)").bind(clocked).execute(&mut *connection).await.map_err(|e|sql(Stage::DeleteClocked,e,prefix))?.rows_affected();
+                        if rows>1{return Err(Error::Unsupported("normal clocked delete cardinality"));}
+                        if rows==1 {command(&mut connection,"SAVEPOINT native_normal_clocked_postdelete",Stage::ClockedTracking,prefix).await?;normal_touch(&mut connection,Stage::ClockedTracking,prefix).await?;command(&mut connection,"RELEASE SAVEPOINT native_normal_clocked_postdelete",Stage::ClockedTracking,prefix).await?;}
+                        prefix.clocked=Commit::Unknown;command(&mut connection,"COMMIT",Stage::CommitClocked,prefix).await?;prefix.clocked=Commit::Acknowledged;transaction_attempted=false;
+                    }
+                }
+                Ok(true)
+            }.await;
+            settle(connection,result,prefix,transaction_attempted).await
+        }).await.map_err(|_|Error::Supervisor)?
+    }
     pub async fn prepare(
         self: Arc<Self>,
         expected: RecordingIdentity,
@@ -125,15 +183,22 @@ impl Store {
     ) -> Result<Prepared, Error> {
         if !(1..=i64::from(i32::MAX)).contains(&expected.recording)
             || !(1..=i64::from(i32::MAX)).contains(&expected.channel)
-            || expected.end - expected.start
-                != chrono::Duration::seconds(match self.window {
-                    CapturedWindow::Thirty => 30,
-                    CapturedWindow::SixtyOneLocalVideoAudio => 61,
-                })
-            || expected.start.timestamp_subsec_nanos() != 0
+            || expected.end <= expected.start
+            || match self.window {
+                CapturedWindow::Thirty => {
+                    expected.end - expected.start != chrono::Duration::seconds(30)
+                        || expected.start.timestamp_subsec_nanos() != 0
+                }
+                CapturedWindow::SixtyOneLocalVideoAudio => {
+                    expected.end - expected.start != chrono::Duration::seconds(61)
+                        || expected.start.timestamp_subsec_nanos() != 0
+                }
+                CapturedWindow::Normal => false,
+            }
         {
             return Err(Error::Unsupported(match self.window {
                 CapturedWindow::Thirty => "Source3 future-clocked identity",
+                CapturedWindow::Normal => "normal recording identity",
                 CapturedWindow::SixtyOneLocalVideoAudio => "Source61 future-clocked identity",
             }));
         }
@@ -229,6 +294,14 @@ async fn command(
         .await
         .map(|_| ())
         .map_err(|source| sql(stage, source, prefix))
+}
+async fn normal_touch(
+    connection: &mut PgConnection,
+    stage: Stage,
+    prefix: Prefix,
+) -> Result<(), Error> {
+    sqlx::query("INSERT INTO django_celery_beat_periodictasks(ident,last_update) VALUES(1,$1) ON CONFLICT(ident) DO UPDATE SET last_update=EXCLUDED.last_update")
+        .bind(Utc::now()).execute(connection).await.map(|_|()).map_err(|e|sql(stage,e,prefix))
 }
 async fn touch(connection: &mut PgConnection, stage: Stage, prefix: Prefix) -> Result<(), Error> {
     let singleton: Option<i64> = sqlx::query_scalar(

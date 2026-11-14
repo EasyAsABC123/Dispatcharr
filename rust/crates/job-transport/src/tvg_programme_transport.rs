@@ -31,6 +31,13 @@ impl TvgJobs {
         })
     }
     pub async fn peek(&self, owner: Arc<dyn Send + Sync>) -> Result<Option<Candidate>, Error> {
+        self.peek_selected(None, owner).await
+    }
+    pub(crate) async fn peek_selected(
+        &self,
+        expected: Option<&[u8]>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Candidate>, Error> {
         let lease = self.jobs.lease(owner)?;
         let (reply, _held) = self
             .jobs
@@ -39,6 +46,11 @@ impl TvgJobs {
             .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &["celery".into()], &[], lease)
             .await
             .map_err(map)?;
+        if let Some(expected) = expected {
+            if expected.is_empty() || reply.0 != 1 || reply.1 != expected {
+                return Err(Error::ClaimRace);
+            }
+        }
         match reply.0 {
             0 => Ok(None),
             1 => {

@@ -282,6 +282,7 @@ async fn setup(broker: &str) -> (Scanner, Arc<Helper>, sqlx::PgPool, i64) {
         pool: pool.clone(),
         jobs,
         publication: None,
+        identity: None,
     });
     (scanner, helper, pool, id)
 }

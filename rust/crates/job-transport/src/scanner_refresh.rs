@@ -20,6 +20,7 @@ use uuid::Uuid;
 pub struct Scope {
     parent: Uuid,
     sources: Vec<i64>,
+    exact: Option<(Uuid, [u8; 32])>,
 }
 impl Scope {
     /// Explicit scanner-assembly capability, not an untrusted HTTP request.
@@ -36,13 +37,34 @@ impl Scope {
         {
             return Err(TransportError::Configuration);
         }
-        Ok(Self { parent, sources })
+        Ok(Self {
+            parent,
+            sources,
+            exact: None,
+        })
+    }
+    pub fn from_registry(proof: &crate::scanner_parents::ScannerRefresh) -> Self {
+        Self {
+            parent: proof.scanner_id(),
+            sources: vec![proof.source_id()],
+            exact: Some((proof.child_id(), proof.digest())),
+        }
+    }
+    pub(crate) fn accepts_raw(&self, m: &RefreshMessage, raw: &[u8]) -> bool {
+        use sha2::Digest;
+        self.accepts(m)
+            && self.exact.as_ref().is_none_or(|(id, hash)| {
+                *id == m.task_id && *hash == <[u8; 32]>::from(sha2::Sha256::digest(raw))
+            })
     }
     pub(crate) fn parent(&self) -> Uuid {
         self.parent
     }
     pub(crate) fn accepts(&self, message: &RefreshMessage) -> bool {
-        message.root == self.parent
+        self.exact
+            .as_ref()
+            .is_none_or(|(id, _)| *id == message.task_id)
+            && message.root == self.parent
             && message.parent == Some(self.parent)
             && message.eta.is_none()
             && !message.force

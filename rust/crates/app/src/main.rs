@@ -9,6 +9,7 @@ mod plugin_gpg_trace;
 mod proxy_health;
 mod realtime;
 mod response_headers;
+mod selected_jobs;
 mod static_assets;
 mod statistics;
 mod vod_react_fallback;
@@ -42,13 +43,36 @@ fn database_url() -> Result<String, String> {
     database_config::url()
 }
 
-async fn health(State(store): State<Store>) -> (StatusCode, Json<serde_json::Value>) {
+#[derive(Clone)]
+struct HealthState {
+    store: Store,
+    selected: Option<selected_jobs::SelectedJobs>,
+}
+async fn health(State(state): State<HealthState>) -> (StatusCode, Json<serde_json::Value>) {
+    let store = state.store;
     // Readiness verifies the migrated schema as well as database connectivity.
     match store.setting("proxy_settings").await {
-        Ok(_) => (
-            StatusCode::OK,
-            Json(serde_json::json!({"status":"ready","backend":"rust","parity_complete":false})),
-        ),
+        Ok(_) => {
+            if let Some(selected) = state.selected {
+                let (ready, details) = selected.readiness();
+                return (
+                    if ready {
+                        StatusCode::OK
+                    } else {
+                        StatusCode::SERVICE_UNAVAILABLE
+                    },
+                    Json(
+                        serde_json::json!({"status":if ready{"ready"}else{"selected_workers_not_ready"},"backend":"rust","parity_complete":false,"selected_workers":details}),
+                    ),
+                );
+            }
+            (
+                StatusCode::OK,
+                Json(
+                    serde_json::json!({"status":"ready","backend":"rust","parity_complete":false}),
+                ),
+            )
+        }
         Err(_) => (
             StatusCode::SERVICE_UNAVAILABLE,
             Json(serde_json::json!({"status":"database_unavailable"})),
@@ -147,6 +171,7 @@ async fn combined_stats_legacy_alias(request: axum::extract::Request) -> Respons
 }
 
 async fn run() -> Result<(), String> {
+    let selected_jobs_enabled = selected_jobs::enabled()?;
     let bind: SocketAddr = env::var("RUST_BIND")
         .unwrap_or_else(|_| "127.0.0.1:9192".into())
         .parse()
@@ -657,11 +682,13 @@ async fn run() -> Result<(), String> {
         Ok("1") => true,
         _ => return Err("RUST_EPG_REFRESH_ENABLED must be 0 or 1".into()),
     };
+    let refresh_enabled = refresh_enabled || selected_jobs_enabled;
     let version_tasks_enabled = match env::var("RUST_VERSION_TASKS_ENABLED").as_deref() {
         Ok("0") | Err(_) => false,
         Ok("1") => true,
         _ => return Err("RUST_VERSION_TASKS_ENABLED must be 0 or 1".into()),
     };
+    let version_tasks_enabled = version_tasks_enabled || selected_jobs_enabled;
     let version_tasks = if version_tasks_enabled {
         let cache = env::var("REDIS_URL").map_err(|_| "Enabled version tasks require REDIS_URL")?;
         let bus = realtime_bus
@@ -696,6 +723,7 @@ async fn run() -> Result<(), String> {
     } else {
         None
     };
+    let artwork_completions = dispatcharr_job_transport::ArtworkCompletions::new();
     let mut epg_index = None;
     let mut epg_series = None;
     let mut epg_artwork = None;
@@ -790,7 +818,6 @@ async fn run() -> Result<(), String> {
                     return Err("EPG refresh initialization failed (credentials omitted)".into());
                 }
             };
-        let artwork_completions = dispatcharr_job_transport::ArtworkCompletions::new();
         let artwork=match dispatcharr_job_transport::recording_existing_artwork_application::Application::prepare(
             store.pool().clone(),Arc::new(bus.clone()),artwork_completions.clone(),&broker,&backend,Duration::from_millis(100),
         ).await{
@@ -813,7 +840,7 @@ async fn run() -> Result<(), String> {
                     cache,
                     poll_interval: Duration::from_millis(100),
                 },
-                artwork_completions,
+                artwork_completions.clone(),
             )
             .await
             {
@@ -826,11 +853,12 @@ async fn run() -> Result<(), String> {
                     return Err(error.into());
                 }
             };
-        if artwork.start().is_err()
-            || index.start(Arc::new(())).is_err()
-            || series.start().is_err()
-            || tvg.start(Arc::new(())).is_err()
-            || refresh.start().is_err()
+        if !selected_jobs_enabled
+            && (artwork.start().is_err()
+                || index.start(Arc::new(())).is_err()
+                || series.start().is_err()
+                || tvg.start(Arc::new(())).is_err()
+                || refresh.start().is_err())
         {
             let _ = refresh.shutdown(Duration::from_secs(4)).await;
             let _ = tvg.shutdown(Duration::from_secs(4)).await;
@@ -893,9 +921,54 @@ async fn run() -> Result<(), String> {
             .map_err(|_| "Core settings must share the original Auth writer budget")?,
         None => auth.clone().router(),
     };
+    let listener = tokio::net::TcpListener::bind(bind)
+        .await
+        .map_err(|_| "Cannot bind HTTP listener")?;
+    let selected_jobs = if selected_jobs_enabled {
+        let bus = realtime_bus
+            .as_ref()
+            .ok_or("Selected jobs require the realtime publisher")?;
+        let existing = selected_jobs::Existing {
+            index: epg_index
+                .clone()
+                .ok_or("Selected Index preparation missing")?,
+            refresh: epg_refresh
+                .clone()
+                .ok_or("Selected Refresh preparation missing")?,
+            series: epg_series
+                .clone()
+                .ok_or("Selected Series preparation missing")?,
+            artwork: epg_artwork
+                .clone()
+                .ok_or("Selected artwork preparation missing")?,
+            tvg: epg_tvg.clone().ok_or("Selected TVG preparation missing")?,
+            version: version_tasks
+                .clone()
+                .ok_or("Selected version preparation missing")?,
+            completions: artwork_completions,
+        };
+        Some(
+            selected_jobs::SelectedJobs::prepare(
+                store.clone(),
+                auth.clone(),
+                Arc::new(bus.clone()),
+                &engine,
+                listener
+                    .local_addr()
+                    .map_err(|_| "Actual Main listener address unavailable")?,
+                existing,
+            )
+            .await?,
+        )
+    } else {
+        None
+    };
     let mut app = Router::new()
         .route("/health/ready", get(health))
-        .with_state(store)
+        .with_state(HealthState {
+            store,
+            selected: selected_jobs.clone(),
+        })
         .merge(auth_routes)
         .merge(combined_statistics.router())
         .route("/proxy/stats", any(combined_stats_legacy_alias))
@@ -1005,20 +1078,21 @@ async fn run() -> Result<(), String> {
         app = vod_react_fallback::with_index(app, index);
     }
     app = app.layer(axum::middleware::from_fn(response_headers::apply));
-    let listener = tokio::net::TcpListener::bind(bind)
-        .await
-        .map_err(|_| "Cannot bind HTTP listener")?;
     eprintln!("Dispatcharr Rust port listening on {bind}; migration parity is incomplete");
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
-    if let Some(version) = &version_tasks {
+    if let Some(version) = version_tasks.as_ref().filter(|_| !selected_jobs_enabled) {
         if version.start().is_err() {
             let _ = version.shutdown(Duration::from_secs(4)).await;
             return Err("Version task intake failed".into());
         }
     }
+    if let Some(selected) = &selected_jobs {
+        selected.start_after_serving()?;
+    }
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
     let services = ShutdownServices {
         core_settings,
+        selected_jobs,
         engine,
         clients,
         hls,
@@ -1052,7 +1126,11 @@ async fn run() -> Result<(), String> {
     )
     .with_graceful_shutdown(async move {
         shutdown_signal().await;
-        signal_services.engine.shutdown();
+        if let Some(selected) = &signal_services.selected_jobs {
+            selected.stop_producers();
+        } else {
+            signal_services.engine.shutdown();
+        }
         let cleanup = tokio::spawn(shutdown_components(signal_services));
         let _ = shutdown_started.send(cleanup);
         // Return immediately: Axum stops accepting while cleanup runs.
@@ -1061,19 +1139,23 @@ async fn run() -> Result<(), String> {
     tokio::pin!(server);
     tokio::select! {
         result=&mut server=>{
-            let _=tokio::time::timeout(shutdown_timeout,shutdown_components(services)).await;
+            let cleanup=tokio::time::timeout(shutdown_timeout,shutdown_components(services)).await;
+            if selected_jobs_enabled {match cleanup{Ok(result)=>result?,Err(_)=>return Err("Selected shutdown deadline expired; process termination may close outstanding resources".into())}}
             result.map_err(|_|"HTTP server failed".to_string())
         },
         cleanup=&mut shutdown_notice=>{
             let mut cleanup=cleanup.map_err(|_|"Shutdown coordination failed")?;
             let drained=tokio::time::timeout(shutdown_timeout,async{
                 let result=(&mut server).await;
-                let _=(&mut cleanup).await;
-                result
+                let cleaned=(&mut cleanup).await;
+                (result,cleaned)
             }).await;
             match drained{
-                Ok(result)=>result.map_err(|_|"HTTP server failed".to_string()),
-                Err(_)=>{cleanup.abort();eprintln!("Shutdown deadline reached; closing remaining HTTP connections");Ok(())},
+                Ok((result,cleaned))=>{
+                    if selected_jobs_enabled {cleaned.map_err(|_|"Selected shutdown supervisor failed; process termination may close outstanding resources".to_string())??;}
+                    result.map_err(|_|"HTTP server failed".to_string())
+                },
+                Err(_)=>{cleanup.abort();if selected_jobs_enabled {Err("Selected shutdown deadline expired; cleanup was cancelled and process termination may close outstanding resources".into())}else{eprintln!("Shutdown deadline reached; closing remaining HTTP connections");Ok(())}},
             }
         }
     }
@@ -1099,6 +1181,7 @@ async fn shutdown_signal() {
 #[derive(Clone)]
 struct ShutdownServices {
     core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
+    selected_jobs: Option<selected_jobs::SelectedJobs>,
     engine: StreamEngine,
     clients: Option<ClientStore>,
     hls: Option<dispatcharr_hls_http::HlsGateway>,
@@ -1126,9 +1209,10 @@ struct ShutdownServices {
     live_statistics: Option<Arc<dispatcharr_realtime::LiveStatistics>>,
     combined_statistics: combined_statistics::CombinedStatistics,
 }
-async fn shutdown_components(services: ShutdownServices) {
+async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     let ShutdownServices {
         core_settings,
+        selected_jobs,
         engine,
         clients,
         hls,
@@ -1143,18 +1227,32 @@ async fn shutdown_components(services: ShutdownServices) {
         output_profiles,
         backup_files,
         epg_programs,
-        epg_refresh,
-        epg_index,
-        epg_series,
-        epg_artwork,
-        epg_tvg,
-        version_tasks,
+        mut epg_refresh,
+        mut epg_index,
+        mut epg_series,
+        mut epg_artwork,
+        mut epg_tvg,
+        mut version_tasks,
         vod_reads,
         grid,
         hdhr,
         live_statistics,
         combined_statistics,
     } = services;
+    if let Some(selected) = selected_jobs {
+        selected.stop_producers();
+        if !selected.shutdown(Duration::from_secs(12)).await {
+            return Err("Selected worker drain is incomplete; process termination may close outstanding resources".into());
+        }
+        // The normal graph owned these actual family lifecycles/ports. Legacy
+        // pollers were never started, so do not close the same ports twice.
+        epg_refresh = None;
+        epg_index = None;
+        epg_series = None;
+        epg_artwork = None;
+        epg_tvg = None;
+        version_tasks = None;
+    }
     engine.shutdown();
     combined_statistics.close_admission();
     // Refresh reporter work retains the realtime publisher until actual drain.
@@ -1349,6 +1447,7 @@ async fn shutdown_components(services: ShutdownServices) {
             eprintln!("Statistics drain deadline reached; pending callbacks require recovery");
         }
     }
+    Ok(())
 }
 
 #[tokio::main]

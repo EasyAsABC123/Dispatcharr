@@ -154,6 +154,7 @@ impl Handler for crate::scanner_m3u_worker::Worker {
             use crate::scanner_m3u_worker::Run;
             match crate::scanner_m3u_worker::Worker::run_once(self, owner).await {
                 Ok(Run::Empty) => Ok(Disposition::Empty),
+                Ok(Run::Failed(id)) => Ok(Disposition::TaskFailed(id)),
                 Ok(Run::Completed(id) | Run::ResultAlreadySucceeded(id)) => {
                     Ok(Disposition::Completed(id))
                 }

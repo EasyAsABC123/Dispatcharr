@@ -15,6 +15,7 @@ use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Error {
+    HeadChanged,
     Closed,
     Capacity,
     DrainTimeout,
@@ -26,6 +27,7 @@ pub enum Error {
 pub enum Run {
     Empty,
     Completed(Uuid),
+    Failed(Uuid),
     ResultAlreadySucceeded(Uuid),
 }
 struct Retained {
@@ -35,7 +37,8 @@ struct Retained {
 struct Inner {
     service: Service,
     ports: M3uPorts,
-    scope: Scope,
+    scope: Option<Scope>,
+    registry: Option<crate::scanner_parents::Registry>,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
 }
@@ -49,16 +52,42 @@ impl Worker {
             inner: Arc::new(Inner {
                 service,
                 ports,
-                scope,
+                scope: Some(scope),
+                registry: None,
                 slots: Arc::new(Semaphore::new(1)),
                 closed: AtomicBool::new(false),
             }),
         }
     }
+    pub fn new_normal(
+        service: Service,
+        ports: M3uPorts,
+        registry: crate::scanner_parents::Registry,
+    ) -> Self {
+        Self {
+            inner: Arc::new(Inner {
+                service,
+                ports,
+                scope: None,
+                registry: Some(registry),
+                slots: Arc::new(Semaphore::new(1)),
+                closed: AtomicBool::new(false),
+            }),
+        }
+    }
+    pub fn stop_admission(&self) {
+        self.inner.closed.store(true, Ordering::Release);
+    }
     pub fn available_slots(&self) -> usize {
         self.inner.slots.available_permits()
     }
     pub async fn run_once(&self, caller: Owner) -> Result<Run, Error> {
+        self.run_expected(None, caller).await
+    }
+    pub async fn run_selected(&self, expected: Arc<[u8]>, caller: Owner) -> Result<Run, Error> {
+        self.run_expected(Some(expected), caller).await
+    }
+    async fn run_expected(&self, expected: Option<Arc<[u8]>>, caller: Owner) -> Result<Run, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -77,14 +106,62 @@ impl Worker {
         });
         let inner = self.inner.clone();
         tokio::spawn(async move {
-            let Some(candidate) = inner
-                .ports
-                .peek(&inner.scope, owner.clone())
-                .await
-                .map_err(Error::Transport)?
+            let scope = match &inner.scope {
+                Some(scope) => scope.clone(),
+                None => {
+                    let registry = inner
+                        .registry
+                        .as_ref()
+                        .ok_or(Error::Transport(TransportError::UnsupportedTask))?;
+                    let Some(raw) = registry
+                        .head(owner.clone())
+                        .await
+                        .map_err(Error::Transport)?
+                    else {
+                        return if expected.is_some() {
+                            Err(Error::HeadChanged)
+                        } else {
+                            Ok(Run::Empty)
+                        };
+                    };
+                    if expected
+                        .as_ref()
+                        .is_some_and(|selected| selected.as_ref() != raw.as_slice())
+                    {
+                        return Err(Error::HeadChanged);
+                    }
+                    registry
+                        .m3u_scope(&raw, owner.clone())
+                        .await
+                        .map_err(Error::Transport)?
+                        .ok_or(Error::Transport(TransportError::UnsupportedTask))?
+                }
+            };
+            let peek = match &expected {
+                Some(raw) => {
+                    inner
+                        .ports
+                        .peek_expected(&scope, Some(raw.clone()), owner.clone())
+                        .await
+                }
+                None => inner.ports.peek(&scope, owner.clone()).await,
+            };
+            let Some(candidate) = peek.map_err(|e| {
+                if expected.is_some() && e == TransportError::ClaimRace {
+                    Error::HeadChanged
+                } else {
+                    Error::Transport(e)
+                }
+            })?
             else {
                 return Ok(Run::Empty);
             };
+            if expected
+                .as_ref()
+                .is_some_and(|selected| !candidate.matches_raw(selected))
+            {
+                return Err(Error::HeadChanged);
+            }
             let prepared = inner
                 .service
                 .prepare(
@@ -111,12 +188,20 @@ impl Worker {
                 .execute_terminal(message.kind, prepared)
                 .await
                 .map_err(Error::Domain)?;
+            let failed = matches!(&value, crate::scanner_m3u::Terminal::Raised(_));
             let written = inner
                 .ports
                 .write_terminal(&message, value, owner)
                 .await
                 .map_err(Error::Transport)?;
-            Ok(if written {
+            if let Some(registry) = &inner.registry {
+                registry
+                    .retire_child(message.id)
+                    .map_err(Error::Transport)?;
+            }
+            Ok(if written && failed && inner.registry.is_some() {
+                Run::Failed(message.id)
+            } else if written {
                 Run::Completed(message.id)
             } else {
                 Run::ResultAlreadySucceeded(message.id)

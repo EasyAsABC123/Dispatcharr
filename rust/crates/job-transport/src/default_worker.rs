@@ -78,6 +78,21 @@ impl DefaultWorker {
     pub fn new_logo_scanner(jobs: Jobs, domains: Arc<dyn Domains>) -> Result<Self, Error> {
         Self::new_scoped(jobs, domains, Some(Kind::LogoScanner))
     }
+    /// Explicit normal cleanup/account handler. Other families keep their own
+    /// typed scopes; this constructor cannot widen legacy default intake.
+    pub(crate) fn new_normal_family(
+        jobs: Jobs,
+        domains: Arc<dyn Domains>,
+        kind: Kind,
+    ) -> Result<Self, Error> {
+        if !matches!(
+            kind,
+            Kind::RedisBackendCleanup | Kind::InactiveAccountNotifications
+        ) {
+            return Err(Error::Configuration);
+        }
+        Self::new_scoped(jobs, domains, Some(kind))
+    }
     fn new_scoped(
         jobs: Jobs,
         domains: Arc<dyn Domains>,
@@ -101,6 +116,13 @@ impl DefaultWorker {
         })
     }
     pub async fn run_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Run, Error> {
+        self.run_expected(None, caller).await
+    }
+    pub(crate) async fn run_expected(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Run, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -131,6 +153,11 @@ impl DefaultWorker {
                     Err(TransportError::UnsupportedTask) => return Ok(Run::UnsupportedHead),
                     Err(error) => return Err(Error::Transport(error)),
                 };
+                if let Some(expected) = expected {
+                    if !candidate.matches_raw(&expected) {
+                        return Err(Error::Transport(crate::transport::Error::ClaimRace));
+                    }
+                }
                 let kind = candidate.message.kind;
                 // Preserve legacy intake authority/classification. Merely
                 // recognizing the new protocol must not activate this family.

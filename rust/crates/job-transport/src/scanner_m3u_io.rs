@@ -45,6 +45,11 @@ fn receipt(bytes: &[u8], scope: &Scope, id: Uuid) -> bool {
                     .any(|v| *v == serde_json::json!([[id.to_string(), null], null]))
         })
 }
+impl Candidate {
+    pub(crate) fn matches_raw(&self, expected: &[u8]) -> bool {
+        self.raw == expected
+    }
+}
 impl M3uPorts {
     pub async fn connect(
         broker: &str,
@@ -69,9 +74,20 @@ impl M3uPorts {
         .map_err(|_| Error::Backend)?;
         Ok(Self { jobs, cache })
     }
+    pub fn from_shared(jobs: Jobs, cache: RedisTransport) -> Self {
+        Self { jobs, cache }
+    }
     pub(crate) async fn peek(
         &self,
         scope: &Scope,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Candidate>, Error> {
+        self.peek_expected(scope, None, owner).await
+    }
+    pub(crate) async fn peek_expected(
+        &self,
+        scope: &Scope,
+        expected: Option<Arc<[u8]>>,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Option<Candidate>, Error> {
         let lease = self.jobs.lease(owner.clone())?;
@@ -83,6 +99,12 @@ impl M3uPorts {
             .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &keys, &[], lease)
             .await
             .map_err(map)?;
+        if expected
+            .as_ref()
+            .is_some_and(|selected| head.0 != 1 || selected.as_ref() != head.1.as_slice())
+        {
+            return Err(Error::ClaimRace);
+        }
         if head.0 == 0 {
             return Ok(None);
         }
@@ -90,7 +112,7 @@ impl M3uPorts {
             return Err(Error::Corrupt);
         }
         let message = scanner_m3u_protocol::parse(&head.1).map_err(|_| Error::UnsupportedTask)?;
-        if !scope.accepts(&message) {
+        if !scope.accepts_raw(&message, &head.1) {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.jobs.lease(owner)?;

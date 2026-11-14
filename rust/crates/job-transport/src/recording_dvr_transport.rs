@@ -44,6 +44,43 @@ impl Jobs {
             _ => Err(Error::Corrupt),
         }
     }
+    pub(crate) async fn peek_normal_recording_dvr(
+        &self,
+        expected: Option<&[u8]>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<DvrCandidate>, Error> {
+        if !self.allows_recording_dvr() {
+            return Err(Error::UnsupportedTask);
+        }
+        let lease = self.lease(owner)?;
+        let (reply, _held) = self
+            .inner
+            .broker
+            .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &["dvr".into()], &[], lease)
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => {
+                if expected.is_some() {
+                    Err(Error::ClaimRace)
+                } else {
+                    Ok(None)
+                }
+            }
+            1 => {
+                if expected.is_some_and(|raw| raw != reply.1.as_slice()) {
+                    return Err(Error::ClaimRace);
+                }
+                let message = clocked_recording_envelope::parse_normal_head(&reply.1)
+                    .map_err(|_| Error::UnsupportedTask)?;
+                Ok(Some(DvrCandidate {
+                    message,
+                    origin: self.inner.clone(),
+                }))
+            }
+            _ => Err(Error::Corrupt),
+        }
+    }
     pub(crate) async fn claim_recording_dvr(
         &self,
         candidate: DvrCandidate,

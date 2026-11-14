@@ -22,6 +22,14 @@ fn canonical(value: &Value) -> Option<Uuid> {
         .then_some(id)
 }
 pub fn parse(raw: &[u8]) -> Option<Message> {
+    parse_mode(raw, false)
+}
+/// Normal generating tasks may themselves be the root. This grants no claim
+/// authority; an actual private execution/publication report is still required.
+pub(crate) fn parse_normal(raw: &[u8]) -> Option<Message> {
+    parse_mode(raw, true)
+}
+fn parse_mode(raw: &[u8], normal: bool) -> Option<Message> {
     if raw.len() > protocol::MAX_ENVELOPE {
         return None;
     }
@@ -33,7 +41,7 @@ pub fn parse(raw: &[u8]) -> Option<Message> {
     let task_id = canonical(&h["id"])?;
     let root = canonical(&h["root_id"])?;
     let parent = canonical(&h["parent_id"])?;
-    if task_id == root || task_id == parent || parent == root {
+    if task_id == root || task_id == parent || (!normal && parent == root) {
         return None;
     }
     let eta_text = h["eta"].as_str()?;

@@ -31,6 +31,7 @@ pub struct Message {
 pub struct Scope {
     parent: Uuid,
     accounts: Vec<i64>,
+    exact: Option<(Uuid, [u8; 32])>,
 }
 impl Scope {
     /// Trusted scanner-assembly authority, never an untrusted HTTP request.
@@ -46,7 +47,25 @@ impl Scope {
         {
             return Err(ProtocolError::InvalidArgument);
         }
-        Ok(Self { parent, accounts })
+        Ok(Self {
+            parent,
+            accounts,
+            exact: None,
+        })
+    }
+    pub(crate) fn from_registry(parent: Uuid, account: i64, child: Uuid, digest: [u8; 32]) -> Self {
+        Self {
+            parent,
+            accounts: vec![account],
+            exact: Some((child, digest)),
+        }
+    }
+    pub(crate) fn accepts_raw(&self, m: &Message, raw: &[u8]) -> bool {
+        use sha2::Digest;
+        self.accepts(m)
+            && self.exact.as_ref().is_none_or(|(id, hash)| {
+                *id == m.id && *hash == <[u8; 32]>::from(sha2::Sha256::digest(raw))
+            })
     }
     pub(crate) fn parent(&self) -> Uuid {
         self.parent

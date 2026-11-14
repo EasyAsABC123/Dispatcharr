@@ -2,6 +2,7 @@
 //! Original Dispatcharr authors retain application/algorithm/license credit.
 //! No source-parent reconstruction, artwork fallback or unqualified FIFO skip.
 use crate::{
+    configured_recording_worker,
     configured_recording_worker::{Assembly, Error, Family, Run, Worker},
     recording_artwork::Publisher,
     refresh_series_handoff::Handoff,
@@ -162,6 +163,24 @@ impl Application {
             _lifetime: Arc::new(Lifetime(stop)),
         })
     }
+    /// Reserve this prepared application for the single normal queue shell;
+    /// a cloned public handle cannot also start its legacy polling loop.
+    pub fn into_normal_handler(
+        self,
+    ) -> Result<Arc<dyn crate::milestone_dispatch::Handler>, &'static str> {
+        {
+            let mut lifecycle = self
+                .inner
+                .lifecycle
+                .lock()
+                .map_err(|_| "normal family lifecycle poisoned")?;
+            if lifecycle.started || lifecycle.closed {
+                return Err("family already started/closed");
+            }
+            lifecycle.started = true;
+        }
+        Ok(Arc::new(NormalHandler { app: self }))
+    }
     pub fn state(&self) -> State {
         self.inner.state.borrow().clone()
     }
@@ -252,6 +271,22 @@ async fn run(inner: &Arc<Inner>, owner: Arc<dyn Send + Sync>) -> Result<State, E
         Err(error) => return Err(Error::Transport(error)),
     };
     if message.parent.is_none() {
+        if let Some(completions) = &inner.completions {
+            let (run, report) = inner.direct.run_once_completed(owner.clone()).await?;
+            if let Some(report) = report {
+                let backend = inner
+                    .jobs
+                    .read_series_lineage(&message, owner)
+                    .await
+                    .map_err(Error::Transport)?
+                    .ok_or(Error::Transport(TransportError::Protocol))?;
+                completions
+                    .record_direct(message, report, backend)
+                    .await
+                    .map_err(Error::Transport)?;
+            }
+            return Ok(State::Observed(Arc::new(run)));
+        }
         return inner
             .direct
             .run_once(owner)
@@ -299,5 +334,122 @@ async fn run(inner: &Arc<Inner>, owner: Arc<dyn Send + Sync>) -> Result<State, E
             Ok(State::Observed(Arc::new(run)))
         }
         other => Ok(State::Observed(Arc::new(other))),
+    }
+}
+
+struct NormalHandler {
+    app: Application,
+}
+impl crate::milestone_dispatch::Lifecycle for NormalHandler {
+    fn stop_admission(&self) {
+        if let Some(completions) = &self.app.inner.completions {
+            completions.close_admission();
+        }
+    }
+    fn shutdown(
+        &self,
+        timeout: Duration,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), crate::milestone_dispatch::Disposition>>
+    {
+        Box::pin(async move {
+            if self.app.shutdown(timeout).await.is_ok() {
+                Ok(())
+            } else {
+                Err(crate::milestone_dispatch::Disposition::Operational(
+                    "normal family drain incomplete".into(),
+                ))
+            }
+        })
+    }
+}
+impl crate::milestone_dispatch::Handler for NormalHandler {
+    fn supports_selected_head(&self) -> bool {
+        true
+    }
+    fn run_once(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>,
+    > {
+        Box::pin(self.execute(None, owner))
+    }
+    fn run_selected(
+        &self,
+        expected: Arc<[u8]>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>,
+    > {
+        Box::pin(self.execute(Some(expected), owner))
+    }
+}
+impl NormalHandler {
+    async fn execute(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>
+    {
+        use crate::milestone_dispatch::Disposition as D;
+        let inner = &self.app.inner;
+        let (raw, message) = match inner.jobs.peek_series(owner.clone()).await {
+            Ok(Some(value)) => value,
+            Ok(None) => {
+                return Ok(if expected.is_some() {
+                    D::HeadChanged
+                } else {
+                    D::Empty
+                })
+            }
+            Err(TransportError::UnsupportedTask) => return Ok(D::UnsupportedHead),
+            Err(error) => return Err(D::Operational(format!("normal Series peek {error:?}"))),
+        };
+        if expected
+            .as_ref()
+            .is_some_and(|selected| selected.as_ref() != raw.as_slice())
+        {
+            return Ok(D::HeadChanged);
+        }
+        let worker = Worker::new_normal_broker(inner.assembly())
+            .map_err(|error| D::Operational(format!("normal Series prepare {error:?}")))?;
+        let result = worker
+            .run_expected(Some(Arc::from(raw)), owner.clone())
+            .await;
+        worker
+            .shutdown(Duration::from_secs(4))
+            .await
+            .map_err(|error| D::Operational(format!("normal Series physical drain {error:?}")))?;
+        let (run, report) = match result {
+            Ok(value) => value,
+            Err(configured_recording_worker::Error::Transport(TransportError::ClaimRace)) => {
+                return Ok(D::HeadChanged)
+            }
+            Err(configured_recording_worker::Error::Capacity) => return Ok(D::Capacity),
+            Err(error) => return Err(D::Operational(format!("normal Series {error:?}"))),
+        };
+        if let (
+            Some(completions),
+            Some(configured_recording_worker::ExecutionReport::Series(report)),
+        ) = (&inner.completions, report)
+        {
+            let backend = inner
+                .jobs
+                .read_series_lineage(&message, owner)
+                .await
+                .map_err(|error| D::Operational(format!("normal Series backend {error:?}")))?
+                .ok_or_else(|| D::Operational("normal Series backend missing".into()))?;
+            completions
+                .record_broker_series(message, report, backend)
+                .await
+                .map_err(|error| D::Operational(format!("normal Series provenance {error:?}")))?;
+        }
+        match run {
+            Run::Empty => Ok(D::Empty),
+            Run::UnsupportedHead => Ok(D::UnsupportedHead),
+            Run::Completed(id) | Run::AlreadySucceeded(id) => Ok(D::Completed(id)),
+        }
     }
 }

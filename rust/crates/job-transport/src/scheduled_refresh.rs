@@ -166,8 +166,7 @@ impl ScheduledRefreshWorker {
     }
     /// Restore unstarted reservations in arrival order (Source119 warm order),
     /// drain active tasks, and leave final shared Jobs close to the caller.
-    pub async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
-        let deadline = tokio::time::Instant::now() + timeout;
+    pub fn stop_admission(&self) {
         let pending = {
             let mut pending = self.inner.pending.lock().unwrap();
             self.inner.closed.store(true, Ordering::Release);
@@ -191,6 +190,10 @@ impl ScheduledRefreshWorker {
                 }
             });
         }
+    }
+    pub async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
+        let deadline = tokio::time::Instant::now() + timeout;
+        self.stop_admission();
         let all = self.inner.owned.clone().acquire_many_owned(
             (self.inner.config.prefetch + self.inner.config.pending_eta) as u32,
         );

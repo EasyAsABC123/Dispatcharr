@@ -15,6 +15,11 @@ pub struct Candidate {
     pub(super) origin: Arc<Inner>,
     pub(super) held: Arc<Lease>,
 }
+impl Candidate {
+    pub(crate) fn matches_raw(&self, expected: &[u8]) -> bool {
+        self.bytes == expected
+    }
+}
 impl Jobs {
     fn require_default(&self) -> Result<(), Error> {
         if self.allows_defaults() {

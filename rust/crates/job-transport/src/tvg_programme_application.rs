@@ -87,6 +87,24 @@ impl Application {
             _lifetime: Arc::new(Lifetime(stop)),
         })
     }
+    /// Reserve this prepared application for the single normal queue shell;
+    /// a cloned public handle cannot also start its legacy polling loop.
+    pub fn into_normal_handler(
+        self,
+    ) -> Result<Arc<dyn crate::milestone_dispatch::Handler>, &'static str> {
+        {
+            let mut lifecycle = self
+                .inner
+                .lifecycle
+                .lock()
+                .map_err(|_| "normal family lifecycle poisoned")?;
+            if lifecycle.started || lifecycle.closed {
+                return Err("family already started/closed");
+            }
+            lifecycle.started = true;
+        }
+        Ok(Arc::new(NormalHandler { app: self }))
+    }
     pub fn state(&self) -> State {
         self.inner.state.borrow().clone()
     }
@@ -162,5 +180,72 @@ impl Application {
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
             .is_ok()
+    }
+}
+
+struct NormalHandler {
+    app: Application,
+}
+impl crate::milestone_dispatch::Lifecycle for NormalHandler {
+    fn shutdown(
+        &self,
+        timeout: Duration,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), crate::milestone_dispatch::Disposition>>
+    {
+        Box::pin(async move {
+            if self.app.shutdown(timeout).await {
+                Ok(())
+            } else {
+                Err(crate::milestone_dispatch::Disposition::Operational(
+                    "normal family drain incomplete".into(),
+                ))
+            }
+        })
+    }
+}
+impl crate::milestone_dispatch::Handler for NormalHandler {
+    fn supports_selected_head(&self) -> bool {
+        true
+    }
+    fn run_once(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>,
+    > {
+        Box::pin(self.execute(None, owner))
+    }
+    fn run_selected(
+        &self,
+        expected: Arc<[u8]>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>,
+    > {
+        Box::pin(self.execute(Some(expected), owner))
+    }
+}
+impl NormalHandler {
+    async fn execute(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>
+    {
+        use crate::milestone_dispatch::Disposition as D;
+        let inner = self.app.inner.clone();
+        match inner.worker.run_expected(expected, owner).await {
+            Ok(Run::Empty) => Ok(D::Empty),
+            Ok(Run::UnsupportedHead) => Ok(D::UnsupportedHead),
+            Ok(Run::Completed(id)) => Ok(D::Completed(id)),
+            Ok(Run::Failed(id)) => Ok(D::TaskFailed(id)),
+            Err(crate::tvg_programme_worker::Error::Transport(
+                crate::transport::Error::ClaimRace,
+            )) => Ok(D::HeadChanged),
+            Err(crate::tvg_programme_worker::Error::Capacity) => Ok(D::Capacity),
+            Err(error) => Err(D::Operational(format!("normal TVG {error:?}"))),
+        }
     }
 }

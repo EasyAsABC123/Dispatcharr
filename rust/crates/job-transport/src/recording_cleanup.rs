@@ -17,6 +17,18 @@ impl Component {
             store: Arc::new(sql::Store::source61_local_video_audio(pool)),
         }
     }
+    pub(crate) fn normal(pool: sqlx::PgPool) -> Self {
+        Self {
+            store: Arc::new(sql::Store::normal(pool)),
+        }
+    }
+    pub(crate) async fn delete_by_name(
+        &self,
+        name: String,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, sql::Error> {
+        self.store.clone().delete_by_name(name, owner).await
+    }
     pub(crate) async fn prepare(
         &self,
         identity: RecordingIdentity,

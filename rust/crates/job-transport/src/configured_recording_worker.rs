@@ -39,6 +39,10 @@ pub enum Run {
     Completed(Uuid),
     AlreadySucceeded(Uuid),
 }
+pub(crate) enum ExecutionReport {
+    Series(configured_recording_service::SeriesReport),
+    Recurring(configured_recording_service::RecurringReport),
+}
 struct Owner {
     _slot: OwnedSemaphorePermit,
     _caller: Arc<dyn Send + Sync>,
@@ -94,6 +98,7 @@ struct Inner {
     family: Family,
     refresh_child: Option<crate::recording_artwork::RefreshSeriesChild>,
     normal_rules: bool,
+    broker_adoption: bool,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
     #[cfg(test)]
@@ -135,6 +140,7 @@ impl Worker {
                 family,
                 refresh_child: None,
                 normal_rules: false,
+                broker_adoption: false,
                 slots: Arc::new(Semaphore::new(1)),
                 closed: AtomicBool::new(false),
                 #[cfg(test)]
@@ -149,6 +155,13 @@ impl Worker {
         Arc::get_mut(&mut worker.inner)
             .ok_or(Error::Configuration)?
             .normal_rules = true;
+        Ok(worker)
+    }
+    pub(crate) fn new_normal_broker(assembly: Assembly) -> Result<Self, Error> {
+        let mut worker = Self::new_normal(assembly)?;
+        Arc::get_mut(&mut worker.inner)
+            .ok_or(Error::Configuration)?
+            .broker_adoption = true;
         Ok(worker)
     }
     pub(crate) fn new_normal_refresh_series_child(
@@ -213,6 +226,27 @@ impl Worker {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<(Run, Option<configured_recording_service::SeriesReport>), Error> {
+        self.run_once_report(caller).await.map(|(run, report)| {
+            (
+                run,
+                match report {
+                    Some(ExecutionReport::Series(report)) => Some(report),
+                    _ => None,
+                },
+            )
+        })
+    }
+    pub(crate) async fn run_once_report(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<(Run, Option<ExecutionReport>), Error> {
+        self.run_expected(None, caller).await
+    }
+    pub(crate) async fn run_expected(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<(Run, Option<ExecutionReport>), Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -232,8 +266,12 @@ impl Worker {
         let inner = self.inner.clone();
         tokio::spawn(async move {
             match inner.family {
-                Family::Series => series(inner, owner).await,
-                Family::Recurring => recurring(inner, owner).await.map(|run| (run, None)),
+                Family::Series => series(inner, owner, expected)
+                    .await
+                    .map(|(run, report)| (run, report.map(ExecutionReport::Series))),
+                Family::Recurring => recurring_report(inner, owner, expected)
+                    .await
+                    .map(|(run, report)| (run, report.map(ExecutionReport::Recurring))),
             }
         })
         .await
@@ -375,6 +413,7 @@ async fn settings(
 async fn series(
     inner: Arc<Inner>,
     owner: Arc<Owner>,
+    expected: Option<Arc<[u8]>>,
 ) -> Result<(Run, Option<configured_recording_service::SeriesReport>), Error> {
     let pending = match peek(&inner, owner.clone()).await {
         Ok(Some(v)) => v,
@@ -382,6 +421,12 @@ async fn series(
         Err(TransportError::UnsupportedTask) => return Ok((Run::UnsupportedHead, None)),
         Err(e) => return Err(Error::Transport(e)),
     };
+    if let Some(expected) = expected {
+        match &pending.claim {
+            Claim::Series(raw) if raw.as_slice() == expected.as_ref() => {}
+            _ => return Err(Error::Transport(TransportError::ClaimRace)),
+        }
+    }
     let message = match &pending.message {
         Message::Series(v) => v.clone(),
         _ => return Ok((Run::UnsupportedHead, None)),
@@ -390,6 +435,7 @@ async fn series(
     // retains its direct-only authority; configured descendants need a capability.
     let task = match inner.refresh_child {
         Some(child) => child.admit(&message),
+        None if inner.broker_adoption => DirectTask::observed_series(&message),
         None => DirectTask::series(&message),
     }
     .ok_or(Error::Unsupported)?;
@@ -461,21 +507,31 @@ async fn series(
         false => Ok((Run::AlreadySucceeded(message.task_id), Some(report))),
     }
 }
-async fn recurring(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {
+async fn recurring_report(
+    inner: Arc<Inner>,
+    owner: Arc<Owner>,
+    expected: Option<Arc<[u8]>>,
+) -> Result<(Run, Option<configured_recording_service::RecurringReport>), Error> {
     let pending = match peek(&inner, owner.clone()).await {
         Ok(Some(v)) => v,
-        Ok(None) => return Ok(Run::Empty),
-        Err(TransportError::UnsupportedTask) => return Ok(Run::UnsupportedHead),
+        Ok(None) => return Ok((Run::Empty, None)),
+        Err(TransportError::UnsupportedTask) => return Ok((Run::UnsupportedHead, None)),
         Err(e) => return Err(Error::Transport(e)),
     };
+    if let Some(expected) = expected {
+        match &pending.claim {
+            Claim::Recurring(candidate) if candidate.matches_raw(&expected) => {}
+            _ => return Err(Error::Transport(TransportError::ClaimRace)),
+        }
+    }
     let message = match &pending.message {
         Message::Recurring(v) => v.clone(),
-        _ => return Ok(Run::UnsupportedHead),
+        _ => return Ok((Run::UnsupportedHead, None)),
     };
     // Essential inverse guard: recognizing other known families does not grant
     // this assembly their expiry/revocation/admission/early-ACK authority.
     if message.kind != Kind::RecurringMaintenance {
-        return Ok(Run::UnsupportedHead);
+        return Ok((Run::UnsupportedHead, None));
     }
     let task = DirectTask::recurring(&message).ok_or(Error::Unsupported)?;
     if !canonical(&inner, &pending, task) {
@@ -502,7 +558,7 @@ async fn recurring(inner: Arc<Inner>, owner: Arc<Owner>) -> Result<Run, Error> {
         .await
         .map_err(Error::Transport)?
     {
-        true => Ok(Run::Completed(message.task_id)),
-        false => Ok(Run::AlreadySucceeded(message.task_id)),
+        true => Ok((Run::Completed(message.task_id), Some(report))),
+        false => Ok((Run::AlreadySucceeded(message.task_id), Some(report))),
     }
 }

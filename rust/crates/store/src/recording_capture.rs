@@ -81,6 +81,46 @@ pub struct CaptureSnapshot {
     pub actual_read_utc: DateTime<Utc>,
     _store_identity: Arc<()>,
 }
+/// Actual normal row context. Optional artwork/profile/EPG remains actual data;
+/// no captured poster/filepath or absence of an input profile is fabricated.
+#[derive(Clone, Debug)]
+pub struct NormalCaptureSnapshot {
+    pub identity: RecordingIdentity,
+    pub channel_uuid: Uuid,
+    pub channel_name: String,
+    pub channel_epg_data_id: Option<i64>,
+    pub channel_stream_profile_id: Option<i64>,
+    pub channel_has_override: bool,
+    pub periodic_name: Option<String>,
+    pub properties: Value,
+    pub programme_custom_properties: Option<Value>,
+    pub actual_read_utc: DateTime<Utc>,
+}
+#[derive(Clone, Debug)]
+pub struct NormalRecordingState {
+    pub stopped: bool,
+    pub property_object: bool,
+    pub start: DateTime<Utc>,
+    pub end: DateTime<Utc>,
+}
+#[derive(Clone, Debug)]
+pub struct RuntimeFinalize {
+    pub ended: DateTime<Utc>,
+    pub bytes_written: u64,
+    pub remux_success: bool,
+    pub interrupted_reason: Option<String>,
+    pub server_shutdown: bool,
+    pub stream_info: Option<Value>,
+}
+#[derive(Clone, Debug)]
+pub enum RuntimeFinalizeOutcome {
+    Missing,
+    Applied(Value),
+    Caught {
+        intended: Value,
+        code: Option<String>,
+    },
+}
 pub struct CaptureStore {
     pool: PgPool,
     identity: Arc<()>,
@@ -90,7 +130,10 @@ pub struct CaptureStore {
 /// Data-only Source whitelist; does not certify media work or permit a task ACK.
 pub enum PropertyWrite {
     Prime(Value),
+    PrimeRuntime(Value),
+    PermanentRuntimeUrls,
     RemovedOwnedHls,
+    RemovedRuntimeHls,
     /// Source's pre-rmtree URL update when the caught prime write left scheduled CP.
     PermanentUrlsAfterRejectedPrime,
     CompletedAfterRejectedPrime {
@@ -133,6 +176,13 @@ async fn settle<T>(
 }
 
 impl CaptureStore {
+    pub fn normal(pool: PgPool) -> Self {
+        Self {
+            pool,
+            identity: Arc::new(()),
+            owned_logo_path: String::new(),
+        }
+    }
     pub fn source3_local(pool: PgPool) -> Self {
         Self {
             pool,
@@ -277,6 +327,153 @@ impl CaptureStore {
     /// Normal scoped autocommit write. No retry or generic SQL->terminal mapping.
     /// The caller guard outlives actual ErrorResponse/Ready/close, even if the
     /// observation future disappears. Post-ACK uncertainty stays operational.
+    /// Real normal row read and idempotency guard. None is the Source no-op for
+    /// a missing row or an already recording/completed/stopped status. This
+    /// method alone grants no queue claim, process or output-path authority.
+    pub async fn normal_snapshot(
+        self: Arc<Self>,
+        expected: RecordingIdentity,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<NormalCaptureSnapshot>, Error> {
+        if !(1..=i64::from(i32::MAX)).contains(&expected.recording)
+            || !(1..=i64::from(i32::MAX)).contains(&expected.channel)
+            || expected.end <= expected.start
+        {
+            return Err(Error::Unsupported("normal recording identity"));
+        }
+        tokio::spawn(async move {
+            let _owner = owner;
+            let mut connection = self.pool.acquire().await.map_err(|source| Error::Sql {
+                stage: Stage::Acquire,
+                source,
+                settlement: None,
+            })?;
+            let result = Self::read_normal_inner(&mut connection, expected).await;
+            settle(connection, result).await
+        })
+        .await
+        .map_err(|_| Error::Supervisor)?
+    }
+    async fn read_normal_inner(
+        connection: &mut PgConnection,
+        expected: RecordingIdentity,
+    ) -> Result<Option<NormalCaptureSnapshot>, Error> {
+        let row=sqlx::query("SELECT r.id::bigint AS recording,r.channel_id::bigint AS channel,r.start_time,r.end_time,CASE WHEN octet_length(r.task_id)<=255 THEN r.task_id ELSE NULL END AS task_id,CASE WHEN r.custom_properties IS NULL THEN '{}'::jsonb WHEN octet_length(r.custom_properties::text)<=8192 THEN r.custom_properties ELSE NULL END AS properties,c.uuid AS channel_uuid,CASE WHEN octet_length(c.name)<=255 THEN c.name ELSE NULL END AS channel_name,c.epg_data_id::bigint AS epg_data_id,c.stream_profile_id::bigint AS stream_profile_id,EXISTS(SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.channel_id=c.id) AS has_override FROM dispatcharr_channels_recording r JOIN dispatcharr_channels_channel c ON c.id=r.channel_id WHERE r.id=$1 LIMIT 1")
+            .bind(expected.recording).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Recording,source,settlement:None})?;
+        let Some(row) = row else {
+            return Ok(None);
+        };
+        let decode = |source| Error::Sql {
+            stage: Stage::Recording,
+            source,
+            settlement: None,
+        };
+        let properties: Option<Value> = row.try_get("properties").map_err(decode)?;
+        let properties =
+            properties.ok_or(Error::Unsupported("normal property transfer capacity"))?;
+        let properties = if properties.is_null()
+            || properties == serde_json::json!(false)
+            || properties == serde_json::json!(0)
+            || properties == serde_json::json!("")
+            || properties == serde_json::json!([])
+        {
+            serde_json::json!({})
+        } else {
+            properties
+        };
+        if !properties.is_object() {
+            return Err(Error::Unsupported("normal object properties"));
+        }
+        if matches!(
+            properties.get("status").and_then(Value::as_str),
+            Some("recording" | "completed" | "stopped")
+        ) {
+            return Ok(None);
+        }
+        let hooks:(bool,bool,bool,bool)=sqlx::query_as("SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_connect_integration),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_deliverylog),NOT EXISTS(SELECT 1 FROM plugins_pluginconfig)").fetch_one(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Context,source,settlement:None})?;
+        if !(hooks.0 && hooks.1 && hooks.2 && hooks.3) {
+            return Err(Error::Unsupported(
+                "normal system-event integration ports required",
+            ));
+        }
+        let recording: i64 = row.try_get("recording").map_err(decode)?;
+        let channel: i64 = row.try_get("channel").map_err(decode)?;
+        let start: DateTime<Utc> = row.try_get("start_time").map_err(decode)?;
+        let end: DateTime<Utc> = row.try_get("end_time").map_err(decode)?;
+        if recording != expected.recording
+            || channel != expected.channel
+            || start != expected.start
+            || end != expected.end
+        {
+            return Err(Error::Unsupported("normal producer/row identity changed"));
+        }
+        let program = properties.get("program");
+        let program_id = program.and_then(|p| p.get("id"));
+        let parse_id = |value: &Value| {
+            value
+                .as_i64()
+                .or_else(|| value.as_str().and_then(|s| s.parse::<i64>().ok()))
+        };
+        let id = program_id
+            .filter(|v| {
+                !v.is_null() && *v != &serde_json::json!(false) && *v != &serde_json::json!(0)
+            })
+            .map(|v| parse_id(v).ok_or(Error::Unsupported("normal programme identity scalar")))
+            .transpose()?;
+        let mut selected: Option<(Option<Value>, bool)> = if let Some(id) = id {
+            sqlx::query_as("SELECT CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,custom_properties IS NULL OR octet_length(custom_properties::text)<=8192 FROM epg_programdata WHERE id=$1 LIMIT 1").bind(id).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Recording,source,settlement:None})?
+        } else {
+            None
+        };
+        if selected.is_none() {
+            let parse_time = |value: &Value| -> Option<DateTime<Utc>> {
+                let text = value.as_str()?;
+                let normalized = text.replacen(' ', "T", 1);
+                DateTime::parse_from_rfc3339(&normalized)
+                    .ok()
+                    .map(|v| v.with_timezone(&Utc))
+                    .or_else(|| {
+                        chrono::NaiveDateTime::parse_from_str(&normalized, "%Y-%m-%dT%H:%M:%S%.f")
+                            .ok()
+                            .map(|v| v.and_utc())
+                    })
+            };
+            if let (Some(tvg), Some(start), Some(end)) = (
+                program
+                    .and_then(|v| v.get("tvg_id"))
+                    .and_then(Value::as_str),
+                program
+                    .and_then(|v| v.get("start_time"))
+                    .and_then(parse_time),
+                program.and_then(|v| v.get("end_time")).and_then(parse_time),
+            ) {
+                selected=sqlx::query_as("SELECT CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,custom_properties IS NULL OR octet_length(custom_properties::text)<=8192 FROM epg_programdata WHERE tvg_id=$1 AND start_time=$2 AND end_time=$3 ORDER BY id ASC LIMIT 1").bind(tvg).bind(start).bind(end).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Recording,source,settlement:None})?;
+            }
+        }
+        let programme_custom_properties = match selected {
+            Some((_, false)) => {
+                return Err(Error::Unsupported(
+                    "normal programme property transfer capacity",
+                ))
+            }
+            Some((value, true)) => value,
+            None => None,
+        };
+        let name: Option<String> = row.try_get("channel_name").map_err(decode)?;
+        Ok(Some(NormalCaptureSnapshot {
+            identity: expected,
+            channel_uuid: row.try_get("channel_uuid").map_err(decode)?,
+            channel_name: name
+                .ok_or(Error::Unsupported("normal channel name transfer capacity"))?,
+            channel_epg_data_id: row.try_get("epg_data_id").map_err(decode)?,
+            channel_stream_profile_id: row.try_get("stream_profile_id").map_err(decode)?,
+            channel_has_override: row.try_get("has_override").map_err(decode)?,
+            periodic_name: row.try_get("task_id").map_err(decode)?,
+            properties,
+            programme_custom_properties,
+            actual_read_utc: Utc::now(),
+        }))
+    }
     pub async fn write_properties(
         self: Arc<Self>,
         recording: i64,
@@ -331,6 +528,205 @@ impl CaptureStore {
         }
     }
 
+    /// Actual effective StreamProfile.is_redirect (locked + name), rather
+    /// than rejecting all noncaptured profile ids or silently choosing DVR UA.
+    pub async fn normal_requires_provider_ua(
+        self: Arc<Self>,
+        channel: i64,
+        default_profile: Option<i64>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        tokio::spawn(async move{
+            let _owner=owner;let mut connection=self.pool.acquire().await.map_err(|source|Error::Sql{stage:Stage::Acquire,source,settlement:None})?;
+            let result=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id JOIN core_streamprofile p ON p.id=COALESCE(o.stream_profile_id,c.stream_profile_id,$2) WHERE c.id=$1 AND p.locked AND p.name='Redirect')")
+                .bind(channel).bind(default_profile).fetch_one(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Recording,source,settlement:None});
+            settle(connection,result).await
+        }).await.map_err(|_|Error::Supervisor)?
+    }
+    /// Source's two-second stop/deletion/end-extension observation transfers
+    /// only derived booleans/timestamps, never the growing recording JSON.
+    pub async fn normal_state(
+        self: Arc<Self>,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<NormalRecordingState>, Error> {
+        if !(1..=i64::from(i32::MAX)).contains(&recording) {
+            return Err(Error::Unsupported("normal state identity"));
+        }
+        tokio::spawn(async move{
+            let _owner=owner;let mut connection=self.pool.acquire().await.map_err(|source|Error::Sql{stage:Stage::Acquire,source,settlement:None})?;
+            let result=async{
+                let row:Option<(bool,bool,DateTime<Utc>,DateTime<Utc>)>=sqlx::query_as("SELECT COALESCE(custom_properties->>'status'='stopped',false),COALESCE(jsonb_typeof(custom_properties)='object' OR custom_properties IN('null'::jsonb,'false'::jsonb,'0'::jsonb,'\"\"'::jsonb,'[]'::jsonb),true),start_time,end_time FROM dispatcharr_channels_recording WHERE id=$1 LIMIT 1").bind(recording).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Recording,source,settlement:None})?;
+                Ok(row.map(|(stopped,property_object,start,end)|NormalRecordingState{stopped,property_object,start,end}))
+            }.await;settle(connection,result).await
+        }).await.map_err(|_|Error::Supervisor)?
+    }
+    /// Fresh final status is always authoritative (stopped wins). Shutdown
+    /// preserves all HLS/file URLs and marks interrupted before returning.
+    pub async fn finalize_runtime(
+        self: Arc<Self>,
+        recording: i64,
+        finalize: RuntimeFinalize,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<RuntimeFinalizeOutcome, Error> {
+        self.finalize_runtime_retry(recording, finalize, false, owner)
+            .await
+    }
+    /// Startup expired rows preserve previous ended_at/bytes_written. Source
+    /// writes only interrupted/reason/remux, plus URLs after actual remux success.
+    pub async fn finalize_expired_runtime(
+        self: Arc<Self>,
+        recording: i64,
+        remux_success: bool,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<RuntimeFinalizeOutcome, Error> {
+        self.finalize_runtime_retry(
+            recording,
+            RuntimeFinalize {
+                ended: Utc::now(),
+                bytes_written: 0,
+                remux_success,
+                interrupted_reason: None,
+                server_shutdown: false,
+                stream_info: None,
+            },
+            true,
+            owner,
+        )
+        .await
+    }
+    async fn finalize_runtime_retry(
+        self: Arc<Self>,
+        recording: i64,
+        finalize: RuntimeFinalize,
+        expired: bool,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<RuntimeFinalizeOutcome, Error> {
+        for attempt in 0..3u32 {
+            let outcome = self
+                .clone()
+                .finalize_runtime_mode(recording, finalize.clone(), expired, owner.clone())
+                .await?;
+            let transient = matches!(&outcome,RuntimeFinalizeOutcome::Caught{code:Some(code),..} if normal_transient_sqlstate(code));
+            if !transient || attempt == 2 {
+                return Ok(outcome);
+            }
+            // Retry only a real SQL ErrorResponse after Ready+close. A lost
+            // write/commit reply, supervisor loss or unknown fate never retries.
+            tokio::time::sleep(std::time::Duration::from_secs(1u64 << attempt)).await;
+        }
+        unreachable!("finite Source DB retry loop returns final outcome")
+    }
+    async fn finalize_runtime_mode(
+        self: Arc<Self>,
+        recording: i64,
+        finalize: RuntimeFinalize,
+        expired: bool,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<RuntimeFinalizeOutcome, Error> {
+        if !(1..=i64::from(i32::MAX)).contains(&recording)
+            || finalize
+                .interrupted_reason
+                .as_ref()
+                .is_some_and(|s| s.len() > 4096)
+        {
+            return Err(Error::Unsupported("normal finalization capacity"));
+        }
+        tokio::spawn(async move{
+            let _owner=owner;let mut connection=self.pool.acquire().await.map_err(|source|Error::Sql{stage:Stage::Acquire,source,settlement:None})?;
+            let result=async{
+                let raw:Option<(Option<Value>,bool)>=sqlx::query_as("SELECT CASE WHEN custom_properties IS NULL THEN '{}'::jsonb WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,custom_properties IS NULL OR octet_length(custom_properties::text)<=8192 FROM dispatcharr_channels_recording WHERE id=$1 LIMIT 1").bind(recording).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::MutationRead,source,settlement:None})?;
+                let before=match raw {None=>return Ok(RuntimeFinalizeOutcome::Missing),Some((Some(before),true))=>before,_=>return Err(Error::Unsupported("normal final property capacity"))};
+                let mut after=normal_object(&before)?;let properties=after.as_object_mut().ok_or(Error::Unsupported("normal fresh object properties"))?;
+                let ended=if finalize.ended.timestamp_subsec_micros()==0{finalize.ended.format("%Y-%m-%d %H:%M:%S").to_string()}else{format!("{}.{:06}",finalize.ended.format("%Y-%m-%d %H:%M:%S"),finalize.ended.timestamp_subsec_micros())};
+                if !expired {properties.insert("ended_at".into(),Value::String(ended));}
+                if expired {
+                    properties.insert("status".into(),Value::String("interrupted".into()));
+                    properties.insert("interrupted_reason".into(),Value::String("server_restarted_after_end".into()));
+                    properties.insert("remux_success".into(),Value::Bool(finalize.remux_success));
+                    if finalize.remux_success {
+                        properties.remove("_hls_dir");
+                        let url=format!("/api/channels/recordings/{recording}/file/");
+                        properties.insert("file_url".into(),Value::String(url.clone()));
+                        properties.insert("output_file_url".into(),Value::String(url));
+                    }
+                }else if finalize.server_shutdown{
+                    properties.insert("status".into(),Value::String("interrupted".into()));properties.insert("interrupted_reason".into(),Value::String("server_shutdown".into()));
+                }else{
+                    if properties.get("status").and_then(Value::as_str)==Some("stopped"){properties.remove("interrupted_reason");}
+                    else if let Some(reason)=finalize.interrupted_reason {properties.insert("status".into(),Value::String("interrupted".into()));properties.insert("interrupted_reason".into(),Value::String(reason));}
+                    else{properties.insert("status".into(),Value::String("completed".into()));properties.remove("interrupted_reason");}
+                    if let Some(stream_info)=finalize.stream_info{properties.insert("stream_info".into(),stream_info);}
+                    let url=format!("/api/channels/recordings/{recording}/file/");properties.insert("file_url".into(),Value::String(url.clone()));properties.insert("output_file_url".into(),Value::String(url));properties.insert("bytes_written".into(),Value::from(finalize.bytes_written));properties.insert("remux_success".into(),Value::Bool(finalize.remux_success));
+                }
+                if serde_json::to_vec(&after).map_err(|_|Error::Unsupported("normal final serialization"))?.len()>8192{return Err(Error::Unsupported("normal merged final capacity"));}
+                let changed=sqlx::query("UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1 AND custom_properties=$3").bind(recording).bind(&after).bind(&before).execute(&mut *connection).await;
+                match changed{Ok(value)if value.rows_affected()==1=>Ok(RuntimeFinalizeOutcome::Applied(after)),Ok(_)=>Err(Error::Unsupported("normal final row changed")),Err(source)=>Ok(RuntimeFinalizeOutcome::Caught{intended:after,code:source.as_database_error().and_then(|e|e.code()).map(|v|v.into_owned())})}
+            }.await;
+            // Caught SQL outcomes also cross actual Ready/close before their
+            // intended in-memory payload can reach Source's best-effort event.
+            settle(connection,result).await
+        }).await.map_err(|_|Error::Supervisor)?
+    }
+    pub async fn publish_normal_permanent_urls(
+        self: Arc<Self>,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        self.runtime_hls_patch(recording, false, owner).await
+    }
+    pub async fn clear_runtime_hls(
+        self: Arc<Self>,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        self.runtime_hls_patch(recording, true, owner).await
+    }
+    async fn runtime_hls_patch(
+        self: Arc<Self>,
+        recording: i64,
+        clear: bool,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if recording <= 0 || recording > i64::from(i32::MAX) {
+            return Err(Error::Unsupported("normal HLS SQL identity"));
+        }
+        tokio::spawn(async move{
+            let _owner=owner;let mut connection=self.pool.acquire().await.map_err(|source|Error::Sql{stage:Stage::Acquire,source,settlement:None})?;
+            let query=if clear {"UPDATE dispatcharr_channels_recording SET custom_properties=COALESCE(custom_properties,'{}'::jsonb)-'_hls_dir' WHERE id=$1"}
+                else {"UPDATE dispatcharr_channels_recording SET custom_properties=COALESCE(custom_properties,'{}'::jsonb)||jsonb_build_object('file_url','/api/channels/recordings/'||id||'/file/','output_file_url','/api/channels/recordings/'||id||'/file/') WHERE id=$1"};
+            let result=sqlx::query(query).bind(recording).execute(&mut *connection).await.map(|r|r.rows_affected()==1).map_err(|source|Error::Sql{stage:Stage::MutationWrite,source,settlement:None});
+            settle(connection,result).await
+        }).await.map_err(|_|Error::Supervisor)?
+    }
+    pub async fn prime_normal_properties(
+        self: Arc<Self>,
+        recording: i64,
+        patch: Value,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<PrimeWriteOutcome, Error> {
+        match self
+            .write_properties(recording, PropertyWrite::PrimeRuntime(patch), owner)
+            .await
+        {
+            Ok(value) => Ok(PrimeWriteOutcome::Applied(value)),
+            Err(Error::Sql {
+                stage: Stage::MutationWrite,
+                source,
+                settlement: None,
+            }) if prime_rejection_scope(
+                Stage::MutationWrite,
+                source.as_database_error().and_then(|e| e.code()).as_deref(),
+                true,
+            ) =>
+            {
+                Ok(PrimeWriteOutcome::Rejected(SettledPrimeRejection {
+                    source,
+                }))
+            }
+            Err(error) => Err(error),
+        }
+    }
     async fn write_properties_inner(
         connection: &mut PgConnection,
         recording: i64,
@@ -379,13 +775,31 @@ impl CaptureStore {
         }
         let rejected_completion =
             matches!(&write, PropertyWrite::CompletedAfterRejectedPrime { .. });
-        let mut after = before.clone();
+        let runtime_object = matches!(
+            &write,
+            PropertyWrite::PrimeRuntime(_)
+                | PropertyWrite::PermanentRuntimeUrls
+                | PropertyWrite::RemovedRuntimeHls
+        );
+        let mut after = if runtime_object {
+            normal_object(before)?
+        } else {
+            before.clone()
+        };
         let properties = after
             .as_object_mut()
             .ok_or(Error::Unsupported("fresh object"))?;
+        let runtime_prime = matches!(&write, PropertyWrite::PrimeRuntime(_));
         match write {
-            PropertyWrite::Prime(patch) => {
-                if properties.get("status").and_then(Value::as_str) != Some("scheduled") {
+            PropertyWrite::Prime(patch) | PropertyWrite::PrimeRuntime(patch) => {
+                if (!runtime_prime
+                    && properties.get("status").and_then(Value::as_str) != Some("scheduled"))
+                    || (runtime_prime
+                        && matches!(
+                            properties.get("status").and_then(Value::as_str),
+                            Some("recording" | "completed" | "stopped")
+                        ))
+                {
                     return Err(Error::Unsupported("prime status changed"));
                 }
                 let patch = patch
@@ -422,6 +836,14 @@ impl CaptureStore {
                 for (key, value) in patch {
                     properties.insert(key.clone(), value.clone());
                 }
+            }
+            PropertyWrite::PermanentRuntimeUrls => {
+                let url = format!("/api/channels/recordings/{recording}/file/");
+                properties.insert("file_url".into(), Value::String(url.clone()));
+                properties.insert("output_file_url".into(), Value::String(url));
+            }
+            PropertyWrite::RemovedRuntimeHls => {
+                properties.remove("_hls_dir");
             }
             PropertyWrite::RemovedOwnedHls => {
                 if properties.get("status").and_then(Value::as_str) != Some("recording") {
@@ -492,6 +914,52 @@ impl CaptureStore {
     /// Only the observed normal recording_start/end rows, injected stable empty
     /// Connect/plugin context and nontrimming history. Does not borrow another
     /// family's caught-P0001 authority or turn unknown audit errors into success.
+    /// Source's normal best-effort audit insertion/history trimming, physically
+    /// settled before returning. Hook integrations are checked in normal row
+    /// preflight until their real ports are composed, never silently discarded.
+    pub async fn insert_runtime_event(
+        self: Arc<Self>,
+        kind: NormalEvent,
+        channel: Uuid,
+        channel_name: String,
+        details: Value,
+        max_events: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<i64>, Error> {
+        if channel_name.len() > 255
+            || !details.is_object()
+            || serde_json::to_vec(&details)
+                .map_err(|_| Error::Unsupported("audit details"))?
+                .len()
+                > 8192
+        {
+            return Err(Error::Unsupported("normal event capacity"));
+        }
+        let result=tokio::spawn(async move {
+            let _owner=owner;let mut connection=self.pool.acquire().await.map_err(|source|Error::Sql{stage:Stage::Acquire,source,settlement:None})?;
+            let result=async {
+                let kind=match kind{NormalEvent::Started=>"recording_start",NormalEvent::Ended=>"recording_end"};
+                let id:i64=sqlx::query_scalar("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$2,$3,$4,$5)RETURNING id::bigint").bind(kind).bind(Utc::now()).bind(channel).bind(channel_name).bind(details).fetch_one(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Audit,source,settlement:None})?;
+                // An nth row exists iff count>max. This avoids Source's full
+                // COUNT scan while preserving its exact cutoff/id predicate.
+                // Negative queryset indices throw inside Source's caught logger;
+                // insertion remains, no trim occurs.
+                if max_events>=0 {
+                    let cutoff:Option<i64>=sqlx::query_scalar("SELECT id::bigint FROM core_systemevent ORDER BY timestamp DESC LIMIT 1 OFFSET $1").bind(max_events).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Audit,source,settlement:None})?;
+                    if let Some(cutoff)=cutoff{sqlx::query("DELETE FROM core_systemevent WHERE id<$1").bind(cutoff).execute(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Audit,source,settlement:None})?;}
+                }Ok(id)
+            }.await;settle(connection,result).await
+        }).await.map_err(|_|Error::Supervisor)?;
+        match result {
+            Ok(id) => Ok(Some(id)),
+            Err(Error::Sql {
+                stage: Stage::Audit,
+                settlement: None,
+                ..
+            }) => Ok(None),
+            Err(error) => Err(error),
+        }
+    }
     pub async fn insert_normal_event(
         self: Arc<Self>,
         kind: NormalEvent,
@@ -565,6 +1033,32 @@ impl CaptureStore {
 pub enum NormalEvent {
     Started,
     Ended,
+}
+
+fn normal_object(value: &Value) -> Result<Value, Error> {
+    let falsy = match value {
+        Value::Null => true,
+        Value::Bool(v) => !*v,
+        Value::Number(n) => n.as_f64() == Some(0.0),
+        Value::String(s) => s.is_empty(),
+        Value::Array(v) => v.is_empty(),
+        Value::Object(v) => v.is_empty(),
+    };
+    if falsy {
+        Ok(serde_json::json!({}))
+    } else if value.is_object() {
+        Ok(value.clone())
+    } else {
+        Err(Error::Unsupported("truthy nonobject recording properties"))
+    }
+}
+
+fn normal_transient_sqlstate(code: &str) -> bool {
+    // psycopg2 operational transaction/resource/connection failures. Source
+    // Integrity/Data/Programming/RaiseException (P0001) are never retried here.
+    ["08", "40", "53", "54", "55", "57", "58"]
+        .iter()
+        .any(|class| code.starts_with(class))
 }
 
 #[cfg(test)]

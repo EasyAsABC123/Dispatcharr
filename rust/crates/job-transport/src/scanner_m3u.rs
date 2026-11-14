@@ -10,8 +10,9 @@ use dispatcharr_contracts::UpdateEventSink;
 use dispatcharr_coordination::{TaskLease, TaskLockDetailedError, TaskLockError, TaskLocks};
 use dispatcharr_ingest_core::{project_entry, stream_hash, ProjectionContext, StreamIdentity};
 use dispatcharr_store::{
-    AuthService, BoundedM3uBatchError, GroupCleanupAccount, ImportedGroup, ImportedStream,
-    M3uGroupImportFailure, M3uGroupImportStage, ScannerM3uLookupCap, Store, StoreError,
+    AuthService, BoundedM3uBatchError, GroupCleanupAccount, GroupCleanupCounts, GroupImportCounts,
+    ImportCounts, ImportedGroup, ImportedStream, M3uGroupImportFailure, M3uGroupImportStage,
+    ScannerM3uLookupCap, Store, StoreError, StreamCleanupCounts, TaskSqlExecutor, TaskSqlSession,
 };
 use serde_json::{json, Value};
 use sqlx::{Connection, Row};
@@ -174,9 +175,36 @@ impl Drop for Done {
     }
 }
 struct Operation {
-    _permit: OwnedSemaphorePermit,
+    _permit: Arc<OwnedSemaphorePermit>,
     _caller: Owner,
     _done: Done,
+    session: Option<TaskSqlSession>,
+    service: Option<std::sync::Weak<Inner>>,
+}
+impl Drop for Operation {
+    fn drop(&mut self) {
+        if let Some(session) = self.session.take() {
+            let permit = self._permit.clone();
+            let caller = self._caller.clone();
+            let done = self._done.0.take();
+            let service = self.service.take();
+            tokio::spawn(async move {
+                let failed = session.close().await.is_err();
+                if let Some(inner) = service.and_then(|v| v.upgrade()) {
+                    inner.session_failed.store(failed, Ordering::Release);
+                    if let Ok(mut active) = inner.session.lock() {
+                        active.take();
+                    }
+                }
+                drop(session);
+                drop(caller);
+                drop(permit);
+                if let Some(done) = done {
+                    let _ = done.send(());
+                }
+            });
+        }
+    }
 }
 #[derive(Clone, Copy)]
 enum HashMode {
@@ -222,6 +250,9 @@ struct Inner {
     elapsed: Arc<dyn Clock>,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
+    normal: bool,
+    session: std::sync::Mutex<Option<TaskSqlSession>>,
+    session_failed: AtomicBool,
 }
 #[derive(Clone)]
 pub struct Service {
@@ -239,8 +270,36 @@ impl Service {
         date: DateClock,
         elapsed: Arc<dyn Clock>,
     ) -> Result<Self, Error> {
+        Self::construct(store, auth, sink, locks, ports, roots, date, elapsed, false)
+    }
+    /// Real one-connection operation borrowed from Main's existing larger pool.
+    #[allow(clippy::too_many_arguments)]
+    pub fn new_owned_shared(
+        store: Store,
+        auth: AuthService,
+        sink: Arc<dyn UpdateEventSink>,
+        locks: TaskLocks,
+        ports: M3uPorts,
+        roots: Roots,
+        date: DateClock,
+        elapsed: Arc<dyn Clock>,
+    ) -> Result<Self, Error> {
+        Self::construct(store, auth, sink, locks, ports, roots, date, elapsed, true)
+    }
+    #[allow(clippy::too_many_arguments)]
+    fn construct(
+        store: Store,
+        auth: AuthService,
+        sink: Arc<dyn UpdateEventSink>,
+        locks: TaskLocks,
+        ports: M3uPorts,
+        roots: Roots,
+        date: DateClock,
+        elapsed: Arc<dyn Clock>,
+        normal: bool,
+    ) -> Result<Self, Error> {
         if !auth.uses_store_pool(&store)
-            || store.pool().options().get_max_connections() != 1
+            || (!normal && store.pool().options().get_max_connections() != 1)
             || !roots.input.is_absolute()
             || !roots.cache.is_absolute()
             || roots
@@ -269,8 +328,159 @@ impl Service {
                 elapsed,
                 slots: Arc::new(Semaphore::new(1)),
                 closed: AtomicBool::new(false),
+                normal,
+                session: std::sync::Mutex::new(None),
+                session_failed: AtomicBool::new(false),
             }),
         })
+    }
+    fn session(&self) -> Result<Option<TaskSqlSession>, Error> {
+        let value = self
+            .inner
+            .session
+            .lock()
+            .map_err(|_| Error::Operational)?
+            .clone();
+        if self.inner.normal && value.is_none() {
+            return Err(Error::Operational);
+        }
+        Ok(value)
+    }
+    fn executor(&self) -> TaskSqlExecutor<'_> {
+        if !self.inner.normal {
+            TaskSqlExecutor::Pool(self.inner.store.pool())
+        } else {
+            match self.session() {
+                Ok(Some(session)) => TaskSqlExecutor::Session(session),
+                _ => TaskSqlExecutor::Unavailable,
+            }
+        }
+    }
+    async fn system_settings(&self, owner: Owner) -> Result<Value, Error> {
+        let auth = self.inner.auth.clone().with_retained_scope(owner);
+        match self.session()? {
+            Some(session) => session.system_settings(auth).await,
+            None => auth.system_settings().await,
+        }
+        .map_err(|_| Error::Operational)
+    }
+    async fn import_groups(
+        &self,
+        id: i64,
+        properties: Value,
+        groups: Vec<ImportedGroup>,
+        time: chrono::DateTime<chrono::Utc>,
+    ) -> Result<Result<GroupImportCounts, M3uGroupImportFailure>, Error> {
+        match self.session()? {
+            Some(session) => {
+                let store = self.inner.store.clone();
+                session
+                    .run(move |connection| {
+                        Box::pin(async move {
+                            store
+                                .import_m3u_groups_report_on_connection(
+                                    connection,
+                                    id,
+                                    &properties,
+                                    groups,
+                                    time,
+                                )
+                                .await
+                        })
+                    })
+                    .await
+                    .map_err(|_| Error::Operational)
+            }
+            None => Ok(self
+                .inner
+                .store
+                .import_m3u_groups_report(id, &properties, groups, time)
+                .await),
+        }
+    }
+    async fn import_batch(
+        &self,
+        id: i64,
+        rows: Vec<ImportedStream>,
+    ) -> Result<Result<ImportCounts, BoundedM3uBatchError>, Error> {
+        match self.session()? {
+            Some(session) => {
+                let store = self.inner.store.clone();
+                session
+                    .run(move |connection| {
+                        Box::pin(async move {
+                            store
+                                .import_m3u_batch_with_lookup_cap_on_connection(
+                                    connection,
+                                    id,
+                                    rows,
+                                    ScannerM3uLookupCap::local_std_file8(),
+                                )
+                                .await
+                        })
+                    })
+                    .await
+                    .map_err(|_| Error::Operational)
+            }
+            None => Ok(self
+                .inner
+                .store
+                .import_m3u_batch_with_lookup_cap(id, rows, ScannerM3uLookupCap::local_std_file8())
+                .await),
+        }
+    }
+    async fn cleanup_streams(
+        &self,
+        id: i64,
+        time: chrono::DateTime<chrono::Utc>,
+    ) -> Result<StreamCleanupCounts, Error> {
+        match self.session()? {
+            Some(session) => {
+                let store = self.inner.store.clone();
+                session
+                    .run(move |connection| {
+                        Box::pin(async move {
+                            store
+                                .cleanup_m3u_streams_on_connection(connection, id, time)
+                                .await
+                        })
+                    })
+                    .await
+                    .map_err(|_| Error::Operational)?
+            }
+            None => self.inner.store.cleanup_m3u_streams(id, time).await,
+        }
+        .map_err(|_| Error::Operational)
+    }
+    async fn cleanup_groups(
+        &self,
+        account: GroupCleanupAccount,
+        time: chrono::DateTime<chrono::Utc>,
+    ) -> Result<GroupCleanupCounts, Error> {
+        match self.session()? {
+            Some(session) => {
+                let store = self.inner.store.clone();
+                session
+                    .run(move |connection| {
+                        Box::pin(async move {
+                            store
+                                .cleanup_m3u_group_relationships_on_connection(
+                                    connection, &account, time,
+                                )
+                                .await
+                        })
+                    })
+                    .await
+                    .map_err(|_| Error::Operational)?
+            }
+            None => {
+                self.inner
+                    .store
+                    .cleanup_m3u_group_relationships(&account, time)
+                    .await
+            }
+        }
+        .map_err(|_| Error::Operational)
     }
     fn now(&self) -> chrono::DateTime<chrono::Utc> {
         let v = (self.inner.date)();
@@ -291,11 +501,34 @@ impl Service {
             .clone()
             .try_acquire_owned()
             .map_err(|_| Error::Capacity)?;
+        let permit = Arc::new(permit);
+        let session = if self.inner.normal {
+            let retained: Owner = Arc::new((permit.clone(), caller.clone()));
+            let session = self
+                .inner
+                .auth
+                .borrow_task_sql_session(retained)
+                .await
+                .map_err(|_| Error::Operational)?;
+            {
+                let mut active = self.inner.session.lock().map_err(|_| Error::Operational)?;
+                if active.is_some() {
+                    return Err(Error::Operational);
+                }
+                *active = Some(session.clone());
+            }
+            self.inner.session_failed.store(false, Ordering::Release);
+            Some(session)
+        } else {
+            None
+        };
         let (sender, done) = tokio::sync::oneshot::channel();
         let owner = Arc::new(Operation {
             _permit: permit,
             _caller: caller,
             _done: Done(Some(sender)),
+            session,
+            service: self.inner.normal.then(|| Arc::downgrade(&self.inner)),
         });
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
@@ -315,7 +548,7 @@ impl Service {
         owner: Arc<Operation>,
         done: tokio::sync::oneshot::Receiver<()>,
     ) -> Result<Prepared, Error> {
-        let row=sqlx::query("SELECT id::bigint,name,file_path,is_active,status,CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,locked,stale_stream_days::bigint, (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL AND custom_properties='{}'::jsonb AND octet_length(name)<=512 AND octet_length(file_path)<=4096 AND COALESCE(octet_length(last_message),0)<=8192) AS known FROM m3u_m3uaccount WHERE id=$1").bind(id).fetch_optional(self.inner.store.pool()).await.map_err(|_|Error::Operational)?.ok_or(Error::Unsupported)?;
+        let row=sqlx::query("SELECT id::bigint,name,file_path,is_active,status,CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,locked,stale_stream_days::bigint, (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL AND custom_properties='{}'::jsonb AND octet_length(name)<=512 AND octet_length(file_path)<=4096 AND COALESCE(octet_length(last_message),0)<=8192) AS known FROM m3u_m3uaccount WHERE id=$1").bind(id).fetch_optional(self.executor()).await.map_err(|_|Error::Operational)?.ok_or(Error::Unsupported)?;
         if !row
             .try_get::<bool, _>("known")
             .map_err(|_| Error::Unsupported)?
@@ -349,11 +582,11 @@ impl Service {
             return Err(Error::Unsupported);
         }
         let hash_mode = self.hash_setting(owner.clone()).await?;
-        let forbidden:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
+        let forbidden:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(self.executor()).await.map_err(|_|Error::Operational)?;
         if forbidden {
             return Err(Error::Unsupported);
         }
-        let domain:i64=sqlx::query_scalar("SELECT (SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_stream WHERE m3u_account_id=$1 LIMIT 65)s)+(SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 LIMIT 17)g)").bind(id).fetch_one(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
+        let domain:i64=sqlx::query_scalar("SELECT (SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_stream WHERE m3u_account_id=$1 LIMIT 65)s)+(SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 LIMIT 17)g)").bind(id).fetch_one(self.executor()).await.map_err(|_|Error::Operational)?;
         if domain > 64 {
             return Err(Error::Capacity);
         }
@@ -431,7 +664,7 @@ impl Service {
         hashes.sort();
         hashes.dedup();
         let mapped: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.stream_hash=ANY($1))")
-            .bind(&hashes).fetch_one(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
+            .bind(&hashes).fetch_one(self.executor()).await.map_err(|_|Error::Operational)?;
         if mapped {
             return Err(Error::Unsupported);
         }
@@ -441,26 +674,19 @@ impl Service {
         // Serialized JSON text size matters, not compressed TOAST storage.
         let supported: bool = sqlx::query_scalar("SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) AND ((logo_url IS NOT NULL AND octet_length(logo_url)>$2) OR (custom_properties IS NOT NULL AND octet_length(custom_properties::text)>$2)))")
             .bind(&hashes).bind(ScannerM3uLookupCap::FIELD_TEXT_BYTES)
-            .fetch_one(self.inner.store.pool()).await.map_err(|_| Error::Operational)?;
+            .fetch_one(self.executor()).await.map_err(|_| Error::Operational)?;
         if !supported {
             return Err(Error::Unsupported);
         }
         if kind == Kind::Single && prepared.account.active {
-            let settings = self
-                .inner
-                .auth
-                .clone()
-                .with_retained_scope(prepared.owner.clone())
-                .system_settings()
-                .await
-                .map_err(|_| Error::Operational)?;
+            let settings = self.system_settings(prepared.owner.clone()).await?;
             let limit = audit_limit(&settings)?;
             // Count and tie materialization share one bounded statement snapshot.
             // Even an unqualified concurrent writer cannot grow the GROUP BY input.
             let history = sqlx::query(
                 "WITH history AS MATERIALIZED(SELECT timestamp FROM core_systemevent LIMIT 10001) SELECT (SELECT count(*) FROM history)::bigint AS total,EXISTS(SELECT 1 FROM history GROUP BY timestamp HAVING count(*)>1) AS tied",
             )
-            .fetch_one(self.inner.store.pool())
+            .fetch_one(self.executor())
             .await
             .map_err(|_| Error::Operational)?;
             let existing: i64 = history.try_get("total").map_err(|_| Error::Operational)?;
@@ -501,7 +727,7 @@ impl Service {
             // This bounds fetched data, not PostgreSQL CPU/TOAST/scan work.
             let row: Option<(bool, Option<Value>)> = sqlx::query_as(
                 "SELECT octet_length(value::text)<=65536 AS bounded,CASE WHEN octet_length(value::text)<=65536 THEN CASE WHEN jsonb_typeof(value)='object' THEN COALESCE(value->'m3u_hash_key','\"\"'::jsonb) ELSE '\"\"'::jsonb END ELSE NULL END AS hash_value FROM core_coresettings WHERE key='stream_settings'",
-            ).fetch_optional(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
+            ).fetch_optional(self.executor()).await.map_err(|_|Error::Operational)?;
             let after = self
                 .inner
                 .ports
@@ -531,6 +757,14 @@ impl Service {
         self.inner.roots.cache.join(format!("{id}.json"))
     }
     async fn settle(&self) -> Result<(), Error> {
+        if self.inner.normal {
+            return self
+                .session()?
+                .ok_or(Error::Operational)?
+                .fence()
+                .await
+                .map_err(|_| Error::Operational);
+        }
         let pool = self.inner.store.pool();
         loop {
             match pool.acquire().await {
@@ -599,14 +833,14 @@ impl Service {
             .bind(status)
             .bind(message)
             .bind(self.now())
-            .execute(self.inner.store.pool())
+            .execute(self.executor())
             .await
         } else {
             sqlx::query("UPDATE m3u_m3uaccount SET status=$2,last_message=$3 WHERE id=$1")
                 .bind(account.id)
                 .bind(status)
                 .bind(message)
-                .execute(self.inner.store.pool())
+                .execute(self.executor())
                 .await
         }
         .map_err(|_| Error::Operational)?;
@@ -650,17 +884,10 @@ impl Service {
         Ok(SettledAuditFailure { stage, source })
     }
     async fn audit(&self, kind: &str, details: Value, owner: Owner) -> Result<(), Error> {
-        let settings = self
-            .inner
-            .auth
-            .clone()
-            .with_retained_scope(owner)
-            .system_settings()
-            .await
-            .map_err(|_| Error::Operational)?;
+        let settings = self.system_settings(owner).await?;
         let max = audit_limit(&settings)?;
         let inserted = sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$3,NULL,NULL,$2)")
-            .bind(kind).bind(details).bind(self.now()).execute(self.inner.store.pool()).await;
+            .bind(kind).bind(details).bind(self.now()).execute(self.executor()).await;
         if let Err(source) = inserted {
             return if self
                 .settled_audit_failure(AuditStage::Insert, source)
@@ -679,7 +906,7 @@ impl Service {
             "WITH history AS MATERIALIZED(SELECT id,timestamp FROM core_systemevent LIMIT 10002) SELECT (SELECT count(*) FROM history)::bigint AS total,EXISTS(SELECT 1 FROM history GROUP BY timestamp HAVING count(*)>1) AS tied,(SELECT id FROM history ORDER BY timestamp DESC LIMIT 1 OFFSET $1) AS cutoff",
         )
         .bind(max)
-        .fetch_one(self.inner.store.pool())
+        .fetch_one(self.executor())
         .await
         .map_err(|_| Error::Operational)?;
         let count: i64 = history.try_get("total").map_err(|_| Error::Operational)?;
@@ -703,7 +930,7 @@ impl Service {
                 .ok_or(Error::Operational)?;
             let removed = sqlx::query("DELETE FROM core_systemevent WHERE id<$1")
                 .bind(cutoff)
-                .execute(self.inner.store.pool())
+                .execute(self.executor())
                 .await;
             if let Err(source) = removed {
                 return if self
@@ -804,10 +1031,8 @@ impl Service {
                     custom_properties: serde_json::Map::new(),
                 })
                 .collect();
-            self.inner
-                .store
-                .import_m3u_groups_report(account.id, &json!({}), groups, self.now())
-                .await
+            self.import_groups(account.id, json!({}), groups, self.now())
+                .await?
                 .map_err(GroupsError::Import)?;
             Ok(files::result(catalog))
         }
@@ -900,6 +1125,9 @@ impl Service {
             .await
             .map_err(|_| Error::DrainTimeout)?
             .map_err(|_| Error::Operational)?;
+        if self.inner.normal && self.inner.session_failed.load(Ordering::Acquire) {
+            return Err(Error::Operational);
+        }
         result
     }
     async fn single(&self, prepared: &Prepared) -> Result<Value, Error> {
@@ -953,7 +1181,7 @@ impl Service {
         };
         self.update(account, "parsing", Some("Refresh in progress..."), false)
             .await?;
-        let rows=sqlx::query("SELECT g.id::bigint,g.name FROM dispatcharr_channels_channelgroup g JOIN dispatcharr_channels_channelgroupm3uaccount r ON r.channel_group_id=g.id WHERE r.m3u_account_id=$1 AND r.enabled LIMIT 17").bind(account.id).fetch_all(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
+        let rows=sqlx::query("SELECT g.id::bigint,g.name FROM dispatcharr_channels_channelgroup g JOIN dispatcharr_channels_channelgroupm3uaccount r ON r.channel_group_id=g.id WHERE r.m3u_account_id=$1 AND r.enabled LIMIT 17").bind(account.id).fetch_all(self.executor()).await.map_err(|_|Error::Operational)?;
         if rows.len() > 16 {
             return Err(Error::Capacity);
         }
@@ -1001,15 +1229,7 @@ impl Service {
         elapsed_start: f64,
         owner: Owner,
     ) -> Result<Value, Error> {
-        let first = self
-            .inner
-            .store
-            .import_m3u_batch_with_lookup_cap(
-                account.id,
-                rows.clone(),
-                ScannerM3uLookupCap::local_std_file8(),
-            )
-            .await;
+        let first = self.import_batch(account.id, rows.clone()).await?;
         let counts = match first {
             Ok(v) => v,
             Err(e) => {
@@ -1017,16 +1237,7 @@ impl Service {
                 if !caught_batch(&e) {
                     return Err(Error::Operational);
                 }
-                match self
-                    .inner
-                    .store
-                    .import_m3u_batch_with_lookup_cap(
-                        account.id,
-                        rows,
-                        ScannerM3uLookupCap::local_std_file8(),
-                    )
-                    .await
-                {
+                match self.import_batch(account.id, rows).await? {
                     Ok(v) => v,
                     Err(e) => {
                         self.settle().await?;
@@ -1061,28 +1272,22 @@ impl Service {
             .parse::<f64>()
             .map_err(|_| Error::Operational)?;
         self.event(account.id,"parsing",100,"parsing",Some("Refresh in progress..."),json!({"elapsed_time":rounded_progress,"time_remaining":0,"streams_processed":processed}),owner.clone()).await?;
-        let stale=sqlx::query("UPDATE dispatcharr_channels_stream SET is_stale=true WHERE m3u_account_id=$1 AND last_seen<$2").bind(account.id).bind(start).execute(self.inner.store.pool()).await.map_err(|_|Error::Operational)?.rows_affected();
-        sqlx::query("UPDATE dispatcharr_channels_channelgroupm3uaccount SET is_stale=true WHERE m3u_account_id=$1 AND last_seen<$2").bind(account.id).bind(start).execute(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
+        let stale=sqlx::query("UPDATE dispatcharr_channels_stream SET is_stale=true WHERE m3u_account_id=$1 AND last_seen<$2").bind(account.id).bind(start).execute(self.executor()).await.map_err(|_|Error::Operational)?.rows_affected();
+        sqlx::query("UPDATE dispatcharr_channels_channelgroupm3uaccount SET is_stale=true WHERE m3u_account_id=$1 AND last_seen<$2").bind(account.id).bind(start).execute(self.executor()).await.map_err(|_|Error::Operational)?;
         let deleted = self
-            .inner
-            .store
-            .cleanup_m3u_streams(account.id, start)
-            .await
-            .map_err(|_| Error::Operational)?
+            .cleanup_streams(account.id, start)
+            .await?
             .reported_total;
-        self.inner
-            .store
-            .cleanup_m3u_group_relationships(
-                &GroupCleanupAccount {
-                    id: account.id,
-                    locked: account.locked,
-                    name: account.name.clone(),
-                    stale_stream_days: account.days,
-                },
-                start,
-            )
-            .await
-            .map_err(|_| Error::Operational)?;
+        self.cleanup_groups(
+            GroupCleanupAccount {
+                id: account.id,
+                locked: account.locked,
+                name: account.name.clone(),
+                stale_stream_days: account.days,
+            },
+            start,
+        )
+        .await?;
         let elapsed = self.inner.elapsed.now() - elapsed_start;
         if !elapsed.is_finite() || !(0.0..=3600.0).contains(&elapsed) {
             return Err(Error::Operational);

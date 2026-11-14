@@ -32,25 +32,21 @@ pub struct StreamCleanupCounts {
     pub reported_total: u64,
     pub deleted_streams: u64,
 }
-impl Store {
-    /// The two source deletions are separate transactions. Both source counts
-    /// are taken first, so an old stream in a disabled group is counted twice
-    /// in reported_total even though it is physically deleted only once.
-    pub async fn cleanup_m3u_streams(
-        &self,
-        account_id: i64,
-        scan_time: DateTime<Utc>,
-    ) -> Result<StreamCleanupCounts, StoreError> {
+// One mutation engine supports both legacy pool and explicit owned-session paths.
+macro_rules! owned_stream_cleanup {
+    ($executor:expr, $begin:expr, $account_id:expr, $scan_time:expr) => {{
+        let account_id = $account_id;
+        let scan_time = $scan_time;
         let days: Option<i64> = sqlx::query_scalar(
             "SELECT stale_stream_days::bigint FROM m3u_m3uaccount WHERE id=$1 AND is_active",
         )
         .bind(account_id)
-        .fetch_optional(&self.pool)
+        .fetch_optional($executor)
         .await?;
         let days = days.ok_or(StoreError::NotFound)?;
         let cutoff = cutoff(scan_time, days)?;
         let counts=sqlx::query(&format!("SELECT count(*) FILTER(WHERE {DISABLED})::bigint AS disabled,count(*) FILTER(WHERE s.last_seen<$2)::bigint AS stale,count(*) FILTER(WHERE {DISABLED} OR s.last_seen<$2)::bigint AS unique_rows FROM dispatcharr_channels_stream s WHERE s.m3u_account_id=$1"))
-            .bind(account_id).bind(cutoff).fetch_one(&self.pool).await?;
+            .bind(account_id).bind(cutoff).fetch_one($executor).await?;
         if counts.try_get::<i64, _>("unique_rows")? > MAX_CLEANUP_ROWS {
             return Err(StoreError::InvalidInput(
                 json!({"detail":"Stream cleanup capacity exceeded."}),
@@ -60,7 +56,7 @@ impl Store {
         let stale = counts.try_get::<i64, _>("stale")? as u64;
         let mut deleted = 0_u64;
         for predicate in [DISABLED, "s.last_seen<$2"] {
-            let mut tx = self.pool.begin().await?;
+            let mut tx = $begin.await?;
             loop {
                 // Bounded row-id batches within each original transaction;
                 // stream deletion uses the existing collector/rollup port.
@@ -87,22 +83,20 @@ impl Store {
             reported_total: disabled + stale,
             deleted_streams: deleted,
         })
-    }
 
-    /// Source receives an account snapshot. The locked `custom` account skips
-    /// cleanup before date arithmetic. Streams/overrides alone do not protect
-    /// an orphan group; the original collector sets those references to NULL.
-    pub async fn cleanup_m3u_group_relationships(
-        &self,
-        account: &GroupCleanupAccount,
-        scan_time: DateTime<Utc>,
-    ) -> Result<GroupCleanupCounts, StoreError> {
+    }};
+}
+
+macro_rules! owned_group_cleanup {
+    ($executor:expr, $begin:expr, $account:expr, $scan_time:expr) => {{
+        let account = $account;
+        let scan_time = $scan_time;
         if account.locked && account.name == "custom" {
             return Ok(GroupCleanupCounts::default());
         }
         let cutoff = cutoff(scan_time, account.stale_stream_days)?;
         let stale=sqlx::query("SELECT channel_group_id::bigint AS group_id FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND last_seen<$2 LIMIT 32769")
-            .bind(account.id).bind(cutoff).fetch_all(&self.pool).await?;
+            .bind(account.id).bind(cutoff).fetch_all($executor).await?;
         if stale.len() > 32768 {
             return Err(StoreError::InvalidInput(
                 json!({"detail":"Group cleanup capacity exceeded."}),
@@ -118,8 +112,8 @@ impl Store {
         // Preserve the separate original relationship-delete commit even if
         // the subsequent orphan-group collector fails.
         sqlx::query("DELETE FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND last_seen<$2")
-            .bind(account.id).bind(cutoff).execute(&self.pool).await?;
-        let mut tx = self.pool.begin().await?;
+            .bind(account.id).bind(cutoff).execute($executor).await?;
+        let mut tx = $begin.await?;
         let orphans:Vec<i64>=sqlx::query_scalar("SELECT g.id::bigint FROM dispatcharr_channels_channelgroup g WHERE g.id=ANY($1) AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r WHERE r.channel_group_id=g.id) AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channel c WHERE c.channel_group_id=g.id) FOR UPDATE OF g")
             .bind(group_ids).fetch_all(&mut *tx).await?;
         if !orphans.is_empty() {
@@ -137,5 +131,62 @@ impl Store {
             removed_relationships: stale.len() as u64,
             removed_groups: orphans.len() as u64,
         })
+
+    }};
+}
+
+impl Store {
+    /// The two source deletions are separate transactions. Both source counts
+    /// are taken first, so an old stream in a disabled group is counted twice
+    /// in reported_total even though it is physically deleted only once.
+    pub async fn cleanup_m3u_streams(
+        &self,
+        account_id: i64,
+        scan_time: DateTime<Utc>,
+    ) -> Result<StreamCleanupCounts, StoreError> {
+        owned_stream_cleanup!(&self.pool, self.pool.begin(), account_id, scan_time)
+    }
+
+    /// Same statement engine on the caller-owned session; no pool lookup or
+    /// additional transaction. The caller retains physical settlement/closure.
+    pub async fn cleanup_m3u_streams_on_connection(
+        &self,
+        connection: &mut sqlx::PgConnection,
+        account_id: i64,
+        scan_time: DateTime<Utc>,
+    ) -> Result<StreamCleanupCounts, StoreError> {
+        owned_stream_cleanup!(
+            &mut *connection,
+            sqlx::Connection::begin(&mut *connection),
+            account_id,
+            scan_time
+        )
+    }
+
+    /// Source receives an account snapshot. The locked `custom` account skips
+    /// cleanup before date arithmetic. Streams/overrides alone do not protect
+    /// an orphan group; the original collector sets those references to NULL.
+    pub async fn cleanup_m3u_group_relationships(
+        &self,
+        account: &GroupCleanupAccount,
+        scan_time: DateTime<Utc>,
+    ) -> Result<GroupCleanupCounts, StoreError> {
+        owned_group_cleanup!(&self.pool, self.pool.begin(), account, scan_time)
+    }
+
+    /// Same statement engine on the caller-owned session; no pool lookup or
+    /// additional transaction. The caller retains physical settlement/closure.
+    pub async fn cleanup_m3u_group_relationships_on_connection(
+        &self,
+        connection: &mut sqlx::PgConnection,
+        account: &GroupCleanupAccount,
+        scan_time: DateTime<Utc>,
+    ) -> Result<GroupCleanupCounts, StoreError> {
+        owned_group_cleanup!(
+            &mut *connection,
+            sqlx::Connection::begin(&mut *connection),
+            account,
+            scan_time
+        )
     }
 }

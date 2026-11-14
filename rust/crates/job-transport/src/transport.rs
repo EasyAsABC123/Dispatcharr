@@ -35,6 +35,9 @@ pub enum Error {
     UnsupportedTask,
     ClaimRace,
     AmbiguousClaim(Uuid),
+    AmbiguousNamedRecordingClaim(i64),
+    AmbiguousNamedRecordingPublication(i64),
+    AmbiguousNamedRecordingResult(i64),
     AmbiguousResult(Uuid),
     AmbiguousPublication(Uuid),
     DrainTimeout,
@@ -521,6 +524,31 @@ impl Jobs {
                 &[format!("celery-tasks:celery-task-meta-{}", message.task_id)],
                 &[],
                 lease,
+            )
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(None),
+            1 => Ok(Some(reply.1)),
+            _ => Err(Error::Corrupt),
+        }
+    }
+    pub(crate) async fn read_recurring_lineage(
+        &self,
+        id: Uuid,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Vec<u8>>, Error> {
+        if !self.allows_defaults() {
+            return Err(Error::UnsupportedTask);
+        }
+        let (reply, _held) = self
+            .inner
+            .result
+            .command_classified::<(i64, Vec<u8>), _>(
+                READ,
+                &[format!("celery-tasks:celery-task-meta-{id}")],
+                &[],
+                self.lease(caller)?,
             )
             .await
             .map_err(map)?;
@@ -1643,3 +1671,25 @@ pub use stats_normal_transport::StatsJobs;
 #[path = "version_transport.rs"]
 mod version_transport;
 pub use version_transport::VersionJobs;
+
+#[path = "normal_queue_transport.rs"]
+mod normal_queue_transport;
+pub(crate) use normal_queue_transport::NormalHead;
+#[path = "normal_recording_transport.rs"]
+mod normal_recording_transport;
+
+#[path = "normal_named_recording_transport.rs"]
+mod normal_named_recording_transport;
+pub(crate) use normal_named_recording_transport::{NamedDvrCandidate, NamedPublicationReply};
+
+pub(crate) use recording_dvr_transport::DvrCandidate;
+
+pub(crate) use normal_recording_transport::ExistingRecordingHead;
+
+#[path = "normal_recovery_transport.rs"]
+mod normal_recovery_transport;
+pub use normal_recovery_transport::RecoveryJobs;
+#[path = "scanner_parents_io.rs"]
+mod scanner_parents_io;
+pub(crate) use scanner_parents_io::ScannerPublication;
+pub use scanner_parents_io::{ScannerParentRegistry, ScannerRefreshCapability};

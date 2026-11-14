@@ -62,6 +62,27 @@ impl Jobs {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<Candidate>, Error> {
+        self.peek_artwork_mode(caller, false, None).await
+    }
+    pub(crate) async fn peek_normal_artwork(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Candidate>, Error> {
+        self.peek_artwork_mode(caller, true, None).await
+    }
+    pub(crate) async fn peek_selected_normal_artwork(
+        &self,
+        expected: &[u8],
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Candidate>, Error> {
+        self.peek_artwork_mode(caller, true, Some(expected)).await
+    }
+    async fn peek_artwork_mode(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+        normal: bool,
+        expected: Option<&[u8]>,
+    ) -> Result<Option<Candidate>, Error> {
         if !self.local_artwork_authorized() {
             return Err(Error::UnsupportedTask);
         }
@@ -77,12 +98,21 @@ impl Jobs {
             )
             .await
             .map_err(map)?;
+        if let Some(expected) = expected {
+            if expected.is_empty() || reply.0 != 1 || reply.1 != expected {
+                return Err(Error::ClaimRace);
+            }
+        }
         match reply.0 {
             0 => Ok(None),
             1 => {
                 let validation = local_validation(&reply.1, self.local_artwork_queue())?;
-                let message = crate::recording_artwork_protocol::parse(&validation)
-                    .ok_or(Error::UnsupportedTask)?;
+                let message = if normal {
+                    crate::recording_artwork_protocol::parse_normal(&validation)
+                } else {
+                    crate::recording_artwork_protocol::parse(&validation)
+                }
+                .ok_or(Error::UnsupportedTask)?;
                 Ok(Some(Candidate {
                     message,
                     bytes: reply.1,

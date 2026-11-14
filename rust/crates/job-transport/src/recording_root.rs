@@ -154,11 +154,33 @@ impl Root {
         relative: &Path,
         existing_last: bool,
     ) -> Result<Node, Error> {
+        self.ensure_inner(relative, existing_last, false)
+    }
+    pub(super) fn ensure_normal_directory(
+        &mut self,
+        relative: &Path,
+        existing_last: bool,
+    ) -> Result<Node, Error> {
+        self.ensure_inner(relative, existing_last, true)
+    }
+    fn ensure_inner(
+        &mut self,
+        relative: &Path,
+        existing_last: bool,
+        normal: bool,
+    ) -> Result<Node, Error> {
         let raw = relative
             .to_str()
             .ok_or(Error::Unsupported("relative UTF8 directory"))?;
-        let parts: Vec<_> = raw.split('/').collect();
-        if parts.is_empty() || parts.len() > 3 {
+        if raw.len() > 4096 {
+            return Err(Error::Unsupported("media directory path capacity"));
+        }
+        let parts: Vec<_> = if normal && raw.is_empty() {
+            Vec::new()
+        } else {
+            raw.split('/').collect()
+        };
+        if !normal && (parts.is_empty() || parts.len() > 3) {
             return Err(Error::Unsupported("bounded media directory depth"));
         }
         for name in &parts {

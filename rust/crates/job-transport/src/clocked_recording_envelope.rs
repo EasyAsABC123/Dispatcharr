@@ -132,7 +132,7 @@ enum Container {
     Object(HashSet<String>),
     Array,
 }
-fn json_value(bytes: &[u8]) -> Result<Value, Refusal> {
+pub(crate) fn json_value(bytes: &[u8]) -> Result<Value, Refusal> {
     let mut stack = Vec::new();
     let mut at = 0usize;
     let mut nodes = 0usize;
@@ -212,6 +212,36 @@ fn json_value(bytes: &[u8]) -> Result<Value, Refusal> {
 /// Refusal is data-only: raw input is never rewritten, ACKed, removed or sent.
 /// Default/legacy parsers and every task registry remain completely unchanged.
 pub fn parse_head(raw: &[u8]) -> Result<ObservedProducerEnvelope, Refusal> {
+    parse_with_date(raw, source_date)
+}
+/// Normal Python UTC datetime spellings, including real microseconds. Parsing
+/// remains observational: it cannot mint a scheduler/execution capability.
+pub fn parse_normal_head(raw: &[u8]) -> Result<ObservedProducerEnvelope, Refusal> {
+    parse_with_date(raw, normal_source_date)
+}
+fn normal_source_date(text: &str) -> Result<DateTime<Utc>, Refusal> {
+    if source_date(text).is_ok() {
+        return source_date(text);
+    }
+    if !text.is_ascii()
+        || text.len() != 32
+        || &text[19..20] != "."
+        || &text[26..] != "+00:00"
+        || !text[20..26].bytes().all(|b| b.is_ascii_digit())
+        || &text[20..26] == "000000"
+    {
+        return Err(Refusal::Date);
+    }
+    let whole = format!("{}+00:00", &text[..19]);
+    source_date(&whole)?;
+    DateTime::parse_from_str(text, "%Y-%m-%d %H:%M:%S%.6f%:z")
+        .map(|value| value.to_utc())
+        .map_err(|_| Refusal::Date)
+}
+fn parse_with_date(
+    raw: &[u8],
+    date: fn(&str) -> Result<DateTime<Utc>, Refusal>,
+) -> Result<ObservedProducerEnvelope, Refusal> {
     if raw.is_empty() || raw.len() > MAX_FRAME_BYTES {
         return Err(Refusal::Capacity);
     }
@@ -321,8 +351,8 @@ pub fn parse_head(raw: &[u8]) -> Result<ObservedProducerEnvelope, Refusal> {
     let channel_id = positive_id(&args[1])?;
     let start_text = args[2].as_str().ok_or(Refusal::Date)?;
     let end_text = args[3].as_str().ok_or(Refusal::Date)?;
-    let start = source_date(start_text)?;
-    let end = source_date(end_text)?;
+    let start = date(start_text)?;
+    let end = date(end_text)?;
     let periodic_name = format!("dvr-recording-{recording_id}");
     if end <= start
         || h["periodic_task_name"] != periodic_name

@@ -14,6 +14,13 @@ impl VersionJobs {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<crate::version_protocol::Message>, Error> {
+        self.claim_selected(None, caller).await
+    }
+    pub(crate) async fn claim_selected(
+        &self,
+        expected: Option<&[u8]>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<crate::version_protocol::Message>, Error> {
         let keys = vec!["celery".to_owned()];
         let lease = self.jobs.lease(caller.clone())?;
         let (reply, held) = self
@@ -23,6 +30,11 @@ impl VersionJobs {
             .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &keys, &[], lease)
             .await
             .map_err(map)?;
+        if let Some(expected) = expected {
+            if expected.is_empty() || reply.0 != 1 || reply.1 != expected {
+                return Err(Error::ClaimRace);
+            }
+        }
         if reply.0 == 0 {
             return Ok(None);
         }

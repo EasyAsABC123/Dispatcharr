@@ -19,6 +19,7 @@ use uuid::Uuid;
 pub type Owner = Arc<dyn Send + Sync>;
 #[derive(Debug)]
 pub enum Error {
+    HeadChanged,
     Unsupported,
     Capacity,
     Closed,
@@ -98,7 +99,8 @@ struct Inner {
     sink: Arc<dyn UpdateEventSink>,
     roots: Roots,
     slot: Arc<Semaphore>,
-    first: std::sync::atomic::AtomicBool,
+    first: Arc<std::sync::atomic::AtomicBool>,
+    logos: Option<crate::logo_scanner::Scanner>,
 }
 #[derive(Clone)]
 struct WatchFile {
@@ -123,6 +125,24 @@ impl Service {
         sink: Arc<dyn UpdateEventSink>,
         roots: Roots,
     ) -> Result<Self, Error> {
+        Self::construct(pool, ports, sink, roots, false)
+    }
+    /// Normal bounded mixed-root scanner; legacy mapped-only construction stays inert.
+    pub fn new_mixed(
+        pool: PgPool,
+        ports: ScannerFilesPorts,
+        sink: Arc<dyn UpdateEventSink>,
+        roots: Roots,
+    ) -> Result<Self, Error> {
+        Self::construct(pool, ports, sink, roots, true)
+    }
+    fn construct(
+        pool: PgPool,
+        ports: ScannerFilesPorts,
+        sink: Arc<dyn UpdateEventSink>,
+        roots: Roots,
+        mixed: bool,
+    ) -> Result<Self, Error> {
         let values = [&roots.m3u, &roots.epg, &roots.logos];
         for (i, path) in values.iter().enumerate() {
             let normalized: PathBuf = path.components().collect();
@@ -144,6 +164,25 @@ impl Service {
                 return Err(Error::Unsupported);
             }
         }
+        let first = Arc::new(std::sync::atomic::AtomicBool::new(false));
+        let logos = if mixed {
+            let effects = Arc::new(crate::logo_scanner_effects::RetainedEffects::new(
+                pool.clone(),
+                ports.marker_transport(),
+                sink.clone(),
+            ));
+            Some(
+                crate::logo_scanner::Scanner::new(
+                    effects,
+                    roots.clone(),
+                    crate::logo_scanner::Limits::default(),
+                )
+                .and_then(|scanner| scanner.with_mapped_parent(first.clone()))
+                .map_err(|_| Error::Unsupported)?,
+            )
+        } else {
+            None
+        };
         Ok(Self {
             inner: Arc::new(Inner {
                 pool,
@@ -151,7 +190,8 @@ impl Service {
                 sink,
                 roots,
                 slot: Arc::new(Semaphore::new(1)),
-                first: std::sync::atomic::AtomicBool::new(false),
+                first,
+                logos,
             }),
         })
     }
@@ -164,14 +204,28 @@ impl Service {
     }
     async fn files(&self, owner: Owner) -> Result<Vec<WatchFile>, Error> {
         let roots = self.inner.roots.clone();
+        let mixed = self.inner.logos.is_some();
         tokio::task::spawn_blocking(move || {
             let _owner = owner;
-            inspect(roots)
+            if mixed {
+                inspect_domain(roots, true)
+            } else {
+                inspect(roots)
+            }
         })
         .await
         .map_err(|_| Error::Operational)?
     }
     pub async fn preflight(&self, owner: Owner) -> Result<(), Error> {
+        self.preflight_parent(None, owner).await
+    }
+    pub(crate) async fn preflight_scanner(&self, parent: Uuid, owner: Owner) -> Result<(), Error> {
+        if parent.is_nil() {
+            return Err(Error::Unsupported);
+        }
+        self.preflight_parent(Some(parent), owner).await
+    }
+    async fn preflight_parent(&self, parent: Option<Uuid>, owner: Owner) -> Result<(), Error> {
         let this = self.clone();
         let permit = Arc::new(self.inner.slot.clone().try_acquire_owned().map_err(|_| {
             if self.inner.slot.is_closed() {
@@ -183,12 +237,12 @@ impl Service {
         let (tx, rx) = oneshot::channel();
         tokio::spawn(async move {
             let _permit = permit;
-            let result = this.preflight_owned(owner).await;
+            let result = this.preflight_owned(owner, parent).await;
             let _ = tx.send(result);
         });
         rx.await.map_err(|_| Error::Operational)?
     }
-    async fn preflight_owned(&self, owner: Owner) -> Result<(), Error> {
+    async fn preflight_owned(&self, owner: Owner, parent: Option<Uuid>) -> Result<(), Error> {
         let files = self.files(owner.clone()).await?;
         for f in files {
             if let Some(raw) = self.inner.ports.marker(&f.path, owner.clone()).await? {
@@ -217,6 +271,28 @@ impl Service {
         }
         let result=sqlx::query_scalar::<_,i64>("SELECT count(*)::bigint FROM (SELECT s.id FROM epg_epgsource s LEFT JOIN epg_epgsourceindex i ON s.id=i.source_id WHERE s.is_active AND s.source_type NOT IN ('dummy','schedules_direct') AND (i.source_id IS NULL OR i.data IS NULL) LIMIT 17) bounded").fetch_one(&mut c).await;
         settle(c).await?;
+        if let Some(logos) = &self.inner.logos {
+            let hook = Arc::new(Execution::new(
+                Arc::new(match self.inner.ports.identity_source() {
+                    Some(identity) => Helper::new_normal(
+                        self.inner.pool.clone(),
+                        self.inner.ports.jobs(),
+                        identity,
+                    ),
+                    None => Helper::new_scoped(
+                        self.inner.pool.clone(),
+                        self.inner.ports.jobs(),
+                        self.inner.ports.reply_id(),
+                        self.inner.ports.origin(),
+                    ),
+                }),
+                parent.ok_or(Error::Unsupported)?,
+            ));
+            logos
+                .preflight_with_first_scan(owner.clone(), hook)
+                .await
+                .map_err(|_| Error::Unsupported)?;
+        }
         if result? > 16 {
             return Err(Error::Unsupported);
         }
@@ -252,7 +328,7 @@ impl Service {
         rx.await.map_err(|_| Error::Operational)?
     }
     async fn owned(&self, parent: Uuid, now: f64, owner: Owner) -> Result<Outcome, Error> {
-        self.preflight_owned(owner.clone()).await?;
+        self.preflight_owned(owner.clone(), Some(parent)).await?;
         let files = self.files(owner.clone()).await?;
         let mut context = RunContext {
             parent,
@@ -273,14 +349,48 @@ impl Service {
                 Err(error) => return Err(error),
             }
         }
-        if !self.first_completed() {
+        if let Some(logos) = &self.inner.logos {
+            let execution = Arc::new(Execution::new(
+                Arc::new(match self.inner.ports.identity_source() {
+                    Some(identity) => Helper::new_normal(
+                        self.inner.pool.clone(),
+                        self.inner.ports.jobs(),
+                        identity,
+                    ),
+                    None => Helper::new_scoped(
+                        self.inner.pool.clone(),
+                        self.inner.ports.jobs(),
+                        self.inner.ports.reply_id(),
+                        self.inner.ports.origin(),
+                    ),
+                }),
+                parent,
+            ));
+            logos
+                .scan_with_first_scan(now, owner.clone(), execution.clone())
+                .await
+                .map_err(|_| Error::Operational)?;
+            context
+                .children
+                .extend_from_slice(execution.children().map_err(|_| Error::Operational)?.ids());
+            if context.children.len() > 32 {
+                return Err(Error::Unsupported);
+            }
+        } else if !self.first_completed() {
             let execution = Execution::new(
-                Arc::new(Helper::new_scoped(
-                    self.inner.pool.clone(),
-                    self.inner.ports.jobs(),
-                    self.inner.ports.reply_id(),
-                    self.inner.ports.origin(),
-                )),
+                Arc::new(match self.inner.ports.identity_source() {
+                    Some(identity) => Helper::new_normal(
+                        self.inner.pool.clone(),
+                        self.inner.ports.jobs(),
+                        identity,
+                    ),
+                    None => Helper::new_scoped(
+                        self.inner.pool.clone(),
+                        self.inner.ports.jobs(),
+                        self.inner.ports.reply_id(),
+                        self.inner.ports.origin(),
+                    ),
+                }),
                 parent,
             );
             let (receipt, done) = crate::logo_scanner::scanner_files_receipt(owner);
@@ -579,6 +689,9 @@ fn parse_marker(raw: &str) -> Result<Option<f64>, Error> {
     Ok(Some(value))
 }
 fn inspect(roots: Roots) -> Result<Vec<WatchFile>, Error> {
+    inspect_domain(roots, false)
+}
+fn inspect_domain(roots: Roots, mixed: bool) -> Result<Vec<WatchFile>, Error> {
     for root in [&roots.m3u, &roots.epg, &roots.logos] {
         for ancestor in root.ancestors() {
             let m = std::fs::symlink_metadata(ancestor).map_err(|_| Error::Operational)?;
@@ -587,10 +700,11 @@ fn inspect(roots: Roots) -> Result<Vec<WatchFile>, Error> {
             }
         }
     }
-    if std::fs::read_dir(&roots.logos)
-        .map_err(|_| Error::Operational)?
-        .next()
-        .is_some()
+    if !mixed
+        && std::fs::read_dir(&roots.logos)
+            .map_err(|_| Error::Operational)?
+            .next()
+            .is_some()
     {
         return Err(Error::Unsupported);
     }
@@ -600,12 +714,18 @@ fn inspect(roots: Roots) -> Result<Vec<WatchFile>, Error> {
         let mut supported = 0;
         for entry in std::fs::read_dir(root).map_err(|_| Error::Operational)? {
             entries += 1;
-            if entries > 8 {
+            if entries > if mixed { 128 } else { 8 } {
                 return Err(Error::Unsupported);
             }
             let path = entry.map_err(|_| Error::Operational)?.path();
             let m = std::fs::symlink_metadata(&path).map_err(|_| Error::Operational)?;
-            if !m.is_file() || m.file_type().is_symlink() {
+            if m.file_type().is_symlink() {
+                return Err(Error::Unsupported);
+            }
+            if !m.is_file() {
+                if mixed {
+                    continue;
+                }
                 return Err(Error::Unsupported);
             }
             let name = path
@@ -623,7 +743,7 @@ fn inspect(roots: Roots) -> Result<Vec<WatchFile>, Error> {
                 continue;
             }
             supported += 1;
-            if supported > 1 {
+            if supported > if mixed { 8 } else { 1 } {
                 return Err(Error::Unsupported);
             }
             let text = path.to_str().ok_or(Error::Unsupported)?.to_owned();
@@ -637,6 +757,9 @@ fn inspect(roots: Roots) -> Result<Vec<WatchFile>, Error> {
                 .map_err(|_| Error::Unsupported)?
                 .as_secs_f64();
             if !(100_000_000.0..10_000_000_000.0).contains(&time) {
+                return Err(Error::Unsupported);
+            }
+            if mixed && files.len() >= 8 {
                 return Err(Error::Unsupported);
             }
             files.push(WatchFile {

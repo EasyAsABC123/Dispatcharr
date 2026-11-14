@@ -23,6 +23,7 @@ struct Inner {
     service: Service,
     ports: ScannerFilesPorts,
     clock: Arc<dyn Clock>,
+    registry: Option<crate::scanner_parents::Registry>,
     slot: Arc<Semaphore>,
 }
 impl Worker {
@@ -32,9 +33,25 @@ impl Worker {
                 service,
                 ports,
                 clock,
+                registry: None,
                 slot: Arc::new(Semaphore::new(1)),
             }),
         }
+    }
+    pub fn new_tracked(
+        service: Service,
+        ports: ScannerFilesPorts,
+        clock: Arc<dyn Clock>,
+        registry: crate::scanner_parents::Registry,
+    ) -> Self {
+        let mut worker = Self::new(service, ports, clock);
+        Arc::get_mut(&mut worker.inner)
+            .expect("new unique scanner")
+            .registry = Some(registry);
+        worker
+    }
+    pub fn stop_admission(&self) {
+        self.inner.slot.close();
     }
     pub fn available_slots(&self) -> usize {
         self.inner.slot.available_permits()
@@ -43,6 +60,12 @@ impl Worker {
         self.inner.service.first_completed()
     }
     pub async fn run_once(&self, owner: Owner) -> Result<Run, Error> {
+        self.run_expected(None, owner).await
+    }
+    pub async fn run_selected(&self, expected: Arc<[u8]>, owner: Owner) -> Result<Run, Error> {
+        self.run_expected(Some(expected), owner).await
+    }
+    async fn run_expected(&self, expected: Option<Arc<[u8]>>, owner: Owner) -> Result<Run, Error> {
         let permit = Arc::new(self.inner.slot.clone().try_acquire_owned().map_err(|_| {
             if self.inner.slot.is_closed() {
                 Error::Closed
@@ -54,26 +77,50 @@ impl Worker {
         let (tx, rx) = oneshot::channel();
         tokio::spawn(async move {
             let owner: Owner = Arc::new((owner, permit));
-            let result = this.owned(owner).await;
+            let result = this.owned(expected, owner).await;
             let _ = tx.send(result);
         });
         rx.await.map_err(|_| Error::Operational)?
     }
-    async fn owned(&self, owner: Owner) -> Result<Run, Error> {
-        let candidate = match self.inner.ports.peek(owner.clone()).await {
+    async fn owned(&self, expected: Option<Arc<[u8]>>, owner: Owner) -> Result<Run, Error> {
+        let peek = match &expected {
+            Some(raw) => {
+                self.inner
+                    .ports
+                    .peek_expected(Some(raw.clone()), owner.clone())
+                    .await
+            }
+            None => self.inner.ports.peek(owner.clone()).await,
+        };
+        let candidate = match peek {
             Ok(None) => return Ok(Run::Empty),
+            Err(ScannerIoError::HeadChanged) => return Err(Error::HeadChanged),
             Err(ScannerIoError::Unsupported) => return Ok(Run::UnsupportedHead),
             Err(error) => return Err(Error::Io(error)),
             Ok(Some(value)) => value,
         };
+        if expected
+            .as_ref()
+            .is_some_and(|raw| !candidate.matches_raw(raw))
+        {
+            return Err(Error::HeadChanged);
+        }
         let now = self.inner.clock.now();
         if !now.is_finite() || !(100_000_000.0..10_000_000_000.0).contains(&now) {
             return Ok(Run::UnsupportedHead);
         }
-        match self.inner.service.preflight(owner.clone()).await {
+        match self
+            .inner
+            .service
+            .preflight_scanner(candidate.message.task_id, owner.clone())
+            .await
+        {
             Err(Error::Unsupported) => return Ok(Run::UnsupportedHead),
             Err(e) => return Err(e),
             Ok(()) => {}
+        }
+        if let Some(registry) = &self.inner.registry {
+            registry.preflight().map_err(|_| Error::Capacity)?;
         }
         self.inner.ports.begin_run()?;
         let message = self.inner.ports.claim(candidate).await?;
@@ -87,15 +134,34 @@ impl Worker {
         match self
             .inner
             .ports
-            .write(message.task_id, bytes, owner)
+            .write(message.task_id, bytes, owner.clone())
             .await?
         {
             false => Ok(Run::AlreadySucceeded),
             true if failed => Ok(Run::Failed),
-            true => Ok(Run::Succeeded),
+            true => {
+                if let Some(registry) = &self.inner.registry {
+                    registry
+                        .record(
+                            message.task_id,
+                            &outcome.children,
+                            self.inner.ports.committed_publications()?,
+                            owner,
+                        )
+                        .await
+                        .map_err(|_| Error::Operational)?;
+                }
+                Ok(Run::Succeeded)
+            }
         }
     }
     pub async fn shutdown(&self, timeout: Duration) -> bool {
+        self.drain(timeout, true).await
+    }
+    pub async fn shutdown_shared(&self, timeout: Duration) -> bool {
+        self.drain(timeout, false).await
+    }
+    async fn drain(&self, timeout: Duration, close_ports: bool) -> bool {
         let Some(deadline) = tokio::time::Instant::now().checked_add(timeout) else {
             return false;
         };
@@ -120,6 +186,9 @@ impl Worker {
             .await
         {
             return false;
+        }
+        if !close_ports {
+            return true;
         }
         self.inner
             .ports
