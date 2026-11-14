@@ -1,0 +1,58 @@
+    Checking dispatcharr-job-transport v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/job-transport)
+    Checking dispatcharr-vod-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/vod-http)
+    Checking dispatcharr-rs v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/app)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/store)
+    Checking dispatcharr-output-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/output-http)
+    Checking dispatcharr-realtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/realtime)
+error: items after a test module
+   --> crates/job-transport/src/normal_recording_publication.rs:464:1
+    |
+464 |   mod controls {
+    |   ^^^^^^^^^^^^
+...
+515 |   fn reply_oid(inner: &Inner) -> Result<Uuid, Error> {
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+534 |   fn origin() -> Result<String, Error> {
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+548 |   pub(crate) fn python_datetime(value: DateTime<Utc>, iso: bool) -> String {
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+561 | / fn encode_named(
+562 | |     key: &str,
+563 | |     recording: i64,
+564 | |     channel: i64,
+...   |
+570 | |     reply: Uuid,
+571 | | ) -> Result<Vec<u8>, Error> {
+    | |___________________________^
+...
+605 |   impl NormalRecordingPublisher {
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+731 |   struct AdoptionRow {
+    |   ^^^^^^^^^^^^^^^^^^
+...
+736 | / async fn adoption_row(
+737 | |     pool: PgPool,
+738 | |     recording: i64,
+739 | |     channel: i64,
+740 | |     periodic: Option<String>,
+741 | |     owner: Arc<dyn Send + Sync>,
+742 | | ) -> Result<AdoptionRow, Error> {
+    | |_______________________________^
+...
+761 |   impl NormalRecordingPublisher {
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+784 |   impl NormalRecordingPublisher {
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#items_after_test_module
+    = note: `-D clippy::items-after-test-module` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::items_after_test_module)]`
+    = help: move the items to before the test module was defined
+
+error: could not compile `dispatcharr-job-transport` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

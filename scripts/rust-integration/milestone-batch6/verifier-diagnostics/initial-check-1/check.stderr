@@ -1,0 +1,90 @@
+   Compiling sqlx-core v0.8.6 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-integration-1/source/rust/vendor/sqlx-core-0.8.6)
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: `sqlx-core` (lib) generated 3 warnings
+    Checking sqlx-postgres v0.8.6 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-integration-1/source/rust/vendor/sqlx-postgres-0.8.6)
+warning: `sqlx-core` (lib) generated 3 warnings (3 duplicates)
+warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+   --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+    |
+335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+    |                                                        ^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+error[E0369]: binary operation `==` cannot be applied to type `PgSslMode`
+  --> vendor/sqlx-postgres-0.8.6/src/options/connect.rs:30:30
+   |
+30 |             if self.ssl_mode == PgSslMode::Allow
+   |                ------------- ^^ ---------------- PgSslMode
+   |                |
+   |                PgSslMode
+   |
+note: an implementation of `PartialEq` might be missing for `PgSslMode`
+  --> vendor/sqlx-postgres-0.8.6/src/options/ssl_mode.rs:8:1
+   |
+ 8 | pub enum PgSslMode {
+   | ^^^^^^^^^^^^^^^^^^ must implement `PartialEq`
+help: consider annotating `PgSslMode` with `#[derive(PartialEq)]`
+  --> vendor/sqlx-postgres-0.8.6/src/options/ssl_mode.rs:8:1
+   |
+ 8 + #[derive(PartialEq)]
+ 9 | pub enum PgSslMode {
+   |
+
+For more information about this error, try `rustc --explain E0369`.
+warning: `sqlx-postgres` (lib) generated 1 warning
+error: could not compile `sqlx-postgres` (lib) due to 1 previous error; 1 warning emitted
+warning: build failed, waiting for other jobs to finish...
+warning: `sqlx-postgres` (lib) generated 1 warning (1 duplicate)
+error: could not compile `sqlx-postgres` (lib) due to 1 previous error; 1 warning emitted

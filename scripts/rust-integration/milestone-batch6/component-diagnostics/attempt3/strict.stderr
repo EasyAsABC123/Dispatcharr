@@ -1,0 +1,51 @@
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/store)
+    Checking dispatcharr-ingest-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/ingest-core)
+    Checking dispatcharr-timeshift-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/timeshift-core)
+    Checking dispatcharr-stream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/stream-http)
+    Checking dispatcharr-backups v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/backups)
+    Checking dispatcharr-input-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/input-store)
+    Checking dispatcharr-stream-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/stream-core)
+    Checking dispatcharr-stream-runtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/stream-runtime)
+    Checking dispatcharr-xmltv-parser v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/xmltv-parser)
+    Checking dispatcharr-clients v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/clients)
+    Checking dispatcharr-coordination v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/coordination)
+    Checking dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/output-store)
+    Checking dispatcharr-ingest-epg v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/ingest-epg)
+    Checking dispatcharr-realtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/realtime)
+    Checking dispatcharr-output-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/output-http)
+    Checking dispatcharr-job-transport v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/job-transport)
+    Checking dispatcharr-vod-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/vod-http)
+    Checking dispatcharr-timeshift-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/timeshift-http)
+    Checking dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/xc-http)
+    Checking dispatcharr-xmltv-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/xmltv-http)
+    Checking dispatcharr-hdhr-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/hdhr-http)
+    Checking dispatcharr-rs v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/app)
+error: duplicated attribute
+   --> crates/job-transport/src/recording_normal_policy.rs:320:7
+    |
+320 | #[cfg(test)]
+    |       ^^^^
+    |
+note: first defined here
+   --> crates/job-transport/src/recording_normal_policy.rs:319:7
+    |
+319 | #[cfg(test)]
+    |       ^^^^
+help: remove this attribute
+   --> crates/job-transport/src/recording_normal_policy.rs:320:7
+    |
+320 | #[cfg(test)]
+    |       ^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#duplicated_attributes
+    = note: `-D clippy::duplicated-attributes` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::duplicated_attributes)]`
+
+error[E0063]: missing field `identity` in initializer of `scanner_index_helper::Helper`
+   --> crates/job-transport/src/scanner_index_resources.rs:281:27
+    |
+281 |     let helper = Arc::new(Helper {
+    |                           ^^^^^^ missing `identity`
+
+For more information about this error, try `rustc --explain E0063`.
+error: could not compile `dispatcharr-job-transport` (lib test) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...

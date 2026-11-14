@@ -1,0 +1,15 @@
+    Checking dispatcharr-job-transport v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/job-transport)
+warning: method `peek_normal_recording_frame` is never used
+  --> crates/job-transport/src/recording_dvr_transport.rs:47:25
+   |
+ 9 | impl Jobs {
+   | --------- method in this implementation
+...
+47 |     pub(crate) async fn peek_normal_recording_frame(
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `dispatcharr-job-transport` (lib) generated 1 warning
+    Checking dispatcharr-rs v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/app)
+    Finished `dev` profile [unoptimized] target(s) in 4.55s

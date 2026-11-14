@@ -1,0 +1,41 @@
+[
+  {
+    "name": "fmt",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all"
+    ],
+    "actual_exit": 0,
+    "seconds": 2.152681589126587
+  },
+  {
+    "name": "check",
+    "argv": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--offline",
+      "--locked"
+    ],
+    "actual_exit": 0,
+    "seconds": 14.399259567260742
+  },
+  {
+    "name": "webpki",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "sqlx-core",
+      "--lib",
+      "--features",
+      "_rt-tokio,_tls-rustls-ring-webpki",
+      "actual_webpki_hostname_context_is_the_only_ignored_error"
+    ],
+    "actual_exit": 101,
+    "seconds": 0.018068313598632812
+  }
+]

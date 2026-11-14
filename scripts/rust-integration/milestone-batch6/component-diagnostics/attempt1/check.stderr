@@ -1,0 +1,91 @@
+    Checking uuid v1.29.2
+    Checking dispatcharr-upstream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/upstream-http)
+    Checking dispatcharr-contracts v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/contracts)
+    Checking sqlx-core v0.8.6
+    Checking dispatcharr-ingest-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/ingest-core)
+    Checking dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/output-store)
+    Checking dispatcharr-coordination v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/coordination)
+    Checking dispatcharr-clients v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/clients)
+   Compiling dispatcharr-xmltv-parser v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/xmltv-parser)
+    Checking sqlx-postgres v0.8.6
+    Checking dispatcharr-stream-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/stream-core)
+    Checking dispatcharr-stream-runtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/stream-runtime)
+    Checking dispatcharr-input-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/input-store)
+    Checking dispatcharr-stream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/stream-http)
+    Checking dispatcharr-timeshift-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/timeshift-core)
+    Checking dispatcharr-backups v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/backups)
+    Checking sqlx v0.8.6
+    Checking dispatcharr-hls-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/hls-core)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/store)
+    Checking dispatcharr-fmp4-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/fmp4-core)
+    Checking dispatcharr-fmp4-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/fmp4-http)
+    Checking dispatcharr-hls-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/hls-http)
+    Checking dispatcharr-ingest-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/ingest-http)
+    Checking dispatcharr-output-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/output-http)
+    Checking dispatcharr-ingest-epg v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/ingest-epg)
+    Checking dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/xc-http)
+    Checking dispatcharr-xmltv-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/xmltv-http)
+    Checking dispatcharr-job-transport v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/job-transport)
+    Checking dispatcharr-realtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/realtime)
+    Checking dispatcharr-vod-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/vod-http)
+    Checking dispatcharr-hdhr-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/hdhr-http)
+    Checking dispatcharr-timeshift-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-diagnostics-1/source/rust/crates/timeshift-http)
+error[E0308]: mismatched types
+   --> crates/job-transport/src/recording_dvr_normal.rs:622:23
+    |
+622 |         confirmation: confirmation.take(),
+    |                       ^^^^^^^^^^^^^^^^^^^ expected `Option<LiteralConfirmation>`, found `Option<Option<LiteralConfirmation>>`
+    |
+    = note: expected enum `Option<LiteralConfirmation>`
+               found enum `Option<Option<LiteralConfirmation>>`
+help: consider using `Option::expect` to unwrap the `Option<Option<LiteralConfirmation>>` value, panicking if the value is an `Option::None`
+    |
+622 |         confirmation: confirmation.take().expect("REASON"),
+    |                                          +++++++++++++++++
+
+error[E0308]: `if` and `else` have incompatible types
+   --> crates/job-transport/src/scanner_index_helper.rs:158:21
+    |
+146 |                     let publication = if let Some(actual) = actual {
+    |  _____________________________________-
+147 | | /                     self.helper
+148 | | |                         .jobs
+149 | | |                         .publish_scanner_index_scoped(
+150 | | |                             self.parent,
+...   | |
+156 | | |                         .await
+    | | |______________________________- expected because of this
+157 | |                   } else {
+158 | | /                     match self.helper.publication {
+159 | | |                         Some((reply, origin)) => {
+160 | | |                             self.helper
+161 | | |                                 .jobs
+...   | |
+177 | | |                     };
+    | | |                      ^
+    | | |                      |
+    | | |______________________help: consider removing this semicolon
+    | |                        expected `Result<Publication, Error>`, found `()`
+178 | |                   };
+    | |___________________- `if` and `else` have incompatible types
+    |
+    = note:   expected enum `Result<Publication, transport::Error>`
+            found unit type `()`
+
+warning: unused import: `crate::milestone_dispatch::Head`
+   --> crates/job-transport/src/normal_queue.rs:507:9
+    |
+507 |     use crate::milestone_dispatch::Head;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` on by default
+
+warning: unused import: `crate::milestone_dispatch::Head`
+   --> crates/job-transport/src/normal_queue.rs:432:9
+    |
+432 |     use crate::milestone_dispatch::Head;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0308`.
+warning: `dispatcharr-job-transport` (lib) generated 2 warnings
+error: could not compile `dispatcharr-job-transport` (lib) due to 2 previous errors; 2 warnings emitted
