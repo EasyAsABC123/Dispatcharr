@@ -9,6 +9,8 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The newest SDK runtime is `921c5c40b2eb7a7073a0006b43fae86b41cd2728`: [984 tests pass](rust-milestone-batch16.md) after Source-qualified NO_PROXY routing and XC import/playback additions. Its focused application and resource checks remain pending; no full milestone or new performance gain is accepted.
+
 The [Candidate15 grouped run](rust-batch15-functional-observations.md) passes10 of19 Native contexts and all ten restart state predicates, with26-container cleanup verified. A separate pinned review qualifies all six retained Source/Native media files without rewriting original strict failures. Fixture failures and a real proxy/NO_PROXY transport gap remain; no full milestone or new performance gain is accepted.
 
 The newest SDK runtime is `71055d14908c02588b205b564752a25f8cee9760`: [964 workspace tests and the real-Redis durable ETA test pass](rust-milestone-batch15.md). It adds natural plugin startup/periodic scheduling; the next grouped runtime cohort combines these changes with provider/restart/idle-viewing acceptance. Full milestones and new performance remain open.

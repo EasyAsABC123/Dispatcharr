@@ -1,0 +1,291 @@
+warning: output filename collision.
+The example target `peer` in package `dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/xc-http)` has the same output filename as the example target `peer` in package `dispatcharr-hdhr-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/hdhr-http)`.
+Colliding filename is: /home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/peer
+The targets should have unique names.
+Consider changing their names to be unique or compiling them separately.
+This may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>.
+warning: output filename collision.
+The example target `peer` in package `dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/xc-http)` has the same output filename as the example target `peer` in package `dispatcharr-hdhr-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/hdhr-http)`.
+Colliding filename is: /home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/peer.dwp
+The targets should have unique names.
+Consider changing their names to be unique or compiling them separately.
+This may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>.
+warning: output filename collision.
+The example target `peer` in package `dispatcharr-xmltv-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/xmltv-http)` has the same output filename as the example target `peer` in package `dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/xc-http)`.
+Colliding filename is: /home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/peer
+The targets should have unique names.
+Consider changing their names to be unique or compiling them separately.
+This may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>.
+warning: output filename collision.
+The example target `peer` in package `dispatcharr-xmltv-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/xmltv-http)` has the same output filename as the example target `peer` in package `dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/xc-http)`.
+Colliding filename is: /home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/peer.dwp
+The targets should have unique names.
+Consider changing their names to be unique or compiling them separately.
+This may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>.
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: `sqlx-core` (lib) generated 3 warnings
+warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+   --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+    |
+335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+    |                                                        ^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: variant `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+   |
+68 | pub enum FrontendMessageFormat {
+   |          --------------------- variant in this enum
+...
+76 |     Flush = b'H',
+   |     ^^^^^
+   |
+   = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: struct `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+   |
+11 | pub struct Flush;
+   |            ^^^^^
+
+warning: `sqlx-postgres` (lib) generated 3 warnings
+warning: `sqlx-core` (lib) generated 3 warnings (3 duplicates)
+warning: `sqlx-postgres` (lib) generated 3 warnings (3 duplicates)
+   Compiling dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/store)
+   Compiling dispatcharr-ingest-epg v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/ingest-epg)
+   Compiling dispatcharr-realtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/realtime)
+   Compiling dispatcharr-output-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/output-http)
+   Compiling dispatcharr-job-transport v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/job-transport)
+   Compiling dispatcharr-vod-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/vod-http)
+   Compiling dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/xc-http)
+   Compiling dispatcharr-timeshift-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/timeshift-http)
+   Compiling dispatcharr-xmltv-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/xmltv-http)
+   Compiling dispatcharr-hdhr-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/hdhr-http)
+   Compiling dispatcharr-rs v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/app)
+    Finished `test` profile [unoptimized] target(s) in 1m 33s
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_backups-79481441f905be85)
+     Running tests/roundtrip.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/roundtrip-0d2d7ee5e8d65cf2)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_clients-d48e1adcfde44017)
+     Running tests/admission.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/admission-8e632ce27de910d3)
+     Running tests/era.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/era-c18dedac520679b5)
+     Running tests/redis.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis-590d29759f80cf5f)
+     Running tests/redis_restart_peer.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis_restart_peer-080b285eb393007f)
+     Running tests/timeshift.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/timeshift-8af140e0c9e2c748)
+     Running tests/timeshift_source.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/timeshift_source-a2b83a709bfcd595)
+     Running tests/vod.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/vod-e47c7730d92790fc)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_contracts-7fd1ccaefa430c55)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_coordination-1e6e8bcf85f5529d)
+     Running tests/acquire_cancel.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/acquire_cancel-a765111d7b8f4142)
+     Running tests/lease_physical.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/lease_physical-84089dab440117fc)
+     Running tests/redis.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis-2278bfa7d7cd3736)
+     Running tests/redis_reconnect.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis_reconnect-aaf40000c0441f81)
+     Running tests/retained_reserve.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/retained_reserve-dfd8b91ecee797d3)
+     Running tests/series_task_lock.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/series_task_lock-da0b247652765dcc)
+     Running tests/task_lock_detailed.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/task_lock_detailed-52d9ca796dc49fdc)
+     Running tests/task_locks.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/task_locks-d6b0cf4690907907)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_fmp4_core-18e0088a5b1c175d)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_fmp4_http-bf0b3d9a8ee9b9db)
+     Running tests/http.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http-64d2fb837be29350)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_hdhr_http-11fbe64a0131be5c)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_hls_core-697f2ec4c761a4e4)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_hls_http-1292cfa3952a71f6)
+     Running tests/http.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http-68309526ec7814c6)
+     Running tests/shutdown.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/shutdown-2b31d03b0cb8cfe8)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_ingest_core-94c5b11970f34cd2)
+     Running tests/cache.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/cache-e72a3252d16c339d)
+     Running tests/cached.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/cached-fb01554f4d71d88e)
+     Running tests/parser.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/parser-608328ba81435329)
+     Running tests/prepared.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/prepared-3e5c944d7e3c9182)
+     Running tests/reader.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/reader-a754bea085fd90c4)
+     Running tests/uploads.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/uploads-7cb1f9bc4e5faf32)
+     Running tests/xmltv_file.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/xmltv_file-375b8d655ec204db)
+     Running tests/xmltv_metadata.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/xmltv_metadata-ad203b48c4a2938a)
+     Running tests/xmltv_programme.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/xmltv_programme-33c593722ac1b111)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_ingest_epg-c30dc5bacf987eb1)
+     Running tests/auto_logos_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/auto_logos_sql-1d0eab23b16284fa)
+     Running tests/channels_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/channels_sql-6b955349de3a6e3d)
+     Running tests/current_bridge_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/current_bridge_sql-87a15db98253efe5)
+     Running tests/current_dispatch_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/current_dispatch_sql-58b82b635a99fabb)
+     Running tests/current_lookup_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/current_lookup_sql-7bf89607c5eb0fa2)
+     Running tests/current_paths_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/current_paths_sql-84a4b769670e24d7)
+     Running tests/file_job_dispatcher_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/file_job_dispatcher_sql-d38533d6eae44d0c)
+     Running tests/file_job_exhaustion.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/file_job_exhaustion-2b0a8b3b3efd938b)
+     Running tests/file_job_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/file_job_sql-3b3acdac8de13cf5)
+     Running tests/index_dispatcher_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/index_dispatcher_sql-0d74b92f3a93200c)
+     Running tests/index_failure_detail_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/index_failure_detail_sql-c6c16a5ae8f1a28a)
+     Running tests/index_failure_scan_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/index_failure_scan_sql-114a282c28aeab8f)
+     Running tests/index_service_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/index_service_sql-5ad1d3e45d047ee1)
+     Running tests/policy_cache_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/policy_cache_sql-d0df1d4a99c64506)
+     Running tests/programme_index_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/programme_index_sql-e98a916fe3d456a4)
+     Running tests/reporter_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/reporter_sql-c08aeb4c27de03a6)
+     Running tests/series_policy.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/series_policy-fc0f7df9210c042c)
+     Running tests/source_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/source_sql-931d109ab8c0fb73)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_ingest_http-b402959487531ecf)
+     Running tests/http.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http-8cd30de2591996ea)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_input_store-8477f609612e6db1)
+     Running tests/gc.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/gc-b580cfac00c4056e)
+     Running tests/redis.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis-d469a53d4a0e4859)
+     Running tests/retained.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/retained-91c0c4279d7139e4)
+     Running tests/source_expiry.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/source_expiry-b329bc31c342dee1)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_job_transport-917839cdce6dded1)
+     Running tests/current_http_driver.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/current_http_driver-8903466a6c597532)
+     Running tests/eta_limits.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/eta_limits-220164c7076aa03a)
+     Running tests/index_application_http.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/index_application_http-22d7c10d4ac344c7)
+     Running tests/index_terminal_resources.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/index_terminal_resources-aa425713316cc0ea)
+     Running tests/interval_schedule.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/interval_schedule-0c4fc22877a9039e)
+     Running tests/resources.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/resources-ff4c50549e9e7bc0)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_output_http-6f79dee149f0e809)
+     Running tests/epg_grid_http.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_grid_http-3f455fc592d1351f)
+     Running tests/epg_grid_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_grid_sql-2cbc10cbbc22f51b)
+     Running tests/epg_grid_wire.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_grid_wire-cf6d03e05d20f461)
+     Running tests/http_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http_sql-021e198fe84c12ba)
+     Running tests/sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/sql-fef00ad24a4a81bc)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_output_store-a56e11f47627ce9f)
+     Running tests/redis.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis-3ce89b482ab834a0)
+     Running tests/redis_reconnect.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis_reconnect-3b280f40ebe33fb6)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_realtime-dc71c0b2611bad08)
+     Running tests/redis.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis-63193c335b0af59a)
+     Running unittests src/bin/dispatcharr-operator.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_operator-03c360da44025d02)
+     Running unittests src/main.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_rs-0b8e5f6795e45b6a)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_store-2c7c7f5307a3b89d)
+     Running tests/auth_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/auth_sql-308933edcfe3cf08)
+     Running tests/browser_reads_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/browser_reads_sql-66943276ceec3774)
+     Running tests/channel_uuids_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/channel_uuids_sql-9c8e38c76c2f9d16)
+     Running tests/epg_current_lookup_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_current_lookup_sql-1c98e8f9c6e7ec8a)
+     Running tests/epg_current_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_current_sql-6240b0bced27038e)
+     Running tests/epg_grid_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_grid_sql-89273b4eb1ca6e37)
+     Running tests/epg_order_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_order_sql-7163ff24892bdc24)
+     Running tests/epg_program_http_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_program_http_sql-d2eebb05fc9f8562)
+     Running tests/epg_reads_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_reads_sql-83187493d1ed365c)
+     Running tests/epg_staging_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_staging_sql-e3940bb450fe6e50)
+     Running tests/grid_concurrency_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/grid_concurrency_sql-d09827a10c52190c)
+     Running tests/import_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/import_sql-c95046ddd6dc82bd)
+     Running tests/ip_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/ip_sql-eb9c18042b78eb6a)
+     Running tests/logo_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/logo_sql-b7ecc3e29093fdfe)
+     Running tests/notifications_mutations_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/notifications_mutations_sql-7ec60d632e8ef133)
+     Running tests/notifications_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/notifications_sql-15e74baf54b642e1)
+     Running tests/operator_commands_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/operator_commands_sql-ba03670841a99826)
+     Running tests/operator_create_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/operator_create_sql-63007133e97fe186)
+     Running tests/postgres.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/postgres-d7da055282095682)
+     Running tests/schema_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/schema_sql-54b993e0e02c23fb)
+     Running tests/serializer_null_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/serializer_null_sql-d21cddb40105d3eb)
+     Running tests/startup_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/startup_sql-f62b77e3e99ee97c)
+     Running tests/user_agent_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/user_agent_sql-d9f6999d0f8ebb72)
+     Running tests/xc_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/xc_sql-f26728e605883ac5)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_stream_core-9ce4af3e86d260ba)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_stream_http-20b49bd0bbee4b7b)
+     Running tests/http.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http-832c547c35dc71d4)
+     Running tests/upstream_native.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/upstream_native-69c6fc26b8b5d35b)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_stream_runtime-469854152e249819)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_timeshift_core-2c63e5312e8f3716)
+     Running tests/busy_vectors.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/busy_vectors-aa18c26d1a817e54)
+     Running tests/python_vectors.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/python_vectors-d6d0956c4e445fbc)
+     Running tests/range_vectors.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/range_vectors-00b45a25c2bd36cd)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_timeshift_http-f34d8a520e1531e3)
+     Running tests/direct_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/direct_sql-c3e4124f83bbe31d)
+     Running tests/media.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/media-dd1485005570e1ec)
+     Running tests/media_cancel.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/media_cancel-fb5f30af0ad0d81a)
+     Running tests/media_pool.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/media_pool-88185535df0dde13)
+     Running tests/sessions.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/sessions-8619fbc8d38222ce)
+     Running tests/sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/sql-90be6c31bf80f310)
+     Running tests/upstream.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/upstream-8b326af3ef745893)
+     Running unittests ../../vendor/sqlx-core-0.8.6/src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_tls_regression-e16143453b756b7b)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_upstream_http-4e919a32cdd0d7e9)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_vod_http-8b35bc3b28c1547d)
+     Running tests/classify_read.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/classify_read-09cccd9268008c86)
+     Running tests/generation_scope.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/generation_scope-fd4ea7a1b0e8db10)
+     Running tests/generation_scope_physical.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/generation_scope_physical-463f8c3c2c4bf4a5)
+     Running tests/http.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http-b14d3fe6ef8e1b43)
+     Running tests/http_recovery.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http_recovery-ccd2822db291b3a3)
+     Running tests/idle_entry.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/idle_entry-2e3ebac7d2335f81)
+     Running tests/lifecycle_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/lifecycle_sql-cd10a754705b525d)
+     Running tests/pending_follower_http.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/pending_follower_http-a7ebbcf88e89c102)
+     Running tests/rapid_reclose_sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/rapid_reclose_sql-c1f03c218b4f6ee3)
+     Running tests/recovery_generation.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/recovery_generation-ffe4cf71b90c3ca1)
+     Running tests/recovery_generation_physical.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/recovery_generation_physical-7367a73dae8104c4)
+     Running tests/sql.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/sql-f23f709cceb35446)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_xc_http-709eb4437efcf438)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_xmltv_http-65cb47212902aeb9)
+     Running unittests src/lib.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_xmltv_parser-e3a10682aa344937)
+     Running tests/streaming.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/streaming-322e381c9ecc1406)
+   Doc-tests dispatcharr_backups
+   Doc-tests dispatcharr_clients
+   Doc-tests dispatcharr_contracts
+   Doc-tests dispatcharr_coordination
+   Doc-tests dispatcharr_fmp4_core
+   Doc-tests dispatcharr_fmp4_http
+   Doc-tests dispatcharr_hdhr_http
+   Doc-tests dispatcharr_hls_core
+   Doc-tests dispatcharr_hls_http
+   Doc-tests dispatcharr_ingest_core
+   Doc-tests dispatcharr_ingest_epg
+   Doc-tests dispatcharr_ingest_http
+   Doc-tests dispatcharr_input_store
+   Doc-tests dispatcharr_job_transport
+   Doc-tests dispatcharr_output_http
+   Doc-tests dispatcharr_output_store
+   Doc-tests dispatcharr_realtime
+   Doc-tests dispatcharr_store
+   Doc-tests dispatcharr_stream_core
+   Doc-tests dispatcharr_stream_http
+   Doc-tests dispatcharr_stream_runtime
+   Doc-tests dispatcharr_timeshift_core
+   Doc-tests dispatcharr_timeshift_http
+   Doc-tests dispatcharr_upstream_http
+   Doc-tests dispatcharr_vod_http
+   Doc-tests dispatcharr_xc_http
+   Doc-tests dispatcharr_xmltv_http
+   Doc-tests dispatcharr_xmltv_parser
