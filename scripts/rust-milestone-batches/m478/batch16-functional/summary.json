@@ -1,0 +1,98 @@
+{
+  "candidate_image_id": "sha256:93443e136512344dbcf7309ba18e1999b32f5bc94cbddbcf7781bea3aa28ba3e",
+  "candidate_git_revision": "921c5c40b2eb7a7073a0006b43fae86b41cd2728",
+  "actual_controller_exit": 1,
+  "seconds": 951.5633272280029,
+  "controller_stdout_EOF": true,
+  "controller_stderr_EOF": true,
+  "controller_group_settled": true,
+  "backends": {
+    "Native": {
+      "status": "failed",
+      "cases": [
+        {
+          "case": "channel-maintenance",
+          "status": "passed"
+        },
+        {
+          "case": "overlap",
+          "status": "passed"
+        },
+        {
+          "case": "controls",
+          "status": "passed"
+        },
+        {
+          "case": "streams-denial",
+          "status": "passed"
+        },
+        {
+          "case": "idle-viewing",
+          "status": "passed"
+        },
+        {
+          "case": "recording-provider-artwork",
+          "status": "passed"
+        },
+        {
+          "case": "plugin-eta-fifo",
+          "status": "passed"
+        },
+        {
+          "case": "plugin-eta-warm",
+          "status": "passed"
+        },
+        {
+          "case": "plugin-eta-crash",
+          "status": "passed"
+        },
+        {
+          "case": "xc-live",
+          "status": "failed",
+          "reason": "KeyError:'XC_LIVE_DATA'"
+        }
+      ],
+      "executed_slice_passed": false
+    },
+    "Original": {
+      "status": "failed",
+      "cases": [
+        {
+          "case": "idle-viewing",
+          "status": "passed"
+        },
+        {
+          "case": "recording-provider-artwork",
+          "status": "passed"
+        },
+        {
+          "case": "plugin-eta-fifo",
+          "status": "passed"
+        },
+        {
+          "case": "plugin-eta-warm",
+          "status": "retained_source_authority",
+          "satisfies_dependency": true
+        },
+        {
+          "case": "plugin-eta-crash",
+          "status": "retained_source_authority",
+          "satisfies_dependency": true
+        },
+        {
+          "case": "xc-live",
+          "status": "failed",
+          "reason": "KeyError:'XC_LIVE_DATA'"
+        }
+      ],
+      "executed_slice_passed": false
+    }
+  },
+  "Native_provider_scope": "Only direct/direct-cache causal warm cells; Source full13 provider cells",
+  "XC_failure": "Both contexts fail KeyError XC_LIVE_DATA at host import of executable Origin before provider/import/viewer behavior; literal old failures retained. No runtime XC defect established. Separate corrected XC-only continuation required.",
+  "original_full_report_scoped_workflow_passed": false,
+  "paired_exceptional_ranges_literal_status": "failed",
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain full application and algorithm credit."
+}

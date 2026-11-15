@@ -1,0 +1,165 @@
+{
+  "scope": "Fresh two-viewer fixed custom FFmpeg input + real decoded AV on loaded normal consumers; no active Recording or CPU/RAM gain claim",
+  "backends": {
+    "Native": {
+      "status": "passed",
+      "scope": "two authenticated idle live viewers, custom Source-template FFmpeg input; no active Recording rows or performance measurement",
+      "profile_template": "actual locked FFmpeg template; Source18 model methods not called",
+      "active": {
+        "actual_upstream_connections": 1,
+        "actual_provider_slots": 1,
+        "actual_recording_ffmpeg_count": 0
+      },
+      "actual_input_process_count": 1,
+      "actual_origin_connection_delta": 1,
+      "actual_client_count": 2,
+      "actual_idle_upstream_and_process_retired": true,
+      "readers": [
+        {
+          "bytes": 1280280,
+          "media_bytes": 1279340,
+          "packets": 6810,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t",
+          "first_byte_seconds": 6.393673108002986
+        },
+        {
+          "bytes": 1280092,
+          "media_bytes": 1279340,
+          "packets": 6809,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t",
+          "first_byte_seconds": 0.011363094999978784
+        }
+      ],
+      "decoders": [
+        {
+          "viewer": "owner",
+          "actual_exit": 0,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "stderr_bytes": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "video_frames": 74,
+          "video_and_audio": true,
+          "file_bytes": 1280280,
+          "file_sha256": "b28edfd93261ddd1a317d38ba86daaf396b9255a6496a378ea887243f4ce243c",
+          "scope": "existing qualified3s positive A/V prefix decoder; not full-window resource useful-work acceptance"
+        },
+        {
+          "viewer": "follower",
+          "actual_exit": 0,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "stderr_bytes": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "video_frames": 74,
+          "video_and_audio": true,
+          "file_bytes": 1280092,
+          "file_sha256": "203e495ee4e5bfe1dd51509b112098d8b076e2494ccedfd8e235b462eeb91373",
+          "scope": "existing qualified3s positive A/V prefix decoder; not full-window resource useful-work acceptance"
+        }
+      ],
+      "raw_sha256": "9ff7a7209672b173e4ea1ef55a9e239c5a82ac2001c0908a40e8615fc5fa3078",
+      "actual_Main_normal_stop": {
+        "actual_exit": 0
+      }
+    },
+    "Original": {
+      "status": "passed",
+      "scope": "two authenticated idle live viewers, custom Source-template FFmpeg input; no active Recording rows or performance measurement",
+      "profile_template": "actual locked FFmpeg template; Source18 model methods not called",
+      "active": {
+        "actual_upstream_connections": 1,
+        "actual_provider_slots": 1,
+        "actual_recording_ffmpeg_count": 0
+      },
+      "actual_input_process_count": 1,
+      "actual_origin_connection_delta": 1,
+      "actual_client_count": 2,
+      "actual_ready_Source_roles": [
+        "beat",
+        "celery",
+        "dvr",
+        "web"
+      ],
+      "actual_Source_roles_normal_stop": true,
+      "actual_upstream_retired_after_Main_shutdown": true,
+      "Source_post_reader_close_retirement_observation": {
+        "upstream_active": 1,
+        "input_process_count": 1,
+        "timing_parity_claimed": false
+      },
+      "readers": [
+        {
+          "bytes": 1279340,
+          "media_bytes": 1279340,
+          "packets": 6805,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t",
+          "first_byte_seconds": 6.587033320996852
+        },
+        {
+          "bytes": 1279340,
+          "media_bytes": 1279340,
+          "packets": 6805,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t",
+          "first_byte_seconds": 0.011802656998042949
+        }
+      ],
+      "decoders": [
+        {
+          "viewer": "owner",
+          "actual_exit": 0,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "stderr_bytes": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "video_frames": 74,
+          "video_and_audio": true,
+          "file_bytes": 1279340,
+          "file_sha256": "e36c4da59f1ebee1635dcd165c516fc7664a9eb592e466550a8d257537e5f9ac",
+          "scope": "existing qualified3s positive A/V prefix decoder; not full-window resource useful-work acceptance"
+        },
+        {
+          "viewer": "follower",
+          "actual_exit": 0,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "stderr_bytes": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "video_frames": 74,
+          "video_and_audio": true,
+          "file_bytes": 1279340,
+          "file_sha256": "e36c4da59f1ebee1635dcd165c516fc7664a9eb592e466550a8d257537e5f9ac",
+          "scope": "existing qualified3s positive A/V prefix decoder; not full-window resource useful-work acceptance"
+        }
+      ],
+      "raw_sha256": "ed9752acfb571093806f374b08b75403a43c9e7c6f2c53b0b6e94f26ca445796"
+    }
+  },
+  "functional_cells_passed": true,
+  "resource_execution_authorized": false,
+  "full_M3_passed": false
+}

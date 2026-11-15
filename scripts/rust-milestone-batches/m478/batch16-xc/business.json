@@ -1,0 +1,180 @@
+{
+  "Native": {
+    "actual_status": "passed",
+    "seven_actual_cells": [
+      {
+        "name": "API-single-groups-provider-batch1000-nullability",
+        "status": "passed",
+        "actual": {
+          "stream_count": 1003,
+          "real_child_count": 1,
+          "nullable_fields_preserved": true,
+          "Source_batch1000_crossed": true
+        }
+      },
+      {
+        "name": "current-rotated-login-stale-importedURL-live-AV",
+        "status": "passed",
+        "actual": {
+          "actual_status": 200,
+          "bytes": 2005109,
+          "file_sha256": "50f12db37b4697a7a853208e537b649df0b30e62d6b02e539c6b5a301c00112e",
+          "Origin_current_login_requests": 1,
+          "stored_imported_url_unchanged": true,
+          "actual_decode_exit": 0,
+          "stderr_bytes": 0,
+          "video_frames": 74,
+          "actual_AV": true,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true
+        }
+      },
+      {
+        "name": "actual-provider-update-enabled-filter-stale-cleanup",
+        "status": "passed",
+        "actual": {
+          "before": 1003,
+          "after": 1001,
+          "stale_removed": true
+        }
+      },
+      {
+        "name": "ordered-account-filters-and-mapped-channel-rollup",
+        "status": "passed",
+        "actual": {
+          "actual_setup": {
+            "actual_mapped_stream_id": 26,
+            "actual_owned_channel": 1
+          },
+          "ordered_first_include_overrides_later_group_exclude": true,
+          "actual_streams_after": 1,
+          "actual_channel_rollup": {
+            "id": 1,
+            "is_catchup": true,
+            "catchup_days": 2
+          }
+        }
+      },
+      {
+        "name": "mapped-channel-catchup-self-heal",
+        "status": "passed",
+        "actual": {
+          "actual_channel_rollup": {
+            "id": 1,
+            "is_catchup": false,
+            "catchup_days": 0
+          },
+          "existing_channel_identity_preserved": true
+        }
+      },
+      {
+        "name": "empty-provider-caught-no-cleanup",
+        "status": "passed",
+        "actual": {
+          "no_destructive_cleanup": true,
+          "normal_caught_result": "Failed to update m3u account, no streams returned from provider"
+        }
+      },
+      {
+        "name": "auth-error-caught-queue-continuation",
+        "status": "passed",
+        "actual": {
+          "status": "error",
+          "no_destructive_cleanup": true,
+          "credential_bearing_error_exported": false
+        }
+      }
+    ],
+    "strict_full_context_passed": false
+  },
+  "Original": {
+    "actual_status": "passed",
+    "seven_actual_cells": [
+      {
+        "name": "API-single-groups-provider-batch1000-nullability",
+        "status": "passed",
+        "actual": {
+          "stream_count": 1003,
+          "real_child_count": 1,
+          "nullable_fields_preserved": true,
+          "Source_batch1000_crossed": true
+        }
+      },
+      {
+        "name": "current-rotated-login-stale-importedURL-live-AV",
+        "status": "passed",
+        "actual": {
+          "actual_status": 200,
+          "bytes": 2004068,
+          "file_sha256": "c1a318d1bce4b8c9ee0f360539d47979ff9406ea0d69574833a03e551d7875d1",
+          "Origin_current_login_requests": 1,
+          "stored_imported_url_unchanged": true,
+          "actual_decode_exit": 0,
+          "stderr_bytes": 0,
+          "video_frames": 74,
+          "actual_AV": true,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true
+        }
+      },
+      {
+        "name": "actual-provider-update-enabled-filter-stale-cleanup",
+        "status": "passed",
+        "actual": {
+          "before": 1003,
+          "after": 1001,
+          "stale_removed": true
+        }
+      },
+      {
+        "name": "ordered-account-filters-and-mapped-channel-rollup",
+        "status": "passed",
+        "actual": {
+          "actual_setup": {
+            "actual_mapped_stream_id": 26,
+            "actual_owned_channel": 1
+          },
+          "ordered_first_include_overrides_later_group_exclude": true,
+          "actual_streams_after": 1,
+          "actual_channel_rollup": {
+            "id": 1,
+            "is_catchup": true,
+            "catchup_days": 2
+          }
+        }
+      },
+      {
+        "name": "mapped-channel-catchup-self-heal",
+        "status": "passed",
+        "actual": {
+          "actual_channel_rollup": {
+            "id": 1,
+            "is_catchup": false,
+            "catchup_days": 0
+          },
+          "existing_channel_identity_preserved": true
+        }
+      },
+      {
+        "name": "empty-provider-caught-no-cleanup",
+        "status": "passed",
+        "actual": {
+          "no_destructive_cleanup": true,
+          "normal_caught_result": "Failed to update m3u account, no streams returned from provider"
+        }
+      },
+      {
+        "name": "auth-error-caught-queue-continuation",
+        "status": "passed",
+        "actual": {
+          "status": "error",
+          "no_destructive_cleanup": true,
+          "credential_bearing_error_exported": false
+        }
+      }
+    ],
+    "strict_full_context_passed": false
+  }
+}
