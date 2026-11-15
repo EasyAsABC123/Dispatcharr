@@ -18,6 +18,20 @@ use std::{
     time::Duration,
 };
 use tokio::sync::{watch, OwnedSemaphorePermit, Semaphore};
+/// Existing global Celery lane budget, shared with the standalone Auto family.
+/// This is not an additional semaphore or a capacity increase.
+pub(crate) const CELERY_CONCURRENCY: usize = 6;
+fn validate_family_admission(family: Family, maximum: usize, selected: bool) -> Result<(), Error> {
+    let allowed = match family {
+        Family::Recording => (1..=20).contains(&maximum),
+        Family::AutoChannels => maximum == CELERY_CONCURRENCY,
+        _ => maximum == 1,
+    };
+    if !allowed || !selected {
+        return Err(Error::Configuration);
+    }
+    Ok(())
+}
 #[derive(Debug)]
 pub enum Error {
     MissingFamily(Family),
@@ -172,6 +186,9 @@ impl Lifecycle for FamilyAdapter {
     fn stop_admission(&self) {
         self.0.inner.stop_admission();
     }
+    fn begin_drain(&self, budget: Duration) {
+        self.0.inner.begin_drain(budget);
+    }
     fn shutdown(&self, timeout: Duration) -> BoxFuture<'_, Result<(), Disposition>> {
         self.0.inner.shutdown(timeout)
     }
@@ -242,13 +259,7 @@ impl Application {
         let mut families = BTreeMap::new();
         for (family, inner) in entries {
             let maximum = inner.maximum_concurrency();
-            if maximum == 0
-                || maximum > 20
-                || (family != Family::Recording && maximum != 1)
-                || !inner.supports_selected_head()
-            {
-                return Err(Error::Configuration);
-            }
+            validate_family_admission(family, maximum, inner.supports_selected_head())?;
             families.insert(
                 family,
                 Arc::new(OwnedFamily {
@@ -384,6 +395,9 @@ impl Application {
         self.lifetime.0.send_replace(true);
         for family in self.inner.families.values() {
             family.inner.stop_admission();
+            family
+                .inner
+                .begin_drain(deadline.saturating_duration_since(tokio::time::Instant::now()));
         }
         let wait = async {
             for lane in [&self.inner.celery, &self.inner.dvr] {
@@ -636,7 +650,7 @@ async fn celery_lane(
     mut stop: watch::Receiver<bool>,
     poll: Duration,
 ) {
-    let maximum = 6usize;
+    let maximum = CELERY_CONCURRENCY;
     let advanced: Option<Arc<tokio::sync::Notify>> = None;
     let mut tasks = tokio::task::JoinSet::new();
     let mut pending = BTreeSet::<Arc<[u8]>>::new();
@@ -747,6 +761,31 @@ async fn celery_lane(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn actual_auto_family_admission_matches_existing_celery_lane_budget() {
+        // Exercise the SAME guard called by Application::prepare, using the
+        // exact metadata returned by the real normal Auto Handler below.
+        assert!(validate_family_admission(
+            Family::AutoChannels,
+            crate::normal_auto_sync::CONCURRENCY,
+            true
+        )
+        .is_ok());
+        assert!(validate_family_admission(
+            Family::AutoChannels,
+            crate::normal_auto_sync::CONCURRENCY,
+            false
+        )
+        .is_err());
+        for invalid in [0, 1, CELERY_CONCURRENCY + 1, 21] {
+            assert!(validate_family_admission(Family::AutoChannels, invalid, true).is_err());
+        }
+        assert!(validate_family_admission(Family::Recording, 20, true).is_ok());
+        assert!(validate_family_admission(Family::Recording, 21, true).is_err());
+        assert!(validate_family_admission(Family::M3uSingle, CELERY_CONCURRENCY, true).is_err());
+        assert!(validate_family_admission(Family::M3uSingle, 1, true).is_ok());
+    }
+
     use crate::milestone_dispatch::Head;
     use std::collections::VecDeque;
     use std::sync::atomic::AtomicUsize;

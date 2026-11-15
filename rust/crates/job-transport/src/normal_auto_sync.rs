@@ -18,8 +18,10 @@ use std::{
     time::Duration,
 };
 use tokio::sync::Notify;
+pub(crate) const CONCURRENCY: usize = crate::normal_queue::CELERY_CONCURRENCY;
 type Owner = Arc<dyn Send + Sync>;
 struct Inner {
+    flows: crate::auto_sync_flow::ActiveFlows,
     jobs: Jobs,
     auth: AuthService,
     recording: Arc<dyn RecordingJobs>,
@@ -72,6 +74,7 @@ impl Prepared {
         }
         Ok(Self {
             inner: Arc::new(Inner {
+                flows: crate::auto_sync_flow::ActiveFlows::default(),
                 jobs,
                 auth,
                 recording,
@@ -190,7 +193,7 @@ impl Prepared {
                     return Ok(D::Revoked(context.id));
                 }
                 let stopped = inner.clone();
-                let flow = Flow::new(
+                let flow = inner.flows.track(Flow::new(
                     inner.jobs.clone(),
                     auth.producer_identity_source(),
                     inner.directory.clone(),
@@ -199,7 +202,7 @@ impl Prepared {
                     context.root,
                     owner.clone(),
                     Arc::new(move || stopped.closed.load(Ordering::Acquire)),
-                );
+                ));
                 let body = dispatcharr_store::auto_sync::sync(
                     session.clone(),
                     auth,
@@ -243,11 +246,15 @@ impl Prepared {
 }
 impl Lifecycle for Prepared {
     fn stop_admission(&self) {
-        self.inner.closed.store(true, Ordering::Release)
+        self.inner.closed.store(true, Ordering::Release);
+    }
+    fn begin_drain(&self, budget: Duration) {
+        self.inner.flows.begin_drain(budget);
     }
     fn shutdown(&self, timeout: Duration) -> BoxFuture<'_, Result<(), D>> {
         Box::pin(async move {
             self.stop_admission();
+            self.begin_drain(timeout);
             let inner = self.inner.clone();
             let waited = tokio::time::timeout(timeout, async {
                 loop {
@@ -279,7 +286,7 @@ impl Lifecycle for Prepared {
 }
 impl Handler for Prepared {
     fn maximum_concurrency(&self) -> usize {
-        6
+        CONCURRENCY
     }
     fn head_advance_notifier(&self) -> Option<Arc<Notify>> {
         Some(self.inner.heads.clone())

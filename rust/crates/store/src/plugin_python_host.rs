@@ -395,8 +395,13 @@ async fn stop_deadline(receiver: &mut watch::Receiver<Option<tokio::time::Instan
     loop {
         let deadline = *receiver.borrow();
         if let Some(deadline) = deadline {
-            tokio::time::sleep_until(deadline).await;
-            return;
+            tokio::select! {
+                _=tokio::time::sleep_until(deadline)=>return,
+                changed=receiver.changed()=>{
+                    if changed.is_err(){tokio::time::sleep_until(deadline).await;return;}
+                },
+            }
+            continue;
         }
         if receiver.changed().await.is_err() {
             std::future::pending::<()>().await;
@@ -423,6 +428,7 @@ impl Host {
                 let command = if let Some(child) = &mut running {
                     tokio::select! {
                         command=receiver.recv()=>command,
+                        _=stop_deadline(&mut stopping)=>{closed.store(true,Ordering::Release);break;},
                         frame=child.next_frame()=>{
                             match frame{Ok(frame)if frame["kind"]=="callback"=>{
                                 let completed=tokio::select!{result=child.callback(frame,lifetime.clone())=>result,_=stop_deadline(&mut stopping)=>Err(Error::Drain)};
@@ -432,7 +438,10 @@ impl Host {
                         }
                     }
                 } else {
-                    receiver.recv().await
+                    tokio::select! {
+                        command=receiver.recv()=>command,
+                        _=stop_deadline(&mut stopping)=>{closed.store(true,Ordering::Release);break;},
+                    }
                 };
                 match command {
                     Some(Command::Call(request)) => {
@@ -509,7 +518,13 @@ impl Host {
         Self { inner }
     }
     pub async fn call(&self, method: String, args: Value, scope: Owner) -> Result<Value, Error> {
-        if self.inner.closed.load(Ordering::Acquire) {
+        if self.inner.closed.load(Ordering::Acquire)
+            || self
+                .inner
+                .stop
+                .borrow()
+                .is_some_and(|deadline| tokio::time::Instant::now() >= deadline)
+        {
             return Err(Error::Closed);
         }
         let (reply, receive) = oneshot::channel();
@@ -531,13 +546,31 @@ impl Host {
     pub fn stop_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);
     }
+    /// Deadline signal only. Already admitted task operations remain allowed
+    /// until this actual deadline; no child/EOF/completion receipt is minted.
+    pub fn interrupt_at(&self, deadline: tokio::time::Instant) {
+        // The actor's normal completion and Main drain can race. Update the
+        // SAME watch value under its lock so a later call cannot extend it.
+        self.inner.stop.send_if_modified(|current| {
+            if current.is_some_and(|old| old <= deadline) {
+                return false;
+            }
+            *current = Some(deadline);
+            true
+        });
+        if self
+            .inner
+            .stop
+            .borrow()
+            .is_some_and(|next| tokio::time::Instant::now() >= next)
+        {
+            self.stop_admission();
+        }
+    }
+
     pub async fn shutdown(&self, budget: Duration) -> Result<Option<Receipt>, Error> {
         self.stop_admission();
-        if self.inner.stop.borrow().is_none() {
-            self.inner
-                .stop
-                .send_replace(Some(tokio::time::Instant::now() + budget));
-        }
+        self.interrupt_at(tokio::time::Instant::now() + budget);
         let (reply, receive) = oneshot::channel();
         self.inner
             .sender
@@ -564,6 +597,22 @@ impl Host {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn earlier_owned_drain_deadline_interrupts_an_already_waiting_actor() {
+        let (sender, mut receiver) = watch::channel(Some(
+            tokio::time::Instant::now() + Duration::from_secs(3600),
+        ));
+        let waiter = tokio::spawn(async move {
+            stop_deadline(&mut receiver).await;
+        });
+        tokio::task::yield_now().await;
+        sender.send_replace(Some(tokio::time::Instant::now()));
+        tokio::time::timeout(Duration::from_secs(1), waiter)
+            .await
+            .unwrap()
+            .unwrap();
+    }
+
     #[tokio::test]
     async fn rpc_fragmented_header_is_owned_until_complete_and_truncation_is_not_eof() {
         let (mut writer, mut reader) = tokio::io::duplex(128);

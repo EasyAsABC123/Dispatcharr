@@ -91,3 +91,25 @@ direct audit passes in 3.20 seconds. Explicit public bridge copy modes also
 support direct workspace builds; archived image19's bridge was already readable.
 The [site correction](../scripts/rust-integration/milestone-batch19/module-site-correction.json)
 awaits a new image and actual nonroot runtime/normal-Main checks.
+
+The third image now passes those package checks: exact archive/credit/UID,
+crypto, PostgreSQL, paired VLC useful core and actual framed regex call/shutdown
+as UID 65532, with all 648 dependency/bridge/notice hashes verified and Source
+Django absent. Its [package record](../scripts/rust-integration/milestone-batch19/package-build3/)
+binds image `sha256:e1011d2a5188ef6a833a889bb4fce4addf828d80873d4b89cc5b460c07269e81`.
+
+Combined application acceptance still fails. The first attempt's newly copied
+test helper tree retained modes 0700/0600: its Origin exited 2 before the new
+Rust cases ran. The failed capture and strict cleanup error are preserved;
+independent checks confirm its two containers, generations and project absent.
+The next helper tree sets actual readable modes and covers setup callbacks in
+teardown, retaining failed-role diagnostics before asserting their exit.
+
+That second attempt reaches production startup and exposes the registry maximum
+mismatch corrected in [Candidate20](rust-milestone-batch20.md). Repeated Native
+contexts never reach business execution. Root sends SIGINT to the exact owned
+controller to stop dependent waits; actual whole exit is -2 after 475.79 seconds.
+All seven containers, original generations, project resources and CLI pipes/group
+are independently settled. Source characterization was not run. These
+[failed application observations](../scripts/rust-integration/milestone-batch19/functional/)
+remain failed; no package result transfers application or performance acceptance.

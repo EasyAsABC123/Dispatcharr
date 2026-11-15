@@ -214,6 +214,11 @@ impl Prepared {
         self.m3u.stop_admission();
         self.xc.stop();
         self.remote.stop();
+        if let Some(auto) = &self.auto {
+            auto.begin_drain(timeout);
+        }
+        self.xc.begin_drain(timeout);
+        self.remote.begin_drain(timeout);
         if !self
             .scanner
             .shutdown_shared(end.saturating_duration_since(tokio::time::Instant::now()))
@@ -323,6 +328,10 @@ impl Lifecycle for M3u {
         self.0.stop_admission();
         self.1.stop();
         self.2.stop();
+    }
+    fn begin_drain(&self, budget: Duration) {
+        self.1.begin_drain(budget);
+        self.2.begin_drain(budget);
     }
     fn shutdown(&self, t: Duration) -> BoxFuture<'_, Result<(), Disposition>> {
         Box::pin(async move {

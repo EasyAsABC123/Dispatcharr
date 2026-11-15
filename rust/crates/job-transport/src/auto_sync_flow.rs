@@ -14,10 +14,48 @@ use dispatcharr_store::{
     ProducerIdentitySource, RegexExecutor,
 };
 use serde_json::Value;
-use std::{path::PathBuf, sync::Arc};
+use std::{
+    path::PathBuf,
+    sync::{Arc, Mutex as StdMutex, Weak},
+    time::Duration,
+};
 use tokio::sync::Mutex;
 use uuid::Uuid;
 type Owner = Arc<dyn Send + Sync>;
+/// Weak capabilities avoid Inner->Flow->owner->Inner cycles. Entries are
+/// pruned on each real registration; live count is the existing worker budget.
+#[derive(Default)]
+pub(crate) struct ActiveFlows(StdMutex<FlowState>);
+#[derive(Default)]
+struct FlowState {
+    deadline: Option<tokio::time::Instant>,
+    flows: Vec<Weak<Flow>>,
+}
+impl ActiveFlows {
+    pub(crate) fn track(&self, flow: Arc<Flow>) -> Arc<Flow> {
+        let mut state = self.0.lock().unwrap_or_else(|e| e.into_inner());
+        state.flows.retain(|f| f.strong_count() > 0);
+        state.flows.push(Arc::downgrade(&flow));
+        if let Some(deadline) = state.deadline {
+            flow.regex.interrupt_at(deadline);
+        }
+        flow
+    }
+    pub(crate) fn begin_drain(&self, budget: Duration) {
+        // Reserve the existing5s physical child wait/EOF budget inside, not in
+        // addition to, the caller's actual remaining application deadline.
+        let deadline = tokio::time::Instant::now() + budget.saturating_sub(Duration::from_secs(5));
+        let mut state = self.0.lock().unwrap_or_else(|e| e.into_inner());
+        let deadline = state
+            .deadline
+            .map(|old| old.min(deadline))
+            .unwrap_or(deadline);
+        state.deadline = Some(deadline);
+        for flow in state.flows.iter().filter_map(Weak::upgrade) {
+            flow.regex.interrupt_at(deadline);
+        }
+    }
+}
 pub(crate) struct Flow {
     jobs: Jobs,
     dispatcher: Dispatcher,

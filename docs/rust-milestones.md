@@ -9,13 +9,20 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate19](rust-milestone-batch19.md): all four
+The newest source candidate is [Candidate20](rust-milestone-batch20.md): all four
+SDK gates pass with 1,025 tests, zero failures and 761 ignored tests. It corrects
+the actual Main AutoChannels registry ceiling mismatch and drives owned regex
+drain before lane joins. Its Docker and combined application/resource acceptance
+remain required.
+
+The preceding source candidate is [Candidate19](rust-milestone-batch19.md): all four
 SDK gates pass, with 1,023 tests, zero failures and 758 ignored tests. It joins
 normal auto-sync, full metadata, shared channel deletion, dependency-only regex,
 remote stream health and Source-equivalent adaptive Beat timing. Its second
 Docker build passes, with archive/credit, crypto, PostgreSQL and paired VLC
 useful-core checks. Actual final-image regex import exposed Debian site-directory
-discovery; that corrected collector awaits another image and normal Main checks.
+discovery. The third image passes final package checks, including framed regex,
+but actual Main startup fails the registry ceiling check corrected in20.
 Combined application/resource acceptance remains required.
 
 The preceding code is [Candidate18](rust-milestone-batch18.md): formatting,
@@ -34,7 +41,7 @@ playlist/full-result handling and VLC/grouped-credential input work. Its Docker
 build and application acceptance remain pending.
 
 The latest built runtime is Candidate19 at
-`08252652ddc3606e4922181d3ef7d0a074974941`; its regex import gate remains open.
+`4f9ba334bf5db99b982a4f7ff91774bb9da45094`; its Main registry gate remains open.
 The preceding built runtime is Candidate18 at
 `8cf704d2794ec3230b3c2856fd66dffe2d01720d`.
 The preceding runtime

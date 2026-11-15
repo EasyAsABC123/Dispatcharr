@@ -78,6 +78,11 @@ impl RegexExecutor {
     pub fn stop_admission(&self) {
         self.host.stop_admission();
     }
+    /// Signal an accepted task's actual drain deadline before lane join.
+    /// Calls remain allowed until then; async shutdown still proves receipts.
+    pub fn interrupt_at(&self, deadline: tokio::time::Instant) {
+        self.host.interrupt_at(deadline);
+    }
     pub async fn shutdown(&self, budget: Duration) -> Result<Option<Receipt>, Error> {
         self.host.shutdown(budget).await
     }

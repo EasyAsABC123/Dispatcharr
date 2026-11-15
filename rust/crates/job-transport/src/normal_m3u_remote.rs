@@ -24,6 +24,7 @@ use std::{
 use tokio::sync::{mpsc, Semaphore};
 type Owner = Arc<dyn Send + Sync>;
 struct Inner {
+    flows: crate::auto_sync_flow::ActiveFlows,
     jobs: Jobs,
     ports: M3uPorts,
     store: Store,
@@ -80,6 +81,7 @@ impl Worker {
     ) -> Self {
         Self {
             inner: Arc::new(Inner {
+                flows: crate::auto_sync_flow::ActiveFlows::default(),
                 jobs,
                 ports,
                 store,
@@ -96,10 +98,14 @@ impl Worker {
         }
     }
     pub(crate) fn stop(&self) {
-        self.inner.closed.store(true, Ordering::Release)
+        self.inner.closed.store(true, Ordering::Release);
+    }
+    pub(crate) fn begin_drain(&self, budget: Duration) {
+        self.inner.flows.begin_drain(budget);
     }
     pub(crate) async fn shutdown(&self, timeout: Duration) -> bool {
         self.stop();
+        self.begin_drain(timeout);
         tokio::time::timeout(timeout, self.inner.slots.clone().acquire_owned())
             .await
             .is_ok_and(|r| r.is_ok())
@@ -219,7 +225,7 @@ impl Worker {
                 };
                 let flow = if message.kind == Kind::Single && inner.auto_jobs.is_some() {
                     let stop = inner.clone();
-                    Some(crate::auto_sync_flow::Flow::new(
+                    Some(inner.flows.track(crate::auto_sync_flow::Flow::new(
                         inner.jobs.clone(),
                         inner.auth.producer_identity_source(),
                         inner.cache.clone(),
@@ -228,7 +234,7 @@ impl Worker {
                         message.root,
                         owner.clone(),
                         Arc::new(move || stop.closed.load(Ordering::Acquire)),
-                    ))
+                    )))
                 } else {
                     None
                 };

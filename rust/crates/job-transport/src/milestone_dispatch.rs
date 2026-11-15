@@ -76,6 +76,9 @@ pub trait Lifecycle: Send + Sync {
     /// Stop new admissions / restore only unstarted reservations, without
     /// closing shared ports needed by other still-active family owners.
     fn stop_admission(&self) {}
+    /// Signal owned dependency deadlines BEFORE the normal shell joins tasks.
+    /// This must not close shared ports or synthesize completion receipts.
+    fn begin_drain(&self, _budget: std::time::Duration) {}
 
     fn shutdown(&self, timeout: std::time::Duration) -> BoxFuture<'_, Result<(), Disposition>>;
 }

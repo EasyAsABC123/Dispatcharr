@@ -12,14 +12,20 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The current source candidate is [Candidate19](rust-milestone-batch19.md): all four
+The current source candidate is [Candidate20](rust-milestone-batch20.md): all SDK
+gates pass with 1,025 tests, zero failures and 761 ignored tests. It corrects the
+actual Main AutoChannels registry rejection and connects regex drain before
+joining worker lanes. Docker and combined application/resource checks remain.
+
+The preceding source candidate is [Candidate19](rust-milestone-batch19.md): all four
 SDK gates pass with 1,023 tests, zero failures and 758 ignored tests. Normal
 auto-sync, large metadata, shared channel deletion, dependency-only regex,
 remote stream health and Source-equivalent Beat timing are joined. Docker and
 archive/credit, crypto, PostgreSQL and paired VLC useful-core checks pass. The
-final-image regex import exposed Debian site-directory discovery; its corrected
-collector requires a new image and normal Main checks. Combined application and
-paired resource acceptance remain required.
+final-image regex import exposed Debian site-directory discovery; the third
+image passes final package checks. Actual Main startup then fails the registry
+ceiling corrected in20. Combined application and paired resource acceptance
+remain required.
 
 The preceding code is [Candidate18](rust-milestone-batch18.md):1,008 workspace tests,
 compilation and strict lint pass; Docker build and asset/credit, GPG and
