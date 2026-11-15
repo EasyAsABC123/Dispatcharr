@@ -12,7 +12,26 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The latest [combined milestone candidate](rust-milestone-batch1.md) is committed
+The current implementation is [Candidate16](rust-milestone-batch16.md), runtime
+`921c5c40b2eb7a7073a0006b43fae86b41cd2728`:984 workspace tests and Docker package
+checks pass. Its focused application cohort is running; it does not inherit
+older performance measurements. The [Candidate15 application record](rust-batch15-functional-observations.md)
+retains ten passing Native contexts and separate six-file media qualification,
+alongside literal fixture failures and the proxy-routing gap corrected in16.
+All full M0–M9 milestones remain open.
+
+Current parallel work is concrete: ingestion owns XC/remote STD imports, large
+catalogue transport and auto-sync; operations owns disabled plugin workflows and
+the required lazy Python-plugin compatibility boundary; streaming owns remaining
+profile/failover/session behavior and the existing paired resource runner. The
+primary agent integrates, verifies and publishes source-bound batches. SQLite,
+full contract/role coverage, enabled plugin execution, wider transport/fault
+coverage, final soak and rollback remain required. Prepared or guarded behavior
+is not accepted parity.
+
+The following candidate1/2 paragraphs retain their historical scopes.
+
+The earlier [combined milestone candidate](rust-milestone-batch1.md) is committed
 as `04026c158c8211da123b94ec67b82812f3223321`:904 Rust inputs/five coupled vectors,
 whole-workspace formatting/check/strict lint/default tests passed (872 passed,
 751 ignored). Its Docker image builds and passes production-ELF, UID65532 and
@@ -44,15 +63,15 @@ Main acceptance nor measured performance gains.
 
 | Milestone | Owner and execution queue | Next acceptance gate |
 | --- | --- | --- |
-| M0: executable baseline contracts | Primary agent, with each component owner | Extend the 131 partial HTTP Source definitions and eight non-HTTP assignments against the fixed inventory; distinguish static candidates, observed dispatch and fully verified behavior. |
+| M0: executable baseline contracts | Primary agent, with each component owner | Extend the current partial HTTP and non-HTTP Source assignments against the fixed inventory; distinguish static candidates, observed dispatch and fully verified behavior. |
 | M1: bounded streaming core | Primary agent, with streaming owner | Preserve exact-source technical core evidence, complete prerequisites and test relevant changes; do not repeat a benchmark merely to update prose. |
-| M2: live TS | Streaming agent (`stream_http`), after current Core integration | Finish authenticated capacity, upstream sharing, disconnect/rejoin, counter, timer and teardown comparisons with actual media and physical lifecycle evidence. |
-| M3: formats and profiles | Streaming agent (`stream_http`), following M2 dependencies | Complete HLS/fMP4/profile, failover, cancellation and fanout matrix, real decoding and relevant paired measurements. |
+| M2: live TS | Streaming agent (`milestone_stream`) | Qualify current Main shared viewing, XC credential rotation, authenticated capacity, upstream sharing, disconnect/rejoin, counters, timers and teardown with actual media and paired resources. |
+| M3: formats and profiles | Streaming agent (`milestone_stream`) | Complete HLS/fMP4, Redirect and output-profile lanes, VLC packaging/failover, cancellation and fanout matrix, actual decoding and paired measurements. |
 | M4: VOD/timeshift | Protocol/operations agent (`source_contract_finish`), after current plugin ownership gates | Complete ranges, seeks, catchup and session boundaries; retain unresolved counters/finalization/sharing differences and test packaged Main behavior. |
 | M5: control APIs | Core/streaming agent (`stream_http`) | Run the current combined Native special-settings cohorts against Source51, then late-reply/caller-loss/frame/shutdown gates; wire actual Main consumers and test React/account/channel workflows and API performance. |
-| M6: ingestion and jobs | Jobs agent (`milestone_jobs`) | Use the captured six TVG/four version Source cases; qualify Native TVG composition, implement configured-Series completed-parent handoff and complete scheduler/default families, then worker-inclusive measurements. Longer audio/video scoped evidence is already published. |
+| M6: ingestion and jobs | Jobs agent (`milestone_jobs`) | Qualify current XC provider/filter/catchup paths; complete remote STD streaming imports, large Groups backend metadata, auto-sync and hooks, complete default producer/task/scheduler coverage, then worker-inclusive measurements. Earlier Source/Native results retain their own scope. |
 | M7: outputs and integrations | Protocol/operations agent (`source_contract_finish`), with streaming dependencies | Finish Xtream/HDHR/XMLTV/M3U/realtime/WebSocket contracts, missing/stale/refresh behavior and recovery; qualify combined packaged workflows and workload measurements. |
-| M8: operations/plugins | Protocol/operations agent (`milestone_ops`) | Qualify the composed Main API and remaining HTTPS/DNS/signature behavior, discovery/install/run, backup/restore/rollback, sessions/CSRF and environment/startup/shutdown. Four finite unsigned ownership cases are published;16 new Source transport observations retain their separate network-gate failure. |
+| M8: operations/plugins | Operations agent (`milestone_ops`) | Qualify current proxy/manifest and backup flows; complete disabled ZIP/discovery/settings/files, actual enabled Python-plugin host with ORM/tasks/events, sessions/CSRF and remaining admin/config/restore/rollback/physical lifecycle compatibility. A manifest refresh is not plugin execution parity. |
 | M9: final acceptance | Primary agent with all three agents | Assemble the final committed source, complete prerequisites and full workflow/package/SDK checks, then restart/soak/cutover/rollback and representative full-graph paired performance. |
 
 ## Qualified groundwork for the milestone batches
