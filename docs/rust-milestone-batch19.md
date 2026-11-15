@@ -72,3 +72,22 @@ retirement call. Component child-retirement capability does not establish that
 Main drives it before waiting for tasks. The corrective shared drain hook is
 separate open work; ordinary regex acceptance will not qualify a held-search
 shutdown from a passing normal capture.
+
+The corrected second image builds and passes archive/UID/entrypoint,
+React/credit, GPG, PostgreSQL and paired VLC useful-core checks. The complete
+1,783-file archive matches its Git revision. VLC's selected core contains the
+original 75 video and 142 AAC frames, with raw finite-tail limitations retained.
+The package test's first import attempt mishandled literal VLC template braces;
+the corrected observer substitutes only Source's named placeholders.
+
+The final-image regex check then fails with `ModuleNotFoundError: regex` despite
+readable, byte-exact retained files. Actual interpreter queries show why: Source
+runs in a venv using `site-packages`, whereas the relocated final interpreter
+discovers Debian `dist-packages`. The earlier Source-only CLI check did not
+certify module origins and was insufficient. The collector now installs the
+same bytes under the recognized directory and audits every loaded regex module,
+including its extension, and every search path under the copied prefix. That
+direct audit passes in 3.20 seconds. Explicit public bridge copy modes also
+support direct workspace builds; archived image19's bridge was already readable.
+The [site correction](../scripts/rust-integration/milestone-batch19/module-site-correction.json)
+awaits a new image and actual nonroot runtime/normal-Main checks.

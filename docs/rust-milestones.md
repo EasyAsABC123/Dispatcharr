@@ -12,8 +12,11 @@ alone does not establish application parity or an application performance gain.
 The newest source candidate is [Candidate19](rust-milestone-batch19.md): all four
 SDK gates pass, with 1,023 tests, zero failures and 758 ignored tests. It joins
 normal auto-sync, full metadata, shared channel deletion, dependency-only regex,
-remote stream health and Source-equivalent adaptive Beat timing. Its Docker and
-combined application/resource acceptance remain required.
+remote stream health and Source-equivalent adaptive Beat timing. Its second
+Docker build passes, with archive/credit, crypto, PostgreSQL and paired VLC
+useful-core checks. Actual final-image regex import exposed Debian site-directory
+discovery; that corrected collector awaits another image and normal Main checks.
+Combined application/resource acceptance remains required.
 
 The preceding code is [Candidate18](rust-milestone-batch18.md): formatting,
 compilation, strict Clippy and1,008 tests pass (zero failures,756 ignored).
@@ -30,7 +33,9 @@ committed Git blobs. It adds plugin actions/managed ZIP installation, remote
 playlist/full-result handling and VLC/grouped-credential input work. Its Docker
 build and application acceptance remain pending.
 
-The latest built runtime is Candidate18 at
+The latest built runtime is Candidate19 at
+`08252652ddc3606e4922181d3ef7d0a074974941`; its regex import gate remains open.
+The preceding built runtime is Candidate18 at
 `8cf704d2794ec3230b3c2856fd66dffe2d01720d`.
 The preceding runtime
 `921c5c40b2eb7a7073a0006b43fae86b41cd2728`:

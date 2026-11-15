@@ -15,8 +15,11 @@ capability inventory and historical component checkpoint.
 The current source candidate is [Candidate19](rust-milestone-batch19.md): all four
 SDK gates pass with 1,023 tests, zero failures and 758 ignored tests. Normal
 auto-sync, large metadata, shared channel deletion, dependency-only regex,
-remote stream health and Source-equivalent Beat timing are joined. Docker,
-combined application and paired resource acceptance remain required.
+remote stream health and Source-equivalent Beat timing are joined. Docker and
+archive/credit, crypto, PostgreSQL and paired VLC useful-core checks pass. The
+final-image regex import exposed Debian site-directory discovery; its corrected
+collector requires a new image and normal Main checks. Combined application and
+paired resource acceptance remain required.
 
 The preceding code is [Candidate18](rust-milestone-batch18.md):1,008 workspace tests,
 compilation and strict lint pass; Docker build and asset/credit, GPG and

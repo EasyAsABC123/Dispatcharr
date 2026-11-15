@@ -1,7 +1,7 @@
 """Build-only pinned lazy CPython/regex-only dependency closure.
 Original Dispatcharr, CPython, Debian and distribution authors retain credit.
-No django/app import, install, subprocess host, DB/HTTP/cache operation or keys.
-NOT wired into Docker until the actual host/ORM/Jobs/Channels lifecycle is ready.
+No Django/application import, install, DB/HTTP/cache operation or runtime keys.
+The copied dependency interpreter runs only a bounded module-origin audit.
 """
 import hashlib,importlib.metadata as metadata,json,os,re,shutil,subprocess,sys,sysconfig
 from pathlib import Path
@@ -29,7 +29,10 @@ def tree(source,target):
   elif child.is_file():copy_file(child,dest)
   else:raise RuntimeError('Unsupported runtime special/symlink object: '+str(child))
 stdlib=Path(sysconfig.get_path('stdlib'));site=Path(sysconfig.get_path('purelib'));exe=Path(sys.executable).resolve()
-copy_file(exe,PREFIX/'bin/python3.13');tree(stdlib,PREFIX/'lib/python3.13');(PREFIX/'lib/python3.13/site-packages').mkdir(parents=True)
+# Actual pinned Debian non-venv policy recognizes this dist-packages path.
+# The source venv's site-packages path is NOT discovered after relocation.
+retained_site=PREFIX/'lib/python3.13/dist-packages'
+copy_file(exe,PREFIX/'bin/python3.13');tree(stdlib,PREFIX/'lib/python3.13');retained_site.mkdir(parents=True)
 # Dependency-only mode copies no Source Python/application assets. The final
 # Docker stage retains the repository LICENSE and ATTRIBUTION.md explicitly.
 licenses={};wheel_owners={}
@@ -38,7 +41,7 @@ for distribution in [metadata.distribution('regex')]:
   source=Path(distribution.locate_file(item))
   if not source.resolve().is_relative_to(site.resolve()):raise RuntimeError('Regex distribution escapes pinned site-packages')
   if '__pycache__'in source.parts or source.suffix in('.pyc','.pyo')or source.name.startswith('test_')or 'tests'in source.parts:continue
-  copy_file(source,PREFIX/'lib/python3.13/site-packages'/source.relative_to(site))
+  copy_file(source,retained_site/source.relative_to(site))
  name=distribution.metadata['Name'];version=distribution.version
  if not name or not re.fullmatch(r'[a-zA-Z0-9_.+-]+',name):raise RuntimeError('Invalid installed distribution name')
  info=Path(distribution._path)
@@ -82,7 +85,7 @@ for retained in sorted(PREFIX.rglob('*')):
  with retained.open('rb')as stream:is_elf=stream.read(4)==b'\x7fELF'
  if not is_elf:continue
  if retained==PREFIX/'bin/python3.13':source=exe
- elif retained.is_relative_to(PREFIX/'lib/python3.13/site-packages'):source=site/retained.relative_to(PREFIX/'lib/python3.13/site-packages')
+ elif retained.is_relative_to(retained_site):source=site/retained.relative_to(retained_site)
  else:source=stdlib/retained.relative_to(PREFIX/'lib/python3.13')
  record={'source':str(source),'retained':'/'+str(retained.relative_to(OUT)),'sha256':sha(retained),'licenses':owners(source),'dependencies':[]}
  dependency=subprocess.run(['ldd',str(source)],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,timeout=15,check=False)
@@ -98,6 +101,31 @@ for retained in sorted(PREFIX.rglob('*')):
   if path.name.startswith('ld-linux-'):loader=path.name
  manifest['ELF'].append(record)
 if not loader:raise RuntimeError('Pinned Python dynamic ELF loader missing')
+# Probe the COPIED interpreter/stdlib/regex closure, not ambient Source sys.path.
+# -I suppresses PYTHONPATH/HOME/user-site. Fail before any successful manifest if
+# the dependency or loaded extension resolves outside this exact retained tree.
+audit_code=r"""
+import hashlib,importlib.util,json,sys
+from pathlib import Path
+import regex
+root=Path(sys.argv[1]).resolve()
+assert Path(sys.prefix).resolve()==root
+assert importlib.util.find_spec('django') is None
+modules=[]
+for name,module in list(sys.modules.items()):
+ if name=='regex' or name.startswith('regex.'):
+  filename=getattr(module,'__file__',None)
+  if filename is None:continue
+  path=Path(filename).resolve();assert path.is_relative_to(root)
+  modules.append({'name':name,'relative_origin':str(path.relative_to(root)),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
+assert modules and any(m['relative_origin'].endswith('.so')for m in modules)
+assert all(Path(path).is_relative_to(root)for path in sys.path if path)
+print(json.dumps({'python':sys.version,'regex':regex.__version__,'prefix':str(root),'modules':modules,'Django_available':False}))
+"""
+audit=subprocess.run([str(lib/loader),'--library-path',str(lib),str(PREFIX/'bin/python3.13'),'-B','-I','-c',audit_code,str(PREFIX)],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,timeout=15,check=False)
+if audit.returncode or audit.stderr or len(audit.stdout)>65536:raise RuntimeError('Copied isolated dependency module-origin audit failed: '+audit.stderr[:4096])
+manifest['actual_relocated_module_audit']=json.loads(audit.stdout)
+manifest['retained_distribution_directory']='/'+str(retained_site.relative_to(OUT))
 wrapper=OUT/'usr/local/bin/dispatcharr-regex-python';wrapper.parent.mkdir(parents=True,exist_ok=True)
 wrapper.write_text('#!/bin/sh\nunset PYTHONHOME PYTHONPATH\nexec /opt/dispatcharr-python/elf/'+loader+' --library-path /opt/dispatcharr-python/elf /opt/dispatcharr-python/bin/python3.13 -I /opt/dispatcharr-python/bridge/regex_bootstrap.py "$@"\n');wrapper.chmod(0o755)
 cli=OUT/'usr/local/bin/dispatcharr-python';cli.write_text('#!/bin/sh\nexec /opt/dispatcharr-python/elf/'+loader+' --library-path /opt/dispatcharr-python/elf /opt/dispatcharr-python/bin/python3.13 "$@"\n');cli.chmod(0o755)
