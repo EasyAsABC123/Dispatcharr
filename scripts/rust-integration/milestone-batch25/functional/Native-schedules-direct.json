@@ -1,0 +1,86 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "name": "actual-API-auto3-to-owned-SD-guide",
+      "status": "passed",
+      "actual": {
+        "real_API_auto_to_one_SD_batch": true,
+        "programmes": 3,
+        "real_parent_root": true,
+        "country_rating": "GBR",
+        "Source_guest_duplicate_preserved": true,
+        "actual_owned_TLS": true
+      }
+    },
+    {
+      "name": "actual-cache-MD5-nochange",
+      "status": "passed",
+      "actual": {
+        "actual_MD5_and_credential_cache_reuse": true,
+        "unchanged_Programme_rows": true
+      }
+    },
+    {
+      "name": "actual-poster-provider-precedence-persistence",
+      "status": "passed",
+      "actual": {
+        "real_SD_metadata_request_and_programme_persistence": true
+      }
+    },
+    {
+      "name": "actual-delta-surgical-oldmetadata",
+      "status": "passed",
+      "actual": {
+        "actual_surgical_replacement_with_Source_cached_fields": true
+      }
+    },
+    {
+      "name": "actual-provider-error-retry-oldmetadata",
+      "status": "passed",
+      "actual": {
+        "actual_three_attempts_and_old_programme_fallback": true
+      }
+    },
+    {
+      "name": "actual-auth-lockout-credential-unlock",
+      "status": "passed",
+      "actual": {
+        "actual_persisted_lockout_and_credential_fingerprint_unlock": true
+      }
+    },
+    {
+      "name": "actual-debug2055-token403-reauth",
+      "status": "passed",
+      "actual": {
+        "actual_debug_disable_and401_403_reauth": true
+      }
+    },
+    {
+      "name": "actual-single-and-TVG-SD-delegation",
+      "status": "passed",
+      "actual": {
+        "actual_single_skip_force_and_TVG_delegation": true
+      }
+    },
+    {
+      "name": "actual-durable90-retry",
+      "status": "passed",
+      "actual": {
+        "actual_countdown90_publication_durable_reservation_and_due_execution": true,
+        "child": "d061ae5c-2d8f-4c4a-8849-16d83c56af28"
+      }
+    }
+  ],
+  "new_Source_characterization_required": true,
+  "performance_verified": false,
+  "unrun_required": [
+    "cold crash ETA visibility and warm restore",
+    "revoke-before-due and revoked deleted Source rows",
+    "held HTTP physical shutdown uncertainty",
+    "large5000-station/programme metadata matrices",
+    "genuinely malformed/nonfinite/alternate text encoding provider shapes",
+    "enabled plugin/Connect hooks",
+    "full Source SD station/lineup UI API"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "name": "two-recordings-use-one-shared-profile-and-raw-upstream",
+      "status": "passed",
+      "observation": {
+        "recorder_count": 2,
+        "each_actual_Main_URL_uses_profile": true,
+        "output_process_count": 1,
+        "origin_connection_delta": 1,
+        "origin_active": 1,
+        "provider_slots": 1,
+        "ordinary_raw_advances": true
+      }
+    },
+    {
+      "name": "recording-terminal-and-decoder-1",
+      "status": "passed",
+      "observation": {
+        "recording_id": 1,
+        "actual_terminal_and_complete_file_decode": true
+      }
+    },
+    {
+      "name": "recording-terminal-and-decoder-2",
+      "status": "passed",
+      "observation": {
+        "recording_id": 2,
+        "actual_terminal_and_complete_file_decode": true
+      }
+    },
+    {
+      "name": "invalid-cached-getter-produces-raw-recording",
+      "status": "passed",
+      "observation": {
+        "recording_id": 3,
+        "one_actual_recorder": true,
+        "no_output_profile_query": true
+      }
+    }
+  ],
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "no_Source_model18_replay": true,
+  "ordinary_raw_survives": true,
+  "ordinary_raw_final": {
+    "bytes": 15096212,
+    "media_bytes": 9611124,
+    "packets": 80299,
+    "sync_errors": 0,
+    "partial_bytes": 0,
+    "ended": true,
+    "errors": [],
+    "transport": "mpegts",
+    "TS_packet_metrics_available": true,
+    "http_status": 200,
+    "content_type": "video/mp2t",
+    "first_byte_seconds": 4.104736060995492
+  },
+  "scope": "normal cached DVR profile getter, actual capture URL, overlapping media and ordinary raw demand; comskip/whole M3/performance remain unqualified"
+}

@@ -12,9 +12,11 @@ alone does not establish application parity or an application performance gain.
 The newest source candidate is [Candidate25](rust-milestone-batch25.md): all four
 SDK gates pass with1,061 tests, zero failures and775 ignored. It joins common
 Redirect assignments and native proxy alias sharing with guarded plugin runtime,
-SQL/result/cache infrastructure and owned host deadlines. Docker, actual Redirect
-and corrected affected workflows, enabled-plugin activation and resource acceptance
-remain required.
+SQL/result/cache infrastructure and owned host deadlines. Docker/package and
+all eighteen joined physical controls pass. Selected affected workflows pass
+across the original Main run and corrected paired Redirect context; original
+failed rows remain. Enabled-plugin and full milestone/resource acceptance remain
+required.
 
 The preceding source candidate is [Candidate24](rust-milestone-batch24.md) at
 `df815fbb3d312d191654bf4079f337ecae216430`: all four SDK gates pass with
@@ -76,7 +78,10 @@ committed Git blobs. It adds plugin actions/managed ZIP installation, remote
 playlist/full-result handling and VLC/grouped-credential input work. Its Docker
 build and application acceptance remain pending.
 
-The latest built runtime is Candidate24 at
+The latest built runtime is Candidate25 at
+`6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d`; package and eighteen joined
+physical controls pass; selected Main workflows are qualified across named
+executions, while full milestone/resource acceptance remains open. Candidate24 at
 `df815fbb3d312d191654bf4079f337ecae216430`; package and eleven physical
 controls pass; the Main batch retains qualified successes and failed fixture
 assertions. Whole Main and resource acceptance remain open. Candidate23 at

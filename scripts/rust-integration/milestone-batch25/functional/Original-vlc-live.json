@@ -1,0 +1,102 @@
+{
+  "status": "passed",
+  "scope": "two authenticated idle live viewers, actual Source0027 locked-template VLC input; no active Recording rows or performance measurement",
+  "profile_template": "actual locked VLC template, exact0027 parameters; no model methods replaced",
+  "readers": [
+    {
+      "bytes": 1535208,
+      "media_bytes": 1535208,
+      "packets": 8166,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t",
+      "first_byte_seconds": 7.102579354002955
+    },
+    {
+      "bytes": 1279340,
+      "media_bytes": 1279340,
+      "packets": 6805,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t",
+      "first_byte_seconds": 0.013537852006265894
+    }
+  ],
+  "decoders": [
+    {
+      "viewer": "owner",
+      "actual_exit": 0,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "video_frames": 74,
+      "video_and_audio": true,
+      "file_bytes": 1535208,
+      "file_sha256": "4079fc711e2503d4562ca8f6c03810858b2d22fed5df11b98b2ecd1cb7acb86a",
+      "scope": "existing qualified3s positive A/V prefix decoder with threads1; packaged fixed-core certificate separately required; no full-file/resource acceptance"
+    },
+    {
+      "viewer": "follower",
+      "actual_exit": 0,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "video_frames": 74,
+      "video_and_audio": true,
+      "file_bytes": 1279340,
+      "file_sha256": "663be691f21c08c156928b33a7f16d8d0c672f0985daa9e9c839029e29f784d7",
+      "scope": "existing qualified3s positive A/V prefix decoder with threads1; packaged fixed-core certificate separately required; no full-file/resource acceptance"
+    }
+  ],
+  "performance_verified": false,
+  "full_M3_passed": false,
+  "actual_ready_Source_roles": [
+    "beat",
+    "celery",
+    "dvr",
+    "vlc-proxy",
+    "web"
+  ],
+  "actual_Main_readiness_status": 401,
+  "active": {
+    "actual_upstream_connections": 1,
+    "actual_provider_slots": 1,
+    "actual_recording_ffmpeg_count": 0
+  },
+  "actual_input_process_count": 1,
+  "actual_origin_connection_delta": 1,
+  "actual_client_count": 2,
+  "Source_post_reader_close_retirement_observation": {
+    "upstream_active": 1,
+    "input_process_count": 1,
+    "timing_parity_claimed": false
+  },
+  "actual_Source_roles_normal_stop": true,
+  "actual_upstream_retired_after_Main_shutdown": true,
+  "actual_proxy_role_stop": null,
+  "actual_owned_proxy_final": {
+    "accepted": 1,
+    "active": 0,
+    "active_sockets": 0,
+    "all_handler_threads_joined": true,
+    "bounded_stream_limit": 134217728,
+    "bytes": 4509932,
+    "completed": 1,
+    "denied": 1,
+    "fixed_port": 8080,
+    "fixed_upstream": "11.254.251.3",
+    "listener": "127.0.0.1:18109",
+    "maximum_active": 1,
+    "upstream_errors": 0
+  }
+}

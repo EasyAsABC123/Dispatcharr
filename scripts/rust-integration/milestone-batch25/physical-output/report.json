@@ -1,0 +1,182 @@
+{
+  "controller_source_git_revision": "6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d",
+  "runtime_image_source_git_revision": "6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d",
+  "runtime_scope": "Candidate25 packaged dependency environment; physical component controllers execute, production Main not executed",
+  "passed": true,
+  "scope": "Actual owned Redis, raw HTTP and profile actor component controls; not Main/Source media or performance acceptance",
+  "image_id": "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+  "git_revision": "6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d",
+  "controllers": [
+    {
+      "name": "output-store",
+      "package": "dispatcharr-output-store",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-output-store",
+        "--test",
+        "redis",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis-47691684c9e0cadc",
+      "sha256": "fcaecbc6de65167cb02ffaddf7847df9addda0d6b0a36e9b00412ca96d30ebf3",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-output-physical-1/output-store"
+    },
+    {
+      "name": "profile-viewers",
+      "package": "dispatcharr-stream-http",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-stream-http",
+        "--test",
+        "output_profiles",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/output_profiles-e6faf834f03a7778",
+      "sha256": "7fdc240e19d954fb6daa090f7d5e0029eb1420d407d2ca38bfde4139dccbd92d",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-output-physical-1/profile-viewers"
+    },
+    {
+      "name": "profile-stop-race",
+      "package": "dispatcharr-stream-http",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-stream-http",
+        "--lib",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_stream_http-3c3a0783cc84ddc5",
+      "sha256": "714aff3a811b1ff6fa3c36f7224465859bff20208ecf1ded1d8d8c4ed769f65f",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-output-physical-1/profile-stop-race"
+    },
+    {
+      "name": "fmp4-generation",
+      "package": "dispatcharr-fmp4-http",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-fmp4-http",
+        "--test",
+        "http",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http-19a958f8e88ba3b1",
+      "sha256": "53e4951bc5fc80b9a4ae40e1d6746b16649a35d379a9d64de1f26b16962be80e",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-output-physical-1/fmp4-generation"
+    },
+    {
+      "name": "redirect-assignments",
+      "package": "dispatcharr-coordination",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-coordination",
+        "--test",
+        "redirect_assignments",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redirect_assignments-5b7031c5e83bca13",
+      "sha256": "bbbbb46131d7033dd5fb486bbf0177b250a0c2322dd0b4276e1bae448fb4e1a4",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-output-physical-1/redirect-assignments"
+    }
+  ],
+  "controller_ELF_dependencies": {
+    "libgcc_s.so.1": {
+      "path": "/usr/lib/libgcc_s.so.1",
+      "sha256": "f0cb09ad25ba16848370f16086d1b5671962431ae2ea878e8eeb4c7bb35a56ed"
+    },
+    "libm.so.6": {
+      "path": "/usr/lib/libm.so.6",
+      "sha256": "58b6b82e39d59d7810d402ba4ec34359fde058204fdb7cd5a269fda256a35421"
+    },
+    "libc.so.6": {
+      "path": "/usr/lib/libc.so.6",
+      "sha256": "071e34179e645b25f8a8c2e7108894dc665caa9f5f8c939cd579a75b6638bc3f"
+    },
+    "ld-linux-x86-64.so.2": {
+      "path": "/usr/lib/ld-linux-x86-64.so.2",
+      "sha256": "2a950d46575efa0210d22440988f5a6b4507ebddc6c86d9a42e6e7ef6f01463e"
+    }
+  },
+  "controller_scope": "SDK25 host-compiled tests with exact separately identified host ELF dependencies; child process environment is the unchanged candidate image; no LD_LIBRARY_PATH override",
+  "Redis_pin_source_sha256": "63c869eeb778ec178ea2cf1ad4475b5401461c665d37d578a8decf5c93637c22",
+  "Redis_image": "redis@sha256:c5d34a98396a4775e223c74e929162c35c5a2182901ba26b50ade939941ce14b",
+  "compose_project": "dispatcharr-output-controls-367fc65d91",
+  "published_ports": false,
+  "network_internal": true,
+  "full_milestone_passed": false,
+  "Main_acceptance": false,
+  "performance_verified": false,
+  "Redis_actual_image_id": "sha256:c5d34a98396a4775e223c74e929162c35c5a2182901ba26b50ade939941ce14b",
+  "Redis_PID": 3539474,
+  "Redis_generation": "7983691",
+  "Redis_version": "Redis server v=7.4.12 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=5e6b576434da555d",
+  "project_inventories_empty": true,
+  "original_Redis_generation_absent": true,
+  "cells": [
+    {
+      "name": "output-store",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 7,
+      "stdout_sha256": "ba91859462066d3b734b4d54e392cadf59781624fb1da758169fe7a470a4464d"
+    },
+    {
+      "name": "profile-viewers",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 2,
+      "stdout_sha256": "ae25ef3f019a06e2e8254ba8a7bbd4b2ce5b68abd8056b753812a1a3763881b8"
+    },
+    {
+      "name": "profile-stop-race",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 1,
+      "stdout_sha256": "26143bf74066020dbf97f4528c414640ac7a717d699984a1acae97668f766216"
+    },
+    {
+      "name": "fmp4-generation",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 1,
+      "stdout_sha256": "7e5f18bd5107edbd53e5b51a5a82da4abead565aea6db5db0374d1fc6fec1552"
+    },
+    {
+      "name": "redirect-assignments",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 7,
+      "stdout_sha256": "6f478591d4a35169f8c1f74cfa363c23574aae720c11df9d76e225967fe3538e"
+    }
+  ],
+  "failure": null,
+  "exact_cleanup": true
+}

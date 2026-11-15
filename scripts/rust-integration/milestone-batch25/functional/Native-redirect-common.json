@@ -1,0 +1,267 @@
+{
+  "status": "passed",
+  "cells": [
+    {
+      "name": "reserved-before-metadata-concurrent-borrow-max1",
+      "status": "passed",
+      "observation": {
+        "before": {
+          "stream_alias": "1",
+          "profile_alias": "1",
+          "profile_count": 1,
+          "metadata_exists": 0,
+          "state": "",
+          "clients": 0,
+          "raw_owner": ""
+        },
+        "operation": {
+          "status": 302,
+          "settled": true,
+          "location": "http://127.0.0.1:18099/held/b0c067b7c7264f078f3d4a065940e6e4",
+          "body_bytes": 0,
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "first": {
+          "status": 302,
+          "settled": true,
+          "location": "http://127.0.0.1:18099/held/b0c067b7c7264f078f3d4a065940e6e4",
+          "body_bytes": 0,
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "final": {
+          "stream_alias": "",
+          "profile_alias": "",
+          "profile_count": 0,
+          "metadata_exists": 0,
+          "state": "",
+          "clients": 0,
+          "raw_owner": ""
+        }
+      }
+    },
+    {
+      "name": "borrowed-assignment-survives-current-inactive-SQL",
+      "status": "passed",
+      "observation": {
+        "before": {
+          "stream_alias": "1",
+          "profile_alias": "1",
+          "profile_count": 1,
+          "metadata_exists": 0,
+          "state": "",
+          "clients": 0,
+          "raw_owner": ""
+        },
+        "operation": {
+          "status": 302,
+          "settled": true,
+          "location": "http://127.0.0.1:18099/held/c873fd167e7d485d82493b82bf878431",
+          "body_bytes": 0,
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "first": {
+          "status": 302,
+          "settled": true,
+          "location": "http://127.0.0.1:18099/held/c873fd167e7d485d82493b82bf878431",
+          "body_bytes": 0,
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "final": {
+          "stream_alias": "",
+          "profile_alias": "",
+          "profile_count": 0,
+          "metadata_exists": 0,
+          "state": "",
+          "clients": 0,
+          "raw_owner": ""
+        }
+      }
+    },
+    {
+      "name": "existing-stopped-metadata-claims-stale-slot-once",
+      "status": "passed",
+      "observation": {
+        "before": {
+          "stream_alias": "1",
+          "profile_alias": "1",
+          "profile_count": 1,
+          "metadata_exists": 0,
+          "state": "",
+          "clients": 0,
+          "raw_owner": ""
+        },
+        "operation": {
+          "seeded_metadata_is_branch_input_not_media_owner": {
+            "stream_alias": "1",
+            "profile_alias": "1",
+            "profile_count": 1,
+            "metadata_exists": 1,
+            "state": "stopped",
+            "clients": 0,
+            "raw_owner": ""
+          },
+          "response": {
+            "status": 302,
+            "settled": true,
+            "location": "http://127.0.0.1:18099/held/e0757014c7d446deb57f597cc2bab4e5",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "after": {
+            "stream_alias": "",
+            "profile_alias": "",
+            "profile_count": 0,
+            "metadata_exists": 1,
+            "state": "stopped",
+            "clients": 0,
+            "raw_owner": ""
+          }
+        },
+        "first": {
+          "status": 302,
+          "settled": true,
+          "location": "http://127.0.0.1:18099/held/e0757014c7d446deb57f597cc2bab4e5",
+          "body_bytes": 0,
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "final": {
+          "stream_alias": "",
+          "profile_alias": "",
+          "profile_count": 0,
+          "metadata_exists": 1,
+          "state": "stopped",
+          "clients": 0,
+          "raw_owner": ""
+        }
+      }
+    },
+    {
+      "name": "foreign-full-counter-refuses-without-private-grant",
+      "status": "passed",
+      "observation": {
+        "foreign_counter_is_declared_input": true,
+        "response": {
+          "status": 503,
+          "settled": true,
+          "location": null,
+          "body_bytes": 88,
+          "body_sha256": "ca48cd0f943b9d128be6463d980bb74bacb1f8c34e42984c9c94b82d0160ceab",
+          "body": {
+            "error": "All active M3U profiles have reached maximum connection limits",
+            "waited": "2s"
+          }
+        },
+        "after": {
+          "stream_alias": "",
+          "profile_alias": "",
+          "profile_count": 1,
+          "metadata_exists": 0,
+          "state": "",
+          "clients": 0,
+          "raw_owner": ""
+        }
+      }
+    },
+    {
+      "name": "running-Proxy-to-Redirect-reuses-actual-raw-Lease-aliases",
+      "status": "passed",
+      "observation": {
+        "before": {
+          "stream_alias": "1",
+          "profile_alias": "1",
+          "profile_count": 1,
+          "metadata_exists": 1,
+          "state": "active",
+          "clients": 1,
+          "raw_owner": "rust:4ea1c867-0d5e-404c-b3df-378ac98ce0be"
+        },
+        "response": {
+          "status": 302,
+          "settled": true,
+          "location": "http://origin:8080/live/0.ts",
+          "body_bytes": 0,
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "after": {
+          "stream_alias": "1",
+          "profile_alias": "1",
+          "profile_count": 1,
+          "metadata_exists": 1,
+          "state": "active",
+          "clients": 1,
+          "raw_owner": "rust:4ea1c867-0d5e-404c-b3df-378ac98ce0be"
+        },
+        "ordinary_raw_fresh_advance": true,
+        "origin_new_connections": 1,
+        "origin_active": 1,
+        "validation_disabled_for_this_declared_slice": true,
+        "private_Proxy_lease_or_provider_reserve_for_Redirect": false
+      }
+    }
+  ],
+  "full_M3_passed": false,
+  "performance_verified": false,
+  "unversioned_foreign_Source_ABA_unqualified": true,
+  "all_owned_request_threads_settled": true,
+  "actual_Origin_stop": {
+    "role": "redirect-origin",
+    "socket": "/tmp/normal-dvr-roles/ab552b8da34b4cd0bdde9805a95b7961.sock",
+    "owner_pid": 15810,
+    "owner_starttime": "8125600",
+    "pid": 15811,
+    "starttime": "8125603",
+    "actual_pgid": 15811,
+    "process_group_authority": "successful Popen(start_new_session=True)",
+    "actual_argv": [
+      "/dispatcharrpy/bin/python",
+      "/normal-dvr-tools/redirect_origin.py",
+      "--state",
+      "/tmp/owned-redirect-877a551dc58342ef80fe6985b0e9ef9a"
+    ],
+    "log_paths": {
+      "stdout": "/tmp/normal-dvr-roles/ab552b8da34b4cd0bdde9805a95b7961/stdout.log",
+      "stderr": "/tmp/normal-dvr-roles/ab552b8da34b4cd0bdde9805a95b7961/stderr.log"
+    },
+    "shutdown_started": true,
+    "signal_settled": true,
+    "actual_master_SIGTERM_sent": true,
+    "shutdown_settled": true,
+    "running": false,
+    "actual_exit": 0,
+    "actual_wait_completed": true,
+    "forced": false,
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "failures": [],
+    "actual_reaped_adopted_children": [],
+    "owned_generations": [
+      {
+        "pid": 15811,
+        "starttime": "8125603",
+        "absent": true
+      }
+    ],
+    "all_original_process_generations_absent": true
+  },
+  "actual_Origin_final": {
+    "active": 0,
+    "threads_joined": true,
+    "requests": [
+      {
+        "method": "HEAD",
+        "path": "/held/b0c067b7c7264f078f3d4a065940e6e4",
+        "monotonic": 81271.944291804
+      },
+      {
+        "method": "HEAD",
+        "path": "/held/c873fd167e7d485d82493b82bf878431",
+        "monotonic": 81274.980998122
+      },
+      {
+        "method": "HEAD",
+        "path": "/held/e0757014c7d446deb57f597cc2bab4e5",
+        "monotonic": 81279.485855335
+      }
+    ]
+  }
+}

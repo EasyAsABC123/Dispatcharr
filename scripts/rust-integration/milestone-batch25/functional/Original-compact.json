@@ -1,0 +1,51 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "name": "API-inline-compact-fractional-global-reservation-override-group",
+      "status": "passed",
+      "actual": {
+        "actual_visible": 5,
+        "fractional_start_truncated": true,
+        "global_reservation_skipped": true,
+        "source_group_override_target_used": true
+      }
+    },
+    {
+      "name": "same-worker-hidden-pin-range-failure",
+      "status": "passed",
+      "actual": {
+        "visible_failed": 2,
+        "hidden_raw_released": true,
+        "pinned_raw_cleared_override_untouched": true,
+        "auto_failed_detail": [
+          {
+            "stream_name": null,
+            "stream_id": null,
+            "group": "Owned Regex",
+            "reason": "RANGE_EXHAUSTED",
+            "error": "Compact pack: 2 visible channel(s) could not fit in range 30000-30002"
+          }
+        ]
+      }
+    },
+    {
+      "name": "reverse-natural-pack-stable-UUID-time",
+      "status": "passed",
+      "actual": {
+        "natural_tuple_reverse": true,
+        "repeated_pack_stable": true,
+        "UUIDs_preserved": true,
+        "raw_updates_did_not_touch_updated_at": true
+      }
+    }
+  ],
+  "new_Source_characterization_required": true,
+  "performance_verified": false,
+  "remaining_required": [
+    "manual repack HTTP",
+    "immediate hide/unhide model/API callbacks",
+    "compact numeric/sort invalid domains",
+    "held transaction physical rollback"
+  ]
+}

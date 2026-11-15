@@ -1,0 +1,379 @@
+{
+  "status": "passed",
+  "scope": "two authenticated idle live viewers, actual Source0027 locked-template VLC input; no active Recording rows or performance measurement",
+  "profile_template": "actual locked VLC template, exact0027 parameters; no model methods replaced",
+  "readers": [
+    {
+      "bytes": 1279340,
+      "media_bytes": 1279340,
+      "packets": 6805,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t",
+      "first_byte_seconds": 6.7639742710016435
+    },
+    {
+      "bytes": 1279340,
+      "media_bytes": 1279340,
+      "packets": 6805,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t",
+      "first_byte_seconds": 0.008539911010302603
+    }
+  ],
+  "decoders": [
+    {
+      "viewer": "owner",
+      "actual_exit": 0,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "video_frames": 74,
+      "video_and_audio": true,
+      "file_bytes": 1279340,
+      "file_sha256": "ecb5ce200ff42a89f8b78dc94d66a1dd813fa9e535d16641863d0e79bc0ab2b1",
+      "scope": "existing qualified3s positive A/V prefix decoder with threads1; packaged fixed-core certificate separately required; no full-file/resource acceptance"
+    },
+    {
+      "viewer": "follower",
+      "actual_exit": 0,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "video_frames": 74,
+      "video_and_audio": true,
+      "file_bytes": 1279340,
+      "file_sha256": "ecb5ce200ff42a89f8b78dc94d66a1dd813fa9e535d16641863d0e79bc0ab2b1",
+      "scope": "existing qualified3s positive A/V prefix decoder with threads1; packaged fixed-core certificate separately required; no full-file/resource acceptance"
+    }
+  ],
+  "performance_verified": false,
+  "full_M3_passed": false,
+  "startup_roots": {
+    "passed": true,
+    "root_ids": [
+      "12d96ea9-d0bb-431e-ad53-565f23f802a6",
+      "c269a557-9b37-41ad-b4fd-3c4970328670",
+      "e286a7bb-806c-4851-a825-c2fad47f9ce2"
+    ],
+    "backend": {
+      "e286a7bb-806c-4851-a825-c2fad47f9ce2": {
+        "metadata": {
+          "status": "SUCCESS",
+          "result": "Recovery complete",
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-15T18:41:31.503231+00:00",
+          "task_id": "e286a7bb-806c-4851-a825-c2fad47f9ce2"
+        },
+        "actual_key": "celery-tasks:celery-task-meta-e286a7bb-806c-4851-a825-c2fad47f9ce2"
+      },
+      "c269a557-9b37-41ad-b4fd-3c4970328670": {
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-15T18:41:31.510035+00:00",
+          "task_id": "c269a557-9b37-41ad-b4fd-3c4970328670"
+        },
+        "actual_key": "celery-tasks:celery-task-meta-c269a557-9b37-41ad-b4fd-3c4970328670"
+      },
+      "12d96ea9-d0bb-431e-ad53-565f23f802a6": {
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-15T18:41:41.530825+00:00",
+          "task_id": "12d96ea9-d0bb-431e-ad53-565f23f802a6"
+        },
+        "actual_key": "celery-tasks:celery-task-meta-12d96ea9-d0bb-431e-ad53-565f23f802a6"
+      }
+    },
+    "queues": [
+      0,
+      0
+    ],
+    "unacked_counts": [
+      0,
+      0
+    ],
+    "actual_startup_frames": [
+      {
+        "frame": {
+          "body": "W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.channels.tasks.recover_recordings_on_startup",
+            "id": "e286a7bb-806c-4851-a825-c2fad47f9ce2",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "e286a7bb-806c-4851-a825-c2fad47f9ce2",
+            "parent_id": null,
+            "argsrepr": "()",
+            "kwargsrepr": "{}",
+            "origin": "gen1@34c8d4fb197b",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "e286a7bb-806c-4851-a825-c2fad47f9ce2",
+            "reply_to": "f49d293c-71c2-383d-9a8d-bc5b157a5450",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "d312d070-1769-4a3a-8622-9671fc09ee64"
+          }
+        },
+        "actual_redis_time": 1794768091.493112,
+        "client_address": "lua",
+        "queue": "celery"
+      },
+      {
+        "frame": {
+          "body": "W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "core.tasks.check_for_version_update",
+            "id": "c269a557-9b37-41ad-b4fd-3c4970328670",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "c269a557-9b37-41ad-b4fd-3c4970328670",
+            "parent_id": null,
+            "argsrepr": "()",
+            "kwargsrepr": "{}",
+            "origin": "gen1@34c8d4fb197b",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "c269a557-9b37-41ad-b4fd-3c4970328670",
+            "reply_to": "f49d293c-71c2-383d-9a8d-bc5b157a5450",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "bf3ca2c3-dd4d-4afe-97fd-3d7270a1338d"
+          }
+        },
+        "actual_redis_time": 1794768091.493319,
+        "client_address": "lua",
+        "queue": "celery"
+      },
+      {
+        "frame": {
+          "body": "W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.plugins.tasks.refresh_plugin_repos",
+            "id": "12d96ea9-d0bb-431e-ad53-565f23f802a6",
+            "shadow": null,
+            "eta": "2026-11-15T18:41:41.493372+00:00",
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "12d96ea9-d0bb-431e-ad53-565f23f802a6",
+            "parent_id": null,
+            "argsrepr": "()",
+            "kwargsrepr": "{}",
+            "origin": "gen1@34c8d4fb197b",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "12d96ea9-d0bb-431e-ad53-565f23f802a6",
+            "reply_to": "286bcad9-385a-37d6-898e-428e522b1d51",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "348e2c21-dfd1-41e4-8727-1535ad39f666"
+          }
+        },
+        "actual_redis_time": 1794768091.493566,
+        "client_address": "lua",
+        "queue": "celery"
+      }
+    ],
+    "plugin_countdown_at_LPUSH_seconds": 9.999805927276611,
+    "repository_fence": {
+      "enabled_repositories": [],
+      "refresh_interval_input": 0
+    },
+    "business_network_fence": {
+      "actual_closed_proxy": {
+        "loopback_proxy_port": 9,
+        "actual_connect_ex": 111
+      },
+      "owned_NO_PROXY": [
+        "localhost",
+        "127.0.0.1",
+        "::1",
+        "baseline",
+        "origin",
+        "11.254.252.2",
+        "11.254.252.3"
+      ],
+      "provider_owned_proxy_preserved": false,
+      "scope": "Actual application env; no HTTP-client/function replacement or Source SSRF bypass"
+    },
+    "observer_actual_UID_proof": {
+      "actual_MONITOR_subscribed": true,
+      "actual_euid": 65532,
+      "actual_egid": 65532,
+      "pid": 3142,
+      "generation": "8105909"
+    },
+    "scope": "Three actual natural startup publications and terminal results; task-specific broader effect authority remains separate.",
+    "observer_role_stop": null,
+    "observer_final": {
+      "thread_settled": true,
+      "actual_rows": 1061,
+      "written_rows": 1061,
+      "persisted_rows": 1061,
+      "captured_bytes": 183372,
+      "row_limit": 20000,
+      "byte_limit": 16777216,
+      "terminal_reader_error": null,
+      "close_after_cases": true,
+      "terminal_marker": "plugin-startup-terminal-2b03f4bb2fe140f498805d859ba32990",
+      "terminal_marker_read": true,
+      "terminal_barrier_observed": true,
+      "terminal_barrier_fsynced": true,
+      "writer_closed": true,
+      "flush_calls": 2,
+      "fsync_calls": 1,
+      "scope": "All commands through the actual terminal ECHO are buffered in bounded batches then flush/fsync completes before the durable marker event; no subsequent background polls are included.",
+      "observer_error": null
+    }
+  },
+  "actual_Main_readiness_status": 200,
+  "active": {
+    "actual_upstream_connections": 1,
+    "actual_provider_slots": 1,
+    "actual_recording_ffmpeg_count": 0
+  },
+  "actual_input_process_count": 1,
+  "actual_origin_connection_delta": 1,
+  "actual_client_count": 2,
+  "actual_idle_upstream_and_process_retired": true,
+  "actual_Main_normal_stop": {
+    "actual_exit": 0,
+    "oom_killed": false,
+    "expected_exit": 0
+  },
+  "actual_proxy_role_stop": {
+    "role": "vlc-proxy",
+    "socket": "/tmp/normal-dvr-roles/97049ee536d940e3b13c6095acb57d83.sock",
+    "owner_pid": 3098,
+    "owner_starttime": "8105690",
+    "pid": 3099,
+    "starttime": "8105692",
+    "actual_pgid": 3099,
+    "process_group_authority": "successful Popen(start_new_session=True)",
+    "actual_argv": [
+      "/dispatcharrpy/bin/python",
+      "/normal-dvr-tools/vlc_forward_proxy.py",
+      "--upstream",
+      "11.254.252.3",
+      "--state",
+      "/tmp/owned-vlc-proxy-979130a47359411194df2d192f265634",
+      "--seconds",
+      "300"
+    ],
+    "log_paths": {
+      "stdout": "/tmp/normal-dvr-roles/97049ee536d940e3b13c6095acb57d83/stdout.log",
+      "stderr": "/tmp/normal-dvr-roles/97049ee536d940e3b13c6095acb57d83/stderr.log"
+    },
+    "shutdown_started": true,
+    "signal_settled": true,
+    "actual_master_SIGTERM_sent": true,
+    "shutdown_settled": true,
+    "running": false,
+    "actual_exit": 0,
+    "actual_wait_completed": true,
+    "forced": false,
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "failures": [],
+    "actual_reaped_adopted_children": [],
+    "owned_generations": [
+      {
+        "pid": 3099,
+        "starttime": "8105692",
+        "absent": true
+      }
+    ],
+    "all_original_process_generations_absent": true
+  },
+  "actual_owned_proxy_final": {
+    "accepted": 1,
+    "active": 0,
+    "active_sockets": 0,
+    "all_handler_threads_joined": true,
+    "bounded_stream_limit": 134217728,
+    "bytes": 3641372,
+    "completed": 0,
+    "denied": 1,
+    "fixed_port": 8080,
+    "fixed_upstream": "11.254.252.3",
+    "listener": "127.0.0.1:18109",
+    "maximum_active": 1,
+    "upstream_errors": 1
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "scope": "five common cases after same actual compact/API causal prerequisites; no full arbitrary regex/exception-class claim",
+  "cases": [
+    {
+      "name": "actual-full-grammar-search-include-exclude-branchreset-rename",
+      "rows": 2,
+      "name_and_absolute_channel_numbers_equal": true,
+      "actual_projection": [
+        {
+          "name": "Selected 00001",
+          "channel_number": 30005.0
+        },
+        {
+          "name": "Selected Stra\u00dfe",
+          "channel_number": 30006.0
+        }
+      ]
+    },
+    {
+      "name": "actual-invalid-filter-skipped-preserves-source-list-distinction",
+      "rows": 5,
+      "name_and_absolute_channel_numbers_equal": true,
+      "actual_projection": [
+        {
+          "name": "Auto 00001",
+          "channel_number": 30005.0
+        },
+        {
+          "name": "Stra\u00dfe",
+          "channel_number": 30006.0
+        },
+        {
+          "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+          "channel_number": 30007.0
+        },
+        {
+          "name": "Auto 00002",
+          "channel_number": 30008.0
+        },
+        {
+          "name": "foo",
+          "channel_number": 30009.0
+        }
+      ]
+    },
+    {
+      "name": "actual-nonstring-filter-error-boundary",
+      "rows": 5,
+      "name_and_absolute_channel_numbers_equal": true,
+      "actual_projection": [
+        {
+          "name": "Auto 00001",
+          "channel_number": 30005.0
+        },
+        {
+          "name": "Stra\u00dfe",
+          "channel_number": 30006.0
+        },
+        {
+          "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+          "channel_number": 30007.0
+        },
+        {
+          "name": "Auto 00002",
+          "channel_number": 30008.0
+        },
+        {
+          "name": "foo",
+          "channel_number": 30009.0
+        }
+      ]
+    },
+    {
+      "name": "actual-rename100ms-timeout-fallback-final512",
+      "rows": 3,
+      "name_and_absolute_channel_numbers_equal": true,
+      "actual_projection": [
+        {
+          "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+          "channel_number": 30005.0
+        },
+        {
+          "name": "Auto 00001",
+          "channel_number": 30006.0
+        },
+        {
+          "name": "Auto 00002",
+          "channel_number": 30007.0
+        }
+      ]
+    },
+    {
+      "name": "actual-nonstring-replacement-perstream-error-boundary",
+      "rows": 2,
+      "name_and_absolute_channel_numbers_equal": true,
+      "actual_projection": [
+        {
+          "name": "Auto 00001",
+          "channel_number": 30005.0
+        },
+        {
+          "name": "Auto 00002",
+          "channel_number": 30006.0
+        }
+      ]
+    }
+  ],
+  "Source_report_sha256": "232ca7d48bfeb2f48f40288ab56b6f9752c67d08e821bbe93a8484cdf8f973e6",
+  "Native_report_sha256": "bedf62e7c1969c2eeceb83b7b4d309fd3aabcb28ec54ebc9baadaaf989b137a2"
+}

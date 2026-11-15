@@ -1,0 +1,267 @@
+{
+  "scope": "Candidate25 selected affected Main workflows qualified across original batch and corrected full Redirect context, same committed source/image; initial false retained",
+  "candidate_git": "6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d",
+  "image_id": "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+  "initial_execution": {
+    "actual_exit": 1,
+    "failure": null,
+    "seconds": 1309.3966868579882,
+    "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch25-functional-1/dispatch/execution.stdout",
+    "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch25-functional-1/dispatch/execution.stderr",
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "process_group": 3544024,
+    "process_group_settled": true,
+    "remaining_group_members": [],
+    "reaped_descendants": [],
+    "output_bytes_written": 0,
+    "output_bytes_discarded": 0
+  },
+  "initial_backend_contexts": [
+    {
+      "status": "failed",
+      "cases": [
+        {
+          "case": "schedules-direct",
+          "status": "passed"
+        },
+        {
+          "case": "vlc-live",
+          "status": "passed"
+        },
+        {
+          "case": "auto-sync",
+          "status": "passed"
+        },
+        {
+          "case": "redirect-common",
+          "status": "failed",
+          "reason": "AssertionError:{'status': 'failed', 'cells': [{'name': 'reserved-before-metadata-concurrent-borrow-max1', 'status': 'failed', 'error_type': 'AssertionError', 'error_label': 'ActualBorrowDoesNotReserveOrRelease'}, {'name': 'borrowed-assignment-survives-current-inactive-SQL', 'status': 'failed', 'error_type': 'AssertionError', 'error_label': 'ActualBorrowDoesNotReserveOrRelease'}, {'name': 'existing-stopped-metadata-claims-stale-slot-once', 'status': 'passed', 'observation': {'before': {'stream_alias': '1', 'profile_alias': '1', 'profile_count': 1, 'metadata_exists': 0, 'state': '', 'clients': 0, 'raw_owner': ''}, 'operation': {'seeded_metadata_is_branch_input_not_media_owner': {'stream_alias': '1', 'profile_alias': '1', 'profile_count': 1, 'metadata_exists': 1, 'state': 'stopped', 'clients': 0, 'raw_owner': ''}, 'response': {'status': 302, 'settled': True, 'location': 'http://127.0.0.1:18099/held/b293778056d7450bab4b4165b108b989', 'body_bytes': 0, 'body_sha256': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b8"
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "cases": [
+        {
+          "case": "schedules-direct",
+          "status": "passed"
+        },
+        {
+          "case": "vlc-live",
+          "status": "passed"
+        },
+        {
+          "case": "auto-sync",
+          "status": "passed"
+        },
+        {
+          "case": "redirect-common",
+          "status": "passed"
+        },
+        {
+          "case": "recording-output-profile",
+          "status": "passed"
+        },
+        {
+          "case": "output-profile",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "initial_business_report_statuses": {
+    "Original": {
+      "schedules-direct": "passed",
+      "xml-tvg-deferred": "passed",
+      "vlc-live": "passed",
+      "auto-sync": "passed",
+      "compact": "passed",
+      "compact-api": "passed",
+      "regex": "passed",
+      "redirect-common": "failed"
+    },
+    "Native": {
+      "schedules-direct": "passed",
+      "xml-tvg-deferred": "passed",
+      "vlc-live": "passed",
+      "auto-sync": "passed",
+      "compact": "passed",
+      "compact-api": "passed",
+      "regex": "passed",
+      "redirect-common": "passed",
+      "recording-output-profile": "passed",
+      "output-profile": "passed"
+    }
+  },
+  "initial_cleanup": [
+    {
+      "project": "dispatcharr-normal-dvr-cbc3d00572",
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "d1e1ea08746a398d9934bbb6e441d6e0d2fe4fe5154baaf0c0739ef80f008440",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "98e595c643f9036061c513f4c5bf102f6a93c323adb6b577b5e13710d725f4cb",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    },
+    {
+      "project": "dispatcharr-normal-dvr-cbfa2e4882",
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "34c8d4fb197b507aff28aabf0048be3903796021b3e1e85389dad982007c5b97",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "3e3e994d55e22e65ded67cdd9dddec52bebcbc96e179cd5f35b42295ea7997ca",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "ab174437da9e63edeb81ab2a81739088d3246b728f38be951ddf5d5bc652a856",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "25c98eaec357a4c7d31eac6990416c13b591a075e9dd4f9ab7d96f6a6cc48999",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "d3f80a85773d83ac9d4997bf2024f748b7a7e24a69a03892d8a62f026bedfab8",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "e3790075ccbd63a2fd3ae00845fe724b87db68ffea1a55ee6cccd71f1b9cc112",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "b2984f3e3cd3d5543759fe63282ec8b5b1beebe980263eb7086d08bedafe8329",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "b388c6ebf97287793a210eaeeccd7b3a0dd3f4f31d66f412eb1d02de8fb76c22",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "a866ec7778215ecbbc79b482079a6d15973813400d7cec650d4c5ac7d9e8b418",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    }
+  ],
+  "initial_exact_cleanup_passed": true,
+  "initial_CID_count": 11,
+  "corrected_reference_execution": {
+    "actual_exit": 0,
+    "failure": null,
+    "seconds": 181.89374566399783,
+    "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch25-redirect-reference-1/dispatch/execution.stdout",
+    "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch25-redirect-reference-1/dispatch/execution.stderr",
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "process_group": 3773102,
+    "process_group_settled": true,
+    "remaining_group_members": [],
+    "reaped_descendants": [],
+    "output_bytes_written": 0,
+    "output_bytes_discarded": 0
+  },
+  "corrected_reference_cleanup": [
+    {
+      "project": "dispatcharr-normal-dvr-2f4034b273",
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "9868a1ce8c37403e4642511a20324b1ea49df0e0a2394cc8548cbc7daeeba6a8",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "cf9ede8c5ced20fa434f52ff3023e7010bd72fe0bd171c9eef4309c79cdde4bb",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    },
+    {
+      "project": "dispatcharr-normal-dvr-f92cbc8e5a",
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "c0dd53a6465e602453d90389c6d6122695507e55dcec6bedf9e27f8e3a74685a",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "7342e4bfbf2961c5b8d252d2fa2ea04ba361e8868652bb9112e4720e594869aa",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "d453fc1aed939b9557a45116cbeef1e38da52ab100b9d505e593ccb81b57a06c",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    }
+  ],
+  "corrected_reference_exact_cleanup_passed": true,
+  "corrected_reference_CID_count": 5,
+  "corrected_Redirect_both_backends_five_cells_passed": true,
+  "reference_diagnosis": "Guest CoreSettings.save did not invalidate serving Source process-local10s config cache; second HEAD also held, original parent finished before snapshot. Corrected fixture keeps validationTrue on both requests and only firstNonceHEADheld, asserts parentpending; no Rust change",
+  "same_candidate_selected_workflows_qualified_across_runs": true,
+  "prior_Source_recording_profile_reused": true,
+  "paired_regex_absolute_numbers_match_after_causal_replay": true,
+  "initial_raw_report_sha256": "e37458ddec638c0745bc52263da562e72277cd5dd67b5e04383ffbb3d410bc00",
+  "corrected_raw_report_sha256": "cdfcc1160d8ecb71fc4862ea09479e16a0f3791b5cf1649b7d841957ad5dac97",
+  "initial_binding_sha256": "349fdf5e7d89aa58721b5f3a3b0000e3ee7205730d63827cc8a5f8475ac76154",
+  "corrected_binding_sha256": "fc33910040182856769e6497137b9480cf555a8d1c13802539bec981fdb72ee5",
+  "full_milestone_passed": false,
+  "performance_verified": false
+}

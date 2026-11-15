@@ -12,7 +12,15 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The latest packaged source is [Candidate24](rust-milestone-batch24.md),
+The current [Candidate25](rust-milestone-batch25.md) is committed as
+`6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d`:1,061 SDK tests pass, zero fail
+and775 remain ignored. Docker/package and all eighteen joined physical controls
+pass. Selected Source/Native application workflows are qualified across the
+original batch and corrected complete Redirect context, with exact cleanup and
+original failed assertions preserved. Full milestone and resource acceptance
+remain open.
+
+The preceding packaged source is [Candidate24](rust-milestone-batch24.md),
 `df815fbb3d312d191654bf4079f337ecae216430`. Its1,053 default tests and all four
 SDK gates pass;767 tests remain ignored. Docker/package checks and eleven actual
 physical output controls pass across identified attempts. Its Source-first Main
@@ -21,10 +29,13 @@ profiles4; Native also passes compact3/API6/output6. Remaining observer/scenario
 and regex-state failures are preserved with prepared corrections. No full
 milestone or new application performance gain is accepted.
 
-The next [Candidate25](rust-milestone-batch25.md) joins common Redirect
+[Candidate25](rust-milestone-batch25.md) joins common Redirect
 reservations and ordinary proxy-to-Redirect alias sharing with guarded plugin
 runtime/SQL/result infrastructure. All four SDK gates pass:1,061 tests pass,
-zero fail and775 remain ignored. Docker and application acceptance are pending. Enabled plugin Main
+zero fail and775 remain ignored. Its scoped package/application evidence is
+linked above. The next joint engineering batch adds inverse/scoped preview,
+remote/staged XMLTV, ordinary guide output and plugin lifecycle activation;
+compiler and physical acceptance remain separate requirements. Enabled plugin Main
 activation and remote XMLTV downloads remain separate active engineering work;
 a compiled runtime module does not accept either feature. Next application
 validation must execute the corrected affected workflows together. Earlier
