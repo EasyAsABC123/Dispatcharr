@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "docker",
+    "run",
+    "--rm",
+    "--network",
+    "none",
+    "--read-only",
+    "--cap-drop",
+    "ALL",
+    "--security-opt",
+    "no-new-privileges:true",
+    "--memory",
+    "128m",
+    "--pids-limit",
+    "32",
+    "--name",
+    "dispatcharr-batch9-main-config-probe",
+    "-e",
+    "TOKIO_WORKER_THREADS=2",
+    "sha256:946ebf97def2a3a3edf6019c622320a3c659e9e0f62db82ded8cf43db5cad860"
+  ],
+  "actual_exit": 1,
+  "stdout": "",
+  "stderr": "Dispatcharr Rust startup failed: DJANGO_SECRET_KEY is required\n",
+  "seconds": 0.3010395460005384,
+  "expected_configuration_refusal": true,
+  "production_entrypoint_not_overridden": true,
+  "exact_name_absent": true,
+  "functional_or_performance_acceptance": false
+}

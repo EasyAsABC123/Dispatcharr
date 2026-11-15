@@ -37,6 +37,17 @@ allowing a replacement connection. Tests exercise the bare Main path and real
 capacity, plus the exact previously queued frame and parent receipt. Full
 production consumption still needs the corrected Docker cohort.
 
-Both experimental flags remain off by default. The production image, new Core
-scaling cases, normal scheduler matrix and affected recording cohort are pending
-runtime qualification. No new CPU/memory gain or complete M0–M9 pass is claimed.
+The [production build](../scripts/rust-integration/milestone-batch9-build/inventory.json)
+is `sha256:946ebf97def2a3a3edf6019c622320a3c659e9e0f62db82ded8cf43db5cad860`.
+All1691 archived inputs match Git:1194 Rust,495 React and two original credit
+files. All114 earlier React/credit hashes and120 selected installed asset/notices
+match; separate GPG/crypto/trust/license27-file checks pass. The image config uses
+UID65532, `/app` and the production Rust entrypoint; its ELF hash is
+`8f71f95516729c6931802ffb40ac77ab24facae9b64b63ff0a216ef36b7ba7ca`.
+An actual default-entrypoint run reaches the expected missing-secret config
+refusal with exit1. Every owned probe is absent afterward. This is build/startup
+evidence, not application acceptance.
+
+Both experimental flags remain off by default. New Core scaling cases, the
+normal scheduler matrix and the affected recording cohort still require runtime
+qualification. No new CPU/memory gain or complete M0–M9 pass is claimed.

@@ -1,0 +1,776 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load remote build context
+#1 DONE 0.1s
+
+#1 [internal] load remote build context
+#1 DONE 0.1s
+
+#2 copy /context /
+#2 DONE 0.3s
+
+#3 [internal] load metadata for docker.io/library/node:24@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40
+#3 ...
+
+#4 [internal] load metadata for ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f
+#4 DONE 0.4s
+
+#5 [internal] load metadata for docker.io/library/rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f
+#5 DONE 0.4s
+
+#3 [internal] load metadata for docker.io/library/node:24@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40
+#3 DONE 0.4s
+
+#6 [internal] load metadata for docker.io/library/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+#6 DONE 0.4s
+
+#7 [media 1/7] FROM ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f
+#7 resolve ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f 0.0s done
+#7 DONE 0.1s
+
+#8 [stage-6  1/16] FROM docker.io/library/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+#8 resolve docker.io/library/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc 0.1s done
+#8 DONE 0.1s
+
+#9 [frontend-dependencies 1/5] FROM docker.io/library/node:24@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40
+#9 resolve docker.io/library/node:24@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40 0.1s done
+#9 DONE 0.1s
+
+#10 [build 1/4] FROM docker.io/library/rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f
+#10 resolve docker.io/library/rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f 0.1s done
+#10 DONE 0.1s
+
+#11 [build 2/4] WORKDIR /workspace
+#11 CACHED
+
+#12 [build 3/4] COPY rust/ ./rust/
+#12 DONE 0.3s
+
+#13 [build 4/4] RUN mkdir -p "/tmp/dispatcharr-target" && cargo build --manifest-path rust/Cargo.toml --locked --release -p dispatcharr-rs
+#13 0.213     Updating crates.io index
+#13 1.577  Downloading crates ...
+#13 1.719   Downloaded async-stream-impl v0.3.6
+#13 1.731   Downloaded async-stream v0.3.6
+#13 1.734   Downloaded atomic-waker v1.1.2
+#13 1.742   Downloaded axum-core v0.5.6
+#13 1.750   Downloaded itoa v1.0.19
+#13 1.752   Downloaded atoi v2.0.0
+#13 1.755   Downloaded lazy_static v1.5.1
+#13 1.763   Downloaded autocfg v1.5.1
+#13 1.768   Downloaded idna_adapter v1.2.2
+#13 1.771   Downloaded inout v0.1.4
+#13 1.773   Downloaded allocator-api2 v0.2.21
+#13 1.776   Downloaded jsonwebtoken v9.3.1
+#13 1.781   Downloaded block-buffer v0.12.1
+#13 1.783   Downloaded backon v1.6.0
+#13 1.786   Downloaded block-buffer v0.10.4
+#13 1.787   Downloaded const-oid v0.9.6
+#13 1.790   Downloaded const-oid v0.10.2
+#13 1.793   Downloaded byteorder v1.5.0
+#13 1.796   Downloaded num-conv v0.2.2
+#13 1.798   Downloaded icu_provider v2.4.0
+#13 1.801   Downloaded find-msvc-tools v0.1.15
+#13 1.803   Downloaded digest v0.10.7
+#13 1.806   Downloaded home v0.5.12
+#13 1.808   Downloaded ipnet v2.12.2
+#13 1.810   Downloaded mime_guess v2.0.5
+#13 1.813   Downloaded hyper-rustls v0.27.10
+#13 1.815   Downloaded event-listener v5.4.2
+#13 1.818   Downloaded scrypt v0.11.0
+#13 1.819   Downloaded percent-encoding v2.3.2
+#13 1.820   Downloaded libbz2-rs-sys v0.2.6
+#13 1.823   Downloaded crypto-common v0.2.2
+#13 1.824   Downloaded http-body v1.1.0
+#13 1.826   Downloaded getrandom v0.4.3
+#13 1.830   Downloaded serde_urlencoded v0.7.1
+#13 1.831   Downloaded md-5 v0.10.6
+#13 1.833   Downloaded lru-slab v0.1.3
+#13 1.835   Downloaded rand_pcg v0.10.2
+#13 1.836   Downloaded log v0.4.35
+#13 1.839   Downloaded signature v2.2.0
+#13 1.840   Downloaded pin-project-lite v0.2.17
+#13 1.846   Downloaded scopeguard v1.2.0
+#13 1.847   Downloaded num-iter v0.1.46
+#13 1.848   Downloaded sha1_smol v1.0.1
+#13 1.850   Downloaded stable_deref_trait v1.2.1
+#13 1.851   Downloaded rustc-hash v2.1.3
+#13 1.852   Downloaded salsa20 v0.10.2
+#13 1.854   Downloaded rand_chacha v0.3.1
+#13 1.856   Downloaded siphasher v1.0.4
+#13 1.857   Downloaded sqlx-macros v0.8.6
+#13 1.858   Downloaded quinn-udp v0.5.16
+#13 1.860   Downloaded spki v0.7.3
+#13 1.862   Downloaded password-hash v0.5.0
+#13 1.864   Downloaded multer v3.1.0
+#13 1.867   Downloaded sqlx-macros-core v0.8.6
+#13 1.869   Downloaded rustversion v1.0.23
+#13 1.873   Downloaded zerofrom-derive v0.1.8
+#13 1.874   Downloaded socket2 v0.6.5
+#13 1.876   Downloaded zerofrom v0.1.8
+#13 1.877   Downloaded time-core v0.1.9
+#13 1.879   Downloaded zeroize_derive v1.5.0
+#13 1.880   Downloaded idna v1.1.0
+#13 1.883   Downloaded zmij v1.0.23
+#13 1.885   Downloaded tower-service v0.3.3
+#13 1.886   Downloaded tokio-macros v2.7.2
+#13 1.888   Downloaded num-bigint v0.4.8
+#13 1.893   Downloaded slab v0.4.12
+#13 1.894   Downloaded serde_json v1.0.154
+#13 1.901   Downloaded tower-layer v0.3.3
+#13 1.902   Downloaded reqwest v0.12.28
+#13 1.906   Downloaded typenum v1.20.1
+#13 1.910   Downloaded quinn-proto v0.11.19
+#13 1.916   Downloaded thiserror v2.0.21
+#13 1.922   Downloaded yoke-derive v0.8.4
+#13 1.923   Downloaded tokio-rustls v0.26.6
+#13 1.925   Downloaded regex-syntax v0.8.11
+#13 1.931   Downloaded want v0.3.2
+#13 1.932   Downloaded version_check v0.9.5
+#13 1.933   Downloaded getrandom v0.2.17
+#13 1.936   Downloaded zeroize v1.9.1
+#13 1.937   Downloaded utf_types v1.0.0
+#13 1.939   Downloaded zerocopy v0.8.63
+#13 1.961   Downloaded tokio-stream v0.1.19
+#13 1.966   Downloaded regex-automata v0.4.18
+#13 1.977   Downloaded yoke v0.8.4
+#13 1.979   Downloaded smallvec v1.16.5
+#13 1.980   Downloaded unicode-properties v0.1.5
+#13 1.982   Downloaded tracing-core v0.1.36
+#13 1.984   Downloaded uuid v1.29.2
+#13 1.987   Downloaded tungstenite v0.29.0
+#13 1.990   Downloaded icu_properties v2.4.0
+#13 1.994   Downloaded tower v0.5.3
+#13 2.003   Downloaded url v2.5.8
+#13 2.006   Downloaded unicode-normalization v0.1.26
+#13 2.010   Downloaded typed-path v0.13.0
+#13 2.016   Downloaded sqlx v0.8.6
+#13 2.030   Downloaded hkdf v0.12.4
+#13 2.033   Downloaded futures-util v0.3.34
+#13 2.045   Downloaded webpki-roots v1.0.11
+#13 2.047   Downloaded tower-http v0.6.11
+#13 2.055   Downloaded vcpkg v0.2.15
+#13 2.102   Downloaded syn v3.0.10
+#13 2.111   Downloaded syn v2.0.119
+#13 2.119   Downloaded ring v0.17.14
+#13 2.152   Downloaded zerotrie v0.2.5
+#13 2.156   Downloaded time v0.3.55
+#13 2.168   Downloaded tokio-util v0.7.20
+#13 2.174   Downloaded zip v9.5.0
+#13 2.180   Downloaded tokio v1.54.1
+#13 2.218   Downloaded hashbrown v0.17.1
+#13 2.223   Downloaded hashbrown v0.15.5
+#13 2.226   Downloaded libc v0.2.191
+#13 2.265   Downloaded icu_collections v2.4.0
+#13 2.270   Downloaded combine v4.6.9
+#13 2.273   Downloaded icu_normalizer v2.4.0
+#13 2.281   Downloaded tracing v0.1.44
+#13 2.294   Downloaded zerovec v0.11.9
+#13 2.298   Downloaded encoding_rs v0.8.44
+#13 2.307   Downloaded chrono v0.4.45
+#13 2.312   Downloaded http v1.5.0
+#13 2.315   Downloaded lzma-sys v0.1.20
+#13 2.342   Downloaded cc v1.11.1
+#13 2.345   Downloaded sqlx-sqlite v0.8.6
+#13 2.349   Downloaded sqlx-mysql v0.8.6
+#13 2.354   Downloaded hyper v1.12.0
+#13 2.359   Downloaded unicode-ident v1.0.27
+#13 2.361   Downloaded writeable v0.6.4
+#13 2.363   Downloaded tracing-attributes v0.1.31
+#13 2.365   Downloaded chrono-tz v0.10.4
+#13 2.380   Downloaded tinyvec v1.13.3
+#13 2.382   Downloaded icu_normalizer_data v2.4.0
+#13 2.384   Downloaded flume v0.11.1
+#13 2.387   Downloaded httparse v1.10.1
+#13 2.388   Downloaded getrandom v0.3.4
+#13 2.391   Downloaded xz2 v0.1.7
+#13 2.392   Downloaded whoami v1.6.1
+#13 2.394   Downloaded spin v0.9.9
+#13 2.396   Downloaded hyper-util v0.1.21
+#13 2.401   Downloaded hmac v0.12.1
+#13 2.402   Downloaded unicase v2.10.0
+#13 2.403   Downloaded rustls v0.23.46
+#13 2.413   Downloaded redis v0.32.7
+#13 2.421   Downloaded nix v0.31.3
+#13 2.430   Downloaded webpki-roots v0.26.11
+#13 2.431   Downloaded utf8_iter v1.1.0
+#13 2.432   Downloaded untrusted v0.9.0
+#13 2.433   Downloaded try-lock v0.2.5
+#13 2.434   Downloaded zlib-rs v0.6.8
+#13 2.438   Downloaded tokio-tungstenite v0.29.0
+#13 2.440   Downloaded tinystr v0.8.5
+#13 2.441   Downloaded thiserror-impl v2.0.21
+#13 2.443   Downloaded synstructure v0.14.0
+#13 2.443   Downloaded stringprep v0.1.5
+#13 2.445   Downloaded iana-time-zone v0.1.65
+#13 2.447   Downloaded lzma-rust2 v0.25.0
+#13 2.454   Downloaded futures-channel v0.3.34
+#13 2.455   Downloaded libm v0.2.16
+#13 2.464   Downloaded deranged v0.5.9
+#13 2.465   Downloaded simple_asn1 v0.6.4
+#13 2.466   Downloaded regex v1.13.1
+#13 2.471   Downloaded num-bigint-dig v0.8.6
+#13 2.474   Downloaded fastrand v2.5.0
+#13 2.475   Downloaded core_detect v1.0.0
+#13 2.477   Downloaded constant_time_eq v0.6.1
+#13 2.478   Downloaded mio v1.2.4
+#13 2.483   Downloaded icu_properties_data v2.4.0
+#13 2.493   Downloaded memchr v2.8.3
+#13 2.497   Downloaded der v0.7.10
+#13 2.502   Downloaded base64 v0.23.1
+#13 2.505   Downloaded zerovec-derive v0.11.7
+#13 2.506   Downloaded serde v1.0.229
+#13 2.509   Downloaded rsa v0.9.10
+#13 2.513   Downloaded quinn v0.11.12
+#13 2.516   Downloaded futures-intrusive v0.5.0
+#13 2.519   Downloaded flate2 v1.1.11
+#13 2.524   Downloaded cipher v0.4.4
+#13 2.525   Downloaded unicode-bidi v0.3.18
+#13 2.527   Downloaded sync_wrapper v1.0.2
+#13 2.527   Downloaded rustls-webpki v0.103.16
+#13 2.530   Downloaded rand v0.10.3
+#13 2.533   Downloaded rand v0.9.5
+#13 2.536   Downloaded rand v0.8.8
+#13 2.538   Downloaded publicsuffix v2.3.0
+#13 2.540   Downloaded proc-macro2 v1.0.107
+#13 2.543   Downloaded either v1.19.0
+#13 2.544   Downloaded subtle v2.6.1
+#13 2.545   Downloaded serde_derive v1.0.229
+#13 2.547   Downloaded serde_core v1.0.229
+#13 2.549   Downloaded num-traits v0.2.19
+#13 2.551   Downloaded indexmap v2.14.2
+#13 2.555   Downloaded data-encoding v2.11.1
+#13 2.555   Downloaded time-macros v0.2.32
+#13 2.557   Downloaded ryu v1.0.23
+#13 2.560   Downloaded rand_core v0.10.1
+#13 2.561   Downloaded pkcs1 v0.7.5
+#13 2.563   Downloaded parking_lot_core v0.9.12
+#13 2.565   Downloaded matchit v0.8.4
+#13 2.566   Downloaded litemap v0.8.3
+#13 2.568   Downloaded futures-sink v0.3.34
+#13 2.569   Downloaded futures-core v0.3.34
+#13 2.570   Downloaded rustls-pki-types v1.15.1
+#13 2.572   Downloaded rand_core v0.9.5
+#13 2.573   Downloaded rand_core v0.6.4
+#13 2.574   Downloaded quote v1.0.47
+#13 2.576   Downloaded ppv-lite86 v0.2.21
+#13 2.577   Downloaded parking_lot v0.12.5
+#13 2.579   Downloaded http-range-header v0.4.2
+#13 2.580   Downloaded hex v0.4.3
+#13 2.581   Downloaded generic-array v0.14.7
+#13 2.582   Downloaded equivalent v1.0.3
+#13 2.583   Downloaded simdutf8 v0.1.5
+#13 2.585   Downloaded signal-hook-registry v1.4.8
+#13 2.586   Downloaded shlex v2.0.1
+#13 2.587   Downloaded sha1 v0.10.7
+#13 2.588   Downloaded rand_chacha v0.9.0
+#13 2.589   Downloaded phf v0.12.1
+#13 2.590   Downloaded mime v0.3.18
+#13 2.591   Downloaded errno v0.3.14
+#13 2.593   Downloaded lock_api v0.4.14
+#13 2.594   Downloaded icu_locale_core v2.4.0
+#13 2.600   Downloaded digest v0.11.3
+#13 2.602   Downloaded crossbeam-queue v0.3.14
+#13 2.603   Downloaded sha2 v0.11.1
+#13 2.606   Downloaded serde_path_to_error v0.1.20
+#13 2.607   Downloaded pkg-config v0.3.34
+#13 2.608   Downloaded num-integer v0.1.47
+#13 2.609   Downloaded litrs v1.0.1
+#13 2.612   Downloaded pem-rfc7468 v0.7.0
+#13 2.613   Downloaded sha2 v0.10.9
+#13 2.615   Downloaded pem v3.0.6
+#13 2.616   Downloaded futures-io v0.3.34
+#13 2.617   Downloaded once_cell v1.21.4
+#13 2.619   Downloaded powerfmt v0.2.1
+#13 2.620   Downloaded phf_shared v0.12.1
+#13 2.621   Downloaded pkcs8 v0.10.2
+#13 2.623   Downloaded pbkdf2 v0.12.2
+#13 2.624   Downloaded psl-types v2.0.11
+#13 2.625   Downloaded potential_utf v0.1.6
+#13 2.626   Downloaded parking v2.2.1
+#13 2.626   Downloaded multiversion_no_op v1.0.0
+#13 2.627   Downloaded futures-executor v0.3.34
+#13 2.628   Downloaded form_urlencoded v1.2.2
+#13 2.629   Downloaded crc-catalog v2.5.0
+#13 2.630   Downloaded cpufeatures v0.2.17
+#13 2.631   Downloaded cfg_aliases v0.2.2
+#13 2.632   Downloaded dotenvy v0.15.7
+#13 2.634   Downloaded document-features v0.2.12
+#13 2.635   Downloaded displaydoc v0.2.7
+#13 2.636   Downloaded chacha20 v0.10.2
+#13 2.638   Downloaded hybrid-array v0.4.15
+#13 2.640   Downloaded http-body-util v0.1.5
+#13 2.642   Downloaded heck v0.5.0
+#13 2.643   Downloaded bytes v1.12.1
+#13 2.645   Downloaded base64 v0.22.1
+#13 2.648   Downloaded foldhash v0.2.0
+#13 2.649   Downloaded httpdate v1.0.3
+#13 2.650   Downloaded foldhash v0.1.5
+#13 2.651   Downloaded crc32fast v1.5.4
+#13 2.653   Downloaded base64ct v1.8.3
+#13 2.655   Downloaded futures-task v0.3.34
+#13 2.656   Downloaded futures-macro v0.3.34
+#13 2.656   Downloaded crypto-common v0.1.7
+#13 2.657   Downloaded cpufeatures v0.3.1
+#13 2.658   Downloaded bitflags v2.13.2
+#13 2.662   Downloaded crossbeam-utils v0.8.23
+#13 2.664   Downloaded cookie v0.18.2
+#13 2.666   Downloaded bzip2 v0.6.1
+#13 2.667   Downloaded crc v3.4.0
+#13 2.669   Downloaded axum v0.8.9
+#13 2.675   Downloaded hashlink v0.10.0
+#13 2.677   Downloaded cookie_store v0.22.1
+#13 2.678   Downloaded cfg-if v1.0.5
+#13 2.680   Downloaded libsqlite3-sys v0.30.1
+#13 2.730   Downloaded aho-corasick v1.1.5
+#13 2.734   Downloaded arc-swap v1.9.5
+#13 2.793    Compiling proc-macro2 v1.0.107
+#13 2.793    Compiling unicode-ident v1.0.27
+#13 2.793    Compiling quote v1.0.47
+#13 2.793    Compiling libc v0.2.191
+#13 2.793    Compiling version_check v0.9.5
+#13 2.793    Compiling serde v1.0.229
+#13 2.794    Compiling cfg-if v1.0.5
+#13 2.796    Compiling serde_core v1.0.229
+#13 2.802    Compiling typenum v1.20.1
+#13 2.804    Compiling shlex v2.0.1
+#13 2.808    Compiling find-msvc-tools v0.1.15
+#13 2.811    Compiling itoa v1.0.19
+#13 2.818    Compiling autocfg v1.5.1
+#13 2.821    Compiling pin-project-lite v0.2.17
+#13 2.824    Compiling bytes v1.12.1
+#13 2.828    Compiling memchr v2.8.3
+#13 2.828    Compiling icu_properties_data v2.4.0
+#13 2.834    Compiling icu_normalizer_data v2.4.0
+#13 2.834    Compiling futures-core v0.3.34
+#13 2.834    Compiling stable_deref_trait v1.2.1
+#13 2.838    Compiling subtle v2.6.1
+#13 2.850    Compiling zmij v1.0.23
+#13 2.856    Compiling futures-sink v0.3.34
+#13 2.856    Compiling writeable v0.6.4
+#13 2.856    Compiling litemap v0.8.3
+#13 2.861    Compiling equivalent v1.0.3
+#13 2.861    Compiling rustversion v1.0.23
+#13 2.862    Compiling utf_types v1.0.0
+#13 2.862    Compiling zerocopy v0.8.63
+#13 2.871    Compiling percent-encoding v2.3.2
+#13 2.888    Compiling futures-io v0.3.34
+#13 2.894    Compiling futures-task v0.3.34
+#13 2.919    Compiling hashbrown v0.17.1
+#13 2.919    Compiling slab v0.4.12
+#13 2.932    Compiling cc v1.11.1
+#13 2.938    Compiling serde_json v1.0.154
+#13 2.966    Compiling thiserror v2.0.21
+#13 2.966    Compiling foldhash v0.2.0
+#13 3.003    Compiling rustls v0.23.46
+#13 3.003    Compiling log v0.4.35
+#13 3.014    Compiling once_cell v1.21.4
+#13 3.019    Compiling generic-array v0.14.7
+#13 3.058    Compiling form_urlencoded v1.2.2
+#13 3.065    Compiling futures-channel v0.3.34
+#13 3.086    Compiling getrandom v0.4.3
+#13 3.107    Compiling parking_lot_core v0.9.12
+#13 3.107    Compiling utf8_iter v1.1.0
+#13 3.140    Compiling httparse v1.10.1
+#13 3.140    Compiling cpufeatures v0.2.17
+#13 3.146    Compiling untrusted v0.9.0
+#13 3.146    Compiling crossbeam-utils v0.8.23
+#13 3.183    Compiling num-traits v0.2.19
+#13 3.190    Compiling tracing-core v0.1.36
+#13 3.224    Compiling ryu v1.0.23
+#13 3.229    Compiling scopeguard v1.2.0
+#13 3.234    Compiling base64 v0.22.1
+#13 3.257    Compiling getrandom v0.3.4
+#13 3.257    Compiling time-core v0.1.9
+#13 3.276    Compiling tower-service v0.3.3
+#13 3.286    Compiling num-conv v0.2.2
+#13 3.290    Compiling zeroize v1.9.1
+#13 3.316    Compiling httpdate v1.0.3
+#13 3.334    Compiling mime v0.3.18
+#13 3.340    Compiling powerfmt v0.2.1
+#13 3.341    Compiling try-lock v0.2.5
+#13 3.341    Compiling deranged v0.5.9
+#13 3.404    Compiling want v0.3.2
+#13 3.426    Compiling rustls-pki-types v1.15.1
+#13 3.467    Compiling http v1.5.0
+#13 3.495    Compiling time-macros v0.2.32
+#13 3.500    Compiling sync_wrapper v1.0.2
+#13 3.509    Compiling atomic-waker v1.1.2
+#13 3.518    Compiling unicase v2.10.0
+#13 3.518    Compiling bitflags v2.13.2
+#13 3.559    Compiling fastrand v2.5.0
+#13 3.572    Compiling zlib-rs v0.6.8
+#13 3.586    Compiling iana-time-zone v0.1.65
+#13 3.607    Compiling tower-layer v0.3.3
+#13 3.673    Compiling mime_guess v2.0.5
+#13 3.698    Compiling backon v1.6.0
+#13 3.710    Compiling arc-swap v1.9.5
+#13 3.716    Compiling cookie v0.18.2
+#13 3.716    Compiling indexmap v2.14.2
+#13 3.743    Compiling syn v3.0.10
+#13 3.752    Compiling syn v2.0.119
+#13 3.812    Compiling ipnet v2.12.2
+#13 3.827    Compiling sha1_smol v1.0.1
+#13 3.836    Compiling base64 v0.23.1
+#13 3.844    Compiling lock_api v0.4.14
+#13 3.879    Compiling encoding_rs v0.8.44
+#13 3.925    Compiling allocator-api2 v0.2.21
+#13 3.997    Compiling hybrid-array v0.4.15
+#13 4.067    Compiling psl-types v2.0.11
+#13 4.083    Compiling const-oid v0.10.2
+#13 4.125    Compiling litrs v1.0.1
+#13 4.143    Compiling foldhash v0.1.5
+#13 4.255    Compiling hashbrown v0.15.5
+#13 4.330    Compiling num-integer v0.1.47
+#13 4.340    Compiling webpki-roots v1.0.11
+#13 4.352    Compiling constant_time_eq v0.6.1
+#13 4.431    Compiling http-body v1.1.0
+#13 4.450    Compiling multer v3.1.0
+#13 4.462    Compiling crc-catalog v2.5.0
+#13 4.531    Compiling http-body-util v0.1.5
+#13 4.535    Compiling pkg-config v0.3.34
+#13 4.554    Compiling block-buffer v0.10.4
+#13 4.561    Compiling crypto-common v0.1.7
+#13 4.562    Compiling crypto-common v0.2.2
+#13 4.574    Compiling getrandom v0.2.17
+#13 4.581    Compiling num-bigint v0.4.8
+#13 4.603    Compiling mio v1.2.4
+#13 4.610    Compiling socket2 v0.6.5
+#13 4.616    Compiling block-buffer v0.12.1
+#13 4.626    Compiling document-features v0.2.12
+#13 4.670    Compiling digest v0.10.7
+#13 4.688    Compiling simdutf8 v0.1.5
+#13 4.702    Compiling rand_core v0.6.4
+#13 4.735    Compiling http-range-header v0.4.2
+#13 4.773    Compiling tinyvec v1.13.3
+#13 4.822    Compiling parking v2.2.1
+#13 4.828    Compiling ring v0.17.14
+#13 4.846    Compiling sha2 v0.10.9
+#13 4.860    Compiling crc32fast v1.5.4
+#13 4.878    Compiling data-encoding v2.11.1
+#13 4.884    Compiling multiversion_no_op v1.0.0
+#13 4.935    Compiling time v0.3.55
+#13 4.940    Compiling cpufeatures v0.3.1
+#13 4.949    Compiling core_detect v1.0.0
+#13 4.960    Compiling md-5 v0.10.6
+#13 4.975    Compiling sha1 v0.10.7
+#13 4.991    Compiling tokio v1.54.1
+#13 4.999    Compiling futures-util v0.3.34
+#13 5.026    Compiling lzma-sys v0.1.20
+#13 5.058    Compiling hmac v0.12.1
+#13 5.079    Compiling event-listener v5.4.2
+#13 5.083    Compiling hashlink v0.10.0
+#13 5.093    Compiling chrono v0.4.45
+#13 5.128    Compiling crossbeam-queue v0.3.14
+#13 5.142    Compiling unicode-normalization v0.1.26
+#13 5.173    Compiling crc v3.4.0
+#13 5.209    Compiling webpki-roots v0.26.11
+#13 5.235    Compiling spin v0.9.9
+#13 5.259    Compiling uuid v1.29.2
+#13 5.266    Compiling libbz2-rs-sys v0.2.6
+#13 5.272    Compiling unicode-bidi v0.3.18
+#13 5.292    Compiling errno v0.3.14
+#13 5.400    Compiling signal-hook-registry v1.4.8
+#13 5.516    Compiling rand_core v0.9.5
+#13 5.560    Compiling digest v0.11.3
+#13 5.592    Compiling unicode-properties v0.1.5
+#13 5.741    Compiling sha2 v0.11.1
+#13 5.749    Compiling stringprep v0.1.5
+#13 5.757    Compiling serde_path_to_error v0.1.20
+#13 5.824    Compiling bzip2 v0.6.1
+#13 5.901    Compiling hkdf v0.12.4
+#13 6.002    Compiling atoi v2.0.0
+#13 6.045    Compiling flate2 v1.1.11
+#13 6.075    Compiling aho-corasick v1.1.5
+#13 6.084    Compiling matchit v0.8.4
+#13 6.123    Compiling typed-path v0.13.0
+#13 6.212    Compiling dotenvy v0.15.7
+#13 6.219    Compiling whoami v1.6.1
+#13 6.226    Compiling byteorder v1.5.0
+#13 6.272    Compiling siphasher v1.0.4
+#13 6.396    Compiling hex v0.4.3
+#13 6.406    Compiling home v0.5.12
+#13 6.414    Compiling regex-syntax v0.8.11
+#13 6.477    Compiling phf_shared v0.12.1
+#13 6.548    Compiling lzma-rust2 v0.25.0
+#13 6.619    Compiling inout v0.1.4
+#13 6.642    Compiling heck v0.5.0
+#13 6.685    Compiling chrono-tz v0.10.4
+#13 6.704    Compiling cipher v0.4.4
+#13 6.714    Compiling phf v0.12.1
+#13 6.811    Compiling base64ct v1.8.3
+#13 6.902    Compiling dispatcharr-contracts v0.1.0 (/workspace/rust/crates/contracts)
+#13 6.922    Compiling salsa20 v0.10.2
+#13 6.961    Compiling pbkdf2 v0.12.2
+#13 7.050    Compiling pem v3.0.6
+#13 7.059    Compiling dispatcharr-xmltv-parser v0.1.0 (/workspace/rust/crates/xmltv-parser)
+#13 7.059    Compiling cfg_aliases v0.2.2
+#13 7.117    Compiling password-hash v0.5.0
+#13 7.147    Compiling dispatcharr-stream-core v0.1.0 (/workspace/rust/crates/stream-core)
+#13 7.155    Compiling nix v0.31.3
+#13 7.156    Compiling dispatcharr-fmp4-core v0.1.0 (/workspace/rust/crates/fmp4-core)
+#13 7.316    Compiling dispatcharr-hls-core v0.1.0 (/workspace/rust/crates/hls-core)
+#13 7.374    Compiling scrypt v0.11.0
+#13 7.461    Compiling synstructure v0.14.0
+#13 7.905    Compiling ppv-lite86 v0.2.21
+#13 8.260    Compiling rand_chacha v0.9.0
+#13 8.299    Compiling rand_chacha v0.3.1
+#13 8.408    Compiling regex-automata v0.4.18
+#13 8.570    Compiling rand v0.9.5
+#13 8.608    Compiling rand v0.8.8
+#13 8.661    Compiling zeroize_derive v1.5.0
+#13 8.670    Compiling serde_derive v1.0.229
+#13 8.716    Compiling zerofrom-derive v0.1.8
+#13 8.734    Compiling yoke-derive v0.8.4
+#13 8.760    Compiling zerovec-derive v0.11.7
+#13 8.793    Compiling displaydoc v0.2.7
+#13 8.895    Compiling tokio-macros v2.7.2
+#13 8.939    Compiling futures-macro v0.3.34
+#13 8.962    Compiling tracing-attributes v0.1.31
+#13 9.017    Compiling thiserror-impl v2.0.21
+#13 9.028    Compiling rustls-webpki v0.103.16
+#13 9.126    Compiling tokio-stream v0.1.19
+#13 9.133    Compiling async-stream-impl v0.3.6
+#13 9.219    Compiling zip v9.5.0
+#13 9.498    Compiling async-stream v0.3.6
+#13 9.641    Compiling zerofrom v0.1.8
+#13 9.726    Compiling yoke v0.8.4
+#13 9.871    Compiling zerovec v0.11.9
+#13 9.871    Compiling zerotrie v0.2.5
+#13 9.895    Compiling tracing v0.1.44
+#13 9.962    Compiling tungstenite v0.29.0
+#13 9.962    Compiling simple_asn1 v0.6.4
+#13 10.02    Compiling axum-core v0.5.6
+#13 10.24    Compiling tinystr v0.8.5
+#13 10.24    Compiling potential_utf v0.1.6
+#13 10.29    Compiling icu_collections v2.4.0
+#13 10.34    Compiling icu_locale_core v2.4.0
+#13 10.67    Compiling regex v1.13.1
+#13 10.87    Compiling smallvec v1.16.5
+#13 10.87    Compiling either v1.19.0
+#13 11.03    Compiling serde_urlencoded v0.7.1
+#13 11.09    Compiling icu_provider v2.4.0
+#13 11.22    Compiling parking_lot v0.12.5
+#13 11.30    Compiling icu_properties v2.4.0
+#13 11.34    Compiling icu_normalizer v2.4.0
+#13 11.49    Compiling futures-intrusive v0.5.0
+#13 12.09    Compiling dispatcharr-backups v0.1.0 (/workspace/rust/crates/backups)
+#13 12.18    Compiling idna_adapter v1.2.2
+#13 12.23    Compiling idna v1.1.0
+#13 12.46    Compiling url v2.5.8
+#13 12.65    Compiling publicsuffix v2.3.0
+#13 12.83    Compiling sqlx-core v0.8.6 (/workspace/rust/vendor/sqlx-core-0.8.6)
+#13 12.95    Compiling xz2 v0.1.7
+#13 13.01    Compiling cookie_store v0.22.1
+#13 13.02    Compiling dispatcharr-ingest-core v0.1.0 (/workspace/rust/crates/ingest-core)
+#13 13.24    Compiling tokio-util v0.7.20
+#13 13.24    Compiling hyper v1.12.0
+#13 13.24    Compiling tower v0.5.3
+#13 13.24    Compiling tokio-tungstenite v0.29.0
+#13 13.24    Compiling dispatcharr-stream-runtime v0.1.0 (/workspace/rust/crates/stream-runtime)
+#13 13.71    Compiling combine v4.6.9
+#13 13.71    Compiling tower-http v0.6.11
+#13 13.83    Compiling jsonwebtoken v9.3.1
+#13 14.16    Compiling hyper-util v0.1.21
+#13 14.42 warning: eliding a lifetime that's named elsewhere is confusing
+#13 14.42    --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+#13 14.42     |
+#13 14.42 501 |     statement: &'q DB::Statement<'q>,
+#13 14.42     |                 ^^               ^^ the lifetime is named here
+#13 14.42     |                 |
+#13 14.42     |                 the lifetime is named here
+#13 14.42 502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+#13 14.42     |            -- the same lifetime is named here  -- the same lifetime is elided here
+#13 14.42     |
+#13 14.42     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+#13 14.42     = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+#13 14.42 help: consistently use `'q`
+#13 14.42     |
+#13 14.42 502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+#13 14.42 502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+#13 14.42     |
+#13 14.42 
+#13 14.43 warning: eliding a lifetime that's named elsewhere is confusing
+#13 14.43    --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+#13 14.43     |
+#13 14.43 388 |     statement: &'q DB::Statement<'q>,
+#13 14.43     |                 ^^               ^^ the lifetime is named here
+#13 14.43     |                 |
+#13 14.43     |                 the lifetime is named here
+#13 14.43 389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+#13 14.43     |              -- the same lifetime is named here     -- the same lifetime is elided here
+#13 14.43     |
+#13 14.43     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+#13 14.43 help: consistently use `'q`
+#13 14.43     |
+#13 14.43 389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+#13 14.43 389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+#13 14.43     |
+#13 14.43 
+#13 14.43 warning: eliding a lifetime that's named elsewhere is confusing
+#13 14.43    --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+#13 14.43     |
+#13 14.43 367 |     statement: &'q DB::Statement<'q>,
+#13 14.43     |                 ^^               ^^ the lifetime is named here
+#13 14.43     |                 |
+#13 14.43     |                 the lifetime is named here
+#13 14.43 368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+#13 14.43     |                  -- the same lifetime is named here     -- the same lifetime is elided here
+#13 14.43     |
+#13 14.43     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+#13 14.43 help: consistently use `'q`
+#13 14.43     |
+#13 14.43 368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+#13 14.43 368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+#13 14.43     |
+#13 14.43 
+#13 14.67    Compiling sqlx-postgres v0.8.6 (/workspace/rust/vendor/sqlx-postgres-0.8.6)
+#13 14.83 warning: `sqlx-core` (lib) generated 3 warnings
+#13 15.29    Compiling axum v0.8.9
+#13 15.33 warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+#13 15.33    --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+#13 15.33     |
+#13 15.33 335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+#13 15.33     |                                                        ^^^^^^^^
+#13 15.33     |
+#13 15.33     = note: `#[warn(deprecated)]` on by default
+#13 15.33 
+#13 15.59    Compiling dispatcharr-timeshift-core v0.1.0 (/workspace/rust/crates/timeshift-core)
+#13 16.16 warning: variant `Flush` is never constructed
+#13 16.16   --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+#13 16.16    |
+#13 16.16 68 | pub enum FrontendMessageFormat {
+#13 16.16    |          --------------------- variant in this enum
+#13 16.16 ...
+#13 16.16 76 |     Flush = b'H',
+#13 16.16    |     ^^^^^
+#13 16.16    |
+#13 16.16    = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+#13 16.16    = note: `#[warn(dead_code)]` on by default
+#13 16.16 
+#13 16.16 warning: struct `Flush` is never constructed
+#13 16.16   --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+#13 16.16    |
+#13 16.16 11 | pub struct Flush;
+#13 16.16    |            ^^^^^
+#13 16.16 
+#13 16.51    Compiling redis v0.32.7
+#13 16.57    Compiling sqlx-macros-core v0.8.6
+#13 16.61    Compiling tokio-rustls v0.26.6
+#13 16.76    Compiling hyper-rustls v0.27.10
+#13 16.91    Compiling reqwest v0.12.28
+#13 17.04 warning: `sqlx-postgres` (lib) generated 3 warnings
+#13 17.38    Compiling sqlx-macros v0.8.6
+#13 18.10    Compiling dispatcharr-upstream-http v0.1.0 (/workspace/rust/crates/upstream-http)
+#13 18.79 warning: `sqlx-core` (lib) generated 3 warnings (3 duplicates)
+#13 20.47    Compiling sqlx v0.8.6
+#13 21.74    Compiling dispatcharr-output-store v0.1.0 (/workspace/rust/crates/output-store)
+#13 21.74    Compiling dispatcharr-store v0.1.0 (/workspace/rust/crates/store)
+#13 21.74    Compiling dispatcharr-coordination v0.1.0 (/workspace/rust/crates/coordination)
+#13 21.74    Compiling dispatcharr-clients v0.1.0 (/workspace/rust/crates/clients)
+#13 21.93    Compiling dispatcharr-input-store v0.1.0 (/workspace/rust/crates/input-store)
+#13 22.32    Compiling dispatcharr-stream-http v0.1.0 (/workspace/rust/crates/stream-http)
+#13 22.76 warning: `sqlx-postgres` (lib) generated 3 warnings (3 duplicates)
+#13 23.33    Compiling dispatcharr-fmp4-http v0.1.0 (/workspace/rust/crates/fmp4-http)
+#13 23.33    Compiling dispatcharr-hls-http v0.1.0 (/workspace/rust/crates/hls-http)
+#13 35.10    Compiling dispatcharr-output-http v0.1.0 (/workspace/rust/crates/output-http)
+#13 35.10    Compiling dispatcharr-ingest-epg v0.1.0 (/workspace/rust/crates/ingest-epg)
+#13 35.10    Compiling dispatcharr-vod-http v0.1.0 (/workspace/rust/crates/vod-http)
+#13 35.10    Compiling dispatcharr-timeshift-http v0.1.0 (/workspace/rust/crates/timeshift-http)
+#13 35.10    Compiling dispatcharr-hdhr-http v0.1.0 (/workspace/rust/crates/hdhr-http)
+#13 35.10    Compiling dispatcharr-realtime v0.1.0 (/workspace/rust/crates/realtime)
+#13 36.03    Compiling dispatcharr-xc-http v0.1.0 (/workspace/rust/crates/xc-http)
+#13 36.80    Compiling dispatcharr-job-transport v0.1.0 (/workspace/rust/crates/job-transport)
+#13 38.32    Compiling dispatcharr-xmltv-http v0.1.0 (/workspace/rust/crates/xmltv-http)
+#13 77.06    Compiling dispatcharr-rs v0.1.0 (/workspace/rust/crates/app)
+#13 91.14     Finished `release` profile [optimized] target(s) in 1m 30s
+#13 DONE 91.3s
+
+#14 [media 6/7] COPY rust/runtime/collect_static.py rust/runtime/drf-static-source-1.json /tmp/
+#14 CACHED
+
+#15 [media 7/7] RUN /dispatcharrpy/bin/python /tmp/collect_static.py
+#15 CACHED
+
+#16 [media 2/7] COPY rust/runtime/collect_media.py /tmp/collect_media.py
+#16 CACHED
+
+#17 [media 4/7] COPY rust/runtime/collect_crypto.py /tmp/collect_crypto.py
+#17 CACHED
+
+#18 [media 3/7] RUN /dispatcharrpy/bin/python /tmp/collect_media.py
+#18 CACHED
+
+#19 [media 5/7] RUN /dispatcharrpy/bin/python /tmp/collect_crypto.py
+#19 CACHED
+
+#20 [stage-6  2/16] COPY --from=media /media-runtime/ /
+#20 CACHED
+
+#21 [stage-6  3/16] COPY --from=build /tmp/dispatcharr-target/release/dispatcharr-rs /usr/local/bin/dispatcharr-rs
+#21 DONE 0.1s
+
+#22 [frontend-dependencies 4/5] RUN npm ci --no-audit --no-fund
+#22 CACHED
+
+#23 [frontend-dependencies 5/5] COPY frontend/ ./
+#23 CACHED
+
+#24 [frontend-dependencies 2/5] WORKDIR /dispatcharr-frontend
+#24 CACHED
+
+#25 [frontend-dependencies 3/5] COPY frontend/package.json frontend/package-lock.json ./
+#25 CACHED
+
+#26 [frontend 1/1] RUN npm run build
+#26 CACHED
+
+#27 [stage-6  4/16] COPY --from=build /tmp/dispatcharr-target/release/dispatcharr-operator /usr/local/bin/dispatcharr-operator
+#27 DONE 0.1s
+
+#28 [stage-6  5/16] COPY --from=frontend /dispatcharr-frontend/dist/ /opt/dispatcharr-frontend/
+#28 DONE 0.1s
+
+#29 [stage-6  6/16] COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
+#29 DONE 0.1s
+
+#30 [stage-6  7/16] COPY rust/crates/output-http/data/Django-LICENSE /usr/share/doc/dispatcharr/Django-LICENSE
+#30 DONE 0.1s
+
+#31 [stage-6  8/16] COPY rust/crates/store/third-party/PYTHON-COPYRIGHT /usr/share/doc/dispatcharr/Python-COPYRIGHT
+#31 DONE 0.1s
+
+#32 [stage-6  9/16] COPY rust/crates/store/datasets/Celery-LICENSE /usr/share/doc/dispatcharr/Celery-LICENSE
+#32 DONE 0.1s
+
+#33 [stage-6 10/16] COPY rust/crates/store/datasets/Kombu-LICENSE /usr/share/doc/dispatcharr/Kombu-LICENSE
+#33 DONE 0.1s
+
+#34 [stage-6 11/16] COPY rust/vendor/sqlx-core-0.8.6/LICENSE-MIT rust/vendor/sqlx-core-0.8.6/LICENSE-APACHE /usr/share/doc/dispatcharr/sqlx-core/
+#34 DONE 0.1s
+
+#35 [stage-6 12/16] COPY rust/vendor/sqlx-postgres-0.8.6/LICENSE-MIT rust/vendor/sqlx-postgres-0.8.6/LICENSE-APACHE /usr/share/doc/dispatcharr/sqlx-postgres/
+#35 DONE 0.1s
+
+#36 [stage-6 13/16] COPY rust/crates/xmltv-parser/vendor/Copyright /usr/share/doc/dispatcharr/libxml2-Copyright
+#36 DONE 0.1s
+
+#37 [stage-6 14/16] COPY rust/crates/xmltv-parser/vendor/NOTICES /usr/share/doc/dispatcharr/libxml2-NOTICES
+#37 DONE 0.1s
+
+#38 [stage-6 15/16] RUN mkdir -p /app /data/logos && ln -s /data /app/media && chown 65532:65532 /data /data/logos
+#38 DONE 0.2s
+
+#39 [stage-6 16/16] WORKDIR /app
+#39 DONE 0.1s
+
+#40 exporting to image
+#40 exporting layers
+#40 exporting layers 2.2s done
+#40 exporting manifest sha256:fdb28f3fa075ff09c582e08602125adeb3e4f55721ff48a5fc273e16d3d9874f done
+#40 exporting config sha256:779ae35d08392e455f44764b54af6978f54ebdc4c60b2c9c2a9f7e740c528b3b done
+#40 exporting attestation manifest sha256:a8f1e9012449d7a75f7e13c1e24ca3e10f0ae26fc6471e0c7a9933f80f4b22ba 0.0s done
+#40 exporting manifest list sha256:946ebf97def2a3a3edf6019c622320a3c659e9e0f62db82ded8cf43db5cad860 done
+#40 naming to docker.io/library/dispatcharr-rust-candidate:milestone-batch9 done
+#40 unpacking to docker.io/library/dispatcharr-rust-candidate:milestone-batch9
+#40 unpacking to docker.io/library/dispatcharr-rust-candidate:milestone-batch9 0.8s done
+#40 DONE 3.0s
