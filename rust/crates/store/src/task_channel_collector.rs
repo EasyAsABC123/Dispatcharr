@@ -147,24 +147,15 @@ impl ChannelDeletionSelection {
         Ok(())
     }
     pub async fn execute(self) -> Result<ChannelDeletion, StoreError> {
+        self.execute_with_stop(true).await
+    }
+    /// Source ChannelViewSet.destroy defaults to preserving active playback.
+    /// Its optional stop_stream control already ran outside Collector atomic.
+    pub(crate) async fn execute_without_stops(self) -> Result<ChannelDeletion, StoreError> {
+        self.execute_with_stop(false).await
+    }
+    async fn execute_with_stop(self, stop: bool) -> Result<ChannelDeletion, StoreError> {
         let operation = self.operation;
-        // The dynamically named cursor consists only of a generated UUID, never
-        // input SQL. Every row is stopped before any Collector DELETE/BEGIN.
-        let cursor = format!("native_channel_stop_{}", operation.simple());
-        let declare=format!("DECLARE {cursor} NO SCROLL CURSOR WITH HOLD FOR SELECT channel_uuid FROM native_task_channel_selection WHERE operation=$1 ORDER BY ordinal");
-        self.session
-            .run(move |c| {
-                Box::pin(async move {
-                    idle(c).await?;
-                    reverse_relations(c).await?;
-                    sqlx::query(&declare)
-                        .bind(operation)
-                        .execute(&mut *c)
-                        .await?;
-                    Ok::<(), StoreError>(())
-                })
-            })
-            .await??;
         let mut report = ChannelDeletion {
             selected: self.selected,
             observed: self.observed,
@@ -173,52 +164,71 @@ impl ChannelDeletionSelection {
             stop_failures: 0,
             effect_outcome: None,
         };
-        loop {
-            let statement = format!("FETCH FORWARD 500 FROM {cursor}");
-            let rows: Vec<(Uuid,)> = self
-                .session
+        if stop {
+            // The dynamically named cursor consists only of a generated UUID, never
+            // input SQL. Every row is stopped before any Collector DELETE/BEGIN.
+            let cursor = format!("native_channel_stop_{}", operation.simple());
+            let declare=format!("DECLARE {cursor} NO SCROLL CURSOR WITH HOLD FOR SELECT channel_uuid FROM native_task_channel_selection WHERE operation=$1 ORDER BY ordinal");
+            self.session
                 .run(move |c| {
                     Box::pin(async move {
                         idle(c).await?;
-                        sqlx::query_as(&statement)
-                            .fetch_all(&mut *c)
+                        reverse_relations(c).await?;
+                        sqlx::query(&declare)
+                            .bind(operation)
+                            .execute(&mut *c)
+                            .await?;
+                        Ok::<(), StoreError>(())
+                    })
+                })
+                .await??;
+            loop {
+                let statement = format!("FETCH FORWARD 500 FROM {cursor}");
+                let rows: Vec<(Uuid,)> = self
+                    .session
+                    .run(move |c| {
+                        Box::pin(async move {
+                            idle(c).await?;
+                            sqlx::query_as(&statement)
+                                .fetch_all(&mut *c)
+                                .await
+                                .map_err(StoreError::from)
+                        })
+                    })
+                    .await??;
+                if rows.is_empty() {
+                    break;
+                }
+                if rows.len() > CHANNEL_PAGE {
+                    return Err(StoreError::Unsupported("Channel stop page exceeded"));
+                }
+                for (uuid,) in rows {
+                    if let Err(error) = self.control.stop_channel(uuid.to_string()).await {
+                        report.stop_failures += 1;
+                        retain_outcome(
+                            &mut report.effect_outcome,
+                            if error.status >= 500 {
+                                RecordingEffectError::Unsettled
+                            } else {
+                                RecordingEffectError::SettledFailure
+                            },
+                        );
+                    }
+                }
+            }
+            let close = format!("CLOSE {cursor}");
+            self.session
+                .run(move |c| {
+                    Box::pin(async move {
+                        sqlx::query(&close)
+                            .execute(&mut *c)
                             .await
+                            .map(|_| ())
                             .map_err(StoreError::from)
                     })
                 })
                 .await??;
-            if rows.is_empty() {
-                break;
-            }
-            if rows.len() > CHANNEL_PAGE {
-                return Err(StoreError::Unsupported("Channel stop page exceeded"));
-            }
-            for (uuid,) in rows {
-                if let Err(error) = self.control.stop_channel(uuid.to_string()).await {
-                    report.stop_failures += 1;
-                    retain_outcome(
-                        &mut report.effect_outcome,
-                        if error.status >= 500 {
-                            RecordingEffectError::Unsettled
-                        } else {
-                            RecordingEffectError::SettledFailure
-                        },
-                    );
-                }
-            }
         }
-        let close = format!("CLOSE {cursor}");
-        self.session
-            .run(move |c| {
-                Box::pin(async move {
-                    sqlx::query(&close)
-                        .execute(&mut *c)
-                        .await
-                        .map(|_| ())
-                        .map_err(StoreError::from)
-                })
-            })
-            .await??;
         let owner = self.owner;
         let jobs = self.jobs;
         self.session.run(move|c|Box::pin(async move{

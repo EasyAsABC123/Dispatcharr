@@ -254,7 +254,12 @@ async fn run_active(inner: &Inner, entry: &Arc<Entry>) -> Result<Outcome, Error>
         .await
         .map_err(Error::Transport)?;
     let message = entry.reservation.message().clone();
-    let publisher = ChildPublisher::context(inner.jobs.clone(), message.clone(), entry.clone());
+    let publisher = ChildPublisher::claimed(
+        inner.jobs.clone(),
+        message.clone(),
+        entry.clone(),
+        entry.reservation.receipt.queued_bytes.clone(),
+    );
     let terminal = inner
         .executor
         .execute(message.clone(), publisher.clone(), entry.clone())
@@ -265,6 +270,7 @@ async fn run_active(inner: &Inner, entry: &Arc<Entry>) -> Result<Outcome, Error>
             &message,
             terminal,
             publisher.completed_children()?,
+            publisher.observed_trail()?,
             entry.clone(),
         )
         .await

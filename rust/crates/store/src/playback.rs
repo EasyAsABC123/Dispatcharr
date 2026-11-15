@@ -278,9 +278,9 @@ impl Store {
         if profile.try_get::<bool, _>("oversized")? {
             return Err(playback_capacity());
         }
-        if !profile.try_get::<bool, _>("is_active")? {
-            return Err(StoreError::Unsupported("Stream profile is inactive"));
-        }
+        // Source Channel/Stream.get_stream_profile resolves the saved/default
+        // input profile even when its UI activation flag is false. Provider
+        // account/profile and output-profile activation checks remain separate.
         let profile_name: String = profile.try_get("name")?;
         let profile_locked: bool = profile.try_get("locked")?;
         if preview.is_some() && profile_locked && profile_name == "Redirect" {

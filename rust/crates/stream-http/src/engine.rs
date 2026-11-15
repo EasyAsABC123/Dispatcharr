@@ -1493,8 +1493,15 @@ async fn run_upstream(
         retry.new_source(current);
         let candidate = &candidates[current];
         session.connecting.store(true, Ordering::Relaxed);
-        let valid_url = reqwest::Url::parse(&candidate.url)
-            .is_ok_and(|url| matches!(url.scheme(), "http" | "https"));
+        // Source promotes RTSP/RTP/UDP to a configured input process. Those
+        // transports never enter the raw HTTP requester; validation here must
+        // not reject a real process-backed candidate before its slot/admission.
+        let valid_url = reqwest::Url::parse(&candidate.url).is_ok_and(|url| {
+            matches!(url.scheme(), "http" | "https")
+                || (candidate.input_command.is_some()
+                    && matches!(url.scheme(), "rtsp" | "rtp" | "udp")
+                    && url.host_str().is_some_and(|host| !host.is_empty()))
+        });
         let reservation = if !valid_url {
             Err(PlaybackError::new(
                 502,

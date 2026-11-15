@@ -1,0 +1,136 @@
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: `sqlx-core` (lib) generated 3 warnings
+warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+   --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+    |
+335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+    |                                                        ^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: variant `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+   |
+68 | pub enum FrontendMessageFormat {
+   |          --------------------- variant in this enum
+...
+76 |     Flush = b'H',
+   |     ^^^^^
+   |
+   = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: struct `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+   |
+11 | pub struct Flush;
+   |            ^^^^^
+
+warning: `sqlx-postgres` (lib) generated 3 warnings
+warning: `sqlx-core` (lib) generated 3 warnings (3 duplicates)
+warning: `sqlx-postgres` (lib) generated 3 warnings (3 duplicates)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/store)
+    Checking dispatcharr-stream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/stream-http)
+error[E0412]: cannot find type `PluginPublicationOwners` in the crate root
+   --> crates/store/src/plugin_repositories.rs:555:33
+    |
+555 |     publications: Option<crate::PluginPublicationOwners>,
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in the crate root
+    |
+help: consider importing this struct
+    |
+  6 + use crate::plugin_publication_owners::PluginPublicationOwners;
+    |
+help: if you import `PluginPublicationOwners`, refer to it directly
+    |
+555 -     publications: Option<crate::PluginPublicationOwners>,
+555 +     publications: Option<PluginPublicationOwners>,
+    |
+
+error[E0412]: cannot find type `PluginPublicationOwners` in the crate root
+   --> crates/store/src/plugin_repositories.rs:561:28
+    |
+561 |     causal: Option<(crate::PluginPublicationOwners, uuid::Uuid, Vec<u8>)>,
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^ not found in the crate root
+    |
+help: consider importing this struct
+    |
+  6 + use crate::plugin_publication_owners::PluginPublicationOwners;
+    |
+help: if you import `PluginPublicationOwners`, refer to it directly
+    |
+561 -     causal: Option<(crate::PluginPublicationOwners, uuid::Uuid, Vec<u8>)>,
+561 +     causal: Option<(PluginPublicationOwners, uuid::Uuid, Vec<u8>)>,
+    |
+
+error[E0412]: cannot find type `PluginPublicationOwners` in the crate root
+   --> crates/store/src/plugin_repositories.rs:571:61
+    |
+571 |     pub fn with_publications(mut self, publications: crate::PluginPublicationOwners) -> Self {
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^ not found in the crate root
+    |
+help: consider importing this struct
+    |
+  6 + use crate::plugin_publication_owners::PluginPublicationOwners;
+    |
+help: if you import `PluginPublicationOwners`, refer to it directly
+    |
+571 -     pub fn with_publications(mut self, publications: crate::PluginPublicationOwners) -> Self {
+571 +     pub fn with_publications(mut self, publications: PluginPublicationOwners) -> Self {
+    |
+
+    Checking dispatcharr-fmp4-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/fmp4-http)
+    Checking dispatcharr-hls-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/hls-http)
+For more information about this error, try `rustc --explain E0412`.
+error: could not compile `dispatcharr-store` (lib) due to 3 previous errors

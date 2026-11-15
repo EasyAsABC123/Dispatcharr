@@ -796,6 +796,24 @@ pub(crate) async fn delete(
     let id = raw
         .parse()
         .map_err(|_| StoreError::StatusBody(404, json!({"detail":"Not found."})))?;
+    let writer = auth.task_sql_writer()?;
+    let auth = auth.with_request_writer_permit(writer.clone())?;
+    let owner = auth.core_publication_owner(writer);
+    let recording_jobs = auth.recording_collector_jobs()?;
+    // Accepted stop/Collector/control effects retain the original HTTP writer,
+    // owner and this one upgraded bridge through actual physical settlement.
+    tokio::spawn(async move { delete_owned(auth, user, id, params, owner, recording_jobs).await })
+        .await
+        .map_err(|_| StoreError::UnhandledRestFault)?
+}
+async fn delete_owned(
+    auth: AuthService,
+    user: crate::User,
+    id: i64,
+    params: HashMap<String, String>,
+    owner: crate::compact_numbering::Owner,
+    recording_jobs: Option<std::sync::Arc<dyn crate::recording_http::RecordingJobs>>,
+) -> Result<StatusCode, StoreError> {
     let mut lookup_tx = auth.store.pool().begin().await?;
     let original = object(&auth, &user, id, &params, &mut lookup_tx).await?;
     lookup_tx.commit().await?;
@@ -820,6 +838,37 @@ pub(crate) async fn delete(
             );
         }
     }
+    if let Some(jobs) = recording_jobs {
+        // Normal Main reuses the actual same-session Collector and exact-key
+        // Recording/PT/revoke effects. No second checkout inside its atomic.
+        // Source default delete does NOT stop the running media worker.
+        let session = auth.borrow_task_sql_session(owner.clone()).await?;
+        let collected = async {
+            let mut selection = auth
+                .prepare_task_channel_deletion(session.clone(), jobs.clone(), owner)
+                .await?;
+            selection.append(vec![id]).await?;
+            selection.execute_without_stops().await
+        }
+        .await;
+        let closed = session.close().await;
+        let report = collected?;
+        closed?;
+        if matches!(
+            report.effect_outcome,
+            Some(
+                crate::recording_http::RecordingEffectError::Unsupported
+                    | crate::recording_http::RecordingEffectError::Unsettled
+            )
+        ) {
+            return Err(StoreError::UnhandledRestFault);
+        }
+        // Source's caught, physically settled revoke/stop failures still permit
+        // the committed Collector204. Completed recording files stay orphaned.
+        return Ok(StatusCode::NO_CONTENT);
+    }
+    // Legacy constructors without the normal recording port keep their previous
+    // finite path/explicit guard, never synthesize a successful revoke.
     let mut tx = auth.store.pool().begin().await?;
     object(&auth, &user, id, &params, &mut tx).await?;
     let recordings: bool = sqlx::query_scalar(

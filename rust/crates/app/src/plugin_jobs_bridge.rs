@@ -157,6 +157,26 @@ impl NativePluginJobs for PluginJobsBridge {
                         json!({"settled":true,"task_id":receipt.task_id,"queue_length":receipt.queue_length}),
                     )
                 }
+                "publish_native_refresh"
+                    if params["queue"] == "celery"
+                        && params["name"] == "apps.plugins.tasks.refresh_plugin_repos" =>
+                {
+                    let text = params["raw_base64"]
+                        .as_str()
+                        .filter(|s| s.len() <= 90000)
+                        .ok_or(PluginHostError::Capacity)?;
+                    let raw = STANDARD
+                        .decode(text)
+                        .map_err(|_| PluginHostError::Protocol)?;
+                    let receipt = self
+                        .jobs
+                        .publish_builtin_plugin_refresh(raw, scope.owner)
+                        .await
+                        .map_err(|_| PluginHostError::Callback)?;
+                    Ok(
+                        json!({"settled":true,"task_id":receipt.task_id,"queue_length":receipt.queue_length}),
+                    )
+                }
                 // Direct builtin .run is guarded BEFORE the Original backend body. Actual
                 // same-session family adapters are still required; never evaluate Python
                 // backend task code merely because an enabled plugin requested it.

@@ -185,6 +185,7 @@ fn bounded_guarded_fields(
 #[derive(Clone)]
 pub struct GuideReporter {
     inner: Arc<Inner>,
+    task_hooks: Option<dispatcharr_store::epg_task_hooks::EpgTaskHooks>,
 }
 impl GuideReporter {
     pub async fn connect(
@@ -216,6 +217,7 @@ impl GuideReporter {
         .await
         .map_err(|_| ImportError::Worker)?;
         Ok(Self {
+            task_hooks: None,
             inner: Arc::new(Inner {
                 settings: CachedSwapPolicy::new(store.clone(), Some(redis.into())),
                 store,
@@ -230,6 +232,13 @@ impl GuideReporter {
                 }),
             }),
         })
+    }
+    /// Per-execution immutable wrapper; worker/admission/transport are shared.
+    pub fn for_task_hooks(&self, hooks: dispatcharr_store::epg_task_hooks::EpgTaskHooks) -> Self {
+        Self {
+            inner: self.inner.clone(),
+            task_hooks: Some(hooks),
+        }
     }
     pub fn physical_operations(&self) -> usize {
         self.inner.state.max - self.inner.state.admission.available_permits()
@@ -298,8 +307,9 @@ impl GuideReporter {
             retained: work,
         };
         let inner = self.inner.clone();
+        let hooks = self.task_hooks.clone();
         tokio::spawn(async move {
-            let result = inner.process(action, &context).await;
+            let result = inner.process(action, &context, hooks.as_ref()).await;
             drop(context);
             result
         })
@@ -341,6 +351,7 @@ impl Inner {
         &self,
         action: ReportAction,
         context: &SwapPolicyContext,
+        hooks: Option<&dispatcharr_store::epg_task_hooks::EpgTaskHooks>,
     ) -> Result<ReportObservation, ImportError> {
         match action {
             ReportAction::Progress {
@@ -393,7 +404,7 @@ impl Inner {
                 let message = success_message(&value);
                 let saved=sqlx::query("UPDATE epg_epgsource SET status='success',last_message=$2,updated_at=$3 WHERE id=$1").bind(value.source_id).bind(&message).bind(now).execute(self.store.pool()).await?;
                 saved_source(saved.rows_affected())?;
-                self.audit("epg_refresh",json!({"source_name":value.source_name,"programs":value.accepted,"channels":value.channels_with_programmes,"skipped_programs":value.skipped_unmapped,"unmapped_channels":value.total_epg_entries-value.mapped_tvg_ids as i64}),context).await;
+                self.audit("epg_refresh",json!({"source_name":value.source_name,"programs":value.accepted,"channels":value.channels_with_programmes,"skipped_programs":value.skipped_unmapped,"unmapped_channels":value.total_epg_entries-value.mapped_tvg_ids as i64}),context,hooks).await?;
                 let mut data = progress_data(value.source_id, 100);
                 data["status"] = json!("success");
                 data["message"] = json!(message);
@@ -401,16 +412,20 @@ impl Inner {
                 self.send(data, context).await;
             }
             ReportAction::Failed(value) => {
-                return Ok(self.failure(value, "parsing_programs", context).await)
+                return self
+                    .failure(value, "parsing_programs", context, hooks)
+                    .await
             }
             ReportAction::ChannelFailed(value) => {
-                return Ok(self.failure(value, "parsing_channels", context).await)
+                return self
+                    .failure(value, "parsing_channels", context, hooks)
+                    .await
             }
             ReportAction::RefreshFailed(value) => {
-                return Ok(self.failure(value, "refresh", context).await)
+                return self.failure(value, "refresh", context, hooks).await
             }
             ReportAction::DownloadFailed(value) => {
-                return Ok(self.failure(value, "downloading", context).await)
+                return self.failure(value, "downloading", context, hooks).await
             }
             ReportAction::LocalDownloadComplete { source_id } => {
                 let saved = sqlx::query("UPDATE epg_epgsource SET status='success' WHERE id=$1")
@@ -466,12 +481,13 @@ impl Inner {
         value: FailedImport,
         action: &str,
         context: &SwapPolicyContext,
-    ) -> ReportObservation {
+        hooks: Option<&dispatcharr_store::epg_task_hooks::EpgTaskHooks>,
+    ) -> Result<ReportObservation, ImportError> {
         // Pooled SQL is separate from the private staging session, so a
         // failed/rolled-back staging transaction cannot poison status.
         let mut connection = match self.store.pool().acquire().await {
             Ok(connection) => connection,
-            Err(cause) => return ReportObservation::FailureStatusAcquireFailed(cause),
+            Err(cause) => return Ok(ReportObservation::FailureStatusAcquireFailed(cause)),
         };
         let saved = match sqlx::query(
             "UPDATE epg_epgsource SET status='error',last_message=$2 WHERE id=$1",
@@ -485,11 +501,11 @@ impl Inner {
             Err(cause) => {
                 // ERROR may precede ReadyForQuery. Await physical close before
                 // publishing caught authority or releasing the retained owner.
-                return if connection.close().await.is_ok() {
+                return Ok(if connection.close().await.is_ok() {
                     ReportObservation::FailureStatusSqlCaught(cause)
                 } else {
                     ReportObservation::FailureStatusUnsettled(cause)
-                };
+                });
             }
         };
         drop(connection);
@@ -502,17 +518,31 @@ impl Inner {
                 "epg_error",
                 json!({"source_name":value.source_name,"message":value.publication_error}),
                 context,
+                hooks,
             )
-            .await;
+            .await?;
         }
         if saved.rows_affected() == 1 {
-            ReportObservation::FailureStatusSaved
+            Ok(ReportObservation::FailureStatusSaved)
         } else {
-            ReportObservation::FailureStatusUnmatched
+            Ok(ReportObservation::FailureStatusUnmatched)
         }
     }
-    async fn audit(&self, kind: &str, details: Value, context: &SwapPolicyContext) {
-        if sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$3,NULL,NULL,$2)").bind(kind).bind(details).bind(source_clock(&self.clock)).execute(self.store.pool()).await.is_err(){return;}
+    async fn audit(
+        &self,
+        kind: &str,
+        details: Value,
+        context: &SwapPolicyContext,
+        hooks: Option<&dispatcharr_store::epg_task_hooks::EpgTaskHooks>,
+    ) -> Result<(), ImportError> {
+        if let Some(hooks) = hooks {
+            return hooks
+                .audit(kind, details, source_clock(&self.clock))
+                .await
+                .map_err(ImportError::Store);
+        }
+
+        if sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$3,NULL,NULL,$2)").bind(kind).bind(details).bind(source_clock(&self.clock)).execute(self.store.pool()).await.is_err(){return Ok(());}
         // External Connect/plugin event dispatch remains a separate M8 bridge.
         let settings = self
             .settings
@@ -520,10 +550,10 @@ impl Inner {
             .await
             .unwrap_or(Value::Null);
         let Some(max) = max_system_events(settings.get("max_system_events")) else {
-            return;
+            return Ok(());
         };
         if max < 0 {
-            return;
+            return Ok(());
         }
         let _=async {
             let count:i64=sqlx::query_scalar("SELECT count(*) FROM core_systemevent").fetch_one(self.store.pool()).await?;
@@ -533,6 +563,7 @@ impl Inner {
             }
             Ok::<_,sqlx::Error>(())
         }.await;
+        Ok(())
     }
 }
 // Python timezone.now() has microsecond precision; bind the same truncated

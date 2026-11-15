@@ -61,6 +61,8 @@ pub struct ChildPublisher {
     root: Uuid,
     parent: Uuid,
     parent_key: String,
+    claimed_raw: Option<Arc<[u8]>>,
+    observed_trail: Arc<Mutex<Option<serde_json::Value>>>,
     trail_closed: Arc<AtomicBool>,
     owner: Arc<dyn Send + Sync>,
     children: ChildRecords,
@@ -79,6 +81,8 @@ impl ChildPublisher {
             root: message.root,
             parent: message.task_id,
             parent_key: message.task_id.to_string(),
+            claimed_raw: None,
+            observed_trail: Arc::new(Mutex::new(None)),
             trail_closed: Arc::new(AtomicBool::new(false)),
             owner,
             children: Arc::new(Mutex::new(Vec::new())),
@@ -86,6 +90,22 @@ impl ChildPublisher {
             child_slots: Arc::new(Semaphore::new(64)),
             failed: Arc::new(AtomicBool::new(false)),
         }
+    }
+    pub(crate) fn claimed(
+        jobs: Jobs,
+        message: RefreshMessage,
+        owner: Arc<dyn Send + Sync>,
+        raw: Vec<u8>,
+    ) -> Self {
+        let mut publisher = Self::context(jobs, message, owner);
+        publisher.claimed_raw = Some(raw.into());
+        publisher
+    }
+    pub(crate) fn observed_trail(&self) -> Result<Option<serde_json::Value>, Error> {
+        self.observed_trail
+            .lock()
+            .map(|value| value.clone())
+            .map_err(|_| Error::Execution)
     }
     /// Called only after the actual native producer flow joined all effects.
     /// A later publication is rejected rather than silently omitted from hooks.
@@ -342,6 +362,10 @@ pub struct ServiceExecutor {
     runner: FileJobRunner,
     store: dispatcharr_store::Store,
     clock: Arc<dyn Fn() -> chrono::DateTime<chrono::Utc> + Send + Sync>,
+    hooks: std::sync::OnceLock<(
+        dispatcharr_store::AuthService,
+        dispatcharr_store::PluginRuntime,
+    )>,
 }
 impl ServiceExecutor {
     pub fn new(
@@ -353,7 +377,17 @@ impl ServiceExecutor {
             runner,
             store,
             clock,
+            hooks: std::sync::OnceLock::new(),
         }
+    }
+    pub(crate) fn bind_hooks(
+        &self,
+        auth: dispatcharr_store::AuthService,
+        runtime: dispatcharr_store::PluginRuntime,
+    ) -> Result<(), Error> {
+        self.hooks
+            .set((auth, runtime))
+            .map_err(|_| Error::Configuration)
     }
 }
 impl RefreshExecutor for ServiceExecutor {
@@ -371,21 +405,75 @@ impl RefreshExecutor for ServiceExecutor {
                 self.store.clone(),
                 self.clock.clone(),
             ));
-            let report = self
+            let cancelled = Arc::new(AtomicBool::new(false));
+            let hooks = match self.hooks.get() {
+                Some((auth, runtime)) => {
+                    let raw = publisher.claimed_raw.as_ref().ok_or(Error::Execution)?;
+                    let context = dispatcharr_store::PluginHookTaskContext::from_native_claim(raw)
+                        .map_err(|_| Error::Execution)?;
+                    Some(
+                        dispatcharr_store::epg_task_hooks::EpgTaskHooks::prepare(
+                            auth.clone(),
+                            runtime.clone(),
+                            context,
+                            Arc::new(publisher.clone()),
+                            owner.clone(),
+                            cancelled.clone(),
+                        )
+                        .map_err(|_| Error::Execution)?,
+                    )
+                }
+                None => None,
+            };
+            let outcome = self
                 .runner
-                .run_report_with_dispatcher(
+                .run_report_with_dispatcher_scoped(
                     FileJobRequest {
                         source_id: message.source_id,
                         force: message.force,
                         defer_retry: message.retry,
-                        cancelled: Arc::new(AtomicBool::new(false)),
+                        cancelled,
                     },
                     owner,
                     dispatcher,
+                    hooks.clone(),
                 )
-                .await
-                .map_err(|_| Error::Execution)?;
-            publisher.close_native_trail()?;
+                .await;
+            let report = match outcome {
+                Ok(report) => report,
+                Err(_) => {
+                    if let Some(hooks) = &hooks {
+                        hooks.abort().await.map_err(|_| Error::Execution)?;
+                    }
+                    return Err(Error::Execution);
+                }
+            };
+            if publisher.close_native_trail().is_err() {
+                if let Some(hooks) = &hooks {
+                    hooks.abort().await.map_err(|_| Error::Execution)?;
+                }
+                return Err(Error::Execution);
+            }
+            let completion = if let Some(hooks) = &hooks {
+                match hooks.complete().await {
+                    Ok(completed) => {
+                        if let Some(report) = completed.report() {
+                            *publisher
+                                .observed_trail
+                                .lock()
+                                .map_err(|_| Error::Execution)? =
+                                Some(report.observed_request_children.clone());
+                        }
+                        Some(completed)
+                    }
+                    Err(_) => {
+                        hooks.abort().await.map_err(|_| Error::Execution)?;
+                        return Err(Error::Execution);
+                    }
+                }
+            } else {
+                None
+            };
             publisher.completed_children()?;
             if let Some(settled) = report.settled_exhaustion {
                 use dispatcharr_ingest_epg::file_job::{
@@ -432,6 +520,15 @@ impl RefreshExecutor for ServiceExecutor {
                         Err(Error::Execution)
                     } else {
                         Ok(NormalReturn::MissingSource)
+                    }
+                }
+                FileJobOutcome::PendingDownloadRejected(proof) => {
+                    let completed = completion.as_ref().ok_or(Error::Execution)?;
+                    let proof = proof.settle(completed).map_err(|_| Error::Execution)?;
+                    if proof.source_id() == message.source_id {
+                        Ok(NormalReturn::Null)
+                    } else {
+                        Err(Error::Execution)
                     }
                 }
                 FileJobOutcome::DownloadRejected(proof)

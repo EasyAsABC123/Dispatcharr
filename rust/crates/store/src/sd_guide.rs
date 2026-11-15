@@ -446,7 +446,7 @@ impl Admission {
         }))
     }
 }
-fn max_events(value: Option<&Value>) -> i64 {
+pub(crate) fn max_events(value: Option<&Value>) -> i64 {
     let Some(value) = value.filter(|v| crate::xc_live_provider::truthy(v)) else {
         return 100;
     };

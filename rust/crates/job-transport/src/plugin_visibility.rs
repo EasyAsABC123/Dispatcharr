@@ -32,6 +32,27 @@ impl Jobs {
         owner: Arc<dyn Send + Sync>,
         offset: usize,
     ) -> Result<usize, Error> {
+        self.recover_plugin_visible_configured(owner, offset, None)
+            .await
+    }
+    pub(crate) async fn recover_plugin_visible_with_publications(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+        offset: usize,
+        executor: dispatcharr_store::PluginRepositoryRefresh,
+    ) -> Result<usize, Error> {
+        if !executor.publication_tracking_enabled() {
+            return self.recover_plugin_visible(owner, offset).await;
+        }
+        self.recover_plugin_visible_configured(owner, offset, Some(executor))
+            .await
+    }
+    async fn recover_plugin_visible_configured(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+        offset: usize,
+        executor: Option<dispatcharr_store::PluginRepositoryRefresh>,
+    ) -> Result<usize, Error> {
         if offset > 131072 {
             return Err(Error::Capacity);
         }
@@ -60,7 +81,7 @@ impl Jobs {
             return Ok(offset);
         }
         let result = self
-            .recover_plugin_locked(&token, owner.clone(), offset)
+            .recover_plugin_locked(&token, owner.clone(), offset, executor.as_ref())
             .await;
         let release = self
             .plugin_broker_settled::<i64>(RELEASE, &keys, &[token.as_bytes()], owner)
@@ -76,6 +97,7 @@ impl Jobs {
         token: &str,
         owner: Arc<dyn Send + Sync>,
         offset: usize,
+        executor: Option<&dispatcharr_store::PluginRepositoryRefresh>,
     ) -> Result<usize, Error> {
         let ceiling = format!(
             "{:.6}",
@@ -129,6 +151,15 @@ impl Jobs {
                 .await?
             {
                 1 => {
+                    if let Some(executor) = executor {
+                        executor
+                            .publication_visible_restored(
+                                receipt.message().id,
+                                &receipt.receipt.queued_bytes,
+                                &receipt.receipt.restored_bytes,
+                            )
+                            .map_err(|_| Error::Corrupt)?;
+                    }
                     restored += 1;
                 }
                 0 => {}

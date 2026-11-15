@@ -963,3 +963,141 @@ async fn tracking(c: &mut sqlx::PgConnection) -> Result<(), StoreError> {
     sqlx::query("INSERT INTO django_celery_beat_periodictasks(ident,last_update) VALUES(1,$1) ON CONFLICT(ident) DO UPDATE SET last_update=EXCLUDED.last_update").bind(Utc::now()).execute(c).await?;
     Ok(())
 }
+
+// Early REST Auth clones and the later selected recording graph share the same
+// real port. Binding is single-assignment and creates no SQL/broker resources.
+impl crate::AuthService {
+    pub fn bind_recording_jobs(
+        &self,
+        jobs: Arc<dyn RecordingJobs>,
+    ) -> Result<(), crate::StoreError> {
+        // Core/health readers may retain an earlier Auth clone. A strong port
+        // here would close Auth -> Bridge -> Engine -> Core/health -> Auth.
+        self.recording_jobs
+            .set(Arc::downgrade(&jobs))
+            .map_err(|_| crate::StoreError::Unsupported("Recording jobs already composed"))
+    }
+    /// Upgrade once before accepted HTTP effects. Legacy constructors are
+    /// genuinely unbound; an expired normal graph is unavailable, never a
+    /// silent fallback to the legacy no-Recording deletion implementation.
+    pub(crate) fn recording_collector_jobs(
+        &self,
+    ) -> Result<Option<Arc<dyn RecordingJobs>>, crate::StoreError> {
+        self.recording_jobs
+            .get()
+            .map(|port| {
+                port.upgrade().ok_or_else(|| {
+                    crate::StoreError::StatusBody(
+                        503,
+                        json!({"detail":"Normal recording Collector unavailable."}),
+                    )
+                })
+            })
+            .transpose()
+    }
+}
+
+#[cfg(test)]
+mod recording_jobs_binding_tests {
+    use super::*;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    struct BackEdgeProbe {
+        // Represents the real Engine -> Core/health -> pre-engine Auth edge.
+        _pre_engine_auth: AuthService,
+        dropped: Arc<AtomicUsize>,
+    }
+    impl Drop for BackEdgeProbe {
+        fn drop(&mut self) {
+            self.dropped.fetch_add(1, Ordering::AcqRel);
+        }
+    }
+    impl RecordingJobs for BackEdgeProbe {
+        fn schedule(
+            &self,
+            _: i64,
+            _: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
+            Box::pin(async { Err(RecordingEffectError::Unsupported) })
+        }
+        fn revoke(
+            &self,
+            _: String,
+            _: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
+            Box::pin(async { Err(RecordingEffectError::Unsupported) })
+        }
+        fn revoke_observed_absent(
+            &self,
+            _: RecordingTaskAbsent,
+            _: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
+            Box::pin(async { Err(RecordingEffectError::Unsupported) })
+        }
+        fn stop_clients(
+            &self,
+            _: Uuid,
+            _: i64,
+            _: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
+            Box::pin(async { Err(RecordingEffectError::Unsupported) })
+        }
+        fn dvr_settings(
+            &self,
+            _: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Value, RecordingEffectError>> {
+            Box::pin(async { Err(RecordingEffectError::Unsupported) })
+        }
+        fn cancelled_event(
+            &self,
+            _: Value,
+            _: Uuid,
+            _: String,
+            _: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
+            Box::pin(async { Err(RecordingEffectError::Unsupported) })
+        }
+    }
+    fn unbound_auth() -> AuthService {
+        AuthService::new(
+            crate::Store::from_pool(
+                sqlx::postgres::PgPoolOptions::new()
+                    .max_connections(1)
+                    .connect_lazy("postgres://unused:unused@127.0.0.1:1/unused")
+                    .unwrap(),
+            ),
+            crate::AuthConfig::new("owned-cycle-probe-signing-key".into()).unwrap(),
+        )
+    }
+    #[tokio::test]
+    async fn actual_binding_has_no_auth_backedge_cycle_but_accepted_lookup_retains_bridge() {
+        let auth = unbound_auth();
+        let early = auth.clone();
+        assert!(early.recording_collector_jobs().unwrap().is_none());
+        let dropped = Arc::new(AtomicUsize::new(0));
+        let bridge: Arc<dyn RecordingJobs> = Arc::new(BackEdgeProbe {
+            _pre_engine_auth: early.clone(),
+            dropped: dropped.clone(),
+        });
+        let weak = Arc::downgrade(&bridge);
+        auth.bind_recording_jobs(bridge.clone()).unwrap();
+        let accepted = early.recording_collector_jobs().unwrap().unwrap();
+        assert!(Arc::ptr_eq(&bridge, &accepted));
+        drop(bridge);
+        assert!(
+            weak.upgrade().is_some(),
+            "accepted operation lost its actual bridge"
+        );
+        assert_eq!(dropped.load(Ordering::Acquire), 0);
+        drop(accepted);
+        assert!(
+            weak.upgrade().is_none(),
+            "shared Auth cell retained the Engine/Core backedge"
+        );
+        assert_eq!(dropped.load(Ordering::Acquire), 1);
+        assert!(matches!(
+            early.recording_collector_jobs(),
+            Err(StoreError::StatusBody(503, _))
+        ));
+        assert!(unbound_auth().recording_collector_jobs().unwrap().is_none());
+    }
+}

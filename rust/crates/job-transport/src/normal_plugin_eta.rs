@@ -106,16 +106,20 @@ pub(super) async fn run_due(
         {
             return announce_revoked(&inner, &receipt, owner).await;
         }
-        let admission = match inner.executor.try_admit(owner.caller.clone()) {
+        let admission = match inner.executor.try_admit_frame(
+            receipt.message().id,
+            &receipt.receipt.queued_bytes,
+            owner.caller.clone(),
+        ) {
             Ok(v) => Arc::new(v),
             Err(_) => return Ok(D::Capacity),
         };
         *owner.admission.lock().unwrap_or_else(|e| e.into_inner()) = Some(admission.clone());
-        admission
-            .preflight()
-            .await
-            .map_err(|_| D::UnsupportedDomain)?;
+        admission.preflight().await.map_err(admission_failure)?;
         if inner.closed.load(Ordering::Acquire) {
+            admission.close().await.map_err(|_| {
+                D::Operational("Plugin ETA closed preclaim SQL close failed".into())
+            })?;
             return Ok(D::NotDue);
         }
         if inner
@@ -123,6 +127,10 @@ pub(super) async fn run_due(
             .contains(&receipt.message().id.to_string())
             .map_err(|_| D::Operational("Plugin ETA revoked read failed".into()))?
         {
+            admission
+                .close()
+                .await
+                .map_err(|_| D::Operational("Plugin ETA revoked SQL close failed".into()))?;
             return announce_revoked(&inner, &receipt, owner).await;
         }
         // Celery early ACK is at actual pool execution, never at timer intake.
@@ -132,6 +140,10 @@ pub(super) async fn run_due(
             .await
             .is_err()
         {
+            admission
+                .close()
+                .await
+                .map_err(|_| D::Operational("Plugin ETA ambiguous ACK SQL close failed".into()))?;
             retain(&inner, owner);
             return Err(D::Operational("Plugin ETA ACK unresolved".into()));
         }
@@ -153,6 +165,10 @@ pub(super) async fn run_due(
             Ok(D::Completed(message.id))
         }
         .await;
+        admission
+            .close()
+            .await
+            .map_err(|_| D::Operational("Plugin ETA terminal SQL close failed".into()))?;
         if result.is_err() {
             retain(&inner, owner);
         }
@@ -224,6 +240,14 @@ pub(super) async fn restore_all(inner: &Arc<Inner>) -> Result<(), D> {
             .restore_plugin_eta(&receipt, inner.clone())
             .await
             .map_err(|_| D::Operational("Plugin ETA warm restore unresolved".into()))?;
+        inner
+            .executor
+            .publication_restored(
+                receipt.message().id,
+                &receipt.receipt.queued_bytes,
+                &receipt.receipt.restored_bytes,
+            )
+            .map_err(|_| D::Operational("Plugin ETA causal restore unresolved".into()))?;
         inner
             .pending
             .lock()

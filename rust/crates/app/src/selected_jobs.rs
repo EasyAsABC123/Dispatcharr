@@ -280,6 +280,8 @@ impl SelectedJobs {
             control.clone(),
             engine.clone(),
         );
+        auth.bind_recording_jobs(recording_jobs.clone())
+            .map_err(|_| "Selected recording HTTP Collector binding failed")?;
         let core_tasks = jobs::normal_core_tasks::Prepared::new(
             shared_jobs.clone(),
             store.clone(),
@@ -289,10 +291,11 @@ impl SelectedJobs {
             revoked.clone(),
         )
         .map_err(|_| "Selected Core downstream task initialization failed")?;
-        let plugin_refresh = jobs::normal_plugin_repos::Prepared::new(
+        let plugin_refresh = jobs::normal_plugin_repos::Prepared::with_plugin_publications(
             shared_jobs.clone(),
             auth.clone(),
             revoked.clone(),
+            plugin_runtime.publication_owners(),
         )
         .map_err(|_| "Selected plugin repository refresh initialization failed")?;
         let channel_tasks = jobs::normal_channel_tasks::Prepared::new(
@@ -393,7 +396,7 @@ impl SelectedJobs {
                 Family::Refresh,
                 existing
                     .refresh
-                    .into_normal_handler_with_download(xml_download.clone())
+                    .into_normal_handler_with_hooks(xml_download.clone(), plugin_runtime.clone())
                     .map_err(|_| "Selected Refresh lifecycle unavailable")?,
             ),
             (

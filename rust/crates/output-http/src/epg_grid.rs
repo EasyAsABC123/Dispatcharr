@@ -6,7 +6,7 @@ use dispatcharr_store::{
     grid_channel_profile, grid_dummy_span, grid_encode_batch, grid_resolve_window, GridTimestamp,
     Store, StoreError, User,
 };
-use serde_json::{json, Value};
+use serde_json::json;
 use std::collections::HashSet;
 fn capacity() -> StoreError {
     StoreError::StatusBody(503, json!({"detail":"Guide read capacity unavailable."}))
@@ -16,16 +16,6 @@ fn unsupported() -> StoreError {
         501,
         json!({"detail":"Custom dummy guide rules require a separate compatibility gate."}),
     )
-}
-fn truthy(value: &Value) -> bool {
-    match value {
-        Value::Null => false,
-        Value::Bool(v) => *v,
-        Value::String(v) => !v.is_empty(),
-        Value::Array(v) => !v.is_empty(),
-        Value::Object(v) => !v.is_empty(),
-        Value::Number(v) => v.as_f64() != Some(0.0),
-    }
 }
 fn utc(value: GridTimestamp) -> DateTime<Utc> {
     value.local.and_utc() - chrono::Duration::microseconds(value.offset_micros)
@@ -60,12 +50,26 @@ pub async fn stored_standard_entity(
     let channels = store
         .grid_visible_channels(user, profile.as_deref())
         .await?;
-    if channels
-        .iter()
-        .any(|c| c.source_type.as_deref() == Some("dummy") && truthy(&c.source_properties))
-    {
+    if channels.iter().any(|c| {
+        c.source_type.as_deref() == Some("dummy")
+            && epg_dummy::simple_config(Some(&c.source_properties)).is_err()
+    }) {
         return Err(unsupported());
     }
+    let names = crate::epg_names::resolve(
+        store,
+        &channels
+            .iter()
+            .map(|c| {
+                (
+                    c.id,
+                    (c.source_type.as_deref() == Some("dummy")).then_some(&c.source_properties),
+                )
+            })
+            .collect::<Vec<_>>(),
+        16 * 1024 * 1024,
+    )
+    .await?;
     let ids: HashSet<i64> = channels
         .iter()
         .filter(|c| c.source_type.as_deref() != Some("dummy"))
@@ -80,20 +84,21 @@ pub async fn stored_standard_entity(
     let days = u32::try_from(days).map_err(|_| capacity())?;
     let mut batch = Vec::new();
     for custom in [true, false] {
-        for channel in channels.iter().filter(|c| {
+        for (index, channel) in channels.iter().enumerate().filter(|(_, c)| {
             if custom {
                 c.source_type.as_deref() == Some("dummy")
             } else {
                 c.epg_id.is_none()
             }
         }) {
-            let programs = epg_dummy::standard(
+            let programs = epg_dummy::configured(
                 &channel.uuid.to_string(),
-                &channel.name,
+                names[index].as_deref().unwrap_or(&channel.name),
                 base,
                 days,
                 Some(start),
                 Some(end),
+                custom.then_some(&channel.source_properties),
             )
             .map_err(|_| capacity())?;
             for p in programs {

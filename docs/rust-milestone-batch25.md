@@ -87,3 +87,27 @@ check is prepared, retaining content, timestamp, size and ordering requirements.
 The original failed report remains false. All three exact container IDs and
 project resources are absent. A separate post-wait wrapper receipt-write failure
 is preserved. This Source-only capture establishes no paired performance gain.
+
+The [third fixed viewing run](../scripts/rust-integration/milestone-batch25/performance-attempt3/result-index.json)
+exits1 after4,477.281 seconds:21 phases are valid out of22 attempted, and two
+remaining phases are not run. All one/two/ten-viewer trials and the first paired
+100-viewer trial pass. Phase22 validates all100 Source streams and its real
+100-client/one-provider/one-upstream state, but55.57ms counter-read skew exceeds
+the unchanged50ms timing criterion. All recorded exact container/project cleanup
+checks pass; there are no changed inputs. The clock failure remains a failure.
+
+[Partial resource observations](../scripts/rust-integration/milestone-batch25/performance-attempt3/partial-observations.json)
+charge backend, infrastructure and Origin. The working-set estimate is not RSS.
+These observations are not completed protocol acceptance:
+
+| Viewers | Valid pairs | Median CPU reduction | Median working-set estimate reduction |
+| --- | --- | --- | --- |
+| 1 | 3 | 9.75% | 70.70% |
+| 2 | 3 | 12.58% | 70.75% |
+| 10 | 3 | 23.93% | 71.03% |
+| 100 | 1 | 63.95% | 71.61% |
+
+Two otherwise valid one-viewer CPU ratios,0.90359 and0.90247, also miss the fixed
+0.9 target. Correcting the observer alone cannot accept the gain. Native CPU
+profiling/optimization and the remaining equivalent-work trials remain required.
+No overall performance gain or milestone is accepted.

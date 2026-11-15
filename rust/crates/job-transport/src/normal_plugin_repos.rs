@@ -69,7 +69,8 @@ fn startup_frame(
         origin,
     )
     .map_err(|_| D::Operational("Plugin startup base frame invalid".into()))?;
-    let mut frame: Value = serde_json::from_slice(&base).map_err(|_| D::UnsupportedDomain)?;
+    let mut frame: Value = serde_json::from_slice(&base)
+        .map_err(|_| D::Operational("Plugin startup base frame JSON invalid".into()))?;
     frame["headers"]["task"] = json!("apps.plugins.tasks.refresh_plugin_repos");
     frame["headers"]["eta"] =
         json!((now + chrono::Duration::seconds(10))
@@ -103,6 +104,27 @@ pub struct Prepared {
 }
 impl Prepared {
     pub fn new(jobs: Jobs, auth: AuthService, revoked: Revoked) -> Result<Self, D> {
+        Self::new_configured(jobs, auth, revoked, None)
+    }
+    pub fn with_plugin_publications(
+        jobs: Jobs,
+        auth: AuthService,
+        revoked: Revoked,
+        publications: dispatcharr_store::PluginPublicationOwners,
+    ) -> Result<Self, D> {
+        Self::new_configured(jobs, auth, revoked, Some(publications))
+    }
+    fn new_configured(
+        jobs: Jobs,
+        auth: AuthService,
+        revoked: Revoked,
+        publications: Option<dispatcharr_store::PluginPublicationOwners>,
+    ) -> Result<Self, D> {
+        let executor = PluginRepositoryRefresh::new(auth.clone());
+        let executor = match publications {
+            Some(value) => executor.with_publications(value),
+            None => executor,
+        };
         if !jobs.allows_defaults() {
             return Err(D::UnsupportedDomain);
         }
@@ -114,7 +136,7 @@ impl Prepared {
                 jobs,
                 producer: auth.producer_identity_source(),
                 startup_attempted: AtomicBool::new(false),
-                executor: PluginRepositoryRefresh::new(auth),
+                executor,
                 revoked,
                 closed: AtomicBool::new(false),
                 slots: Arc::new(Semaphore::new(1)),
@@ -198,7 +220,11 @@ impl Prepared {
             if candidate.message.eta.is_some() {
                 return delayed::reserve(&inner, candidate.raw, owner).await;
             }
-            let admission = match inner.executor.try_admit(owner.caller.clone()) {
+            let admission = match inner.executor.try_admit_frame(
+                candidate.message.id,
+                &candidate.raw,
+                owner.caller.clone(),
+            ) {
                 Ok(v) => Arc::new(v),
                 Err(_) => return Ok(D::Capacity),
             };
@@ -208,6 +234,9 @@ impl Prepared {
                 .await
                 .map_err(|_| D::UnsupportedDomain)?;
             if inner.closed.load(Ordering::Acquire) {
+                admission.close().await.map_err(|_| {
+                    D::Operational("Plugin refresh preclaim SQL close failed".into())
+                })?;
                 return Err(D::Operational("Plugin refresh closed before claim".into()));
             }
             let message = match inner
@@ -216,8 +245,16 @@ impl Prepared {
                 .await
             {
                 Ok(v) => v,
-                Err(crate::transport::Error::ClaimRace) => return Ok(D::HeadChanged),
+                Err(crate::transport::Error::ClaimRace) => {
+                    admission.close().await.map_err(|_| {
+                        D::Operational("Plugin refresh changed-head SQL close failed".into())
+                    })?;
+                    return Ok(D::HeadChanged);
+                }
                 Err(_) => {
+                    admission.close().await.map_err(|_| {
+                        D::Operational("Plugin refresh ambiguous-claim SQL close failed".into())
+                    })?;
                     retain(&inner, owner);
                     return Err(D::Operational("Plugin refresh claim ambiguous".into()));
                 }
@@ -252,6 +289,10 @@ impl Prepared {
                 Ok(D::Completed(message.id))
             }
             .await;
+            admission
+                .close()
+                .await
+                .map_err(|_| D::Operational("Plugin refresh terminal SQL close failed".into()))?;
             if result.is_err() {
                 retain(&inner, owner);
             }
@@ -275,6 +316,19 @@ fn retain(inner: &Inner, owner: Arc<Owner>) {
         saved.push(owner);
     }
 }
+fn admission_failure(error: dispatcharr_store::StoreError) -> D {
+    match error {
+        dispatcharr_store::StoreError::StatusBody(503, _) => D::Capacity,
+        dispatcharr_store::StoreError::Unsupported("Owned task SQL session unavailable") => {
+            D::Operational("Plugin refresh SQL session unsettled".into())
+        }
+        dispatcharr_store::StoreError::Database(_) => {
+            D::Operational("Plugin refresh SQL preflight failed".into())
+        }
+        _ => D::UnsupportedDomain,
+    }
+}
+
 impl Handler for Prepared {
     fn maintenance(&self, caller: Arc<dyn Send + Sync>) -> BoxFuture<'_, Result<(), D>> {
         Box::pin(async move {
@@ -300,13 +354,19 @@ impl Handler for Prepared {
             let inner = self.inner.clone();
             // Spawn owns the entire physical scan/mutex release even if supervisor cancels.
             let offset = inner.visibility_cursor.load(Ordering::Acquire);
-            let next =
-                tokio::spawn(
-                    async move { inner.jobs.recover_plugin_visible(caller, offset).await },
-                )
-                .await
-                .map_err(|_| D::Operational("Plugin visibility join failed".into()))?
-                .map_err(|_| D::Operational("Plugin visibility recovery failed".into()))?;
+            let next = tokio::spawn(async move {
+                inner
+                    .jobs
+                    .recover_plugin_visible_with_publications(
+                        caller,
+                        offset,
+                        inner.executor.clone(),
+                    )
+                    .await
+            })
+            .await
+            .map_err(|_| D::Operational("Plugin visibility join failed".into()))?
+            .map_err(|_| D::Operational("Plugin visibility recovery failed".into()))?;
             self.inner.visibility_cursor.store(next, Ordering::Release);
             Ok(())
         })
@@ -403,5 +463,34 @@ mod tests {
         plain["headers"]["eta"] = Value::Null;
         plain["body"] = json!("W1sxXSwge30sIHt9XQ==");
         assert!(parse(&serde_json::to_vec(&plain).unwrap()).is_err());
+    }
+}
+
+#[cfg(test)]
+mod builtin_producer_domain_tests {
+    use super::*;
+    #[test]
+    fn exact_native_refresh_frame_keeps_existing_plain_eta_and_parent_guards() {
+        let bytes = startup_frame(
+            Uuid::new_v4(),
+            Uuid::new_v4(),
+            "owned@test",
+            chrono::Utc::now(),
+        )
+        .unwrap();
+        let mut frame: Value = serde_json::from_slice(&bytes).unwrap();
+        assert!(parse_eta(&bytes).is_ok());
+        frame["headers"]["eta"] = Value::Null;
+        assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_ok());
+        for (name, value) in [
+            ("task", json!("apps.plugins.tasks.unsupported")),
+            ("parent_id", json!(Uuid::new_v4().to_string())),
+            ("expires", json!(chrono::Utc::now().to_rfc3339())),
+            ("argsrepr", json!("[1]")),
+        ] {
+            let mut bad = frame.clone();
+            bad["headers"][name] = value;
+            assert!(parse(&serde_json::to_vec(&bad).unwrap()).is_err());
+        }
     }
 }

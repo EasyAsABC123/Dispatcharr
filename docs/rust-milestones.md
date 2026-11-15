@@ -9,7 +9,14 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate27](rust-milestone-batch27.md): all four
+The newest source candidate is [Candidate28](rust-milestone-batch28.md): all four
+SDK gates pass with1,088 tests, zero failures and783 ignored. It joins local/
+remote XML event scopes, dummy/ordered-name guide output, native builtin task
+handoff and late-body guards, process transports, inactive input profiles,
+Channel/Recording Collector and account scalars. Docker, combined Main/physical
+acceptance and performance remain open.
+
+The preceding source candidate is [Candidate27](rust-milestone-batch27.md): all four
 SDK gates pass with1,078 tests, zero failures and782 ignored. It adds the normal
 SD Connect/scoped-plugin event caller, supervised unknown-SQL hook quarantine/
 readiness and numeric preview command substitution. Docker/package checks pass. Main, enabled-plugin

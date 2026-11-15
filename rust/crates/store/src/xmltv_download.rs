@@ -51,6 +51,7 @@ pub struct Admission {
     session: TaskSqlSession,
     owner: Owner,
     missing_tvg: bool,
+    hooks: Option<crate::epg_task_hooks::EpgTaskHooks>,
 }
 struct Source {
     id: i64,
@@ -99,6 +100,12 @@ pub enum Outcome {
     Installed(Installed),
     HandledFailure(Rejected),
 }
+/// Source effects have settled but the actual scoped actor/SQL may remain open.
+/// HandledFailure cannot become legacy Rejected without its completed scope.
+pub enum ScopedOutcome {
+    Installed(Installed),
+    HandledFailure(crate::epg_task_hooks::PendingXmlRejection),
+}
 impl Downloader {
     pub fn prepare(
         auth: AuthService,
@@ -128,12 +135,21 @@ impl Downloader {
             .auth
             .borrow_task_sql_session(owner.clone())
             .await?;
+        self.admit_on(id, owner, session, None).await
+    }
+    async fn admit_on(
+        &self,
+        id: i64,
+        owner: Owner,
+        session: TaskSqlSession,
+        hooks: Option<crate::epg_task_hooks::EpgTaskHooks>,
+    ) -> Result<Admission, Error> {
         let read=async {
    let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT CASE WHEN octet_length(name)<=65536 THEN name END AS name,CASE WHEN octet_length(url)<=65536 THEN url END AS url,source_type,CASE WHEN octet_length(file_path)<=4096 THEN file_path END AS file_path,octet_length(name)>65536 OR coalesce(octet_length(url)>65536,false) OR coalesce(octet_length(file_path)>4096,false) AS oversized FROM epg_epgsource WHERE id=$1").bind(id).fetch_optional(c).await.map_err(StoreError::from)})).await??;
    let row=row.ok_or(Error::Unsupported)?;if row.try_get::<bool,_>("oversized").map_err(StoreError::from)?||row.try_get::<String,_>("source_type").map_err(StoreError::from)?!="xmltv" {return Err(Error::Unsupported)}
    let name:String=row.try_get("name").map_err(StoreError::from)?;let url:Option<String>=row.try_get("url").map_err(StoreError::from)?;let url=url.unwrap_or_default();
    let forbidden=session.run(|c|Box::pin(async move{sqlx::query_scalar::<_,bool>("SELECT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event='epg_error') OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled)").fetch_one(c).await.map_err(StoreError::from)})).await??;
-   if forbidden{return Err(Error::Unsupported)}
+   if forbidden && hooks.is_none(){return Err(Error::Unsupported)}
    let group=stream_settings(&session,&self.inner.auth).await?;
    let agent_id=group.get("default_user_agent").filter(|v|crate::xc_live_provider::truthy(v)).and_then(source_integer);
    let agent=if let Some(agent_id)=agent_id {
@@ -149,12 +165,43 @@ impl Downloader {
                 owner: Arc::new((owner, session.clone())),
                 session,
                 missing_tvg: false,
+                hooks,
             }),
             Err(error) => {
-                session.close().await?;
+                if hooks.is_none() {
+                    session.close().await?;
+                }
                 Err(error)
             }
         }
+    }
+    pub async fn run_scoped(
+        &self,
+        id: i64,
+        owner: Owner,
+        cancel: Arc<AtomicBool>,
+        hooks: crate::epg_task_hooks::EpgTaskHooks,
+    ) -> Result<ScopedOutcome, Error> {
+        if !(1..=i64::from(i32::MAX)).contains(&id) {
+            return Err(Error::Unsupported);
+        }
+        let session = hooks.download_session().await?;
+        let admission = self
+            .admit_on(id, owner, session, Some(hooks.clone()))
+            .await?;
+        tokio::spawn(async move {
+            // The same task scope owns SQL/context after this supervisor. On
+            // failure caller must abort it; on success finish it only after all
+            // subsequent parsing and native child publications have joined.
+            match admission.fetch(cancel).await? {
+                Outcome::Installed(file) => Ok(ScopedOutcome::Installed(file)),
+                Outcome::HandledFailure(proof) => Ok(ScopedOutcome::HandledFailure(
+                    hooks.pending_rejection(proof),
+                )),
+            }
+        })
+        .await
+        .map_err(|_| Error::Unsettled("scoped download supervisor"))?
     }
     /// Accepted refresh callers backpressure only known unused Auth capacity;
     /// same source/caller is retained and unknown SQL outcomes are never retried.
@@ -322,6 +369,19 @@ impl Admission {
         self.status("error", Some(&message)).await?;
         self.progress(action, 100, json!({"status":"error","error":public_error}))
             .await?;
+        if let Some(hooks) = &self.hooks {
+            hooks
+                .audit(
+                    "epg_error",
+                    json!({"source_name":self.source.name,"message":public_error}),
+                    chrono::Utc::now(),
+                )
+                .await?;
+            return Ok(Outcome::HandledFailure(Rejected {
+                source: self.source.id,
+                kind,
+            }));
+        }
         let name = self.source.name.clone();
         let audit=self.session.run(move|c|Box::pin(async move{sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES('epg_error',$1,NULL,NULL,$2)").bind(chrono::Utc::now()).bind(json!({"source_name":name,"message":public_error})).execute(c).await.map(|_|()).map_err(StoreError::from)})).await?;
         if let Err(error) = audit {

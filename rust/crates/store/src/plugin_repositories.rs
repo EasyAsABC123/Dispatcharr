@@ -552,15 +552,70 @@ async fn manifest_refresh(
 #[derive(Clone)]
 pub struct PluginRepositoryRefresh {
     auth: AuthService,
+    publications: Option<crate::PluginPublicationOwners>,
 }
 pub struct PluginRefreshAdmission {
     auth: AuthService,
     _owner: Arc<dyn Send + Sync>,
-    _permit: Arc<tokio::sync::OwnedSemaphorePermit>,
+    _permit: Option<Arc<tokio::sync::OwnedSemaphorePermit>>,
+    causal: Option<(crate::PluginPublicationOwners, uuid::Uuid, Vec<u8>)>,
+    session: tokio::sync::Mutex<Option<crate::TaskSqlSession>>,
 }
 impl PluginRepositoryRefresh {
     pub fn new(auth: AuthService) -> Self {
-        Self { auth }
+        Self {
+            auth,
+            publications: None,
+        }
+    }
+    pub fn with_publications(mut self, publications: crate::PluginPublicationOwners) -> Self {
+        self.publications = Some(publications);
+        self
+    }
+    /// Exact raw producer frame is checked by the normal Jobs family parser.
+    /// Only a settled native PUBLISH record can loan its original writer; an
+    /// external frame still requires independent admission from the same Auth4.
+    pub fn try_admit_frame(
+        &self,
+        id: uuid::Uuid,
+        raw: &[u8],
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<PluginRefreshAdmission, StoreError> {
+        match &self.publications {
+            None => self.try_admit(owner),
+            Some(publications) => Ok(PluginRefreshAdmission {
+                auth: self.auth.clone(),
+                _owner: owner,
+                _permit: None,
+                causal: Some((publications.clone(), id, raw.to_vec())),
+                session: tokio::sync::Mutex::new(None),
+            }),
+        }
+    }
+    pub fn publication_tracking_enabled(&self) -> bool {
+        self.publications.is_some()
+    }
+    pub fn publication_visible_restored(
+        &self,
+        id: uuid::Uuid,
+        stored: &[u8],
+        restored: &[u8],
+    ) -> Result<(), StoreError> {
+        match &self.publications {
+            Some(p) => p.restored_stored(id, stored, restored),
+            None => Ok(()),
+        }
+    }
+    pub fn publication_restored(
+        &self,
+        id: uuid::Uuid,
+        raw: &[u8],
+        restored: &[u8],
+    ) -> Result<(), StoreError> {
+        match &self.publications {
+            Some(p) => p.restored(id, raw, restored),
+            None => Ok(()),
+        }
     }
     pub fn try_admit(
         &self,
@@ -581,12 +636,48 @@ impl PluginRepositoryRefresh {
         Ok(PluginRefreshAdmission {
             auth,
             _owner: owner,
-            _permit: permit,
+            _permit: Some(permit),
+            causal: None,
+            session: tokio::sync::Mutex::new(None),
         })
     }
 }
 impl PluginRefreshAdmission {
+    /// Every preclaim exit and terminal path joins the SAME retained session.
+    pub async fn close(&self) -> Result<(), StoreError> {
+        let session = self.session.lock().await.take();
+        match session {
+            Some(session) => session.close().await,
+            None => Ok(()),
+        }
+    }
+
     pub async fn preflight(&self) -> Result<(), StoreError> {
+        if let Some((publications, id, raw)) = &self.causal {
+            let mut retained = self.session.lock().await;
+            if retained.is_some() {
+                return Err(capacity());
+            }
+            let session = publications
+                .admit(*id, raw, self.auth.clone(), self._owner.clone())
+                .await?;
+            let result = session
+                .run(|connection| {
+                    Box::pin(async move { manifest_fetch::refresh_preflight(connection).await })
+                })
+                .await;
+            match result {
+                Ok(Ok(())) => {
+                    *retained = Some(session);
+                    return Ok(());
+                }
+                other => {
+                    let close = session.close().await;
+                    close?;
+                    return other?;
+                }
+            }
+        }
         let mut connection = self.auth.store.pool().acquire().await?;
         connection.close_on_drop();
         let observed = manifest_fetch::refresh_preflight(&mut connection).await;
@@ -600,6 +691,19 @@ impl PluginRefreshAdmission {
     /// physical Ready+close. An unresolved transport/classification is a fault,
     /// never a fabricated Source caught-error status or successful None result.
     pub async fn execute(&self) -> Result<serde_json::Value, StoreError> {
+        if self.causal.is_some() {
+            let session = self
+                .session
+                .lock()
+                .await
+                .as_ref()
+                .cloned()
+                .ok_or_else(capacity)?;
+            let result = manifest_fetch::refresh_enabled_on_session(&session).await;
+            let close = session.close().await;
+            close?;
+            return result;
+        }
         let mut connection = self.auth.store.pool().acquire().await?;
         connection.close_on_drop();
         let observed = manifest_fetch::refresh_enabled(&mut connection).await;

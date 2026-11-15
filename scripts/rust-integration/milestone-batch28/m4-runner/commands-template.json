@@ -1,0 +1,45 @@
+{
+  "scope": "Scoped seven-case current Native counterpart within required M4 matrix; not the full native/VOD-ranges-catchup gate",
+  "global_dispatcher_required": true,
+  "exclusive_heavy": true,
+  "resources": [
+    "M4-owned-PG-Redis-origin-media"
+  ],
+  "seconds": 690,
+  "cleanup_seconds": 40,
+  "output_bytes": 1048576,
+  "argv": [
+    "python3",
+    "scripts/rust-vod-contracts/run.py",
+    "--output",
+    "@NEW_OUTPUT@",
+    "--candidate-overlay",
+    "docker/compose.rust-candidate.yml",
+    "--candidate-build-manifest",
+    "@ACTUAL_BUILD_JSON@",
+    "--candidate-package-proof",
+    "@ACTUAL_ROOT_PACKAGE_PROOF_JSON@",
+    "--candidate-source-inputs",
+    "@ACTUAL_SOURCE_INPUTS_JSON@",
+    "--retained-source-authority",
+    "scripts/rust-vod-contracts/retained-source-wire.json",
+    "--functional-seconds",
+    "600"
+  ],
+  "evaluator_argv": [
+    "python3",
+    "scripts/rust-vod-contracts/verify_retained.py",
+    "--output",
+    "@NEW_OUTPUT@"
+  ],
+  "cleanup_argv": [
+    "python3",
+    "scripts/rust-vod-contracts/verify_retained.py",
+    "--output",
+    "@NEW_OUTPUT@",
+    "--cleanup-only"
+  ],
+  "paired_new_Source_domains": "Use existing same-matrix paired contexts only for missing cells, not this retained-only mode; those callbacks remain required/open.",
+  "auto_dispatch": false,
+  "full_M4_passed": false
+}

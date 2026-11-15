@@ -55,7 +55,8 @@ pub fn generate_counted(
         let target=ctx.max_frame_bytes.min(64*1024);
         let mut batch=String::new();
         let mut channel_rows=0usize;
-        for channel in channels {
+        let names=dispatcharr_output_http::epg_names::resolve(&store,&channels.iter().map(|c|(c.id,c.source_properties.as_ref())).collect::<Vec<_>>(),limits.max_metadata_bytes).await?;
+        for (channel,parse_name) in channels.into_iter().zip(names) {
             // Unknown custom data is never silently treated as a standard guide.
             if rows::requires_custom_adapter(&channel) { Err(failure(501,"Custom XMLTV source properties require a verified regex adapter."))?; }
             let number=if let Some(numbers)=&numbers {numbers.get(&channel.id).expect("assigned channel number").clone()}else{dispatcharr_output_http::render::display_number(channel.number).map_err(|_|failure(503,"Invalid XMLTV channel number."))?};
@@ -65,9 +66,10 @@ pub fn generate_counted(
             if !batch.is_empty() && batch.len()+xml.len()>target {yield std::mem::take(&mut batch);}
             batch.push_str(&xml);channel_rows+=1;
             if channel_rows.is_multiple_of(200) || batch.len()>=target {yield std::mem::take(&mut batch);}
-            map_bytes=map_bytes.checked_add(256+id.capacity()+channel.name.capacity()).ok_or_else(||failure(503,"XMLTV mapping capacity unavailable."))?;
+            let properties_bytes=channel.source_properties.as_ref().map(rows::json_memory).transpose()?.unwrap_or(0);
+            map_bytes=map_bytes.checked_add(256+id.capacity()+channel.name.capacity()+properties_bytes).ok_or_else(||failure(503,"XMLTV mapping capacity unavailable."))?;
             if map_bytes>limits.max_metadata_bytes {Err(failure(503,"XMLTV mapping capacity unavailable."))?;}
-            if channel.epg_id.is_none() || channel.source_type.as_deref()==Some("dummy") {placeholders.push((id,channel.name));} else {real.entry(channel.epg_id.unwrap()).or_default().push(id);}
+            if channel.epg_id.is_none() || channel.source_type.as_deref()==Some("dummy") {placeholders.push((id,parse_name.unwrap_or(channel.name),channel.source_properties));} else {real.entry(channel.epg_id.unwrap()).or_default().push(id);}
         }
         if !batch.is_empty(){yield std::mem::take(&mut batch);}
         drop(numbers);
@@ -89,9 +91,9 @@ pub fn generate_counted(
         if !batch.is_empty(){yield std::mem::take(&mut batch);}
         drop(programmes);drop(real);
         let start=ctx.now.with_minute(0).and_then(|v|v.with_second(0)).and_then(|v|v.with_nanosecond(0)).expect("valid UTC hour");
-        for (id,name) in placeholders {
+        for (id,name,properties) in placeholders {
             let days=if ctx.window.forward_days>0{ctx.window.forward_days as u32}else{3};
-            for programme in dummy::standard(&id,&name,start,days,Some(lookback),cutoff).map_err(render_error)? {
+            for programme in dummy::configured(&id,&name,start,days,Some(lookback),cutoff,properties.as_ref()).map_err(render_error)? {
                 let xml=render::standard_dummy(&programme,ctx.max_frame_bytes).map_err(render_error)?;
                 if !batch.is_empty() && batch.len()+xml.len()>target {yield std::mem::take(&mut batch);}
                 batch.push_str(&xml);

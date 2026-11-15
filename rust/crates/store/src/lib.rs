@@ -539,6 +539,7 @@ mod compact_unhide;
 mod source_input_profile;
 
 pub mod epg_connect;
+pub mod epg_task_hooks;
 pub mod sd_guide;
 mod sd_guide_auth;
 mod sd_guide_fetch;
@@ -564,6 +565,7 @@ pub mod plugin_python_sql_registry;
 pub mod plugin_runtime;
 pub mod plugin_trace_claims;
 pub use plugin_execution_ports::{NativePluginJobs, NativePluginProcesses};
+pub use plugin_publication_owners::PluginPublicationOwners;
 pub use plugin_python_registry::{PluginTaskCapability, PluginTaskPolicy};
 pub use plugin_runtime::{PluginRuntime, PluginTaskAdmission};
 

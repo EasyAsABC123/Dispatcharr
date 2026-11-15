@@ -6,6 +6,7 @@ import io
 import importlib.util
 import json
 import os
+import signal
 from pathlib import Path
 import shutil
 import subprocess
@@ -33,6 +34,10 @@ class ActiveSourceComplete(Exception):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--candidate-package-proof',type=Path)
+    parser.add_argument('--candidate-source-inputs',type=Path)
+    parser.add_argument('--retained-source-authority',type=Path,help='Validated retained seven-case Source authority; Native-only counterpart, no Source business requests')
+    parser.add_argument('--functional-seconds',type=int,default=None,help='One absolute functional budget; cleanup has separate90s')
     parser.add_argument('--docker', default='docker')
     parser.add_argument('--source-frontend-from-candidate', action='store_true', help='Mount unchanged built React from immutable candidate into source fixture; requires candidate manifest')
     parser.add_argument('--profile-aliases', action='store_true', help='Separately characterize bare-profile redirects and their follow status')
@@ -208,6 +213,32 @@ def main():
         parser.error('source React fixture requires immutable candidate manifest')
     if bool(args.vod_active_stage_binary) != bool(args.vod_active_stage_proof):parser.error('diagnostic binary and source proof must be supplied together')
     if args.vod_active_stage_binary and not args.vod_active_recovery_native:parser.error('stage diagnostics require actual active Source/native fixture')
+    retained=None
+    if args.retained_source_authority:
+        if not(args.candidate_overlay and args.candidate_build_manifest):parser.error('retained Source requires existing immutable candidate')
+        permitted={'output','docker','candidate_overlay','candidate_build_manifest','candidate_package_proof','candidate_source_inputs','retained_source_authority','functional_seconds'}
+        forbidden=[name for name,value in vars(args).items()if name not in permitted and value!=parser.get_default(name)]
+        if forbidden:parser.error('retained seven-case adapter cannot dispatch unrelated Source/Cargo/diagnostic flags: '+','.join(forbidden))
+        from retained_source import load_authority,validate_candidate_bundle
+        if not(args.candidate_package_proof and args.candidate_source_inputs):parser.error('retained counterpart requires actual package proof and complete source inputs')
+        retained=load_authority(args.retained_source_authority.resolve())
+        retained['candidate_bundle']=validate_candidate_bundle(args.candidate_build_manifest,args.candidate_package_proof,args.candidate_source_inputs)
+    if args.functional_seconds is not None and not 1<=args.functional_seconds<=1800:parser.error('functional budget1..1800 required')
+    if retained and args.functional_seconds is None:parser.error('retained counterpart requires explicit absolute functional budget')
+    functional_deadline=time.monotonic()+args.functional_seconds if args.functional_seconds is not None else None
+    cleanup_deadline=None
+    def remaining(seconds):
+        deadline=cleanup_deadline if cleanup_deadline is not None else functional_deadline
+        if deadline is None:return seconds
+        left=deadline-time.monotonic()
+        if left<=0:raise TimeoutError('Absolute owned functional/cleanup deadline')
+        return min(seconds,left)
+    def host_generation(pid):
+        if not pid:return None
+        try:return Path('/proc',str(pid),'stat').read_text().rsplit(')',1)[1].split()[19]
+        except(FileNotFoundError,ProcessLookupError):return None
+    def interrupted(signum,frame):raise KeyboardInterrupt('Root-owned functional stop')
+    if retained:signal.signal(signal.SIGTERM,interrupted)
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     if any(output.iterdir()):
@@ -228,6 +259,9 @@ def main():
     spec=importlib.util.spec_from_file_location('frozen_vod_wire_probe',tool_root/'scripts/rust-vod-contracts/probe.py')
     frozen_probe=importlib.util.module_from_spec(spec)
     spec.loader.exec_module(frozen_probe)
+    if retained:
+        from retained_source import install_absolute_probe
+        install_absolute_probe(frozen_probe,functional_deadline)
     probe,profile_alias_probe=frozen_probe.probe,frozen_probe.profile_alias_probe
     project = 'dispatcharr-vod-contract-' + uuid.uuid4().hex[:10]
     temporary = Path(tempfile.mkdtemp(prefix='dispatcharr-vod-contract-'))
@@ -279,9 +313,19 @@ def main():
     port_metadata = port_namespace['write_port_overlay'](port_overlay,service_ports)
     port_metadata.update(tool_sha256=hashlib.sha256(port_source).hexdigest(),overlay_sha256=hashlib.sha256(port_overlay.read_bytes()).hexdigest())
     compose += ['-f',str(port_overlay)]
+    if retained:
+        fence=output/'retained-source-network-fence.yml'
+        values={'HTTP_PROXY':'http://127.0.0.1:9','HTTPS_PROXY':'http://127.0.0.1:9','ALL_PROXY':'http://127.0.0.1:9','http_proxy':'http://127.0.0.1:9','https_proxy':'http://127.0.0.1:9','all_proxy':'http://127.0.0.1:9','NO_PROXY':'localhost,127.0.0.1,::1,baseline,origin','no_proxy':'localhost,127.0.0.1,::1,baseline,origin'}
+        # Source is setup/ORM only in retained mode; never contact public repo or
+        # version services during its normal startup helper lifecycle.
+        fence.write_text('services:\n  baseline:\n    environment:\n'+''.join('      '+key+': '+json.dumps(value)+'\n'for key,value in values.items()))
+        compose+=['-f',str(fence)]
     report = {'format_version': 1, 'scope': 'original Python native XC VOD wire contracts',
               'source_commit': BASELINE, 'passed': False, 'project': project,
               'performance_verified': False, 'parity_verified': False, 'fixture_ports':port_metadata, 'tool_source_sha256':tool_hashes, 'tool_manifest_sha256':hashlib.sha256(tool_manifest.encode()).hexdigest(), 'tool_source_scope':'All VOD/Timeshift probes, helpers, integration/baseline fixtures and Compose files copied before setup; later imports and script mounts use these bytes.'}
+    if retained:
+        report['scope']='Current Native seven-case VOD counterpart to qualified retained Source; no Source business replay'
+        (output/'owned-project.json').write_text(json.dumps({'project':project,'docker':args.docker,'controller_pid':os.getpid(),'controller_generation':host_generation(os.getpid()),'candidate_bundle':retained['candidate_bundle']},indent=2)+'\n')
     if stage_diagnostic:
         report['scope']='DIAGNOSTIC ONLY: actual fixture with bounded error-stage executable overlay; no canonical runtime/package parity'
         report['active_stage_diagnostic']=stage_diagnostic
@@ -289,11 +333,23 @@ def main():
     if candidate_manifest:
         report['candidate_overlay_sha256']=hashlib.sha256((output/'candidate-overlay.yml').read_bytes()).hexdigest()
     def command(arguments, timeout=180):
+        deadline=cleanup_deadline if cleanup_deadline is not None else functional_deadline
+        if deadline is not None:
+            timeout=min(timeout,deadline-time.monotonic())
+            if timeout<=0:raise TimeoutError('Absolute owned functional/cleanup deadline')
         result = subprocess.run(arguments, env=environment, capture_output=True, text=True, timeout=timeout)
         with (output/'commands.log').open('a') as log:
             log.write(result.stdout+result.stderr)
         result.check_returncode()
         return result.stdout
+    owned_history={}
+    def capture_owned():
+        for cid in command([args.docker,'container','ls','-aq','--filter','label=com.docker.compose.project='+project],timeout=5).split():
+            item=json.loads(command([args.docker,'inspect',cid],timeout=5))[0]
+            old=owned_history.get(item['Id'])
+            if old is None or not old.get('generation'):
+                owned_history[item['Id']]={'Id':item['Id'],'pid':item['State']['Pid'],'generation':host_generation(item['State']['Pid']),'actual_exit':item['State']['ExitCode'],'state':item['State']['Status'],'service':item['Config'].get('Labels',{}).get('com.docker.compose.service')}
+        (output/'owned-container-history.json').write_text(json.dumps(list(owned_history.values()),indent=2)+'\n')
     def container(service):
         return command(compose+['ps','-q',service]).strip()
     def address(service, port):
@@ -302,12 +358,14 @@ def main():
         # A frozen contract tree can sit below the actual Git worktree. Archive
         # from its Git top level so Git's subdirectory prefix cannot produce an
         # empty baseline tree when ROOT is that frozen nested directory.
-        git_root=subprocess.check_output(['git','rev-parse','--show-toplevel'],cwd=ROOT,text=True).strip()
-        archive = subprocess.run(['git','archive',BASELINE],cwd=git_root,check=True,capture_output=True).stdout
+        git_root=subprocess.check_output(['git','rev-parse','--show-toplevel'],cwd=ROOT,text=True,timeout=remaining(10)).strip()
+        archive = subprocess.run(['git','archive',BASELINE],cwd=git_root,check=True,capture_output=True,timeout=remaining(30)).stdout
         with tarfile.open(fileobj=io.BytesIO(archive),mode='r:') as baseline_tar:
             if 'pyproject.toml' not in baseline_tar.getnames():
                 raise RuntimeError('Baseline archive missing repository root')
-        subprocess.run(['tar','-x','--same-permissions','-C',str(source)],input=archive,check=True)
+        if retained and hashlib.sha256(archive).hexdigest()!='f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff':raise ValueError('Qualified Original archive identity changed')
+        report['Original_source_archive_sha256']=hashlib.sha256(archive).hexdigest()
+        subprocess.run(['tar','-x','--same-permissions','-C',str(source)],input=archive,check=True,timeout=remaining(30))
         (source/'media').mkdir(exist_ok=True)
         if args.source_frontend_from_candidate:
             frontend = source/'frontend/dist'
@@ -329,17 +387,31 @@ def main():
                 report['fixture_start_attempts'].append({'attempt':attempt,'started':False,'rootless_dynamic_port_collision':bind_collision})
                 if not bind_collision or attempt == 4:
                     raise
-        deadline = time.monotonic()+180
+            finally:
+                if retained:
+                    primary=sys.exc_info()[1]
+                    try:capture_owned()
+                    except Exception as error:
+                        report.setdefault('fixture_resource_capture_errors',[]).append(type(error).__name__)
+                        if primary is None:raise
+        deadline = min(time.monotonic()+180,functional_deadline or float('inf'))
         while True:
             try:
                 base = address('baseline',5656)
-                with urllib.request.urlopen(base+'/api/core/version/',timeout=2) as response:
-                    if response.status == 200:
-                        break
+                if retained:
+                    status=json.loads(command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/verification/supervisor.py','control','status'],timeout=5))
+                    if status.get('ok')and status.get('running'):break
+                else:
+                    with urllib.request.urlopen(base+'/api/core/version/',timeout=remaining(2)) as response:
+                        if response.status == 200:break
             except Exception:
                 if time.monotonic()>deadline:
                     raise TimeoutError('baseline readiness timed out')
-                time.sleep(1)
+                time.sleep(remaining(1))
+        if retained:
+            closed=json.loads(command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','-c',"import json,socket;s=socket.socket();s.settimeout(.2);v=s.connect_ex(('127.0.0.1',9));s.close();print(json.dumps({'actual_connect_ex':v}))"],timeout=5))
+            if closed['actual_connect_ex']!=111:raise ValueError('Owned Source setup network proxy port must be actually closed')
+            report['Source_setup_public_network_fence']=closed
         command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/vod-verification/seed.py'])
         seed = json.loads((output/'vod-seed.json').read_text())
         if args.vod_header_stripped_follow_source:
@@ -354,7 +426,7 @@ def main():
                 candidate=address('candidate',9192);deadline=time.monotonic()+60
                 while True:
                     try:
-                        with urllib.request.urlopen(candidate+'/health/ready',timeout=2)as ready:
+                        with urllib.request.urlopen(candidate+'/health/ready',timeout=remaining(2))as ready:
                             if json.load(ready).get('status')=='ready':break
                     except(OSError,ValueError):pass
                     if time.monotonic()>deadline:raise TimeoutError('Native header candidate readiness')
@@ -801,7 +873,19 @@ def main():
             result.check_returncode()
         inspection = json.loads(command([args.docker,'inspect',container('baseline')]))[0]
         report['source_image_id'] = inspection['Image']
-        report['wire'] = probe(base,seed['native_path'],capture_fullfile=output/'baseline-full.mp4')
+        if retained:
+            with urllib.request.urlopen(address('origin',8080)+'/stats',timeout=remaining(5))as response:actual_fixture=json.load(response)['vod']
+            from retained_source import validate_fixture
+            validate_fixture(retained,actual_fixture)
+            report['wire']=retained['observation']['wire']
+            report['retained_Source_authority']=retained['proof']
+            report['current_candidate_bundle']=retained['candidate_bundle']
+            report['retained_Source_origin_fixture']=actual_fixture
+            report['Source_business_HTTP_requests_executed']=0
+            report['Source_management_fixture_setup_executed']=True
+            report['Source_web_started_only_as_existing_fixture_setup']=True
+        else:
+            report['wire'] = probe(base,seed['native_path'],capture_fullfile=output/'baseline-full.mp4')
         if args.profile_aliases:
             report['profile_aliases'] = profile_alias_probe(base,seed['native_path'],seed['provider_profile_id'])
             (output/'profile-aliases.json').write_text(json.dumps(report['profile_aliases'],indent=2)+'\n')
@@ -815,11 +899,18 @@ def main():
         if candidate_manifest:
             report['candidate_reset'] = {'mode':'baseline web stopped; only isolated Redis cleared'}
             report['candidate_reset']['web_stop'] = json.loads(command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/verification/supervisor.py','control','stop']))
+            if retained and report['candidate_reset']['web_stop'].get('exit_code')!=0:raise RuntimeError('Source setup web did not retire normally')
             report['candidate_reset']['redis_keys_before'] = int(command(compose+['exec','-T','baseline','redis-cli','dbsize']))
             report['candidate_reset']['redis_clear'] = command(compose+['exec','-T','baseline','redis-cli','FLUSHDB']).strip()
+            if retained:
+                command(compose+['up','-d','--no-deps','--no-build','data-init'])
+                capture_owned()
+                init_exit=command([args.docker,'wait',container('data-init')],timeout=15).strip()
+                if init_exit!='0':raise RuntimeError('Owned data-volume initialization failed')
             command(compose+['up','-d','--no-deps','--no-build','candidate'])
+            if retained:capture_owned()
             candidate = address('candidate',9192)
-            deadline = time.monotonic()+60
+            deadline = min(time.monotonic()+60,functional_deadline or float('inf'))
             while True:
                 try:
                     with urllib.request.urlopen(candidate+'/health/ready',timeout=2) as response:
@@ -829,12 +920,24 @@ def main():
                     pass
                 if time.monotonic()>deadline:
                     raise TimeoutError('candidate readiness timed out')
-                time.sleep(.25)
+                time.sleep(remaining(.25))
             inspected = json.loads(command([args.docker,'inspect',container('candidate')]))[0]
             spec = importlib.util.spec_from_file_location('playback_build_adapter',tool_root/'scripts/rust-playback-baseline/run.py')
             playback_adapter = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(playback_adapter)
             source_hash = playback_adapter.validate_build_manifest(candidate_manifest,inspected['Image'],(inspected['Config'].get('Labels') or {}).get('org.opencontainers.image.source-tree-sha256'))
+            if retained:
+                mounts=inspected['Mounts']
+                if len(mounts)!=1 or mounts[0]['Destination']!='/data':raise ValueError('Native counterpart requires data-only volume, no Source/evidence mounts')
+                if inspected['Config'].get('User')not in('65532','65532:65532'):raise ValueError('Actual packaged Native UID differs')
+                image_config=json.loads(command([args.docker,'image','inspect',inspected['Image']],timeout=5))[0]['Config']
+                for key in('Entrypoint','Cmd'):
+                    if inspected['Config'].get(key)!=image_config.get(key):raise ValueError('Native counterpart must execute normal packaged '+key)
+                actual_env=dict(item.split('=',1)for item in inspected['Config'].get('Env',[])if'='in item)
+                if actual_env.get('RUST_VOD_REDIS_RECOVERY_ENABLED','0')!='0':raise ValueError('Default wire counterpart cannot silently enable recovery')
+
+                report['actual_native_data_only_mount']={'destination':mounts[0]['Destination'],'type':mounts[0]['Type'],'user':inspected['Config']['User'],'entrypoint':inspected['Config'].get('Entrypoint'),'command':inspected['Config'].get('Cmd')}
+
             report['candidate_provenance'] = {'image_id':inspected['Image'],'source_tree_sha256':source_hash,'build_manifest_sha256':hashlib.sha256(candidate_manifest_bytes).hexdigest()}
             if args.vod_progress_source:
                 spec=importlib.util.spec_from_file_location('frozen_vod_progress',tool_root/'scripts/rust-output-contracts/vod_progress_probe.py');progress_probe=importlib.util.module_from_spec(spec);spec.loader.exec_module(progress_probe)
@@ -932,7 +1035,7 @@ def main():
                 (output/'candidate-timeshift-sessions.json').write_text(json.dumps(report['candidate_timeshift_sessions'],indent=2)+'\n')
                 (output/'candidate-timeshift-media.json').write_text(json.dumps(report['candidate_timeshift_media'],indent=2)+'\n')
         report['decoders'] = []
-        for backend in ['baseline']+(['candidate'] if candidate_manifest else []):
+        for backend in ([]if retained else['baseline'])+(['candidate'] if candidate_manifest else []):
             decoded = command(compose+['exec','-T','baseline','ffmpeg','-hide_banner','-loglevel','error','-xerror','-progress','pipe:1','-nostats','-i','/evidence/'+backend+'-full.mp4','-map','0:v:0','-map','0:a:0','-t','3','-f','null','-'],timeout=45)
             (output/(backend+'-decode.log')).write_text(decoded)
             frames = max((int(line.split('=')[1]) for line in decoded.splitlines() if line.startswith('frame=')),default=0)
@@ -940,7 +1043,7 @@ def main():
             if frames<50:
                 raise RuntimeError('native VOD decoded insufficient video frames')
         origin = address('origin',8080)
-        with urllib.request.urlopen(origin+'/stats',timeout=5) as response:
+        with urllib.request.urlopen(origin+'/stats',timeout=remaining(5)) as response:
             report['origin'] = json.load(response)
         # A characterization succeeds only when every request was recorded.
         # It does not claim that baseline defects satisfy RFC range behavior.
@@ -989,10 +1092,46 @@ def main():
         raise
     finally:
         if output_peer:output_peer.close()
+        if functional_deadline is not None:cleanup_deadline=time.monotonic()+90
+        owned=[]
+        if retained:
+            try:
+                capture_owned()
+                owned=list(owned_history.values())
+            except Exception as error:report['precleanup_inventory_error']=type(error).__name__;owned=list(owned_history.values())
+            report['actual_owned_containers_before_cleanup']=owned
+        if retained:
+            stops=[]
+            for item in owned:
+                if item.get('service')!='candidate':continue
+                receipt={'Id':item['Id'],'actual_exit':None,'OOMKilled':None,'error':None}
+                try:
+                    command([args.docker,'stop','--time','20',item['Id']],timeout=25)
+                    state=json.loads(command([args.docker,'inspect',item['Id']],timeout=5))[0]['State']
+                    receipt.update(actual_exit=state['ExitCode'],OOMKilled=state['OOMKilled'],running=state['Running'])
+                except Exception as error:receipt['error']=type(error).__name__
+                stops.append(receipt)
+            report['actual_Main_normal_stop']={'receipts':stops,'passed':bool(stops)and all(x['error']is None and x['actual_exit']==0 and not x['OOMKilled']and not x['running']for x in stops)}
+            if not report['actual_Main_normal_stop']['passed']:report['passed']=False
         try:
-            command(compose+['logs','--no-color'],timeout=30)
+            if retained:
+                try:command(compose+['logs','--no-color'],timeout=15)
+                except Exception as error:report['cleanup_log_collection_error']=type(error).__name__
+            else:command(compose+['logs','--no-color'],timeout=30)
             command(compose+['down','-v','--remove-orphans','--timeout','15'],timeout=60)
             report['cleanup_passed'] = True
+            if retained:
+                inventories={}
+                for kind in('container','network','volume'):
+                    inventories[kind]=command([args.docker,kind,'ls','-q','--filter','label=com.docker.compose.project='+project],timeout=5).split()
+                identities=[]
+                for item in owned:
+                    p=Path('/proc',str(item['pid']),'stat')
+                    same=bool(item['generation']and host_generation(item['pid'])==item['generation'])
+                    identities.append({'Id':item['Id'],'host_generation_absent':not same})
+                exact_cids={item['Id']:command([args.docker,'container','ls','-aq','--no-trunc','--filter','id='+item['Id']],timeout=5).split()for item in owned}
+                report['independent_owned_cleanup']={'inventories':inventories,'exact_container_ids':exact_cids,'actual_generations':identities,'passed':not report.get('precleanup_inventory_error')and not report.get('fixture_resource_capture_errors')and not any(inventories.values())and not any(exact_cids.values())and all(x['host_generation_absent']for x in identities)}
+                if not report['independent_owned_cleanup']['passed']:raise RuntimeError('Actual owned resources not settled')
         except Exception as error:
             report['cleanup_passed'] = False
             report['cleanup_error'] = type(error).__name__

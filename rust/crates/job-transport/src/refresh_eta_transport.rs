@@ -311,6 +311,7 @@ impl Jobs {
         message: &crate::refresh_protocol::RefreshMessage,
         result: crate::refresh_worker::NormalReturn,
         children: Vec<Uuid>,
+        observed_trail: Option<serde_json::Value>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
         if !self.allows_refresh() {
@@ -329,6 +330,24 @@ impl Jobs {
                 message.source_id
             )),
         };
+        if let Some(trail) = observed_trail {
+            if !trail.is_array() {
+                return Err(Error::Protocol);
+            }
+            // Actual pinned Context trail is metadata, never publication authority.
+            // Keep the existing bounded backend wire/lease/SUCCESS/TTL contract.
+            let mut meta = serde_json::json!({"status":"SUCCESS","result":value,"traceback":null,"children":trail,"date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string(),"task_id":message.task_id.to_string()});
+            if let Some(parent) = message.parent {
+                meta["parent_id"] = serde_json::json!(parent.to_string());
+            }
+            return self
+                .write_metadata(
+                    message.task_id,
+                    serde_json::to_vec(&meta).map_err(|_| Error::Protocol)?,
+                    caller,
+                )
+                .await;
+        }
         self.write_result(message.task_id, value, message.parent, children, caller)
             .await
     }

@@ -63,6 +63,7 @@ struct Inner {
     jobs: Jobs,
     driver: Mutex<Option<ScheduledRefreshDriver>>,
     executor: Arc<dyn RefreshExecutor>,
+    service: Arc<ServiceExecutor>,
     series_handoff: Option<crate::refresh_series_handoff::Handoff>,
     runner: FileJobRunner,
     reporter: GuideReporter,
@@ -178,14 +179,13 @@ impl RefreshApplication {
         .map_err(|_| "Refresh service initialization failed")?;
         let series_handoff = configured_series
             .then(|| crate::refresh_series_handoff::Handoff::prepare(jobs.clone()));
-        let service: Arc<dyn RefreshExecutor> =
-            Arc::new(ServiceExecutor::new(runner.clone(), store.clone(), clock));
+        let service = Arc::new(ServiceExecutor::new(runner.clone(), store.clone(), clock));
         let executor: Arc<dyn RefreshExecutor> = match &series_handoff {
             Some(handoff) => Arc::new(crate::refresh_series_handoff::Executor {
-                inner: service,
+                inner: service.clone(),
                 handoff: handoff.clone(),
             }),
-            None => service,
+            None => service.clone(),
         };
         Ok(Self {
             inner: Arc::new(Inner {
@@ -194,6 +194,7 @@ impl RefreshApplication {
                 jobs,
                 driver: Mutex::new(None),
                 executor,
+                service,
                 series_handoff,
                 runner,
                 reporter,
@@ -204,6 +205,17 @@ impl RefreshApplication {
                 http: Arc::new(Semaphore::new(4)),
             }),
         })
+    }
+    pub fn into_normal_handler_with_hooks(
+        self,
+        download: dispatcharr_store::xmltv_download::Downloader,
+        runtime: dispatcharr_store::PluginRuntime,
+    ) -> Result<Arc<dyn crate::milestone_dispatch::Handler>, &'static str> {
+        self.inner
+            .service
+            .bind_hooks(self.inner.auth.clone(), runtime)
+            .map_err(|_| "normal XMLTV hook binding failed")?;
+        self.into_normal_handler_with_download(download)
     }
     pub fn into_normal_handler_with_download(
         self,

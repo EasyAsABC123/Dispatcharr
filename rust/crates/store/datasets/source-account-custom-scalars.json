@@ -1,0 +1,269 @@
+{
+  "source_file_sha256": "05f17f1978c6bdca8b350003462a15cd1889bd5df5b8e730bc61daaaed90a102",
+  "authority": "exact pinned UserSerializer.validate_custom_properties AST, stdlib json/re, isolated ValidationError type",
+  "scope": "pure algorithm on declared JSON inputs; HTTP/database not executed",
+  "records": [
+    {
+      "name": "xc-null",
+      "input": {
+        "xc_password": null
+      },
+      "accepted": true,
+      "actual_output": {
+        "xc_password": null
+      }
+    },
+    {
+      "name": "xc-false",
+      "input": {
+        "xc_password": false
+      },
+      "accepted": true,
+      "actual_output": {
+        "xc_password": false
+      }
+    },
+    {
+      "name": "xc-empty-string",
+      "input": {
+        "xc_password": ""
+      },
+      "accepted": true,
+      "actual_output": {
+        "xc_password": ""
+      }
+    },
+    {
+      "name": "xc-zero-int",
+      "input": {
+        "xc_password": 0
+      },
+      "accepted": true,
+      "actual_output": {
+        "xc_password": 0
+      }
+    },
+    {
+      "name": "xc-zero-float",
+      "input": {
+        "xc_password": 0.0
+      },
+      "accepted": true,
+      "actual_output": {
+        "xc_password": 0.0
+      }
+    },
+    {
+      "name": "xc-negative-zero-float",
+      "input": {
+        "xc_password": -0.0
+      },
+      "accepted": true,
+      "actual_output": {
+        "xc_password": -0.0
+      }
+    },
+    {
+      "name": "xc-empty-array",
+      "input": {
+        "xc_password": []
+      },
+      "accepted": true,
+      "actual_output": {
+        "xc_password": []
+      }
+    },
+    {
+      "name": "xc-empty-object",
+      "input": {
+        "xc_password": {}
+      },
+      "accepted": true,
+      "actual_output": {
+        "xc_password": {}
+      }
+    },
+    {
+      "name": "xc-safe-string",
+      "input": {
+        "xc_password": "owned.Safe_@-123"
+      },
+      "accepted": true,
+      "actual_output": {
+        "xc_password": "owned.Safe_@-123"
+      }
+    },
+    {
+      "name": "xc-unsafe-string",
+      "input": {
+        "xc_password": "space forbidden"
+      },
+      "accepted": false,
+      "actual_validation_message": "XC password may only contain letters, numbers, periods (.), underscores (_), at signs (@), and hyphens (-)"
+    },
+    {
+      "name": "profiles-null",
+      "input": {
+        "allowed_m3u_profile_ids": null
+      },
+      "accepted": true,
+      "actual_output": {
+        "allowed_m3u_profile_ids": null
+      }
+    },
+    {
+      "name": "profiles-empty",
+      "input": {
+        "allowed_m3u_profile_ids": []
+      },
+      "accepted": true,
+      "actual_output": {
+        "allowed_m3u_profile_ids": []
+      }
+    },
+    {
+      "name": "profiles-ordinary",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          1,
+          2,
+          1
+        ]
+      },
+      "accepted": true,
+      "actual_output": {
+        "allowed_m3u_profile_ids": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "name": "profiles-i64-max",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          9223372036854775807
+        ]
+      },
+      "accepted": true,
+      "actual_output": {
+        "allowed_m3u_profile_ids": [
+          9223372036854775807
+        ]
+      }
+    },
+    {
+      "name": "profiles-u64",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          9223372036854775808
+        ]
+      },
+      "accepted": true,
+      "actual_output": {
+        "allowed_m3u_profile_ids": [
+          9223372036854775808
+        ]
+      }
+    },
+    {
+      "name": "profiles-above-u64",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          18446744073709551616
+        ]
+      },
+      "accepted": true,
+      "actual_output": {
+        "allowed_m3u_profile_ids": [
+          18446744073709551616
+        ]
+      }
+    },
+    {
+      "name": "profiles-large-int",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001
+        ]
+      },
+      "accepted": true,
+      "actual_output": {
+        "allowed_m3u_profile_ids": [
+          10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001
+        ]
+      }
+    },
+    {
+      "name": "profiles-zero",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          0
+        ]
+      },
+      "accepted": false,
+      "actual_validation_message": "allowed_m3u_profile_ids must be a list of positive integer IDs"
+    },
+    {
+      "name": "profiles-negative",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          -1
+        ]
+      },
+      "accepted": false,
+      "actual_validation_message": "allowed_m3u_profile_ids must be a list of positive integer IDs"
+    },
+    {
+      "name": "profiles-bool",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          true
+        ]
+      },
+      "accepted": false,
+      "actual_validation_message": "allowed_m3u_profile_ids must be a list of positive integer IDs"
+    },
+    {
+      "name": "profiles-float",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          1.0
+        ]
+      },
+      "accepted": false,
+      "actual_validation_message": "allowed_m3u_profile_ids must be a list of positive integer IDs"
+    },
+    {
+      "name": "profiles-string",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          "1"
+        ]
+      },
+      "accepted": false,
+      "actual_validation_message": "allowed_m3u_profile_ids must be a list of positive integer IDs"
+    },
+    {
+      "name": "profiles-object",
+      "input": {
+        "allowed_m3u_profile_ids": {}
+      },
+      "accepted": false,
+      "actual_validation_message": "allowed_m3u_profile_ids must be a list of positive integer IDs"
+    },
+    {
+      "name": "profiles-nested",
+      "input": {
+        "allowed_m3u_profile_ids": [
+          [
+            1
+          ]
+        ]
+      },
+      "accepted": false,
+      "actual_validation_message": "allowed_m3u_profile_ids must be a list of positive integer IDs"
+    }
+  ]
+}

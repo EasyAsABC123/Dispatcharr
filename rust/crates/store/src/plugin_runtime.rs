@@ -455,6 +455,9 @@ impl PluginRuntime {
         !self.inner.closed.load(Ordering::Acquire)
             && !self.inner.unsettled_sql.load(Ordering::Acquire)
     }
+    pub fn publication_owners(&self) -> PluginPublicationOwners {
+        self.inner.publications.clone()
+    }
     pub fn stop_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);
         self.inner.actions.stop_admission();

@@ -24,7 +24,9 @@ class Channel(virtual.Channel):
   return value
  def _put(self,queue,message,**kwargs):
   witness,records=seal();name=message.get('headers',{}).get('task')
-  if name not in records:raise CompatibilityUnavailable('Only an actual loaded plugin task may enter the dependency bridge')
+  if name in records:method='publish_registered'
+  elif name=='apps.plugins.tasks.refresh_plugin_repos':method='publish_native_refresh'
+  else:raise CompatibilityUnavailable('Builtin producer requires its exact prepared native family adapter')
   # Existing normal Jobs lane does not yet consume Source priority subqueues.
   priority=message.get('properties',{}).get('priority',0)
   if priority not in(None,0):raise CompatibilityUnavailable('Plugin priority subqueue is unsupported')
@@ -32,7 +34,7 @@ class Channel(virtual.Channel):
   # body encoding, delivery tag, headers and delivery_info augmentation.
   raw=dumps(message).encode('utf8')
   if len(raw)>1024*1024:raise CompatibilityUnavailable('Plugin raw task frame capacity')
-  receipt=current().call('jobs','publish_registered',{'witness':witness,'name':name,'queue':queue,'raw_base64':base64.b64encode(raw).decode('ascii')})
+  receipt=current().call('jobs',method,{'witness':witness,'name':name,'queue':queue,'raw_base64':base64.b64encode(raw).decode('ascii')})
   if not isinstance(receipt,dict)or receipt.get('settled')is not True:raise CompatibilityUnavailable('Actual native publication settlement missing')
  def _get(self,*args,**kwargs):raise CompatibilityUnavailable('Native owns FIFO reservation/ACK; dependency consumption is forbidden')
  def _purge(self,*args,**kwargs):raise CompatibilityUnavailable('Plugin queue purge lifecycle is unsupported')

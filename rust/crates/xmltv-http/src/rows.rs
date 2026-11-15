@@ -34,7 +34,7 @@ impl Limits {
 }
 // Charge containers conservatively, including IndexMap buckets and unused vector
 // capacity. Encoded JSON length alone misses arrays of many tiny scalar nodes.
-fn json_memory(value: &Value) -> Result<usize, StoreError> {
+pub(crate) fn json_memory(value: &Value) -> Result<usize, StoreError> {
     let mut pending = vec![(value, 0usize)];
     let mut total = 0usize;
     let mut nodes = 0usize;
@@ -112,14 +112,15 @@ pub fn requires_custom_adapter(channel: &Channel) -> bool {
     if !truthy {
         return false;
     }
-    let Value::Object(properties) = value else {
+    let Value::Object(_) = value else {
         return true;
     };
     // epg_generator resolves stream-name parsing for any source, but custom
     // dummy logo/programme generation only runs for source_type='dummy'.
     // Real XML/SD provider/config properties otherwise do not alter output.
-    channel.source_type.as_deref() == Some("dummy")
-        || properties.get("name_source").and_then(Value::as_str) == Some("stream")
+    (channel.source_type.as_deref() == Some("dummy")
+        && dispatcharr_output_http::epg_dummy::simple_config(Some(value)).is_err())
+        || dispatcharr_output_http::epg_names::stream_offset(Some(value)).is_err()
 }
 
 fn capacity() -> StoreError {
@@ -294,10 +295,24 @@ mod source_custom_property_routing {
             ] {
                 assert!(!requires_custom_adapter(&channel(kind, properties)));
             }
-            assert!(requires_custom_adapter(&channel(
+            assert!(!requires_custom_adapter(&channel(
                 kind,
                 json!({"name_source":"stream","stream_index":1})
             )));
+            assert!(requires_custom_adapter(&channel(
+                kind,
+                json!({"name_source":"stream","stream_index":"1"})
+            )));
+        }
+    }
+    #[test]
+    fn default_dummy_configuration_and_literal_fallback_reach_shared_source_iterator() {
+        for properties in [
+            json!({"title_pattern":"","time_pattern":"unused-invalid"}),
+            json!({"fallback_title_template":"Owned"}),
+            json!({"category":false,"title_pattern":0}),
+        ] {
+            assert!(!requires_custom_adapter(&channel("dummy", properties)));
         }
     }
     #[test]

@@ -79,6 +79,8 @@ pub struct AuthService {
     pub(crate) request_writer_permit: Option<Arc<tokio::sync::OwnedSemaphorePermit>>,
     pub(crate) user_agent_workers: Arc<tokio::sync::Semaphore>,
     pub(crate) channel_control: Option<Arc<dyn ChannelControl>>,
+    pub(crate) recording_jobs:
+        Arc<std::sync::OnceLock<std::sync::Weak<dyn crate::recording_http::RecordingJobs>>>,
     pub(crate) notification_cache: Option<crate::NotificationCache>,
     pub(crate) event_sink: Option<Arc<dyn dispatcharr_contracts::UpdateEventSink>>,
     // Request-local ownership only; global AuthService remains unscoped.
@@ -102,6 +104,7 @@ impl AuthService {
             request_writer_permit: None,
             user_agent_workers: Arc::new(tokio::sync::Semaphore::new(4)),
             channel_control: None,
+            recording_jobs: Arc::new(std::sync::OnceLock::new()),
             notification_cache: None,
             event_sink: None,
             retained_scope: None,

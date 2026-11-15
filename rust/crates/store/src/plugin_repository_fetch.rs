@@ -1012,10 +1012,34 @@ async fn save_task_failure(
     sqlx::query("UPDATE plugins_pluginrepo SET last_fetch_status=$2,last_fetched=$3,updated_at=$4 WHERE id=$1").bind(id).bind(status.chars().take(255).collect::<String>()).bind(Utc::now()).bind(Utc::now()).execute(&mut*connection).await?;
     Ok(())
 }
-pub(super) async fn refresh_enabled(
+async fn apply_task_manifest(
     connection: &mut sqlx::PgConnection,
-) -> Result<Value, StoreError> {
-    let repos = enabled_repos(connection).await?;
+    id: i64,
+    data: Value,
+    verified: Option<bool>,
+) -> Result<(), StoreError> {
+    save(connection, id, &data, verified).await?;
+    // Source task invokes only _unmanage_dropped_slugs. Cache-detail
+    // invalidation belongs to the HTTP refresh action, never this task.
+    let plugins = inner(&data)
+        .get("plugins")
+        .and_then(Value::as_array)
+        .ok_or_else(|| {
+            unqualified("Task plugin entry collection outside qualified array domain")
+        })?;
+    if plugins.iter().any(|v| {
+        !v.is_object()
+            || v.get("slug")
+                .is_some_and(|slug| !slug.is_null() && !slug.is_string())
+    }) {
+        return Err(unqualified(
+            "Task plugin entry/slug exception class outside qualified domain",
+        ));
+    }
+    sync_managed_plugins(connection, id, &data).await
+}
+async fn refresh_enabled_sql(mut connection: RefreshSql<'_>) -> Result<Value, StoreError> {
+    let repos = connection.enabled().await?;
     for repo in repos {
         let key = if repo.official {
             None
@@ -1026,7 +1050,7 @@ pub(super) async fn refresh_enabled(
             Ok(value) => value,
             Err(error) => {
                 let status = settled_fetch_status(error)?;
-                save_task_failure(connection, repo.id, &status).await?;
+                connection.failure(repo.id, status.clone()).await?;
                 tracing::warn!(target:"dispatcharr::plugin_refresh",repo_id=repo.id,status=%status,"Failed to refresh plugin repository");
                 continue;
             }
@@ -1036,31 +1060,10 @@ pub(super) async fn refresh_enabled(
             tracing::warn!(target:"dispatcharr::plugin_refresh",repo_id=repo.id,"Skipping plugin repository with invalid registry name");
             continue;
         }
-        let observed = async {
-            save(connection, repo.id, &data, verified).await?;
-            // Source task invokes only _unmanage_dropped_slugs. Cache-detail
-            // invalidation belongs to the HTTP refresh action, never this task.
-            let plugins = inner(&data)
-                .get("plugins")
-                .and_then(Value::as_array)
-                .ok_or_else(|| {
-                    unqualified("Task plugin entry collection outside qualified array domain")
-                })?;
-            if plugins.iter().any(|v| {
-                !v.is_object()
-                    || v.get("slug")
-                        .is_some_and(|slug| !slug.is_null() && !slug.is_string())
-            }) {
-                return Err(unqualified(
-                    "Task plugin entry/slug exception class outside qualified domain",
-                ));
-            }
-            sync_managed_plugins(connection, repo.id, &data).await
-        }
-        .await;
+        let observed = connection.apply(repo.id, data, verified).await;
         if let Err(error) = observed {
             let status = settled_sql_status(error)?;
-            save_task_failure(connection, repo.id, &status).await?;
+            connection.failure(repo.id, status.clone()).await?;
             tracing::warn!(target:"dispatcharr::plugin_refresh",repo_id=repo.id,status=%status,"Failed to refresh plugin repository");
         } else {
             tracing::info!(target:"dispatcharr::plugin_refresh",repo_id=repo.id,repo_name=%repo.name,"Refreshed plugin repository");
@@ -1069,6 +1072,67 @@ pub(super) async fn refresh_enabled(
     // Actual Source body has no explicit return. Reach this only after every
     // enabled row has actually executed, skipped validation, or caught above.
     Ok(Value::Null)
+}
+
+enum RefreshSql<'a> {
+    Connection(&'a mut sqlx::PgConnection),
+    Session(&'a crate::TaskSqlSession),
+}
+impl RefreshSql<'_> {
+    async fn enabled(&mut self) -> Result<Vec<RefreshRepo>, StoreError> {
+        match self {
+            Self::Connection(connection) => enabled_repos(connection).await,
+            Self::Session(session) => {
+                session
+                    .run(|connection| Box::pin(async move { enabled_repos(connection).await }))
+                    .await?
+            }
+        }
+    }
+    async fn failure(&mut self, id: i64, status: String) -> Result<(), StoreError> {
+        match self {
+            Self::Connection(connection) => save_task_failure(connection, id, &status).await,
+            Self::Session(session) => {
+                session
+                    .run(move |connection| {
+                        Box::pin(async move { save_task_failure(connection, id, &status).await })
+                    })
+                    .await?
+            }
+        }
+    }
+    async fn apply(
+        &mut self,
+        id: i64,
+        data: Value,
+        verified: Option<bool>,
+    ) -> Result<(), StoreError> {
+        match self {
+            Self::Connection(connection) => {
+                apply_task_manifest(connection, id, data, verified).await
+            }
+            Self::Session(session) => {
+                session
+                    .run(move |connection| {
+                        Box::pin(async move {
+                            apply_task_manifest(connection, id, data, verified).await
+                        })
+                    })
+                    .await?
+            }
+        }
+    }
+}
+pub(super) async fn refresh_enabled(
+    connection: &mut sqlx::PgConnection,
+) -> Result<Value, StoreError> {
+    refresh_enabled_sql(RefreshSql::Connection(connection)).await
+}
+/// SAME refresh algorithm; HTTP/GPG waits never hold the parent/child SQL gate.
+pub(super) async fn refresh_enabled_on_session(
+    session: &crate::TaskSqlSession,
+) -> Result<Value, StoreError> {
+    refresh_enabled_sql(RefreshSql::Session(session)).await
 }
 
 /// Shared managed release download. The caller retains its existing Auth4,

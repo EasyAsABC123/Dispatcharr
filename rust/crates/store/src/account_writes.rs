@@ -77,6 +77,17 @@ fn python_json_length(value: &Value) -> usize {
     }
 }
 
+// Source validates JSON integers, not SQL IDs: custom_properties can retain
+// arbitrary positive Python ints. Float/bool/string lookalikes stay invalid;
+// playback's separate typed lookup/admission domain is not widened here.
+fn source_positive_integer(value: &Value) -> bool {
+    let Value::Number(number) = value else {
+        return false;
+    };
+    let text = number.to_string();
+    text.bytes().all(|byte| byte.is_ascii_digit()) && text.bytes().any(|byte| byte != b'0')
+}
+
 pub(crate) fn validate_custom(value: &Value) -> Result<Map<String, Value>, StoreError> {
     if value.is_null() {
         return Ok(Map::new());
@@ -122,7 +133,7 @@ pub(crate) fn validate_custom(value: &Value) -> Result<Map<String, Value>, Store
     }
     if let Some(value) = values
         .get("xc_password")
-        .filter(|value| !value.is_null() && **value != json!("") && **value != json!(false))
+        .filter(|value| crate::channels::truthy(Some(value)))
     {
         if value.as_str().is_none_or(|value| {
             value.is_empty()
@@ -137,11 +148,10 @@ pub(crate) fn validate_custom(value: &Value) -> Result<Map<String, Value>, Store
         .get("allowed_m3u_profile_ids")
         .filter(|value| !value.is_null())
     {
-        if value.as_array().is_none_or(|values| {
-            values
-                .iter()
-                .any(|value| value.as_i64().is_none_or(|id| id <= 0))
-        }) {
+        if value
+            .as_array()
+            .is_none_or(|values| values.iter().any(|value| !source_positive_integer(value)))
+        {
             return Err(error(
                 "custom_properties",
                 "allowed_m3u_profile_ids must be a list of positive integer IDs",
@@ -383,6 +393,31 @@ pub(crate) async fn revoke_key(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn pinned_source_custom_scalar_vectors_preserve_falsy_values_and_integer_types() {
+        let dataset: Value = serde_json::from_str(include_str!(
+            "../datasets/source-account-custom-scalars.json"
+        ))
+        .unwrap();
+        for row in dataset["records"].as_array().unwrap() {
+            let result = validate_custom(&row["input"]);
+            if row["accepted"] == true {
+                assert_eq!(
+                    Value::Object(result.unwrap()),
+                    row["actual_output"],
+                    "{}",
+                    row["name"]
+                );
+            } else {
+                let expected = json!({"custom_properties":[row["actual_validation_message"]]});
+                assert!(
+                    matches!(result, Err(StoreError::InvalidInput(actual)) if actual == expected),
+                    "{}",
+                    row["name"]
+                );
+            }
+        }
+    }
     #[test]
     fn omitted_properties_preserve_legacy_sql_and_json_null() {
         assert_eq!(merged_properties(None, None), None);

@@ -12,7 +12,12 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The current source [Candidate27](rust-milestone-batch27.md) passes all four SDK
+The current source [Candidate28](rust-milestone-batch28.md) passes all four SDK
+gates with1,088 tests, zero failures and783 ignored. Guide scopes/output, builtin
+task handoff, process ingress and ordinary Channel/account compatibility are
+joined; Docker, Main/physical and performance acceptance remain required.
+
+The preceding [Candidate27](rust-milestone-batch27.md) passes all four SDK
 gates with1,078 tests, zero failures and782 ignored. Normal SD Connect/scoped
 plugin callers, unknown-SQL abort/readiness and numeric preview substitution
 are integrated. Docker/package checks pass; Main and actual plugin lifecycle

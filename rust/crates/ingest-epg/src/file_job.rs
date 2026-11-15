@@ -93,6 +93,7 @@ pub enum FileJobOutcome {
     MissingSource(String),
     Failed,
     DownloadRejected(dispatcharr_store::xmltv_download::Rejected),
+    PendingDownloadRejected(dispatcharr_store::epg_task_hooks::PendingXmlRejection),
     Unsupported(&'static str),
 }
 /// A reason known from the exact busy/exhaustion branches. This is not a
@@ -329,6 +330,18 @@ impl FileJobRunner {
         caller: Arc<dyn Send + Sync>,
         dispatcher: Arc<dyn GuideTaskDispatcher>,
     ) -> Result<FileJobReport, ImportError> {
+        self.run_report_with_dispatcher_scoped(request, caller, dispatcher, None)
+            .await
+    }
+    /// Task-local reporter scope. Shared defaults and concurrent parents remain
+    /// immutable; the existing supervisor owns this clone through all effects.
+    pub async fn run_report_with_dispatcher_scoped(
+        &self,
+        request: FileJobRequest,
+        caller: Arc<dyn Send + Sync>,
+        dispatcher: Arc<dyn GuideTaskDispatcher>,
+        hooks: Option<dispatcharr_store::epg_task_hooks::EpgTaskHooks>,
+    ) -> Result<FileJobReport, ImportError> {
         if self.inner.stopping.load(Ordering::Acquire) {
             return Err(ImportError::Stopping);
         }
@@ -359,8 +372,17 @@ impl FileJobRunner {
         };
         let inner = self.inner.clone();
         let result = tokio::spawn(async move {
+            let mut services = inner.services.clone();
+            if let Some(hooks) = &hooks {
+                services.reporter = services.reporter.for_task_hooks(hooks.clone());
+            }
+            let execution = Execution {
+                inner: &inner,
+                services,
+                hooks,
+            };
             let mut settled_exhaustion = None;
-            let outcome = inner
+            let outcome = execution
                 .run_owned(request, job, dispatcher, &mut settled_exhaustion)
                 .await?;
             Ok::<_, ImportError>(FileJobReport {
@@ -406,7 +428,18 @@ impl FileJobRunner {
         }
     }
 }
-impl Inner {
+struct Execution<'a> {
+    inner: &'a Inner,
+    services: FileJobServices,
+    hooks: Option<dispatcharr_store::epg_task_hooks::EpgTaskHooks>,
+}
+impl std::ops::Deref for Execution<'_> {
+    type Target = Inner;
+    fn deref(&self) -> &Inner {
+        self.inner
+    }
+}
+impl Execution<'_> {
     async fn run_owned(
         &self,
         request: FileJobRequest,
@@ -641,14 +674,37 @@ impl Inner {
             let Some(remote) = self.remote.get() else {
                 return Ok(FileJobOutcome::Unsupported("remote XMLTV download"));
             };
-            match remote
-                .run(
-                    source.id,
-                    context.retained.clone(),
-                    context.cancelled.clone(),
-                )
-                .await
-            {
+            let outcome = if let Some(hooks) = &self.hooks {
+                match remote
+                    .run_scoped(
+                        source.id,
+                        context.retained.clone(),
+                        context.cancelled.clone(),
+                        hooks.clone(),
+                    )
+                    .await
+                {
+                    Ok(dispatcharr_store::xmltv_download::ScopedOutcome::Installed(file)) => {
+                        Ok(dispatcharr_store::xmltv_download::Outcome::Installed(file))
+                    }
+                    Ok(dispatcharr_store::xmltv_download::ScopedOutcome::HandledFailure(proof))
+                        if proof.source_id() == source.id =>
+                    {
+                        return Ok(FileJobOutcome::PendingDownloadRejected(proof))
+                    }
+                    Ok(_) => return Err(ImportError::Worker),
+                    Err(error) => Err(error),
+                }
+            } else {
+                remote
+                    .run(
+                        source.id,
+                        context.retained.clone(),
+                        context.cancelled.clone(),
+                    )
+                    .await
+            };
+            match outcome {
                 Ok(dispatcharr_store::xmltv_download::Outcome::Installed(file))
                     if file.source_id() == source.id =>
                 {

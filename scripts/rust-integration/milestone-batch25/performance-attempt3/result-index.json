@@ -1,0 +1,4772 @@
+{
+  "frozen_sha256": "b41e8c32b26c73754d93117892a04197ee6f65b86cf45e1dc65aa82ea357f39b",
+  "preflight_only": false,
+  "gain_accepted": false,
+  "all_phases_valid": false,
+  "pairs": [],
+  "live_only_gain_accepted": false,
+  "active_DVR_gain_accepted": false,
+  "full_migration_accepted": false,
+  "changed_inputs": [],
+  "elapsed_seconds": 4477.281283545002,
+  "complete_raw_result_sha256": "4c639189d51f18d3dece8bcdddced694a381a2fd3e976f74002c2f10ff35abc2",
+  "phases": [
+    {
+      "phase": 1,
+      "viewers": 1,
+      "trial": 1,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-7c331c29784346caba399833bd8c126b.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/1-1-1-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-7c331c29784346caba399833bd8c126b.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-a902c4a01bfc",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a902c4a01bfc"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a902c4a01bfc"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a902c4a01bfc"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=c36912ed2aeaac529a3b2c51c90bb73ed9d33d032ceee255c3cf5a7f0e990649"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=fe5abc83ab91c12ef15bf7c32739a76a6f8b605365c182788c025d81253c3370"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=aeab739de0f330bb5cbe6dcdde640794fe650ce8171f9c5f036a681118e6868c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99865768100426,
+      "media_byte_deltas": [
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.674867,
+          "cpu_mean_cores": 0.06124915359837246,
+          "charged_memory_median_bytes": 850538496,
+          "charged_memory_max_simultaneous_bytes": 857522176,
+          "working_set_estimate_median_bytes": 833941504,
+          "working_set_estimate_max_simultaneous_bytes": 840925184
+        },
+        "origin": {
+          "cpu_core_seconds": 0.428383,
+          "cpu_mean_cores": 0.007139876399861979,
+          "charged_memory_median_bytes": 222965760,
+          "charged_memory_max_simultaneous_bytes": 223932416,
+          "working_set_estimate_median_bytes": 101683200,
+          "working_set_estimate_max_simultaneous_bytes": 102649856
+        },
+        "observer": {
+          "cpu_core_seconds": 7.592618,
+          "cpu_mean_cores": 0.12654646442871745,
+          "charged_memory_median_bytes": 215846912,
+          "charged_memory_max_simultaneous_bytes": 221630464,
+          "working_set_estimate_median_bytes": 150999040,
+          "working_set_estimate_max_simultaneous_bytes": 152600576
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.695868,
+          "cpu_mean_cores": 0.1949354944269519,
+          "charged_memory_median_bytes": 1289371648,
+          "charged_memory_max_simultaneous_bytes": 1301524480,
+          "working_set_estimate_median_bytes": 1087045632,
+          "working_set_estimate_max_simultaneous_bytes": 1094053888
+        },
+        "primary": {
+          "cpu_core_seconds": 4.10325,
+          "cpu_mean_cores": 0.06838902999823444,
+          "charged_memory_median_bytes": 1074163712,
+          "charged_memory_max_simultaneous_bytes": 1080487936,
+          "working_set_estimate_median_bytes": 936284160,
+          "working_set_estimate_max_simultaneous_bytes": 942608384
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "f0156f978bf576ad6a2bb3452770a136097e7b3c3d56dc8d1d02f9d7145f194a",
+        "resource-samples.json": "3538c4b697e1f56d241c138f280f622ce2cab71387d011cdc4528d4e72e06c12",
+        "useful-media-complete.json": "9161979833c43e58de0a2368deffa2ed47d075381d2709e0d45dc3e60654c822"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 1,
+        "passed_readers": 1
+      }
+    },
+    {
+      "phase": 2,
+      "viewers": 1,
+      "trial": 1,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-33ad68708bf94526ab5c93cd1d4cce49.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/2-1-1-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-33ad68708bf94526ab5c93cd1d4cce49.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-f44cc11478f1",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-f44cc11478f1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-f44cc11478f1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-f44cc11478f1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=2490655a19f4f5dc0509774dbe38218fcae566054b80afc8848ae28c2867ba0f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=a1128a0ed5b84b399a59494fabfb3e453b308f78629578b6179d5f8fc1c574cd"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=50ebc5088972b79f42b779bb899c614239c2533bdb10eb4012c349acaf427321"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=6786742fa48ea21f3d8d9e5eb3b92ef536f81bd1733b3b830ded85060dc16c49"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.998698676005006,
+      "media_byte_deltas": [
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.231494,
+          "cpu_mean_cores": 0.05385940147552494,
+          "charged_memory_median_bytes": 171835392,
+          "charged_memory_max_simultaneous_bytes": 179486720,
+          "working_set_estimate_median_bytes": 167071744,
+          "working_set_estimate_max_simultaneous_bytes": 174723072
+        },
+        "origin": {
+          "cpu_core_seconds": 0.42825,
+          "cpu_mean_cores": 0.0071376548066911325,
+          "charged_memory_median_bytes": 222142464,
+          "charged_memory_max_simultaneous_bytes": 223019008,
+          "working_set_estimate_median_bytes": 100859904,
+          "working_set_estimate_max_simultaneous_bytes": 101736448
+        },
+        "observer": {
+          "cpu_core_seconds": 7.594833,
+          "cpu_mean_cores": 0.1265832954313285,
+          "charged_memory_median_bytes": 217698304,
+          "charged_memory_max_simultaneous_bytes": 224432128,
+          "working_set_estimate_median_bytes": 153784320,
+          "working_set_estimate_max_simultaneous_bytes": 155824128
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.254577,
+          "cpu_mean_cores": 0.18758035171354456,
+          "charged_memory_median_bytes": 611938304,
+          "charged_memory_max_simultaneous_bytes": 626626560,
+          "working_set_estimate_median_bytes": 422125568,
+          "working_set_estimate_max_simultaneous_bytes": 431390720
+        },
+        "primary": {
+          "cpu_core_seconds": 3.659744,
+          "cpu_mean_cores": 0.060997056282216064,
+          "charged_memory_median_bytes": 394174464,
+          "charged_memory_max_simultaneous_bytes": 402194432,
+          "working_set_estimate_median_bytes": 268128256,
+          "working_set_estimate_max_simultaneous_bytes": 276148224
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "f677eb2f64f826ab8d5ba9e476f1b9ce83f90eaece633ee7df53457e3b353449",
+        "resource-samples.json": "7e02b3cb7d70182ac4ac7d3fa9d8342955fb9259a47fe604ce38db67dc987126",
+        "useful-media-complete.json": "eabfed3d7eeda973a9da0492221dd7d49507cdca7542a9800c482612d41b415c"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 1,
+        "passed_readers": 1
+      }
+    },
+    {
+      "phase": 3,
+      "viewers": 1,
+      "trial": 2,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-9e051d2622264138a9fb634432410ed1.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/3-1-2-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-9e051d2622264138a9fb634432410ed1.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-99f1871ca676",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-99f1871ca676"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-99f1871ca676"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-99f1871ca676"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=218ae7ed82dbdadf1a9db3321e02d3dbfd45f97b508fe145a5a1ae7c13c77cc5"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=330ec1ae53c76e8e4f33773ead6bff2b1fa6a7c1eb0c3df18457bcb989091aff"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=1491d337c40b4d1ef7e52eddfa69ac2cd87bba3f3d25e4ec048fb09fc51a7c74"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=8402f7c1d423c1959c26292c7d691ca1e04d6e5f7b433781d7db4627fce7da85"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99867117201211,
+      "media_byte_deltas": [
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.248724,
+          "cpu_mean_cores": 0.054146599191940925,
+          "charged_memory_median_bytes": 167194624,
+          "charged_memory_max_simultaneous_bytes": 173211648,
+          "working_set_estimate_median_bytes": 167133184,
+          "working_set_estimate_max_simultaneous_bytes": 173150208
+        },
+        "origin": {
+          "cpu_core_seconds": 0.438567,
+          "cpu_mean_cores": 0.007309611886947599,
+          "charged_memory_median_bytes": 222425088,
+          "charged_memory_max_simultaneous_bytes": 223338496,
+          "working_set_estimate_median_bytes": 101142528,
+          "working_set_estimate_max_simultaneous_bytes": 102055936
+        },
+        "observer": {
+          "cpu_core_seconds": 7.586893,
+          "cpu_mean_cores": 0.1264510171941791,
+          "charged_memory_median_bytes": 219906048,
+          "charged_memory_max_simultaneous_bytes": 226615296,
+          "working_set_estimate_median_bytes": 155975680,
+          "working_set_estimate_max_simultaneous_bytes": 157540352
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.274184,
+          "cpu_mean_cores": 0.1879072282730676,
+          "charged_memory_median_bytes": 609243136,
+          "charged_memory_max_simultaneous_bytes": 621789184,
+          "working_set_estimate_median_bytes": 424144896,
+          "working_set_estimate_max_simultaneous_bytes": 431046656
+        },
+        "primary": {
+          "cpu_core_seconds": 3.687291,
+          "cpu_mean_cores": 0.061456211078888524,
+          "charged_memory_median_bytes": 389636096,
+          "charged_memory_max_simultaneous_bytes": 395739136,
+          "working_set_estimate_median_bytes": 268292096,
+          "working_set_estimate_max_simultaneous_bytes": 274395136
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "4d94eb6291c8abd02be997c5704217e71f3e5e1e12bab05ba81eddfa47845ab5",
+        "resource-samples.json": "a8b76b82f13a8842724a1bb32396d194040ce43d0fd2f800902c7ff70f6d5bbb",
+        "useful-media-complete.json": "76315b6b8a4687da729eacda24e6f9554337ec2f7b8906f05ac1be4abe4b857c"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 1,
+        "passed_readers": 1
+      }
+    },
+    {
+      "phase": 4,
+      "viewers": 1,
+      "trial": 2,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-3c6b62baf3a140d793badaeb845e00b2.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/4-1-2-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-3c6b62baf3a140d793badaeb845e00b2.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-4cd160b768d7",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-4cd160b768d7"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-4cd160b768d7"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-4cd160b768d7"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=190fbbf1828a6720e25af4bc4b89cc8da3c58a0c5852aa7ed0bc317b19379a93"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=aa33365fd3e7d7e55cafadbc83efc1201b636112db2a5581839f783c4bcf8013"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=fbf5f2a1564cb8f10924613b490e75a9257034a2283e79389d255f57923049db"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.998590804010746,
+      "media_byte_deltas": [
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.653981,
+          "cpu_mean_cores": 0.060901113693419294,
+          "charged_memory_median_bytes": 833429504,
+          "charged_memory_max_simultaneous_bytes": 838807552,
+          "working_set_estimate_median_bytes": 833343488,
+          "working_set_estimate_max_simultaneous_bytes": 838721536
+        },
+        "origin": {
+          "cpu_core_seconds": 0.426716,
+          "cpu_mean_cores": 0.007112100372388666,
+          "charged_memory_median_bytes": 222470144,
+          "charged_memory_max_simultaneous_bytes": 223690752,
+          "working_set_estimate_median_bytes": 101187584,
+          "working_set_estimate_max_simultaneous_bytes": 102408192
+        },
+        "observer": {
+          "cpu_core_seconds": 7.556764,
+          "cpu_mean_cores": 0.12594902478100953,
+          "charged_memory_median_bytes": 219713536,
+          "charged_memory_max_simultaneous_bytes": 226164736,
+          "working_set_estimate_median_bytes": 155164672,
+          "working_set_estimate_max_simultaneous_bytes": 156749824
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.637461,
+          "cpu_mean_cores": 0.1939622388468175,
+          "charged_memory_median_bytes": 1275568128,
+          "charged_memory_max_simultaneous_bytes": 1285996544,
+          "working_set_estimate_median_bytes": 1089613824,
+          "working_set_estimate_max_simultaneous_bytes": 1096130560
+        },
+        "primary": {
+          "cpu_core_seconds": 4.080697,
+          "cpu_mean_cores": 0.06801321406580796,
+          "charged_memory_median_bytes": 1055481856,
+          "charged_memory_max_simultaneous_bytes": 1061556224,
+          "working_set_estimate_median_bytes": 934113280,
+          "working_set_estimate_max_simultaneous_bytes": 940187648
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "515a13f5ff80e394ca0d7fe1f7117ccc37e73dbc1d854a628c72f8fe903f03d7",
+        "resource-samples.json": "d298b81deff0d61f65074739a672b2c1870d777e6f9b3234bcc97bfa6893be53",
+        "useful-media-complete.json": "f0042f4465fff9f2b1f8225a65a6ec7ad8fabc519cd8e9f393e8732f4452d7f5"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 1,
+        "passed_readers": 1
+      }
+    },
+    {
+      "phase": 5,
+      "viewers": 1,
+      "trial": 3,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-06beeaaf5193476f8e475a5892d65046.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/5-1-3-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-06beeaaf5193476f8e475a5892d65046.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-b5932bc55f30",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b5932bc55f30"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b5932bc55f30"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b5932bc55f30"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=55b591a5b0d153cd2b85264628b7fa3775982daad556493f95371cac9f3d4cbc"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=bcaba683abf41d8c58053907c5dde1cfb19efa989a11d04bba92cbc0caf2dc03"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=fa0983dceaf350bce3e41a8fceb1366bd4ceb926dc7073aeb592a8353f924df9"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99843681100174,
+      "media_byte_deltas": [
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.674495,
+          "cpu_mean_cores": 0.0612431789110582,
+          "charged_memory_median_bytes": 836616192,
+          "charged_memory_max_simultaneous_bytes": 841494528,
+          "working_set_estimate_median_bytes": 836530176,
+          "working_set_estimate_max_simultaneous_bytes": 841408512
+        },
+        "origin": {
+          "cpu_core_seconds": 0.423314,
+          "cpu_mean_cores": 0.007055417149174429,
+          "charged_memory_median_bytes": 222371840,
+          "charged_memory_max_simultaneous_bytes": 223313920,
+          "working_set_estimate_median_bytes": 101089280,
+          "working_set_estimate_max_simultaneous_bytes": 102031360
+        },
+        "observer": {
+          "cpu_core_seconds": 7.603584,
+          "cpu_mean_cores": 0.12672970170792439,
+          "charged_memory_median_bytes": 219901952,
+          "charged_memory_max_simultaneous_bytes": 225939456,
+          "working_set_estimate_median_bytes": 155303936,
+          "working_set_estimate_max_simultaneous_bytes": 156872704
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.701393,
+          "cpu_mean_cores": 0.195028297768157,
+          "charged_memory_median_bytes": 1279250432,
+          "charged_memory_max_simultaneous_bytes": 1289621504,
+          "working_set_estimate_median_bytes": 1093443584,
+          "working_set_estimate_max_simultaneous_bytes": 1099161600
+        },
+        "primary": {
+          "cpu_core_seconds": 4.097809,
+          "cpu_mean_cores": 0.06829859606023263,
+          "charged_memory_median_bytes": 1059315712,
+          "charged_memory_max_simultaneous_bytes": 1063682048,
+          "working_set_estimate_median_bytes": 937947136,
+          "working_set_estimate_max_simultaneous_bytes": 942313472
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "0023ce4713d61cdacdea1eeae57316fc051067ec14c8ac410a01659e2a3d6231",
+        "resource-samples.json": "78ae6ceec1850bb4ec2e6fa2e0d3a69774ca59655580466b92d7679b787ce248",
+        "useful-media-complete.json": "39601170b7108c7b675650a45ffa22ea8421945723fe7317b03c20119f35d8cf"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 1,
+        "passed_readers": 1
+      }
+    },
+    {
+      "phase": 6,
+      "viewers": 1,
+      "trial": 3,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-9c584383b3d9447f9a7669a6b8aecda0.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/6-1-3-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-9c584383b3d9447f9a7669a6b8aecda0.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-28445a50a4a8",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-28445a50a4a8"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-28445a50a4a8"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-28445a50a4a8"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=9a7a0555feb61bc0e97bd393b6365f7df6e2b687f4ec80a23756f93cbdfeb5cb"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=24c91fce3b788f4aa553f132c8f5eeb4d49e7bef08c9b4b740889de7d2c732ae"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=28ba9b8bf56826275db489c14d209a61d1377ebe887abc5426e12062ce895d8f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=5c4641d7ebcb22d7de6691cdff8840cc5fdf9988a3e2cb7c5c0a720d52a94bc3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.998502288988675,
+      "media_byte_deltas": [
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.275013,
+          "cpu_mean_cores": 0.0545849125404094,
+          "charged_memory_median_bytes": 169713664,
+          "charged_memory_max_simultaneous_bytes": 175181824,
+          "working_set_estimate_median_bytes": 169652224,
+          "working_set_estimate_max_simultaneous_bytes": 175120384
+        },
+        "origin": {
+          "cpu_core_seconds": 0.423149,
+          "cpu_mean_cores": 0.007052659380760228,
+          "charged_memory_median_bytes": 222404608,
+          "charged_memory_max_simultaneous_bytes": 223203328,
+          "working_set_estimate_median_bytes": 101122048,
+          "working_set_estimate_max_simultaneous_bytes": 101920768
+        },
+        "observer": {
+          "cpu_core_seconds": 7.621842,
+          "cpu_mean_cores": 0.12703387100045682,
+          "charged_memory_median_bytes": 219795456,
+          "charged_memory_max_simultaneous_bytes": 226553856,
+          "working_set_estimate_median_bytes": 155480064,
+          "working_set_estimate_max_simultaneous_bytes": 157192192
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.320004,
+          "cpu_mean_cores": 0.18867144292162646,
+          "charged_memory_median_bytes": 612007936,
+          "charged_memory_max_simultaneous_bytes": 622477312,
+          "working_set_estimate_median_bytes": 426606592,
+          "working_set_estimate_max_simultaneous_bytes": 432611328
+        },
+        "primary": {
+          "cpu_core_seconds": 3.698162,
+          "cpu_mean_cores": 0.06163757192116963,
+          "charged_memory_median_bytes": 391798784,
+          "charged_memory_max_simultaneous_bytes": 397611008,
+          "working_set_estimate_median_bytes": 270454784,
+          "working_set_estimate_max_simultaneous_bytes": 276267008
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "64e8f9c457e1d7f0f5d7e8044a11b1e5ce460f5fc5f5d6dea6e309c3eaa07c64",
+        "resource-samples.json": "df49a480187ea04af59153611f279a69621135d2bcfdf79f15222a6e3a954f81",
+        "useful-media-complete.json": "2bb823bc00a46e8a9e738389822d73e2a25d00c573500436f8f693bba1739419"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 1,
+        "passed_readers": 1
+      }
+    },
+    {
+      "phase": 7,
+      "viewers": 2,
+      "trial": 1,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-b233fd1c62ed466bbada7ec684239499.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/7-2-1-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "2",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-b233fd1c62ed466bbada7ec684239499.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-ff73a8afb793",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-ff73a8afb793"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-ff73a8afb793"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-ff73a8afb793"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=a23294f8cd1717a657af6d1cd743793c575ed210d78b56ca7c54225bf35da4e0"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=54177e2d092935de8859df797e09e130f66eecefdaf8dee9f0bc46cc7193263d"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=fb26052208bd01ee2bfb29a4a0b84fb064952e52b758c5e92c3330110edaa3cd"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99878351100779,
+      "media_byte_deltas": [
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.773837,
+          "cpu_mean_cores": 0.06289855859006918,
+          "charged_memory_median_bytes": 834367488,
+          "charged_memory_max_simultaneous_bytes": 840056832,
+          "working_set_estimate_median_bytes": 833708032,
+          "working_set_estimate_max_simultaneous_bytes": 839397376
+        },
+        "origin": {
+          "cpu_core_seconds": 0.419594,
+          "cpu_mean_cores": 0.0069933751227309205,
+          "charged_memory_median_bytes": 222461952,
+          "charged_memory_max_simultaneous_bytes": 223789056,
+          "working_set_estimate_median_bytes": 101208064,
+          "working_set_estimate_max_simultaneous_bytes": 102535168
+        },
+        "observer": {
+          "cpu_core_seconds": 7.630378,
+          "cpu_mean_cores": 0.1271755451275121,
+          "charged_memory_median_bytes": 226430976,
+          "charged_memory_max_simultaneous_bytes": 236687360,
+          "working_set_estimate_median_bytes": 156917760,
+          "working_set_estimate_max_simultaneous_bytes": 158568448
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.823809,
+          "cpu_mean_cores": 0.19706747884031223,
+          "charged_memory_median_bytes": 1282908160,
+          "charged_memory_max_simultaneous_bytes": 1298456576,
+          "working_set_estimate_median_bytes": 1091764224,
+          "working_set_estimate_max_simultaneous_bytes": 1099034624
+        },
+        "primary": {
+          "cpu_core_seconds": 4.193431,
+          "cpu_mean_cores": 0.06989193371280011,
+          "charged_memory_median_bytes": 1056477184,
+          "charged_memory_max_simultaneous_bytes": 1063198720,
+          "working_set_estimate_median_bytes": 934563840,
+          "working_set_estimate_max_simultaneous_bytes": 941285376
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "69bfa646ecf4946e0da23c898944a8396ecbf0c745631e80d83d9e5f934af5e8",
+        "resource-samples.json": "2fac35dd2979503ab514ad68268c6ee44b5d74850a8e659cb9e061550f8b0ea4",
+        "useful-media-complete.json": "95f6b51453b36b6a9001c5e10cbdc68aac3cb8d344096dcee0297d967d41ca40"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 2,
+        "passed_readers": 2
+      }
+    },
+    {
+      "phase": 8,
+      "viewers": 2,
+      "trial": 1,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-8b64e89ddac844e1abc4de3cc87885a7.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/8-2-1-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "2",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-8b64e89ddac844e1abc4de3cc87885a7.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-42fbde8a6b20",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-42fbde8a6b20"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-42fbde8a6b20"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-42fbde8a6b20"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=771bf50a974ee8669e9f7ee4823af3e716c569cc9d94c0cf107042b70573a038"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=6310aee4bcb90d0129af0d7dc80de5c8e7786ff995092898dc92f0be6cbe85f1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=47f20d50ca680e813376ac3809533b914a8cfd31e11c8981bd132770b98d5c3a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=5b605dce7906df5db0c84556cacdf0a9a47a68ed6d68c8c61289a13175463536"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99871116199938,
+      "media_byte_deltas": [
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.255483,
+          "cpu_mean_cores": 0.05425921552231415,
+          "charged_memory_median_bytes": 169623552,
+          "charged_memory_max_simultaneous_bytes": 175554560,
+          "working_set_estimate_median_bytes": 167817216,
+          "working_set_estimate_max_simultaneous_bytes": 173748224
+        },
+        "origin": {
+          "cpu_core_seconds": 0.425918,
+          "cpu_mean_cores": 0.007098785819748713,
+          "charged_memory_median_bytes": 233275392,
+          "charged_memory_max_simultaneous_bytes": 234606592,
+          "working_set_estimate_median_bytes": 101261312,
+          "working_set_estimate_max_simultaneous_bytes": 102592512
+        },
+        "observer": {
+          "cpu_core_seconds": 7.642064,
+          "cpu_mean_cores": 0.12737046933168386,
+          "charged_memory_median_bytes": 229093376,
+          "charged_memory_max_simultaneous_bytes": 239312896,
+          "working_set_estimate_median_bytes": 157102080,
+          "working_set_estimate_max_simultaneous_bytes": 158392320
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.323465,
+          "cpu_mean_cores": 0.18872847067374673,
+          "charged_memory_median_bytes": 631848960,
+          "charged_memory_max_simultaneous_bytes": 647991296,
+          "working_set_estimate_median_bytes": 425881600,
+          "working_set_estimate_max_simultaneous_bytes": 433393664
+        },
+        "primary": {
+          "cpu_core_seconds": 3.681401,
+          "cpu_mean_cores": 0.061358001342062866,
+          "charged_memory_median_bytes": 402755584,
+          "charged_memory_max_simultaneous_bytes": 409153536,
+          "working_set_estimate_median_bytes": 268935168,
+          "working_set_estimate_max_simultaneous_bytes": 275333120
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "0f6eba65ec9cae1734ee216969681036abdfa0f4447d53d95da7640ac004103e",
+        "resource-samples.json": "43a43a5eccddacee97ccef5b8b3ea712f11a2e7c140074ef858eac6e2160a3f4",
+        "useful-media-complete.json": "4a3be7eadf8e0e26c58297fd25a027f0c4580ad6d946ccd485089be0900dd353"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 2,
+        "passed_readers": 2
+      }
+    },
+    {
+      "phase": 9,
+      "viewers": 2,
+      "trial": 2,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-5aec4d09ddfb4995a3ba7bf92e2885d7.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/9-2-2-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "2",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-5aec4d09ddfb4995a3ba7bf92e2885d7.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-bd88a2190fc0",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-bd88a2190fc0"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-bd88a2190fc0"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-bd88a2190fc0"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=20730b33bb2339d3b8d40975b127ebaee6232af8e1a2a624d3b2110d25b481d4"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=32a53b64da4f92ca31764e72d81acf9917d1e1941c91e73d49b62704d11bb6fe"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=12198af29b865639165e6b31f969f7b56dc2670bacacc616f192be721250f863"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=86440348a89dcf3f4d5725ccebb58d761dd0a6254aed19cf2cf4214e1374158e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.998596097997506,
+      "media_byte_deltas": [
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.24749,
+          "cpu_mean_cores": 0.05412609979566484,
+          "charged_memory_median_bytes": 167391232,
+          "charged_memory_max_simultaneous_bytes": 173363200,
+          "working_set_estimate_median_bytes": 167329792,
+          "working_set_estimate_max_simultaneous_bytes": 173301760
+        },
+        "origin": {
+          "cpu_core_seconds": 0.425554,
+          "cpu_mean_cores": 0.00709273262502559,
+          "charged_memory_median_bytes": 222351360,
+          "charged_memory_max_simultaneous_bytes": 223924224,
+          "working_set_estimate_median_bytes": 101068800,
+          "working_set_estimate_max_simultaneous_bytes": 102641664
+        },
+        "observer": {
+          "cpu_core_seconds": 7.608516,
+          "cpu_mean_cores": 0.1268115671835518,
+          "charged_memory_median_bytes": 228831232,
+          "charged_memory_max_simultaneous_bytes": 240222208,
+          "working_set_estimate_median_bytes": 157593600,
+          "working_set_estimate_max_simultaneous_bytes": 158924800
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.28156,
+          "cpu_mean_cores": 0.18803039960424225,
+          "charged_memory_median_bytes": 618930176,
+          "charged_memory_max_simultaneous_bytes": 635830272,
+          "working_set_estimate_median_bytes": 425680896,
+          "working_set_estimate_max_simultaneous_bytes": 432926720
+        },
+        "primary": {
+          "cpu_core_seconds": 3.673044,
+          "cpu_mean_cores": 0.06121883242069043,
+          "charged_memory_median_bytes": 389890048,
+          "charged_memory_max_simultaneous_bytes": 396296192,
+          "working_set_estimate_median_bytes": 268546048,
+          "working_set_estimate_max_simultaneous_bytes": 274952192
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "45effb9f94f51b4a083b588ae73cea81f1ddf59b01f5513c482cca5343128e0e",
+        "resource-samples.json": "0d00c5fbcbc914aa6d152166219109e3f4859727043ba3b2050e09111dd620f2",
+        "useful-media-complete.json": "d4f809890cf2afe610232a7f220d9a78e969241420883334a6f08449def919ba"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 2,
+        "passed_readers": 2
+      }
+    },
+    {
+      "phase": 10,
+      "viewers": 2,
+      "trial": 2,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-3a0a902ea724461a93e43d3c5aeb812d.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/10-2-2-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "2",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-3a0a902ea724461a93e43d3c5aeb812d.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-eca30dfc7f61",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-eca30dfc7f61"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-eca30dfc7f61"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-eca30dfc7f61"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=dd18c62164e729e7df22dc4ca871fe239d3c374cec866d11485548483e746e60"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=8f450988f679a697c5bd8cf86e2f825d521948456833650d746daa073bf2470c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=acfd13beb443adba828ddb07aab20fba977bc6ded05dc69b06138f156d560e17"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99839515099302,
+      "media_byte_deltas": [
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.777176,
+          "cpu_mean_cores": 0.06295461721091526,
+          "charged_memory_median_bytes": 834428928,
+          "charged_memory_max_simultaneous_bytes": 839892992,
+          "working_set_estimate_median_bytes": 832835584,
+          "working_set_estimate_max_simultaneous_bytes": 838316032
+        },
+        "origin": {
+          "cpu_core_seconds": 0.426629,
+          "cpu_mean_cores": 0.007110673525955785,
+          "charged_memory_median_bytes": 222396416,
+          "charged_memory_max_simultaneous_bytes": 223707136,
+          "working_set_estimate_median_bytes": 101142528,
+          "working_set_estimate_max_simultaneous_bytes": 102453248
+        },
+        "observer": {
+          "cpu_core_seconds": 7.724422,
+          "cpu_mean_cores": 0.1287438102396003,
+          "charged_memory_median_bytes": 226742272,
+          "charged_memory_max_simultaneous_bytes": 234594304,
+          "working_set_estimate_median_bytes": 156626944,
+          "working_set_estimate_max_simultaneous_bytes": 158748672
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.928227,
+          "cpu_mean_cores": 0.19880910097647134,
+          "charged_memory_median_bytes": 1283526656,
+          "charged_memory_max_simultaneous_bytes": 1295396864,
+          "working_set_estimate_median_bytes": 1089794048,
+          "working_set_estimate_max_simultaneous_bytes": 1096515584
+        },
+        "primary": {
+          "cpu_core_seconds": 4.203805,
+          "cpu_mean_cores": 0.07006529073687105,
+          "charged_memory_median_bytes": 1056481280,
+          "charged_memory_max_simultaneous_bytes": 1062481920,
+          "working_set_estimate_median_bytes": 933634048,
+          "working_set_estimate_max_simultaneous_bytes": 939651072
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "b1f77d0368a7e4259e854ff1eaef316c748422945062bdaeb30be0360dc3f14f",
+        "resource-samples.json": "872ebabd2f343467de0c4ea03e36c2e3e18625d0e39c1b227cf192c1e1667745",
+        "useful-media-complete.json": "f6427c675f78a1538f1145ae48c194d5e002a70931de2deb05d7f1484db77c78"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 2,
+        "passed_readers": 2
+      }
+    },
+    {
+      "phase": 11,
+      "viewers": 2,
+      "trial": 3,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-069fabfd627f48dfa28283c8f8f9baff.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/11-2-3-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "2",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-069fabfd627f48dfa28283c8f8f9baff.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-e234bb32c43c",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-e234bb32c43c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-e234bb32c43c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-e234bb32c43c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=309dd307d574847a9683e350c212e5c40b901938da0a7169f2c0f0532064bea9"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=fb47f9e773b1af81751069fd2a86dd1762667dbaddb1be2b58a5776e0e5e7e68"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=7fd74bd94f60eeaac8317ed1d504d9ed5700dafa271d4c8cc19d1886cb3e4467"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99862149999535,
+      "media_byte_deltas": [
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.783202,
+          "cpu_mean_cores": 0.06305481535105424,
+          "charged_memory_median_bytes": 839634944,
+          "charged_memory_max_simultaneous_bytes": 844455936,
+          "working_set_estimate_median_bytes": 835518464,
+          "working_set_estimate_max_simultaneous_bytes": 840339456
+        },
+        "origin": {
+          "cpu_core_seconds": 0.426451,
+          "cpu_mean_cores": 0.007107679965614427,
+          "charged_memory_median_bytes": 224219136,
+          "charged_memory_max_simultaneous_bytes": 225263616,
+          "working_set_estimate_median_bytes": 101101568,
+          "working_set_estimate_max_simultaneous_bytes": 102146048
+        },
+        "observer": {
+          "cpu_core_seconds": 7.670094,
+          "cpu_mean_cores": 0.12783783707431667,
+          "charged_memory_median_bytes": 230453248,
+          "charged_memory_max_simultaneous_bytes": 241901568,
+          "working_set_estimate_median_bytes": 157794304,
+          "working_set_estimate_max_simultaneous_bytes": 159240192
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.879747,
+          "cpu_mean_cores": 0.19800033239098536,
+          "charged_memory_median_bytes": 1294036992,
+          "charged_memory_max_simultaneous_bytes": 1309818880,
+          "working_set_estimate_median_bytes": 1094336512,
+          "working_set_estimate_max_simultaneous_bytes": 1099964416
+        },
+        "primary": {
+          "cpu_core_seconds": 4.209653,
+          "cpu_mean_cores": 0.07016249531666867,
+          "charged_memory_median_bytes": 1063628800,
+          "charged_memory_max_simultaneous_bytes": 1068785664,
+          "working_set_estimate_median_bytes": 936394752,
+          "working_set_estimate_max_simultaneous_bytes": 941551616
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "4f19e9842ed886f1a7051da31152616e12bd8cf07f1ee282b086e287f489baf4",
+        "resource-samples.json": "2374b423aa051e0a98371b99ef657f6f26732c8d6cb0b4ec177bb3f6daafd93d",
+        "useful-media-complete.json": "2e46e7fa19423ebeafae8b77a20102d3347bcacc1afe1af71d6807168e4ec126"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 2,
+        "passed_readers": 2
+      }
+    },
+    {
+      "phase": 12,
+      "viewers": 2,
+      "trial": 3,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-8eb9f55d6a434471bfab7941b901b754.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/12-2-3-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "2",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-8eb9f55d6a434471bfab7941b901b754.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-b0b9b16e6f68",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b0b9b16e6f68"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b0b9b16e6f68"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b0b9b16e6f68"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=b2d32904cc76a289e650f84d1b624f2e7a74639e04feeaeaa60324f884b3c434"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=20e06f8fa2daa7216c13cb9240c1473f21bb30a4eaa86d63a9454aa5f3665d2f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=d7b730412eca560f660c1431893ff91c0c8090f668e650fc3141508778f5693e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=ac75c608b4562317e9f04b5424a95613adb3b6a3a55a826ac4f7589979f20592"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.998612092997064,
+      "media_byte_deltas": [
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.254777,
+          "cpu_mean_cores": 0.05424753817563543,
+          "charged_memory_median_bytes": 246657024,
+          "charged_memory_max_simultaneous_bytes": 252575744,
+          "working_set_estimate_median_bytes": 166305792,
+          "working_set_estimate_max_simultaneous_bytes": 172224512
+        },
+        "origin": {
+          "cpu_core_seconds": 0.425386,
+          "cpu_mean_cores": 0.0070899306694071065,
+          "charged_memory_median_bytes": 222146560,
+          "charged_memory_max_simultaneous_bytes": 223170560,
+          "working_set_estimate_median_bytes": 100864000,
+          "working_set_estimate_max_simultaneous_bytes": 101888000
+        },
+        "observer": {
+          "cpu_core_seconds": 7.608562,
+          "cpu_mean_cores": 0.12681230006132188,
+          "charged_memory_median_bytes": 230387712,
+          "charged_memory_max_simultaneous_bytes": 239345664,
+          "working_set_estimate_median_bytes": 157728768,
+          "working_set_estimate_max_simultaneous_bytes": 159477760
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.288725,
+          "cpu_mean_cores": 0.18814976890636442,
+          "charged_memory_median_bytes": 698757120,
+          "charged_memory_max_simultaneous_bytes": 712511488,
+          "working_set_estimate_median_bytes": 426184704,
+          "working_set_estimate_max_simultaneous_bytes": 431927296
+        },
+        "primary": {
+          "cpu_core_seconds": 3.680163,
+          "cpu_mean_cores": 0.061337468845042535,
+          "charged_memory_median_bytes": 469090304,
+          "charged_memory_max_simultaneous_bytes": 474943488,
+          "working_set_estimate_median_bytes": 267456512,
+          "working_set_estimate_max_simultaneous_bytes": 273309696
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "20d9afd8321017c4d7ea66438f0471f0e1f41960c871546d0d5b598b96315470",
+        "resource-samples.json": "729ebc36771cea4dcd54b1b6dd35a2fba2f596dd7376f930662384a9d6ed68b1",
+        "useful-media-complete.json": "230b44b415d5c68e0eb6743f02ab4de9184894ec13b36b7dcdada73b2919d35d"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 2,
+        "passed_readers": 2
+      }
+    },
+    {
+      "phase": 13,
+      "viewers": 10,
+      "trial": 1,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-6a805d5c3f1d4639968cab299d0920af.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/13-10-1-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "10",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-6a805d5c3f1d4639968cab299d0920af.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-416553f29105",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-416553f29105"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-416553f29105"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-416553f29105"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=d4b2935434164c649d8ed80b51ddb06cd183b57bc4172f9224ca4d5d205d2162"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=94a83fdb3a3f7cbae350186a66a783417225de0fd20b9bc2ca16ecc26f998a65"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=a04b5a2a85bd975279935c0f4f758790569eb67e503378fb1e292f2c6400f9fc"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99860050599091,
+      "media_byte_deltas": [
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 4.373765,
+          "cpu_mean_cores": 0.07289778366685863,
+          "charged_memory_median_bytes": 843517952,
+          "charged_memory_max_simultaneous_bytes": 847785984,
+          "working_set_estimate_median_bytes": 843431936,
+          "working_set_estimate_max_simultaneous_bytes": 847699968
+        },
+        "origin": {
+          "cpu_core_seconds": 0.441002,
+          "cpu_mean_cores": 0.00735020477612583,
+          "charged_memory_median_bytes": 222412800,
+          "charged_memory_max_simultaneous_bytes": 224145408,
+          "working_set_estimate_median_bytes": 101130240,
+          "working_set_estimate_max_simultaneous_bytes": 102862848
+        },
+        "observer": {
+          "cpu_core_seconds": 8.520386,
+          "cpu_mean_cores": 0.14200974569647226,
+          "charged_memory_median_bytes": 297353216,
+          "charged_memory_max_simultaneous_bytes": 347295744,
+          "working_set_estimate_median_bytes": 159272960,
+          "working_set_estimate_max_simultaneous_bytes": 161247232
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 13.335153,
+          "cpu_mean_cores": 0.2222577341394567,
+          "charged_memory_median_bytes": 1363886080,
+          "charged_memory_max_simultaneous_bytes": 1417068544,
+          "working_set_estimate_median_bytes": 1102581760,
+          "working_set_estimate_max_simultaneous_bytes": 1109565440
+        },
+        "primary": {
+          "cpu_core_seconds": 4.814767,
+          "cpu_mean_cores": 0.08024798844298446,
+          "charged_memory_median_bytes": 1065795584,
+          "charged_memory_max_simultaneous_bytes": 1070452736,
+          "working_set_estimate_median_bytes": 944427008,
+          "working_set_estimate_max_simultaneous_bytes": 949084160
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "a978044d3945a0f085a6651d8034e91f9478562d34484f21a8c8508b39cc2542",
+        "resource-samples.json": "25ebc250b484884d4fab239abbb4e6849e327af7284da1eba74d245d859b1b64",
+        "useful-media-complete.json": "54007aa3e6b50764a637593fd9ff6d5108c1856b082d71439cadf08dc7c86276"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 10,
+        "passed_readers": 10
+      }
+    },
+    {
+      "phase": 14,
+      "viewers": 10,
+      "trial": 1,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-c980f9a77f4b4441874db36fa0291bd4.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/14-10-1-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "10",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-c980f9a77f4b4441874db36fa0291bd4.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-143b16f236d4",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-143b16f236d4"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-143b16f236d4"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-143b16f236d4"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=9ef6a174c820ad6eada02e45c495289c18fcb4e4ad5869ff2fde339f662e32dd"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=6accaa55b6c3abb4ef26c6e667879b37089a40af873e50e98fe03e6e43d9907e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=7fd232490a00e92f9cacfd486b253785bf87933a82da7cceee9eafc74b46481a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=89b1e9d47adad3aa32970c2e6f2d3d634137c3b3a715298c0bb49f8794eb8486"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99833713499538,
+      "media_byte_deltas": [
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.275661,
+          "cpu_mean_cores": 0.05459586309250222,
+          "charged_memory_median_bytes": 169029632,
+          "charged_memory_max_simultaneous_bytes": 173441024,
+          "working_set_estimate_median_bytes": 168800256,
+          "working_set_estimate_max_simultaneous_bytes": 173211648
+        },
+        "origin": {
+          "cpu_core_seconds": 0.425525,
+          "cpu_mean_cores": 0.007092279891733915,
+          "charged_memory_median_bytes": 222515200,
+          "charged_memory_max_simultaneous_bytes": 223334400,
+          "working_set_estimate_median_bytes": 100995072,
+          "working_set_estimate_max_simultaneous_bytes": 101924864
+        },
+        "observer": {
+          "cpu_core_seconds": 7.876739,
+          "cpu_mean_cores": 0.13128262175462382,
+          "charged_memory_median_bytes": 298041344,
+          "charged_memory_max_simultaneous_bytes": 343736320,
+          "working_set_estimate_median_bytes": 163143680,
+          "working_set_estimate_max_simultaneous_bytes": 164917248
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.577925,
+          "cpu_mean_cores": 0.19297076473886,
+          "charged_memory_median_bytes": 687980544,
+          "charged_memory_max_simultaneous_bytes": 739094528,
+          "working_set_estimate_median_bytes": 433360896,
+          "working_set_estimate_max_simultaneous_bytes": 439484416
+        },
+        "primary": {
+          "cpu_core_seconds": 3.701186,
+          "cpu_mean_cores": 0.06168814298423614,
+          "charged_memory_median_bytes": 391536640,
+          "charged_memory_max_simultaneous_bytes": 396427264,
+          "working_set_estimate_median_bytes": 269787136,
+          "working_set_estimate_max_simultaneous_bytes": 274788352
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "4dc648764b206eb7320f12390b0c0198de8c07d0ef5f62a485a89c106c4b1ddc",
+        "resource-samples.json": "2fc58ab35c91850f5e0bdce2f705d784e2be9b9897522369ca09e6f76f9d1fa3",
+        "useful-media-complete.json": "69178020cbe9bc9fa5832f906a6bee5c5cecbc33b224471168d009f590a25a43"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 10,
+        "passed_readers": 10
+      }
+    },
+    {
+      "phase": 15,
+      "viewers": 10,
+      "trial": 2,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-d7df5353b53d415ea0f9ae851b326eb9.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/15-10-2-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "10",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-d7df5353b53d415ea0f9ae851b326eb9.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-d37c7dba2233",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-d37c7dba2233"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-d37c7dba2233"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-d37c7dba2233"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=429d5a8f387ce09b7486fc47b33d80213ad87f8d07d546967b84d5d7a29c6aa8"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=bbed41ae4db01594b9fc0fbf33884ab14836188838bfaedc1a24080375120620"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=caa745555d32e7848bc7dcf86131a60607705053f13d192fcbf972713e650ee7"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=b9ba61c7d70b1fbece6301b8d5ccfeec58ad138292b706e913500886606f6afa"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99852715599991,
+      "media_byte_deltas": [
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.280076,
+          "cpu_mean_cores": 0.05466927532190246,
+          "charged_memory_median_bytes": 182452224,
+          "charged_memory_max_simultaneous_bytes": 187068416,
+          "working_set_estimate_median_bytes": 168337408,
+          "working_set_estimate_max_simultaneous_bytes": 172953600
+        },
+        "origin": {
+          "cpu_core_seconds": 0.428685,
+          "cpu_mean_cores": 0.007144925389341513,
+          "charged_memory_median_bytes": 222531584,
+          "charged_memory_max_simultaneous_bytes": 223608832,
+          "working_set_estimate_median_bytes": 101163008,
+          "working_set_estimate_max_simultaneous_bytes": 102240256
+        },
+        "observer": {
+          "cpu_core_seconds": 7.862022,
+          "cpu_mean_cores": 0.13103691661560712,
+          "charged_memory_median_bytes": 300195840,
+          "charged_memory_max_simultaneous_bytes": 347820032,
+          "working_set_estimate_median_bytes": 164995072,
+          "working_set_estimate_max_simultaneous_bytes": 166666240
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.570783,
+          "cpu_mean_cores": 0.1928511173268511,
+          "charged_memory_median_bytes": 705191936,
+          "charged_memory_max_simultaneous_bytes": 756621312,
+          "working_set_estimate_median_bytes": 434835456,
+          "working_set_estimate_max_simultaneous_bytes": 440029184
+        },
+        "primary": {
+          "cpu_core_seconds": 3.708761,
+          "cpu_mean_cores": 0.061814200711243966,
+          "charged_memory_median_bytes": 404996096,
+          "charged_memory_max_simultaneous_bytes": 410447872,
+          "working_set_estimate_median_bytes": 269512704,
+          "working_set_estimate_max_simultaneous_bytes": 274964480
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "9c1fe976163409f2710b0342fecd1da430c99165146568932bb5ba2f165e2a3b",
+        "resource-samples.json": "7677120a55e39509254a195c72e2588454b388d651a794a2043ea98c11689662",
+        "useful-media-complete.json": "e98cb1a449c8a03048ef346e66be89a754a9418a1814f937145ea77278023bee"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 10,
+        "passed_readers": 10
+      }
+    },
+    {
+      "phase": 16,
+      "viewers": 10,
+      "trial": 2,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-1ead4f12d43d4d3c8d8458d84f094d56.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/16-10-2-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "10",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-1ead4f12d43d4d3c8d8458d84f094d56.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-efb12fe7ae6c",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-efb12fe7ae6c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-efb12fe7ae6c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-efb12fe7ae6c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=0ccab44a4d3487ad2f5e1d4a5e37c75f6e0c6ef66ef58a86f20cd26714c3260f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=a136eda540e557a22d6545b4f72c4c6a36cb003e94a8bd10a2f50ec74c7aa720"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=f004853388060d88205e0ee78be269aee0bdb0f41d0fffd2e2f74fe09b5fcf11"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99873392999871,
+      "media_byte_deltas": [
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 4.447241,
+          "cpu_mean_cores": 0.07412224739923101,
+          "charged_memory_median_bytes": 840421376,
+          "charged_memory_max_simultaneous_bytes": 844976128,
+          "working_set_estimate_median_bytes": 840331264,
+          "working_set_estimate_max_simultaneous_bytes": 844886016
+        },
+        "origin": {
+          "cpu_core_seconds": 0.428194,
+          "cpu_mean_cores": 0.007136717259727171,
+          "charged_memory_median_bytes": 222683136,
+          "charged_memory_max_simultaneous_bytes": 223727616,
+          "working_set_estimate_median_bytes": 101400576,
+          "working_set_estimate_max_simultaneous_bytes": 102445056
+        },
+        "observer": {
+          "cpu_core_seconds": 8.285098,
+          "cpu_mean_cores": 0.13808788048205034,
+          "charged_memory_median_bytes": 299958272,
+          "charged_memory_max_simultaneous_bytes": 349945856,
+          "working_set_estimate_median_bytes": 161492992,
+          "working_set_estimate_max_simultaneous_bytes": 164753408
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 13.160533,
+          "cpu_mean_cores": 0.2193468451410085,
+          "charged_memory_median_bytes": 1362890752,
+          "charged_memory_max_simultaneous_bytes": 1417994240,
+          "working_set_estimate_median_bytes": 1102147584,
+          "working_set_estimate_max_simultaneous_bytes": 1110663168
+        },
+        "primary": {
+          "cpu_core_seconds": 4.875435,
+          "cpu_mean_cores": 0.08125896465895818,
+          "charged_memory_median_bytes": 1062699008,
+          "charged_memory_max_simultaneous_bytes": 1068421120,
+          "working_set_estimate_median_bytes": 941326336,
+          "working_set_estimate_max_simultaneous_bytes": 947048448
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "64d6fc497ff171ed34b5adf8b20c59f44f6006b655725324bbfc47a20c2e301a",
+        "resource-samples.json": "dfceef2428129e342c263ebbcdfb53d100b14124da3033c2d51e2da99298873d",
+        "useful-media-complete.json": "20e5f01de751eec964d15c847a4859253570a9f76df59c2af0539d74de9344f3"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 10,
+        "passed_readers": 10
+      }
+    },
+    {
+      "phase": 17,
+      "viewers": 10,
+      "trial": 3,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-e51dabeebd504b78ab3c6c203a21fc9d.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/17-10-3-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "10",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-e51dabeebd504b78ab3c6c203a21fc9d.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-3db4724aea25",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-3db4724aea25"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-3db4724aea25"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-3db4724aea25"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=381490aa3672d14f5d55de729fce7f803c1e272472285ef6d323c196cbaf5088"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=c3cd24fdbed0ccf5c124c3b2252606a8af4306ec9e9148f8dcdb5ad063f27e48"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=decc69ec1846fdf53513944cba00c7392f6595f50869a877e7586bb35e1dfbf9"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99849783099489,
+      "media_byte_deltas": [
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 4.422653,
+          "cpu_mean_cores": 0.07371272881627516,
+          "charged_memory_median_bytes": 841150464,
+          "charged_memory_max_simultaneous_bytes": 846303232,
+          "working_set_estimate_median_bytes": 841064448,
+          "working_set_estimate_max_simultaneous_bytes": 846217216
+        },
+        "origin": {
+          "cpu_core_seconds": 0.438506,
+          "cpu_mean_cores": 0.007308616312948259,
+          "charged_memory_median_bytes": 222453760,
+          "charged_memory_max_simultaneous_bytes": 223694848,
+          "working_set_estimate_median_bytes": 101171200,
+          "working_set_estimate_max_simultaneous_bytes": 102412288
+        },
+        "observer": {
+          "cpu_core_seconds": 8.337395,
+          "cpu_mean_cores": 0.13896006235831038,
+          "charged_memory_median_bytes": 300359680,
+          "charged_memory_max_simultaneous_bytes": 349646848,
+          "working_set_estimate_median_bytes": 162312192,
+          "working_set_estimate_max_simultaneous_bytes": 163766272
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 13.198554,
+          "cpu_mean_cores": 0.21998140748753378,
+          "charged_memory_median_bytes": 1364828160,
+          "charged_memory_max_simultaneous_bytes": 1418403840,
+          "working_set_estimate_median_bytes": 1104072704,
+          "working_set_estimate_max_simultaneous_bytes": 1110601728
+        },
+        "primary": {
+          "cpu_core_seconds": 4.861159,
+          "cpu_mean_cores": 0.08102134512922342,
+          "charged_memory_median_bytes": 1064046592,
+          "charged_memory_max_simultaneous_bytes": 1069281280,
+          "working_set_estimate_median_bytes": 942678016,
+          "working_set_estimate_max_simultaneous_bytes": 947912704
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "631ca7e91031aff36ba5a0fca9f44de3c2dc1fdd55256bdd036a3bad2dd323f0",
+        "resource-samples.json": "62dc2864d900e9feab3ce8f3ae3a245ab8acce929b41674fc2379e130502a999",
+        "useful-media-complete.json": "01fefc2285e6af6a8cbc7ea7bb1860e6ff65df43bacd96a10cfa865cee99088e"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 10,
+        "passed_readers": 10
+      }
+    },
+    {
+      "phase": 18,
+      "viewers": 10,
+      "trial": 3,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-a17687467d0e4423a77099e2293543e0.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/18-10-3-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "10",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-a17687467d0e4423a77099e2293543e0.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-89099357fde9",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-89099357fde9"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-89099357fde9"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-89099357fde9"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=6c61549660e41ad8e600f35beb2b8d13ed81283a929afe5e155026923bad4eb3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=c5f824e8d99fb0c1c8d99dec8ba0f98191ed857284d7906f6ad3eece60bbd80d"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=5fac25f71da3fc951f284df1081a156cf832e0076c35af4eaa04c974ebdb3418"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=3bc3e0ee0918e6207911324dcf92b56481c8fd3dddc2b44ed2c0dae2119bb6c3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.9985725620063,
+      "media_byte_deltas": [
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.272967,
+          "cpu_mean_cores": 0.054550747796833166,
+          "charged_memory_median_bytes": 168267776,
+          "charged_memory_max_simultaneous_bytes": 172744704,
+          "working_set_estimate_median_bytes": 168206336,
+          "working_set_estimate_max_simultaneous_bytes": 172683264
+        },
+        "origin": {
+          "cpu_core_seconds": 0.42367,
+          "cpu_mean_cores": 0.007061334660289672,
+          "charged_memory_median_bytes": 222883840,
+          "charged_memory_max_simultaneous_bytes": 223916032,
+          "working_set_estimate_median_bytes": 101601280,
+          "working_set_estimate_max_simultaneous_bytes": 102633472
+        },
+        "observer": {
+          "cpu_core_seconds": 7.91713,
+          "cpu_mean_cores": 0.13195530596695346,
+          "charged_memory_median_bytes": 299638784,
+          "charged_memory_max_simultaneous_bytes": 347402240,
+          "working_set_estimate_median_bytes": 164343808,
+          "working_set_estimate_max_simultaneous_bytes": 165990400
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.613767,
+          "cpu_mean_cores": 0.19356738842407628,
+          "charged_memory_median_bytes": 689770496,
+          "charged_memory_max_simultaneous_bytes": 741892096,
+          "working_set_estimate_median_bytes": 434073600,
+          "working_set_estimate_max_simultaneous_bytes": 439336960
+        },
+        "primary": {
+          "cpu_core_seconds": 3.696637,
+          "cpu_mean_cores": 0.06161208245712284,
+          "charged_memory_median_bytes": 391098368,
+          "charged_memory_max_simultaneous_bytes": 395988992,
+          "working_set_estimate_median_bytes": 269754368,
+          "working_set_estimate_max_simultaneous_bytes": 274644992
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "e3c5fadb8b50c7600efc429182614a58fd673694e4b2257e905e70accdeb0fe0",
+        "resource-samples.json": "1eb8952e2acc17ab96c51f8fdcaa546bf373a1f2345fd00fee40ab2b05032331",
+        "useful-media-complete.json": "9102efdef425d95b331bce61b88ec59306d572ffd7dccb7302f90455ac9a0a11"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 10,
+        "passed_readers": 10
+      }
+    },
+    {
+      "phase": 19,
+      "viewers": 100,
+      "trial": 1,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-b2b0f193420543a8ba6a3610c0873a8c.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/19-100-1-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "100",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-b2b0f193420543a8ba6a3610c0873a8c.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-05de6c463e08",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-05de6c463e08"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-05de6c463e08"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-05de6c463e08"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=6506de0e90f023dd5b8ab59f5746c79a11807d2b8428c69fa7c414d11319ec88"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=b418761a9d4700b4ccf746f550fb826f2524c1fa4595a38c5f0c307685d897fa"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=eec0a8a73e34bf521857795aefd627dad3a98f20ce8c831d34e4884f32bf3b03"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99871002200234,
+      "media_byte_deltas": [
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 10.584777,
+          "cpu_mean_cores": 0.17641674289527923,
+          "charged_memory_median_bytes": 878145536,
+          "charged_memory_max_simultaneous_bytes": 882196480,
+          "working_set_estimate_median_bytes": 878059520,
+          "working_set_estimate_max_simultaneous_bytes": 882110464
+        },
+        "origin": {
+          "cpu_core_seconds": 0.470571,
+          "cpu_mean_cores": 0.007843018622024293,
+          "charged_memory_median_bytes": 222760960,
+          "charged_memory_max_simultaneous_bytes": 224006144,
+          "working_set_estimate_median_bytes": 101502976,
+          "working_set_estimate_max_simultaneous_bytes": 102748160
+        },
+        "observer": {
+          "cpu_core_seconds": 20.315102,
+          "cpu_mean_cores": 0.3385923129438979,
+          "charged_memory_median_bytes": 1087160320,
+          "charged_memory_max_simultaneous_bytes": 1558863872,
+          "working_set_estimate_median_bytes": 195559424,
+          "working_set_estimate_max_simultaneous_bytes": 198008832
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 31.37045,
+          "cpu_mean_cores": 0.5228520744612014,
+          "charged_memory_median_bytes": 2187698176,
+          "charged_memory_max_simultaneous_bytes": 2662555648,
+          "working_set_estimate_median_bytes": 1175199744,
+          "working_set_estimate_max_simultaneous_bytes": 1182146560
+        },
+        "primary": {
+          "cpu_core_seconds": 11.055348,
+          "cpu_mean_cores": 0.18425976151730353,
+          "charged_memory_median_bytes": 1100742656,
+          "charged_memory_max_simultaneous_bytes": 1106202624,
+          "working_set_estimate_median_bytes": 979398656,
+          "working_set_estimate_max_simultaneous_bytes": 984858624
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "91e3d4b79fedfa522d8208600925980a73b38f0f9a6a930660b141f4cc35a7c4",
+        "resource-samples.json": "31435e201c30fd0c4918ac28750e6d58c0e5fc3b7f91fa674f9ee4934f65cda5",
+        "useful-media-complete.json": "4b7a37e0b8abfd14e50b565678b6b45f0628cf6219b9c737e594f1f656dce9c3"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 100,
+        "passed_readers": 100
+      }
+    },
+    {
+      "phase": 20,
+      "viewers": 100,
+      "trial": 1,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-c9e434ca2d644342b01ade3e1fbf4f05.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/20-100-1-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "100",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-c9e434ca2d644342b01ade3e1fbf4f05.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-34ca15c8c478",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-34ca15c8c478"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-34ca15c8c478"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-34ca15c8c478"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=bc65b9e9e7afba0ea88063157d4c7f3d26a72c0ee20f51936c4074194202c513"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=f52fec80ff02e378df1452e518a1df55efb0e79f7a07fbb94a322e8fcc2c796a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=723f3bc4bbc1dc232f50e96db8a63874a4798f24ba080806e964e92e77ed6ac3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=9968b09b507c2d0e9c7dcdbecfa1644adf5f37718c18b69197fb76c4ad2f587d"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99855856099748,
+      "media_byte_deltas": [
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.547963,
+          "cpu_mean_cores": 0.05913413730419818,
+          "charged_memory_median_bytes": 172953600,
+          "charged_memory_max_simultaneous_bytes": 178425856,
+          "working_set_estimate_median_bytes": 172888064,
+          "working_set_estimate_max_simultaneous_bytes": 178360320
+        },
+        "origin": {
+          "cpu_core_seconds": 0.43729,
+          "cpu_mean_cores": 0.007288341761667983,
+          "charged_memory_median_bytes": 222724096,
+          "charged_memory_max_simultaneous_bytes": 223756288,
+          "working_set_estimate_median_bytes": 101163008,
+          "working_set_estimate_max_simultaneous_bytes": 102195200
+        },
+        "observer": {
+          "cpu_core_seconds": 11.186531,
+          "cpu_mean_cores": 0.18644666252485423,
+          "charged_memory_median_bytes": 1074950144,
+          "charged_memory_max_simultaneous_bytes": 1505001472,
+          "working_set_estimate_median_bytes": 243417088,
+          "working_set_estimate_max_simultaneous_bytes": 247758848
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 15.171784,
+          "cpu_mean_cores": 0.2528691415907204,
+          "charged_memory_median_bytes": 1469337600,
+          "charged_memory_max_simultaneous_bytes": 1903824896,
+          "working_set_estimate_median_bytes": 515907584,
+          "working_set_estimate_max_simultaneous_bytes": 525152256
+        },
+        "primary": {
+          "cpu_core_seconds": 3.985253,
+          "cpu_mean_cores": 0.06642247906586617,
+          "charged_memory_median_bytes": 395591680,
+          "charged_memory_max_simultaneous_bytes": 401203200,
+          "working_set_estimate_median_bytes": 273965056,
+          "working_set_estimate_max_simultaneous_bytes": 279576576
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "114ad520ee2c224cab79b2b02b106f55bb9fc013098873bf36ba36dc88774496",
+        "resource-samples.json": "0e79bf055b55b46200d6db0c50e368f5966d66d91eac04424890a46877ec1494",
+        "useful-media-complete.json": "cf654264c6090b30861e6f3acfc21dbb5e4c0ab571cfbb5463b7f3a618cc74c9"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 1.9839999999989857,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 100,
+        "passed_readers": 100
+      }
+    },
+    {
+      "phase": 21,
+      "viewers": 100,
+      "trial": 2,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-3c698de4be574c0bbe94c60e6db86aa1.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/21-100-2-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "100",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-3c698de4be574c0bbe94c60e6db86aa1.scope",
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-e48b5536eb12",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-e48b5536eb12"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-e48b5536eb12"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-e48b5536eb12"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=bb6c5c5c9e7022ff81a8420f4fc3d4a439a672e28b4899a0dd6fbc04fc6da42d"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=995ef59295288e7bd1f192bbcf8255a70bf3278d4211aa9cd859c444d059a79b"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=1f901b1bc123d5c3d5c0b77cc02859cb15c3aef667446a7942aa892c4e776346"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=d4a5ebe7f84bd81b34ec590a27c1bd5e49e1a75b09143e4dc2df144c35350776"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": true,
+      "measurement_seconds": 59.99853159500344,
+      "media_byte_deltas": [
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.579597,
+          "cpu_mean_cores": 0.05966141011854533,
+          "charged_memory_median_bytes": 274415616,
+          "charged_memory_max_simultaneous_bytes": 279076864,
+          "working_set_estimate_median_bytes": 173985792,
+          "working_set_estimate_max_simultaneous_bytes": 178982912
+        },
+        "origin": {
+          "cpu_core_seconds": 0.429313,
+          "cpu_mean_cores": 0.007155391783550788,
+          "charged_memory_median_bytes": 236105728,
+          "charged_memory_max_simultaneous_bytes": 236969984,
+          "working_set_estimate_median_bytes": 101261312,
+          "working_set_estimate_max_simultaneous_bytes": 102137856
+        },
+        "observer": {
+          "cpu_core_seconds": 11.428297,
+          "cpu_mean_cores": 0.19047627827197902,
+          "charged_memory_median_bytes": 1073127424,
+          "charged_memory_max_simultaneous_bytes": 1500749824,
+          "working_set_estimate_median_bytes": 242618368,
+          "working_set_estimate_max_simultaneous_bytes": 258859008
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 15.437207,
+          "cpu_mean_cores": 0.25729308017407515,
+          "charged_memory_median_bytes": 1581932544,
+          "charged_memory_max_simultaneous_bytes": 2014007296,
+          "working_set_estimate_median_bytes": 516673536,
+          "working_set_estimate_max_simultaneous_bytes": 538099712
+        },
+        "primary": {
+          "cpu_core_seconds": 4.00891,
+          "cpu_mean_cores": 0.06681680190209612,
+          "charged_memory_median_bytes": 510763008,
+          "charged_memory_max_simultaneous_bytes": 515166208,
+          "working_set_estimate_median_bytes": 275333120,
+          "working_set_estimate_max_simultaneous_bytes": 280420352
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "65ba6522867dfb93a0c570e0f54e542db30495763f520abe5c029179154ce1a2",
+        "resource-samples.json": "1de8fc4e79d4a1329d4bc90c7aa4e0ff75fb5ac57f7c28dc08ea6c2ab43e7669",
+        "useful-media-complete.json": "b833176a64b43b499bfa21a004ff37b480b16786c4d8b9b8be3c98ff8c7145ed"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 100,
+        "passed_readers": 100
+      }
+    },
+    {
+      "phase": 22,
+      "viewers": 100,
+      "trial": 2,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-557e4be23be640acb9b0362fab0955ec.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-4/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-3/22-100-2-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "100",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-557e4be23be640acb9b0362fab0955ec.scope",
+      "actual_exit": 1,
+      "project": "dispatcharr-shared-ts-bb9d87a8b861",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-bb9d87a8b861"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-bb9d87a8b861"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-bb9d87a8b861"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=cc21149493e2fbc733293f10e94dcf654406042dae5908c8f7e0d7783b3f8fde"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=6c5797612d29421b9f444219c0036d1f6a4d09f38460cb47b73c09201cdd71ec"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=e4a98608f196abde0ab1c78f0c25d9c81ada965b293251bb52c8f35755b4299b"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "valid": false,
+      "measurement_seconds": 59.998285280991695,
+      "media_byte_deltas": [
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248,
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 10.628485,
+          "cpu_mean_cores": 0.17714647927392108,
+          "charged_memory_median_bytes": 887586816,
+          "charged_memory_max_simultaneous_bytes": 891699200,
+          "working_set_estimate_median_bytes": 881946624,
+          "working_set_estimate_max_simultaneous_bytes": 886059008
+        },
+        "origin": {
+          "cpu_core_seconds": 0.456937,
+          "cpu_mean_cores": 0.007615834316931122,
+          "charged_memory_median_bytes": 226353152,
+          "charged_memory_max_simultaneous_bytes": 228462592,
+          "working_set_estimate_median_bytes": 101588992,
+          "working_set_estimate_max_simultaneous_bytes": 103698432
+        },
+        "observer": {
+          "cpu_core_seconds": 20.729297,
+          "cpu_mean_cores": 0.3454981572042915,
+          "charged_memory_median_bytes": 1119436800,
+          "charged_memory_max_simultaneous_bytes": 1611374592,
+          "working_set_estimate_median_bytes": 213323776,
+          "working_set_estimate_max_simultaneous_bytes": 217956352
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 31.814719,
+          "cpu_mean_cores": 0.5302604707951437,
+          "charged_memory_median_bytes": 2233729024,
+          "charged_memory_max_simultaneous_bytes": 2726191104,
+          "working_set_estimate_median_bytes": 1195913216,
+          "working_set_estimate_max_simultaneous_bytes": 1204768768
+        },
+        "primary": {
+          "cpu_core_seconds": 11.085422,
+          "cpu_mean_cores": 0.1847623135908522,
+          "charged_memory_median_bytes": 1113726976,
+          "charged_memory_max_simultaneous_bytes": 1118928896,
+          "working_set_estimate_median_bytes": 983322624,
+          "working_set_estimate_max_simultaneous_bytes": 988524544
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "32ed9b31930dd1b91016cd3ff435e61d5170d81f03fba481f24355ec608d1961",
+        "resource-samples.json": "2512b54186f11bb51843fdf1d8b1f0b095519c675087d99e1bc26090c6c9a0e7",
+        "useful-media-complete.json": "18a74fbdd62114c88c61c53d937a33581fedaf0e913fe6e59042900a1a8c9cc6"
+      },
+      "useful_media_summary": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": false,
+        "old_v2_requalification": false,
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5,
+        "readers": 100,
+        "passed_readers": 100
+      }
+    }
+  ]
+}

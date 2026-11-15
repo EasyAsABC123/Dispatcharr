@@ -157,6 +157,50 @@ impl Jobs {
             Err(_) => Err(PluginError::Backend),
         }
     }
+    /// Exact existing native family only; Source/Kombu supplies original bytes.
+    /// Parented/expiry/other unsupported shapes fail the real family codec
+    /// BEFORE shared broker publication and cannot leave an unconsumable head.
+    pub async fn publish_builtin_plugin_refresh(
+        &self,
+        raw: Vec<u8>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<PluginPublished, PluginError> {
+        if !matches!(self.inner.authority, Authority::DefaultServices) {
+            return Err(PluginError::Unsupported);
+        }
+        let frame: Value = serde_json::from_slice(&raw).map_err(|_| PluginError::Corrupt)?;
+        let candidate = if frame["headers"]["eta"].is_null() {
+            crate::normal_plugin_repos::parse(&raw)
+        } else {
+            crate::normal_plugin_repos::parse_eta(&raw)
+        }
+        .map_err(|_| PluginError::Unsupported)?;
+        let lease = self.lease(owner).map_err(transport)?;
+        let maximum = self.inner.config.max_queued_jobs.to_string();
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(
+                PUBLISH,
+                &["celery".into(), "_kombu.binding.celery".into()],
+                &[&raw, maximum.as_bytes(), b"celery\x06\x16\x06\x16celery"],
+                lease,
+            )
+            .await
+        {
+            Ok((n, _)) if n > 0 => Ok(PluginPublished {
+                task_id: candidate.id.to_string(),
+                queue_length: n as u64,
+            }),
+            Ok((-2, _)) => Err(PluginError::Capacity),
+            Ok(_) => Err(PluginError::Corrupt),
+            Err(ClassifiedError::Backend) => Err(PluginError::AmbiguousPublication {
+                task_id: candidate.id.to_string(),
+            }),
+            Err(ClassifiedError::Capacity) => Err(PluginError::Capacity),
+            Err(_) => Err(PluginError::Backend),
+        }
+    }
     pub async fn registered_plugin_queue_length(
         &self,
         owner: Arc<dyn Send + Sync>,

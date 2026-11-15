@@ -231,7 +231,10 @@ impl Ports for NativePorts {
                             .map(Value::Bool)
                             .map_err(|_| Error::Protocol);
                     }
-                    let hook_intent = if method == "publish_registered" {
+                    let hook_intent = if matches!(
+                        method.as_str(),
+                        "publish_registered" | "publish_native_refresh"
+                    ) {
                         let raw = STANDARD
                             .decode(params["raw_base64"].as_str().ok_or(Error::Protocol)?)
                             .map_err(|_| Error::Protocol)?;
@@ -239,7 +242,10 @@ impl Ports for NativePorts {
                     } else {
                         None
                     };
-                    let intent = if method == "publish_registered" {
+                    let intent = if matches!(
+                        method.as_str(),
+                        "publish_registered" | "publish_native_refresh"
+                    ) {
                         let encoded = params["raw_base64"]
                             .as_str()
                             .filter(|s| s.len() <= 90000)

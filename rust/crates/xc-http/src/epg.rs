@@ -4,7 +4,7 @@ use crate::{epg_hash, numbers, project::JsonBytes};
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::{DateTime, Duration, Timelike, Utc};
 use dispatcharr_contracts::PlaybackRequest;
-use dispatcharr_store::{AuthService, Store, User};
+use dispatcharr_store::{AuthService, Store, StoreError, User};
 use futures_util::TryStreamExt;
 use serde_json::{json, Value};
 use sqlx::{Postgres, QueryBuilder, Row};
@@ -259,9 +259,6 @@ pub(crate) async fn write(ctx: &Context<'_>, out: &mut JsonBytes) -> Result<(), 
     let mut count = 0usize;
     if channel.epg.is_none() || (channel.source_type.as_deref() == Some("dummy") && !channel.stored)
     {
-        if channel.properties.as_ref().is_some_and(truthy) {
-            return Err(Error::Unsupported);
-        }
         let maximum = if ctx.short {
             if limit.starts_with('-') {
                 0
@@ -277,9 +274,19 @@ pub(crate) async fn write(ctx: &Context<'_>, out: &mut JsonBytes) -> Result<(), 
             .and_then(|v| v.with_second(0))
             .and_then(|v| v.with_nanosecond(0))
             .ok_or(Error::Backend)?;
-        let dummy = dispatcharr_output_http::epg_dummy::standard(
+        let parse_names = dispatcharr_output_http::epg_names::resolve(
+            ctx.store,
+            &[(channel.id, channel.properties.as_ref())],
+            limits.max_metadata_bytes,
+        )
+        .await
+        .map_err(|error| match error {
+            StoreError::StatusBody(501, _) => Error::Unsupported,
+            _ => Error::Capacity,
+        })?;
+        let dummy = dispatcharr_output_http::epg_dummy::configured(
             raw,
-            &channel.name,
+            parse_names[0].as_deref().unwrap_or(&channel.name),
             start,
             if window.forward_days > 0 {
                 window.forward_days as u32
@@ -288,8 +295,12 @@ pub(crate) async fn write(ctx: &Context<'_>, out: &mut JsonBytes) -> Result<(), 
             },
             Some(if ctx.short { ctx.now } else { lookback }),
             cutoff,
+            channel.properties.as_ref(),
         )
-        .map_err(|_| Error::Capacity)?;
+        .map_err(|error| match error {
+            dispatcharr_output_http::epg_dummy::DummyError::Unsupported => Error::Unsupported,
+            dispatcharr_output_http::epg_dummy::DummyError::Capacity => Error::Capacity,
+        })?;
         for p in dummy.take(maximum) {
             append(
                 out,
