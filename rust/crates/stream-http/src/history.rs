@@ -2,7 +2,14 @@
 //! Original Dispatcharr authors retain full application credit.
 use dispatcharr_input_store::{Error, InputBytes, InputSnapshot, InputStore};
 use dispatcharr_stream_runtime::{FrameLease, OwnedChunk, OwnedDelivery, Viewer};
-use std::{io, sync::Arc, time::Duration};
+use std::{
+    io,
+    sync::{
+        atomic::{AtomicU64, Ordering},
+        Arc,
+    },
+    time::Duration,
+};
 use tokio::time::{self, Instant};
 
 pub(super) struct History {
@@ -87,12 +94,24 @@ impl History {
     }
 }
 
+#[cfg(test)]
 pub(super) async fn next(
     viewer: &mut Viewer,
     history: Option<&History>,
 ) -> io::Result<Option<Payload>> {
+    next_observed(viewer, history, None).await
+}
+
+pub(super) async fn next_observed(
+    viewer: &mut Viewer,
+    history: Option<&History>,
+    observed_cursor: Option<&AtomicU64>,
+) -> io::Result<Option<Payload>> {
     loop {
         let requested = viewer.next_sequence();
+        if let Some(cursor) = observed_cursor {
+            cursor.store(requested, Ordering::Release);
+        }
         match viewer.next_owned().await {
             OwnedDelivery::Chunk(mut chunk) => {
                 if chunk.discontinuity {

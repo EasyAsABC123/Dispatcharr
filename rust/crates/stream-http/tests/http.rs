@@ -1831,3 +1831,70 @@ async fn native_source_switch_retains_stamp_in_pending_packet_from_same_http_bat
     assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
     server.abort();
 }
+
+#[tokio::test]
+async fn source_owner_waiting_for_a_healthy_input_does_not_insert_keepalive_packets() {
+    let (sender, receiver) = tokio::sync::mpsc::channel::<Bytes>(2);
+    let receiver = Arc::new(std::sync::Mutex::new(Some(receiver)));
+    let app = Router::new().route(
+        "/live",
+        get(move || {
+            let mut receiver = receiver.lock().unwrap().take().unwrap();
+            async move {
+                Body::from_stream(async_stream::stream! {
+                    while let Some(data)=receiver.recv().await {yield Ok::<_,Infallible>(data);}
+                })
+            }
+        }),
+    );
+    let (base, origin) = serve(app).await;
+    let mut limits = config();
+    limits.source_initialization = true;
+    limits.initial_buffer_chunks = 1;
+    limits.flush_partial_chunks = false;
+    limits.keepalive_interval = Duration::from_millis(10);
+    limits.read_timeout = Duration::from_secs(5);
+    let engine = StreamEngine::new(limits).unwrap();
+    let chunk = |seed: u8| {
+        let mut packet = vec![seed; 188];
+        packet[..4].copy_from_slice(&[0x47, 0x01, 0x00, 0x10]);
+        Bytes::from([packet.clone(), packet].concat())
+    };
+    sender.send(chunk(1)).await.unwrap();
+    let mut playback = source(format!("{base}/live"), "healthy-owner-no-control");
+    playback.startup_behind = Duration::from_secs(1);
+    let mut body = time::timeout(Duration::from_secs(1), engine.play(playback))
+        .await
+        .unwrap()
+        .unwrap()
+        .into_body();
+    let first = time::timeout(Duration::from_secs(1), body.frame())
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap()
+        .into_data()
+        .unwrap();
+    assert_eq!(first, chunk(1));
+    drop(first);
+    assert!(
+        time::timeout(Duration::from_millis(100), body.frame())
+            .await
+            .is_err(),
+        "Source healthy owner must wait for media rather than yield a null control packet"
+    );
+    sender.send(chunk(2)).await.unwrap();
+    let second = time::timeout(Duration::from_secs(1), body.frame())
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap()
+        .into_data()
+        .unwrap();
+    assert_eq!(second, chunk(2));
+    drop(second);
+    drop(body);
+    drop(sender);
+    assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
+    origin.abort();
+}

@@ -1,0 +1,47 @@
+   Compiling smallvec v1.16.5
+   Compiling tokio v1.54.1
+   Compiling serde_core v1.0.229
+   Compiling icu_normalizer v2.4.0
+   Compiling futures-util v0.3.34
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling futures-channel v0.3.34
+   Compiling url v2.5.8
+   Compiling tracing v0.1.44
+   Compiling serde_json v1.0.154
+   Compiling tokio-util v0.7.20
+   Compiling serde v1.0.229
+   Compiling hyper v1.12.0
+   Compiling combine v4.6.9
+   Compiling hyper-util v0.1.21
+   Compiling tower v0.5.3
+   Compiling publicsuffix v2.3.0
+   Compiling tokio-rustls v0.26.6
+   Compiling serde_urlencoded v0.7.1
+   Compiling syn v2.0.119
+   Compiling redis v0.32.7
+   Compiling tower-http v0.6.11
+   Compiling async-stream-impl v0.3.6
+   Compiling hyper-rustls v0.27.10
+   Compiling uuid v1.29.2
+   Compiling cookie_store v0.22.1
+   Compiling axum-core v0.5.6
+   Compiling reqwest v0.12.28
+   Compiling dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/output-store)
+   Compiling async-stream v0.3.6
+   Compiling dispatcharr-contracts v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/contracts)
+   Compiling serde_path_to_error v0.1.20
+   Compiling dispatcharr-stream-runtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/stream-runtime)
+   Compiling axum v0.8.9
+   Compiling dispatcharr-clients v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/clients)
+   Compiling dispatcharr-upstream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/upstream-http)
+   Compiling dispatcharr-input-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/input-store)
+   Compiling dispatcharr-coordination v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/coordination)
+   Compiling dispatcharr-stream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/stream-http)
+    Finished `test` profile [unoptimized] target(s) in 14.18s
+     Running tests/http.rs (/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http-5517307a4fdd2d8f)
+
+thread 'source_owner_waiting_for_a_healthy_input_does_not_insert_keepalive_packets' panicked at crates/stream-http/tests/http.rs:1880:5:
+Source healthy owner must wait for media rather than yield a null control packet
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `-p dispatcharr-stream-http --test http`

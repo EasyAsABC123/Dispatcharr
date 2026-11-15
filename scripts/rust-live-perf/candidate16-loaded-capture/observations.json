@@ -1,0 +1,126 @@
+{
+  "scope": "Descriptive loaded-graph capture with confirmed Source-only test-controller accounting bias; no application gains accepted",
+  "candidate_git": "921c5c40b2eb7a7073a0006b43fae86b41cd2728",
+  "image_id": "sha256:93443e136512344dbcf7309ba18e1999b32f5bc94cbddbcf7781bea3aa28ba3e",
+  "actual_controller_exit": 1,
+  "elapsed_seconds": 282.6549327360044,
+  "phases": [
+    {
+      "phase": 1,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "original_phase_valid": true,
+      "viewers": 1,
+      "measurement_seconds": 59.99871786100266,
+      "sample_count": 61,
+      "primary_metrics": {
+        "cpu_core_seconds": 3.866925,
+        "cpu_mean_cores": 0.06445012723369184,
+        "charged_memory_median_bytes": 963719168,
+        "charged_memory_max_simultaneous_bytes": 967241728,
+        "working_set_estimate_median_bytes": 963600384,
+        "working_set_estimate_max_simultaneous_bytes": 967122944
+      },
+      "media_passed": true,
+      "failed_functional_checks": [],
+      "cleanup_errors": [],
+      "raw_sha256": {
+        "shared-ts.json": "9621c0aa5844e3765a30edc0919d9dffa07c262ca696c027b746d5a601066c70",
+        "resource-samples.json": "cebaf0566bddea5eca84e3b38eb50af7a0b18b057c1835cb28f5e532b77cf515",
+        "useful-media-complete.json": "3bf5be32a785650a43488a0a66e4ec4ebc87758676d78bfbc3289d7cea605726"
+      }
+    },
+    {
+      "phase": 2,
+      "backend": "candidate",
+      "actual_exit": 1,
+      "original_phase_valid": false,
+      "viewers": 1,
+      "measurement_seconds": 59.99863132500468,
+      "sample_count": 61,
+      "primary_metrics": {
+        "cpu_core_seconds": 5.219072,
+        "cpu_mean_cores": 0.08698651760452625,
+        "charged_memory_median_bytes": 242003968,
+        "charged_memory_max_simultaneous_bytes": 247476224,
+        "working_set_estimate_median_bytes": 241938432,
+        "working_set_estimate_max_simultaneous_bytes": 247410688
+      },
+      "media_passed": false,
+      "failed_functional_checks": [],
+      "cleanup_errors": [],
+      "raw_sha256": {
+        "shared-ts.json": "a2438650559b71b4962b57e1ed7f23c3103c48ec89a1635ad225851792c8f987",
+        "resource-samples.json": "74f0d10355ab4e5e8ab68d22118e0bdb075bc61b39305ca8239358dc3561578f",
+        "useful-media-complete.json": "13f86bb012a3766de93e1fc40e488ba9021e47cb39a31e2c3708c0fb7c1c7f4e"
+      }
+    }
+  ],
+  "Root_cleanup": {
+    "actual_controller_exit": 1,
+    "elapsed_seconds": 282.6549327360044,
+    "project_inventories": [
+      {
+        "project": "dispatcharr-shared-ts-3c1355eb9f23",
+        "kind": "containers",
+        "actual_exit": 0,
+        "empty": true
+      },
+      {
+        "project": "dispatcharr-shared-ts-3c1355eb9f23",
+        "kind": "networks",
+        "actual_exit": 0,
+        "empty": true
+      },
+      {
+        "project": "dispatcharr-shared-ts-3c1355eb9f23",
+        "kind": "volumes",
+        "actual_exit": 0,
+        "empty": true
+      },
+      {
+        "observer_scope": "dispatcharr-resource-551e8de5121146b8b3dc9208b9c4589e.scope",
+        "state": "inactive",
+        "actual_exit": 4
+      },
+      {
+        "project": "dispatcharr-shared-ts-5138c7e8ba26",
+        "kind": "containers",
+        "actual_exit": 0,
+        "empty": true
+      },
+      {
+        "project": "dispatcharr-shared-ts-5138c7e8ba26",
+        "kind": "networks",
+        "actual_exit": 0,
+        "empty": true
+      },
+      {
+        "project": "dispatcharr-shared-ts-5138c7e8ba26",
+        "kind": "volumes",
+        "actual_exit": 0,
+        "empty": true
+      },
+      {
+        "observer_scope": "dispatcharr-resource-a2c25ba9116a467180604bd4364f869c.scope",
+        "state": "inactive",
+        "actual_exit": 4
+      }
+    ],
+    "exact_CID_count": 7,
+    "all_exact_CIDs_absent": true,
+    "recorded_host_PID_count": 79,
+    "all_recorded_host_PIDs_absent": true,
+    "Source_first_phase_valid": true,
+    "Native_full_window_sampled_but_media_strict_failed": true,
+    "six_Source_fixture_controllers_bias_app_accounting": true,
+    "no_application_gain_accepted": true,
+    "quiet_window_finished": true
+  },
+  "extra_Source_fixture_controllers": 6,
+  "performance_verified": false,
+  "full_milestone_passed": false,
+  "credit": "Original Dispatcharr and dependency authors retain full application and algorithm credit.",
+  "extra_Native_fixture_controllers": 0,
+  "common_baseline_supervisor_present_both": true
+}

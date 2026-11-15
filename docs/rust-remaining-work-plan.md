@@ -12,7 +12,7 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The current code is [Candidate17](rust-milestone-batch17.md):1,004 workspace tests,
+The current code is [Candidate18](rust-milestone-batch18.md):1,008 workspace tests,
 compilation and strict lint pass; Docker and application acceptance are pending.
 The latest built runtime remains [Candidate16](rust-milestone-batch16.md),
 `921c5c40b2eb7a7073a0006b43fae86b41cd2728`. Its

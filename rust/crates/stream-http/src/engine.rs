@@ -1,5 +1,7 @@
 #[path = "profile_process.rs"]
 mod profile_process;
+#[path = "source_keepalive.rs"]
+mod source_keepalive;
 use axum::{body::Body, http::Response};
 use bytes::Bytes;
 use dispatcharr_clients::{ClientLease, ClientStore};
@@ -606,15 +608,23 @@ impl StreamEngine {
         }
         let keepalive_interval = self.inner.config.keepalive_interval;
         let max_keepalive_duration = self.inner.config.max_keepalive_duration;
+        // A local Source StreamManager gates keepalives on its real health.
+        // Generic component and remote-owner modes retain their existing path;
+        // the shared non-owner health lookup remains a separate parity gate.
+        let source_owner_keepalive = register_client
+            && self.inner.config.source_initialization
+            && session.manager_visible.load(Ordering::Acquire);
         let stream = async_stream::stream! {
             let mut state = state;
             let mut stopped=state.client.as_ref().map(ClientLease::stopped);
             let mut last_media=Instant::now();
+            let mut source_keepalive=source_keepalive::SourceKeepalive::new();
             'transport: loop {
                 if stopped.as_ref().is_some_and(|control|*control.borrow()) {break;}
                 // Keep a historical read alive across keepalive ticks. Dropping
                 // and recreating it each tick would queue cancelled Redis reads.
-                let waiting=history::next(&mut state.viewer,history.as_ref());
+                let cursor=AtomicU64::new(state.viewer.next_sequence());
+                let waiting=history::next_observed(&mut state.viewer,history.as_ref(),Some(&cursor));
                 tokio::pin!(waiting);
                 let next=loop {
                     let client_stopped=async {
@@ -626,9 +636,18 @@ impl StreamEngine {
                     tokio::select! {
                         _=client_stopped=>break 'transport,
                         next=&mut waiting=>break next,
-                        _=time::sleep(keepalive_interval)=>{
+                        _=time::sleep(if source_owner_keepalive {source_keepalive.delay()}else{keepalive_interval})=>{
                             if !register_client {continue;}
-                            if last_media.elapsed()>=max_keepalive_duration {break 'transport;}
+                            if source_owner_keepalive {
+                                let session=&state._guard.session;
+                                let at_head=cursor.load(Ordering::Acquire)>session.buffer_index.load(Ordering::Acquire);
+                                let healthy=session.health.lock().unwrap().healthy;
+                                match source_keepalive.empty(at_head,healthy,Instant::now().into_std(),keepalive_interval,max_keepalive_duration) {
+                                    source_keepalive::Decision::Wait=>continue,
+                                    source_keepalive::Decision::Stop=>break 'transport,
+                                    source_keepalive::Decision::Send=>{},
+                                }
+                            }else if last_media.elapsed()>=max_keepalive_duration {break 'transport;}
                             if let Some(client)=&state.client {client.record_keepalive(188);}
                             let frame=KeepaliveFrame {_client:state.client.clone(),_guard:state._guard.clone()};
                             yield Ok::<MediaFrame,io::Error>(MediaFrame {data:Bytes::from_owner(frame),discontinuity:false});
@@ -638,6 +657,7 @@ impl StreamEngine {
                 match next {
                     Ok(Some(chunk)) => {
                         last_media=Instant::now();
+                        source_keepalive.received();
                         if let Some(client)=&state.client {client.record_bytes(chunk.as_ref().len());}
                         let discontinuity=chunk.discontinuity();
                         let frame = FrameOwner { chunk, _client:state.client.clone(), _guard: state._guard.clone() };

@@ -9,8 +9,14 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest committed code is `49ad42e2f48ea11f3d6a991e8bbb45702d89906f`:
-[Candidate17](rust-milestone-batch17.md) passes formatting, compilation, strict
+The newest code is [Candidate18](rust-milestone-batch18.md): formatting,
+compilation, strict Clippy and1,008 tests pass (zero failures,756 ignored).
+Its real HTTP regression fails on the preceding engine and passes after the
+local healthy-owner keepalive correction. Docker/runtime acceptance remains
+required; remote-owner health integration is a separate open gate.
+
+The preceding code `49ad42e2f48ea11f3d6a991e8bbb45702d89906f`,
+[Candidate17](rust-milestone-batch17.md), passes formatting, compilation, strict
 Clippy and1,004 tests (zero failures,756 ignored). All1,260 SDK inputs match
 committed Git blobs. It adds plugin actions/managed ZIP installation, remote
 playlist/full-result handling and VLC/grouped-credential input work. Its Docker
@@ -22,8 +28,10 @@ The latest built runtime remains
 Its [functional observations](rust-batch16-functional-observations.md) include
 nine passing Native contexts, fresh paired idle viewing and seven paired XC
 business cells. Original strict fixture failures remain recorded. The separate
-resource run has [premeasurement startup failures](rust-candidate16-resource-startup.md);
-it must complete the full fixed paired workload before accepting a gain.
+resource run retains [premeasurement startup failures](rust-candidate16-resource-startup.md)
+and a [descriptive paired capture](rust-batch16-resource-observations.md) with
+fixture accounting bias and Native media-validation failure. No gain is accepted.
+The corrected runtime/harness must complete the full fixed paired workload.
 No full M0–M9 milestone or new performance gain is accepted.
 
 The [Candidate15 grouped run](rust-batch15-functional-observations.md) passes10 of19 Native contexts and all ten restart state predicates, with26-container cleanup verified. A separate pinned review qualifies all six retained Source/Native media files without rewriting original strict failures. Fixture failures and a real proxy/NO_PROXY transport gap remain; no full milestone or new performance gain is accepted.
