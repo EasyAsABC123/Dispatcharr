@@ -36,7 +36,7 @@ struct Inner {
     publisher: jobs::normal_recording_publication::NormalRecordingPublisher,
     dvr: Arc<jobs::recording_dvr_normal::NormalDvr>,
     recovery: jobs::normal_recording_recovery::Worker,
-    scheduler: jobs::normal_recording_scheduler::Scheduler,
+    scheduler: jobs::normal_beat::Scheduler,
     control: Arc<jobs::normal_control::Control>,
     startup: watch::Sender<Startup>,
     startup_slots: Arc<Semaphore>,
@@ -107,6 +107,7 @@ impl SelectedJobs {
     ) -> Result<Self, String> {
         let local = loopback(actual)?;
         let beat_enabled = flag("RUST_EXPERIMENTAL_SELECTED_BEAT")?;
+        let beat_identity = auth.producer_identity_source();
         let cache = env::var("REDIS_URL").map_err(|_| "Selected jobs require REDIS_URL")?;
         let broker = env::var("CELERY_BROKER_URL").unwrap_or_else(|_| cache.clone());
         let backend = env::var("CELERY_RESULT_BACKEND").unwrap_or_else(|_| broker.clone());
@@ -152,7 +153,7 @@ impl SelectedJobs {
                     configured_plugin_directory: plugin_directory,
                     media_uid,
                     publisher: publisher.clone(),
-                    revoked,
+                    revoked: revoked.clone(),
                     control: control.clone(),
                     publications,
                     named_publications: publisher.named_publications(),
@@ -194,15 +195,25 @@ impl SelectedJobs {
             auth.clone(),
             dispatcharr_output_http::source_output_origin,
         );
+        let recording_jobs = crate::recording_http_bridge::port(
+            store.clone(),
+            cache.clone(),
+            publisher.clone(),
+            control.clone(),
+            engine.clone(),
+        );
+        let core_tasks = jobs::normal_core_tasks::Prepared::new(
+            shared_jobs.clone(),
+            store.clone(),
+            auth.clone(),
+            recording_jobs.clone(),
+            events.clone(),
+            revoked.clone(),
+        )
+        .map_err(|_| "Selected Core downstream task initialization failed")?;
         let recording_http = dispatcharr_store::recording_http::RecordingHttp::prepare(
             auth.clone(),
-            crate::recording_http_bridge::port(
-                store.clone(),
-                cache.clone(),
-                publisher.clone(),
-                control.clone(),
-                engine.clone(),
-            ),
+            recording_jobs,
             events.clone(),
         );
         let scanner = jobs::normal_scanner::Prepared::connect(
@@ -296,6 +307,7 @@ impl SelectedJobs {
             (Family::Recording, dvr.clone()),
             (Family::StartupRecovery, Arc::new(recovery.clone())),
         ];
+        entries.extend(core_tasks.entries());
         entries.extend(defaults.entries());
         entries.extend(scanner.entries());
         let queue = jobs::normal_queue::Application::prepare(
@@ -306,12 +318,22 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected complete registry initialization failed")?;
-        let scheduler = jobs::normal_recording_scheduler::Scheduler::prepare(
+        let scheduler = jobs::normal_beat::Scheduler::prepare(
             store.pool().clone(),
-            publisher.clone(),
+            shared_jobs.clone(),
+            beat_identity,
             Duration::from_millis(100),
         )
-        .map_err(|_| "Selected clocked scheduler initialization failed")?;
+        .map_err(|_| "Selected normal Beat initialization failed")?;
+        if beat_enabled {
+            let setup = scheduler
+                .initialize(Arc::new(()))
+                .await
+                .map_err(|_| "Selected normal Beat setup failed")?;
+            if !setup.failed.is_empty() {
+                eprintln!("Normal Beat default entries rejected: {:?}", setup.failed);
+            }
+        }
         Ok(Self {
             inner: Arc::new(Inner {
                 queue,
@@ -355,12 +377,11 @@ impl SelectedJobs {
             && (!self.inner.beat_enabled
                 || matches!(
                     scheduler,
-                    jobs::normal_recording_scheduler::State::Running
-                        | jobs::normal_recording_scheduler::State::Observed(_)
+                    jobs::normal_beat::Status::Running | jobs::normal_beat::Status::Observed(_)
                 ));
         (
             ready,
-            serde_json::json!({"scope":"experimental selected14 plus startup recovery; not Source47 parity","ready":ready,"startup":format!("{startup:?}"),"startup_error":startup_error,"control":format!("{control:?}"),"celery":format!("{:?}",queue.celery),"dvr":format!("{:?}",queue.dvr),"clocked_scheduler":format!("{scheduler:?}"),"clocked_scheduler_enabled":self.inner.beat_enabled,"parity_complete":false}),
+            serde_json::json!({"scope":"experimental selected16 plus startup recovery; not Source47 parity","ready":ready,"startup":format!("{startup:?}"),"startup_error":startup_error,"control":format!("{control:?}"),"celery":format!("{:?}",queue.celery),"dvr":format!("{:?}",queue.dvr),"clocked_scheduler":format!("{scheduler:?}"),"clocked_scheduler_enabled":self.inner.beat_enabled,"parity_complete":false}),
         )
     }
     pub fn start_after_serving(&self) -> Result<(), String> {
@@ -436,7 +457,7 @@ impl SelectedJobs {
             self.inner
                 .scheduler
                 .start(Arc::new(()))
-                .map_err(|_| "Selected clocked scheduler start failed")?;
+                .map_err(|_| "Selected normal Beat start failed")?;
         }
         self.inner.startup.send_replace(Startup::Started);
         Ok(())

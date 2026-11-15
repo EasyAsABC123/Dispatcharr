@@ -25,6 +25,7 @@ use std::{
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 pub type RecordingChannelId = Uuid;
+pub type RecordingTaskConnection = sqlx::PgConnection;
 const SLOTS: usize = 4;
 const RAW: usize = 65536;
 const RESPONSE: usize = 4 * 1024 * 1024;
@@ -47,6 +48,39 @@ pub enum RecordingEffectError {
 /// Concrete job/media ports avoid a Store→job-transport dependency cycle.
 /// Implementations reread real rows/publish real commands; no frame mint here.
 pub trait RecordingJobs: Send + Sync {
+    fn supports_task_session(&self) -> bool {
+        false
+    }
+    fn schedule_from_task_on<'a>(
+        &'a self,
+        _recording: i64,
+        _parent: Uuid,
+        _connection: &'a mut RecordingTaskConnection,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'a, Result<Vec<String>, RecordingEffectError>> {
+        Box::pin(async { Err(RecordingEffectError::Unsupported) })
+    }
+    fn revoke_on<'a>(
+        &'a self,
+        _task: String,
+        _connection: &'a mut RecordingTaskConnection,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'a, Result<(), RecordingEffectError>> {
+        Box::pin(async { Err(RecordingEffectError::Unsupported) })
+    }
+    fn supports_task_signals(&self) -> bool {
+        false
+    }
+    /// Actual save-signal child of an already claimed task. The default is an
+    /// explicit refusal; HTTP callers retain the ordinary root schedule path.
+    fn schedule_from_task(
+        &self,
+        _recording: i64,
+        _parent: Uuid,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<Vec<String>, RecordingEffectError>> {
+        Box::pin(async { Err(RecordingEffectError::Unsupported) })
+    }
     fn schedule(
         &self,
         recording: i64,

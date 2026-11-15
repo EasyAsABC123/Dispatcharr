@@ -137,7 +137,7 @@ fn validate_schedule(entry: &Entry) -> Result<(), Error> {
     }
     Ok(())
 }
-fn decision(
+pub(crate) fn decision(
     entry: &Entry,
     now: DateTime<Utc>,
 ) -> Result<crate::interval_schedule::DueDecision, Error> {

@@ -176,6 +176,91 @@ impl Store {
             settle(connection,result,prefix,transaction_attempted).await
         }).await.map_err(|_|Error::Supervisor)?
     }
+
+    /// Source cleanup on the caller's physically owned session. This function
+    /// never acquires/returns/closes a second pool connection; the outer task
+    /// owns final Ready/close and keeps its HOLD cursor on this same session.
+    pub async fn delete_by_name_on(
+        &self,
+        connection: &mut PgConnection,
+        name: &str,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        let _owner = owner;
+        if !matches!(self.window, CapturedWindow::Normal) || name.is_empty() || name.len() > 255 {
+            return Err(Error::Unsupported("normal periodic task name"));
+        }
+        let mut prefix = Prefix::default();
+        let mut transaction_attempted = false;
+        let result=async{
+
+                let row:Option<(i64,Option<i64>)>=sqlx::query_as("SELECT id::bigint,clocked_id::bigint FROM django_celery_beat_periodictask WHERE name=$1 LIMIT 1")
+                    .bind(name).fetch_optional(&mut *connection).await.map_err(|e|sql(Stage::Read,e,prefix))?;
+                let Some((id,clocked))=row else{return Ok(false);};
+                transaction_attempted=true;
+                command(connection,"BEGIN",Stage::BeginPeriodic,prefix).await?;
+                command(connection,"SAVEPOINT native_normal_predelete",Stage::PreDeleteTracking,prefix).await?;
+                normal_touch(connection,Stage::PreDeleteTracking,prefix).await?;
+                command(connection,"RELEASE SAVEPOINT native_normal_predelete",Stage::PreDeleteTracking,prefix).await?;
+                for (q,stage) in [("UPDATE epg_epgsource SET refresh_task_id=NULL WHERE refresh_task_id=$1",Stage::ClearEpg),("UPDATE m3u_m3uaccount SET refresh_task_id=NULL WHERE refresh_task_id=$1",Stage::ClearM3u)]{
+                    sqlx::query(q).bind(id).execute(&mut *connection).await.map_err(|e|sql(stage,e,prefix))?;
+                }
+                let rows=sqlx::query("DELETE FROM django_celery_beat_periodictask WHERE id=$1 AND name=$2 AND clocked_id IS NOT DISTINCT FROM $3")
+                    .bind(id).bind(name).bind(clocked).execute(&mut *connection).await.map_err(|e|sql(Stage::DeletePeriodic,e,prefix))?.rows_affected();
+                if rows!=1{return Err(Error::Unsupported("normal periodic changed before delete"));}
+                prefix.periodic=Commit::Unknown;command(connection,"COMMIT",Stage::CommitPeriodic,prefix).await?;prefix.periodic=Commit::Acknowledged;
+                command(connection,"BEGIN",Stage::BeginOverride,prefix).await?;
+                normal_touch(connection,Stage::OverrideTracking,prefix).await?;
+                prefix.override_touch=Commit::Unknown;command(connection,"COMMIT",Stage::CommitOverride,prefix).await?;prefix.override_touch=Commit::Acknowledged;transaction_attempted=false;
+                if let Some(clocked)=clocked {
+                    let used:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)").bind(clocked).fetch_one(&mut *connection).await.map_err(|e|sql(Stage::UnusedClocked,e,prefix))?;
+                    if !used {
+                        transaction_attempted=true;command(connection,"BEGIN",Stage::BeginClocked,prefix).await?;
+                        let rows=sqlx::query("DELETE FROM django_celery_beat_clockedschedule WHERE id=$1 AND NOT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)").bind(clocked).execute(&mut *connection).await.map_err(|e|sql(Stage::DeleteClocked,e,prefix))?.rows_affected();
+                        if rows>1{return Err(Error::Unsupported("normal clocked delete cardinality"));}
+                        if rows==1 {command(connection,"SAVEPOINT native_normal_clocked_postdelete",Stage::ClockedTracking,prefix).await?;normal_touch(connection,Stage::ClockedTracking,prefix).await?;command(connection,"RELEASE SAVEPOINT native_normal_clocked_postdelete",Stage::ClockedTracking,prefix).await?;}
+                        prefix.clocked=Commit::Unknown;command(connection,"COMMIT",Stage::CommitClocked,prefix).await?;prefix.clocked=Commit::Acknowledged;transaction_attempted=false;
+                    }
+                }
+                Ok(true)
+
+        }.await;
+        let rollback = if result.is_err() && transaction_attempted {
+            sqlx::query("ROLLBACK")
+                .execute(&mut *connection)
+                .await
+                .err()
+        } else {
+            None
+        };
+        let ready = connection.ping().await.err();
+        match (result, rollback, ready) {
+            (Ok(value), None, None) => Ok(value),
+            (Err(cause), rollback, ready) => Err(Error::Boundary {
+                cause: Box::new(cause),
+                prefix,
+                rollback,
+                ready,
+                close: None,
+            }),
+            (Ok(_), rollback, Some(source)) => Err(Error::Sql {
+                stage: Stage::Ready,
+                source,
+                prefix,
+                rollback,
+                ready: None,
+                close: None,
+            }),
+            (Ok(_), Some(source), None) => Err(Error::Sql {
+                stage: Stage::Ready,
+                source,
+                prefix,
+                rollback: None,
+                ready: None,
+                close: None,
+            }),
+        }
+    }
     pub async fn prepare(
         self: Arc<Self>,
         expected: RecordingIdentity,

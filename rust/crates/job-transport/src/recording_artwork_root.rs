@@ -10,6 +10,7 @@ pub(crate) struct Message {
     pub(crate) task_id: Uuid,
     pub(crate) recording: i64,
     pub(crate) eta: Option<DateTime<Utc>>,
+    pub(crate) parent: Option<Uuid>,
 }
 pub(crate) fn parse(raw: &[u8]) -> Option<Message> {
     let mut value = json_value(raw).ok()?;
@@ -59,11 +60,56 @@ pub(crate) fn parse(raw: &[u8]) -> Option<Message> {
         task_id,
         recording,
         eta,
+        parent: None,
     })
 }
+/// Normal save-signal child with a real countdown ETA. Legacy immediate child
+/// parsing remains distinct; the original root parser and tests are unchanged.
+pub(crate) fn parse_signal(raw: &[u8]) -> Option<Message> {
+    if let Some(message) = parse(raw) {
+        return Some(message);
+    }
+    let mut value = json_value(raw).ok()?;
+    if value["headers"]["eta"].is_null() {
+        return None;
+    }
+    let parent = Uuid::parse_str(value["headers"]["parent_id"].as_str()?).ok()?;
+    let root = Uuid::parse_str(value["headers"]["root_id"].as_str()?).ok()?;
+    if parent.is_nil() || root.is_nil() {
+        return None;
+    }
+    value["headers"]["parent_id"] = Value::Null;
+    value["headers"]["root_id"] = value["headers"]["id"].clone();
+    let mut message = parse(&serde_json::to_vec(&value).ok()?)?;
+    message.parent = Some(parent);
+    Some(message)
+}
+
 #[cfg(test)]
 mod controls {
     use super::*;
+    #[test]
+    fn parented_countdown_preserves_parent_without_widening_root_authority() {
+        let source: Value = serde_json::from_str(include_str!(
+            "../datasets/source-local-recording-artwork.json"
+        ))
+        .unwrap();
+        let raw = STANDARD
+            .decode(source["frames_raw_base64"][0].as_str().unwrap())
+            .unwrap();
+        let mut frame: Value = serde_json::from_slice(&raw).unwrap();
+        frame["properties"]["delivery_info"]["routing_key"] = json!("celery");
+        let parent = Uuid::new_v4();
+        frame["headers"]["root_id"] = json!(parent.to_string());
+        frame["headers"]["parent_id"] = json!(parent.to_string());
+        frame["headers"]["eta"] = json!("2026-11-14T12:00:01+00:00");
+        let raw = serde_json::to_vec(&frame).unwrap();
+        assert!(parse(&raw).is_none());
+        let admitted = parse_signal(&raw).unwrap();
+        assert_eq!(admitted.parent, Some(parent));
+        assert!(admitted.eta.is_some());
+        assert!(crate::recording_artwork_protocol::parse_normal(&raw).is_none());
+    }
     #[test]
     fn root_and_captured_child_authority_remain_disjoint_and_unknown_callbacks_stay_refused() {
         let source: Value = serde_json::from_str(include_str!(

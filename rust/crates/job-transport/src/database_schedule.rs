@@ -440,3 +440,8 @@ mod heap;
 mod calendar_schedule;
 #[path = "calendar_tz.rs"]
 mod calendar_tz;
+
+/// Existing pinned UTC-server query window offset, shared by normal Beat.
+pub(crate) fn normal_query_offset(zone: &str) -> Result<i32, Error> {
+    calendar_schedule::query_hour_offset(zone)
+}

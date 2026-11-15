@@ -208,6 +208,13 @@ pub(crate) fn arguments(args: &Value) -> Result<String, StoreError> {
         MAX_REPR,
     )
 }
+pub(crate) fn periodic_arguments(args: &Value) -> Result<String, StoreError> {
+    if args.as_array().ok_or_else(unavailable)?.is_empty() {
+        arguments(args)
+    } else {
+        render(Frame::Value(args, 0), MAX_REPR)
+    }
+}
 pub(crate) fn keywords(kwargs: &Value) -> Result<String, StoreError> {
     kwargs.as_object().ok_or_else(unavailable)?;
     render(Frame::Value(kwargs, 0), MAX_REPR)

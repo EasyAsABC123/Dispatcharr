@@ -35,6 +35,74 @@ struct Bridge {
     engine: StreamEngine,
 }
 impl RecordingJobs for Bridge {
+    fn supports_task_session(&self) -> bool {
+        true
+    }
+    fn schedule_from_task_on<'a>(
+        &'a self,
+        recording: i64,
+        parent: dispatcharr_store::recording_http::RecordingChannelId,
+        connection: &'a mut dispatcharr_store::recording_http::RecordingTaskConnection,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'a, Result<Vec<String>, Effect>> {
+        Box::pin(async move {
+            let published = self
+                .publisher
+                .schedule_booking_child_on(recording, parent, connection, owner)
+                .await
+                .map_err(publication_error)?;
+            let mut children = Vec::new();
+            if let dispatcharr_job_transport::normal_recording_publication::BookingTask::Immediate{task_key}=published.task {children.push(task_key);}
+            if let Some(artwork) = published.artwork {
+                children.push(artwork.to_string());
+            }
+            Ok(children)
+        })
+    }
+    fn revoke_on<'a>(
+        &'a self,
+        task: String,
+        connection: &'a mut dispatcharr_store::recording_http::RecordingTaskConnection,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'a, Result<(), Effect>> {
+        Box::pin(async move {
+            let deleted =
+                dispatcharr_store::recording_beat_cleanup::Store::normal(self.store.pool().clone())
+                    .delete_by_name_on(connection, &task, owner.clone())
+                    .await
+                    .map_err(cleanup_error)?;
+            if !deleted {
+                self.control
+                    .revoke_one(&task, owner)
+                    .await
+                    .map_err(|_| Effect::Unsettled)?;
+            }
+            Ok(())
+        })
+    }
+    fn supports_task_signals(&self) -> bool {
+        true
+    }
+    fn schedule_from_task(
+        &self,
+        recording: i64,
+        parent: dispatcharr_store::recording_http::RecordingChannelId,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<Vec<String>, Effect>> {
+        Box::pin(async move {
+            let published = self
+                .publisher
+                .schedule_booking_child(recording, parent, owner)
+                .await
+                .map_err(publication_error)?;
+            let mut children = Vec::new();
+            if let dispatcharr_job_transport::normal_recording_publication::BookingTask::Immediate { task_key } = published.task { children.push(task_key); }
+            if let Some(artwork) = published.artwork {
+                children.push(artwork.to_string());
+            }
+            Ok(children)
+        })
+    }
     fn schedule(
         &self,
         recording: i64,
@@ -136,6 +204,7 @@ fn publication_error(error: Error) -> Effect {
             ready: None,
             close: None,
         } if source.as_database_error().is_some() => Effect::SettledFailure,
+        Error::Cleanup(error) => cleanup_error(*error),
         Error::Audit(error) => match *error {
             dispatcharr_store::recording_capture::Error::Sql {
                 source,

@@ -52,18 +52,18 @@ fn parameter_types(index: usize) -> Vec<PgTypeInfo> {
     let time = <DateTime<Utc> as Type<sqlx::Postgres>>::type_info();
     let uuid = <Uuid as Type<sqlx::Postgres>>::type_info();
     match index {
-        2 | 6 | 9 | 10 | 12 | 13 | 14 | 17 | 18 | 25 | 26 | 31 | 33 | 40 | 41 | 46 | 48 => {
-            vec![int]
-        }
-        3 | 21 | 55 | 58 => vec![text],
-        11 | 15 => vec![int, value.clone(), value],
+        0 | 1 | 5 | 19 | 22 | 23 | 24 | 28 | 29 | 30 | 32 | 34 | 35 | 36 | 38 | 39 | 40 | 44
+        | 45 | 46 | 48 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 60 | 61 | 62 | 64 | 66 | 67 | 68
+        | 70 | 74 => vec![],
+        2 | 6 | 9 | 10 | 12 | 13 | 14 | 17 | 18 | 25 | 26 | 31 | 33 | 41 | 42 | 47 | 49 | 57
+        | 58 | 63 | 65 => vec![int],
+        3 | 21 | 37 | 72 | 75 => vec![text],
+        4 | 8 | 73 => vec![int.clone(), int],
         7 => vec![text, time.clone(), time],
-        4 | 8 | 56 => vec![int.clone(), int],
+        11 | 15 => vec![int, value.clone(), value],
         16 | 20 => vec![text.clone(), time, uuid, text, value],
-        27 | 42 => vec![int.clone(), text, int],
-        52 | 54 => vec![time],
-        0 | 1 | 5 | 19 | 22 | 23 | 24 | 28 | 29 | 30 | 32 | 34 | 35 | 36 | 37 | 38 | 39 | 43
-        | 44 | 45 | 47 | 49 | 50 | 51 | 53 | 57 => vec![],
+        27 | 43 | 59 => vec![int.clone(), text, int],
+        69 | 71 => vec![time],
         _ => panic!("unreviewed production statement index"),
     }
 }
@@ -71,7 +71,7 @@ fn parameter_types(index: usize) -> Vec<PgTypeInfo> {
 #[test]
 fn compiled_statement_inventory_and_actual_bound_types() {
     let statements = actual_statements();
-    assert_eq!(statements.len(), 59);
+    assert_eq!(statements.len(), 76);
     assert_eq!(statements[0].1, statements[19].1);
     assert!(statements[0]
         .1
@@ -122,7 +122,7 @@ async fn actual_compiled_dvr_schema_prepare_only() {
         .expect("actual read-only setting");
     assert_eq!(readonly, "on");
     let statements = actual_statements();
-    assert_eq!(statements.len(), 59);
+    assert_eq!(statements.len(), 76);
     let mut rows = Vec::new();
     for (index, (source, sql)) in statements.into_iter().enumerate() {
         let types = parameter_types(index);

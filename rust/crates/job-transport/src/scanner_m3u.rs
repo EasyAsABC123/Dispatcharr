@@ -28,6 +28,15 @@ use std::{
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 pub type Owner = Arc<dyn Send + Sync>;
 pub type DateClock = Arc<dyn Fn() -> chrono::DateTime<chrono::Utc> + Send + Sync>;
+fn preparation_diagnostics() -> bool {
+    static ENABLED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *ENABLED.get_or_init(|| {
+        std::env::var("RUST_M3U_PREPARE_DIAGNOSTICS")
+            .ok()
+            .as_deref()
+            == Some("1")
+    })
+}
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Error {
     Configuration,
@@ -509,7 +518,10 @@ impl Service {
                 .auth
                 .borrow_task_sql_session(retained)
                 .await
-                .map_err(|_| Error::Operational)?;
+                .map_err(|error| match error {
+                    StoreError::StatusBody(503, _) => Error::Capacity,
+                    _ => Error::Operational,
+                })?;
             {
                 let mut active = self.inner.session.lock().map_err(|_| Error::Operational)?;
                 if active.is_some() {
@@ -533,10 +545,25 @@ impl Service {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
-        let result = self.prepare_inner(id, kind, owner.clone(), done).await;
+        let mut stage = "admission";
+        let result = self
+            .prepare_inner(id, kind, owner.clone(), done, &mut stage)
+            .await;
+        if self.inner.normal && preparation_diagnostics() {
+            if let Err(error) = &result {
+                eprintln!(
+                    "Selected M3U prepare account={id} kind={kind:?} stage={stage} error={error:?}"
+                );
+            }
+        }
         // All outcomes, including unsupported/error exits, wait for the raw
         // dedicated pool's actual Ready/close before local ownership is dropped.
         let fenced = self.settle().await;
+        if self.inner.normal && preparation_diagnostics() {
+            if let Err(error) = &fenced {
+                eprintln!("Selected M3U prepare account={id} kind={kind:?} stage=physical_fence error={error:?}");
+            }
+        }
         drop(owner);
         fenced?;
         result
@@ -547,8 +574,11 @@ impl Service {
         kind: Kind,
         owner: Arc<Operation>,
         done: tokio::sync::oneshot::Receiver<()>,
+        stage: &mut &'static str,
     ) -> Result<Prepared, Error> {
+        *stage = "account_sql";
         let row=sqlx::query("SELECT id::bigint,name,file_path,is_active,status,CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,locked,stale_stream_days::bigint, (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL AND custom_properties='{}'::jsonb AND octet_length(name)<=512 AND octet_length(file_path)<=4096 AND COALESCE(octet_length(last_message),0)<=8192) AS known FROM m3u_m3uaccount WHERE id=$1").bind(id).fetch_optional(self.executor()).await.map_err(|_|Error::Operational)?.ok_or(Error::Unsupported)?;
+        *stage = "account_shape";
         if !row
             .try_get::<bool, _>("known")
             .map_err(|_| Error::Unsupported)?
@@ -572,6 +602,7 @@ impl Service {
                 .try_get("stale_stream_days")
                 .map_err(|_| Error::Operational)?,
         };
+        *stage = "account_path";
         if !account.name.is_ascii()
             || !account.path.starts_with(&self.inner.roots.input)
             || account.path.parent() != Some(self.inner.roots.input.as_path())
@@ -581,12 +612,17 @@ impl Service {
         {
             return Err(Error::Unsupported);
         }
+        *stage = "hash_policy_sql_or_cache";
         let hash_mode = self.hash_setting(owner.clone()).await?;
+        *stage = "forbidden_effects_sql";
         let forbidden:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(self.executor()).await.map_err(|_|Error::Operational)?;
+        *stage = "forbidden_effects_domain";
         if forbidden {
             return Err(Error::Unsupported);
         }
+        *stage = "row_counts_sql";
         let domain:i64=sqlx::query_scalar("SELECT (SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_stream WHERE m3u_account_id=$1 LIMIT 65)s)+(SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 LIMIT 17)g)").bind(id).fetch_one(self.executor()).await.map_err(|_|Error::Operational)?;
+        *stage = "row_counts_domain";
         if domain > 64 {
             return Err(Error::Capacity);
         }
@@ -599,6 +635,7 @@ impl Service {
             owner,
             done,
         };
+        *stage = "input_or_cache_files";
         if prepared.account.active {
             let path = prepared.account.path.clone();
             let cache = self.cache_path(id);
@@ -617,6 +654,7 @@ impl Service {
         } else if kind == Kind::Single {
             return Err(Error::Unsupported);
         }
+        *stage = "missing_input_domain";
         if kind == Kind::Single
             && prepared.missing_input
             && prepared
@@ -634,6 +672,7 @@ impl Service {
         }
         // Bounded conservative superset from both owned catalogs. This is
         // admission only: never change input order or first-row deduplication.
+        *stage = "input_hash_projection";
         let mut hashes = Vec::new();
         if matches!(hash_mode, HashMode::Empty) {
             hashes.push(
@@ -663,8 +702,10 @@ impl Service {
         }
         hashes.sort();
         hashes.dedup();
+        *stage = "mapped_hash_sql";
         let mapped: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.stream_hash=ANY($1))")
             .bind(&hashes).fetch_one(self.executor()).await.map_err(|_|Error::Operational)?;
+        *stage = "mapped_hash_domain";
         if mapped {
             return Err(Error::Unsupported);
         }
@@ -672,12 +713,15 @@ impl Service {
         // known unsupported rows before ACK, but is not a stability promise:
         // the actual Store SELECT still performs its own CASE/flag checks.
         // Serialized JSON text size matters, not compressed TOAST storage.
+        *stage = "matched_field_budget_sql";
         let supported: bool = sqlx::query_scalar("SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) AND ((logo_url IS NOT NULL AND octet_length(logo_url)>$2) OR (custom_properties IS NOT NULL AND octet_length(custom_properties::text)>$2)))")
             .bind(&hashes).bind(ScannerM3uLookupCap::FIELD_TEXT_BYTES)
             .fetch_one(self.executor()).await.map_err(|_| Error::Operational)?;
+        *stage = "matched_field_budget_domain";
         if !supported {
             return Err(Error::Unsupported);
         }
+        *stage = "single_audit_policy";
         if kind == Kind::Single && prepared.account.active {
             let settings = self.system_settings(prepared.owner.clone()).await?;
             let limit = audit_limit(&settings)?;
@@ -703,6 +747,7 @@ impl Service {
                 return Err(Error::Unsupported);
             }
         }
+        *stage = "prepared";
         Ok(prepared)
     }
     async fn hash_setting(&self, owner: Owner) -> Result<HashMode, Error> {

@@ -41,17 +41,41 @@ fn quote(value: &str, output: &mut String) {
 /// Hash selected fields using the original sorted, spaced, ASCII JSON spelling.
 /// Unknown keys are ignored, duplicates collapse, and XC nonzero stream IDs
 /// replace URL while forcing the account ID into the hash to prevent collisions.
+pub struct NullableStreamIdentity<'a> {
+    pub name: Option<&'a str>,
+    pub url: Option<&'a str>,
+    pub tvg_id: Option<&'a str>,
+    pub m3u_id: Option<i64>,
+    pub group: Option<&'a str>,
+    pub account_type: &'a str,
+    pub stream_id: Option<i64>,
+}
 pub fn stream_hash(identity: &StreamIdentity<'_>, keys: &[&str]) -> String {
+    stream_hash_nullable(
+        &NullableStreamIdentity {
+            name: Some(identity.name),
+            url: Some(identity.url),
+            tvg_id: Some(identity.tvg_id),
+            m3u_id: identity.m3u_id,
+            group: identity.group,
+            account_type: identity.account_type,
+            stream_id: identity.stream_id,
+        },
+        keys,
+    )
+}
+/// Source model fields preserve SQL NULL separately from an empty string.
+pub fn stream_hash_nullable(identity: &NullableStreamIdentity<'_>, keys: &[&str]) -> String {
     let use_id = identity.account_type == "XC"
         && identity.stream_id.is_some_and(|id| id != 0)
         && keys.contains(&"url");
     let mut parts = BTreeMap::new();
     for key in keys {
         let part = match *key {
-            "name" => Part::String(identity.name),
+            "name" => identity.name.map_or(Part::Null, Part::String),
             "url" if use_id => Part::Integer(identity.stream_id.unwrap()),
-            "url" => Part::String(identity.url),
-            "tvg_id" => Part::String(identity.tvg_id),
+            "url" => identity.url.map_or(Part::Null, Part::String),
+            "tvg_id" => identity.tvg_id.map_or(Part::Null, Part::String),
             "m3u_id" => identity.m3u_id.map_or(Part::Null, Part::Integer),
             "group" => identity.group.map_or(Part::Null, Part::String),
             _ => continue,
@@ -107,5 +131,34 @@ mod tests {
         let zero = stream_hash(&identity, &["url"]);
         identity.url = "https://three/new";
         assert_ne!(zero, stream_hash(&identity, &["url"]));
+    }
+    #[test]
+    fn sql_null_hash_parts_are_not_empty_strings() {
+        let identity = NullableStreamIdentity {
+            name: Some("Name"),
+            url: None,
+            tvg_id: None,
+            m3u_id: None,
+            group: None,
+            account_type: "",
+            stream_id: None,
+        };
+        assert_eq!(
+            stream_hash_nullable(&identity, &["url", "tvg_id"]),
+            "d489df5c9806aa38c732f1490553295ac5722874232e17c39638e769d917d816"
+        );
+        let old = StreamIdentity {
+            name: "Name",
+            url: "",
+            tvg_id: "",
+            m3u_id: None,
+            group: None,
+            account_type: "",
+            stream_id: None,
+        };
+        assert_ne!(
+            stream_hash_nullable(&identity, &["url", "tvg_id"]),
+            stream_hash(&old, &["url", "tvg_id"])
+        );
     }
 }

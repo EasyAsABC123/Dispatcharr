@@ -3,7 +3,7 @@
 mod reader;
 pub use reader::{Entries, ReadError};
 mod identity;
-pub use identity::{stream_hash, StreamIdentity};
+pub use identity::{stream_hash, stream_hash_nullable, NullableStreamIdentity, StreamIdentity};
 mod validation;
 use regex::Regex;
 use serde::{Deserialize, Serialize};

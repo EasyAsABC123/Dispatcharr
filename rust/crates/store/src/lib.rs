@@ -482,3 +482,5 @@ mod recording_http_files;
 mod recording_playback;
 mod recording_playback_files;
 pub use recording_playback::{RecordingPlayback, RecordingPlaybackOrigin};
+pub mod core_task_offsets;
+pub mod core_task_rehash;

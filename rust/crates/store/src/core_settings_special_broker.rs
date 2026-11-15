@@ -4,7 +4,7 @@ use crate::core_settings_special_budget::Scratch;
 use crate::{AuthService, StoreError};
 use serde::Serialize;
 use serde_json::{json, Value};
-use sqlx::{Connection, Row};
+use sqlx::Row;
 use std::{collections::BTreeSet, sync::Arc};
 
 fn unavailable() -> StoreError {
@@ -13,108 +13,61 @@ fn unavailable() -> StoreError {
         json!({"detail":"CoreSettings resource capacity is unavailable."}),
     )
 }
-async fn finish(mut c: sqlx::pool::PoolConnection<sqlx::Postgres>) -> Result<(), StoreError> {
-    if let Err(error) = Connection::ping(&mut *c).await {
-        let _ = c.close().await;
-        return Err(error.into());
-    }
-    Connection::shrink_buffers(&mut *c);
-    c.return_to_pool().await;
-    drop(c);
-    Ok(())
-}
 /// Owned IDs/token never come from a response or guessed public counter.
 pub(crate) struct RehashLocks {
     pub(crate) ids: Vec<i64>,
     pub(crate) token: String,
-    _charge: std::sync::Arc<crate::core_settings_special_budget::Charge>,
+    _charge: Vec<std::sync::Arc<crate::core_settings_special_budget::Charge>>,
 }
 impl RehashLocks {
     pub(crate) async fn acquire(auth: &AuthService, scratch: &Scratch) -> Result<Self, StoreError> {
-        // Existing scratch grant covers retained row text/row descriptors,
-        // bounded IDs and command encoding before SQL transfer/allocation.
-        let charge = scratch.charge(65536 + 1024 * 512)?;
-        let mut c = auth.store.pool().acquire().await?;
-        // Source includes inactive/custom accounts and excludes valid per-account
-        // hash overrides. Bound before transferring any unbounded JSON property text.
-        let result=sqlx::query("WITH bounded AS (SELECT id::bigint AS id,CASE WHEN jsonb_typeof(custom_properties)='object' THEN jsonb_typeof(custom_properties->'hash_key') END AS kind,COALESCE(CASE WHEN jsonb_typeof(custom_properties)='object' THEN custom_properties->'hash_key' #>> '{}' END,'') AS props FROM m3u_m3uaccount ORDER BY id LIMIT 1025), measured AS (SELECT id,kind,props,octet_length(props) AS bytes,sum(octet_length(props)) OVER () AS total,count(*) OVER () AS rows FROM bounded) SELECT id,kind,bytes,total,rows,CASE WHEN total<=65536 AND rows<=1024 THEN props END AS props FROM measured ORDER BY id").fetch_all(&mut*c).await;
-        finish(c).await?;
-        let rows = result?;
-        if rows.len() > 1024 {
-            return Err(unavailable());
-        }
-        let mut ids = Vec::new();
-        let mut total = 0usize;
-        for row in rows {
-            let aggregate: i64 = row.try_get("total")?;
-            let count: i64 = row.try_get("rows")?;
-            if aggregate > 65536 || count > 1024 {
-                return Err(unavailable());
-            }
-            let bytes: i32 = row.try_get("bytes")?;
-            if !(0..=65536).contains(&bytes) {
-                return Err(unavailable());
-            }
-            total = total.checked_add(bytes as usize).ok_or_else(unavailable)?;
-            if total > 65536 {
-                return Err(unavailable());
-            }
-            let raw: Option<String> = row.try_get("props")?;
-            let kind: Option<String> = row.try_get("kind")?;
-            let override_fields = match kind.as_deref() {
-                None | Some("null") => Vec::new(),
-                Some("string") => super::core_settings_special::hash_fields_text(
-                    raw.as_deref().ok_or_else(unavailable)?,
-                ),
-                _ => {
-                    return Err(StoreError::Unsupported(
-                        "Uncaptured per-account hash override type",
-                    ))
-                }
-            };
-            if override_fields.is_empty() {
-                ids.push(row.try_get("id")?)
-            }
-        }
+        // Bounded SQL pages plus actual retained envelope IDs use the existing
+        // actor quote. Catalog cardinality is not a fixed admission condition.
+        let page = scratch.charge(65536 + 256 * 512)?;
         let cache = auth.notification_cache.as_ref().ok_or_else(unavailable)?;
         let token = uuid::Uuid::new_v4().simple().to_string();
+        let mut c = auth.store.pool().acquire().await?;
+        let mut charges = vec![page];
         let mut acquired = Vec::new();
         let mut blocked = Vec::new();
-        for id in ids {
-            let mut cmd = redis::cmd("SET");
-            cmd.arg(format!("task_lock_refresh_single_m3u_account_{id}"))
-                .arg(&token)
-                .arg("EX")
-                .arg(7200)
-                .arg("NX");
-            match cache.command_settled::<Option<String>>(cmd).await {
-                Ok(Some(reply)) if reply == "OK" => acquired.push(id),
-                Ok(None) => blocked.push(id),
-                Ok(_) => {
-                    let owned = Self {
-                        ids: acquired,
-                        token,
-                        _charge: charge.clone(),
-                    };
-                    owned.release(auth).await?;
-                    return Err(StoreError::Unsupported("Unexpected rehash lock reply"));
-                }
-                Err(error) => {
-                    let owned = Self {
-                        ids: acquired,
-                        token,
-                        _charge: charge.clone(),
-                    };
-                    let _ = owned.release(auth).await;
-                    return Err(error);
+        let observed=async{
+            let count=crate::core_task_rehash::prepare_global_targets(&mut c).await?;
+            charges.push(scratch.charge(count.checked_mul(128).ok_or_else(unavailable)?)?);
+            sqlx::query("DECLARE rust_core_rehash_targets NO SCROLL CURSOR WITH HOLD FOR SELECT id FROM rust_rehash_targets ORDER BY seq").execute(&mut*c).await?;
+            loop{
+                let rows=sqlx::query("FETCH FORWARD 256 FROM rust_core_rehash_targets").fetch_all(&mut*c).await?;
+                if rows.is_empty(){break;}
+                for row in rows{
+                    let id:i64=row.try_get("id")?;
+                    let mut cmd=redis::cmd("SET");cmd.arg(format!("task_lock_refresh_single_m3u_account_{id}")).arg(&token).arg("EX").arg(7200).arg("NX");
+                    match cache.command_settled::<Option<String>>(cmd).await?{
+                        Some(reply)if reply=="OK"=>acquired.push(id),None=>blocked.push(id),_=>return Err(StoreError::Unsupported("Unexpected rehash lock reply"))
+                    }
                 }
             }
-        }
+            sqlx::query("CLOSE rust_core_rehash_targets").execute(&mut*c).await?;
+            Ok::<_,StoreError>(())
+        }.await;
+        // TEMP state stays on this one slot; close it instead of returning a
+        // session containing task-private tables/cursors to another actor.
+        let closed = c.close().await;
         let owned = Self {
             ids: acquired,
             token,
-            _charge: charge,
+            _charge: charges,
         };
+        if let Err(error) = observed {
+            let release = owned.release(auth).await;
+            eprintln!(
+                "Core rehash preparation failed {error:?}; release {release:?}; close {closed:?}"
+            );
+            return Err(error);
+        }
+        if let Err(error) = closed {
+            let release = owned.release(auth).await;
+            eprintln!("Core rehash SQL close failed {error:?}; release {release:?}");
+            return Err(error.into());
+        }
         if !blocked.is_empty() {
             owned.release(auth).await?;
             return Err(StoreError::StatusBody(

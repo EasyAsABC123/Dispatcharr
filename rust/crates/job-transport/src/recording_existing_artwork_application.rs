@@ -387,11 +387,12 @@ impl NormalHandler {
         };
         let frame = crate::clocked_recording_envelope::json_value(&selected)
             .map_err(|_| D::UnsupportedHead)?;
-        let outcome = if frame["headers"]["parent_id"].is_null() {
-            run_root(&inner, owner, selected).await
-        } else {
-            run_mode(&inner, owner, true, Some(selected)).await
-        };
+        let outcome =
+            if frame["headers"]["parent_id"].is_null() || !frame["headers"]["eta"].is_null() {
+                run_root(&inner, owner, selected).await
+            } else {
+                run_mode(&inner, owner, true, Some(selected)).await
+            };
         match outcome {
             Ok(State::Empty) => Ok(D::Empty),
             Ok(State::HeadChanged) => Ok(D::HeadChanged),

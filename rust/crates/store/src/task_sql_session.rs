@@ -62,14 +62,33 @@ pub struct TaskSqlSession {
     state: Arc<State>,
 }
 impl AuthService {
+    /// HTTP callers already own their validated writer. Main task callers do
+    /// not have request-local state: admit from the SAME four-slot budget.
+    fn task_sql_writer(&self) -> Result<Arc<OwnedSemaphorePermit>, StoreError> {
+        if self.request_writer_permit.is_some() {
+            return self.rest_writer();
+        }
+        self.user_agent_workers
+            .clone()
+            .try_acquire_owned()
+            .map(Arc::new)
+            .map_err(|_| {
+                StoreError::StatusBody(
+                    503,
+                    serde_json::json!({"detail":"Owned task SQL writer capacity is unavailable."}),
+                )
+            })
+    }
     /// Borrow exactly one connection from the existing Store and one of the
     /// SAME original four writer slots. No new pool or transaction is created.
     pub async fn borrow_task_sql_session(
         &self,
         owner: Owner,
     ) -> Result<TaskSqlSession, StoreError> {
-        let writer = self.rest_writer()?;
-        let connection = self.store.pool().acquire().await?.detach();
+        let writer = self.task_sql_writer()?;
+        // Keep the actual PoolConnection slot until physical close. Detaching
+        // would let the pool replace it while this worker still owns a socket.
+        let connection = self.store.pool().acquire().await?;
         let (sender, mut receiver) = mpsc::channel::<Command>(1);
         let state = Arc::new(State {
             phase: AtomicU8::new(0),
@@ -175,5 +194,72 @@ impl TaskSqlSession {
             Some(cache) => cache.settings_group("system_settings", load).await,
             None => load().await,
         }
+    }
+}
+
+#[cfg(test)]
+mod main_worker_admission_regression {
+    use super::*;
+    fn main_auth() -> AuthService {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .max_connections(8)
+            .connect_lazy("postgres://unused:unused@127.0.0.1:1/unused")
+            .unwrap();
+        AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("unused-test-signing".into()).unwrap(),
+        )
+    }
+    #[tokio::test]
+    async fn main_m3u_bare_auth_admits_real_shared_writer_before_sql() {
+        let auth = main_auth();
+        assert!(auth.request_writer_permit.is_none());
+        auth.store.pool().close().await;
+        // A genuinely closed pool is observed only AFTER admission. Before the
+        // fix this exact Main entry failed immediately as missing REST ingress.
+        assert!(matches!(
+            auth.borrow_task_sql_session(Arc::new(())).await,
+            Err(StoreError::Database(sqlx::Error::PoolClosed))
+        ));
+        assert_eq!(auth.user_agent_workers.available_permits(), 4);
+    }
+    #[tokio::test]
+    async fn main_m3u_ingress_writer_is_reused_and_exhaustion_is_capacity() {
+        let auth = main_auth();
+        auth.store.pool().close().await;
+        let mut held = Vec::new();
+        for _ in 0..4 {
+            held.push(Arc::new(
+                auth.user_agent_workers.clone().try_acquire_owned().unwrap(),
+            ));
+        }
+        assert!(matches!(
+            auth.borrow_task_sql_session(Arc::new(())).await,
+            Err(StoreError::StatusBody(503, _))
+        ));
+        let scoped = auth
+            .clone()
+            .with_request_writer_permit(held[0].clone())
+            .unwrap();
+        let reused = scoped.task_sql_writer().unwrap();
+        assert!(Arc::ptr_eq(&reused, &held[0]));
+        assert_eq!(auth.user_agent_workers.available_permits(), 0);
+        assert!(matches!(
+            scoped.borrow_task_sql_session(Arc::new(())).await,
+            Err(StoreError::Database(sqlx::Error::PoolClosed))
+        ));
+        drop(reused);
+        drop(scoped);
+        drop(held);
+        assert_eq!(auth.user_agent_workers.available_permits(), 4);
+        let foreign = Arc::new(
+            Arc::new(tokio::sync::Semaphore::new(1))
+                .try_acquire_owned()
+                .unwrap(),
+        );
+        let mut invalid = auth.clone();
+        invalid.request_writer_permit = Some(foreign);
+        assert!(invalid.task_sql_writer().is_err());
+        assert_eq!(auth.user_agent_workers.available_permits(), 4);
     }
 }

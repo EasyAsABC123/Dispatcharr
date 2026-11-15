@@ -18,7 +18,7 @@ impl ArtworkRootPublisher {
         raw: &[u8],
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
-        let message = recording_artwork_root::parse(raw).ok_or(Error::Protocol)?;
+        let message = recording_artwork_root::parse_signal(raw).ok_or(Error::Protocol)?;
         let maximum = self.jobs.inner.config.max_queued_jobs.to_string();
         match self
             .jobs
@@ -76,7 +76,8 @@ impl Jobs {
         match reply.0 {
             0 => Ok(None),
             1 => Ok(Some(RootArtworkCandidate {
-                message: recording_artwork_root::parse(&reply.1).ok_or(Error::UnsupportedTask)?,
+                message: recording_artwork_root::parse_signal(&reply.1)
+                    .ok_or(Error::UnsupportedTask)?,
                 raw: reply.1,
                 origin: self.inner.clone(),
             })),
@@ -125,7 +126,7 @@ impl Jobs {
         self.write_result(
             message.task_id,
             serde_json::json!(completed.value),
-            None,
+            message.parent,
             vec![],
             owner,
         )

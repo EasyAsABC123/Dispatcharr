@@ -271,3 +271,7 @@ mod recording_normal_task;
 mod recording_normal_capture;
 
 mod recording_artwork_root;
+
+pub mod normal_core_tasks;
+
+pub mod normal_beat;

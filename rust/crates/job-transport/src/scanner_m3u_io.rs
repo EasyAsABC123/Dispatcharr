@@ -279,3 +279,32 @@ impl M3uPorts {
         self.jobs.shutdown(timeout).await
     }
 }
+
+#[cfg(test)]
+mod image8_fifo_regression {
+    use super::*;
+    #[test]
+    fn image8_groups5_actual_parent_backend_passes_existing_receipt_guard() {
+        use sha2::{Digest, Sha256};
+        let data: Value =
+            serde_json::from_str(include_str!("../datasets/native-image8-groups5-fifo.json"))
+                .unwrap();
+        let raw = data["frame"].as_str().unwrap().as_bytes();
+        let message =
+            scanner_m3u_protocol::parse(raw).expect("actual oldest Groups5 header/body parser");
+        let scope = Scope::from_registry(
+            message.parent,
+            message.account,
+            message.id,
+            Sha256::digest(raw).into(),
+        );
+        assert!(
+            receipt(
+                data["parent_backend"].as_str().unwrap().as_bytes(),
+                &scope,
+                message.id
+            ),
+            "actual scanner backend must list this exact child"
+        );
+    }
+}

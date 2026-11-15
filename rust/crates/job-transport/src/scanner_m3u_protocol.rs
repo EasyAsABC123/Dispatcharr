@@ -164,4 +164,25 @@ mod tests {
         }
         assert!(Scope::new(Uuid::new_v4(), vec![1, 1]).is_err());
     }
+    #[test]
+    fn image8_groups5_actual_fifo_frame_parses_and_exact_scope_matches() {
+        use sha2::{Digest, Sha256};
+        let data: Value =
+            serde_json::from_str(include_str!("../datasets/native-image8-groups5-fifo.json"))
+                .unwrap();
+        let raw = data["frame"].as_str().unwrap().as_bytes();
+        assert_eq!(format!("{:x}", Sha256::digest(raw)), data["frame_sha256"]);
+        let message = parse(raw).expect(
+            "actual image8 oldest raw Groups5 head must parse before any database/file admission",
+        );
+        assert_eq!(message.kind, Kind::Groups);
+        assert_eq!(message.account, 5);
+        let scope = Scope::from_registry(
+            message.parent,
+            message.account,
+            message.id,
+            Sha256::digest(raw).into(),
+        );
+        assert!(scope.accepts_raw(&message, raw));
+    }
 }

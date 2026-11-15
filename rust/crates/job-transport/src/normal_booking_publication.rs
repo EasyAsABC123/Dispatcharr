@@ -31,6 +31,23 @@ impl NormalRecordingPublisher {
         recording: i64,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<BookingPublication, Error> {
+        self.schedule_booking_context(recording, None, caller).await
+    }
+    pub async fn schedule_booking_child(
+        &self,
+        recording: i64,
+        parent: Uuid,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<BookingPublication, Error> {
+        self.schedule_booking_context(recording, Some(parent), caller)
+            .await
+    }
+    async fn schedule_booking_context(
+        &self,
+        recording: i64,
+        parent: Option<Uuid>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<BookingPublication, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -68,7 +85,8 @@ impl NormalRecordingPublisher {
                     .map_err(|_| Error::Capacity)?;
                 drop_future(inner.pool.clone(), recording, owner.clone()).await?;
                 let key = format!("dvr-now-{recording}-{}", Uuid::new_v4().simple());
-                let bytes = immediate_frame(&row, &key, reply_oid(&inner)?)?;
+                let bytes =
+                    booking_lineage(immediate_frame(&row, &key, reply_oid(&inner)?)?, parent)?;
                 let message = crate::normal_named_recording::parse_head(&bytes)
                     .map_err(|_| Error::Unsupported("immediate booking envelope"))?;
                 let reply = inner
@@ -95,7 +113,7 @@ impl NormalRecordingPublisher {
                     .ok_or(Error::Unsupported(
                         "booking root artwork publisher not composed",
                     ))?;
-                let raw = artwork_frame(recording, reply_oid(&inner)?)?;
+                let raw = booking_lineage(artwork_frame(recording, reply_oid(&inner)?)?, parent)?;
                 Some(
                     publisher
                         .publish(&raw, owner)
@@ -372,3 +390,20 @@ impl NormalRecordingPublisher {
         .map_err(|_| Error::Supervisor)?
     }
 }
+
+fn booking_lineage(raw: Vec<u8>, parent: Option<Uuid>) -> Result<Vec<u8>, Error> {
+    let Some(parent) = parent else {
+        return Ok(raw);
+    };
+    if parent.is_nil() {
+        return Err(Error::Unsupported("booking task parent identity"));
+    }
+    let mut frame: Value =
+        serde_json::from_slice(&raw).map_err(|_| Error::Unsupported("booking task frame"))?;
+    frame["headers"]["root_id"] = json!(parent.to_string());
+    frame["headers"]["parent_id"] = json!(parent.to_string());
+    serde_json::to_vec(&frame).map_err(|_| Error::Unsupported("booking task lineage"))
+}
+
+#[path = "normal_booking_session.rs"]
+mod normal_booking_session;

@@ -34,6 +34,7 @@ pub enum Error {
     Policy(dispatcharr_ingest_epg::cache_policy::ConfiguredSettingsError),
     Settings(crate::recording_settings::Error),
     Audit(Box<dispatcharr_store::recording_capture::Error>),
+    Cleanup(Box<dispatcharr_store::recording_beat_cleanup::Error>),
     Supervisor,
     DrainTimeout,
 }
