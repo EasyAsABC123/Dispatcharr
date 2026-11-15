@@ -43,10 +43,32 @@
     "correction": "owned producer context plus equivalent lint fixes; actual post-await admission stop race corrected before activation"
   },
   "prepared_race_control": "actual Redis successful observation held across actual Engine.stop; captured subscription cannot reopen owner",
-  "physical_Redis_controls_run": false,
-  "Docker_built": false,
+  "physical_Redis_controls_run": true,
+  "Docker_built": true,
   "Main_application_acceptance": false,
   "performance_verified": false,
   "full_milestones_accepted": false,
-  "credit": "Original Dispatcharr and dependency authors retain full application, algorithm and licensing credit."
+  "credit": "Original Dispatcharr and dependency authors retain full application, algorithm and licensing credit.",
+  "Docker_git_revision": "0752ba808cf657c8c0371d75ffdc65de96ecd9e0",
+  "image_id": "sha256:36db5ca87400e1534fef5539eccf308e0cbf023267fdf8ba1e7753719952dbbd",
+  "package_checks_passed": true,
+  "all1302_SDK_inputs_match_committed_Git": true,
+  "physical_Redis_control_results": {
+    "output_store": {
+      "passed_tests": 6,
+      "actual_exit": 0
+    },
+    "profile_stop_race": {
+      "passed_tests": 1,
+      "actual_exit": 0
+    },
+    "replica_viewers": {
+      "passed_tests": 0,
+      "failed_tests": 1,
+      "actual_exit": 101,
+      "failure": "remote first profile frame is None"
+    },
+    "exact_cleanup": true
+  },
+  "normal_Main_acceptance": "Source-first affected Compose batch running; not accepted"
 }

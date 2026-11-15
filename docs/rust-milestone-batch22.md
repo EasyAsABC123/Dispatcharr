@@ -22,7 +22,8 @@ subscribes that captured session directly instead of reopening a historical
 source. Stop checks guard claim and process spawn. An ignored physical regression
 holds a real successful Redis observation across actual channel stop and requires
 zero profile admissions, one origin request and no raw-session resurrection.
-That control still requires scheduled execution before acceptance.
+That control passes scheduled execution with actual Redis and HTTP; the
+separate two-replica viewer control fails before its first profile frame.
 
 Formatting, compilation, strict Clippy and the workspace pass:1,034 tests,
 zero failures,764 ignored and176 result blocks. The
@@ -32,8 +33,23 @@ compilation/tests but failed three strict-Clippy checks. An owned producer
 context and equivalent expression cleanup correct those checks; the ownership
 race fix was joined before activation.
 
-Docker/package checks, real Redis ownership controls, the Source-first combined
-Compose cohort and resource acceptance remain pending. Historical Candidate20
+Docker build and all package checks pass for `0752ba808cf657c8c0371d75ffdc65de96ecd9e0`,
+image `sha256:36db5ca87400e1534fef5539eccf308e0cbf023267fdf8ba1e7753719952dbbd`.
+The1,793-file archive matches Git; all1,302 SDK inputs match committed blobs.
+[Package evidence](../scripts/rust-integration/milestone-batch22/package/)
+retains original assets/credits, crypto, PostgreSQL, actual isolated regex and
+paired VLC useful-core checks.
+
+[Real Redis controls](../scripts/rust-integration/milestone-batch22/physical-output/report.json)
+pass all six output-store tests and the forced-stop race regression. The
+two-replica profile viewer test exits101 with no first remote frame. The actual
+host-compiled controller and ELF dependencies are identified separately from
+the candidate child runtime. All four containers, the owned Compose project and
+the original Redis generation settle. This failure remains unaccepted while a
+follower/client-lifetime correction is prepared.
+
+The Source-first combined Compose cohort is collecting independent workflows;
+Main and resource acceptance remain pending. Historical Candidate20
 passes do not qualify this candidate. Wider profile edits, exceptional commands,
 owner loss/rejoin, enabled plugins, Schedules Direct and other Source gaps remain
 open. No full M0–M9 milestone or application performance gain is accepted.

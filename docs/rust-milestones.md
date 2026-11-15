@@ -12,8 +12,8 @@ alone does not establish application parity or an application performance gain.
 The newest source candidate is [Candidate22](rust-milestone-batch22.md): all four
 SDK gates pass with1,034 tests, zero failures and764 ignored. It joins shared
 output-profile ownership across TS/HLS/fMP4 and corrects post-await stop admission.
-Docker, real Redis controls, combined application and performance acceptance
-remain required.
+Docker/package checks and seven Redis/stop controls pass. The two-replica viewer
+control fails; combined application and performance acceptance remain required.
 
 The preceding source candidate is [Candidate21](rust-milestone-batch21.md): all four
 SDK gates pass with1,029 tests, zero failures and761 ignored. It resolves the
@@ -54,9 +54,10 @@ committed Git blobs. It adds plugin actions/managed ZIP installation, remote
 playlist/full-result handling and VLC/grouped-credential input work. Its Docker
 build and application acceptance remain pending.
 
-The latest built runtime is Candidate21 at
-`ac9d704943e69b9c343f31063cda1e3df5008791`; package checks pass and Main acceptance
-is pending. The preceding Candidate20 at
+The latest built runtime is Candidate22 at
+`0752ba808cf657c8c0371d75ffdc65de96ecd9e0`; package checks pass, replica-viewer
+acceptance fails and Main acceptance is pending. Candidate21 at
+`ac9d704943e69b9c343f31063cda1e3df5008791` also passes package checks. The preceding Candidate20 at
 `1cdf0c15ff4d8265409337f6b0ce29a0debe29e3` starts actual Main.
 Auto-sync completion and live VLC acceptance remain open. The preceding built
 runtime is Candidate19 at `4f9ba334bf5db99b982a4f7ff91774bb9da45094`.

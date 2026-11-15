@@ -1,0 +1,123 @@
+{
+  "passed": false,
+  "scope": "Actual owned Redis, raw HTTP and profile actor component controls; not Main/Source media or performance acceptance",
+  "image_id": "sha256:36db5ca87400e1534fef5539eccf308e0cbf023267fdf8ba1e7753719952dbbd",
+  "git_revision": "0752ba808cf657c8c0371d75ffdc65de96ecd9e0",
+  "controllers": [
+    {
+      "name": "output-store",
+      "package": "dispatcharr-output-store",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-output-store",
+        "--test",
+        "redis",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis-47691684c9e0cadc",
+      "sha256": "f1ca228e0c8b7ba62b907b6b16922a6fbaaa1d1778162c9be8fbce99984caa0e",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch22-output-physical-1/output-store"
+    },
+    {
+      "name": "profile-viewers",
+      "package": "dispatcharr-stream-http",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-stream-http",
+        "--test",
+        "output_profiles",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/output_profiles-e6faf834f03a7778",
+      "sha256": "dcdfe84077154fb77ba0354c1bbce98591b3dae630436350e2d37460eef79be0",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch22-output-physical-1/profile-viewers"
+    },
+    {
+      "name": "profile-stop-race",
+      "package": "dispatcharr-stream-http",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-stream-http",
+        "--lib",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_stream_http-3c3a0783cc84ddc5",
+      "sha256": "ab5ae059c54c90bf75b721f05cd94f321d27ca3f4ed534c9db3e9062a4ca2ae4",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch22-output-physical-1/profile-stop-race"
+    }
+  ],
+  "controller_ELF_dependencies": {
+    "libgcc_s.so.1": {
+      "path": "/usr/lib/libgcc_s.so.1",
+      "sha256": "f0cb09ad25ba16848370f16086d1b5671962431ae2ea878e8eeb4c7bb35a56ed"
+    },
+    "libm.so.6": {
+      "path": "/usr/lib/libm.so.6",
+      "sha256": "58b6b82e39d59d7810d402ba4ec34359fde058204fdb7cd5a269fda256a35421"
+    },
+    "libc.so.6": {
+      "path": "/usr/lib/libc.so.6",
+      "sha256": "071e34179e645b25f8a8c2e7108894dc665caa9f5f8c939cd579a75b6638bc3f"
+    },
+    "ld-linux-x86-64.so.2": {
+      "path": "/usr/lib/ld-linux-x86-64.so.2",
+      "sha256": "2a950d46575efa0210d22440988f5a6b4507ebddc6c86d9a42e6e7ef6f01463e"
+    }
+  },
+  "controller_scope": "SDK15 host-compiled tests with exact separately identified host ELF dependencies; child process environment is the unchanged candidate image; no LD_LIBRARY_PATH override",
+  "Redis_pin_source_sha256": "63c869eeb778ec178ea2cf1ad4475b5401461c665d37d578a8decf5c93637c22",
+  "Redis_image": "redis@sha256:c5d34a98396a4775e223c74e929162c35c5a2182901ba26b50ade939941ce14b",
+  "compose_project": "dispatcharr-output-controls-ea276d1844",
+  "published_ports": false,
+  "network_internal": true,
+  "full_milestone_passed": false,
+  "Main_acceptance": false,
+  "performance_verified": false,
+  "Redis_actual_image_id": "sha256:c5d34a98396a4775e223c74e929162c35c5a2182901ba26b50ade939941ce14b",
+  "Redis_PID": 2905278,
+  "Redis_generation": "6944426",
+  "Redis_version": "Redis server v=7.4.12 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=5e6b576434da555d",
+  "project_inventories_empty": true,
+  "original_Redis_generation_absent": true,
+  "cells": [
+    {
+      "name": "output-store",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 6,
+      "stdout_sha256": "38a99b60affd59b7ead915e0601b719ffefef5ccd84aba7bb305bdc62d9a54d8"
+    },
+    {
+      "name": "profile-viewers",
+      "passed": false,
+      "failure": "RuntimeError:actual command failed: profile-viewers"
+    },
+    {
+      "name": "profile-stop-race",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 1,
+      "stdout_sha256": "76941ae9822befffc1697cf075e41e3446443b0c4562ae24e44a6ad1f19a8d5c"
+    }
+  ],
+  "failure": null,
+  "exact_cleanup": true
+}
