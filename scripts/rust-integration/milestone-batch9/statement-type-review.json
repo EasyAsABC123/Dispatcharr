@@ -1,0 +1,801 @@
+{
+  "old_statement_count": 59,
+  "new_statement_count": 76,
+  "new_distinct_SQL_literals": 0,
+  "all_new_occurrences_exact_prior_literals": true,
+  "new_in_session_binds_audited": "i64/Option<i64> and DateTime<Utc> unchanged; &str replaces &String with same PostgreSQL TEXT",
+  "fresh_live_SQL_prepare": false,
+  "scope": "reviewed repeated production statement/type inventory; not a new physical schema acceptance",
+  "statements": [
+    {
+      "index": 0,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        0,
+        19
+      ],
+      "sql_sha256": "6c23a80a5787e06004d73c1197459d1bef3da6d0b653ec3e4634942faf936b75",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 1,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        1
+      ],
+      "sql_sha256": "f2634b5c6dffe18b598fd1bd28cfabc4932e41f00fdd80b6cdeb04320de692e7",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 2,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        2
+      ],
+      "sql_sha256": "267999d22e195e88dd528bedb4805e327c409da44a70ac3d8cd79de254d8cfa5",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 3,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        3
+      ],
+      "sql_sha256": "d49f5c04bfd13ae6f56936417aa0b3dc882bbbebb46db7de93e8b5218cbbbb08",
+      "parameter_type_profile": "text"
+    },
+    {
+      "index": 4,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        4
+      ],
+      "sql_sha256": "2ad155da41492a24d0a5ef3d4bbd3ba42e5999e302a5c5196a62640b36e1b423",
+      "parameter_type_profile": "int_int"
+    },
+    {
+      "index": 5,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        5
+      ],
+      "sql_sha256": "91620b7191bc58f851c537ceea44548aea6a19c47f86ba66818f00182190fbb2",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 6,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        6
+      ],
+      "sql_sha256": "bba49268266a784cf36d4b2898ec0a67ecdf197c6aa0cd77d0b39ae7685339f4",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 7,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        7
+      ],
+      "sql_sha256": "289a9a20e512609b9b7f1a4772cd80bba50cb82aabe992c6a6deaafd57df0e01",
+      "parameter_type_profile": "text_time_time"
+    },
+    {
+      "index": 8,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        8
+      ],
+      "sql_sha256": "59ec57c36cfa5ab6ae6d8b3aea6a17fdd1090b5a5262157e543f2acd985c5a1a",
+      "parameter_type_profile": "int_int"
+    },
+    {
+      "index": 9,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        9
+      ],
+      "sql_sha256": "3a75cb022828062f8f2a1e6aa51222d4b7dba91db373919a7f45b4709972f806",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 10,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        10
+      ],
+      "sql_sha256": "a4a9876ac2b42c137870f34877ecca382867ec3023a551b0e6df26afdefe1bb2",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 11,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        11,
+        15
+      ],
+      "sql_sha256": "c8579ce24a1d3fd1a43910ba2325a6e0a2c3862c8356dbac596288f931b1a1e6",
+      "parameter_type_profile": "int_json_json"
+    },
+    {
+      "index": 12,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        12
+      ],
+      "sql_sha256": "610448fccdeac21cf8fcbf7fb79a88b3f24954e21aaa09b62e73476cf1bc1387",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 13,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        13
+      ],
+      "sql_sha256": "ec88693a9d2845969348db762337a61a98d3bdd9d797eb99b42dc1cf711e6e7f",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 14,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        14
+      ],
+      "sql_sha256": "85a199e627a381c6f76bdb459844a863f03b6840f4827358de877e10374ba679",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 15,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        11,
+        15
+      ],
+      "sql_sha256": "c8579ce24a1d3fd1a43910ba2325a6e0a2c3862c8356dbac596288f931b1a1e6",
+      "parameter_type_profile": "int_json_json"
+    },
+    {
+      "index": 16,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        16
+      ],
+      "sql_sha256": "c112e6361fed56387a956a6fc81e6963c32f695f0122e0770b7624da9b1dd953",
+      "parameter_type_profile": "text_time_uuid_text_json"
+    },
+    {
+      "index": 17,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        17
+      ],
+      "sql_sha256": "aee0f900e84efaf33e0449c00538061a2876426a274520c818393c948f524aa3",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 18,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        18
+      ],
+      "sql_sha256": "47109c1c0a8faa5bfaeea410cff6125e6a91101a72e3fb83cf2c09d70abcd88f",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 19,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        0,
+        19
+      ],
+      "sql_sha256": "6c23a80a5787e06004d73c1197459d1bef3da6d0b653ec3e4634942faf936b75",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 20,
+      "source": "crates/store/src/recording_capture.rs",
+      "exact_prior_statement_indices": [
+        20
+      ],
+      "sql_sha256": "fd10df4b5f7713dd26accdc321319e1c6c122891f7b409d42935e7a83af07652",
+      "parameter_type_profile": "text_time_uuid_text_json"
+    },
+    {
+      "index": 21,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        21
+      ],
+      "sql_sha256": "e85ba9360459420f198d31b5cc0a154a5c0bacf1bcc3cc8be6854aa581fad1c1",
+      "parameter_type_profile": "text"
+    },
+    {
+      "index": 22,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        22,
+        29,
+        32,
+        37,
+        44,
+        47
+      ],
+      "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 23,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        23
+      ],
+      "sql_sha256": "aa6085de5eeb4749030f4e32f867f40f621fe4b15f7105ba9f9da8667e988bea",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 24,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        24
+      ],
+      "sql_sha256": "bdeee63c2a9037f84d69ef923346fe1ef398d9a98291fa2f3762c3ba0621dcac",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 25,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        25,
+        40
+      ],
+      "sql_sha256": "2e621e2d4caf4d9f51aed517d7be61f4ef83325d78d2d29d95bf1649c80d5c54",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 26,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        26,
+        41
+      ],
+      "sql_sha256": "e0791648843dac23493fc128f4f5cf8136bf4fd7d5eb9ba35c5699e5f80f76a7",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 27,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        27
+      ],
+      "sql_sha256": "c3a0f6cc2dc8faa6cf9ad8c5b62395b2465acd91198d905f7edaf25f28f93032",
+      "parameter_type_profile": "int_text_int"
+    },
+    {
+      "index": 28,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        28,
+        30,
+        36,
+        43,
+        45,
+        51
+      ],
+      "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 29,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        22,
+        29,
+        32,
+        37,
+        44,
+        47
+      ],
+      "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 30,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        28,
+        30,
+        36,
+        43,
+        45,
+        51
+      ],
+      "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 31,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        31,
+        46
+      ],
+      "sql_sha256": "b1ba34aacea37f22c6ab7fab7da718ea993f0aa74b8eab6bd6028d7ecb872423",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 32,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        22,
+        29,
+        32,
+        37,
+        44,
+        47
+      ],
+      "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 33,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        33,
+        48
+      ],
+      "sql_sha256": "5abf4bce0f58bdc961aedb93d4f54cfbba5b274b3f99e765503ce70d9ff2db8e",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 34,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        34
+      ],
+      "sql_sha256": "0ab065931dd9163167014314e42e0230a7069bafcba731f70f14fdc1e75d0533",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 35,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        35
+      ],
+      "sql_sha256": "e0cc7dcac671f3213c2cb801682e60d37f738bd7e3b7b0cbceba3f5afa2e1aac",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 36,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        28,
+        30,
+        36,
+        43,
+        45,
+        51
+      ],
+      "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 37,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        21
+      ],
+      "sql_sha256": "e85ba9360459420f198d31b5cc0a154a5c0bacf1bcc3cc8be6854aa581fad1c1",
+      "parameter_type_profile": "text"
+    },
+    {
+      "index": 38,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        22,
+        29,
+        32,
+        37,
+        44,
+        47
+      ],
+      "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 39,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        23
+      ],
+      "sql_sha256": "aa6085de5eeb4749030f4e32f867f40f621fe4b15f7105ba9f9da8667e988bea",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 40,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        24
+      ],
+      "sql_sha256": "bdeee63c2a9037f84d69ef923346fe1ef398d9a98291fa2f3762c3ba0621dcac",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 41,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        25,
+        40
+      ],
+      "sql_sha256": "2e621e2d4caf4d9f51aed517d7be61f4ef83325d78d2d29d95bf1649c80d5c54",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 42,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        26,
+        41
+      ],
+      "sql_sha256": "e0791648843dac23493fc128f4f5cf8136bf4fd7d5eb9ba35c5699e5f80f76a7",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 43,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        27
+      ],
+      "sql_sha256": "c3a0f6cc2dc8faa6cf9ad8c5b62395b2465acd91198d905f7edaf25f28f93032",
+      "parameter_type_profile": "int_text_int"
+    },
+    {
+      "index": 44,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        28,
+        30,
+        36,
+        43,
+        45,
+        51
+      ],
+      "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 45,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        22,
+        29,
+        32,
+        37,
+        44,
+        47
+      ],
+      "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 46,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        28,
+        30,
+        36,
+        43,
+        45,
+        51
+      ],
+      "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 47,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        31,
+        46
+      ],
+      "sql_sha256": "b1ba34aacea37f22c6ab7fab7da718ea993f0aa74b8eab6bd6028d7ecb872423",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 48,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        22,
+        29,
+        32,
+        37,
+        44,
+        47
+      ],
+      "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 49,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        33,
+        48
+      ],
+      "sql_sha256": "5abf4bce0f58bdc961aedb93d4f54cfbba5b274b3f99e765503ce70d9ff2db8e",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 50,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        34
+      ],
+      "sql_sha256": "0ab065931dd9163167014314e42e0230a7069bafcba731f70f14fdc1e75d0533",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 51,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        35
+      ],
+      "sql_sha256": "e0cc7dcac671f3213c2cb801682e60d37f738bd7e3b7b0cbceba3f5afa2e1aac",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 52,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        28,
+        30,
+        36,
+        43,
+        45,
+        51
+      ],
+      "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 53,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        57
+      ],
+      "sql_sha256": "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 54,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        22,
+        29,
+        32,
+        37,
+        44,
+        47
+      ],
+      "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 55,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        38
+      ],
+      "sql_sha256": "23af2de14b29cba93efd1676ce93a385471f71183432d375d6d0eba30ba8e79f",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 56,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        39
+      ],
+      "sql_sha256": "58872d83efaa662dbe3d11b23dab12a4c2c29c4c79deb018ced57aeddeb07594",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 57,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        25,
+        40
+      ],
+      "sql_sha256": "2e621e2d4caf4d9f51aed517d7be61f4ef83325d78d2d29d95bf1649c80d5c54",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 58,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        26,
+        41
+      ],
+      "sql_sha256": "e0791648843dac23493fc128f4f5cf8136bf4fd7d5eb9ba35c5699e5f80f76a7",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 59,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        42
+      ],
+      "sql_sha256": "c5b2af313477bc6d8d8b635eb184025bc87a8aae2409c73200dd404db6bf4491",
+      "parameter_type_profile": "int_text_int"
+    },
+    {
+      "index": 60,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        28,
+        30,
+        36,
+        43,
+        45,
+        51
+      ],
+      "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 61,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        22,
+        29,
+        32,
+        37,
+        44,
+        47
+      ],
+      "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 62,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        28,
+        30,
+        36,
+        43,
+        45,
+        51
+      ],
+      "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 63,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        31,
+        46
+      ],
+      "sql_sha256": "b1ba34aacea37f22c6ab7fab7da718ea993f0aa74b8eab6bd6028d7ecb872423",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 64,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        22,
+        29,
+        32,
+        37,
+        44,
+        47
+      ],
+      "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 65,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        33,
+        48
+      ],
+      "sql_sha256": "5abf4bce0f58bdc961aedb93d4f54cfbba5b274b3f99e765503ce70d9ff2db8e",
+      "parameter_type_profile": "int"
+    },
+    {
+      "index": 66,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        49
+      ],
+      "sql_sha256": "330fe17103b53f3bbb59e0b8fff0c78b8d712aaa6d76e631f6fcb68538fa8414",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 67,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        50
+      ],
+      "sql_sha256": "2ad2f348a942d39a5b4a70e97cb542903dfef2e714beb8c4afba69e3cc76c46c",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 68,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        28,
+        30,
+        36,
+        43,
+        45,
+        51
+      ],
+      "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 69,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        52
+      ],
+      "sql_sha256": "5ef417835eb18b5d99e2923275fdcb24b6659bb3d96be3f4fdadc1dd3f137a2f",
+      "parameter_type_profile": "time"
+    },
+    {
+      "index": 70,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        53
+      ],
+      "sql_sha256": "a954e11addbce63e430718dfe7e079561a148870e631382ad22fd7f342314563",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 71,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        54
+      ],
+      "sql_sha256": "f28a3e2a8488a797ded39f23349c42c5fda9fb5b99c2815df7c926267c8f7481",
+      "parameter_type_profile": "time"
+    },
+    {
+      "index": 72,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        55
+      ],
+      "sql_sha256": "6939bb448343c654a89ca8dd9c5030304389712a7b38989d29b574b7bb936a91",
+      "parameter_type_profile": "text"
+    },
+    {
+      "index": 73,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        56
+      ],
+      "sql_sha256": "1830460d45df5f83cc041664f3384702da4ae180ca717bfff88c6a1a09fa4456",
+      "parameter_type_profile": "int_int"
+    },
+    {
+      "index": 74,
+      "source": "crates/store/src/recording_beat_cleanup.rs",
+      "exact_prior_statement_indices": [
+        57
+      ],
+      "sql_sha256": "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710",
+      "parameter_type_profile": "none"
+    },
+    {
+      "index": 75,
+      "source": "crates/ingest-epg/src/cache_policy.rs",
+      "exact_prior_statement_indices": [
+        58
+      ],
+      "sql_sha256": "db1d22d63053547b2ee28718889eaf75be2a6447b691629530611c3d24bb96fd",
+      "parameter_type_profile": "text"
+    }
+  ]
+}

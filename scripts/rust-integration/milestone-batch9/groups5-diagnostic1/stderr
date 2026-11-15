@@ -1,0 +1,133 @@
+   Compiling errno v0.3.14
+   Compiling uuid v1.29.2
+   Compiling signal-hook-registry v1.4.8
+   Compiling tokio v1.54.1
+   Compiling dispatcharr-ingest-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-next-integration-1/source/rust/crates/ingest-core)
+   Compiling dispatcharr-xmltv-parser v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-next-integration-1/source/rust/crates/xmltv-parser)
+   Compiling dispatcharr-backups v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-next-integration-1/source/rust/crates/backups)
+   Compiling tokio-util v0.7.20
+   Compiling hyper v1.12.0
+   Compiling tower v0.5.3
+   Compiling hyper-util v0.1.21
+   Compiling combine v4.6.9
+   Compiling tokio-rustls v0.26.6
+   Compiling tokio-stream v0.1.19
+   Compiling sqlx-core v0.8.6 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-next-integration-1/source/rust/vendor/sqlx-core-0.8.6)
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+   Compiling redis v0.32.7
+warning: `sqlx-core` (lib) generated 3 warnings
+   Compiling hyper-rustls v0.27.10
+   Compiling tower-http v0.6.11
+   Compiling reqwest v0.12.28
+   Compiling sqlx-postgres v0.8.6 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-next-integration-1/source/rust/vendor/sqlx-postgres-0.8.6)
+warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+   --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+    |
+335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+    |                                                        ^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: variant `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+   |
+68 | pub enum FrontendMessageFormat {
+   |          --------------------- variant in this enum
+...
+76 |     Flush = b'H',
+   |     ^^^^^
+   |
+   = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: struct `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+   |
+11 | pub struct Flush;
+   |            ^^^^^
+
+   Compiling tokio-tungstenite v0.29.0
+   Compiling axum v0.8.9
+warning: `sqlx-postgres` (lib) generated 3 warnings
+   Compiling sqlx v0.8.6
+   Compiling dispatcharr-upstream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-next-integration-1/source/rust/crates/upstream-http)
+   Compiling dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-next-integration-1/source/rust/crates/output-store)
+   Compiling dispatcharr-coordination v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-next-integration-1/source/rust/crates/coordination)
+   Compiling dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-next-integration-1/source/rust/crates/store)
+error[E0425]: cannot find value `b_updated` in this scope
+   --> crates/store/src/core_task_rehash.rs:235:17
+    |
+235 |     let b = (b, b_updated, b_live.and_then(|v| v.2));
+    |                 ^^^^^^^^^ not found in this scope
+
+error[E0061]: this function takes 3 arguments but 4 arguments were supplied
+   --> crates/store/src/core_task_rehash.rs:186:30
+    |
+186 |                     let keep=winner(&mut tx,existing,id,updated).await?;let remove=if keep==id{existing}else{id};
+    |                              ^^^^^^                     ------- unexpected argument #4 of type `DateTime<chrono::Utc>`
+    |
+note: function defined here
+   --> crates/store/src/core_task_rehash.rs:223:10
+    |
+223 | async fn winner(tx: &mut Transaction<'_, Postgres>, a: i64, b: i64) -> Result<i64, StoreError> {
+    |          ^^^^^^
+help: remove the extra argument
+    |
+186 -                     let keep=winner(&mut tx,existing,id,updated).await?;let remove=if keep==id{existing}else{id};
+186 +                     let keep=winner(&mut tx,existing,id).await?;let remove=if keep==id{existing}else{id};
+    |
+
+Some errors have detailed explanations: E0061, E0425.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `dispatcharr-store` (lib) due to 2 previous errors
