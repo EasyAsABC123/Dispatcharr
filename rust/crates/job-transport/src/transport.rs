@@ -1712,6 +1712,8 @@ mod normal_backup_transport;
 #[path = "core_settings_broker_transport.rs"]
 mod core_settings_broker_transport;
 
+#[path = "normal_control_backend.rs"]
+mod normal_control_backend;
 #[path = "normal_plugin_refresh_transport.rs"]
 mod normal_plugin_refresh_transport;
 #[path = "xc_account_transport.rs"]

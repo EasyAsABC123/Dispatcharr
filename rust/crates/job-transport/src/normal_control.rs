@@ -46,6 +46,9 @@ pub struct Observation {
     pub received: u64,
     pub applied: u64,
     pub rejected: u64,
+    pub backend_marked: u64,
+    pub backend_preserved_success: u64,
+    pub backend_failed: u64,
     pub redis_client_id: Option<u64>,
     pub reader_closed: bool,
 }
@@ -54,6 +57,7 @@ struct Inner {
     url: String,
     topic: String,
     revoked: Revoked,
+    backend: Mutex<Option<crate::transport::Jobs>>,
     clock: AtomicU64,
     stop: Arc<AtomicBool>,
     started: AtomicBool,
@@ -65,6 +69,9 @@ struct Inner {
     received: AtomicU64,
     applied: AtomicU64,
     rejected: AtomicU64,
+    backend_marked: AtomicU64,
+    backend_preserved_success: AtomicU64,
+    backend_failed: AtomicU64,
     client_id: AtomicU64,
     reader_closed: AtomicBool,
 }
@@ -125,6 +132,7 @@ impl Control {
                 url: broker.into(),
                 topic,
                 revoked,
+                backend: Mutex::new(None),
                 clock: AtomicU64::new(0),
                 stop: stop.clone(),
                 started: AtomicBool::new(false),
@@ -136,11 +144,31 @@ impl Control {
                 received: AtomicU64::new(0),
                 applied: AtomicU64::new(0),
                 rejected: AtomicU64::new(0),
+                backend_marked: AtomicU64::new(0),
+                backend_preserved_success: AtomicU64::new(0),
+                backend_failed: AtomicU64::new(0),
                 client_id: AtomicU64::new(0),
                 reader_closed: AtomicBool::new(false),
             }),
             _lifetime: Arc::new(Lifetime(stop)),
         })
+    }
+    /// Cold-bind Main's EXISTING shared result port, before receiver start.
+    /// Legacy memory-only constructors remain scoped to their prior contract.
+    pub fn bind_backend(&self, jobs: crate::transport::Jobs) -> Result<(), Error> {
+        if !jobs.allows_defaults() || self.inner.started.load(Ordering::Acquire) {
+            return Err(Error::Configuration);
+        }
+        let mut backend = self
+            .inner
+            .backend
+            .lock()
+            .map_err(|_| Error::Configuration)?;
+        if backend.is_some() {
+            return Err(Error::Configuration);
+        }
+        *backend = Some(jobs);
+        Ok(())
     }
     pub fn state(&self) -> State {
         *self.inner.state.borrow()
@@ -152,6 +180,9 @@ impl Control {
             received: self.inner.received.load(Ordering::Acquire),
             applied: self.inner.applied.load(Ordering::Acquire),
             rejected: self.inner.rejected.load(Ordering::Acquire),
+            backend_marked: self.inner.backend_marked.load(Ordering::Acquire),
+            backend_preserved_success: self.inner.backend_preserved_success.load(Ordering::Acquire),
+            backend_failed: self.inner.backend_failed.load(Ordering::Acquire),
             redis_client_id: (id != 0).then_some(id),
             reader_closed: self.inner.reader_closed.load(Ordering::Acquire),
         }
@@ -180,9 +211,11 @@ impl Control {
                 *inner.writer.lock().map_err(|_| Error::Configuration)? = Some(writer);
                 let reader = inner.clone();
                 let physical = owner.clone();
-                tokio::task::spawn_blocking(move || read_loop(&reader, physical))
-                    .await
-                    .map_err(|_| Error::Io)?
+                tokio::task::spawn_blocking(move || {
+                    read_loop(&reader, physical, tokio::runtime::Handle::current())
+                })
+                .await
+                .map_err(|_| Error::Io)?
             }
             .await;
             inner.reader_closed.store(true, Ordering::Release);
@@ -556,7 +589,11 @@ fn ok(stream: &mut Socket, stop: &AtomicBool) -> Result<(), Error> {
         _ => Err(Error::Protocol),
     }
 }
-fn read_loop(inner: &Arc<Inner>, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
+fn read_loop(
+    inner: &Arc<Inner>,
+    owner: Arc<dyn Send + Sync>,
+    runtime: tokio::runtime::Handle,
+) -> Result<(), Error> {
     let mut stream = socket(&inner.address, &inner.stop)?;
     if let Some(password) = &inner.address.redis.password {
         if let Some(username) = &inner.address.redis.username {
@@ -620,6 +657,33 @@ fn read_loop(inner: &Arc<Inner>, owner: Arc<dyn Send + Sync>) -> Result<(), Erro
                         .revoked
                         .apply(&keys, owner.clone())
                         .map_err(|_| Error::Revoked)?;
+                    let backend = inner
+                        .backend
+                        .lock()
+                        .map_err(|_| Error::Configuration)?
+                        .clone();
+                    if let Some(jobs) = backend {
+                        // Source applies its memory set FIRST, then attempts
+                        // each distinct ID's backend mark. Errors are caught
+                        // per ID; they neither undo memory nor stop later IDs.
+                        let unique = keys.iter().collect::<std::collections::BTreeSet<_>>();
+                        for key in unique {
+                            match runtime.block_on(jobs.write_control_revoked(key, owner.clone())) {
+                                Ok(true) => {
+                                    inner.backend_marked.fetch_add(1, Ordering::AcqRel);
+                                }
+                                Ok(false) => {
+                                    inner
+                                        .backend_preserved_success
+                                        .fetch_add(1, Ordering::AcqRel);
+                                }
+                                Err(_) => {
+                                    inner.backend_failed.fetch_add(1, Ordering::AcqRel);
+                                    eprintln!("Pidbox revoke: caught settled backend mark failure; continuing command");
+                                }
+                            }
+                        }
+                    }
                     inner.applied.fetch_add(1, Ordering::AcqRel);
                 }
             }

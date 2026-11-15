@@ -109,6 +109,15 @@ impl Application {
             _lifetime: Arc::new(Lifetime(stop)),
         })
     }
+    pub fn bind_normal_provider(
+        &self,
+        auth: dispatcharr_store::AuthService,
+    ) -> Result<(), &'static str> {
+        self.inner
+            .store
+            .bind_normal_provider(auth)
+            .map_err(|_| "Normal recording artwork provider binding failed")
+    }
     /// Reserve this prepared application for the single normal queue shell;
     /// a cloned public handle cannot also start its legacy polling loop.
     pub fn into_normal_handler(

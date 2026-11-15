@@ -87,11 +87,51 @@ impl Attempt {
     pub fn new_manual_session(connect: Duration, read: Duration) -> Result<Self, reqwest::Error> {
         Self::configured(connect, read, false, false)
     }
+    /// Source Requests environment trust override for ordinary independent
+    /// provider calls. Reuse this factory and its physical client; do not bypass
+    /// certificate verification to reach an owned acceptance Origin.
+    pub fn new_requests(connect: Duration, read: Duration) -> io::Result<Self> {
+        use std::io::Read;
+        let path = std::env::var_os("REQUESTS_CA_BUNDLE")
+            .filter(|v| !v.is_empty())
+            .or_else(|| std::env::var_os("CURL_CA_BUNDLE").filter(|v| !v.is_empty()));
+        let roots = if let Some(path) = path {
+            let file = std::fs::File::open(path)?;
+            if !file.metadata()?.is_file() {
+                return Err(invalid(
+                    "Requests CA directories are outside this bounded factory",
+                ));
+            }
+            let mut bytes = Vec::new();
+            file.take(4 * 1024 * 1024 + 1).read_to_end(&mut bytes)?;
+            if bytes.len() > 4 * 1024 * 1024 {
+                return Err(invalid("Requests CA bundle capacity"));
+            }
+            let certificates =
+                reqwest::Certificate::from_pem_bundle(&bytes).map_err(io::Error::other)?;
+            if certificates.is_empty() || certificates.len() > 128 {
+                return Err(invalid("Requests CA certificate count"));
+            }
+            Some(certificates)
+        } else {
+            None
+        };
+        Self::configured_with_roots(connect, read, true, true, roots).map_err(io::Error::other)
+    }
     fn configured(
         connect: Duration,
         read: Duration,
         follow: bool,
         automatic_cookies: bool,
+    ) -> Result<Self, reqwest::Error> {
+        Self::configured_with_roots(connect, read, follow, automatic_cookies, None)
+    }
+    fn configured_with_roots(
+        connect: Duration,
+        read: Duration,
+        follow: bool,
+        automatic_cookies: bool,
+        roots: Option<Vec<reqwest::Certificate>>,
     ) -> Result<Self, reqwest::Error> {
         let cookies = Arc::new(AttemptCookies::default());
         let builder = Client::builder()
@@ -111,6 +151,14 @@ impl Attempt {
             } else {
                 reqwest::redirect::Policy::none()
             });
+        let builder = if let Some(roots) = roots {
+            roots.into_iter().fold(
+                builder.tls_built_in_root_certs(false),
+                |builder, certificate| builder.add_root_certificate(certificate),
+            )
+        } else {
+            builder
+        };
         let builder = if automatic_cookies {
             builder.cookie_provider(cookies.clone())
         } else {
@@ -125,6 +173,17 @@ impl Attempt {
         agent: &str,
         headers: &[(String, String)],
     ) -> io::Result<RequestBuilder> {
+        self.request_method(reqwest::Method::GET, url, agent, headers)
+    }
+    /// Source Requests HEAD/GET validation uses the same bounded factory and
+    /// redirect/TLS/header policy, with no separate client or admission pool.
+    pub fn request_method(
+        &self,
+        method: reqwest::Method,
+        url: &str,
+        agent: &str,
+        headers: &[(String, String)],
+    ) -> io::Result<RequestBuilder> {
         let agent = if agent.is_empty() {
             DEFAULT_AGENT
         } else {
@@ -132,7 +191,7 @@ impl Attempt {
         };
         let mut request = self
             .client
-            .get(url)
+            .request(method, url)
             .header(header::USER_AGENT, latin1(agent)?)
             .header(header::ACCEPT, "*/*")
             .header(header::ACCEPT_ENCODING, "gzip, deflate")
@@ -340,6 +399,40 @@ fn decode_layer(mut source: ByteStream, coding: Coding) -> ByteStream {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn source_head_validation_reuses_get_headers_and_range_without_network() {
+        let attempt = Attempt::new(Duration::from_secs(4), Duration::from_secs(4)).unwrap();
+        let get = attempt
+            .request("https://owned.invalid/poster", "", &[])
+            .unwrap()
+            .build()
+            .unwrap();
+        let head = attempt
+            .request_method(
+                reqwest::Method::HEAD,
+                "https://owned.invalid/poster",
+                "",
+                &[],
+            )
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(get.method(), reqwest::Method::GET);
+        assert_eq!(head.method(), reqwest::Method::HEAD);
+        assert_eq!(get.url(), head.url());
+        assert_eq!(get.headers(), head.headers());
+        let ranged = attempt
+            .request(
+                "https://owned.invalid/poster",
+                "",
+                &[("Range".into(), "bytes=0-0".into())],
+            )
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(ranged.headers()["range"], "bytes=0-0");
+    }
+
     use flate2::{
         write::{DeflateEncoder, GzEncoder, ZlibEncoder},
         Compression,

@@ -94,7 +94,7 @@ impl Revoked {
             .contains_key(task_key))
     }
 }
-fn valid(key: &str) -> bool {
+pub(crate) fn valid(key: &str) -> bool {
     !key.is_empty() && key.len() <= 255 && key.bytes().all(|v| v.is_ascii_graphic())
 }
 #[cfg(test)]

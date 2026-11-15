@@ -20,10 +20,11 @@ pub(super) async fn prepare(
     }
     let pool = store.pool.clone();
     let origin = store.origin.clone();
+    let runtime = store.provider.get().cloned();
     tokio::spawn(async move {
         let _owner = owner;
-        let mut connection = pool.acquire().await.map_err(sql)?.detach();
-        let observed = resolve(&mut connection, recording, origin).await;
+        let mut connection = pool.acquire().await.map_err(sql)?;
+        let observed = resolve(&mut connection, recording, origin, runtime).await;
         let ready = connection.ping().await.err().map(Box::new);
         let close = connection.close().await.err().map(Box::new);
         match observed {
@@ -52,6 +53,7 @@ async fn resolve(
     connection: &mut sqlx::PgConnection,
     recording: i64,
     origin: Arc<()>,
+    runtime: Option<Arc<provider::Runtime>>,
 ) -> Result<Prepared, Error> {
     if recording <= 0 {
         return Err(Error::Unsupported("recording identity"));
@@ -64,6 +66,8 @@ async fn resolve(
             resolved: Value::Null,
             changed: false,
             skip: Some("error: Recording matching query does not exist.".into()),
+            provider: None,
+            writer: None,
         });
     };
     if !row.try_get::<bool, _>("fits").map_err(sql)? {
@@ -90,6 +94,8 @@ async fn resolve(
                 resolved: properties.clone(),
                 changed: false,
                 skip: Some(format!("skipped: status is {status}")),
+                provider: None,
+                writer: None,
             });
         }
     }
@@ -166,35 +172,35 @@ async fn resolve(
         }
         None => json!({}),
     };
-    // Potential image branches must execute their real validation/create ports;
-    // never pretend an image is missing just to reach channel fallback.
-    if image_candidate(&epg_props) {
-        return Err(Error::Unsupported(
-            "artwork EPG image validation not composed",
-        ));
+    if truth(&epg_props) && !epg_props.is_object() {
+        return Err(Error::Unsupported("artwork EPG provider properties type"));
     }
-    let mut logo = None;
-    if !no_external {
-        let title = title.as_ref().ok_or(Error::Unsupported("artwork title"))?;
-        // Actual Source first Movie, then first Series with a logo. No fixture
-        // title/season or same-process parent receipt defines this SQL branch.
-        for query in ["SELECT l.id::bigint FROM vod_movie m LEFT JOIN vod_vodlogo l ON l.id=m.logo_id WHERE UPPER(m.name::text)=UPPER($1) ORDER BY m.name LIMIT 1","SELECT l.id::bigint FROM vod_series m LEFT JOIN vod_vodlogo l ON l.id=m.logo_id WHERE UPPER(m.name::text)=UPPER($1) ORDER BY m.name LIMIT 1"]{
-            logo=sqlx::query_scalar::<_,Option<i64>>(query).bind(title).fetch_optional(&mut *connection).await.map_err(sql)?.flatten();if logo.is_some(){break;}
-        }
-        if logo.is_none() {
-            return Err(Error::Unsupported(
-                "artwork provider fallback requires real HTTP composition",
-            ));
-        }
+    // All network/Logo mutations execute only AFTER actual broker claim. This
+    // preflight records bounded real row/EPG inputs; it never manufactures a
+    // successful no-image result for an unresolved provider branch.
+    let needs_pipeline = image_candidate(&epg_props) || !no_external || direct_candidate(&program);
+    if needs_pipeline {
+        let runtime = runtime.ok_or(Error::Unsupported("artwork HTTP provider not bound"))?;
+        return Ok(Prepared {
+            origin,
+            recording,
+            resolved: Value::Null,
+            changed: false,
+            skip: None,
+            provider: Some(provider::Plan {
+                runtime,
+                properties,
+                program,
+                matched_program,
+                epg_props,
+                title,
+                channel_name,
+                channel_logo,
+            }),
+            writer: None,
+        });
     }
-    if logo.is_none() {
-        if direct_candidate(&program) {
-            return Err(Error::Unsupported(
-                "artwork direct image validation/persistence not composed",
-            ));
-        }
-        logo = channel_logo;
-    }
+    let logo = channel_logo;
     let (resolved, changed) =
         resolved_properties(properties, program, matched_program, logo, &epg_props)?;
     Ok(Prepared {
@@ -203,9 +209,11 @@ async fn resolve(
         resolved,
         changed,
         skip: None,
+        provider: None,
+        writer: None,
     })
 }
-fn resolved_properties(
+pub(super) fn resolved_properties(
     properties: Value,
     program: Value,
     matched_program: bool,

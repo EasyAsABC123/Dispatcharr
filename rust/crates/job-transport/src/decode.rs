@@ -136,7 +136,14 @@ pub fn decode(raw: &[u8], expected: Uuid) -> Result<Metadata, DecodeError> {
         _ => return Err(DecodeError::UnsupportedState),
     };
     let result = fields.get("result").ok_or(DecodeError::Malformed)?.clone();
-    if !fields.get("children").is_some_and(Value::is_array) {
+    // Pinned Backend.mark_as_revoked(request=None) has no current task:
+    // current_task_children returns None, unlike an admitted request's [].
+    let control_revoked_null = state == State::Revoked
+        && fields.len() == 6
+        && fields.get("children") == Some(&Value::Null)
+        && result
+            == serde_json::json!({"exc_type":"TaskRevokedError","exc_message":["revoked"],"exc_module":"celery.exceptions"});
+    if !fields.get("children").is_some_and(Value::is_array) && !control_revoked_null {
         return Err(DecodeError::Malformed);
     }
     let optional = |name: &str| -> Result<Option<String>, DecodeError> {
@@ -174,7 +181,8 @@ pub fn decode(raw: &[u8], expected: Uuid) -> Result<Metadata, DecodeError> {
                 && arguments.len() == 1
                 && matches!(arguments[0].as_str(), Some("expired" | "revoked"))
                 && fields.get("traceback") == Some(&Value::Null)
-                && fields["children"].as_array().is_some_and(Vec::is_empty)
+                && (fields["children"].as_array().is_some_and(Vec::is_empty)
+                    || control_revoked_null)
                 && optional("date_done")?.is_some_and(|v| {
                     v.len() <= 40 && chrono::DateTime::parse_from_rfc3339(&v).is_ok()
                 })

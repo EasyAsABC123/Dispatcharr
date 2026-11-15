@@ -190,6 +190,10 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected scanner transport initialization failed")?;
+        control
+            .bind_backend(shared_jobs.clone())
+            .map_err(|_| "Selected pidbox backend binding failed")?;
+        existing.artwork.bind_normal_provider(auth.clone())?;
         let (backup_database, backup_runtime, backup_root, backup_scratch) =
             crate::backup_config::configured()?;
         let backup_jobs = jobs::normal_backup::Application::prepare(
@@ -635,20 +639,20 @@ impl SelectedJobs {
         {
             return false;
         }
+        if !self
+            .inner
+            .control
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            return false;
+        }
         if self
             .inner
             .shared_jobs
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
             .is_err()
-        {
-            return false;
-        }
-        if !self
-            .inner
-            .control
-            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
-            .await
         {
             return false;
         }
