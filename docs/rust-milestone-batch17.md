@@ -5,7 +5,8 @@ authors. VideoLAN/VLC and all dependency authors retain their credit and license
 notices. React is preserved. VLC packaging adds explicit attribution without
 removing any earlier attribution bytes.
 
-The combined candidate passes formatting, workspace compilation, strict Clippy
+The Rust code at `49ad42e2f48ea11f3d6a991e8bbb45702d89906f` passes formatting,
+workspace compilation, strict Clippy
 and 1,004 tests, with zero failures and 756 ignored tests across 173 result
 blocks. The [SDK packet](../scripts/rust-integration/milestone-batch17/inventory.json)
 binds 1,260 selected inputs: 1,254 Rust files, attribution and five coupled
@@ -41,8 +42,11 @@ This candidate has code-level validation only. Its
 [first Docker build](../scripts/rust-integration/milestone-batch17/failed-build.json)
 exited1 after3.919 seconds: the VLC collector requires an owning-package notice
 for a custom `/usr/local` libva binary that has no Debian package owner. The
-pinned Original image contains its actual custom libva license notice; that
-specific packaging correction and a successful rebuild remain required.
+pinned Original image contains its actual custom libva license notice. The
+packaging follow-up changes only the Python collector: it retains three actual
+pinned custom-build notices for libva, libvpl and vpl-gpu-rt with exact hashes,
+without inventing Debian ownership. Its AST and notice identities are verified;
+the Rust code is unchanged. A successful rebuild remains required.
 Runtime package probes, combined Source/Native application acceptance and
 representative paired performance are pending. Candidate16 functional evidence and performance runs
 keep their own image identity and cannot be transferred to17. Full M0–M9,

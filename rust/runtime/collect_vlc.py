@@ -21,7 +21,33 @@ def sha(path):
     return result.hexdigest()
 
 
+# These are actual custom-build notices retained in pinned Original, not Debian
+# package ownership. The observed shadow libva ELF differs from Debian bytes.
+_CUSTOM_NOTICES={
+    'libva':('intel-media-licenses/libva/COPYING','c86a782ee845b52472dae9b9d79fb915d333628ac0efe49cdce63644814931de'),
+    'libvpl':('intel-media-licenses/libvpl/LICENSE','bf1cfac2e2792b6e1e995ce103d70796aecaf2ec7e4c5fe5474f7acec7b4a677'),
+    'vpl-gpu-rt':('intel-media-licenses/vpl-gpu-rt/LICENSE','c31c3cc5fd66d1250dbca1c3d9011a9f874537442ac71c8de80f2f0fed13f297'),
+}
+def custom_notice(path):
+    actual=path.resolve()
+    if not actual.is_relative_to('/usr/local/lib'):return None
+    name=actual.name
+    if re.fullmatch(r'libva(?:-drm|-x11)?\.so(?:\.[0-9]+)*',name):component='libva'
+    elif re.fullmatch(r'libvpl\.so(?:\.[0-9]+)*',name):component='libvpl'
+    elif re.fullmatch(r'libmfx-gen\.so(?:\.[0-9]+)*',name):component='vpl-gpu-rt'
+    else:return None
+    relative,expected=_CUSTOM_NOTICES[component]
+    notice=Path('/usr/local/share/doc/dispatcharr-ffmpeg')/relative
+    if not notice.is_file()or sha(notice)!=expected:raise ValueError('actual custom VLC dependency notice mismatch:'+component)
+    target=pg_docs/('Original-custom-'+component)/notice.name
+    target.parent.mkdir(parents=True,exist_ok=True)
+    if target.exists()and sha(target)!=expected:raise ValueError('conflicting custom VLC dependency notice')
+    shutil.copy2(notice,target)
+    return [{'origin':'pinned-Original-custom-build','component':component,'source':str(notice),'retained_path':'/'+str(target.relative_to(root)),'sha256':expected,'actual_resolved_ELF':str(actual),'actual_ELF_sha256':sha(actual)}]
+
 def retain_licenses(path):
+    custom=custom_notice(path)
+    if custom is not None:return custom
     owners = set()
     queries = list(dict.fromkeys((str(path.resolve()), str(path))))
     # Debian usrmerge ownership may retain the pre-/usr spelling.
