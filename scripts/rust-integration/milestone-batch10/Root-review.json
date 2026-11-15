@@ -1,0 +1,181 @@
+{
+  "passed": true,
+  "scope": "Combined SDK only; not Compose acceptance, ignored external-fixture tests, full milestone closure or performance",
+  "runtime_git_revision": "34be395bdcfd2978b45f31a86566e590acd24037",
+  "all1216_inputs_exact_Git": true,
+  "Rust_inputs": 1211,
+  "total_inputs": 1216,
+  "actual_checks": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "PID": 971545,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 2.3607242107391357,
+      "source_unchanged": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 971608,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 12.732278108596802,
+      "source_unchanged": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "d508619beafa16a0e8112056bfce782580ddbc1bb68e099b813e9ba52e159978"
+    },
+    {
+      "name": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 971845,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 36.807308197021484,
+      "source_unchanged": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "3c82d1e94a338e999d54dabfcaba0c65488c9aa6839fedc805a8fe1542c0457d"
+    },
+    {
+      "name": "workspace",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 973133,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 108.68976497650146,
+      "source_unchanged": true,
+      "stdout_sha256": "f1a5b8ee875ef469f74864dac7811cde509a5dc0ac8a8435dfc849999aff7422",
+      "stderr_sha256": "ab1a5775da56eab213cff8bb463522e3093fa31c1343349e7ccf27a9b8277c3b"
+    }
+  ],
+  "workspace_totals": {
+    "passed": 938,
+    "failed": 0,
+    "ignored": 752
+  },
+  "result_blocks": 173,
+  "named_recovery_production_path_test_executed": true,
+  "shared_target": "artifacts/rust/m7-xc-vod-info-physical-compile-29/target",
+  "locked_dependencies": true,
+  "Cargo_lock_changed": false,
+  "prior_attempts": [
+    {
+      "attempt": 1,
+      "actual_checks": [
+        [
+          "fmt",
+          0
+        ],
+        [
+          "check",
+          101
+        ]
+      ]
+    },
+    {
+      "attempt": 2,
+      "actual_checks": [
+        [
+          "fmt",
+          0
+        ],
+        [
+          "check",
+          101
+        ]
+      ]
+    },
+    {
+      "attempt": 3,
+      "actual_checks": [
+        [
+          "fmt",
+          0
+        ],
+        [
+          "check",
+          101
+        ]
+      ]
+    },
+    {
+      "attempt": 4,
+      "actual_checks": [
+        [
+          "fmt",
+          0
+        ],
+        [
+          "check",
+          0
+        ],
+        [
+          "strict",
+          101
+        ]
+      ]
+    },
+    {
+      "attempt": 5,
+      "actual_checks": [
+        [
+          "fmt",
+          0
+        ],
+        [
+          "check",
+          0
+        ],
+        [
+          "strict",
+          0
+        ],
+        [
+          "workspace",
+          0
+        ]
+      ]
+    }
+  ],
+  "prior_failure_notes": {
+    "attempt1": "Channel preflight owned PgConnection incorrectly dereferenced; Core test correction manifest not applied before this run.",
+    "attempt2": "Backup schedule updating flag undefined.",
+    "attempt3": "Root manifest adapter accepted no entries for singular manifest, so correction remained unapplied and actual compile failed again.",
+    "attempt4": "Three new channel lint errors; independent workspace test deferred by old runner.",
+    "attempt5": "All four zero;937passed752ignored. Before later SQL ownership and recovery changes."
+  },
+  "original_authors_credit_preserved": true,
+  "all_milestones_complete": false,
+  "performance_gains": false
+}

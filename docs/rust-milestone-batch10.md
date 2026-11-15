@@ -15,6 +15,9 @@ across173 result blocks. All1216 recorded inputs remained unchanged. The named
 recovery admission/cancellation/drain regression executed and passed. Ignored
 tests are not acceptance. The shared Cargo target and locked dependency graph
 were reused; Cargo.lock did not change.
+The [SDK packet](../scripts/rust-integration/milestone-batch10/inventory.json)
+retains each actual exit, unchanged source map and earlier failures. Its runtime
+revision is `34be395bdcfd2978b45f31a86566e590acd24037`.
 
 Core settings now publish through Main's existing shared Jobs broker. Cache and
 lock operations retain the cache connection; there is no fallback from the

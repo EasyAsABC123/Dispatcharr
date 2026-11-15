@@ -1,0 +1,120 @@
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: `sqlx-core` (lib) generated 3 warnings
+warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+   --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+    |
+335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+    |                                                        ^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: variant `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+   |
+68 | pub enum FrontendMessageFormat {
+   |          --------------------- variant in this enum
+...
+76 |     Flush = b'H',
+   |     ^^^^^
+   |
+   = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: struct `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+   |
+11 | pub struct Flush;
+   |            ^^^^^
+
+warning: `sqlx-postgres` (lib) generated 3 warnings
+warning: `sqlx-core` (lib) generated 3 warnings (3 duplicates)
+warning: `sqlx-postgres` (lib) generated 3 warnings (3 duplicates)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-following-integration-1/source/rust/crates/store)
+error: this looks like an `else if` but the `else` is missing
+   --> crates/store/src/channel_maintenance_http.rs:121:91
+    |
+121 | ...   if c&&s{return Err(bad("Provide either channel_ids or epg_source_id, not both"));}if !c&&!s{return Err(bad("channel_ids or epg_sour...
+    |                                                                                         ^
+    |
+    = note: to remove this lint, add the missing `else` or add a new line before the second `if`
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#suspicious_else_formatting
+    = note: `-D clippy::suspicious-else-formatting` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::suspicious_else_formatting)]`
+
+error: this looks like an `else if` but the `else` is missing
+   --> crates/store/src/channel_maintenance_http.rs:122:132
+    |
+122 | ...   if let Some(channel)=channel.filter(|v|!v.is_null()){if !channel.is_array(){return Err(bad("channel_ids must be a list"));}if chann...
+    |                                                                                                                                  ^
+    |
+    = note: to remove this lint, add the missing `else` or add a new line before the second `if`
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#suspicious_else_formatting
+
+error: you seem to be trying to use `match` for destructuring a single pattern. Consider using `if let`
+   --> crates/store/src/channel_maintenance.rs:209:29
+    |
+209 |           Value::String(v) => match dispatcharr_ingest_core::source_integer_literal(v) {
+    |  _____________________________^
+210 | |             Some(s) => return s.parse::<i64>().map(Some).map_err(|_| unknown()),
+211 | |             None => (),
+212 | |         },
+    | |_________^ help: try: `if let Some(s) = dispatcharr_ingest_core::source_integer_literal(v) { return s.parse::<i64>().map(Some).map_err(|_| unknown()) }`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#single_match
+    = note: `-D clippy::single-match` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::single_match)]`
+
+error: could not compile `dispatcharr-store` (lib) due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `dispatcharr-store` (lib test) due to 3 previous errors
