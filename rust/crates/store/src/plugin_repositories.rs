@@ -610,3 +610,20 @@ impl PluginRefreshAdmission {
         observed
     }
 }
+
+/// Internal shared transport port; caller must already retain its real request
+/// owner and Auth4/SQL session. No extra permit/pool/client is allocated here.
+pub(crate) async fn download_managed_plugin(
+    raw: &str,
+    file: &mut tokio::fs::File,
+    hash: bool,
+) -> Result<Option<String>, StoreError> {
+    manifest_fetch::download_managed(raw, file, hash).await
+}
+
+pub(crate) async fn fetch_plugin_detail(
+    raw: &str,
+    key: Option<&str>,
+) -> Result<(Value, Option<bool>), StoreError> {
+    manifest_fetch::fetch_detail(raw, key).await
+}

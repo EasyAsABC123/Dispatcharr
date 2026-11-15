@@ -57,6 +57,7 @@ fn source(url: String, channel: &str) -> PlaybackSource {
         profile_id: 1,
         provider_profile_id: None,
         provider_max_streams: 0,
+        credential_pool: None,
         url,
         user_agent: String::new(),
         headers: vec![],

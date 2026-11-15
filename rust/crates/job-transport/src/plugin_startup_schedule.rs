@@ -135,6 +135,35 @@ impl Scheduler {
         .map_err(|_| Error::Supervisor)?
     }
 }
+/// Reuse the exact startup scheduling body on an already-admitted HTTP task SQL
+/// session. No Scheduler timer, checkout, client or separate writer is started.
+pub struct PluginRepositoryScheduleAdapter;
+impl dispatcharr_store::PluginRepositorySchedule for PluginRepositoryScheduleAdapter {
+    fn synchronize<'a>(
+        &'a self,
+        session: dispatcharr_store::TaskSqlSession,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'a, Result<(), dispatcharr_store::StoreError>> {
+        Box::pin(async move {
+            session
+                .run(move |connection| {
+                    Box::pin(async move {
+                        let _owner = owner;
+                        setup(connection).await.map_err(|error| match error {
+                            Error::Database(error) => {
+                                dispatcharr_store::StoreError::Database(*error)
+                            }
+                            _ => dispatcharr_store::StoreError::Unsupported(
+                                "Plugin periodic settings exceed bounded Source schedule domain",
+                            ),
+                        })
+                    })
+                })
+                .await?
+        })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

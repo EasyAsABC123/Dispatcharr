@@ -26,6 +26,7 @@ pub(super) struct Receipt {
     pub stdout_eof: bool,
     pub stderr_eof: bool,
     pub read_failed: bool,
+    pub input_failed: bool,
     pub forced_kill: bool,
     pub group_settled: bool,
 }
@@ -52,6 +53,42 @@ fn reap_descendants(pid: u32) {
         }
     }
 }
+/// Original StreamManager maps only literal vlc/cvlc command names to its
+/// VLC parser. The marker is matched case-insensitively within a stderr line;
+/// arbitrary pipe-read boundaries must not hide a real input failure.
+struct VlcInputFailure {
+    enabled: bool,
+    suffix: VecDeque<u8>,
+}
+impl VlcInputFailure {
+    const MARKER: &'static [u8] = b"unable to open the mrl";
+    fn new(command: &str) -> Self {
+        Self {
+            enabled: command.eq_ignore_ascii_case("vlc") || command.eq_ignore_ascii_case("cvlc"),
+            suffix: VecDeque::with_capacity(Self::MARKER.len()),
+        }
+    }
+    fn observe(&mut self, bytes: &[u8]) -> bool {
+        if !self.enabled {
+            return false;
+        }
+        for &byte in bytes {
+            if matches!(byte, b'\r' | b'\n') {
+                self.suffix.clear();
+                continue;
+            }
+            if self.suffix.len() == Self::MARKER.len() {
+                self.suffix.pop_front();
+            }
+            self.suffix.push_back(byte.to_ascii_lowercase());
+            if self.suffix.iter().copied().eq(Self::MARKER.iter().copied()) {
+                return true;
+            }
+        }
+        false
+    }
+}
+
 impl InputProcess {
     pub fn start(
         command: &StreamCommand,
@@ -69,6 +106,7 @@ impl InputProcess {
         if unsafe { libc::prctl(libc::PR_SET_CHILD_SUBREAPER, 1, 0, 0, 0) } != 0 {
             return Err(io::Error::last_os_error());
         }
+        let mut input_failure = VlcInputFailure::new(&command.argv[0]);
         let mut process = Command::new(&command.argv[0]);
         process
             .args(&command.argv[1..])
@@ -106,6 +144,7 @@ impl InputProcess {
                 stdout_eof: false,
                 stderr_eof: false,
                 read_failed: false,
+                input_failed: false,
                 forced_kill: false,
                 group_settled: false,
             };
@@ -157,6 +196,12 @@ impl InputProcess {
                             Ok(0)=>{err_closed=true;receipt.stderr_eof=true;},
                             Ok(count)=>{
                                 receipt.stderr_bytes=receipt.stderr_bytes.saturating_add(count as u64);
+                                if input_failure.observe(&errors[..count]) {
+                                    receipt.input_failed=true;
+                                    // Existing settlement retains provider/session ownership until
+                                    // TERM/KILL, both EOFs and actual process-group absence.
+                                    discard_output=true;
+                                }
                                 for byte in &errors[..count] { if tail.len()==STDERR_TAIL { tail.pop_front(); } tail.push_back(*byte); }
                             },
                             Err(_)=>{err_closed=true;receipt.read_failed=true;discard_output=true;},
@@ -212,6 +257,28 @@ impl Drop for InputProcess {
 mod tests {
     use super::*;
     use std::sync::atomic::{AtomicBool, Ordering};
+    #[test]
+    fn vlc_input_failure_survives_every_pipe_read_boundary() {
+        let line = b"main input error: VLC is UNABLE TO OPEN THE MRL 'http://owned.invalid'.\n";
+        for cut in 0..line.len() {
+            let mut parser = VlcInputFailure::new("cvlc");
+            let first = parser.observe(&line[..cut]);
+            let second = parser.observe(&line[cut..]);
+            assert!(first || second, "marker lost at pipe offset {cut}");
+        }
+    }
+    #[test]
+    fn unrelated_vlc_errors_and_other_command_stderr_do_not_trigger_failover() {
+        for command in ["vlc", "CVLC"] {
+            let mut parser = VlcInputFailure::new(command);
+            assert!(!parser
+                .observe(b"vlcpulse audio output error: PulseAudio server connection failure\n"));
+            assert!(!parser.observe(b"unable to open the \nmrl\n"));
+        }
+        for command in ["ffmpeg", "streamlink", "/usr/bin/vlc", "custom"] {
+            assert!(!VlcInputFailure::new(command).observe(b"unable to open the mrl\n"));
+        }
+    }
     fn shell(script: &str) -> StreamCommand {
         StreamCommand {
             argv: vec!["/bin/sh".into(), "-c".into(), script.into()],

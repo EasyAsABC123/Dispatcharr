@@ -22,6 +22,7 @@ pub struct ProviderStream {
     pub stream_id: i64,
     pub provider_profile_id: i64,
     pub provider_max_streams: u32,
+    pub credential_pool: Option<dispatcharr_contracts::PlaybackCredentialPool>,
     pub url: String,
     pub user_agent: String,
     pub metadata: Vec<(String, String)>,
@@ -84,6 +85,33 @@ impl ProviderUrl<'_> {
         }
         Ok(Some(url))
     }
+}
+
+/// Source connection_pool.compute_credential_fingerprint and truncated legacy key.
+/// Python Unicode case conversion can differ from Rust's; that unqualified
+/// username domain remains explicit rather than splitting one real login pool.
+fn xc_credential_pool(
+    group: i64,
+    maximum: u32,
+    username: &str,
+    password: &str,
+) -> Result<dispatcharr_contracts::PlaybackCredentialPool, StoreError> {
+    use sha2::{Digest, Sha256};
+    if !username.is_ascii() || group <= 0 || maximum == 0 {
+        return Err(StoreError::Unsupported(
+            "XC credential normalization domain unsupported",
+        ));
+    }
+    let strip = |c: char| c.is_whitespace() || matches!(c, '\u{001c}'..='\u{001f}');
+    let mut digest = Sha256::new();
+    digest.update(username.trim_matches(strip).to_ascii_lowercase().as_bytes());
+    digest.update([0]);
+    digest.update(password.trim_matches(strip).as_bytes());
+    let fingerprint = format!("{:x}", digest.finalize());
+    Ok(dispatcharr_contracts::PlaybackCredentialPool {
+        counter_key: format!("server_group_connections:{group}:{}", &fingerprint[..16]),
+        max_streams: maximum,
+    })
 }
 
 impl Store {
@@ -172,6 +200,7 @@ impl Store {
         }
         let mut streams = Vec::new();
         let mut unsupported = false;
+        let mut credential_unavailable = false;
         for row in rows {
             let account_type: String = row.try_get("account_type")?;
             let search: String = row.try_get("search_pattern")?;
@@ -231,11 +260,36 @@ impl Store {
             };
             let maximum: i32 = row.try_get("max_streams")?;
             let server_group: Option<i64> = row.try_get("server_group_id")?;
-            if server_group.is_some() && maximum > 0 {
-                return Err(StoreError::Unsupported(
-                    "Credential-scoped provider pooling is not implemented",
-                ));
-            }
+            let credential_pool = match (server_group, maximum > 0) {
+                (Some(group), true) if account_type == "XC" => {
+                    let Some(current) = crate::xc_account_provider::credentials(
+                        server.as_deref().unwrap_or_default(),
+                        username.as_deref().unwrap_or_default(),
+                        password.as_deref().unwrap_or_default(),
+                        &search,
+                        &replace,
+                    )?
+                    else {
+                        // An enforced credential group without a fingerprint has
+                        // no capacity in Original; never fall back to a stale URL.
+                        credential_unavailable = true;
+                        continue;
+                    };
+                    Some(xc_credential_pool(
+                        group,
+                        maximum as u32,
+                        &current.username,
+                        &current.password,
+                    )?)
+                }
+                (Some(_), true) => {
+                    return Err(StoreError::Unsupported(
+                        "STD credential sample-URL precedence is not implemented",
+                    ))
+                }
+                // Original unlimited profiles skip BOTH profile and credential counters.
+                _ => None,
+            };
             let mut metadata = vec![
                 (
                     "stream_name".to_owned(),
@@ -258,13 +312,19 @@ impl Store {
                 stream_id: row.try_get("stream_id")?,
                 provider_profile_id: row.try_get("provider_profile_id")?,
                 provider_max_streams: u32::try_from(maximum).unwrap_or(u32::MAX),
+                credential_pool,
                 url,
                 user_agent,
                 metadata,
             });
         }
         if streams.is_empty() {
-            return Err(if unsupported {
+            return Err(if credential_unavailable {
+                StoreError::StatusBody(
+                    503,
+                    serde_json::json!({"error":"All active M3U profiles have reached maximum connection limits"}),
+                )
+            } else if unsupported {
                 StoreError::Unsupported(
                     "Assigned providers require unimplemented URL/credential transforms",
                 )
@@ -428,6 +488,7 @@ impl AuthService {
             profile_id: channel.profile_id,
             provider_profile_id: Some(stream.provider_profile_id),
             provider_max_streams: stream.provider_max_streams,
+            credential_pool: stream.credential_pool,
             url: stream.url,
             user_agent: stream.user_agent,
             headers: Vec::new(),
@@ -445,6 +506,7 @@ impl AuthService {
                     stream_id: stream.stream_id,
                     provider_profile_id: Some(stream.provider_profile_id),
                     provider_max_streams: stream.provider_max_streams,
+                    credential_pool: stream.credential_pool,
                     url: stream.url,
                     user_agent: stream.user_agent,
                     headers: Vec::new(),
@@ -681,6 +743,26 @@ mod output_tests {
             stream_limit: 0,
             custom_properties: properties,
         }
+    }
+    #[test]
+    fn grouped_xc_current_login_fingerprint_matches_source_normalization() {
+        let a = xc_credential_pool(7, 2, "  CURRENT-Login\t", "\u{001c} 密碼 \u{001f}").unwrap();
+        let b = xc_credential_pool(7, 2, "current-login", "密碼").unwrap();
+        assert_eq!(a, b);
+        assert_eq!(a.counter_key, "server_group_connections:7:1ef5e20b3f61d0a8");
+        assert_ne!(
+            a.counter_key,
+            xc_credential_pool(7, 2, "current-login", "rotated")
+                .unwrap()
+                .counter_key
+        );
+        assert_ne!(
+            a.counter_key,
+            xc_credential_pool(8, 2, "current-login", "密碼")
+                .unwrap()
+                .counter_key
+        );
+        assert!(xc_credential_pool(7, 2, "Σ", "password").is_err());
     }
     #[test]
     fn xc_live_uses_rotated_login_instead_of_stale_imported_url() {

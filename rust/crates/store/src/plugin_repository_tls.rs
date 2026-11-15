@@ -83,13 +83,16 @@ async fn validate(url: &Url) -> Result<(), Failure> {
 }
 
 fn client(ca_bundle: Option<&Path>) -> Result<Client, Failure> {
+    client_with_timeout(ca_bundle, INACTIVITY)
+}
+fn client_with_timeout(ca_bundle: Option<&Path>, timeout: Duration) -> Result<Client, Failure> {
     let mut builder = Client::builder()
         .no_proxy()
         .redirect(Policy::none())
         .pool_max_idle_per_host(0)
         .http1_only()
-        .connect_timeout(INACTIVITY)
-        .read_timeout(INACTIVITY)
+        .connect_timeout(timeout)
+        .read_timeout(timeout)
         .user_agent("python-requests/2.34.2");
     {
         let path =
@@ -200,4 +203,88 @@ pub(super) async fn one_get(
     drop(stream);
     drop(client);
     Ok((status, location, body))
+}
+
+/// Stream a managed ZIP using the SAME validated HTTPS/DNS/NO_PROXY port and
+/// already-admitted plugin owner. No response body Vec or detached file writer.
+pub(super) async fn download_one(
+    url: &Url,
+    ca_bundle: Option<&Path>,
+    proxy_port: Option<u16>,
+    file: &mut tokio::fs::File,
+    hash: bool,
+) -> Result<(u16, Option<String>, Option<String>), Failure> {
+    use sha2::{Digest, Sha256};
+    use tokio::io::AsyncWriteExt;
+    validate(url).await?;
+    super::proxy_environment::enforce(url, proxy_port)?;
+    let client = client_with_timeout(ca_bundle, Duration::from_secs(60))?;
+    let response = client
+        .get(url.clone())
+        .header(header::ACCEPT, "*/*")
+        .header(header::ACCEPT_ENCODING, "gzip, deflate")
+        .send()
+        .await
+        .map_err(|e| {
+            if e.is_timeout() {
+                Failure::Timeout
+            } else {
+                Failure::Connect
+            }
+        })?;
+    let status = response.status().as_u16();
+    let bytes = response
+        .headers()
+        .iter()
+        .try_fold(0usize, |sum, (k, v)| {
+            sum.checked_add(k.as_str().len())?
+                .checked_add(v.as_bytes().len())?
+                .checked_add(4)
+        })
+        .ok_or(Failure::Unqualified("Release header capacity unavailable"))?;
+    if bytes > MAX_HEADER_BYTES {
+        return Err(Failure::Unqualified("Release header capacity unavailable"));
+    }
+    let location = response
+        .headers()
+        .get(header::LOCATION)
+        .map(|v| v.to_str().map(str::to_owned))
+        .transpose()
+        .map_err(|_| Failure::Unqualified("Non-UTF8 redirect location remains unqualified"))?;
+    if [301, 302, 303, 307, 308].contains(&status) || status >= 400 {
+        drop(response);
+        drop(client);
+        return Ok((status, location, None));
+    }
+    const LIMIT: usize = 200 * 1024 * 1024;
+    let mut stream =
+        dispatcharr_upstream_http::body_limited(response, LIMIT + 65536).map_err(|_| {
+            Failure::Unqualified("Release content decoding outside bounded Requests domain")
+        })?;
+    let mut total = 0usize;
+    let mut digest = hash.then(Sha256::new);
+    let result = async {
+        while let Some(chunk) = stream.next().await {
+            let chunk = chunk.map_err(|_| Failure::Connect)?;
+            total = total
+                .checked_add(chunk.len())
+                .ok_or(Failure::ReleaseTooLarge)?;
+            if total > LIMIT {
+                return Err(Failure::ReleaseTooLarge);
+            }
+            if let Some(digest) = &mut digest {
+                digest.update(&chunk);
+            }
+            file.write_all(&chunk).await.map_err(|_| Failure::File)?;
+        }
+        Ok((
+            status,
+            location,
+            digest.map(|d| format!("{:x}", d.finalize())),
+        ))
+    }
+    .await;
+    drop(stream);
+    drop(client);
+    result
 }

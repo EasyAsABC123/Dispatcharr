@@ -916,6 +916,18 @@ async fn run() -> Result<(), String> {
     // explicitly unsupported transports and signatures.
     let plugin_repositories =
         dispatcharr_store::PluginRepositories::new(auth.clone()).with_unsigned_manifest_fetches();
+    let plugin_actions = dispatcharr_store::PluginActions::prepare(
+        auth.clone(),
+        std::env::var_os("DISPATCHARR_PLUGINS_DIR")
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(|| "/data/plugins".into()),
+    )
+    .with_repository_schedule(Arc::new(
+        dispatcharr_job_transport::normal_beat::PluginRepositoryScheduleAdapter,
+    ));
+    if plugin_actions.startup_discover(Arc::new(())).await.is_err() {
+        eprintln!("Plugin discovery requires compatible runtime or unavailable startup resources");
+    }
     let auth_routes = match &core_settings {
         Some(core) => auth
             .clone()
@@ -982,6 +994,7 @@ async fn run() -> Result<(), String> {
         .merge(output_profiles.clone().router())
         .merge(backup_files.clone().router())
         .merge(plugin_repositories.router())
+        .merge(plugin_actions.clone().router())
         .merge(epg_programs.clone().router())
         .merge(epg_programs.clone().current_router())
         .merge(vod_reads.router())
@@ -1101,6 +1114,7 @@ async fn run() -> Result<(), String> {
     }
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
     let services = ShutdownServices {
+        plugin_actions,
         core_settings,
         selected_jobs,
         engine,
@@ -1136,6 +1150,7 @@ async fn run() -> Result<(), String> {
     )
     .with_graceful_shutdown(async move {
         shutdown_signal().await;
+        signal_services.plugin_actions.stop_admission();
         if let Some(selected) = &signal_services.selected_jobs {
             selected.stop_producers();
         } else {
@@ -1190,6 +1205,7 @@ async fn shutdown_signal() {
 }
 #[derive(Clone)]
 struct ShutdownServices {
+    plugin_actions: dispatcharr_store::PluginActions,
     core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
     selected_jobs: Option<selected_jobs::SelectedJobs>,
     engine: StreamEngine,
@@ -1221,6 +1237,7 @@ struct ShutdownServices {
 }
 async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     let ShutdownServices {
+        plugin_actions,
         core_settings,
         selected_jobs,
         engine,
@@ -1249,6 +1266,10 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         live_statistics,
         combined_statistics,
     } = services;
+    plugin_actions
+        .shutdown(Duration::from_secs(8))
+        .await
+        .map_err(|_| "Plugin filesystem/SQL/reader drain incomplete; physical owners remain")?;
     if let Some(selected) = selected_jobs {
         selected.stop_producers();
         if !selected.shutdown(Duration::from_secs(12)).await {

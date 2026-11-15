@@ -286,6 +286,18 @@ impl ValidatedCache {
                 "Parsed M3U cache validation cancelled",
             )));
         }
+        Self::from_file_while(File::open(path)?, limits, proceed)
+    }
+    /// Validate the caller's already-open descriptor. Normal import callers use
+    /// O_NOFOLLOW and fstat on this same FD; validation never reopens its path.
+    pub fn from_file(file: File, limits: CacheReadLimits) -> Result<Self, CacheReadError> {
+        Self::from_file_while(file, limits, || true)
+    }
+    fn from_file_while(
+        mut file: File,
+        limits: CacheReadLimits,
+        mut proceed: impl FnMut() -> bool,
+    ) -> Result<Self, CacheReadError> {
         if limits.bytes == 0
             || limits.entry_bytes == 0
             || limits.groups == 0
@@ -293,7 +305,6 @@ impl ValidatedCache {
         {
             return Err(CacheReadError::Capacity);
         }
-        let mut file = File::open(path)?;
         if file.metadata()?.len() > limits.bytes {
             return Err(CacheReadError::Capacity);
         }

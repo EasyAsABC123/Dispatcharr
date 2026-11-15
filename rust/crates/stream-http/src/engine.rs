@@ -1329,7 +1329,12 @@ async fn run_upstream(
                 .reserve_provider(ProviderReservation {
                     profile_id: candidate.provider_profile_id,
                     max_streams: candidate.provider_max_streams,
-                    credential_pool: None,
+                    credential_pool: candidate.credential_pool.as_ref().map(|pool| {
+                        dispatcharr_coordination::CredentialPool {
+                            counter_key: pool.counter_key.clone(),
+                            max_streams: pool.max_streams,
+                        }
+                    }),
                 })
                 .await
             {

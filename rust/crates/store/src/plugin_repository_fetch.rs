@@ -28,6 +28,8 @@ pub(super) enum Action {
 }
 #[derive(Debug)]
 enum Failure {
+    ReleaseTooLarge,
+    File,
     Policy(String),
     Json,
     MissingPlugins,
@@ -119,6 +121,9 @@ fn unsigned(data: Value) -> Result<Value, Failure> {
     Err(Failure::MissingPlugins)
 }
 fn decoded_manifest(raw: &[u8]) -> Result<Value, Failure> {
+    unsigned(decoded_json(raw)?)
+}
+fn decoded_json(raw: &[u8]) -> Result<Value, Failure> {
     let text = std::str::from_utf8(raw).map_err(|_| Failure::Json)?;
     let (value, _quote) = crate::xc_bounded_user::checked_properties(
         text,
@@ -136,7 +141,7 @@ fn decoded_manifest(raw: &[u8]) -> Result<Value, Failure> {
         }
         _ => Failure::Json,
     })?;
-    unsigned(value)
+    Ok(value)
 }
 struct Head {
     status: u16,
@@ -352,6 +357,9 @@ async fn one_get(
     tls_transport::one_get(url, bundle.as_deref(), proxy_port).await
 }
 async fn fetch(raw: &str) -> Result<Value, Failure> {
+    fetch_any(raw, true).await
+}
+async fn fetch_any(raw: &str, registry: bool) -> Result<Value, Failure> {
     let mut current =
         reqwest::Url::parse(raw).map_err(|_| Failure::Policy("URL has no hostname.".into()))?;
     let mut proxy_port = proxy_environment::explicit_port(raw);
@@ -368,7 +376,11 @@ async fn fetch(raw: &str) -> Result<Value, Failure> {
         if status >= 400 {
             return Err(Failure::Http(status));
         }
-        return decoded_manifest(&body);
+        return if registry {
+            decoded_manifest(&body)
+        } else {
+            decoded_json(&body)
+        };
     }
     Err(Failure::Policy("Exceeded maximum of 5 redirects.".into()))
 }
@@ -969,6 +981,9 @@ fn settled_fetch_status(error: Failure) -> Result<String, StoreError> {
             "Plugin refresh unexpected exception-class causality is not qualified",
         )),
         Failure::Unqualified(message) => Err(unqualified(message)),
+        Failure::ReleaseTooLarge | Failure::File => Err(unqualified(
+            "Managed release failure cannot be persisted as a guessed manifest exception class",
+        )),
     }
 }
 fn settled_sql_status(error: StoreError) -> Result<String, StoreError> {
@@ -1054,4 +1069,82 @@ pub(super) async fn refresh_enabled(
     // Actual Source body has no explicit return. Reach this only after every
     // enabled row has actually executed, skipped validation, or caught above.
     Ok(Value::Null)
+}
+
+/// Shared managed release download. The caller retains its existing Auth4,
+/// physical SQL session and filesystem lock while this same transport settles.
+pub(super) async fn download_managed(
+    raw: &str,
+    file: &mut tokio::fs::File,
+    hash: bool,
+) -> Result<Option<String>, StoreError> {
+    async fn run(
+        raw: &str,
+        file: &mut tokio::fs::File,
+        hash: bool,
+    ) -> Result<Option<String>, Failure> {
+        let mut current =
+            reqwest::Url::parse(raw).map_err(|_| Failure::Policy("URL has no hostname.".into()))?;
+        let mut proxy_port = proxy_environment::explicit_port(raw);
+        let bundle = std::env::var_os("REQUESTS_CA_BUNDLE")
+            .filter(|v| !v.is_empty())
+            .or_else(|| std::env::var_os("CURL_CA_BUNDLE").filter(|v| !v.is_empty()))
+            .map(std::path::PathBuf::from);
+        for _ in 0..=5 {
+            let (status, location, sha) =
+                tls_transport::download_one(&current, bundle.as_deref(), proxy_port, file, hash)
+                    .await?;
+            if [301, 302, 303, 307, 308].contains(&status) {
+                let location = location.filter(|v| !v.is_empty()).ok_or_else(|| {
+                    Failure::Policy("Redirect response missing Location header.".into())
+                })?;
+                proxy_port = proxy_environment::redirect_port(proxy_port, &location)?;
+                current = current
+                    .join(&location)
+                    .map_err(|_| Failure::Policy("URL has no hostname.".into()))?;
+                continue;
+            }
+            if status >= 400 {
+                return Err(Failure::Http(status));
+            }
+            return Ok(sha);
+        }
+        Err(Failure::Policy("Exceeded maximum of 5 redirects.".into()))
+    }
+    run(raw, file, hash).await.map_err(|failure| match failure {
+        Failure::Policy(value) => StoreError::StatusBody(400, json!({"error":value})),
+        Failure::ReleaseTooLarge => {
+            StoreError::StatusBody(400, json!({"error":"Download is too large"}))
+        }
+        Failure::File => {
+            StoreError::Unsupported("Managed release file operation did not settle successfully")
+        }
+        Failure::Unqualified(value) => StoreError::Unsupported(value),
+        _ => StoreError::StatusBody(
+            502,
+            json!({"error":"Failed to download plugin. Check the URL and try again."}),
+        ),
+    })
+}
+
+/// Per-plugin details reuse the existing validated HTTP/GPG transport; detail
+/// JSON need not contain the registry-only plugins array.
+pub(super) async fn fetch_detail(
+    raw: &str,
+    key: Option<&str>,
+) -> Result<(Value, Option<bool>), StoreError> {
+    let data = fetch_any(raw, false).await.map_err(detail_failure)?;
+    let verified = manifest_signature::verify(inner(&data), data.get("signature"), key)
+        .await
+        .map_err(detail_failure)?;
+    Ok((inner(&data).clone(), verified))
+}
+fn detail_failure(failure: Failure) -> StoreError {
+    match failure {
+        Failure::Policy(value) => StoreError::StatusBody(400, json!({"error":value})),
+        Failure::Unqualified(value) => StoreError::Unsupported(value),
+        _ => StoreError::Unsupported(
+            "Exact Source detail HTTP/JSON exception text remains unqualified",
+        ),
+    }
 }

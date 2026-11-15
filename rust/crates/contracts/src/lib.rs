@@ -112,12 +112,21 @@ impl PlaybackRequest {
     }
 }
 
+/// Exact provider credential counter selected by the Source-backed resolver.
+/// Contains a one-way fingerprint key, never the account login itself.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct PlaybackCredentialPool {
+    pub counter_key: String,
+    pub max_streams: u32,
+}
+
 #[derive(Clone, Debug)]
 pub struct PlaybackCandidate {
     pub input_command: Option<StreamCommand>,
     pub stream_id: i64,
     pub provider_profile_id: Option<i64>,
     pub provider_max_streams: u32,
+    pub credential_pool: Option<PlaybackCredentialPool>,
     pub url: String,
     pub user_agent: String,
     pub headers: Vec<(String, String)>,
@@ -171,6 +180,7 @@ pub struct PlaybackSource {
     pub provider_profile_id: Option<i64>,
     /// Zero means unlimited, as in the original provider profile model.
     pub provider_max_streams: u32,
+    pub credential_pool: Option<PlaybackCredentialPool>,
     pub url: String,
     pub user_agent: String,
     pub headers: Vec<(String, String)>,
@@ -191,6 +201,7 @@ impl PlaybackSource {
             stream_id: self.stream_id,
             provider_profile_id: self.provider_profile_id,
             provider_max_streams: self.provider_max_streams,
+            credential_pool: self.credential_pool.clone(),
             url: self.url.clone(),
             user_agent: self.user_agent.clone(),
             headers: self.headers.clone(),

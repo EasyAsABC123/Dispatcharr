@@ -1,0 +1,522 @@
+//! Remote STD M3U normal worker over the same Main M3U slot and owned services.
+//! Original Dispatcharr authors retain application/algorithm/protocol credit.
+use crate::{
+    m3u_result_file::GroupsResultFile,
+    milestone_dispatch::Disposition as D,
+    normal_revocation::Revoked,
+    normal_xc_live::Message,
+    scanner_m3u_protocol::Kind,
+    transport::{Jobs, M3uPorts},
+};
+use dispatcharr_contracts::UpdateEventSink;
+use dispatcharr_coordination::{TaskLockDetailedError, TaskLockError, TaskLocks};
+use dispatcharr_ingest_core::{CacheReadLimits, Entry, ValidatedCache};
+use dispatcharr_store::{xc_live_tasks::Prepared, AuthService, Store, StoreError};
+use serde_json::{json, Value};
+use std::{
+    path::PathBuf,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc, Mutex,
+    },
+    time::{Duration, Instant},
+};
+use tokio::sync::{mpsc, Semaphore};
+type Owner = Arc<dyn Send + Sync>;
+struct Inner {
+    jobs: Jobs,
+    ports: M3uPorts,
+    store: Store,
+    auth: AuthService,
+    events: Arc<dyn UpdateEventSink>,
+    locks: TaskLocks,
+    revoked: Revoked,
+    slots: Arc<Semaphore>,
+    cache: PathBuf,
+    closed: AtomicBool,
+    uncertain: Mutex<Vec<Owner>>,
+}
+#[derive(Clone)]
+pub(crate) struct Worker {
+    inner: Arc<Inner>,
+}
+struct Guard {
+    inner: Arc<Inner>,
+    owner: Owner,
+    armed: bool,
+}
+impl Drop for Guard {
+    fn drop(&mut self) {
+        if self.armed {
+            let mut owners = self
+                .inner
+                .uncertain
+                .lock()
+                .unwrap_or_else(|e| e.into_inner());
+            if !owners.iter().any(|o| Arc::ptr_eq(o, &self.owner)) {
+                owners.push(self.owner.clone())
+            }
+        }
+    }
+}
+enum Outcome {
+    Value(Value),
+    File(GroupsResultFile),
+}
+impl Worker {
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new(
+        jobs: Jobs,
+        ports: M3uPorts,
+        store: Store,
+        auth: AuthService,
+        events: Arc<dyn UpdateEventSink>,
+        locks: TaskLocks,
+        revoked: Revoked,
+        slots: Arc<Semaphore>,
+        cache: PathBuf,
+    ) -> Self {
+        Self {
+            inner: Arc::new(Inner {
+                jobs,
+                ports,
+                store,
+                auth,
+                events,
+                locks,
+                revoked,
+                slots,
+                cache,
+                closed: AtomicBool::new(false),
+                uncertain: Mutex::new(Vec::with_capacity(1)),
+            }),
+        }
+    }
+    pub(crate) fn stop(&self) {
+        self.inner.closed.store(true, Ordering::Release)
+    }
+    pub(crate) async fn shutdown(&self, timeout: Duration) -> bool {
+        self.stop();
+        tokio::time::timeout(timeout, self.inner.slots.clone().acquire_owned())
+            .await
+            .is_ok_and(|r| r.is_ok())
+    }
+    pub(crate) async fn run(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        caller: Owner,
+    ) -> Result<Option<D>, D> {
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(D::Operational("Remote M3U intake stopped".into()));
+        }
+        let slot = self
+            .inner
+            .slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| D::Capacity)?;
+        let owner: Owner = Arc::new((slot, caller, self.inner.clone()));
+        let inner = self.inner.clone();
+        tokio::spawn(async move {
+            let mut guard = Guard {
+                inner: inner.clone(),
+                owner: owner.clone(),
+                armed: true,
+            };
+            let result = async {
+                let candidate = match inner
+                    .jobs
+                    .peek_xc_live(expected.as_deref(), owner.clone())
+                    .await
+                {
+                    Ok(Some(v)) => v,
+                    Ok(None) => return Ok(Some(D::Empty)),
+                    Err(crate::transport::Error::ClaimRace) => return Ok(Some(D::HeadChanged)),
+                    Err(crate::transport::Error::UnsupportedTask) => {
+                        return Err(D::UnsupportedHead)
+                    }
+                    Err(_) => return Err(fault("head read")),
+                };
+                let prepared = match dispatcharr_store::xc_live_tasks::prepare_std_remote(
+                    inner.store.clone(),
+                    inner.auth.clone(),
+                    candidate.message.account,
+                    owner.clone(),
+                    inner.events.clone(),
+                )
+                .await
+                {
+                    Ok(Some(p)) => Arc::new(p),
+                    Ok(None) => return Ok(None),
+                    Err(StoreError::StatusBody(503, _)) => return Ok(Some(D::Capacity)),
+                    Err(StoreError::Unsupported(_)) => return Err(D::UnsupportedDomain),
+                    Err(_) => return Err(fault("SQL admission")),
+                };
+                if inner.closed.load(Ordering::Acquire) {
+                    prepared.close().await.map_err(|_| fault("SQL close"))?;
+                    return Err(fault("admission stopped"));
+                }
+                let message = match inner.jobs.claim_xc_live(candidate, owner.clone()).await {
+                    Ok(v) => v,
+                    Err(crate::transport::Error::ClaimRace) => {
+                        prepared.close().await.map_err(|_| fault("SQL close"))?;
+                        return Ok(Some(D::HeadChanged));
+                    }
+                    Err(_) => {
+                        let _ = prepared.close().await;
+                        return Err(fault("claim outcome"));
+                    }
+                };
+                if inner
+                    .revoked
+                    .contains(&message.id.to_string())
+                    .map_err(|_| fault("revoked state"))?
+                {
+                    prepared
+                        .close()
+                        .await
+                        .map_err(|_| fault("revoked SQL close"))?;
+                    if !inner
+                        .jobs
+                        .write_xc_live_revoked(&message, owner.clone())
+                        .await
+                        .map_err(|_| fault("revoked backend"))?
+                    {
+                        return Err(fault("revoked backend refused"));
+                    }
+                    return Ok(Some(D::Revoked(message.id)));
+                }
+                let key = if message.kind == Kind::Single {
+                    "refresh_single_m3u_account"
+                } else {
+                    "refresh_m3u_account_groups"
+                };
+                let lease = match inner
+                    .locks
+                    .acquire_retained_detailed(key, message.account, owner.clone())
+                    .await
+                {
+                    Ok(v) => Some(v),
+                    Err(TaskLockDetailedError::Operational(TaskLockError::Held)) => None,
+                    Err(_) => {
+                        let _ = prepared.close().await;
+                        return Err(fault("task lock"));
+                    }
+                };
+                let body = if lease.is_none() {
+                    Ok(Outcome::Value(if message.kind == Kind::Groups {
+                        json!([
+                            format!("Task already running for account_id={}.", message.account),
+                            null
+                        ])
+                    } else {
+                        json!(format!(
+                            "Task already running for account_id={}.",
+                            message.account
+                        ))
+                    }))
+                } else {
+                    execute(&inner, &prepared, &message, owner.clone()).await
+                };
+                let closed = prepared.close().await;
+                let released = if let Some(lease) = lease {
+                    lease.release_owned_detailed().await.is_ok_and(|v| v)
+                } else {
+                    true
+                };
+                if closed.is_err() || !released {
+                    return Err(fault("physical SQL/token drain"));
+                }
+                let ack = match body? {
+                    Outcome::Value(value) => {
+                        inner
+                            .jobs
+                            .write_xc_live(&message, value, Vec::new(), owner.clone())
+                            .await
+                    }
+                    Outcome::File(file) => {
+                        inner
+                            .jobs
+                            .write_m3u_full_result(
+                                message.id,
+                                message.parent,
+                                Vec::new(),
+                                file,
+                                owner.clone(),
+                            )
+                            .await
+                    }
+                }
+                .map_err(|_| fault("result publication"))?;
+                Ok(Some(if ack {
+                    D::Completed(message.id)
+                } else {
+                    D::CompletedWithoutId
+                }))
+            }
+            .await;
+            if result.is_ok() {
+                guard.armed = false
+            }
+            result
+        })
+        .await
+        .map_err(|_| fault("supervisor lost"))?
+    }
+}
+fn fault(stage: &str) -> D {
+    D::Operational(format!("Remote M3U {stage} unsettled"))
+}
+fn store_error(error: StoreError) -> D {
+    match error {
+        StoreError::Unsupported(_) => D::UnsupportedDomain,
+        _ => fault("SQL/event effects"),
+    }
+}
+async fn execute(
+    inner: &Inner,
+    prepared: &Arc<Prepared>,
+    message: &Message,
+    owner: Owner,
+) -> Result<Outcome, D> {
+    let outcome = execute_body(inner, prepared, message, owner.clone()).await;
+    if message.kind == Kind::Single {
+        let path = inner.cache.join(format!("{}.json", message.account));
+        let retired = tokio::task::spawn_blocking(move || {
+            let _owner = owner;
+            // Original's finally catches all actual OSError outcomes. A known
+            // deletion refusal is not an unsettled worker or fabricated delete.
+            std::fs::remove_file(path)
+        })
+        .await;
+        if retired.is_err() {
+            return Err(fault("parsed cache retirement"));
+        }
+    }
+    outcome
+}
+async fn execute_body(
+    inner: &Inner,
+    prepared: &Arc<Prepared>,
+    message: &Message,
+    owner: Owner,
+) -> Result<Outcome, D> {
+    let start = chrono::Utc::now();
+    let elapsed = Instant::now();
+    let parsed = inner.cache.join(format!("{}.json", message.account));
+    if message.kind == Kind::Single {
+        prepared.begin_single().await.map_err(store_error)?;
+    }
+    let cached = if message.kind == Kind::Single {
+        probe(parsed.clone(), owner.clone()).await?
+    } else {
+        None
+    };
+    let entries = if let Some(entries) = cached.filter(|n| *n > 0) {
+        entries
+    } else {
+        let group_lease = if message.kind == Kind::Single {
+            match inner
+                .locks
+                .acquire_retained_detailed(
+                    "refresh_m3u_account_groups",
+                    message.account,
+                    owner.clone(),
+                )
+                .await
+            {
+                Ok(v) => Some(v),
+                Err(TaskLockDetailedError::Operational(TaskLockError::Held)) => {
+                    return Err(D::UnsupportedDomain)
+                }
+                Err(_) => return Err(fault("nested groups lock")),
+            }
+        } else {
+            None
+        };
+        let transfer = dispatcharr_store::remote_m3u_io::transfer(
+            prepared.remote_input(inner.cache.clone(), message.use_cache),
+            prepared.clone(),
+            owner.clone(),
+        )
+        .await;
+        let downloaded = match transfer {
+            Ok(v) => v,
+            Err(dispatcharr_store::remote_m3u_io::Error::Caught(message_text)) => {
+                prepared
+                    .caught_remote_error(&message_text, "downloading")
+                    .await
+                    .map_err(store_error)?;
+                if let Some(lease) = group_lease {
+                    if !lease.release_owned_detailed().await.is_ok_and(|v| v) {
+                        return Err(fault("groups token release"));
+                    }
+                }
+                return Ok(Outcome::Value(if message.kind == Kind::Single {
+                    json!("Failed to update m3u account - download failed or other error")
+                } else {
+                    json!([message_text, null])
+                }));
+            }
+            Err(_) => {
+                if let Some(lease) = group_lease {
+                    let _ = lease.release_owned_detailed().await;
+                }
+                return Err(fault("HTTP/file transfer"));
+            }
+        };
+        prepared
+            .import_std_groups(
+                downloaded.catalog.groups,
+                start,
+                message.kind == Kind::Single || message.full,
+            )
+            .await
+            .map_err(store_error)?;
+        if let Some(lease) = group_lease {
+            if !lease.release_owned_detailed().await.is_ok_and(|v| v) {
+                return Err(fault("groups token release"));
+            }
+        }
+        downloaded.catalog.entries
+    };
+    if message.kind == Kind::Groups {
+        let path = parsed;
+        let directory = inner.cache.clone();
+        let retained = owner;
+        let file = tokio::task::spawn_blocking(move || {
+            GroupsResultFile::from_actual_cache(&path, &directory, retained)
+        })
+        .await
+        .map_err(|_| fault("result file supervisor"))?
+        .map_err(|_| fault("result file"))?;
+        return Ok(Outcome::File(file));
+    }
+    if entries == 0 {
+        return Ok(Outcome::Value(
+            prepared.empty_std().await.map_err(store_error)?.result,
+        ));
+    }
+    prepared.parsing_only().await.map_err(store_error)?;
+    let groups = prepared.std_groups().await.map_err(store_error)?;
+    let (sender, mut receiver) = mpsc::channel(1);
+    let retained = owner.clone();
+    let actor = tokio::task::spawn_blocking(move || produce_batches(parsed, sender, retained));
+    let mut total = dispatcharr_store::ImportCounts::default();
+    let mut failed = 0usize;
+    let mut import_error = None;
+    while let Some(batch) = receiver.recv().await {
+        match prepared.std_batch(batch, &groups, &mut total).await {
+            Ok(true) => {}
+            Ok(false) => failed += 1,
+            Err(error) => {
+                // A SQL error must not drop the parser's JoinHandle and then
+                // retire its still-open cache. Closing the receiver interrupts
+                // its bounded blocking_send; join before releasing either FD.
+                import_error = Some(store_error(error));
+                receiver.close();
+                break;
+            }
+        }
+    }
+    drop(receiver);
+    let parsed = actor.await.map_err(|_| fault("parser supervisor"))?;
+    if let Some(error) = import_error {
+        // The producer can report the expected closed consumer here. Its actual
+        // physical return is proven above; preserve the original SQL outcome.
+        return Err(error);
+    }
+    parsed.map_err(|_| fault("cache parse"))?;
+    let completed = if failed > 0 {
+        prepared.finish_std_failure(failed).await
+    } else {
+        prepared.finish_import(total, start, elapsed).await
+    }
+    .map_err(store_error)?;
+    if completed.invalidate {
+        inner
+            .ports
+            .invalidate(owner)
+            .await
+            .map_err(|_| fault("output cache invalidation"))?;
+    }
+    Ok(Outcome::Value(completed.result))
+}
+async fn probe(path: PathBuf, owner: Owner) -> Result<Option<u64>, D> {
+    tokio::task::spawn_blocking(move || {
+        let _owner = owner;
+        match std::fs::symlink_metadata(&path) {
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
+            Err(_) => Err(fault("cache metadata")),
+            Ok(meta) if !meta.is_file() || meta.file_type().is_symlink() => {
+                Err(D::UnsupportedDomain)
+            }
+            Ok(_) => match open_cache(&path) {
+                Ok(cache) => Ok(Some(cache.entries)),
+                Err(dispatcharr_ingest_core::CacheReadError::Json(error))
+                    if error.is_syntax() || error.is_eof() =>
+                {
+                    // Source retains a malformed JSON cache as .corrupted and
+                    // then downloads again. Actual rename refusal is caught.
+                    let mut backup = path.as_os_str().to_os_string();
+                    backup.push(".corrupted");
+                    let _ = std::fs::rename(&path, PathBuf::from(backup));
+                    Ok(None)
+                }
+                Err(dispatcharr_ingest_core::CacheReadError::Io(_)) => Ok(None),
+                // The bounded decoder's capacity/schema domain is not a
+                // provider-empty result and must not trigger destructive import.
+                Err(_) => Err(D::UnsupportedDomain),
+            },
+        }
+    })
+    .await
+    .map_err(|_| fault("cache probe supervisor"))?
+}
+fn produce_batches(
+    path: PathBuf,
+    sender: mpsc::Sender<Vec<Entry>>,
+    owner: Owner,
+) -> Result<(), ()> {
+    let _owner = owner;
+    let mut cache = open_cache(&path).map_err(|_| ())?;
+    let mut rows = Vec::with_capacity(1000);
+    let mut bytes = 0usize;
+    cache
+        .for_each(|entry| {
+            let encoded = serde_json::to_vec(&entry).map_err(|_| "entry byte accounting")?;
+            bytes = bytes
+                .checked_add(encoded.len())
+                .filter(|n| *n <= dispatcharr_store::MAX_IMPORT_BATCH_BYTES)
+                .ok_or("logical batch capacity")?;
+            rows.push(entry);
+            if rows.len() == 1000 {
+                sender
+                    .blocking_send(std::mem::take(&mut rows))
+                    .map_err(|_| "closed batch consumer")?;
+                bytes = 0;
+            }
+            Ok(())
+        })
+        .map_err(|_| ())?;
+    if !rows.is_empty() {
+        sender.blocking_send(rows).map_err(|_| ())?;
+    }
+    Ok(())
+}
+
+fn open_cache(
+    path: &std::path::Path,
+) -> Result<ValidatedCache, dispatcharr_ingest_core::CacheReadError> {
+    use dispatcharr_ingest_core::CacheReadError;
+    use std::os::unix::fs::{MetadataExt, OpenOptionsExt};
+    let file = std::fs::OpenOptions::new()
+        .read(true)
+        .custom_flags(libc::O_NOFOLLOW)
+        .open(path)?;
+    let metadata = file.metadata()?;
+    if !metadata.is_file() || metadata.nlink() != 1 {
+        return Err(CacheReadError::Capacity);
+    }
+    ValidatedCache::from_file(file, CacheReadLimits::default())
+}

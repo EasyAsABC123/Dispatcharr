@@ -22,6 +22,7 @@ struct Account {
     id: i64,
     name: String,
     active: bool,
+    kind: String,
     status: String,
     message: Option<String>,
     base: String,
@@ -55,6 +56,27 @@ pub async fn prepare(
     owner: Owner,
     events: Arc<dyn UpdateEventSink>,
 ) -> Result<Option<Prepared>, StoreError> {
+    prepare_for(store, auth, id, owner, events, "XC").await
+}
+/// Actual remote STD accounts use the same owned preparation/writer/session;
+/// missing/nonremote types delegate without claiming the broker head.
+pub async fn prepare_std_remote(
+    store: Store,
+    auth: AuthService,
+    id: i64,
+    owner: Owner,
+    events: Arc<dyn UpdateEventSink>,
+) -> Result<Option<Prepared>, StoreError> {
+    prepare_for(store, auth, id, owner, events, "STD").await
+}
+async fn prepare_for(
+    store: Store,
+    auth: AuthService,
+    id: i64,
+    owner: Owner,
+    events: Arc<dyn UpdateEventSink>,
+    expected_type: &'static str,
+) -> Result<Option<Prepared>, StoreError> {
     if !auth.uses_store_pool(&store) {
         return Err(unsupported());
     }
@@ -68,14 +90,15 @@ pub async fn prepare(
     let read=async {
         let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT a.id::bigint,a.name,a.account_type,a.status,CASE WHEN COALESCE(octet_length(a.last_message),0)<=65536 THEN a.last_message END AS last_message,a.is_active,a.locked,a.stale_stream_days::bigint,CASE WHEN COALESCE(octet_length(a.server_url),0)<=65536 THEN a.server_url END AS server_url,CASE WHEN COALESCE(octet_length(a.username),0)<=65536 THEN a.username END AS username,CASE WHEN COALESCE(octet_length(a.password),0)<=65536 THEN a.password END AS password,CASE WHEN COALESCE(octet_length(u.user_agent),0)<=65536 THEN u.user_agent END AS user_agent,CASE WHEN COALESCE(octet_length(a.custom_properties::text),0)<=65536 THEN a.custom_properties END AS custom_properties,(COALESCE(octet_length(a.last_message),0)<=65536 AND COALESCE(octet_length(a.server_url),0)<=65536 AND COALESCE(octet_length(a.username),0)<=65536 AND COALESCE(octet_length(a.password),0)<=65536 AND COALESCE(octet_length(a.custom_properties::text),0)<=65536 AND COALESCE(octet_length(u.user_agent),0)<=65536) AS fits FROM m3u_m3uaccount a LEFT JOIN core_useragent u ON u.id=a.user_agent_id WHERE a.id=$1").bind(id).fetch_optional(&mut*c).await})).await??;
         let Some(row)=row else{return Err(StoreError::NotFound)};
-        if row.try_get::<String,_>("account_type")?!="XC"{return Ok(None)}
+        if row.try_get::<String,_>("account_type")?!=expected_type{return Ok(None)}
+        if expected_type=="STD"&&row.try_get::<Option<String>,_>("server_url")?.is_none_or(|v|v.is_empty()){return Ok(None)}
         if !row.try_get::<bool,_>("is_active")?{return Err(unsupported())}
         if !row.try_get::<bool,_>("fits")? {return Err(unsupported())}
         let properties=properties(row.try_get::<Option<Value>,_>("custom_properties")?.unwrap_or(Value::Null))?;
-        if properties.get("enable_vod").is_some_and(truthy){return Err(unsupported())}
+        if expected_type=="XC"&&properties.get("enable_vod").is_some_and(truthy){return Err(unsupported())}
         let forbidden=session.run(move|c|Box::pin(async move{sqlx::query_scalar::<_,bool>("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(&mut*c).await})).await??;
         if forbidden{return Err(unsupported())}
-        let account=Account{id,name:row.try_get("name")?,status:row.try_get("status")?,message:row.try_get("last_message")?,active:row.try_get("is_active")?,base:row.try_get::<Option<String>,_>("server_url")?.unwrap_or_default(),user:row.try_get::<Option<String>,_>("username")?.unwrap_or_default(),password:row.try_get::<Option<String>,_>("password")?.unwrap_or_default(),agent:row.try_get::<Option<String>,_>("user_agent")?.filter(|v|!v.is_empty()).unwrap_or(default_agent),properties,locked:row.try_get("locked")?,days:row.try_get("stale_stream_days")?};
+        let account=Account{id,kind:row.try_get("account_type")?,name:row.try_get("name")?,status:row.try_get("status")?,message:row.try_get("last_message")?,active:row.try_get("is_active")?,base:row.try_get::<Option<String>,_>("server_url")?.unwrap_or_default(),user:row.try_get::<Option<String>,_>("username")?.unwrap_or_default(),password:row.try_get::<Option<String>,_>("password")?.unwrap_or_default(),agent:row.try_get::<Option<String>,_>("user_agent")?.filter(|v|!v.is_empty()).unwrap_or(default_agent),properties,locked:row.try_get("locked")?,days:row.try_get("stale_stream_days")?};
         let settings=session.system_settings(auth.clone()).await?;
         let max_events=match settings.get("max_system_events"){None|Some(Value::Null)=>100,Some(v)if v==&json!(0)=>100,Some(v)=>v.as_i64().filter(|v|(1..=10000).contains(v)).ok_or_else(unsupported)?};
         let stream=stream_settings(&auth,&session).await?;
@@ -362,8 +385,8 @@ impl Prepared {
         if !eligible.is_multiple_of(1000) && !self.batch(batch, &mut total).await? {
             failed += 1
         }
-        let selected = total.created + total.updated + total.unchanged;
         if failed > 0 {
+            crate::xc_live_rollup::account(&self.session, id).await?;
             self.error_status(
                 &format!("Refresh incomplete: {failed} batch(es) failed to process."),
                 "parsing",
@@ -384,8 +407,22 @@ impl Prepared {
                 result: json!("Failed to update m3u account, no streams returned from provider"),
             });
         }
+        self.finish_import(total, start, elapsed).await
+    }
+    pub async fn finish_import(
+        &self,
+        total: crate::ImportCounts,
+        start: DateTime<Utc>,
+        elapsed: std::time::Instant,
+    ) -> Result<Completion, StoreError> {
+        let id = self.account.id;
+        let selected = total.created + total.updated + total.unchanged;
         let progress = elapsed.elapsed().as_secs_f64();
-        self.event("parsing",100,"parsing",Some("Refresh in progress..."),json!({"elapsed_time":format!("{progress:.2}").parse::<f64>().map_err(|_|unsupported())?,"time_remaining":0,"streams_processed":selected})).await?;
+        if self.account.kind == "STD" {
+            self.event_current("parsing",100.0,json!({"elapsed_time":format!("{progress:.2}").parse::<f64>().map_err(|_|unsupported())?,"time_remaining":0,"streams_processed":selected})).await?;
+        } else {
+            self.event("parsing",100,"parsing",Some("Refresh in progress..."),json!({"elapsed_time":format!("{progress:.2}").parse::<f64>().map_err(|_|unsupported())?,"time_remaining":0,"streams_processed":selected})).await?;
+        }
         let stale=self.session.run(move|c|Box::pin(async move{let n=sqlx::query("UPDATE dispatcharr_channels_stream SET is_stale=true WHERE m3u_account_id=$1 AND last_seen<$2").bind(id).bind(start).execute(&mut*c).await?.rows_affected();sqlx::query("UPDATE dispatcharr_channels_channelgroupm3uaccount SET is_stale=true WHERE m3u_account_id=$1 AND last_seen<$2").bind(id).bind(start).execute(&mut*c).await?;Ok::<_,StoreError>(n)})).await??;
         let store = self.store.clone();
         let deleted = self
@@ -423,6 +460,167 @@ impl Prepared {
             invalidate: true,
             result: json!("Dispatched jobs complete."),
         })
+    }
+    pub async fn finish_std_failure(&self, failed: usize) -> Result<Completion, StoreError> {
+        self.error_status(
+            &format!("Refresh incomplete: {failed} batch(es) failed to process."),
+            "parsing",
+        )
+        .await?;
+        crate::xc_live_rollup::account(&self.session, self.account.id).await?;
+        Ok(Completion {
+            invalidate: true,
+            result: json!("Failed to update m3u account, one or more batches failed to process"),
+        })
+    }
+    pub async fn empty_std(&self) -> Result<Completion, StoreError> {
+        self.error_status("No streams found in M3U source", "parsing")
+            .await?;
+        Ok(Completion {
+            invalidate: false,
+            result: json!("Failed to update m3u account, no streams found"),
+        })
+    }
+    pub async fn import_std_groups(
+        &self,
+        names: Vec<String>,
+        start: DateTime<Utc>,
+        full: bool,
+    ) -> Result<(), StoreError> {
+        self.event_current("processing_groups", 0.0, json!({}))
+            .await?;
+        let incoming = names
+            .into_iter()
+            .map(|name| ImportedGroup {
+                name,
+                custom_properties: Map::new(),
+            })
+            .collect();
+        let store = self.store.clone();
+        let id = self.account.id;
+        let props = Value::Object(self.account.properties.clone());
+        self.session
+            .run(move |c| {
+                Box::pin(async move {
+                    store
+                        .import_m3u_groups_report_on_connection(c, id, &props, incoming, start)
+                        .await
+                })
+            })
+            .await?
+            .map_err(|e| e.source)?;
+        if !full {
+            let message =
+                "M3U groups loaded. Please select groups or refresh M3U to complete setup.";
+            self.status("pending_setup", Some(message), false).await?;
+            self.event_current("processing_groups", 100.0, json!({}))
+                .await?;
+        }
+        Ok(())
+    }
+    pub async fn std_groups(&self) -> Result<BTreeMap<String, i64>, StoreError> {
+        let id = self.account.id;
+        self.session.run(move|c|Box::pin(async move{let rows=sqlx::query("SELECT g.id::bigint,g.name FROM dispatcharr_channels_channelgroup g JOIN dispatcharr_channels_channelgroupm3uaccount r ON r.channel_group_id=g.id WHERE r.m3u_account_id=$1 AND r.enabled LIMIT 32769").bind(id).fetch_all(&mut*c).await?;if rows.len()>32768{return Err(unsupported())}rows.into_iter().map(|row|Ok((row.try_get("name")?,row.try_get("id")?))).collect::<Result<BTreeMap<String,i64>,StoreError>>()})).await?
+    }
+    pub async fn std_batch(
+        &self,
+        entries: Vec<Entry>,
+        groups: &BTreeMap<String, i64>,
+        total: &mut crate::ImportCounts,
+    ) -> Result<bool, StoreError> {
+        let keys = self
+            .hash_keys
+            .iter()
+            .map(String::as_str)
+            .collect::<Vec<_>>();
+        let context = ProjectionContext {
+            account_id: self.account.id,
+            account_type: "STD",
+            groups,
+            hash_keys: &keys,
+            max_name_characters: 512,
+        };
+        let mut rows = Vec::with_capacity(entries.len());
+        for entry in entries {
+            if let Some(projected) = project_entry(&entry, &context).map_err(|_| unsupported())? {
+                let group = projected.custom_properties["group-title"]
+                    .as_str()
+                    .unwrap_or("Default Group");
+                if !self
+                    .filters
+                    .allows(&projected.name, &projected.url, group)?
+                {
+                    continue;
+                }
+                let stream = ImportedStream::from(projected);
+                rows.push(ImportedXcStream {
+                    logo_url: Some(stream.logo_url.clone()),
+                    tvg_id: Some(stream.tvg_id.clone()),
+                    stream,
+                });
+            }
+        }
+        self.batch(rows, total).await
+    }
+    pub async fn parsing_only(&self) -> Result<(), StoreError> {
+        let id = self.account.id;
+        self.session
+            .run(move |c| {
+                Box::pin(async move {
+                    sqlx::query("UPDATE m3u_m3uaccount SET status='parsing' WHERE id=$1")
+                        .bind(id)
+                        .execute(&mut *c)
+                        .await?;
+                    Ok::<_, StoreError>(())
+                })
+            })
+            .await?
+    }
+    pub async fn caught_remote_error(&self, message: &str, action: &str) -> Result<(), StoreError> {
+        self.error_status(message, action).await
+    }
+    pub fn remote_input(
+        &self,
+        directory: std::path::PathBuf,
+        use_cache: bool,
+    ) -> crate::remote_m3u_io::Input {
+        crate::remote_m3u_io::Input {
+            account: self.account.id,
+            url: self.account.base.clone(),
+            agent: self.account.agent.clone(),
+            directory,
+            use_cache,
+        }
+    }
+    async fn event_current(
+        &self,
+        action: &str,
+        progress: f64,
+        extra: Value,
+    ) -> Result<(), StoreError> {
+        let id = self.account.id;
+        let row=self.session.run(move|c|Box::pin(async move{sqlx::query("SELECT status,CASE WHEN COALESCE(octet_length(last_message),0)<=65536 THEN last_message END AS last_message,COALESCE(octet_length(last_message),0)<=65536 AS fits FROM m3u_m3uaccount WHERE id=$1").bind(id).fetch_one(&mut*c).await})).await??;
+        if !row.try_get::<bool, _>("fits")? {
+            return Err(unsupported());
+        }
+        let mut data = json!({"progress":progress,"type":"m3u_refresh","account":id,"action":action,"status":row.try_get::<String,_>("status")?});
+        if let Some(message) = row
+            .try_get::<Option<String>, _>("last_message")?
+            .filter(|m| !m.is_empty())
+        {
+            data["message"] = json!(message)
+        }
+        for (k, v) in extra.as_object().ok_or_else(unsupported)? {
+            data[k] = v.clone();
+        }
+        self.events
+            .send_retained(
+                "updates",
+                json!({"type":"update","data":data}),
+                self.owner.clone(),
+            )
+            .await
+            .map_err(|_| unsupported())
     }
     async fn error_status(&self, message: &str, action: &str) -> Result<(), StoreError> {
         self.status("error", Some(message), false).await?;
@@ -666,6 +864,54 @@ fn project(
         logo_url: logo,
         tvg_id: tvg,
     }))
+}
+
+impl crate::remote_m3u_io::Observer for Prepared {
+    fn starting(
+        &self,
+        _owner: Owner,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), crate::remote_m3u_io::Error>> {
+        Box::pin(async move {
+            self.status("fetching", Some("Starting download..."), false)
+                .await
+                .map_err(|_| crate::remote_m3u_io::Error::Unsettled)
+        })
+    }
+    fn began(
+        &self,
+        _owner: Owner,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), crate::remote_m3u_io::Error>> {
+        Box::pin(async move {
+            self.event_current("downloading", 0.0, json!({}))
+                .await
+                .map_err(|_| crate::remote_m3u_io::Error::Unsettled)
+        })
+    }
+    fn progress(
+        &self,
+        value: crate::remote_m3u_io::Progress,
+        _owner: Owner,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), crate::remote_m3u_io::Error>> {
+        Box::pin(async move {
+            let id = self.account.id;
+            let message = value.message.clone();
+            self.session
+                .run(move |c| {
+                    Box::pin(async move {
+                        sqlx::query("UPDATE m3u_m3uaccount SET last_message=$2 WHERE id=$1")
+                            .bind(id)
+                            .bind(message)
+                            .execute(&mut *c)
+                            .await?;
+                        Ok::<_, StoreError>(())
+                    })
+                })
+                .await
+                .map_err(|_| crate::remote_m3u_io::Error::Unsettled)?
+                .map_err(|_| crate::remote_m3u_io::Error::Unsettled)?;
+            self.event_current("downloading",value.progress,json!({"speed":value.speed,"elapsed_time":value.elapsed,"time_remaining":value.remaining,"message":value.message})).await.map_err(|_|crate::remote_m3u_io::Error::Unsettled)
+        })
+    }
 }
 
 #[cfg(test)]

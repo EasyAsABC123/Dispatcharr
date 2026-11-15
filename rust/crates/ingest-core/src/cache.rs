@@ -59,8 +59,29 @@ impl CacheDownload {
         let mut temporary = destination.as_os_str().to_os_string();
         temporary.push(".tmp");
         let temporary = PathBuf::from(temporary);
-        // A leftover/concurrent staging file requires account-lock recovery;
-        // never truncate another writer's staging data without ownership.
+        Self::begin_at(destination, temporary, maximum)
+    }
+    /// Normal producers retain their real account lock and pass a fresh random
+    /// attempt token. Each physical writer owns only its unique create_new file;
+    /// crash leftovers from another attempt cannot block or be truncated by it.
+    /// The complete validated bytes still replace the same public raw cache.
+    pub fn begin_owned(
+        destination: &Path,
+        maximum: u64,
+        token: [u8; 16],
+    ) -> Result<Self, CacheError> {
+        if maximum == 0 {
+            return Err(CacheError::Capacity);
+        }
+        let mut temporary = destination.as_os_str().to_os_string();
+        temporary.push(".tmp.");
+        for byte in token {
+            temporary.push(format!("{byte:02x}"));
+        }
+        Self::begin_at(destination, PathBuf::from(temporary), maximum)
+    }
+    fn begin_at(destination: &Path, temporary: PathBuf, maximum: u64) -> Result<Self, CacheError> {
+        // create_new rejects an existing or symlink staging path atomically.
         let file = OpenOptions::new()
             .write(true)
             .create_new(true)

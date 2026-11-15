@@ -62,6 +62,7 @@ async fn shutdown_deadline_covers_all_sessions_and_managers_when_redis_stalls() 
                 profile_id: 1,
                 provider_profile_id: None,
                 provider_max_streams: 0,
+                credential_pool: None,
                 url: url.clone(),
                 user_agent: "test".into(),
                 headers: vec![],

@@ -28,6 +28,7 @@ pub(crate) struct Message {
     pub account: i64,
     pub kind: Kind,
     pub full: bool,
+    pub use_cache: bool,
 }
 pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     if raw.is_empty() || raw.len() > crate::protocol::MAX_ENVELOPE {
@@ -144,6 +145,10 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
         account,
         kind,
         full,
+        use_cache: kwargs
+            .get("use_cache")
+            .and_then(Value::as_bool)
+            .unwrap_or(false),
     })
 }
 struct Inner {

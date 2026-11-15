@@ -1265,3 +1265,4 @@ mod query_tests;
 
 #[path = "plugin_startup_schedule.rs"]
 mod plugin_startup_schedule;
+pub use plugin_startup_schedule::PluginRepositoryScheduleAdapter;

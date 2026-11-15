@@ -501,5 +501,10 @@ pub mod xc_live_tasks;
 
 mod provider_json_admission;
 
+mod plugin_actions;
 mod xc_live_filters;
 mod xc_live_rollup;
+pub use plugin_actions::{PluginActions, PluginRepositorySchedule};
+
+#[doc(hidden)]
+pub mod remote_m3u_io;

@@ -12,10 +12,14 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The current implementation is [Candidate16](rust-milestone-batch16.md), runtime
-`921c5c40b2eb7a7073a0006b43fae86b41cd2728`:984 workspace tests and Docker package
-checks pass. Its focused application cohort is running; it does not inherit
-older performance measurements. The [Candidate15 application record](rust-batch15-functional-observations.md)
+The current code is [Candidate17](rust-milestone-batch17.md):1,004 workspace tests,
+compilation and strict lint pass; Docker and application acceptance are pending.
+The latest built runtime remains [Candidate16](rust-milestone-batch16.md),
+`921c5c40b2eb7a7073a0006b43fae86b41cd2728`. Its
+[functional record](rust-batch16-functional-observations.md) includes paired
+shared viewing and seven paired XC business cells, preserving strict fixture
+failures. Its separate resource batch does not inherit older measurements.
+The [Candidate15 application record](rust-batch15-functional-observations.md)
 retains ten passing Native contexts and separate six-file media qualification,
 alongside literal fixture failures and the proxy-routing gap corrected in16.
 All full M0–M9 milestones remain open.

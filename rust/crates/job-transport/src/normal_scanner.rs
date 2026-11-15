@@ -16,6 +16,7 @@ pub struct Prepared {
     _ports: ScannerFilesPorts,
     registry: Registry,
     xc: crate::normal_xc_live::Worker,
+    remote: crate::normal_m3u_remote::Worker,
 }
 impl Prepared {
     #[allow(clippy::too_many_arguments)]
@@ -78,17 +79,29 @@ impl Prepared {
             registry.clone(),
         );
         let xc = crate::normal_xc_live::Worker::new(
+            jobs.clone(),
+            m3u_ports.clone(),
+            store.clone(),
+            auth.clone(),
+            sink.clone(),
+            locks.clone(),
+            m3u.admission(),
+            revoked.clone(),
+            m3u_roots.cache.clone(),
+        );
+        let remote = crate::normal_m3u_remote::Worker::new(
             jobs,
             m3u_ports,
             store,
             auth,
             sink,
             locks,
-            m3u.admission(),
             revoked,
+            m3u.admission(),
             m3u_roots.cache,
         );
         Ok(Self {
+            remote,
             xc,
             scanner,
             m3u,
@@ -101,7 +114,8 @@ impl Prepared {
         self.registry.clone()
     }
     pub fn entries(&self) -> Vec<(Family, Arc<dyn Handler>)> {
-        let m3u: Arc<dyn Handler> = Arc::new(M3u(self.m3u.clone(), self.xc.clone()));
+        let m3u: Arc<dyn Handler> =
+            Arc::new(M3u(self.m3u.clone(), self.xc.clone(), self.remote.clone()));
         vec![
             (Family::Scanner, Arc::new(Scanner(self.scanner.clone()))),
             (Family::M3uGroups, m3u.clone()),
@@ -115,6 +129,7 @@ impl Prepared {
         self.scanner.stop_admission();
         self.m3u.stop_admission();
         self.xc.stop();
+        self.remote.stop();
         if !self
             .scanner
             .shutdown_shared(end.saturating_duration_since(tokio::time::Instant::now()))
@@ -132,6 +147,13 @@ impl Prepared {
             .await
         {
             return Err(Disposition::Operational("XC live drain".into()));
+        }
+        if !self
+            .remote
+            .shutdown(end.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            return Err(Disposition::Operational("Remote M3U drain".into()));
         }
         self.service
             .shutdown(end.saturating_duration_since(tokio::time::Instant::now()))
@@ -206,11 +228,13 @@ impl Handler for Scanner {
 struct M3u(
     crate::scanner_m3u_worker::Worker,
     crate::normal_xc_live::Worker,
+    crate::normal_m3u_remote::Worker,
 );
 impl Lifecycle for M3u {
     fn stop_admission(&self) {
         self.0.stop_admission();
         self.1.stop();
+        self.2.stop();
     }
     fn shutdown(&self, t: Duration) -> BoxFuture<'_, Result<(), Disposition>> {
         Box::pin(async move {
@@ -261,6 +285,9 @@ impl Handler for M3u {
             if let Some(result) = self.1.run(Some(expected.clone()), owner.clone()).await? {
                 return Ok(result);
             }
+            if let Some(result) = self.2.run(Some(expected.clone()), owner.clone()).await? {
+                return Ok(result);
+            }
             self.mapped(self.0.run_selected(expected, owner).await)
                 .await
         })
@@ -271,6 +298,9 @@ impl Handler for M3u {
     ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
         Box::pin(async move {
             if let Some(result) = self.1.run(None, owner.clone()).await? {
+                return Ok(result);
+            }
+            if let Some(result) = self.2.run(None, owner.clone()).await? {
                 return Ok(result);
             }
             self.mapped(self.0.run_once(owner).await).await

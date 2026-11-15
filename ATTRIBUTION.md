@@ -384,3 +384,14 @@ and contributors. Their original licenses are retained in
 and [rust/crates/store/third-party/PYTHON-COPYRIGHT](rust/crates/store/third-party/PYTHON-COPYRIGHT),
 and copied into the packaged runtime documentation. The port adds no claim of
 authorship or upstream endorsement.
+
+## VLC runtime packaging
+
+VLC and its input-profile behavior retain full credit to VideoLAN, the VLC
+contributors, the original Dispatcharr authors and all dependency authors.
+The Rust runtime packaging collector preserves the pinned distribution binaries,
+plugins and public data with their owning-package copyright and license notices
+under `/usr/share/doc/dispatcharr/vlc-copyright` (or identical retained media,
+crypto and PostgreSQL notices). The generated `vlc-runtime.json` records source
+image, component and notice hashes. Packaging code does not transfer authorship
+or establish runtime compatibility before its Docker acceptance checks pass.

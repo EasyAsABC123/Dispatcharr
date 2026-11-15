@@ -1751,3 +1751,6 @@ mod plugin_visibility;
 
 #[path = "xc_live_transport.rs"]
 mod xc_live_transport;
+
+#[path = "m3u_result_transport.rs"]
+mod m3u_result_transport;

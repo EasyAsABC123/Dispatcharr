@@ -293,3 +293,6 @@ mod xc_profile_notifications;
 mod plugin_eta;
 
 mod normal_xc_live;
+
+mod m3u_result_file;
+mod normal_m3u_remote;
