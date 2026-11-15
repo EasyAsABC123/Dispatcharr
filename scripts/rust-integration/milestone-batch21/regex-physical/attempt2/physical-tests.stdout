@@ -1,0 +1,18 @@
+
+running 3 tests
+test actual_packaged_grammar_remote_error_timeout_and_normal_wait_eof ... {"regex_physical_case":"actual-fullcase-search","actual":{"active":true,"matches":[true,true,false],"caught":null}}
+{"regex_physical_case":"actual-invalid-filter","actual":{"active":false,"matches":null,"caught":{"actual_class":"error","message":"missing ) at position 1"}}}
+{"regex_physical_case":"actual-TypeError","actual":{"error":"Remote(Object {\"actual_class\": String(\"TypeError\"), \"message\": String(\"first argument must be a string or compiled pattern\")})"}}
+{"regex_physical_case":"actual-branchreset-replacement-after-error","actual":{"items":[{"name":"Selected 123","caught":null,"other_failure":null},{"name":"Selected Straße","caught":null,"other_failure":null}]}}
+{"regex_physical_case":"actual100ms-substitution-timeout","actual":{"items":[{"name":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab","caught":{"actual_class":"TimeoutError","message":"regex timed out"},"other_failure":null}]}}
+{"regex_physical_case":"normal-physical-wait","actual":{"pid":8,"generation":"6786455","namespace":"pid:[4026534494]","exit":0,"wait":true,"stdout_EOF":true,"stderr_EOF":true,"forced":false,"descendants_absent":true,"callbacks_settled":true}}
+ok
+test actual_pre_ready_stop_releases_caller_only_after_child_absence ... {"regex_physical_case":"actual-startup-interruption","actual":{"pid":11,"generation":"6786478","shutdown":"Err(Drain)","call":"Err(Protocol)","receipt":null,"component_only_injected_startup_gate":true}}
+ok
+test actual_unbounded_search_caller_loss_retains_owner_until_physical_retirement ... {"regex_physical_case":"actual-held-search","actual":{"pid":13,"generation":"6786500","CPUticks_before":9,"CPUticks_later":34}}
+{"regex_physical_case":"interrupted-search-not-nonmatch","actual":{"shutdown":"Err(Drain)"}}
+{"regex_physical_case":"actual-interrupted-physical-wait","actual":{"pid":13,"generation":"6786500","namespace":"pid:[4026534494]","exit":null,"wait":true,"stdout_EOF":true,"stderr_EOF":true,"forced":true,"descendants_absent":true,"callbacks_settled":true}}
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.14s
+

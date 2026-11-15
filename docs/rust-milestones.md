@@ -12,8 +12,8 @@ alone does not establish application parity or an application performance gain.
 The newest source candidate is [Candidate21](rust-milestone-batch21.md): all four
 SDK gates pass with1,029 tests, zero failures and761 ignored. It resolves the
 supported media alias for metadata spools and joins normal compact/manual
-numbering and input-profile promotion. Docker, combined application acceptance
-and performance remain required.
+numbering and input-profile promotion. Docker/package checks pass; combined
+application acceptance and performance remain required.
 
 The preceding source candidate is [Candidate20](rust-milestone-batch20.md): all four
 SDK gates pass with 1,025 tests, zero failures and 761 ignored tests. It corrects
@@ -48,8 +48,10 @@ committed Git blobs. It adds plugin actions/managed ZIP installation, remote
 playlist/full-result handling and VLC/grouped-credential input work. Its Docker
 build and application acceptance remain pending.
 
-The latest built runtime is Candidate20 at
-`1cdf0c15ff4d8265409337f6b0ce29a0debe29e3`; actual Main startup now succeeds.
+The latest built runtime is Candidate21 at
+`ac9d704943e69b9c343f31063cda1e3df5008791`; package checks pass and Main acceptance
+is pending. The preceding Candidate20 at
+`1cdf0c15ff4d8265409337f6b0ce29a0debe29e3` starts actual Main.
 Auto-sync completion and live VLC acceptance remain open. The preceding built
 runtime is Candidate19 at `4f9ba334bf5db99b982a4f7ff91774bb9da45094`.
 The preceding built runtime is Candidate18 at

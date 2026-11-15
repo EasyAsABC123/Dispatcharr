@@ -33,8 +33,25 @@ binds1,298 inputs and17 changed source paths. The preceding attempt failed to
 compile because a SQL row stream borrowed a temporary formatted query string;
 retaining the string through stream drain corrects that compiler error.
 
-Docker package verification and real Main acceptance remain pending. The next
+Docker build and package verification now pass for `ac9d704943e69b9c343f31063cda1e3df5008791`,
+image `sha256:421540af94b7efa8e403a982efd73fe1afee2d33677c86b2f87885d6b97440ae`.
+The1,789-file source archive matches Git, including495 React inputs. All1,298
+SDK inputs match committed blobs. Package checks cover original credit/asset
+retention, crypto, PostgreSQL,648 actual Python/regex files/notices and the
+paired VLC useful audio/video core.
+[Package evidence](../scripts/rust-integration/milestone-batch21/package/)
+retains the exact scope; full finite tails and real Main acceptance remain open. The next
 cohort uses corrected Source policy expectations, an explicitly bound real
 Source task producer, compact/manual cells and input-profile playback. Ignored
 physical controls, full M0–M9 milestones and application performance gains remain
 unaccepted.
+
+Three explicitly scheduled [physical regex controls](../scripts/rust-integration/milestone-batch21/regex-physical/scope.json)
+pass inside the exact candidate image: grammar/error recovery and normal wait/EOF,
+actual CPU-active held-search ownership through forced retirement, and an
+injected pre-ready stop. The host-compiled test controller and its read-only ELF
+dependencies are identified separately from the packaged Python actor. The first
+attempt exits127 before tests because its controller mode0700 denies UID65532;
+a byte-identical0555 controller copy corrects that fixture issue. Both attempts
+clean up exactly. Expected Drain/error outcomes remain errors. These controls
+do not establish real Main held-search cancellation or full business parity.
