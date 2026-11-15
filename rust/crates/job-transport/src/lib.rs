@@ -296,3 +296,9 @@ mod normal_xc_live;
 
 mod m3u_result_file;
 mod normal_m3u_remote;
+
+mod auto_sync_epg_dispatch;
+mod auto_sync_flow;
+mod auto_sync_protocol;
+pub mod full_metadata;
+mod normal_auto_sync;

@@ -57,6 +57,37 @@ pub fn parse_initial(raw: &[u8]) -> Result<Envelope, ProtocolError> {
         epg_data_id: message.source_id,
     })
 }
+/// Normal shell intake preserves real parent/root metadata while reusing the
+/// existing family's full envelope/body constraints. No producer receipt or
+/// completed-parent witness is required for a surviving authenticated head.
+pub(crate) fn parse_normal(raw: &[u8]) -> Result<(Envelope, Option<Uuid>), ProtocolError> {
+    if raw.len() > 65536 {
+        return Err(ProtocolError::Capacity);
+    }
+    let invalid = || ProtocolError::InvalidArgument;
+    let mut value: Value = serde_json::from_slice(raw).map_err(|_| invalid())?;
+    let canonical = |value: &Value| -> Result<Uuid, ProtocolError> {
+        let text = value.as_str().ok_or_else(invalid)?;
+        let id = Uuid::parse_str(text).map_err(|_| invalid())?;
+        if id.is_nil() || id.to_string() != text || id.get_variant() != uuid::Variant::RFC4122 {
+            return Err(invalid());
+        }
+        Ok(id)
+    };
+    let id = canonical(&value["headers"]["id"])?;
+    let root = canonical(&value["headers"]["root_id"])?;
+    let parent = match &value["headers"]["parent_id"] {
+        Value::Null => None,
+        value => Some(canonical(value)?),
+    };
+    if parent.is_none() && root != id {
+        return Err(invalid());
+    }
+    value["headers"]["parent_id"] = Value::Null;
+    value["headers"]["root_id"] = json!(id);
+    let message = parse_initial(&serde_json::to_vec(&value).map_err(|_| invalid())?)?;
+    Ok((message, parent))
+}
 impl Envelope {
     pub fn execution(&self) -> Result<(), UnqualifiedProgrammeExecution> {
         Err(UnqualifiedProgrammeExecution)
@@ -84,6 +115,34 @@ mod tests {
         let parsed = parse_initial(&raw).unwrap();
         assert_eq!(parsed.epg_data_id, 1);
         assert_eq!(parsed.execution(), Err(UnqualifiedProgrammeExecution));
+    }
+    #[test]
+    fn normal_parented_head_keeps_source_body_constraints_and_legacy_refusal() {
+        let mut frame = actual();
+        let parent = Uuid::new_v4();
+        let root = Uuid::new_v4();
+        frame["headers"]["parent_id"] = json!(parent);
+        frame["headers"]["root_id"] = json!(root);
+        let raw = serde_json::to_vec(&frame).unwrap();
+        assert!(parse_initial(&raw).is_err());
+        let (message, observed_parent) = parse_normal(&raw).unwrap();
+        assert_eq!(message.epg_data_id, 1);
+        assert_eq!(observed_parent, Some(parent));
+        frame["properties"]["delivery_info"]["routing_key"] = json!("other");
+        assert!(parse_normal(&serde_json::to_vec(&frame).unwrap()).is_err());
+        frame["properties"]["delivery_info"]["routing_key"] = json!("celery");
+        frame["headers"]["parent_id"] = Value::Null;
+        assert!(parse_normal(&serde_json::to_vec(&frame).unwrap()).is_err());
+    }
+    #[test]
+    fn normal_parented_head_does_not_normalize_business_kwargs_or_identifier_spelling() {
+        let mut frame = actual();
+        frame["headers"]["parent_id"] = json!(Uuid::new_v4());
+        frame["headers"]["kwargsrepr"] = json!("{'force': True}");
+        assert!(parse_normal(&serde_json::to_vec(&frame).unwrap()).is_err());
+        frame["headers"]["kwargsrepr"] = json!("{}");
+        frame["headers"]["root_id"] = json!(Uuid::new_v4().to_string().to_uppercase());
+        assert!(parse_normal(&serde_json::to_vec(&frame).unwrap()).is_err());
     }
     #[test]
     fn other_queue_and_inherited_identity_are_refused() {

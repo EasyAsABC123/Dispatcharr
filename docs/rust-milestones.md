@@ -9,7 +9,13 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest code is [Candidate18](rust-milestone-batch18.md): formatting,
+The newest source candidate is [Candidate19](rust-milestone-batch19.md): all four
+SDK gates pass, with 1,023 tests, zero failures and 758 ignored tests. It joins
+normal auto-sync, full metadata, shared channel deletion, dependency-only regex,
+remote stream health and Source-equivalent adaptive Beat timing. Its Docker and
+combined application/resource acceptance remain required.
+
+The preceding code is [Candidate18](rust-milestone-batch18.md): formatting,
 compilation, strict Clippy and1,008 tests pass (zero failures,756 ignored).
 Its real HTTP regression fails on the preceding engine and passes after the
 local healthy-owner keepalive correction. Its Docker build and physical

@@ -395,3 +395,16 @@ under `/usr/share/doc/dispatcharr/vlc-copyright` (or identical retained media,
 crypto and PostgreSQL notices). The generated `vlc-runtime.json` records source
 image, component and notice hashes. Packaging code does not transfer authorship
 or establish runtime compatibility before its Docker acceptance checks pass.
+
+## Regex and auto-sync language compatibility
+
+The lazy regex dependency bridge retains the original CPython interpreter,
+standard library and pinned `regex` implementation. Full credit belongs to
+CPython, the Python Software Foundation, the regex authors and contributors,
+Unicode contributors, and the original Dispatcharr authors whose behavior is
+preserved. The generated `/usr/share/doc/dispatcharr/regex-host/` manifest and
+notices retain the actual distribution and ELF owning-package licenses. The
+captured auto-sync Unicode metadata follows the pinned CPython implementation;
+it establishes no new claim to authorship of Python or Unicode algorithms/data.
+Rust owns backend orchestration and effects; dependency packaging does not
+establish compatibility before the combined application checks pass.

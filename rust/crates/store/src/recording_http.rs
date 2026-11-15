@@ -35,6 +35,9 @@ pub struct RecordingTaskAbsent {
     task: String,
 }
 impl RecordingTaskAbsent {
+    pub(crate) fn from_collector(task: String) -> Self {
+        Self { task }
+    }
     pub fn task_key(&self) -> &str {
         &self.task
     }
@@ -901,7 +904,7 @@ async fn destroy(owner: Arc<Owner>, row: Recording, user: &User) -> Result<Respo
 
 /// Nested post_delete uses the actual Collector transaction, not a second
 /// independent autocommit cleanup that could survive a Recording rollback.
-async fn delete_periodic_in_collector(
+pub(crate) async fn delete_periodic_in_collector(
     c: &mut sqlx::PgConnection,
     key: &str,
 ) -> Result<bool, StoreError> {

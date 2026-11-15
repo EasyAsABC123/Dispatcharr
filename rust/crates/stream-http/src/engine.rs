@@ -608,17 +608,18 @@ impl StreamEngine {
         }
         let keepalive_interval = self.inner.config.keepalive_interval;
         let max_keepalive_duration = self.inner.config.max_keepalive_duration;
-        // A local Source StreamManager gates keepalives on its real health.
-        // Generic component and remote-owner modes retain their existing path;
-        // the shared non-owner health lookup remains a separate parity gate.
-        let source_owner_keepalive = register_client
-            && self.inner.config.source_initialization
-            && session.manager_visible.load(Ordering::Acquire);
+        // Both local and remote Source generators use the same empty-read
+        // backoff. Local managers retain their in-memory health decision;
+        // followers consult only the canonical raw ingress timestamp.
+        let source_keepalive_enabled = register_client && self.inner.config.source_initialization;
+        let source_health_timing = self.inner.config.health_timing();
+        let source_health_settings = self.inner.health_settings.clone();
         let stream = async_stream::stream! {
             let mut state = state;
             let mut stopped=state.client.as_ref().map(ClientLease::stopped);
             let mut last_media=Instant::now();
             let mut source_keepalive=source_keepalive::SourceKeepalive::new();
+            let mut remote_health=history::RemoteHealth::default();
             'transport: loop {
                 if stopped.as_ref().is_some_and(|control|*control.borrow()) {break;}
                 // Keep a historical read alive across keepalive ticks. Dropping
@@ -636,12 +637,25 @@ impl StreamEngine {
                     tokio::select! {
                         _=client_stopped=>break 'transport,
                         next=&mut waiting=>break next,
-                        _=time::sleep(if source_owner_keepalive {source_keepalive.delay()}else{keepalive_interval})=>{
+                        _=time::sleep(if source_keepalive_enabled {source_keepalive.delay()}else{keepalive_interval})=>{
                             if !register_client {continue;}
-                            if source_owner_keepalive {
+                            if source_keepalive_enabled {
                                 let session=&state._guard.session;
                                 let at_head=cursor.load(Ordering::Acquire)>session.buffer_index.load(Ordering::Acquire);
-                                let healthy=session.health.lock().unwrap().healthy;
+                                let healthy=if session.manager_visible.load(Ordering::Acquire) {
+                                    session.health.lock().unwrap().healthy
+                                }else if !source_keepalive.health_check_due(at_head) {
+                                    true
+                                }else if let Some(history)=history.as_ref() {
+                                    let timeout=async {
+                                        effective_health_timing(source_health_timing,source_health_settings.as_ref()).await.map(|v|v.connection)
+                                    };
+                                    !history.source_unhealthy(&mut remote_health,epoch_seconds(),timeout).await
+                                }else {
+                                    // Source with no Redis client returns false from
+                                    // _should_send_keepalive (do not invent unhealthy).
+                                    true
+                                };
                                 match source_keepalive.empty(at_head,healthy,Instant::now().into_std(),keepalive_interval,max_keepalive_duration) {
                                     source_keepalive::Decision::Wait=>continue,
                                     source_keepalive::Decision::Stop=>break 'transport,
@@ -1508,6 +1522,18 @@ async fn run_upstream(
     }
     if let Some(lease) = lease {
         if let Some(inputs) = &inner.inputs {
+            if inner.config.source_initialization {
+                // Actual process/body and InputWriter finish are already drained.
+                // Clear raw health while current owner still matches, before the
+                // coordinator release can admit a successor.
+                let _ = inputs
+                    .clear_source_last_data_retained(
+                        &session.source.channel_id,
+                        lease.token(),
+                        (session.clone(), lease.clone()),
+                    )
+                    .await;
+            }
             let _ = inputs
                 .cleanup(&session.source.channel_id, lease.token())
                 .await;
@@ -1956,6 +1982,23 @@ async fn drive_candidate(
                 // Pending packets in this same frame must retain those flags.
                 if inner.config.source_initialization && published { marker.disarm(); }
                 if failed { break; }
+                if inner.config.source_initialization {
+                    if let Some(inputs)=&inner.inputs {
+                        let owner=session.input_owner.lock().unwrap().clone();
+                        if let Some(owner)=owner {
+                            // Source add_chunk accepts partial/subtarget ingress;
+                            // this is deliberately independent of `published`.
+                            let written=inputs.put_source_last_data_retained(
+                                &session.source.channel_id,&owner,epoch_seconds(),
+                                (session.clone(),worker.clone(),provider.cloned()),
+                            ).await;
+                            if matches!(written,Err(dispatcharr_input_store::Error::LostOwnership)) {break;}
+                            // Redis/type/timeout failure cannot manufacture fresh
+                            // remote health. Source fetch_chunk catches such an
+                            // error and continues its ordinary ingress attempts.
+                        }
+                    }
+                }
             }
             _ = flush.tick(), if inner.config.flush_partial_chunks => {
                 if !chunk.is_empty() {

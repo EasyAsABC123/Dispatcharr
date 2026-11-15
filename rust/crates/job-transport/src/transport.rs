@@ -1754,3 +1754,9 @@ mod xc_live_transport;
 
 #[path = "m3u_result_transport.rs"]
 mod m3u_result_transport;
+
+#[path = "auto_sync_transport.rs"]
+mod auto_sync_transport;
+
+#[path = "auto_sync_epg_transport.rs"]
+mod auto_sync_epg_transport;

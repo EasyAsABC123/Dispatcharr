@@ -33,6 +33,7 @@ struct Inner {
     revoked: Revoked,
     slots: Arc<Semaphore>,
     cache: PathBuf,
+    auto_jobs: Option<Arc<dyn dispatcharr_store::recording_http::RecordingJobs>>,
     closed: AtomicBool,
     uncertain: Mutex<Vec<Owner>>,
 }
@@ -75,6 +76,7 @@ impl Worker {
         revoked: Revoked,
         slots: Arc<Semaphore>,
         cache: PathBuf,
+        auto_jobs: Option<Arc<dyn dispatcharr_store::recording_http::RecordingJobs>>,
     ) -> Self {
         Self {
             inner: Arc::new(Inner {
@@ -87,6 +89,7 @@ impl Worker {
                 revoked,
                 slots,
                 cache,
+                auto_jobs,
                 closed: AtomicBool::new(false),
                 uncertain: Mutex::new(Vec::with_capacity(1)),
             }),
@@ -137,15 +140,26 @@ impl Worker {
                     }
                     Err(_) => return Err(fault("head read")),
                 };
-                let prepared = match dispatcharr_store::xc_live_tasks::prepare_std_remote(
-                    inner.store.clone(),
-                    inner.auth.clone(),
-                    candidate.message.account,
-                    owner.clone(),
-                    inner.events.clone(),
-                )
-                .await
-                {
+                let admission = if inner.auto_jobs.is_some() {
+                    dispatcharr_store::xc_live_tasks::prepare_std_remote_with_auto(
+                        inner.store.clone(),
+                        inner.auth.clone(),
+                        candidate.message.account,
+                        owner.clone(),
+                        inner.events.clone(),
+                    )
+                    .await
+                } else {
+                    dispatcharr_store::xc_live_tasks::prepare_std_remote(
+                        inner.store.clone(),
+                        inner.auth.clone(),
+                        candidate.message.account,
+                        owner.clone(),
+                        inner.events.clone(),
+                    )
+                    .await
+                };
+                let prepared = match admission {
                     Ok(Some(p)) => Arc::new(p),
                     Ok(None) => return Ok(None),
                     Err(StoreError::StatusBody(503, _)) => return Ok(Some(D::Capacity)),
@@ -203,6 +217,21 @@ impl Worker {
                         return Err(fault("task lock"));
                     }
                 };
+                let flow = if message.kind == Kind::Single && inner.auto_jobs.is_some() {
+                    let stop = inner.clone();
+                    Some(crate::auto_sync_flow::Flow::new(
+                        inner.jobs.clone(),
+                        inner.auth.producer_identity_source(),
+                        inner.cache.clone(),
+                        message.id,
+                        message.parent,
+                        message.root,
+                        owner.clone(),
+                        Arc::new(move || stop.closed.load(Ordering::Acquire)),
+                    ))
+                } else {
+                    None
+                };
                 let body = if lease.is_none() {
                     Ok(Outcome::Value(if message.kind == Kind::Groups {
                         json!([
@@ -216,7 +245,12 @@ impl Worker {
                         ))
                     }))
                 } else {
-                    execute(&inner, &prepared, &message, owner.clone()).await
+                    execute(&inner, &prepared, &message, owner.clone(), flow.clone()).await
+                };
+                let regex_closed = if let Some(flow) = &flow {
+                    flow.retire(Duration::from_secs(5)).await.is_ok()
+                } else {
+                    true
                 };
                 let closed = prepared.close().await;
                 let released = if let Some(lease) = lease {
@@ -224,15 +258,19 @@ impl Worker {
                 } else {
                     true
                 };
-                if closed.is_err() || !released {
+                if closed.is_err() || !released || !regex_closed {
                     return Err(fault("physical SQL/token drain"));
                 }
                 let ack = match body? {
                     Outcome::Value(value) => {
-                        inner
-                            .jobs
-                            .write_xc_live(&message, value, Vec::new(), owner.clone())
-                            .await
+                        if let Some(flow) = &flow {
+                            flow.complete(value).await
+                        } else {
+                            inner
+                                .jobs
+                                .write_xc_live(&message, value, Vec::new(), owner.clone())
+                                .await
+                        }
                     }
                     Outcome::File(file) => {
                         inner
@@ -278,8 +316,9 @@ async fn execute(
     prepared: &Arc<Prepared>,
     message: &Message,
     owner: Owner,
+    flow: Option<Arc<crate::auto_sync_flow::Flow>>,
 ) -> Result<Outcome, D> {
-    let outcome = execute_body(inner, prepared, message, owner.clone()).await;
+    let outcome = execute_body(inner, prepared, message, owner.clone(), flow).await;
     if message.kind == Kind::Single {
         let path = inner.cache.join(format!("{}.json", message.account));
         let retired = tokio::task::spawn_blocking(move || {
@@ -300,6 +339,7 @@ async fn execute_body(
     prepared: &Arc<Prepared>,
     message: &Message,
     owner: Owner,
+    flow: Option<Arc<crate::auto_sync_flow::Flow>>,
 ) -> Result<Outcome, D> {
     let start = chrono::Utc::now();
     let elapsed = Instant::now();
@@ -429,6 +469,10 @@ async fn execute_body(
     parsed.map_err(|_| fault("cache parse"))?;
     let completed = if failed > 0 {
         prepared.finish_std_failure(failed).await
+    } else if let (Some(jobs), Some(flow)) = (&inner.auto_jobs, &flow) {
+        prepared
+            .finish_import_with_auto(total, start, elapsed, flow.services(jobs.clone()))
+            .await
     } else {
         prepared.finish_import(total, start, elapsed).await
     }

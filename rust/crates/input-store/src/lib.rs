@@ -3,6 +3,7 @@
 mod diagnostics;
 mod gc;
 mod retained;
+mod source_health;
 use dispatcharr_output_store::transport::{RedisTransport, TransportConfig};
 use std::{sync::Arc, time::Duration};
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};

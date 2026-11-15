@@ -36,6 +36,7 @@ struct Account {
 pub struct Prepared {
     store: Store,
     session: TaskSqlSession,
+    auth: AuthService,
     account: Account,
     events: Arc<dyn UpdateEventSink>,
     owner: Owner,
@@ -56,7 +57,7 @@ pub async fn prepare(
     owner: Owner,
     events: Arc<dyn UpdateEventSink>,
 ) -> Result<Option<Prepared>, StoreError> {
-    prepare_for(store, auth, id, owner, events, "XC").await
+    prepare_for(store, auth, id, owner, events, "XC", false).await
 }
 /// Actual remote STD accounts use the same owned preparation/writer/session;
 /// missing/nonremote types delegate without claiming the broker head.
@@ -67,7 +68,27 @@ pub async fn prepare_std_remote(
     owner: Owner,
     events: Arc<dyn UpdateEventSink>,
 ) -> Result<Option<Prepared>, StoreError> {
-    prepare_for(store, auth, id, owner, events, "STD").await
+    prepare_for(store, auth, id, owner, events, "STD", false).await
+}
+pub async fn prepare_with_auto(
+    store: Store,
+    auth: AuthService,
+    id: i64,
+    owner: Owner,
+    events: Arc<dyn UpdateEventSink>,
+) -> Result<Option<Prepared>, StoreError> {
+    crate::auto_sync_language::Language::source()?;
+    prepare_for(store, auth, id, owner, events, "XC", true).await
+}
+pub async fn prepare_std_remote_with_auto(
+    store: Store,
+    auth: AuthService,
+    id: i64,
+    owner: Owner,
+    events: Arc<dyn UpdateEventSink>,
+) -> Result<Option<Prepared>, StoreError> {
+    crate::auto_sync_language::Language::source()?;
+    prepare_for(store, auth, id, owner, events, "STD", true).await
 }
 async fn prepare_for(
     store: Store,
@@ -76,6 +97,7 @@ async fn prepare_for(
     owner: Owner,
     events: Arc<dyn UpdateEventSink>,
     expected_type: &'static str,
+    allow_auto: bool,
 ) -> Result<Option<Prepared>, StoreError> {
     if !auth.uses_store_pool(&store) {
         return Err(unsupported());
@@ -96,8 +118,9 @@ async fn prepare_for(
         if !row.try_get::<bool,_>("fits")? {return Err(unsupported())}
         let properties=properties(row.try_get::<Option<Value>,_>("custom_properties")?.unwrap_or(Value::Null))?;
         if expected_type=="XC"&&properties.get("enable_vod").is_some_and(truthy){return Err(unsupported())}
-        let forbidden=session.run(move|c|Box::pin(async move{sqlx::query_scalar::<_,bool>("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(&mut*c).await})).await??;
+        let forbidden=session.run(move|c|Box::pin(async move{sqlx::query_scalar::<_,bool>("SELECT (NOT $2 AND EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync)) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).bind(allow_auto).fetch_one(&mut*c).await})).await??;
         if forbidden{return Err(unsupported())}
+        if allow_auto{crate::auto_sync::preflight(&session,id).await?;}
         let account=Account{id,kind:row.try_get("account_type")?,name:row.try_get("name")?,status:row.try_get("status")?,message:row.try_get("last_message")?,active:row.try_get("is_active")?,base:row.try_get::<Option<String>,_>("server_url")?.unwrap_or_default(),user:row.try_get::<Option<String>,_>("username")?.unwrap_or_default(),password:row.try_get::<Option<String>,_>("password")?.unwrap_or_default(),agent:row.try_get::<Option<String>,_>("user_agent")?.filter(|v|!v.is_empty()).unwrap_or(default_agent),properties,locked:row.try_get("locked")?,days:row.try_get("stale_stream_days")?};
         let settings=session.system_settings(auth.clone()).await?;
         let max_events=match settings.get("max_system_events"){None|Some(Value::Null)=>100,Some(v)if v==&json!(0)=>100,Some(v)=>v.as_i64().filter(|v|(1..=10000).contains(v)).ok_or_else(unsupported)?};
@@ -110,6 +133,7 @@ async fn prepare_for(
         Ok(Some((account, max_events, hash_keys, filters))) => Ok(Some(Prepared {
             store,
             session,
+            auth,
             account,
             events,
             owner,
@@ -308,6 +332,22 @@ impl Prepared {
         start: DateTime<Utc>,
         elapsed: std::time::Instant,
     ) -> Result<Completion, StoreError> {
+        self.single_runtime(start, elapsed, None).await
+    }
+    pub async fn single_with_auto(
+        &self,
+        start: DateTime<Utc>,
+        elapsed: std::time::Instant,
+        services: crate::auto_sync::Services,
+    ) -> Result<Completion, StoreError> {
+        self.single_runtime(start, elapsed, Some(services)).await
+    }
+    async fn single_runtime(
+        &self,
+        start: DateTime<Utc>,
+        elapsed: std::time::Instant,
+        auto: Option<crate::auto_sync::Services>,
+    ) -> Result<Completion, StoreError> {
         if !self.account.active {
             return Err(unsupported());
         }
@@ -407,13 +447,34 @@ impl Prepared {
                 result: json!("Failed to update m3u account, no streams returned from provider"),
             });
         }
-        self.finish_import(total, start, elapsed).await
+        self.finish_import_runtime(total, start, elapsed, auto)
+            .await
     }
     pub async fn finish_import(
         &self,
         total: crate::ImportCounts,
         start: DateTime<Utc>,
         elapsed: std::time::Instant,
+    ) -> Result<Completion, StoreError> {
+        self.finish_import_runtime(total, start, elapsed, None)
+            .await
+    }
+    pub async fn finish_import_with_auto(
+        &self,
+        total: crate::ImportCounts,
+        start: DateTime<Utc>,
+        elapsed: std::time::Instant,
+        services: crate::auto_sync::Services,
+    ) -> Result<Completion, StoreError> {
+        self.finish_import_runtime(total, start, elapsed, Some(services))
+            .await
+    }
+    async fn finish_import_runtime(
+        &self,
+        total: crate::ImportCounts,
+        start: DateTime<Utc>,
+        elapsed: std::time::Instant,
+        auto: Option<crate::auto_sync::Services>,
     ) -> Result<Completion, StoreError> {
         let id = self.account.id;
         let selected = total.created + total.updated + total.unchanged;
@@ -448,14 +509,46 @@ impl Prepared {
                 })
             })
             .await??;
+        let auto_report = if let Some(services) = auto {
+            Some(
+                crate::auto_sync::sync(
+                    self.session.clone(),
+                    self.auth.clone(),
+                    services,
+                    id,
+                    start,
+                    self.owner.clone(),
+                )
+                .await
+                .map_err(|error| match error {
+                    crate::auto_sync::Error::Store(error) => error,
+                    crate::auto_sync::Error::Caught(_) | crate::auto_sync::Error::Model { .. } => {
+                        StoreError::Unsupported("Auto-sync caught-error scope did not settle")
+                    }
+                    crate::auto_sync::Error::Unsupported => StoreError::Unsupported(
+                        "Auto-sync required configuration/task capability is not composed",
+                    ),
+                    crate::auto_sync::Error::Unsettled => StoreError::StatusBody(
+                        503,
+                        json!({"error":"Auto-sync accepted effects physically unsettled"}),
+                    ),
+                })?,
+            )
+        } else {
+            None
+        };
+        let auto_suffix = auto_report
+            .as_ref()
+            .map(|report| report.message_suffix())
+            .unwrap_or_default();
         // Existing mapped channels use Source's account-scoped aggregation on
         // this same owned session. Source catches only actual settled failures.
         crate::xc_live_rollup::account(&self.session, id).await?;
         let duration = elapsed.elapsed().as_secs_f64();
-        let text=format!("Processing completed in {duration:.1} seconds. Streams: {} created, {} updated, {stale} marked stale, {deleted} removed. Total processed: {selected}.",total.created,total.updated);
+        let text=format!("Processing completed in {duration:.1} seconds. Streams: {} created, {} updated, {stale} marked stale, {deleted} removed. Total processed: {selected}.{auto_suffix}",total.created,total.updated);
         self.status("success", Some(&text), true).await?;
         self.audit("m3u_refresh",json!({"account_name":self.account.name,"elapsed_time":format!("{duration:.2}").parse::<f64>().map_err(|_|unsupported())?,"streams_created":total.created,"streams_updated":total.updated,"streams_stale":stale,"streams_deleted":deleted,"total_processed":selected})).await?;
-        self.event("parsing",100,"success",Some(&text),json!({"elapsed_time":duration,"time_remaining":0,"streams_processed":selected,"streams_created":total.created,"streams_updated":total.updated,"streams_stale":stale,"streams_deleted":deleted,"channels_created":0,"channels_updated":0,"channels_deleted":0,"channels_failed":0,"failed_stream_details":[]})).await?;
+        self.event("parsing",100,"success",Some(&text),json!({"elapsed_time":duration,"time_remaining":0,"streams_processed":selected,"streams_created":total.created,"streams_updated":total.updated,"streams_stale":stale,"streams_deleted":deleted,"channels_created":auto_report.as_ref().map_or(0,|r|r.created),"channels_updated":auto_report.as_ref().map_or(0,|r|r.updated),"channels_deleted":auto_report.as_ref().map_or(0,|r|r.deleted),"channels_failed":auto_report.as_ref().map_or(0,|r|r.failed),"failed_stream_details":auto_report.as_ref().map(|r|r.failures.as_slice()).unwrap_or(&[])})).await?;
         Ok(Completion {
             invalidate: true,
             result: json!("Dispatched jobs complete."),

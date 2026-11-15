@@ -21,6 +21,24 @@ pub(super) struct History {
     pub retained: Option<Arc<dyn Send + Sync>>,
 }
 
+/// Source caches only successful/missing Redis observations, per generator,
+/// against wall time. A failed observation returns healthy without caching it.
+#[derive(Default)]
+pub(super) struct RemoteHealth {
+    checked_at: f64,
+    unhealthy: bool,
+}
+impl RemoteHealth {
+    fn cached(&self, now: f64) -> Option<bool> {
+        (now - self.checked_at < 2.0).then_some(self.unhealthy)
+    }
+    fn observed(&mut self, now: f64, unhealthy: bool) -> bool {
+        self.checked_at = now;
+        self.unhealthy = unhealthy;
+        unhealthy
+    }
+}
+
 pub(super) enum Payload {
     Cached(OwnedChunk),
     Historical {
@@ -71,6 +89,35 @@ impl History {
                 }
                 Err(_) => return Err(io::Error::other("Shared input history unavailable")),
             }
+        }
+    }
+
+    /// Caller gates this behind Source's >=5 empties/head condition. The lazy
+    /// dynamic timeout future is polled only for an actual timestamp, matching
+    /// Source's missing-key branch (which does not read settings).
+    pub async fn source_unhealthy<F, E>(
+        &self,
+        cache: &mut RemoteHealth,
+        now: f64,
+        timeout: F,
+    ) -> bool
+    where
+        F: std::future::Future<Output = Result<Duration, E>>,
+    {
+        if let Some(unhealthy) = cache.cached(now) {
+            return unhealthy;
+        }
+        match self
+            .store
+            .read_source_last_data_retained(&self.channel, self.retained.clone())
+            .await
+        {
+            Ok((None, _scope)) => cache.observed(now, true),
+            Ok((Some(timestamp), _scope)) => match timeout.await {
+                Ok(timeout) => cache.observed(now, now - timestamp >= timeout.as_secs_f64()),
+                Err(_) => false,
+            },
+            Err(_) => false,
         }
     }
 
@@ -479,5 +526,111 @@ mod tests {
             .unwrap()
             .is_some());
         cleanup(&history, &mut redis).await;
+    }
+    #[tokio::test]
+    #[ignore = "requires isolated real Redis: REDIS_TEST_URL"]
+    async fn remote_raw_health_cache_obeys_dynamic_settings_and_never_caches_read_errors() {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        let (history, mut redis) = fixture(188 * 8).await;
+        let mut cache = RemoteHealth::default();
+        let polled = Arc::new(AtomicUsize::new(0));
+        let settings = |seconds| {
+            let count = polled.clone();
+            async move {
+                count.fetch_add(1, Ordering::SeqCst);
+                Ok::<Duration, ()>(Duration::from_secs(seconds))
+            }
+        };
+        history
+            .store
+            .put_source_last_data_retained(&history.channel, &history.owner, 1770000000.0, ())
+            .await
+            .unwrap();
+        assert!(
+            !history
+                .source_unhealthy(&mut cache, 1770000005.0, settings(10))
+                .await
+        );
+        history
+            .store
+            .put_source_last_data_retained(&history.channel, &history.owner, 1770000005.0, ())
+            .await
+            .unwrap();
+        assert!(
+            !history
+                .source_unhealthy(&mut cache, 1770000006.0, settings(0))
+                .await
+        );
+        assert_eq!(polled.load(Ordering::SeqCst), 1);
+        assert!(
+            history
+                .source_unhealthy(&mut cache, 1770000007.0, settings(1))
+                .await
+        );
+        history
+            .store
+            .put_source_last_data_retained(&history.channel, &history.owner, 1770000008.0, ())
+            .await
+            .unwrap();
+        assert!(
+            history
+                .source_unhealthy(&mut cache, 1770000008.0, settings(10))
+                .await
+        );
+        assert_eq!(polled.load(Ordering::SeqCst), 2);
+        assert!(
+            !history
+                .source_unhealthy(&mut cache, 1770000009.0, settings(10))
+                .await
+        );
+        assert_eq!(polled.load(Ordering::SeqCst), 3);
+        history
+            .store
+            .clear_source_last_data_retained(&history.channel, &history.owner, ())
+            .await
+            .unwrap();
+        assert!(time::timeout(
+            Duration::from_secs(1),
+            history.source_unhealthy(
+                &mut cache,
+                1770000011.0,
+                std::future::pending::<Result<Duration, ()>>()
+            )
+        )
+        .await
+        .unwrap());
+        let key = format!("live:channel:{}:last_data", history.channel);
+        let _: () = redis::cmd("SET")
+            .arg(&key)
+            .arg("bad")
+            .query_async(&mut redis)
+            .await
+            .unwrap();
+        assert!(
+            !history
+                .source_unhealthy(&mut cache, 1770000013.0, settings(10))
+                .await
+        );
+        history
+            .store
+            .put_source_last_data_retained(&history.channel, &history.owner, 1770000013.0, ())
+            .await
+            .unwrap();
+        assert!(
+            !history
+                .source_unhealthy(&mut cache, 1770000013.0, settings(10))
+                .await
+        );
+        assert_eq!(polled.load(Ordering::SeqCst), 4);
+        let _: () = redis::cmd("DEL")
+            .arg(&key)
+            .arg(format!("live:channel:{}:owner", history.channel))
+            .arg(format!(
+                "live:channel:{}:input:buffer:index",
+                history.channel
+            ))
+            .query_async(&mut redis)
+            .await
+            .unwrap();
     }
 }

@@ -162,6 +162,7 @@ struct Inner {
     revoked: crate::normal_revocation::Revoked,
     slots: Arc<Semaphore>,
     cache_root: std::path::PathBuf,
+    auto_jobs: Option<Arc<dyn dispatcharr_store::recording_http::RecordingJobs>>,
     closed: AtomicBool,
     uncertain: Mutex<Vec<Owner>>,
 }
@@ -200,6 +201,7 @@ impl Worker {
         slots: Arc<Semaphore>,
         revoked: crate::normal_revocation::Revoked,
         cache_root: std::path::PathBuf,
+        auto_jobs: Option<Arc<dyn dispatcharr_store::recording_http::RecordingJobs>>,
     ) -> Self {
         let identity = auth.producer_identity_source();
         Self {
@@ -214,6 +216,7 @@ impl Worker {
                 identity,
                 slots,
                 cache_root,
+                auto_jobs,
                 closed: AtomicBool::new(false),
                 uncertain: Mutex::new(Vec::with_capacity(1)),
             }),
@@ -288,15 +291,26 @@ impl Worker {
                     }
                     return Ok(Some(D::Revoked(message.id)));
                 }
-                let session = match dispatcharr_store::xc_live_tasks::prepare(
-                    inner.store.clone(),
-                    inner.auth.clone(),
-                    candidate.message.account,
-                    owner.clone(),
-                    inner.events.clone(),
-                )
-                .await
-                {
+                let prepared = if inner.auto_jobs.is_some() {
+                    dispatcharr_store::xc_live_tasks::prepare_with_auto(
+                        inner.store.clone(),
+                        inner.auth.clone(),
+                        candidate.message.account,
+                        owner.clone(),
+                        inner.events.clone(),
+                    )
+                    .await
+                } else {
+                    dispatcharr_store::xc_live_tasks::prepare(
+                        inner.store.clone(),
+                        inner.auth.clone(),
+                        candidate.message.account,
+                        owner.clone(),
+                        inner.events.clone(),
+                    )
+                    .await
+                };
+                let session = match prepared {
                     Ok(Some(v)) => v,
                     Ok(None) => return Ok(None),
                     Err(StoreError::StatusBody(503, _)) => return Ok(Some(D::Capacity)),
@@ -360,6 +374,21 @@ impl Worker {
                         return Err(D::Operational("XC live lock outcome".into()));
                     }
                 };
+                let flow = if message.kind == Kind::Single && inner.auto_jobs.is_some() {
+                    let stop = inner.clone();
+                    Some(crate::auto_sync_flow::Flow::new(
+                        inner.jobs.clone(),
+                        inner.identity.clone(),
+                        inner.cache_root.clone(),
+                        message.id,
+                        message.parent,
+                        message.root,
+                        owner.clone(),
+                        Arc::new(move || stop.closed.load(Ordering::Acquire)),
+                    ))
+                } else {
+                    None
+                };
                 let mut children = Vec::new();
                 let work: Result<Value, D> = async {
                     if lock.is_none() {
@@ -404,7 +433,16 @@ impl Worker {
                     let group_work = async {
                         if session.publishes_profiles() {
                             match publish_profile(&inner, &message, owner.clone()).await {
-                                Ok(id) => children.push(id),
+                                Ok(receipt) => {
+                                    children.push(receipt.id);
+                                    if let Some(flow) = &flow {
+                                        flow.append_child(&receipt).await.map_err(|_| {
+                                            D::Operational(
+                                                "XC actual child metadata append failed".into(),
+                                            )
+                                        })?;
+                                    }
+                                }
                                 Err(crate::transport::Error::Capacity) => {}
                                 Err(_) => {
                                     return Err(D::Operational(
@@ -433,7 +471,14 @@ impl Worker {
                             "Failed to update m3u account - download failed or other error"
                         ));
                     }
-                    let completion = session.single(start, elapsed).await.map_err(domain)?;
+                    let completion = if let (Some(jobs), Some(flow)) = (&inner.auto_jobs, &flow) {
+                        session
+                            .single_with_auto(start, elapsed, flow.services(jobs.clone()))
+                            .await
+                    } else {
+                        session.single(start, elapsed).await
+                    }
+                    .map_err(domain)?;
                     if completion.invalidate {
                         inner.ports.invalidate(owner.clone()).await.map_err(|_| {
                             D::Operational("XC cache invalidation unsettled".into())
@@ -442,23 +487,32 @@ impl Worker {
                     Ok(completion.result)
                 }
                 .await;
+                let regex_closed = if let Some(flow) = &flow {
+                    flow.retire(Duration::from_secs(5)).await.is_ok()
+                } else {
+                    true
+                };
                 let closed = session.close().await;
                 let unlocked = if let Some(lock) = lock {
                     lock.release_owned_detailed().await.is_ok_and(|v| v)
                 } else {
                     true
                 };
-                if closed.is_err() || !unlocked {
+                if closed.is_err() || !unlocked || !regex_closed {
                     return Err(D::Operational(
                         "XC live physical drain or token release".into(),
                     ));
                 }
                 let result = work?;
-                let ack = inner
-                    .jobs
-                    .write_xc_live(&message, result, children, owner)
-                    .await
-                    .map_err(|_| D::Operational("XC live backend unsettled".into()))?;
+                let ack = if let Some(flow) = &flow {
+                    flow.complete(result).await
+                } else {
+                    inner
+                        .jobs
+                        .write_xc_live(&message, result, children, owner)
+                        .await
+                }
+                .map_err(|_| D::Operational("XC live backend unsettled".into()))?;
                 if !ack {
                     return Err(D::Operational("XC live backend rejected".into()));
                 }
@@ -487,11 +541,37 @@ impl Worker {
         result
     }
 }
+struct ProfilePublication {
+    id: Uuid,
+    parent: Uuid,
+    root: Uuid,
+}
+impl crate::full_metadata::ActualPublishedChildren for ProfilePublication {
+    fn parent_task_id(&self) -> Uuid {
+        self.parent
+    }
+    fn root_task_id(&self) -> Uuid {
+        self.root
+    }
+    fn children(
+        &self,
+        after: i64,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<Vec<(i64, Uuid)>, crate::transport::Error>>
+    {
+        Box::pin(async move {
+            Ok(if after < 1 {
+                vec![(1, self.id)]
+            } else {
+                Vec::new()
+            })
+        })
+    }
+}
 async fn publish_profile(
     inner: &Inner,
     message: &Message,
     owner: Owner,
-) -> Result<Uuid, crate::transport::Error> {
+) -> Result<ProfilePublication, crate::transport::Error> {
     let identity = inner
         .identity
         .current()
@@ -513,8 +593,15 @@ async fn publish_profile(
     frame["headers"]["parent_id"] = json!(message.id);
     frame["body"]=json!(STANDARD.encode(serde_json::to_vec(&json!([[message.account],{},{"callbacks":null,"errbacks":null,"chain":null,"chord":null}])).map_err(|_|crate::transport::Error::Protocol)?));
     let raw = serde_json::to_vec(&frame).map_err(|_| crate::transport::Error::Protocol)?;
-    inner.jobs.publish_xc_profile_child(&raw, owner).await?;
-    Ok(id)
+    let receipt = inner.jobs.publish_xc_profile_child(&raw, owner).await?;
+    if receipt.task_id != id {
+        return Err(crate::transport::Error::Corrupt);
+    }
+    Ok(ProfilePublication {
+        id,
+        parent: message.id,
+        root: message.root,
+    })
 }
 
 fn domain(error: StoreError) -> D {

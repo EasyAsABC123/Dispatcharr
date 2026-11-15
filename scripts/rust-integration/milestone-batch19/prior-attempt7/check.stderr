@@ -1,0 +1,259 @@
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: `sqlx-core` (lib) generated 3 warnings
+   Compiling sqlx-postgres v0.8.6 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/vendor/sqlx-postgres-0.8.6)
+warning: `sqlx-core` (lib) generated 3 warnings (3 duplicates)
+warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+   --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+    |
+335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+    |                                                        ^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: variant `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+   |
+68 | pub enum FrontendMessageFormat {
+   |          --------------------- variant in this enum
+...
+76 |     Flush = b'H',
+   |     ^^^^^
+   |
+   = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: struct `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+   |
+11 | pub struct Flush;
+   |            ^^^^^
+
+warning: `sqlx-postgres` (lib) generated 3 warnings
+    Checking dispatcharr-input-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/input-store)
+    Checking dispatcharr-stream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/stream-http)
+   Compiling sqlx-macros-core v0.8.6
+    Checking dispatcharr-hls-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/hls-http)
+warning: `sqlx-postgres` (lib) generated 3 warnings (3 duplicates)
+   Compiling sqlx-macros v0.8.6
+    Checking dispatcharr-fmp4-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/fmp4-http)
+    Checking sqlx v0.8.6
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/store)
+warning: fields `owner` and `sql` are never read
+  --> crates/store/src/plugin_python_host.rs:27:9
+   |
+26 | pub struct Invocation {
+   |            ---------- fields in this struct
+27 |     pub owner: Owner,
+   |         ^^^^^
+28 |     pub sql: Option<crate::TaskSqlSession>,
+   |         ^^^
+   |
+   = note: `Invocation` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `dispatcharr-store` (lib) generated 1 warning
+    Checking dispatcharr-output-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/output-http)
+    Checking dispatcharr-ingest-epg v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/ingest-epg)
+    Checking dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/xc-http)
+    Checking dispatcharr-job-transport v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/job-transport)
+    Checking dispatcharr-xmltv-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/xmltv-http)
+error[E0583]: file not found for module `auto_sync_transport`
+    --> crates/job-transport/src/transport.rs:1758:1
+     |
+1758 | mod auto_sync_transport;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = help: to create the module `auto_sync_transport`, create file "crates/job-transport/src/transport/auto_sync_transport.rs" or "crates/job-transport/src/transport/auto_sync_transport/mod.rs"
+     = note: if there is a `mod auto_sync_transport` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0603]: module `producer_identity` is private
+   --> crates/job-transport/src/auto_sync_epg_dispatch.rs:8:5
+    |
+  8 |     producer_identity::ProducerIdentitySource,
+    |     ^^^^^^^^^^^^^^^^^ private module
+    |
+note: the module `producer_identity` is defined here
+   --> /home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/store/src/lib.rs:465:1
+    |
+465 | mod producer_identity;
+    | ^^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: module `producer_identity` is private
+   --> crates/job-transport/src/auto_sync_flow.rs:13:5
+    |
+ 13 |     producer_identity::ProducerIdentitySource,
+    |     ^^^^^^^^^^^^^^^^^ private module
+    |
+note: the module `producer_identity` is defined here
+   --> /home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/store/src/lib.rs:465:1
+    |
+465 | mod producer_identity;
+    | ^^^^^^^^^^^^^^^^^^^^^
+
+    Checking dispatcharr-realtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/realtime)
+    Checking dispatcharr-vod-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/vod-http)
+    Checking dispatcharr-hdhr-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/hdhr-http)
+    Checking dispatcharr-timeshift-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/timeshift-http)
+error[E0599]: no method named `publish_auto_sync_epg` found for struct `transport::Jobs` in the current scope
+   --> crates/job-transport/src/auto_sync_epg_dispatch.rs:95:37
+    |
+ 95 |                     match self.jobs.publish_auto_sync_epg(&raw, owner.clone()).await {
+    |                                     ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: crates/job-transport/src/transport.rs:91:1
+    |
+ 91 | pub struct Jobs {
+    | --------------- method `publish_auto_sync_epg` not found for this struct
+    |
+help: there is a method `publish_index` with a similar name, but with different arguments
+   --> crates/job-transport/src/transport.rs:860:5
+    |
+860 | /     pub async fn publish_index(
+861 | |         &self,
+862 | |         task: &crate::index_protocol::IndexTask,
+863 | |         id: Uuid,
+864 | |         caller: Arc<dyn Send + Sync>,
+865 | |     ) -> Result<Published, Error> {
+    | |_________________________________^
+
+error[E0599]: no method named `peek_auto_sync` found for struct `transport::Jobs` in the current scope
+   --> crates/job-transport/src/normal_auto_sync.rs:108:22
+    |
+106 |                   let candidate = match inner
+    |  _______________________________________-
+107 | |                     .jobs
+108 | |                     .peek_auto_sync(expected.as_deref(), owner.clone())
+    | |                     -^^^^^^^^^^^^^^ method not found in `transport::Jobs`
+    | |_____________________|
+    |
+    |
+   ::: crates/job-transport/src/transport.rs:91:1
+    |
+ 91 |   pub struct Jobs {
+    |   --------------- method `peek_auto_sync` not found for this struct
+
+error[E0624]: method `task_sql_writer` is private
+   --> crates/job-transport/src/normal_auto_sync.rs:117:47
+    |
+117 |                 let writer = match inner.auth.task_sql_writer() {
+    |                                               ^^^^^^^^^^^^^^^ private method
+    |
+   ::: /home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/store/src/task_sql_session.rs:67:5
+    |
+ 67 |     pub(crate) fn task_sql_writer(&self) -> Result<Arc<OwnedSemaphorePermit>, StoreError> {
+    |     ------------------------------------------------------------------------------------- private method defined here
+
+error[E0599]: no method named `claim_auto_sync` found for struct `transport::Jobs` in the current scope
+   --> crates/job-transport/src/normal_auto_sync.rs:157:48
+    |
+157 |                 let message = match inner.jobs.claim_auto_sync(candidate, owner.clone()).await {
+    |                                                ^^^^^^^^^^^^^^^ method not found in `transport::Jobs`
+    |
+   ::: crates/job-transport/src/transport.rs:91:1
+    |
+ 91 | pub struct Jobs {
+    | --------------- method `claim_auto_sync` not found for this struct
+
+error[E0308]: mismatched types
+   --> crates/job-transport/src/normal_scanner.rs:198:33
+    |
+198 |             (Family::M3uGroups, m3u.clone()),
+    |                                 ^^^^^^^^^^^ expected `Arc<Scanner>`, found `Arc<dyn Handler>`
+    |
+    = note: expected struct `std::sync::Arc<normal_scanner::Scanner>`
+               found struct `std::sync::Arc<dyn milestone_dispatch::Handler>`
+    = help: `normal_scanner::Scanner` implements `Handler` so you could change the expected type to `Box<dyn Handler>`
+
+error[E0308]: mismatched types
+   --> crates/job-transport/src/normal_scanner.rs:199:33
+    |
+199 |             (Family::M3uSingle, m3u),
+    |                                 ^^^ expected `Arc<Scanner>`, found `Arc<dyn Handler>`
+    |
+    = note: expected struct `std::sync::Arc<normal_scanner::Scanner>`
+               found struct `std::sync::Arc<dyn milestone_dispatch::Handler>`
+    = help: `normal_scanner::Scanner` implements `Handler` so you could change the expected type to `Box<dyn Handler>`
+
+error[E0308]: mismatched types
+   --> crates/job-transport/src/normal_scanner.rs:202:26
+    |
+202 |             entries.push(auto.entry())
+    |                     ---- ^^^^^^^^^^^^ expected `(Family, Arc<Scanner>)`, found `(Family, Arc<dyn Handler>)`
+    |                     |
+    |                     arguments to this method are incorrect
+    |
+    = note: expected tuple `(milestone_dispatch::Family, std::sync::Arc<normal_scanner::Scanner>)`
+               found tuple `(milestone_dispatch::Family, std::sync::Arc<(dyn milestone_dispatch::Handler + 'static)>)`
+    = help: `normal_scanner::Scanner` implements `Handler` so you could change the expected type to `Box<dyn Handler>`
+note: method defined here
+   --> /rustc/1159e78c4747b02ef996e55082b704c09b970588/library/alloc/src/vec/mod.rs:2521:12
+
+error[E0308]: mismatched types
+   --> crates/job-transport/src/normal_scanner.rs:204:9
+    |
+193 |     pub fn entries(&self) -> Vec<(Family, Arc<dyn Handler>)> {
+    |                              ------------------------------- expected `Vec<(Family, Arc<dyn Handler>)>` because of return type
+...
+204 |         entries
+    |         ^^^^^^^ expected `Vec<(Family, Arc<dyn Handler>)>`, found `Vec<(Family, Arc<Scanner>)>`
+    |
+    = note: expected struct `Vec<(milestone_dispatch::Family, std::sync::Arc<(dyn milestone_dispatch::Handler + 'static)>)>`
+               found struct `Vec<(milestone_dispatch::Family, std::sync::Arc<normal_scanner::Scanner>)>`
+    = help: `normal_scanner::Scanner` implements `Handler` so you could box the found value and coerce it to the trait object `Box<dyn Handler>`, you will have to change the expected type as well
+    = note: the full name for the type has been written to '/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_job_transport-e46155452a7b225d.long-type-16594057213737546201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+Some errors have detailed explanations: E0308, E0583, E0599, E0603, E0624.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `dispatcharr-job-transport` (lib) due to 11 previous errors

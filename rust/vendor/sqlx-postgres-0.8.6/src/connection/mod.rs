@@ -131,6 +131,16 @@ impl PgConnection {
         Ok(())
     }
 
+    /// Drain this connection's pending protocol frames, then report the exact
+    /// last ReadyForQuery transaction state. Unlike transaction depth this
+    /// observes raw BEGIN and aborted/read-only transactions too. No SQL or
+    /// transaction ID is allocated, and caller transaction state is not changed.
+    pub async fn protocol_transaction_is_idle(&mut self) -> Result<bool, Error> {
+        self.wait_until_ready().await?;
+        Ok(self.inner.pending_ready_for_query_count == 0
+            && matches!(self.inner.transaction_status, TransactionStatus::Idle))
+    }
+
     pub(crate) fn in_transaction(&self) -> bool {
         match self.inner.transaction_status {
             TransactionStatus::Transaction => true,

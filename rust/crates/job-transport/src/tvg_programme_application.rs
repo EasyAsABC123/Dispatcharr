@@ -102,6 +102,7 @@ impl Application {
                 return Err("family already started/closed");
             }
             lifecycle.started = true;
+            self.inner.jobs.enable_normal_intake();
         }
         Ok(Arc::new(NormalHandler { app: self }))
     }

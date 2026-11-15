@@ -36,6 +36,11 @@ RUN /dispatcharrpy/bin/python /tmp/collect_vlc.py
 COPY rust/runtime/collect_static.py rust/runtime/drf-static-source-1.json /tmp/
 RUN /dispatcharrpy/bin/python /tmp/collect_static.py
 
+# Lazy regex dependency only: no Source application backend is packaged.
+COPY rust/runtime/collect_regex_host.py /tmp/collect_regex_host.py
+RUN /dispatcharrpy/bin/python /tmp/collect_regex_host.py
+COPY rust/runtime/regex_bridge/ /media-runtime/opt/dispatcharr-python/bridge/
+
 FROM debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
 LABEL org.opencontainers.image.title="Dispatcharr derivative Rust backend port" \
       org.opencontainers.image.licenses="AGPL-3.0-only" \

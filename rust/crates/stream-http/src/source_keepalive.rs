@@ -35,6 +35,12 @@ impl SourceKeepalive {
         self.started = None;
     }
 
+    /// The next empty observation must be Source's fifth (or later) before
+    /// consulting remote health. Never issue a Redis GET for early/behind waits.
+    pub fn health_check_due(&self, at_head: bool) -> bool {
+        at_head && self.consecutive_empty >= 4
+    }
+
     pub fn empty(
         &mut self,
         at_head: bool,
@@ -180,5 +186,38 @@ mod tests {
             policy.empty(true, false, start + maximum + interval, interval, maximum),
             Decision::Stop
         ));
+    }
+    #[test]
+    fn remote_query_gate_waits_for_fifth_empty_and_never_queries_behind_head() {
+        let mut policy = SourceKeepalive::new();
+        let now = Instant::now();
+        for _ in 0..4 {
+            assert!(!policy.health_check_due(true));
+            assert!(matches!(
+                policy.empty(
+                    true,
+                    true,
+                    now,
+                    Duration::from_millis(500),
+                    Duration::from_secs(60)
+                ),
+                Decision::Wait
+            ));
+        }
+        assert!(policy.health_check_due(true));
+        assert!(!policy.health_check_due(false));
+        assert!(matches!(
+            policy.empty(
+                true,
+                false,
+                now,
+                Duration::from_millis(500),
+                Duration::from_secs(60)
+            ),
+            Decision::Send
+        ));
+        assert!(!policy.health_check_due(true));
+        policy.received();
+        assert!(!policy.health_check_due(true));
     }
 }

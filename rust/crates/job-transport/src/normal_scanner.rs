@@ -17,6 +17,7 @@ pub struct Prepared {
     registry: Registry,
     xc: crate::normal_xc_live::Worker,
     remote: crate::normal_m3u_remote::Worker,
+    auto: Option<crate::normal_auto_sync::Prepared>,
 }
 impl Prepared {
     #[allow(clippy::too_many_arguments)]
@@ -34,6 +35,64 @@ impl Prepared {
         date: crate::scanner_m3u::DateClock,
         clock: Arc<dyn Clock>,
         revoked: crate::normal_revocation::Revoked,
+    ) -> Result<Self, Disposition> {
+        Self::connect_runtime(
+            jobs, store, auth, sink, locks, broker, cache, config, roots, m3u_roots, date, clock,
+            revoked, None,
+        )
+        .await
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub async fn connect_with_auto(
+        jobs: Jobs,
+        store: Store,
+        auth: AuthService,
+        sink: Arc<dyn UpdateEventSink>,
+        locks: TaskLocks,
+        broker: &str,
+        cache: &str,
+        config: Config,
+        roots: crate::logo_scanner::Roots,
+        m3u_roots: crate::scanner_m3u::Roots,
+        date: crate::scanner_m3u::DateClock,
+        clock: Arc<dyn Clock>,
+        revoked: crate::normal_revocation::Revoked,
+        recording: Arc<dyn dispatcharr_store::recording_http::RecordingJobs>,
+    ) -> Result<Self, Disposition> {
+        Self::connect_runtime(
+            jobs,
+            store,
+            auth,
+            sink,
+            locks,
+            broker,
+            cache,
+            config,
+            roots,
+            m3u_roots,
+            date,
+            clock,
+            revoked,
+            Some(recording),
+        )
+        .await
+    }
+    #[allow(clippy::too_many_arguments)]
+    async fn connect_runtime(
+        jobs: Jobs,
+        store: Store,
+        auth: AuthService,
+        sink: Arc<dyn UpdateEventSink>,
+        locks: TaskLocks,
+        broker: &str,
+        cache: &str,
+        config: Config,
+        roots: crate::logo_scanner::Roots,
+        m3u_roots: crate::scanner_m3u::Roots,
+        date: crate::scanner_m3u::DateClock,
+        clock: Arc<dyn Clock>,
+        revoked: crate::normal_revocation::Revoked,
+        recording: Option<Arc<dyn dispatcharr_store::recording_http::RecordingJobs>>,
     ) -> Result<Self, Disposition> {
         if !auth.uses_store_pool(&store) {
             return Err(Disposition::UnsupportedDomain);
@@ -78,6 +137,21 @@ impl Prepared {
             m3u_ports.clone(),
             registry.clone(),
         );
+        let auto = if let Some(recording) = &recording {
+            Some(
+                crate::normal_auto_sync::Prepared::new(
+                    jobs.clone(),
+                    store.clone(),
+                    auth.clone(),
+                    recording.clone(),
+                    revoked.clone(),
+                    m3u_roots.cache.clone(),
+                )
+                .map_err(|_| Disposition::UnsupportedDomain)?,
+            )
+        } else {
+            None
+        };
         let xc = crate::normal_xc_live::Worker::new(
             jobs.clone(),
             m3u_ports.clone(),
@@ -88,6 +162,7 @@ impl Prepared {
             m3u.admission(),
             revoked.clone(),
             m3u_roots.cache.clone(),
+            recording.clone(),
         );
         let remote = crate::normal_m3u_remote::Worker::new(
             jobs,
@@ -99,8 +174,10 @@ impl Prepared {
             revoked,
             m3u.admission(),
             m3u_roots.cache,
+            recording,
         );
         Ok(Self {
+            auto,
             remote,
             xc,
             scanner,
@@ -116,16 +193,23 @@ impl Prepared {
     pub fn entries(&self) -> Vec<(Family, Arc<dyn Handler>)> {
         let m3u: Arc<dyn Handler> =
             Arc::new(M3u(self.m3u.clone(), self.xc.clone(), self.remote.clone()));
-        vec![
+        let mut entries: Vec<(Family, Arc<dyn Handler>)> = vec![
             (Family::Scanner, Arc::new(Scanner(self.scanner.clone()))),
             (Family::M3uGroups, m3u.clone()),
             (Family::M3uSingle, m3u),
-        ]
+        ];
+        if let Some(auto) = &self.auto {
+            entries.push(auto.entry())
+        }
+        entries
     }
     /// All queue lanes must stop first. Shared Jobs is closed only by Main after
     /// every other family has physically drained; this assembly never closes it.
     pub async fn shutdown(&self, timeout: Duration) -> Result<(), Disposition> {
         let end = tokio::time::Instant::now() + timeout;
+        if let Some(auto) = &self.auto {
+            auto.stop_admission();
+        }
         self.scanner.stop_admission();
         self.m3u.stop_admission();
         self.xc.stop();
@@ -154,6 +238,10 @@ impl Prepared {
             .await
         {
             return Err(Disposition::Operational("Remote M3U drain".into()));
+        }
+        if let Some(auto) = &self.auto {
+            auto.shutdown(end.saturating_duration_since(tokio::time::Instant::now()))
+                .await?;
         }
         self.service
             .shutdown(end.saturating_duration_since(tokio::time::Instant::now()))

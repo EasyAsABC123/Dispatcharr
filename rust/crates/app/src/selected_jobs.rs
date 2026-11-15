@@ -286,10 +286,10 @@ impl SelectedJobs {
             );
         let recording_http = dispatcharr_store::recording_http::RecordingHttp::prepare(
             auth.clone(),
-            recording_jobs,
+            recording_jobs.clone(),
             events.clone(),
         );
-        let scanner = jobs::normal_scanner::Prepared::connect(
+        let scanner = jobs::normal_scanner::Prepared::connect_with_auto(
             shared_jobs.clone(),
             store.clone(),
             auth,
@@ -310,6 +310,7 @@ impl SelectedJobs {
             Arc::new(|| std::time::SystemTime::now().into()),
             Arc::new(jobs::logo_task::SystemClock),
             revoked.clone(),
+            recording_jobs,
         )
         .await
         .map_err(|_| {
@@ -401,7 +402,7 @@ impl SelectedJobs {
             store.pool().clone(),
             shared_jobs.clone(),
             beat_identity,
-            Duration::from_millis(100),
+            Duration::from_secs(5),
         )
         .map_err(|_| "Selected normal Beat initialization failed")?;
         if !std::env::var("DISPATCHARR_SKIP_PLUGIN_AUTODISCOVERY")

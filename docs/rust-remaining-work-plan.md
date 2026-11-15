@@ -12,7 +12,13 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The current code is [Candidate18](rust-milestone-batch18.md):1,008 workspace tests,
+The current source candidate is [Candidate19](rust-milestone-batch19.md): all four
+SDK gates pass with 1,023 tests, zero failures and 758 ignored tests. Normal
+auto-sync, large metadata, shared channel deletion, dependency-only regex,
+remote stream health and Source-equivalent Beat timing are joined. Docker,
+combined application and paired resource acceptance remain required.
+
+The preceding code is [Candidate18](rust-milestone-batch18.md):1,008 workspace tests,
 compilation and strict lint pass; Docker build and asset/credit, GPG and
 PostgreSQL probes pass. Actual VLC remux exposed missing relocated plugin
 discovery; its launcher correction requires a new image and acceptance.

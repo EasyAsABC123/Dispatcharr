@@ -60,6 +60,14 @@ empty or absent. The
 accepts this selected application/media workflow, not the full 24-phase resource
 workload or a performance gain.
 
+The two-phase resource observations remain descriptive. Source's primary mean
+CPU is 0.06353 cores and Native's is 0.08737 cores (ratio 1.3753); primary peak
+working-set estimates are 920,453,120 and 246,501,376 bytes. Native Main accounts
+for only 0.01116 cores; its shared infrastructure container accounts for
+0.07334 cores. The higher CPU use requires investigation before the full fixed
+paired workload. No memory percentage is promoted as an accepted application
+gain from this integration sample.
+
 Wider combined application acceptance remains required. The
 [preceding resource capture](rust-batch16-resource-observations.md) remains failed
 and descriptive: extra Source fixture controllers biased accounting, and the

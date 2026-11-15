@@ -508,3 +508,26 @@ pub use plugin_actions::{PluginActions, PluginRepositorySchedule};
 
 #[doc(hidden)]
 pub mod remote_m3u_io;
+
+mod task_channel_collector;
+pub use task_channel_collector::{ChannelDeletion, ChannelDeletionSelection};
+mod plugin_python_host;
+mod plugin_python_regex;
+pub use plugin_python_host::{Error as PythonRegexError, Receipt as PythonRegexReceipt};
+pub use plugin_python_regex::RegexExecutor;
+// Actual normal auto-sync algorithm; dependency/SQL effects remain owned.
+#[doc(hidden)]
+pub mod auto_sync;
+mod auto_sync_config;
+mod auto_sync_create;
+#[doc(hidden)]
+pub mod auto_sync_epg;
+mod auto_sync_existing;
+mod auto_sync_language;
+mod auto_sync_natural;
+mod auto_sync_numbers;
+mod auto_sync_orphans;
+mod auto_sync_profiles;
+mod auto_sync_regex;
+mod auto_sync_resolve;
+mod auto_sync_streams;

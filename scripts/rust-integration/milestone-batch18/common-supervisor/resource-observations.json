@@ -1,0 +1,37 @@
+{
+  "scope": "Two one-viewer integration phases only; not full fixed24 resource acceptance",
+  "gain_accepted": false,
+  "phases": {
+    "baseline": {
+      "primary_cpu_mean_cores": 0.06352972060223086,
+      "primary_peak_working_set_estimate_bytes": 920453120,
+      "primary_peak_charged_memory_bytes": 920547328,
+      "samples": 61,
+      "seconds": 59.99850091999542,
+      "per_service_cpu_mean_cores": {
+        "observer": 0.12629518877653614,
+        "orchestrator": 0.0001924048071699869,
+        "baseline": 0.0606669990780876,
+        "origin": 0.0028627215241432587,
+        "publication-observer": 0.0
+      }
+    },
+    "candidate": {
+      "primary_cpu_mean_cores": 0.08737460771860835,
+      "primary_peak_working_set_estimate_bytes": 246501376,
+      "primary_peak_charged_memory_bytes": 246571008,
+      "samples": 61,
+      "seconds": 59.9985869680022,
+      "per_service_cpu_mean_cores": {
+        "observer": 0.12534373524514375,
+        "orchestrator": 0.00022105520596798855,
+        "baseline": 0.07334216058032814,
+        "candidate": 0.011155862726516594,
+        "origin": 0.0028765844117636364,
+        "publication-observer": 0.0
+      }
+    }
+  },
+  "primary_CPU_ratio": 1.3753343614664058,
+  "interpretation": "Observed Native CPU higher; memory descriptive only; cannot accept gains without all24phases/every pair. Most Native CPU is in baseline infrastructure cgroup, not Main; scheduler polling diagnosis ongoing."
+}
