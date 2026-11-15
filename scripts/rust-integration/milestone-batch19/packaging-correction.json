@@ -1,0 +1,33 @@
+{
+  "scope": "Packaging-only correction after passing SDK10; Rust language sources unchanged",
+  "SDK_git_revision": "490c63f8959b288c709f3fed9d56edf2cd52354f",
+  "changed_path": "rust/runtime/collect_regex_host.py",
+  "SDK_sha256": "e77cbd107ab19da84a334d3921096bebc6c5e2670b375a634dfc4339521700a8",
+  "corrected_sha256": "e9cf916dbcf89da7776dbdcfae3097853d8623eae835f2462ef4740e0375435e",
+  "actual_failed_Docker_build_exit": 1,
+  "failed_Docker_build_seconds": 110.34846965200268,
+  "failure": "Collector requested /app/LICENSE absent in pinned Source; final Docker stage already retains repository LICENSE/ATTRIBUTION",
+  "correction": "Remove duplicate Source-app license lookup and obsolete empty application-prefix iteration; retain dependency-only scope; preserve generic Python CLI argument boundaries",
+  "direct_Source_collector_audit_exit": 0,
+  "direct_Source_collector_audit_seconds": 3.2818932209993363,
+  "retained_ELF_records": 51,
+  "retained_prefix_files": 626,
+  "pinned_python": "3.13.18",
+  "pinned_regex": "2026.9.29",
+  "actual_pinned_regex_license_sha256": "bff55ef4cdcc8c14ce259f8e8ab60e264418440d6335f4dc138273fbd506144d",
+  "network": "none",
+  "Source_backend_started": false,
+  "exact_audit_CIDs_absent": true,
+  "new_Docker_image_or_runtime_acceptance": false,
+  "performance_verified": false,
+  "all_original_author_credits_preserved": true,
+  "actual_isolated_CLI": {
+    "Source_Django_available": false,
+    "prefix": "/opt/dispatcharr-python",
+    "python": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+    "regex": "2026.9.29"
+  },
+  "actual_isolated_CLI_audit_exit": 0,
+  "actual_isolated_CLI_audit_seconds": 3.1937970029975986,
+  "CLI_audit_initial_fixture_failure": "Implicit no-exec tmpfs denied execution; explicit exec temporary mount corrected the audit fixture"
+}

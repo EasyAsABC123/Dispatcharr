@@ -30,9 +30,8 @@ def tree(source,target):
   else:raise RuntimeError('Unsupported runtime special/symlink object: '+str(child))
 stdlib=Path(sysconfig.get_path('stdlib'));site=Path(sysconfig.get_path('purelib'));exe=Path(sys.executable).resolve()
 copy_file(exe,PREFIX/'bin/python3.13');tree(stdlib,PREFIX/'lib/python3.13');(PREFIX/'lib/python3.13/site-packages').mkdir(parents=True)
-# Dependency-only mode copies no Source Python/application assets.
-app=OUT/'__no_source_application_assets'
-copy_file(Path('/app/LICENSE'),DOCS/'Dispatcharr-LICENSE')
+# Dependency-only mode copies no Source Python/application assets. The final
+# Docker stage retains the repository LICENSE and ATTRIBUTION.md explicitly.
 licenses={};wheel_owners={}
 for distribution in [metadata.distribution('regex')]:
  for item in distribution.files or[]:
@@ -101,9 +100,9 @@ for retained in sorted(PREFIX.rglob('*')):
 if not loader:raise RuntimeError('Pinned Python dynamic ELF loader missing')
 wrapper=OUT/'usr/local/bin/dispatcharr-regex-python';wrapper.parent.mkdir(parents=True,exist_ok=True)
 wrapper.write_text('#!/bin/sh\nunset PYTHONHOME PYTHONPATH\nexec /opt/dispatcharr-python/elf/'+loader+' --library-path /opt/dispatcharr-python/elf /opt/dispatcharr-python/bin/python3.13 -I /opt/dispatcharr-python/bridge/regex_bootstrap.py "$@"\n');wrapper.chmod(0o755)
-cli=OUT/'usr/local/bin/dispatcharr-python';cli.write_text('#!/bin/sh\nexec /opt/dispatcharr-python/elf/'+loader+' --library-path /opt/dispatcharr-python/elf /opt/dispatcharr-python/bin/python3.13 \"$@\"\n');cli.chmod(0o755)
+cli=OUT/'usr/local/bin/dispatcharr-python';cli.write_text('#!/bin/sh\nexec /opt/dispatcharr-python/elf/'+loader+' --library-path /opt/dispatcharr-python/elf /opt/dispatcharr-python/bin/python3.13 "$@"\n');cli.chmod(0o755)
 # Bootstrap/custom backend are supplied separately from reviewed owned source;
 # this collector never copies a fixture, shell environment, upload or key home.
-for path in sorted([*PREFIX.rglob('*'),*app.rglob('*')]):
+for path in sorted(PREFIX.rglob('*')):
  if path.is_file():manifest['files'].append({'path':'/'+str(path.relative_to(OUT)),'bytes':path.stat().st_size,'sha256':sha(path)})
 (DOCS/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

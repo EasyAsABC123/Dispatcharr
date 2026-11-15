@@ -45,3 +45,30 @@ edge/fault domains remain explicit open work. Full-reader API acceptance and
 old-SUCCESS/result-subscription semantics require their actual entry points;
 direct Redis observations alone cannot qualify them. No full M0–M9 milestone or
 new application performance gain is accepted.
+
+The first image build failed after 110.35 seconds because the dependency
+collector requested `/app/LICENSE`, which is absent in the pinned Source image.
+The final Docker stage already retains the repository license and attribution.
+The packaging-only correction removes that duplicate lookup and its obsolete
+empty application-prefix iteration. A direct network-disabled Source audit now
+passes in 3.28 seconds, retaining 51 ELF records and 626 prefix files, with actual
+CPython 3.13.18 and regex 2026.9.29 notices. The initial direct audit also caught
+an obsolete variable reference; that failure is retained. Both audit containers
+are absent. No Source backend was started.
+The [packaging correction](../scripts/rust-integration/milestone-batch19/packaging-correction.json)
+and separate build-input map preserve the exact SDK snapshot while accounting
+for the collector change. Rust language sources are unchanged. A corrected
+image and its actual dependency/application checks remain required.
+
+An additional direct audit executes the actual isolated Python CLI and imports
+the pinned regex package, confirming its relocated prefix and absence of Source
+Django. It passes in 3.19 seconds. The preceding temporary fixture denied exec
+on its output mount; that failed attempt is retained. The CLI argument-quoting
+correction belongs to the packaging-only change.
+
+The normal Main lifecycle still needs active auto-flow cancellation: an
+unbounded search can prevent the worker from reaching its existing regex
+retirement call. Component child-retirement capability does not establish that
+Main drives it before waiting for tasks. The corrective shared drain hook is
+separate open work; ordinary regex acceptance will not qualify a held-search
+shutdown from a passing normal capture.
