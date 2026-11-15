@@ -9,7 +9,15 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest committed runtime is `52e8ebc7e4ce8b92368ec94797d60c0e44678687`:
+The latest packaged recording candidate is `cb1ba69af8e0623222391a707a2b9fc03b5995f6`:
+[915 tests and its Docker build pass](rust-milestone-batch8.md), and the selected
+worker cohort passes223 checks with strict data-only Native mounts. Playback,
+normal artwork and their combined route/drain ownership are assembled; the full
+shared Source/Native recording cohort has not yet run. These results remain
+separate from the earlier PostgreSQL acceptance below. All full milestones stay
+open, and no new paired performance gain is accepted.
+
+The preceding committed runtime is `52e8ebc7e4ce8b92368ec94797d60c0e44678687`:
 [911 tests pass](rust-milestone-batch7.md), with 751 external-fixture tests ignored,
 and its [production image](rust-milestone-batch7-build.md) preserves React and all
 original credits. The [grouped PostgreSQL run](rust-batch7-tls-acceptance.md) now
