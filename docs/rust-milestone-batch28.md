@@ -40,13 +40,29 @@ fixture setup and web setup still execute. Attempts2 and3 remain failed for the
 completed data-init selection and closed-socket probe defects respectively;
 attempt4 is the successful run. This selected scope does not close full M4.
 
-The combined Source-first application batch is prepared in the existing cohort:
-guide Connect/local/remote hooks, dummy/stream-name output, shared UDP ingress,
-inactive profiles, Channel/Recording Collector, account properties, actual four
-plugin actions/child PG sessions/timeout/rollback and builtin publication. A
-saved-Redirect direct Stream cell only characterizes currently unresolved Source
-behavior. Prepared callback coverage establishes no parity; acceptance requires its actual
-completed application evidence.
+The [completed Source-first application batch](../scripts/rust-integration/milestone-batch28/application/inventory.json)
+exited1 after 1,247.292 seconds. Source passes VLC viewing and all five selected
+auto-sync cells; Native passes auto-sync and the six-cell output-profile workflow.
+Source passes two-viewer VLC sharing and clean 74-frame A/V prefixes with normal
+role shutdown. Native proves the same selected viewing work, but its Main drain
+exits1, so the Native VLC context remains failed. The Native recording-profile
+business report also passes while its context fails the required Main exit0.
+
+Source SD and enabled-plugin workflows fail during fixture setup. Redirect
+composition retains failed preview setup, signed-zero persistence and Collector
+alias assertions. Two independent preview sharing/strict decoder cells pass; the
+third tries to rename a protected locked Source profile before its HTTP call.
+Source accepts PATCH `-0.0` but GET returns persisted `0.0`. Collector deletion,
+recording/schedule effects, orphan-file retention and continued viewing pass;
+after physical worker/slot/upstream retirement an inert deleted Channel alias
+remains, failing the original absence criterion. These failures remain literal.
+
+Both UDP workflows prove two clients sharing one provider/process and physical
+retirement. Their strict raw-prefix decoders exit0 but each captures only 50 video
+frames and 2,196 bytes of missing-PPS errors; the required 70-frame/no-stderr
+criteria fail. A proposed certified-window followup has not run. RTSP/RTP media
+remain unmeasured. Both projects, all exact container generations and CLI groups
+retire with empty owned inventories and no cleanup errors.
 
 The [six actual package proofs](../scripts/rust-integration/milestone-batch28/package/inventory.json)
 pass for committed runtime `3ca0ef4417f3187dabca98afc0b29f7ea0a1bdc8`, image
@@ -62,6 +78,18 @@ The packaged VLC useful-media remux/decoder checks also pass with exact cleanup.
 These package checks do not establish plugin execution, database backup/restore,
 streaming failover or application parity.
 
-Combined Main acceptance remains pending. Broader physical retirement, recovery,
+The [counter sampler lifecycle controls](../scripts/rust-integration/milestone-batch28/instrumentation/inventory.json)
+also pass: cancellation before clock start and one actual tick followed by
+cancellation. Both workers close their files, settle their pipes and disappear
+by recorded PID/generation in the same charged observer cgroup. The fixed 50ms
+gate is unchanged. These controls do not validate a full high-viewer measurement;
+the earlier clock failure and CPU misses remain failed.
+
+Next, apply the grounded fixture corrections, capture the exact selected-worker
+shutdown stage, and rerun failed/dependent workflows on the next built candidate.
+The new custom-guide code and certified UDP window remain unaccepted until their
+actual paired application checks run. CPU attribution precedes another campaign.
+
+Combined Main acceptance remains false after this failed batch. Broader physical retirement, recovery,
 authentication/header coverage and paired performance remain required. No full M0–M9
 milestone or new application performance gain is accepted.

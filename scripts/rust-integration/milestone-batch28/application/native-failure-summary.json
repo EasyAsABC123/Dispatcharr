@@ -1,0 +1,69 @@
+{
+  "backend": "Native",
+  "passed_contexts": [
+    "auto-sync",
+    "output-profile"
+  ],
+  "failed_contexts": [
+    {
+      "case": "schedules-direct",
+      "stage": "setup command exited1",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch28-functional-1/fixtures/Native-77bbe268/schedules-direct-primary-exception.json",
+        "sha256": "ade1e39037ded94bb9830f870b3aecd48cd5ebadf0dac42425e5a10f7bf34aa4"
+      }
+    },
+    {
+      "case": "vlc-live",
+      "stage": "all two-viewer media/sharing decoders pass, Main drain actual1 expected0, no OOM",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch28-functional-1/results/Native/vlc-live.json",
+        "sha256": "2f282075ab08c9fc8ce3d7c57ed638d9abb6f1d80e5a0c4bc4acb68df3514e4e"
+      }
+    },
+    {
+      "case": "redirect-common",
+      "stage": "required preview and signed-zero persistence assertions fail; inactive input profile, Channel/Recording Collector and saved-Redirect characterization cells pass",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch28-functional-1/results/Native/redirect-common.json",
+        "sha256": "4f798f5745ec02c8ed007321e9d893d3750e39bd452553cd10302ee9a3f8374a"
+      },
+      "positive_reference": {
+        "path": "artifacts/rust/normal-graph-batch28-functional-1/fixtures/Native-77bbe268/redirect-extension-composition.json",
+        "sha256": "19d1a068d0c5315943f7e0762ac781953c5255d4400d406e4bb10a7552a1b386"
+      }
+    },
+    {
+      "case": "process-transports",
+      "stage": "both raw strict prefix decoders exit0 but50frames and2196 stderr bytes",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch28-functional-1/results/Native/process-transports.json",
+        "sha256": "fbc537e7a1cc85f7bee01360bd5aab88923994e97b833fa750e766eba56a2b18"
+      }
+    },
+    {
+      "case": "m8-actions",
+      "stage": "guest plugin fixture setup FileNotFoundError",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch28-functional-1/fixtures/Native-77bbe268/m8-actions-primary-exception.json",
+        "sha256": "63d1a813aca70a09758af405709fdb784753d6f925ebeaf80b79dc092f8aa9de"
+      }
+    },
+    {
+      "case": "recording-output-profile",
+      "stage": "business report passed but context Main drain actual1 expected0/noOOM",
+      "references": [
+        {
+          "path": "artifacts/rust/normal-graph-batch28-functional-1/results/Native/recording-output-profile.json",
+          "sha256": "e52cca8f939790dbd6b07694ffecbefaa48f8ec7c819379577bbb55db56070f5"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-batch28-functional-1/fixtures/Native-77bbe268/recording-output-profile-teardown-errors.json",
+          "sha256": "4f9f29397f6ad82926ff7e1f8854b4cfc848cf93ee3007627f98de601f653660"
+        }
+      ]
+    }
+  ],
+  "full_milestone_passed": false,
+  "new_performance_gains_accepted": false
+}

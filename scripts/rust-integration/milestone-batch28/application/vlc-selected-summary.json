@@ -1,0 +1,110 @@
+{
+  "backends": {
+    "Original": {
+      "status": "passed",
+      "viewing_scope": "two authenticated viewers; actual Source0027 locked VLC; no Recording/performance",
+      "clients": 2,
+      "input_processes": 1,
+      "origin_connection_delta": 1,
+      "active": {
+        "actual_upstream_connections": 1,
+        "actual_provider_slots": 1,
+        "actual_recording_ffmpeg_count": 0
+      },
+      "decoders": [
+        {
+          "viewer": "owner",
+          "actual_exit": 0,
+          "stderr_bytes": 0,
+          "video_frames": 74,
+          "video_and_audio": true,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "file_sha256": "46dd79870bb4b9c539bf6c87a1161fe29ed56bf2650f3f7ba095904e2ce2db8f"
+        },
+        {
+          "viewer": "follower",
+          "actual_exit": 0,
+          "stderr_bytes": 0,
+          "video_frames": 74,
+          "video_and_audio": true,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "file_sha256": "66d8e51902ce11fd6fb0941637535b154f3c6773c6828df4c958e61317f2d13d"
+        }
+      ],
+      "proxy_final": {
+        "active": 0,
+        "active_sockets": 0,
+        "all_handler_threads_joined": true,
+        "accepted": 1,
+        "completed": 1,
+        "upstream_errors": 0
+      },
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch28-functional-1/results/Original/vlc-live.json",
+        "sha256": "42a0c98bfdc7a6326497cf2138fa96d67650934178c9dbe2dba0cc5625c93681"
+      },
+      "roles_normal_stop": true,
+      "Source_reader_close_retention": {
+        "upstream_active": 1,
+        "input_process_count": 1,
+        "timing_parity_claimed": false
+      }
+    },
+    "Native": {
+      "status": "failed",
+      "viewing_scope": "two authenticated viewers; actual Source0027 locked VLC; no Recording/performance",
+      "clients": 2,
+      "input_processes": 1,
+      "origin_connection_delta": 1,
+      "active": {
+        "actual_upstream_connections": 1,
+        "actual_provider_slots": 1,
+        "actual_recording_ffmpeg_count": 0
+      },
+      "decoders": [
+        {
+          "viewer": "owner",
+          "actual_exit": 0,
+          "stderr_bytes": 0,
+          "video_frames": 74,
+          "video_and_audio": true,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "file_sha256": "08866c0ff73ba19de2b8c9113a63fd97c8d712092da303c26864ae7cbbdcbd25"
+        },
+        {
+          "viewer": "follower",
+          "actual_exit": 0,
+          "stderr_bytes": 0,
+          "video_frames": 74,
+          "video_and_audio": true,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "file_sha256": "08866c0ff73ba19de2b8c9113a63fd97c8d712092da303c26864ae7cbbdcbd25"
+        }
+      ],
+      "proxy_final": {
+        "active": 0,
+        "active_sockets": 0,
+        "all_handler_threads_joined": true,
+        "accepted": 1,
+        "completed": 0,
+        "upstream_errors": 1
+      },
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch28-functional-1/results/Native/vlc-live.json",
+        "sha256": "2f282075ab08c9fc8ce3d7c57ed638d9abb6f1d80e5a0c4bc4acb68df3514e4e"
+      },
+      "normal_Main_exit0_required_passed": false
+    }
+  },
+  "paired_current_Main_shutdown_acceptance": false,
+  "performance_verified": false,
+  "full_M3_passed": false
+}

@@ -1,0 +1,28 @@
+{
+  "scope": "Actual two-case counter instrumentation lifecycle only; no application,Source,60s or100viewer clock validation",
+  "reports": [
+    {
+      "source": "artifacts/rust/m3-resource-counter-gil-fix-2/overlay/sampler.py",
+      "published": "sampler.py",
+      "sha256": "32392b5ba13fbd959f05acb40f095910d241f75df2962eca5bfdc9850fb6c653"
+    },
+    {
+      "source": "artifacts/rust/m3-resource-counter-lifecycle-prep-1/check_lifecycle.py",
+      "published": "check_lifecycle.py",
+      "sha256": "4ef2648a8bac5578df821d99c1c38d613e2d218deec83ae64dbdb94ca59bf6dd"
+    },
+    {
+      "source": "artifacts/rust/m3-resource-counter-lifecycle-actual-1/report.json",
+      "published": "actual-lifecycle.json",
+      "sha256": "795b71bee1ccdc2843b585d2c69b92ad1eea40936d3c624b8d54ae270bb31577"
+    }
+  ],
+  "actual_exit": 0,
+  "cases_passed": 2,
+  "all_owned_worker_PID_generations_absent": true,
+  "all_counter_FDs_closed": true,
+  "counter_worker_same_charged_observer_cgroup": true,
+  "fixed_50ms_gate_unchanged": true,
+  "full_performance_validated": false,
+  "gain_accepted": false
+}

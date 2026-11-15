@@ -1,0 +1,239 @@
+{
+  "passed": true,
+  "scope": "counter instrumentation lifecycle only; no60s workload/app/Source benchmark",
+  "sampler_sha256": "32392b5ba13fbd959f05acb40f095910d241f75df2962eca5bfdc9850fb6c653",
+  "actual_observer_cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dispatcharr-resource-counter-lifecycle-1.scope",
+  "cases": [
+    {
+      "name": "cancel-before-clock-start",
+      "passed": true,
+      "actual_ready": {
+        "kind": "ready",
+        "PID": 684903,
+        "generation": "9727578",
+        "same_observer_cgroup": true,
+        "counter_file_identities": [
+          {
+            "group": "observer",
+            "file": "cpu.stat",
+            "device": 31,
+            "inode": 1325558
+          },
+          {
+            "group": "observer",
+            "file": "memory.stat",
+            "device": 31,
+            "inode": 1325580
+          },
+          {
+            "group": "observer",
+            "file": "memory.current",
+            "device": 31,
+            "inode": 1325572
+          },
+          {
+            "group": "observer",
+            "file": "memory.swap.current",
+            "device": 31,
+            "inode": 1325584
+          },
+          {
+            "group": "observer",
+            "file": "memory.events",
+            "device": 31,
+            "inode": 1325578
+          },
+          {
+            "group": "observer",
+            "file": "memory.peak",
+            "device": 31,
+            "inode": 1325573
+          }
+        ]
+      },
+      "actual_settlement": {
+        "PID": 684903,
+        "generation": "9727578",
+        "actual_exit": 0,
+        "forced": false,
+        "generation_absent": true,
+        "stdout_EOF": true,
+        "stderr_writer_settled": true,
+        "stderr_bytes": 0,
+        "protocol_errors": [],
+        "worker_final": {
+          "kind": "final",
+          "PID": 684903,
+          "generation": "9727578",
+          "measurement_completed": false,
+          "failure_type": null,
+          "opened_counter_files": 6,
+          "all_counter_FDs_closed": true,
+          "close_errno": []
+        },
+        "same_accounting_group": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dispatcharr-resource-counter-lifecycle-1.scope",
+        "cleanup_passed": true
+      }
+    },
+    {
+      "name": "one-actual-tick-then-cancel",
+      "passed": true,
+      "actual_ready": {
+        "kind": "ready",
+        "PID": 684904,
+        "generation": "9727581",
+        "same_observer_cgroup": true,
+        "counter_file_identities": [
+          {
+            "group": "observer",
+            "file": "cpu.stat",
+            "device": 31,
+            "inode": 1325558
+          },
+          {
+            "group": "observer",
+            "file": "memory.stat",
+            "device": 31,
+            "inode": 1325580
+          },
+          {
+            "group": "observer",
+            "file": "memory.current",
+            "device": 31,
+            "inode": 1325572
+          },
+          {
+            "group": "observer",
+            "file": "memory.swap.current",
+            "device": 31,
+            "inode": 1325584
+          },
+          {
+            "group": "observer",
+            "file": "memory.events",
+            "device": 31,
+            "inode": 1325578
+          },
+          {
+            "group": "observer",
+            "file": "memory.peak",
+            "device": 31,
+            "inode": 1325573
+          }
+        ]
+      },
+      "actual_sample": {
+        "kind": "sample",
+        "index": 0,
+        "monotonic_start": 97275.838802741,
+        "monotonic_end": 97275.838901394,
+        "groups": {
+          "observer": {
+            "swap_current_bytes": 0,
+            "cpu_stat": {
+              "usage_usec": 90669,
+              "user_usec": 73780,
+              "system_usec": 16888,
+              "nice_usec": 72261,
+              "core_sched.force_idle_usec": 0,
+              "nr_periods": 2,
+              "nr_throttled": 0,
+              "throttled_usec": 0,
+              "nr_bursts": 0,
+              "burst_usec": 0
+            },
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "charged_memory_current_bytes": 21286912,
+            "inactive_file_bytes": 16384,
+            "working_set_estimate_bytes": 21270528,
+            "lifetime_memory_peak_context_only_bytes": 21286912
+          }
+        },
+        "counter_file_reads": [
+          {
+            "group": "observer",
+            "file": "cpu.stat",
+            "monotonic_start": 97275.838807661,
+            "monotonic_end": 97275.838820492,
+            "process_cpu_nanoseconds": 13790,
+            "bytes": 166
+          },
+          {
+            "group": "observer",
+            "file": "memory.stat",
+            "monotonic_start": 97275.838823472,
+            "monotonic_end": 97275.838850532,
+            "process_cpu_nanoseconds": 28040,
+            "bytes": 1151
+          },
+          {
+            "group": "observer",
+            "file": "memory.current",
+            "monotonic_start": 97275.838853143,
+            "monotonic_end": 97275.838855553,
+            "process_cpu_nanoseconds": 2790,
+            "bytes": 9
+          },
+          {
+            "group": "observer",
+            "file": "memory.swap.current",
+            "monotonic_start": 97275.838858673,
+            "monotonic_end": 97275.838860693,
+            "process_cpu_nanoseconds": 2240,
+            "bytes": 2
+          },
+          {
+            "group": "observer",
+            "file": "memory.events",
+            "monotonic_start": 97275.838861913,
+            "monotonic_end": 97275.838864973,
+            "process_cpu_nanoseconds": 3460,
+            "bytes": 70
+          },
+          {
+            "group": "observer",
+            "file": "memory.peak",
+            "monotonic_start": 97275.838866363,
+            "monotonic_end": 97275.838868443,
+            "process_cpu_nanoseconds": 2510,
+            "bytes": 9
+          }
+        ],
+        "counter_sweep_process_cpu_nanoseconds": 96260
+      },
+      "unchanged_50ms_clock_check": true,
+      "actual_settlement": {
+        "PID": 684904,
+        "generation": "9727581",
+        "actual_exit": 0,
+        "forced": false,
+        "generation_absent": true,
+        "stdout_EOF": true,
+        "stderr_writer_settled": true,
+        "stderr_bytes": 0,
+        "protocol_errors": [],
+        "worker_final": {
+          "kind": "final",
+          "PID": 684904,
+          "generation": "9727581",
+          "measurement_completed": false,
+          "failure_type": null,
+          "opened_counter_files": 6,
+          "all_counter_FDs_closed": true,
+          "close_errno": []
+        },
+        "same_accounting_group": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dispatcharr-resource-counter-lifecycle-1.scope",
+        "cleanup_passed": true
+      }
+    }
+  ],
+  "gain_accepted": false
+}

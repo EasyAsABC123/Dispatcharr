@@ -1,0 +1,83 @@
+{
+  "backends": {
+    "Original": {
+      "status": "failed",
+      "business_checks_passed": true,
+      "physical_retirement_passed": true,
+      "actual_clients": 2,
+      "actual_provider": 1,
+      "decoders": [
+        {
+          "name": "owner",
+          "actual_exit": 0,
+          "stderr_bytes": 2196,
+          "stderr_sha256": "5f5b05cc2f06554c10b2330a236abdbddf128c652f1399b2dab9b5f3c6185d1c",
+          "video_frames": 50,
+          "video_and_audio": true,
+          "passed": false,
+          "media_sha256": "0f13c1cd20e59a31e60e659dac2136205231b2087d56c85cc811fd5fa99da440"
+        },
+        {
+          "name": "follower",
+          "actual_exit": 0,
+          "stderr_bytes": 2196,
+          "stderr_sha256": "b7d0dfc930658fa49c91847c1f7f0b93b91f073d72d26372de738ee7e0297311",
+          "video_frames": 50,
+          "video_and_audio": true,
+          "passed": false,
+          "media_sha256": "cecee211c000e827214e274308086976f17985fe21790c1af9789b5eb36c6b18"
+        }
+      ],
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch28-functional-1/results/Original/process-transports.json",
+        "sha256": "2c059fb12313146b00ac0e1409b9e3f8acfaba9b9678ac1d3eb5bba4bed3a015"
+      }
+    },
+    "Native": {
+      "status": "failed",
+      "business_checks_passed": true,
+      "physical_retirement_passed": true,
+      "actual_clients": 2,
+      "actual_provider": 1,
+      "decoders": [
+        {
+          "name": "owner",
+          "actual_exit": 0,
+          "stderr_bytes": 2196,
+          "stderr_sha256": "9ffdac269d498abac8bb5bb7e32444b601ee86ccf5a5e58897d455c2338e02cf",
+          "video_frames": 50,
+          "video_and_audio": true,
+          "passed": false,
+          "media_sha256": "0f13c1cd20e59a31e60e659dac2136205231b2087d56c85cc811fd5fa99da440"
+        },
+        {
+          "name": "follower",
+          "actual_exit": 0,
+          "stderr_bytes": 2196,
+          "stderr_sha256": "d8eccccf76f663bf36f7977a4c0ad1e3d20186bd6bf6604d413dd78201dafe77",
+          "video_frames": 50,
+          "video_and_audio": true,
+          "passed": false,
+          "media_sha256": "c578eb891016d477a081c548320d61ec03a90eee946b8ea95bb7cb72abf2a137"
+        }
+      ],
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch28-functional-1/results/Native/process-transports.json",
+        "sha256": "fbc537e7a1cc85f7bee01360bd5aab88923994e97b833fa750e766eba56a2b18"
+      }
+    }
+  },
+  "criteria_unchanged": {
+    "required_frames_at_least": 70,
+    "required_stderr_bytes": 0,
+    "required_useful_AV_seconds": 3
+  },
+  "Source_prefix_diagnosis": {
+    "path": "artifacts/rust/m3-source28-udp-prefix-diagnosis-1/diagnosis.json",
+    "sha256": "8b1d867965d555319f0d0186ec942e3c495f6629896b3e75206f6c97bb00daf4"
+  },
+  "old_raw_failures_preserved": true,
+  "new_certificate_followup_not_executed": true,
+  "RTSP_RTP_media": "unmeasured",
+  "full_M3_passed": false
+}
