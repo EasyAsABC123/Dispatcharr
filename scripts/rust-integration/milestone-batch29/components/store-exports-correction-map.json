@@ -1,0 +1,22 @@
+{
+  "status": "frozen_correction_uncompiled",
+  "rows": [
+    {
+      "path": "rust/crates/store/src/lib.rs",
+      "preimage_path": "artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/store/src/lib.rs",
+      "preimage_sha256": "505535ddc46ac3a4aa52de3111fdc05dd5d44763dc382096056e0a0a0698ff83",
+      "overlay_path": "artifacts/rust/m7-custom-guide-sdk35-exports-fix-1/overlay/rust/crates/store/src/lib.rs",
+      "sha256": "16e8bce32467c80928f1839f25ff9c86ebeea213bfebf5947d9c82c01cc54ffb"
+    }
+  ],
+  "audit": {
+    "path": "artifacts/rust/m7-custom-guide-sdk35-exports-fix-1/all16-diff-audit.json",
+    "sha256": "4e10306b7e7ac45fd62b36a9c289c692b7077a3c4e41db4d77ee01922e6d7e78"
+  },
+  "validation": {
+    "patch_scope": "exactly two restored existing SDK34 lines; all SDK35 custom exports retained",
+    "Cargo": false,
+    "runtime": false
+  },
+  "cause": "Custom overlay payload retained stale lib tail despite correctly refreshed preimage hash; preimage check alone did not validate additive payload preservation"
+}

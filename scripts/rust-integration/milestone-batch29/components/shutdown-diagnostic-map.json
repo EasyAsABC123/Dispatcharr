@@ -1,0 +1,39 @@
+{
+  "status": "frozen_uncompiled_diagnostic_only",
+  "rows": [
+    {
+      "path": "rust/crates/app/src/selected_jobs.rs",
+      "preimage_path": "rust/crates/app/src/selected_jobs.rs",
+      "preimage_sha256": "129bea00d84e5e304431398126a6628a4e7af4a88b80ada88c5a5fcb9ab9cfc0",
+      "overlay_path": "artifacts/rust/m6-selected-shutdown-diagnostics-1/overlay/rust/crates/app/src/selected_jobs.rs",
+      "sha256": "388f1ff94201d5a99b3e931a4224a865c3e1fd6c5272a8ec23d4b7d59de8b205"
+    }
+  ],
+  "enable": "RUST_SELECTED_SHUTDOWN_DIAGNOSTICS=1 before actual Main startup",
+  "record_budget": 64,
+  "safe_fields": [
+    "fixed shutdown stage",
+    "compiled Family enum only",
+    "fixed disposition VARIANT without fields",
+    "settled/unsettled flags"
+  ],
+  "unchanged": [
+    "shutdown deadlines and branch outcomes",
+    "queue drain result",
+    "normal/error classification",
+    "physical ownership/retention",
+    "no production culprit asserted"
+  ],
+  "known_evidence": {
+    "Main28_VLC_media": "both strict decoders0; live/input/upstream retired",
+    "Main28_selected_stop": "immediate actual exit1; exact failing stage unobserved",
+    "Docker_stop_seconds": 0.4000454719935078
+  },
+  "validation": {
+    "source_static_control_assertions": true,
+    "Cargo": false,
+    "runtime": false,
+    "rustfmt": "not run: executable unavailable in current child PATH; Root SDK formatter required"
+  },
+  "next_driver_requirement": "Enable diagnostic environment before Main, preserve actual stderr before context reset; do not reinterpret original failure"
+}

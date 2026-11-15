@@ -674,7 +674,7 @@ impl SelectedJobs {
             tokio::time::timeout_at(deadline, self.inner.startup_slots.clone().acquire_owned())
                 .await;
         let Ok(Ok(_startup)) = startup else {
-            return false;
+            return selected_shutdown_failed("startup");
         };
         if !self
             .inner
@@ -682,7 +682,7 @@ impl SelectedJobs {
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
         {
-            return false;
+            return selected_shutdown_failed("channel_http");
         }
         if !self
             .inner
@@ -690,7 +690,7 @@ impl SelectedJobs {
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
         {
-            return false;
+            return selected_shutdown_failed("recording_http");
         }
         if !self
             .inner
@@ -698,7 +698,7 @@ impl SelectedJobs {
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
         {
-            return false;
+            return selected_shutdown_failed("xc_http");
         }
         if !self
             .inner
@@ -707,7 +707,7 @@ impl SelectedJobs {
             .await
         {
             eprintln!("Recording playback drain remains physically unsettled");
-            return false;
+            return selected_shutdown_failed("recording_playback");
         }
         if self
             .inner
@@ -716,7 +716,7 @@ impl SelectedJobs {
             .await
             .is_err()
         {
-            return false;
+            return selected_shutdown_failed("scheduler");
         }
         let drained = self
             .inner
@@ -724,7 +724,27 @@ impl SelectedJobs {
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await;
         if !drained.complete() {
-            return false;
+            for (stage, settled) in [
+                ("queue_pollers", drained.pollers_settled),
+                ("queue_admissions", drained.admissions_settled),
+                ("queue_heads", drained.heads_settled),
+            ] {
+                selected_shutdown_diagnostic(
+                    stage,
+                    None,
+                    if settled { "settled" } else { "unsettled" },
+                );
+            }
+            for (family, result) in &drained.families {
+                if let Err(error) = result {
+                    selected_shutdown_diagnostic(
+                        "queue_family",
+                        Some(*family),
+                        shutdown_disposition_kind(error),
+                    );
+                }
+            }
+            return selected_shutdown_failed("queue");
         }
         if self
             .inner
@@ -733,7 +753,7 @@ impl SelectedJobs {
             .await
             .is_err()
         {
-            return false;
+            return selected_shutdown_failed("scanner");
         }
         if self
             .inner
@@ -742,7 +762,7 @@ impl SelectedJobs {
             .await
             .is_err()
         {
-            return false;
+            return selected_shutdown_failed("recording_publisher");
         }
         if !self
             .inner
@@ -750,7 +770,7 @@ impl SelectedJobs {
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
         {
-            return false;
+            return selected_shutdown_failed("control");
         }
         if self
             .inner
@@ -759,7 +779,7 @@ impl SelectedJobs {
             .await
             .is_err()
         {
-            return false;
+            return selected_shutdown_failed("plugin_jobs");
         }
         if self
             .inner
@@ -768,12 +788,64 @@ impl SelectedJobs {
             .await
             .is_err()
         {
-            return false;
+            return selected_shutdown_failed("shared_jobs");
         }
         self.inner.startup.send_replace(Startup::Stopped);
         true
     }
 }
+// Opt-in, fixed-vocabulary shutdown diagnostics. Never format runtime errors,
+// task IDs, arbitrary task names, provider URLs, request bodies or credentials.
+// At most64 records for the whole process, including repeated shutdown callers.
+fn selected_shutdown_diagnostic(
+    stage: &'static str,
+    family: Option<Family>,
+    outcome: &'static str,
+) {
+    use std::sync::{atomic::AtomicUsize, OnceLock};
+    static ENABLED: OnceLock<bool> = OnceLock::new();
+    static RECORDS: AtomicUsize = AtomicUsize::new(0);
+    if !*ENABLED
+        .get_or_init(|| env::var("RUST_SELECTED_SHUTDOWN_DIAGNOSTICS").is_ok_and(|v| v == "1"))
+    {
+        return;
+    }
+    if RECORDS
+        .fetch_update(Ordering::AcqRel, Ordering::Acquire, |n| {
+            (n < 64).then_some(n + 1)
+        })
+        .is_ok()
+    {
+        eprintln!("selected_shutdown stage={stage} family={family:?} outcome={outcome}");
+    }
+}
+fn selected_shutdown_failed(stage: &'static str) -> bool {
+    selected_shutdown_diagnostic(stage, None, "unsettled");
+    false
+}
+fn shutdown_disposition_kind(value: &jobs::milestone_dispatch::Disposition) -> &'static str {
+    use jobs::milestone_dispatch::Disposition as D;
+    match value {
+        D::Empty => "Empty",
+        D::NotDue => "NotDue",
+        D::Capacity => "Capacity",
+        D::Reserved(_) => "Reserved",
+        D::Restored(_) => "Restored",
+        D::HeadChanged => "HeadChanged",
+        D::Completed(_) => "Completed",
+        D::CompletedNamed(_) => "CompletedNamed",
+        D::CompletedWithoutId => "CompletedWithoutId",
+        D::TaskFailedWithoutId => "TaskFailedWithoutId",
+        D::TaskFailed(_) => "TaskFailed",
+        D::TaskFailedNamed(_) => "TaskFailedNamed",
+        D::Revoked(_) => "Revoked",
+        D::RevokedNamed(_) => "RevokedNamed",
+        D::UnsupportedHead => "UnsupportedHead",
+        D::UnsupportedDomain => "UnsupportedDomain",
+        D::Operational(_) => "Operational",
+    }
+}
+
 fn probe(local: SocketAddr, closed: &AtomicBool) -> bool {
     use std::io::{Read, Write};
     let deadline = std::time::Instant::now() + Duration::from_secs(10);

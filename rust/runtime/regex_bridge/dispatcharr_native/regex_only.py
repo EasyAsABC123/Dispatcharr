@@ -21,6 +21,32 @@ def evaluate(value):
   translated=regex.sub(r'\$(\d+)',r'\\\1',config.get('replacement'))
   if len(translated.encode('utf8'))>131072:raise CompatibilityUnavailable('Regex translated replacement capacity')
   return {'replacement':translated}
+ if kind=='named_groups':
+  # Actual pinned dependency operations only; Rust owns all dummy timeline,
+  # title/template merging, field precedence and native output/effects.
+  pattern=regex.sub(r'\(\?<(?![=!])([^>]+)>',r'(?P<\1>',config.get('pattern'))
+  try:
+   compiled=regex.compile(pattern)
+  except Exception as error:return {'compiled':False,'caught':caught(error),'rows':None}
+  named=compiled.groupindex
+  # Bound result construction BEFORE groupdict allocation. Captures cannot
+  # exceed the512 input codepoints; JSON control escaping needs at most6bytes
+  # per codepoint. The existing framed actor limit is8MiB.
+  keys=sum(len(key.encode('utf8'))for key in named)
+  budget=len(names)*(len(named)*(6*512+256)+keys+256)
+  if budget>8*1024*1024-65536:raise CompatibilityUnavailable('Named capture response capacity')
+  rows=[]
+  for name in names:
+   try:match=compiled.search(name)
+   except Exception as error:rows.append({'matched':None,'groups':None,'caught':caught(error)})
+   else:rows.append({'matched':match is not None,'groups':list(match.groupdict().items())if match is not None else None,'caught':None})
+  # Search deliberately has NO timeout, just like the Source operation.
+  # Terminated/unknown actor lifecycle never becomes matched=False.
+  return {'compiled':True,'caught':None,'rows':rows}
+ if kind=='normalize_captures':
+  # Keep these actual dependency sub/Unicode semantics; Rust adds aliases only
+  # after its Source-ordered title/time/date group merge and retained snapshot.
+  return {'values':[regex.sub(r'\s+','',regex.sub(r'[^a-zA-Z0-9\s]','',name)).lower()for name in names]}
  if kind=='filter':
   pattern=config.get('pattern')
   if not pattern:return {'active':False,'matches':None,'caught':None}

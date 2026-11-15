@@ -1,0 +1,44 @@
+{
+  "epoch": "SDK35",
+  "gates": [
+    {
+      "name": "fmt",
+      "actual_exit": 0,
+      "wait_completed": true,
+      "source_unchanged": true
+    },
+    {
+      "name": "check",
+      "actual_exit": 101,
+      "wait_completed": true,
+      "source_unchanged": true
+    },
+    {
+      "name": "strict",
+      "actual_exit": 101,
+      "wait_completed": true,
+      "source_unchanged": true
+    },
+    {
+      "name": "workspace",
+      "actual_exit": 101,
+      "wait_completed": true,
+      "source_unchanged": true
+    }
+  ],
+  "explanation": "Compiler failure: stale Store lib overlay dropped existing epg_task_hooks module and public PluginPublicationOwners; both restored. No tests executed.",
+  "raw_files": {
+    "inputs.json": "1f6fc3fb8ac69e9b8d4116e9798898591bf4858d0bd29fb99ae1508d6068eff7",
+    "checks.json": "269bd7c66ea1f01bccd75bda90c0f73ab26db809cfd423046378fbbf72cdd639",
+    "fmt.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fmt.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "check.stderr": "3007c37897e14dee65dfe4fa5cbf4f896cb5436e647a9cd6af735bec7d202449",
+    "strict.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "strict.stderr": "a146e5d637959785c41a9c6dffb0d16a2963df4c7ff7b2f3a562c186425ecede",
+    "workspace.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "workspace.stderr": "d9d322a2e573359d82728bff6dee0ab986e0de6f814877e0348e7cb4eff5e9ca"
+  },
+  "historical_failure_preserved": true,
+  "runtime_application_acceptance": false
+}

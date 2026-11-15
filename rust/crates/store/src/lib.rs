@@ -514,8 +514,10 @@ mod task_channel_collector;
 pub use task_channel_collector::{ChannelDeletion, ChannelDeletionSelection};
 mod plugin_python_host;
 mod plugin_python_regex;
-pub use plugin_python_host::{Error as PythonRegexError, Receipt as PythonRegexReceipt};
-pub use plugin_python_regex::RegexExecutor;
+pub use plugin_python_host::{
+    Error as PythonRegexError, NoSpawnRetirement, Receipt as PythonRegexReceipt,
+};
+pub use plugin_python_regex::{RegexExecutor, RegexNamedGroupRow, RegexNamedGroups};
 // Actual normal auto-sync algorithm; dependency/SQL effects remain owned.
 #[doc(hidden)]
 pub mod auto_sync;

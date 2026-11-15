@@ -1,0 +1,144 @@
+{
+  "scope": "all16 custom freeze payloads versus actual SDK34 canonical preimages; all14 existing hashes match",
+  "finding": "Two unintended registration/export removals in Store lib ONLY; original freeze immutable, followup restores them",
+  "review": "Every removed diff line inspected; other removals correspond to intentional reachable planner/lifecycle replacement, not stale feature removal",
+  "files": [
+    {
+      "path": "rust/crates/output-http/src/epg_custom.rs",
+      "overlay_sha256": "5054ecb3d8a075c569948df65fb20bc228e461341b60e4855f96ca08548d6d23",
+      "new": true
+    },
+    {
+      "path": "rust/crates/output-http/src/epg_custom_scope.rs",
+      "overlay_sha256": "3d4400b0278c7caebf41db59615c2c6e4319b61381d8de2c8f70c978b1c20597",
+      "new": true
+    },
+    {
+      "path": "rust/crates/output-http/src/epg_dummy.rs",
+      "overlay_sha256": "75d80c9d68eda59731419cdc9ca1ec48251de40ecb34bd4fffb58b1806edf0cd",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "1512b57c11e986264e9c80cd367925250f3944d18586e5a1c471e7081d473f08",
+      "removed_lines": 2,
+      "added_lines": 34,
+      "review": "Intentional visibility broadening for shared custom native planner; source truthy/strip bodies retained."
+    },
+    {
+      "path": "rust/crates/output-http/src/epg_grid.rs",
+      "overlay_sha256": "6265f5dad0d1f9fa802edb8e9739539e32de78672484c3ba5e05b50d119262e7",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "2c1f62b93aa037c3eb8e4c1fef85f59af40d98c219b89846cf3eb80407e02584",
+      "removed_lines": 8,
+      "added_lines": 62,
+      "review": "Replaces configured-only dummy generation with scoped custom planner and actual custom projection. Standard path preserved; output no longer fixed null fields when custom."
+    },
+    {
+      "path": "rust/crates/output-http/src/epg_grid_http.rs",
+      "overlay_sha256": "ad1873902cff3cae72fcfd53a1a15fec4085e7dbba9a20dfe192c670ad32bb4c",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "dbd13c5346233862c56e6257d92a66ea8373b97d8fbd2c1ce30d191726f3c538",
+      "removed_lines": 5,
+      "added_lines": 35,
+      "review": "Adds scope/physical grant proof and propagates actual request/worker completion; only prior return expressions replaced."
+    },
+    {
+      "path": "rust/crates/output-http/src/lib.rs",
+      "overlay_sha256": "c00bb9f56d98178ebc79123d36231f96cf910d80c1bef474b4b902f7545c7d08",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "9d39173af65d89dbe018cf8862b5bbc6d7a7971afc88416622ec101edeea2f17",
+      "removed_lines": 0,
+      "added_lines": 2,
+      "review": "Additive2 module declarations only; no removed line."
+    },
+    {
+      "path": "rust/crates/store/src/lib.rs",
+      "overlay_sha256": "505535ddc46ac3a4aa52de3111fdc05dd5d44763dc382096056e0a0a0698ff83",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "d5debbdf9f5dc52d7d2e35f8dfd7e10a8689c692e76c08e600cce60bd54f9117",
+      "removed_lines": 4,
+      "added_lines": 4,
+      "review": "CONFIRMED unintended removals of epg_task_hooks and PluginPublicationOwners restored by this followup; existing RegexExecutor/Error/Receipt preserved; new typed regex and no-spawn exports retained."
+    },
+    {
+      "path": "rust/crates/store/src/plugin_python_host.rs",
+      "overlay_sha256": "a5b7adec8162e7d0ccdf3e5bdf9fd9dae37135d6b7b392cb89b0cd5195903c4d",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "c4b3e8ce199342533d597514c1b50c8bef1586794bd52167a0608269be47eef4",
+      "removed_lines": 0,
+      "added_lines": 19,
+      "review": "Additive19 lines only: no-spawn marker lifecycle observation."
+    },
+    {
+      "path": "rust/crates/store/src/plugin_python_regex.rs",
+      "overlay_sha256": "aa8a5361d7e3e408bb1721af2fb839c22c5929837131a5018b560f438c614a14",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "80998d11cedc93d708e0c67588d88c308d708b162072e29f50338bd0c93fa0b4",
+      "removed_lines": 0,
+      "added_lines": 181,
+      "review": "Additive181 lines only: typed group/normalize RPC."
+    },
+    {
+      "path": "rust/crates/xc-http/src/epg.rs",
+      "overlay_sha256": "e1dcd24b9a954d897ac19123a2acc7454c72fac7d4c764435ac0c33b4f2ba7d0",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "0fc2a6454d1d052f0fffe63f3db8c364da03915a6fe984fba9718f66a5f71a41",
+      "removed_lines": 11,
+      "added_lines": 25,
+      "review": "Scoped custom planner replaces configured-only dummy call; same Source errors and existing normal output retained."
+    },
+    {
+      "path": "rust/crates/xc-http/src/gateway.rs",
+      "overlay_sha256": "ec68139e57792576a892faa108f52f28ef47e813cddddf3699d3a316c008db80",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "6978304bda5bc838966ea3efe306ab26cb4f1134fb1adbb358bb5f160f7ca912",
+      "removed_lines": 6,
+      "added_lines": 24,
+      "review": "Intentional scope registration/retirement/ownership transfer; old unscoped generation and permit release replaced."
+    },
+    {
+      "path": "rust/crates/xmltv-http/src/content.rs",
+      "overlay_sha256": "82cf0cea5cf9340924606265d005e02351da6c964cf6c794a409e8fadb85bfe8",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "7bec111bdd2c2d6c4c88de741cc1f7cae9fa1353b8f17312ef71d31032acbc09",
+      "removed_lines": 14,
+      "added_lines": 26,
+      "review": "Scoped custom generator replaces explicit unsupported custom guard; XML standard path routes through common planner."
+    },
+    {
+      "path": "rust/crates/xmltv-http/src/gateway.rs",
+      "overlay_sha256": "25a7b5dc4425a6e3932e5496c2b680f95dba12db3cbb7ed79312c7967a445594",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "996b7b56abeaf0db4f5e54f8318ff374222cd2179e82612d42fff7b77017a2b7",
+      "removed_lines": 9,
+      "added_lines": 23,
+      "review": "Intentional scope registration/retirement/ownership transfer; old unscoped generation and permit release replaced."
+    },
+    {
+      "path": "rust/crates/xmltv-http/src/render.rs",
+      "overlay_sha256": "767d40f7a23f6e36515333afe18b1c452f1ee5ce8d120aa8b609587188ca7df1",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "9926d38a3246104c3a74cce7c7880ddc422cb7d299b826be51dd2b53446c18cb",
+      "removed_lines": 1,
+      "added_lines": 72,
+      "review": "Adds custom render; replaces stale draft header only."
+    },
+    {
+      "path": "rust/crates/xmltv-http/src/rows.rs",
+      "overlay_sha256": "79baad4661ff3c7f5c943ff3132245916cfd9a4c3eef34900f60ff891e587159",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "8e89e82f9bdf19a5d950ea8dea182d7fe7dc24a7eb43647c3f9b328bae44a96f",
+      "removed_lines": 0,
+      "added_lines": 13,
+      "review": "Additive13 lines only: custom icon handling."
+    },
+    {
+      "path": "rust/runtime/regex_bridge/dispatcharr_native/regex_only.py",
+      "overlay_sha256": "61b8e198377f2573749414c87acf162cee478b7ce654341d71727cae8e5de26e",
+      "new": false,
+      "actual_SDK34_preimage_sha256": "2f6fa5ef0830f02d462122c9a8623e3c9783de0e1130208d013124f9bb000cf7",
+      "removed_lines": 0,
+      "added_lines": 26,
+      "review": "Additive26 lines only: dependency-only group/normalize operations."
+    }
+  ],
+  "runtime_or_compiler_claim": false
+}

@@ -1292,6 +1292,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         .shutdown(Duration::from_secs(8))
         .await
         .map_err(|_| "Plugin filesystem/SQL/reader drain incomplete; physical owners remain")?;
+    let selected_mode = selected_jobs.is_some();
     if let Some(selected) = selected_jobs {
         selected.stop_producers();
         if !selected.shutdown(Duration::from_secs(12)).await {
@@ -1469,7 +1470,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         Some(index) => index.shutdown(Duration::from_secs(4)).await,
         None => true,
     };
-    if !core_settings_drained
+    let incomplete = !core_settings_drained
         || !combined_stats_drained
         || !refresh_drained
         || !index_intake_drained
@@ -1488,17 +1489,26 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         || !programs
         || !grid
         || !hdhr
-        || !vod_read_drained
-    {
+        || !vod_read_drained;
+    if incomplete {
         eprintln!("Service drain deadline reached; pending reservations require recovery");
     }
     if let Some(clients) = clients {
         clients.shutdown().await;
     }
-    if let Some(statistics) = live_statistics {
-        if !statistics.shutdown(Duration::from_millis(500)).await {
-            eprintln!("Statistics drain deadline reached; pending callbacks require recovery");
-        }
+    let statistics_drained = match live_statistics {
+        Some(statistics) => statistics.shutdown(Duration::from_millis(500)).await,
+        None => true,
+    };
+    if !statistics_drained {
+        eprintln!(
+            "Statistics drain deadline reached; process termination may close pending callbacks"
+        );
+    }
+    if selected_mode && (incomplete || !statistics_drained) {
+        return Err(
+            "Service drain incomplete; process termination may close outstanding resources".into(),
+        );
     }
     Ok(())
 }

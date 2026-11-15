@@ -1,0 +1,143 @@
+{
+  "scope": "Reachable scoped UTC/no-time custom guide output across XMLTV/grid/XC plus physical regex lifecycle and opt-in selected shutdown diagnostics",
+  "source_base": "SDK34 / Candidate28 3ca0ef4417f3187dabca98afc0b29f7ea0a1bdc8",
+  "final_epoch": "SDK39",
+  "all_four_SDK_gates_passed": true,
+  "inputs": 1406,
+  "Rust_tree_inputs": 1400,
+  "changed_paths": [
+    "rust/crates/app/src/main.rs",
+    "rust/crates/app/src/selected_jobs.rs",
+    "rust/crates/output-http/src/epg_custom.rs",
+    "rust/crates/output-http/src/epg_custom_scope.rs",
+    "rust/crates/output-http/src/epg_dummy.rs",
+    "rust/crates/output-http/src/epg_grid.rs",
+    "rust/crates/output-http/src/epg_grid_http.rs",
+    "rust/crates/output-http/src/lib.rs",
+    "rust/crates/store/src/lib.rs",
+    "rust/crates/store/src/plugin_python_host.rs",
+    "rust/crates/store/src/plugin_python_regex.rs",
+    "rust/crates/xc-http/src/epg.rs",
+    "rust/crates/xc-http/src/gateway.rs",
+    "rust/crates/xmltv-http/src/content.rs",
+    "rust/crates/xmltv-http/src/gateway.rs",
+    "rust/crates/xmltv-http/src/render.rs",
+    "rust/crates/xmltv-http/src/rows.rs",
+    "rust/runtime/regex_bridge/dispatcharr_native/regex_only.py"
+  ],
+  "new_paths": [
+    "rust/crates/output-http/src/epg_custom.rs",
+    "rust/crates/output-http/src/epg_custom_scope.rs"
+  ],
+  "test_totals": [
+    1095,
+    0,
+    783
+  ],
+  "test_result_blocks": 180,
+  "Store_exports_restored": [
+    "epg_task_hooks",
+    "PluginPublicationOwners"
+  ],
+  "Docker_built": false,
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "full_milestones_accepted": false,
+  "runtime_fix_claimed_for_Main28_selected_drain": false,
+  "diagnostic_environment": "RUST_SELECTED_SHUTDOWN_DIAGNOSTICS=1; maximum64 fixed-vocabulary records/process; no arbitrary errors/task IDs/URLs/configuration",
+  "known_guards": [
+    "custom time/date patterns",
+    "non-UTC/fractional duration domains",
+    "large guide/expansion stress",
+    "Source forced-shutdown equivalence",
+    "actual Main normal0 and held unknown Main1/actor wait+EOF proof",
+    "current Candidate28 VLC unexpected selected-worker drain1 unresolved",
+    "full M6/M7 and rewrite parity/performance"
+  ],
+  "credit": "Original Dispatcharr, Celery/Kombu/Django, regex, CPython and all dependency authors retain application, algorithm, media, implementation and licensing credit. React and original attribution remain unchanged.",
+  "component_inputs": [
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/custom-guide-map.json",
+      "sha256": "473efaed69ef4010a81e600fb6e40defd7a45f21241274d0f05ad67fc40cae39",
+      "origin": "artifacts/rust/m7-custom-guide-1/overlay-map.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/custom-source-authority.json",
+      "sha256": "b09d781d1c07d07540a46acaf0be5d43219202837127400f8def3002199ac98f",
+      "origin": "artifacts/rust/m7-custom-guide-1/source-authority.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/custom-static-validation.json",
+      "sha256": "105fef2ea5eca4f87985038ef93e583fcca59064fce2c98df0bea305ce4282f0",
+      "origin": "artifacts/rust/m7-custom-guide-1/static-validation.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/main-drain-map.json",
+      "sha256": "81153b4276db88c3f21da864cf7592ebae91df63ea931cef2d572907d2b95619",
+      "origin": "artifacts/rust/m7-guide-drain-exit-1/overlay-map.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/shutdown-diagnostic-map.json",
+      "sha256": "eba64ed6236f9ab27c558d81b0028986a633be5a71c535435891b9a3286a9df8",
+      "origin": "artifacts/rust/m6-selected-shutdown-diagnostics-1/overlay-map.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/store-exports-correction-map.json",
+      "sha256": "80e2b9d49ef3b98158f4153408a61c3b4c6172436f768ce78c8ef92f1b7f19f2",
+      "origin": "artifacts/rust/m7-custom-guide-sdk35-exports-fix-1/overlay-map.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/all16-diff-audit.json",
+      "sha256": "4e10306b7e7ac45fd62b36a9c289c692b7077a3c4e41db4d77ee01922e6d7e78",
+      "origin": "artifacts/rust/m7-custom-guide-sdk35-exports-fix-1/all16-diff-audit.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/ownership-review.json",
+      "sha256": "b169f8edd1f995e9bc87a3d9669cf7051b2dbb482ef045c8010d1912061a5793",
+      "origin": "artifacts/rust/m7-custom-guide-ownership-review-1/review.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/no-spawn-review.json",
+      "sha256": "2278c8174f4ff27e08df0817d3f691a88b5240c3336d5698bc656329c44c367c",
+      "origin": "artifacts/rust/m7-no-spawn-ownership-review-1/review.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/initial-join.json",
+      "sha256": "8bb05203e107ed5b3a949c782a1b7d8fd51cfb332eb0660e42a377d62d6fe5fd",
+      "origin": "artifacts/rust/SDK35-join/join.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/after-format.json",
+      "sha256": "081c509ab42bf4be82ffbc2e24c4c7daed568839cf0f2e7475021e055e11ae6b",
+      "origin": "artifacts/rust/SDK35-join/after-format.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/exports-assembly.json",
+      "sha256": "9d9a7289ca8fda9d09b702cecbba77f56c54ebdb070c65e6bf7c509482ba5cf5",
+      "origin": "artifacts/rust/SDK35-join/exports-correction.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/shutdown-diagnostic-assembly.json",
+      "sha256": "5fbcff4a3dee1af43415768b3148fb89011182256b12af64df646aae295c9c72",
+      "origin": "artifacts/rust/SDK35-join/selected-diagnostic-assembly.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/SDK36-corrections.json",
+      "sha256": "4177cb02bdfa7d9c14ca298d1c03083528e8240132e6562002081883f465c971",
+      "origin": "artifacts/rust/SDK35-join/attempt36-corrections.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/SDK37-correction.json",
+      "sha256": "e99f1013966140755e2ddf8cee2ae689f449cca06975048bfc92d2a237e8e330",
+      "origin": "artifacts/rust/SDK35-join/attempt37-correction.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch29/components/SDK38-correction.json",
+      "sha256": "87c0499e748a908bdc32b854a8abdb2d32fd77298bdfc0f4beb9a284fab8aa64",
+      "origin": "artifacts/rust/SDK35-join/attempt38-correction.json"
+    }
+  ],
+  "all_canonical_preimages_verified": true,
+  "install_proof_sha256": "cb72ef124626e776c8234db8e5e43db8ae28bd5b626905320741fa47da4bc3af",
+  "runtime_installed": true
+}

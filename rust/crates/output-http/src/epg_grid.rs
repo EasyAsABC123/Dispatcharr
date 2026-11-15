@@ -6,7 +6,7 @@ use dispatcharr_store::{
     grid_channel_profile, grid_dummy_span, grid_encode_batch, grid_resolve_window, GridTimestamp,
     Store, StoreError, User,
 };
-use serde_json::json;
+use serde_json::{json, Value};
 use std::collections::HashSet;
 fn capacity() -> StoreError {
     StoreError::StatusBody(503, json!({"detail":"Guide read capacity unavailable."}))
@@ -29,6 +29,16 @@ pub async fn stored_standard_entity(
     params: &[(String, String)],
     now: DateTime<Utc>,
     history: i64,
+) -> Result<Vec<Vec<u8>>, StoreError> {
+    stored_scoped_entity(store, user, params, now, history, None).await
+}
+pub async fn stored_scoped_entity(
+    store: &Store,
+    user: &User,
+    params: &[(String, String)],
+    now: DateTime<Utc>,
+    history: i64,
+    scope: Option<&std::sync::Arc<crate::epg_custom_scope::Scope>>,
 ) -> Result<Vec<Vec<u8>>, StoreError> {
     let stamp = GridTimestamp {
         local: now.naive_utc(),
@@ -53,6 +63,7 @@ pub async fn stored_standard_entity(
     if channels.iter().any(|c| {
         c.source_type.as_deref() == Some("dummy")
             && epg_dummy::simple_config(Some(&c.source_properties)).is_err()
+            && (scope.is_none() || !crate::epg_custom::supported(&c.source_properties))
     }) {
         return Err(unsupported());
     }
@@ -83,6 +94,7 @@ pub async fn stored_standard_entity(
     let (base, days) = grid_dummy_span(now, start, end).map_err(|_| capacity())?;
     let days = u32::try_from(days).map_err(|_| capacity())?;
     let mut batch = Vec::new();
+    let mut batch_bytes = 0usize;
     for custom in [true, false] {
         for (index, channel) in channels.iter().enumerate().filter(|(_, c)| {
             if custom {
@@ -91,23 +103,64 @@ pub async fn stored_standard_entity(
                 c.epg_id.is_none()
             }
         }) {
-            let programs = epg_dummy::configured(
+            let plan = crate::epg_custom::prepare(
+                scope,
                 &channel.uuid.to_string(),
                 names[index].as_deref().unwrap_or(&channel.name),
-                base,
-                days,
-                Some(start),
-                Some(end),
                 custom.then_some(&channel.source_properties),
+                crate::epg_custom::Window {
+                    start: base,
+                    days,
+                    lookback: Some(start),
+                    cutoff: Some(end),
+                },
+                1024 * 1024,
             )
-            .map_err(|_| capacity())?;
+            .await?;
+            let programs = plan.programmes;
             for p in programs {
+                let p = p?;
                 let prefix = if custom {
                     "dummy-custom"
                 } else {
                     "dummy-standard"
                 };
-                batch.push(json!({"id":format!("{prefix}-{}-{}",channel.id,p.start_time.format("%Y%m%dT%H%M%S")),"start_time":p.start_time.to_rfc3339_opts(SecondsFormat::Secs,false),"end_time":p.end_time.to_rfc3339_opts(SecondsFormat::Secs,false),"title":p.title,"description":p.description,"tvg_id":channel.uuid.to_string(),"sub_title":null,"custom_properties":null,"season":null,"episode":null,"is_new":false,"is_live":false,"is_premiere":false,"is_finale":false}));
+                let is_new = p.properties.get("new") == Some(&Value::Bool(true));
+                let is_live = p.properties.get("live") == Some(&Value::Bool(true));
+                let properties = if p.properties.as_object().is_some_and(|v| v.is_empty()) {
+                    Value::Null
+                } else {
+                    p.properties
+                };
+                let format = |time: DateTime<Utc>| {
+                    time.to_rfc3339_opts(
+                        if time.timestamp_subsec_micros() == 0 {
+                            SecondsFormat::Secs
+                        } else {
+                            SecondsFormat::Micros
+                        },
+                        false,
+                    )
+                };
+                let row = json!({"id":format!("{prefix}-{}-{}",channel.id,p.start_time.format("%Y%m%dT%H%M%S")),"start_time":format(p.start_time),"end_time":format(p.end_time),"title":p.title,"description":p.description,"tvg_id":channel.uuid.to_string(),"sub_title":p.sub_title,"custom_properties":properties,"season":null,"episode":null,"is_new":is_new,"is_live":is_live,"is_premiere":false,"is_finale":false});
+                let charge = crate::epg_custom::metadata_bytes(&row)?;
+                if charge > 1024 * 1024 {
+                    return Err(capacity());
+                }
+                if !batch.is_empty() && batch_bytes + charge > 1024 * 1024 {
+                    let (frame, next) = grid_encode_batch(&batch, first, 16 * 1024 * 1024)
+                        .map_err(|_| capacity())?;
+                    retained = retained
+                        .checked_add(frame.len())
+                        .filter(|n| *n <= 32 * 1024 * 1024)
+                        .ok_or_else(capacity)?;
+                    frames.push(frame);
+                    first = next;
+                    batch.clear();
+                    batch_bytes = 0;
+                }
+                batch.push(row);
+                batch_bytes += charge;
                 if batch.len() == 500 {
                     let (frame, next) = grid_encode_batch(&batch, first, 16 * 1024 * 1024)
                         .map_err(|_| capacity())?;
@@ -118,6 +171,7 @@ pub async fn stored_standard_entity(
                     frames.push(frame);
                     first = next;
                     batch.clear();
+                    batch_bytes = 0;
                 }
             }
         }

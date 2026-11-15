@@ -1,0 +1,44 @@
+{
+  "epoch": "SDK38",
+  "gates": [
+    {
+      "name": "fmt",
+      "actual_exit": 0,
+      "wait_completed": true,
+      "source_unchanged": true
+    },
+    {
+      "name": "check",
+      "actual_exit": 0,
+      "wait_completed": true,
+      "source_unchanged": true
+    },
+    {
+      "name": "strict",
+      "actual_exit": 101,
+      "wait_completed": true,
+      "source_unchanged": true
+    },
+    {
+      "name": "workspace",
+      "actual_exit": 0,
+      "wait_completed": true,
+      "source_unchanged": true
+    }
+  ],
+  "explanation": "Full workspace passed1095/0/783; strict items_after_test_module corrected by moving unchanged fallback function before tests.",
+  "raw_files": {
+    "inputs.json": "84650f4f27831a0a4869da84695fc79b2de7b8604970d1fc5af0ca0a9951554b",
+    "checks.json": "22ee31837c6722acb8ab62b99ca8e497fa484ec69b97cd759799257c0271a1a9",
+    "fmt.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fmt.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "check.stderr": "af18ae77c26d3c292f243c883f2eaa317f92a1140318c39214a7d63413aa06e1",
+    "strict.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "strict.stderr": "c92bbbd7e9f2faac22a7ca9aad0b47594f194907c1ca1ac7f75ce06f6e607835",
+    "workspace.stdout": "5d422f15651239c08b7cea4dc9d8f3bb6f3d8c882a60a9d19caac60ea70a0216",
+    "workspace.stderr": "cbe989d7d324234a39eb939b661ab00b3409d2bc37193cde5da8ab7428c47348"
+  },
+  "historical_failure_preserved": true,
+  "runtime_application_acceptance": false
+}

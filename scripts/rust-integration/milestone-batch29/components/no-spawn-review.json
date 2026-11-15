@@ -1,0 +1,37 @@
+{
+  "scope": "Independent offline code review only; no apps/Cargo/tests/source mutation",
+  "frozen_map": "artifacts/rust/m7-custom-guide-1/overlay-map.json",
+  "frozen_map_sha256": "473efaed69ef4010a81e600fb6e40defd7a45f21241274d0f05ad67fc40cae39",
+  "inputs": [
+    {
+      "path": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/output-http/src/epg_custom_scope.rs",
+      "sha256": "3d4400b0278c7caebf41db59615c2c6e4319b61381d8de2c8f70c978b1c20597"
+    },
+    {
+      "path": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/store/src/plugin_python_host.rs",
+      "sha256": "a5b7adec8162e7d0ccdf3e5bdf9fd9dae37135d6b7b392cb89b0cd5195903c4d"
+    },
+    {
+      "path": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/store/src/plugin_python_regex.rs",
+      "sha256": "aa8a5361d7e3e408bb1721af2fb839c22c5929837131a5018b560f438c614a14"
+    }
+  ],
+  "confirmed": [
+    "spawn_attempted.store(true,Release) occurs before sole Running::spawn call and is never reset",
+    "supervisor_finished.store(true,Release) occurs only after normal supervisor epilogue, after any real child retirement; no Drop/unwind/observer-timeout marker",
+    "Acquire finished read synchronizes prior attempted write; subsequent attempted Acquire cannot certify stale false after actual attempt",
+    "Private NoSpawnRetirement constructor reachable only through actual SAME Host finished && !attempted state; it contains no PID/wait/EOF/process result or match value",
+    "Scope checks SAME RegexExecutor token only after shutdown Err; leaves operation fault set, completes normal=false and cannot mint successful CompletedScope",
+    "Any attempted spawn, panic or unfinished supervisor remains token-none and must retain original scope/grants until existing real wait/EOF/group/callback barrier",
+    "Flow set_deadline now shares SAME gate with OnceLock host creation, so drain cannot miss first actor publication or extend existing watch deadline",
+    "Main drain nonzero required via separate81153b4276db88c3f21da864cf7592ebae91df63ea931cef2d572907d2b95619 dependency"
+  ],
+  "unresolved_concrete_findings": [],
+  "runtime_required": [
+    "Root joint SDK compiles new typed marker path and executes prepared inert-supervisor test",
+    "Actual packaged attempted spawn/held search still requires real retirement receipt",
+    "Existing selected Main guide context demonstrates deadline/caller-loss/forced physical retirement and exit1"
+  ],
+  "runtime_qualification": false,
+  "full_M7_passed": false
+}

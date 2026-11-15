@@ -1,0 +1,45 @@
+{
+  "scope": "Independent read-only review of mutable private draft at these exact hashes; no Cargo/apps/source edits",
+  "inputs": [
+    {
+      "path": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/output-http/src/epg_custom_scope.rs",
+      "sha256": "e1b35dd39f23abafd3fb5ef9dd08baa05997df05093b2e3bb4e110e892ad6cbc"
+    },
+    {
+      "path": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/output-http/src/epg_grid_http.rs",
+      "sha256": "ad1873902cff3cae72fcfd53a1a15fec4085e7dbba9a20dfe192c670ad32bb4c"
+    },
+    {
+      "path": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/output-http/src/epg_grid.rs",
+      "sha256": "6265f5dad0d1f9fa802edb8e9739539e32de78672484c3ba5e05b50d119262e7"
+    },
+    {
+      "path": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/store/src/plugin_python_regex.rs",
+      "sha256": "7ba8d398baf186e71763f6ff40bf1f6d4ff3bcbe6bd1432735f7390132a520f4"
+    }
+  ],
+  "confirmed": [
+    "Registry starts no process; caller already owns admitted view grant before Scope open",
+    "OnceLock initialization is inside retirement mutex gate; final external Arc<Scope> Drop starts supervised cleanup, no wrapper Clone or strong-count guessing",
+    "Same request/view/workspace grants retained by actor owner through spawned RPC and retirement",
+    "Earlier registry drain deadline propagates to current and late scopes and real actor watch before waits",
+    "Unknown retirement retains same Flow/owner/registry entry until actual wait/stdoutEOF/stderrEOF/group/callback receipt; no replacement/grant transfer",
+    "CompletedScope construction private, successful only after retirement without fault; Workspace verifies exact Arc identity before transferring actual memory permit",
+    "Grid owned worker remains detached from caller timeout and retains grants; normal response only takes workspace after sealed completion"
+  ],
+  "findings": [
+    {
+      "issue": "Canonical Main only logs !grid before returning Ok, so selected process can otherwise exit0 for unknown scope",
+      "resolution": "Jobs already prepared separate m7-guide-drain-exit-1 map81153b4276db88c3f21da864cf7592ebae91df63ea931cef2d572907d2b95619; required dependency, no further edit requested"
+    }
+  ],
+  "remaining_runtime": [
+    "Actual packaged named regex call + exact process identity and existing view/workspace ownership",
+    "Held actual regex CPU through caller loss/deadline; forced wait/EOF/group/callback receipt and original grants until settlement",
+    "Same-context Main SIGTERM selected exit1 on forced/unsettled retirement with exact independent cleanup",
+    "Actual normal child exit0 and proof-before-memory-transfer, late drain registration",
+    "No physical or Source semantic qualification inferred from static proof test"
+  ],
+  "full_M7_passed": false,
+  "new_unresolved_concrete_issues": []
+}

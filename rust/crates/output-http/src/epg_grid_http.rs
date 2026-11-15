@@ -1,6 +1,6 @@
 //! Independent original Dispatcharr guide adapter; no application route enabled.
 //! Original authors retain full application credit. Physical gates are separate.
-use crate::epg_grid::stored_standard_entity;
+use crate::epg_grid::stored_scoped_entity;
 use axum::{
     body::Body,
     extract::{ConnectInfo, Request, State},
@@ -48,6 +48,7 @@ impl AsRef<[u8]> for Frame {
 }
 struct Inner {
     store: Store,
+    custom: crate::epg_custom_scope::Registry,
     auth: AuthService,
     limits: GridReadLimits,
     requests: Arc<Semaphore>,
@@ -91,6 +92,7 @@ impl GridGateway {
         Ok(Self {
             inner: Arc::new(Inner {
                 store,
+                custom: crate::epg_custom_scope::Registry::new(),
                 auth,
                 limits,
                 requests: Arc::new(Semaphore::new(limits.concurrent_responses)),
@@ -124,6 +126,7 @@ impl GridGateway {
         // the grace period. Closing work permits here would discard them.
         self.inner.owned.close();
         let until = tokio::time::Instant::now() + grace;
+        self.inner.custom.begin_drain(until);
         while self.physical_operations() != 0 && tokio::time::Instant::now() < until {
             tokio::time::sleep(Duration::from_millis(5)).await;
         }
@@ -132,7 +135,8 @@ impl GridGateway {
             self.inner.requests.close();
             self.inner.memory.close();
         }
-        drained
+        let custom = self.inner.custom.shutdown(until).await;
+        drained && custom
     }
     pub async fn read(
         &self,
@@ -176,6 +180,8 @@ impl GridGateway {
         // A bounded input owner precedes auth/cache/SQL. Waiting does not
         // reserve an active96MiB workspace or start physical database work.
         let expires = tokio::time::Instant::now() + self.inner.limits.deadline;
+        let owner = Arc::new(owner);
+        let scope = self.inner.custom.open(owner.clone(), expires)?;
         let state = self.clone();
         let (mut tx, rx) = oneshot::channel();
         tokio::spawn(async move {
@@ -207,10 +213,26 @@ impl GridGateway {
             if tx.is_closed() || tokio::time::Instant::now() >= expires {
                 return;
             }
+            let request_permit = Arc::new(request_permit);
+            let workspace = Arc::new(crate::epg_custom_scope::Workspace::new(workspace));
+            if scope
+                .retain(Arc::new((owner.clone(), request_permit.clone())))
+                .and_then(|()| scope.retain_workspace(workspace.clone()))
+                .is_err()
+            {
+                let _ = tx.send(Err(unavailable()));
+                return;
+            }
             let is_http = matches!(mode, Mode::Http(_));
             let html = html_renderer(&headers, &params);
             let indent = json_indent(&headers);
-            let result = state.prepare(peer, headers, params, &mode).await;
+            let result = state
+                .prepare(peer, headers, params, &mode, scope.clone())
+                .await;
+            let (result, completion) = match scope.finish(result.is_err()).await {
+                Ok(proof) => (result, Some(proof)),
+                Err(error) => (Err(error), None),
+            };
             let prepared = match result {
                 Ok(value) => Ok(value),
                 Err(error) if is_http => {
@@ -257,7 +279,13 @@ impl GridGateway {
                 }
                 Err(error) => Err(error),
             };
-            let result = prepared.and_then(|prepared| finish(prepared, workspace));
+            let result = prepared.and_then(|prepared| {
+                finish(
+                    prepared,
+                    workspace
+                        .take_after_retirement(completion.as_ref().ok_or_else(unavailable)?)?,
+                )
+            });
             drop(request_permit);
             drop(owner);
             let _ = tx.send(result);
@@ -273,6 +301,7 @@ impl GridGateway {
         headers: HeaderMap,
         params: Vec<(String, String)>,
         mode: &Mode,
+        scope: Arc<crate::epg_custom_scope::Scope>,
     ) -> Result<Prepared, StoreError> {
         let method = match mode {
             Mode::Frames => Method::GET,
@@ -327,12 +356,13 @@ impl GridGateway {
             &self.inner.auth.source_epg_settings().await?,
         )
         .map_err(|_| unavailable())?;
-        let frames = stored_standard_entity(
+        let frames = stored_scoped_entity(
             &self.inner.store,
             &user,
             &params,
             (self.inner.clock)(),
             policy.max_days,
+            Some(&scope),
         )
         .await?;
         let mut headers = HeaderMap::new();

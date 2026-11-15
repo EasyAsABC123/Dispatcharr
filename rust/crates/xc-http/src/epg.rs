@@ -202,6 +202,13 @@ pub async fn render(ctx: Context<'_>) -> Result<Vec<u8>, Error> {
     Ok(out.finish())
 }
 pub(crate) async fn write(ctx: &Context<'_>, out: &mut JsonBytes) -> Result<(), Error> {
+    write_scoped(ctx, out, None).await
+}
+pub(crate) async fn write_scoped(
+    ctx: &Context<'_>,
+    out: &mut JsonBytes,
+    scope: Option<&Arc<dispatcharr_output_http::epg_custom_scope::Scope>>,
+) -> Result<(), Error> {
     let limits = ctx.limits;
     if limits.max_programmes == 0
         || limits.max_programmes > 1_000_000
@@ -284,24 +291,31 @@ pub(crate) async fn write(ctx: &Context<'_>, out: &mut JsonBytes) -> Result<(), 
             StoreError::StatusBody(501, _) => Error::Unsupported,
             _ => Error::Capacity,
         })?;
-        let dummy = dispatcharr_output_http::epg_dummy::configured(
+        let plan = dispatcharr_output_http::epg_custom::prepare(
+            scope,
             raw,
             parse_names[0].as_deref().unwrap_or(&channel.name),
-            start,
-            if window.forward_days > 0 {
-                window.forward_days as u32
-            } else {
-                3
-            },
-            Some(if ctx.short { ctx.now } else { lookback }),
-            cutoff,
             channel.properties.as_ref(),
+            dispatcharr_output_http::epg_custom::Window {
+                start,
+                days: if window.forward_days > 0 {
+                    window.forward_days as u32
+                } else {
+                    3
+                },
+                lookback: Some(if ctx.short { ctx.now } else { lookback }),
+                cutoff,
+            },
+            ctx.limits.max_response_bytes.min(1024 * 1024),
         )
+        .await
         .map_err(|error| match error {
-            dispatcharr_output_http::epg_dummy::DummyError::Unsupported => Error::Unsupported,
-            dispatcharr_output_http::epg_dummy::DummyError::Capacity => Error::Capacity,
+            StoreError::StatusBody(501, _) => Error::Unsupported,
+            _ => Error::Capacity,
         })?;
+        let dummy = plan.programmes;
         for p in dummy.take(maximum) {
+            let p = p.map_err(|_| Error::Capacity)?;
             append(
                 out,
                 Programme {

@@ -1,4 +1,4 @@
-//! Draft bounded XML programme formatting; original Dispatcharr authors retain credit.
+//! Bounded Source XML programme formatting; original Dispatcharr authors retain credit.
 use dispatcharr_ingest_core::XmltvProgramme;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum RenderError {
@@ -32,6 +32,57 @@ pub fn standard_dummy(
     out.raw("</title>\n    <desc>")?;
     out.escape(&input.description)?;
     out.raw("</desc>\n  </programme>\n")?;
+    Ok(out.value)
+}
+
+pub fn custom_dummy(
+    input: &dispatcharr_output_http::epg_custom::Programme,
+    limit: usize,
+) -> Result<String, RenderError> {
+    let mut out = Xml::new(limit);
+    out.raw("  <programme start=\"")?;
+    out.raw(&input.start_time.format("%Y%m%d%H%M%S +0000").to_string())?;
+    out.raw("\" stop=\"")?;
+    out.raw(&input.end_time.format("%Y%m%d%H%M%S +0000").to_string())?;
+    out.raw("\" channel=\"")?;
+    out.escape(&input.channel_id)?;
+    out.raw("\">\n")?;
+    out.tag("    ", "title", &input.title)?;
+    if let Some(title) = input.sub_title.as_ref().filter(|v| !v.is_empty()) {
+        out.tag("    ", "sub-title", title)?;
+    }
+    out.tag("    ", "desc", &input.description)?;
+    if let Some(categories) = input
+        .properties
+        .get("categories")
+        .and_then(serde_json::Value::as_array)
+    {
+        for category in categories {
+            out.tag(
+                "    ",
+                "category",
+                category.as_str().ok_or(RenderError::InvalidMetadata)?,
+            )?;
+        }
+    }
+    if let Some(date) = input.properties.get("date") {
+        out.tag(
+            "    ",
+            "date",
+            date.as_str().ok_or(RenderError::InvalidMetadata)?,
+        )?;
+    }
+    for (key, tag) in [("live", "    <live />\n"), ("new", "    <new />\n")] {
+        if input.properties.get(key) == Some(&serde_json::Value::Bool(true)) {
+            out.raw(tag)?;
+        }
+    }
+    if let Some(icon) = input.properties.get("icon") {
+        out.raw("    <icon src=\"")?;
+        out.escape(icon.as_str().ok_or(RenderError::InvalidMetadata)?)?;
+        out.raw("\" />\n")?;
+    }
+    out.raw("  </programme>\n")?;
     Ok(out.value)
 }
 pub struct Programme<'a> {
@@ -677,3 +728,23 @@ pub fn programme(input: Programme<'_>, limit: usize) -> Result<String, RenderErr
 #[cfg(test)]
 #[path = "render_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod custom_no_time_tests {
+    use super::*;
+    #[test]
+    fn source_dummy_custom_tag_order_is_not_real_programme_metadata_order() {
+        let start = "2026-01-02T00:17:19.123456Z".parse().unwrap();
+        let p = dispatcharr_output_http::epg_custom::Programme {
+            channel_id: "owned&".into(),
+            start_time: start,
+            end_time: start + chrono::Duration::minutes(181),
+            title: "Owned <&>".into(),
+            description: "Literal {unknown}".into(),
+            sub_title: Some("".into()),
+            properties: serde_json::json!({"categories":["Sport","Live","Sport"],"date":"2026-01-02","live":true,"new":true,"icon":"http://owned.invalid/p?a=1&b=2"}),
+        };
+        let body = custom_dummy(&p, 4096).unwrap();
+        assert_eq!(body,"  <programme start=\"20260102001719 +0000\" stop=\"20260102031819 +0000\" channel=\"owned&amp;\">\n    <title>Owned &lt;&amp;&gt;</title>\n    <desc>Literal {unknown}</desc>\n    <category>Sport</category>\n    <category>Live</category>\n    <category>Sport</category>\n    <date>2026-01-02</date>\n    <live />\n    <new />\n    <icon src=\"http://owned.invalid/p?a=1&amp;b=2\" />\n  </programme>\n");
+    }
+}

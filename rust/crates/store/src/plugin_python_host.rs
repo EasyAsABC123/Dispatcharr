@@ -50,6 +50,11 @@ pub struct Receipt {
     pub descendants_absent: bool,
     pub callbacks_settled: bool,
 }
+/// Actual supervisor ended normally without ever entering an OS-spawn attempt.
+/// This is NOT a child wait/EOF receipt and certifies no search result.
+pub struct NoSpawnRetirement {
+    _private: (),
+}
 /// Implementations use EXISTING shared SQL/Jobs/cache/event/child ports and
 /// must retain owner through actual operations. Missing ports cannot report
 /// ready: enabling a Python plugin remains pre-effect guarded by Main.
@@ -93,6 +98,8 @@ struct Inner {
     sender: mpsc::Sender<Command>,
     closed: Arc<AtomicBool>,
     receipt: Arc<Mutex<Option<Receipt>>>,
+    spawn_attempted: Arc<AtomicBool>,
+    supervisor_finished: Arc<AtomicBool>,
     stop: watch::Sender<Option<tokio::time::Instant>>,
 }
 #[derive(Clone)]
@@ -416,10 +423,14 @@ impl Host {
             sender,
             closed: Arc::new(AtomicBool::new(false)),
             receipt: Arc::new(Mutex::new(None)),
+            spawn_attempted: Arc::new(AtomicBool::new(false)),
+            supervisor_finished: Arc::new(AtomicBool::new(false)),
             stop,
         });
         let closed = inner.closed.clone();
         let receipts = inner.receipt.clone();
+        let attempted = inner.spawn_attempted.clone();
+        let finished = inner.supervisor_finished.clone();
         // Only an inert protocol actor starts here, not CPython/Source. The
         // first admitted regex operation is the sole child spawn point.
         tokio::spawn(async move {
@@ -451,6 +462,7 @@ impl Host {
                         }
                         let caller = request.scope;
                         if running.is_none() {
+                            attempted.store(true, Ordering::Release);
                             match Running::spawn(
                                 &config,
                                 ports.clone(),
@@ -514,8 +526,15 @@ impl Host {
                     *receipts.lock().await = Some(receipt);
                 }
             }
+            // Normal epilogue ONLY, never a Drop/observer-timeout marker.
+            finished.store(true, Ordering::Release);
         });
         Self { inner }
+    }
+    pub fn no_spawn_retirement(&self) -> Option<NoSpawnRetirement> {
+        (self.inner.supervisor_finished.load(Ordering::Acquire)
+            && !self.inner.spawn_attempted.load(Ordering::Acquire))
+        .then_some(NoSpawnRetirement { _private: () })
     }
     pub async fn call(&self, method: String, args: Value, scope: Owner) -> Result<Value, Error> {
         if self.inner.closed.load(Ordering::Acquire)

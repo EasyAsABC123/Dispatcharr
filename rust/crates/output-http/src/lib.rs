@@ -2,6 +2,8 @@
 //! All original application authors retain full credit; see ATTRIBUTION.md.
 //! Prototype only: no application route or output parity is accepted yet.
 mod csrf;
+pub mod epg_custom;
+pub mod epg_custom_scope;
 pub mod epg_dummy;
 pub mod epg_grid;
 mod epg_grid_http;

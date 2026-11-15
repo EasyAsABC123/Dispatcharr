@@ -1,0 +1,44 @@
+{
+  "epoch": "SDK36",
+  "gates": [
+    {
+      "name": "fmt",
+      "actual_exit": 0,
+      "wait_completed": true,
+      "source_unchanged": true
+    },
+    {
+      "name": "check",
+      "actual_exit": 0,
+      "wait_completed": true,
+      "source_unchanged": true
+    },
+    {
+      "name": "strict",
+      "actual_exit": 101,
+      "wait_completed": true,
+      "source_unchanged": true
+    },
+    {
+      "name": "workspace",
+      "actual_exit": 101,
+      "wait_completed": true,
+      "source_unchanged": true
+    }
+  ],
+  "explanation": "Compiler passed; strict needless_late_init corrected. Four unchanged ingest HTTP tests failed local listener PermissionDenied under default sandbox; this environment failure is distinct from application compatibility and later escalated full tests passed.",
+  "raw_files": {
+    "inputs.json": "773ed8fea7190412ef921d95984c94b6ea9f0b1a51d8e0ddf249f3afa8077572",
+    "checks.json": "6ae80f3647f561a2858cec327e85c2fab4db823836d28a2d4b5034165e96940b",
+    "fmt.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fmt.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "check.stderr": "f2e06f1cb181e7c0661997a78f0f8abc46de15be25cd78676142b46f3831f350",
+    "strict.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "strict.stderr": "926902cf77513eedded901394872c2cff2f42865add8706d90f2166c788a987d",
+    "workspace.stdout": "5ba7666aff83f2c47f6c248ae120f2e971b2393fabf53876478a8a1509f9bcaf",
+    "workspace.stderr": "ca61a113d34e27e38f54a5f8c12e08fb2d058b99510aee3fd586eef7aa95565f"
+  },
+  "historical_failure_preserved": true,
+  "runtime_application_acceptance": false
+}

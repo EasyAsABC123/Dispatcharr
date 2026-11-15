@@ -123,6 +123,19 @@ pub fn requires_custom_adapter(channel: &Channel) -> bool {
         || dispatcharr_output_http::epg_names::stream_offset(Some(value)).is_err()
 }
 
+pub fn requires_scoped_adapter(channel: &Channel) -> bool {
+    if !requires_custom_adapter(channel) {
+        return false;
+    }
+    !(channel.source_type.as_deref() == Some("dummy")
+        && channel
+            .source_properties
+            .as_ref()
+            .is_some_and(dispatcharr_output_http::epg_custom::supported)
+        && dispatcharr_output_http::epg_names::stream_offset(channel.source_properties.as_ref())
+            .is_ok())
+}
+
 fn capacity() -> StoreError {
     StoreError::StatusBody(
         503,

@@ -1,7 +1,7 @@
 //! Streaming XMLTV generation from the original Dispatcharr epg_generator.
-//! Original authors retain full credit. Custom regular-expression dummy guides
-//! are explicitly unsupported until their separate Source engine gate passes.
-use crate::{dummy, render, rows, window::Window};
+//! Original authors retain full credit. Native scoped custom-guide support is
+//! deliberately separate from the unchanged legacy generator capability.
+use crate::{render, rows, window::Window};
 use chrono::{DateTime, Duration, Timelike, Utc};
 use dispatcharr_store::{Store, StoreError, User};
 use futures_util::{Stream, TryStreamExt};
@@ -42,6 +42,15 @@ pub fn generate_counted(
     limits: rows::Limits,
     channel_count: Option<std::sync::Arc<std::sync::atomic::AtomicUsize>>,
 ) -> Pin<Box<dyn Stream<Item = Result<String, StoreError>> + Send>> {
+    generate_counted_scoped(store, ctx, limits, channel_count, None)
+}
+pub fn generate_counted_scoped(
+    store: Store,
+    ctx: Context,
+    limits: rows::Limits,
+    channel_count: Option<std::sync::Arc<std::sync::atomic::AtomicUsize>>,
+    scope: Option<std::sync::Arc<dispatcharr_output_http::epg_custom_scope::Scope>>,
+) -> Pin<Box<dyn Stream<Item = Result<String, StoreError>> + Send>> {
     Box::pin(async_stream::try_stream! {
         limits.validate()?;
         if ctx.origin.len()>65536 || ctx.tvg_id_source.len()>65536 || ctx.max_frame_bytes<PREAMBLE.len() || ctx.max_frame_bytes>8*1024*1024 { Err(failure(503,"XMLTV resource capacity unavailable."))?; }
@@ -58,18 +67,23 @@ pub fn generate_counted(
         let names=dispatcharr_output_http::epg_names::resolve(&store,&channels.iter().map(|c|(c.id,c.source_properties.as_ref())).collect::<Vec<_>>(),limits.max_metadata_bytes).await?;
         for (channel,parse_name) in channels.into_iter().zip(names) {
             // Unknown custom data is never silently treated as a standard guide.
-            if rows::requires_custom_adapter(&channel) { Err(failure(501,"Custom XMLTV source properties require a verified regex adapter."))?; }
+            if if scope.is_some(){rows::requires_scoped_adapter(&channel)}else{rows::requires_custom_adapter(&channel)} { Err(failure(501,"Custom XMLTV source properties require a verified regex adapter."))?; }
             let number=if let Some(numbers)=&numbers {numbers.get(&channel.id).expect("assigned channel number").clone()}else{dispatcharr_output_http::render::display_number(channel.number).map_err(|_|failure(503,"Invalid XMLTV channel number."))?};
             let id=match ctx.tvg_id_source.as_str(){"tvg_id" if channel.tvg_id.as_ref().is_some_and(|s|!s.is_empty())=>channel.tvg_id.clone().unwrap(),"gracenote" if channel.station.as_ref().is_some_and(|s|!s.is_empty())=>channel.station.clone().unwrap(),_ if !number.is_empty()=>number,_=>channel.id.to_string()};
+            let plan=if channel.epg_id.is_none()||channel.source_type.as_deref()==Some("dummy"){
+                let start=ctx.now.with_minute(0).and_then(|v|v.with_second(0)).and_then(|v|v.with_nanosecond(0)).ok_or_else(||failure(503,"Invalid guide clock"))?;
+                Some(dispatcharr_output_http::epg_custom::prepare(scope.as_ref(),&id,parse_name.as_deref().unwrap_or(&channel.name),channel.source_properties.as_ref(),dispatcharr_output_http::epg_custom::Window{start,days:if ctx.window.forward_days>0{ctx.window.forward_days as u32}else{3},lookback:Some(ctx.now-Duration::days(ctx.window.prev_days)),cutoff:(ctx.window.forward_days>0).then(||ctx.now+Duration::days(ctx.window.forward_days))},ctx.max_frame_bytes.min(1024*1024)).await?)
+            }else{None};
             let logo=channel.logo.as_ref().map_or_else(String::new,|(id,url)|if !ctx.cached_logos && (url.starts_with("http://")||url.starts_with("https://")){url.clone()}else{format!("{}/api/channels/logos/{id}/cache/",ctx.origin)});
+            let logo=plan.as_ref().and_then(|p|p.logo.as_ref()).filter(|v|!v.is_empty()).cloned().unwrap_or(logo);
             let xml=render::channel(&id,&channel.name,&logo,ctx.max_frame_bytes).map_err(render_error)?;
             if !batch.is_empty() && batch.len()+xml.len()>target {yield std::mem::take(&mut batch);}
             batch.push_str(&xml);channel_rows+=1;
             if channel_rows.is_multiple_of(200) || batch.len()>=target {yield std::mem::take(&mut batch);}
-            let properties_bytes=channel.source_properties.as_ref().map(rows::json_memory).transpose()?.unwrap_or(0);
+            let properties_bytes=plan.as_ref().map_or(0,|plan|plan.bytes);
             map_bytes=map_bytes.checked_add(256+id.capacity()+channel.name.capacity()+properties_bytes).ok_or_else(||failure(503,"XMLTV mapping capacity unavailable."))?;
             if map_bytes>limits.max_metadata_bytes {Err(failure(503,"XMLTV mapping capacity unavailable."))?;}
-            if channel.epg_id.is_none() || channel.source_type.as_deref()==Some("dummy") {placeholders.push((id,parse_name.unwrap_or(channel.name),channel.source_properties));} else {real.entry(channel.epg_id.unwrap()).or_default().push(id);}
+            if let Some(plan)=plan {placeholders.push(plan.programmes);} else {real.entry(channel.epg_id.unwrap()).or_default().push(id);}
         }
         if !batch.is_empty(){yield std::mem::take(&mut batch);}
         drop(numbers);
@@ -90,14 +104,12 @@ pub fn generate_counted(
         }
         if !batch.is_empty(){yield std::mem::take(&mut batch);}
         drop(programmes);drop(real);
-        let start=ctx.now.with_minute(0).and_then(|v|v.with_second(0)).and_then(|v|v.with_nanosecond(0)).expect("valid UTC hour");
-        for (id,name,properties) in placeholders {
-            let days=if ctx.window.forward_days>0{ctx.window.forward_days as u32}else{3};
-            for programme in dummy::configured(&id,&name,start,days,Some(lookback),cutoff,properties.as_ref()).map_err(render_error)? {
-                let xml=render::standard_dummy(&programme,ctx.max_frame_bytes).map_err(render_error)?;
-                if !batch.is_empty() && batch.len()+xml.len()>target {yield std::mem::take(&mut batch);}
-                batch.push_str(&xml);
-                if batch.len()>=target {yield std::mem::take(&mut batch);}
+        for programmes in placeholders {
+            for programme in programmes {
+                let programme=programme?;
+                let xml=render::custom_dummy(&programme,ctx.max_frame_bytes).map_err(render_error)?;
+                if !batch.is_empty()&&batch.len()+xml.len()>target{yield std::mem::take(&mut batch);}
+                batch.push_str(&xml);if batch.len()>=target{yield std::mem::take(&mut batch);}
             }
             if !batch.is_empty(){yield std::mem::take(&mut batch);}
         }

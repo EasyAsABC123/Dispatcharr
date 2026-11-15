@@ -1,4 +1,4 @@
-//! Unregistered/unwired XC gateway draft. Original Dispatcharr author credit.
+//! Source XC gateway with explicitly scoped custom-guide dependency ownership.
 //! All paths require original/native HTTP and resource gates before acceptance.
 use crate::{
     counts::ConnectionCounts,
@@ -58,6 +58,7 @@ struct Inner {
     auth: AuthService,
     counts: ConnectionCounts,
     config: XcConfig,
+    custom: dispatcharr_output_http::epg_custom_scope::Registry,
     requests: Arc<Semaphore>,
     memory: Arc<Semaphore>,
     stopped: AtomicBool,
@@ -142,6 +143,7 @@ impl XcGateway {
                 requests: Arc::new(Semaphore::new(config.max_requests)),
                 memory: Arc::new(Semaphore::new(config.max_memory_bytes)),
                 config,
+                custom: dispatcharr_output_http::epg_custom_scope::Registry::new(),
                 stopped: AtomicBool::new(false),
                 epg_enabled: AtomicBool::new(false),
                 vod_lists_enabled: AtomicBool::new(false),
@@ -215,7 +217,9 @@ impl XcGateway {
         self.inner.stopped.store(true, Ordering::Release);
         self.inner.requests.close();
         self.inner.memory.close();
-        tokio::time::timeout(Duration::from_secs(5), async {
+        let deadline = tokio::time::Instant::now() + Duration::from_secs(5);
+        self.inner.custom.begin_drain(deadline);
+        let drained = tokio::time::timeout(Duration::from_secs(5), async {
             loop {
                 let done = self.inner.done.notified();
                 if self.active_requests() == 0 {
@@ -230,7 +234,9 @@ impl XcGateway {
             }
         })
         .await
-        .is_ok()
+        .is_ok();
+        let custom = self.inner.custom.shutdown(deadline).await;
+        drained && custom
     }
     async fn handle(&self, request: Request<Body>) -> Result<Response, StoreError> {
         if self.inner.stopped.load(Ordering::Acquire) {
@@ -243,6 +249,10 @@ impl XcGateway {
                 .try_acquire_owned()
                 .map_err(|_| reader::capacity())?,
         );
+        let scope = self.inner.custom.open(
+            permit.clone(),
+            tokio::time::Instant::now() + self.inner.config.request_deadline,
+        )?;
         self.inner.workers.fetch_add(1, Ordering::AcqRel);
         let worker = Worker(self.inner.clone());
         let gateway = self.clone();
@@ -255,7 +265,7 @@ impl XcGateway {
         // its existing request/memory grants live until actual completion.
         let physical = tokio::spawn(async move {
             let _worker = worker;
-            gateway.process(request, permit).await
+            gateway.process(request, permit, scope).await
         });
         observe_physical(deadline, physical).await
     }
@@ -263,18 +273,23 @@ impl XcGateway {
         &self,
         request: Request<Body>,
         permit: Arc<OwnedSemaphorePermit>,
+        scope: Arc<dispatcharr_output_http::epg_custom_scope::Scope>,
     ) -> Result<Response, StoreError> {
         let config = &self.inner.config;
         let reservation = config.max_metadata_bytes * 2
             + config.max_response_bytes * 2
             + config.max_body_bytes * 2;
-        let mut memory = self
+        let memory = self
             .inner
             .memory
             .clone()
             .acquire_many_owned(reservation as u32)
             .await
             .map_err(|_| reader::capacity())?;
+        let memory = Arc::new(dispatcharr_output_http::epg_custom_scope::Workspace::new(
+            memory,
+        ));
+        scope.retain_workspace(memory.clone())?;
         let mut header_bytes = request.uri().to_string().len();
         for (name, value) in request.headers() {
             header_bytes = header_bytes
@@ -383,7 +398,7 @@ impl XcGateway {
                 max_response_bytes: config.max_response_bytes,
                 max_number_bytes: config.max_number_bytes,
             };
-            let result = crate::epg::write(
+            let result = crate::epg::write_scoped(
                 &crate::epg::Context {
                     store: &self.inner.store,
                     auth: &auth,
@@ -395,6 +410,7 @@ impl XcGateway {
                     number_memory: self.inner.memory.clone(),
                 },
                 &mut out,
+                Some(&scope),
             )
             .await;
             match result {
@@ -542,8 +558,10 @@ impl XcGateway {
         drop(auth);
         drop(identity);
         drop(parts);
+        let completion = scope.finish(false).await?;
         let data = out.finish();
         let size = data.len();
+        let mut memory = memory.take_after_retirement(&completion)?;
         let retained = memory.split(data.capacity()).ok_or_else(reader::capacity)?;
         drop(memory);
         let data = Bytes::from_owner(Payload {

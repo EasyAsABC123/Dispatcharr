@@ -113,7 +113,7 @@ impl Iterator for StandardDummy {
 pub struct SimpleConfig<'a> {
     fallback: Option<(&'a str, &'a str)>,
 }
-fn source_truthy(value: &Value) -> bool {
+pub(crate) fn source_truthy(value: &Value) -> bool {
     match value {
         Value::Null => false,
         Value::Bool(v) => *v,
@@ -123,7 +123,7 @@ fn source_truthy(value: &Value) -> bool {
         Value::Object(v) => !v.is_empty(),
     }
 }
-fn source_strip(value: &str) -> &str {
+pub(crate) fn source_strip(value: &str) -> &str {
     value.trim_matches(|c:char|matches!(c,'\u{9}'..='\u{d}'|'\u{1c}'..='\u{20}'|'\u{85}'|'\u{a0}'|'\u{1680}'|'\u{2000}'..='\u{200a}'|'\u{2028}'|'\u{2029}'|'\u{202f}'|'\u{205f}'|'\u{3000}'))
 }
 pub fn simple_config(properties: Option<&Value>) -> Result<SimpleConfig<'_>, DummyError> {
@@ -205,6 +205,38 @@ impl Iterator for ConfiguredDummy {
         Some(programme)
     }
 }
+pub(crate) fn fallback_after_no_match(
+    channel: &str,
+    name: &str,
+    start: DateTime<Utc>,
+    days: u32,
+    lookback: Option<DateTime<Utc>>,
+    cutoff: Option<DateTime<Utc>>,
+    properties: &Value,
+) -> Result<ConfiguredDummy, DummyError> {
+    let object = properties.as_object().ok_or(DummyError::Unsupported)?;
+    let title = fallback_field(object, "fallback_title_template")?;
+    let description = fallback_field(object, "fallback_description_template")?;
+    let fallback = (!title.is_empty() || !description.is_empty()).then(|| {
+        (
+            if title.is_empty() {
+                name.to_owned()
+            } else {
+                title.to_owned()
+            },
+            if description.is_empty() {
+                format!("EPG information is currently unavailable for {name}")
+            } else {
+                description.to_owned()
+            },
+        )
+    });
+    Ok(ConfiguredDummy {
+        standard: standard(channel, name, start, days, lookback, cutoff)?,
+        fallback,
+    })
+}
+
 #[cfg(test)]
 mod configured_tests {
     use super::*;

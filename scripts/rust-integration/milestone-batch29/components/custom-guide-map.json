@@ -1,0 +1,155 @@
+{
+  "state": "FROZEN coherent scoped native UTC/no-time custom guide path; static checks only",
+  "base_commit": "d4f9bc878ff391af6ca8c19b571eb04519075d0e",
+  "dependencies": [
+    {
+      "map": "artifacts/rust/m7-stream-name-1/overlay-map.json",
+      "sha256": "dc8c46cc810a41dccbe3c20b564295241f5433729e75bba1b54b71ac441e7b93"
+    },
+    {
+      "map": "artifacts/rust/m7-guide-drain-exit-1/overlay-map.json",
+      "sha256": "81153b4276db88c3f21da864cf7592ebae91df63ea931cef2d572907d2b95619"
+    }
+  ],
+  "files": [
+    {
+      "path": "rust/crates/output-http/src/epg_custom.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/output-http/src/epg_custom.rs",
+      "new": true,
+      "preimage_path": null,
+      "preimage_sha256": null,
+      "sha256": "5054ecb3d8a075c569948df65fb20bc228e461341b60e4855f96ca08548d6d23"
+    },
+    {
+      "path": "rust/crates/output-http/src/epg_custom_scope.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/output-http/src/epg_custom_scope.rs",
+      "new": true,
+      "preimage_path": null,
+      "preimage_sha256": null,
+      "sha256": "3d4400b0278c7caebf41db59615c2c6e4319b61381d8de2c8f70c978b1c20597"
+    },
+    {
+      "path": "rust/crates/output-http/src/epg_dummy.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/output-http/src/epg_dummy.rs",
+      "new": false,
+      "preimage_path": "artifacts/rust/m7-stream-name-1/overlay/rust/crates/output-http/src/epg_dummy.rs",
+      "preimage_sha256": "1512b57c11e986264e9c80cd367925250f3944d18586e5a1c471e7081d473f08",
+      "sha256": "75d80c9d68eda59731419cdc9ca1ec48251de40ecb34bd4fffb58b1806edf0cd"
+    },
+    {
+      "path": "rust/crates/output-http/src/epg_grid.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/output-http/src/epg_grid.rs",
+      "new": false,
+      "preimage_path": "artifacts/rust/m7-stream-name-1/overlay/rust/crates/output-http/src/epg_grid.rs",
+      "preimage_sha256": "2c1f62b93aa037c3eb8e4c1fef85f59af40d98c219b89846cf3eb80407e02584",
+      "sha256": "6265f5dad0d1f9fa802edb8e9739539e32de78672484c3ba5e05b50d119262e7"
+    },
+    {
+      "path": "rust/crates/output-http/src/epg_grid_http.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/output-http/src/epg_grid_http.rs",
+      "new": false,
+      "preimage_path": "rust/crates/output-http/src/epg_grid_http.rs",
+      "preimage_sha256": "dbd13c5346233862c56e6257d92a66ea8373b97d8fbd2c1ce30d191726f3c538",
+      "sha256": "ad1873902cff3cae72fcfd53a1a15fec4085e7dbba9a20dfe192c670ad32bb4c"
+    },
+    {
+      "path": "rust/crates/output-http/src/lib.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/output-http/src/lib.rs",
+      "new": false,
+      "preimage_path": "artifacts/rust/m7-stream-name-1/overlay/rust/crates/output-http/src/lib.rs",
+      "preimage_sha256": "9d39173af65d89dbe018cf8862b5bbc6d7a7971afc88416622ec101edeea2f17",
+      "sha256": "c00bb9f56d98178ebc79123d36231f96cf910d80c1bef474b4b902f7545c7d08"
+    },
+    {
+      "path": "rust/crates/store/src/lib.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/store/src/lib.rs",
+      "new": false,
+      "preimage_path": "rust/crates/store/src/lib.rs",
+      "preimage_sha256": "d5debbdf9f5dc52d7d2e35f8dfd7e10a8689c692e76c08e600cce60bd54f9117",
+      "sha256": "505535ddc46ac3a4aa52de3111fdc05dd5d44763dc382096056e0a0a0698ff83"
+    },
+    {
+      "path": "rust/crates/store/src/plugin_python_host.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/store/src/plugin_python_host.rs",
+      "new": false,
+      "preimage_path": "rust/crates/store/src/plugin_python_host.rs",
+      "preimage_sha256": "c4b3e8ce199342533d597514c1b50c8bef1586794bd52167a0608269be47eef4",
+      "sha256": "a5b7adec8162e7d0ccdf3e5bdf9fd9dae37135d6b7b392cb89b0cd5195903c4d"
+    },
+    {
+      "path": "rust/crates/store/src/plugin_python_regex.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/store/src/plugin_python_regex.rs",
+      "new": false,
+      "preimage_path": "rust/crates/store/src/plugin_python_regex.rs",
+      "preimage_sha256": "80998d11cedc93d708e0c67588d88c308d708b162072e29f50338bd0c93fa0b4",
+      "sha256": "aa8a5361d7e3e408bb1721af2fb839c22c5929837131a5018b560f438c614a14"
+    },
+    {
+      "path": "rust/crates/xc-http/src/epg.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/xc-http/src/epg.rs",
+      "new": false,
+      "preimage_path": "artifacts/rust/m7-stream-name-1/overlay/rust/crates/xc-http/src/epg.rs",
+      "preimage_sha256": "0fc2a6454d1d052f0fffe63f3db8c364da03915a6fe984fba9718f66a5f71a41",
+      "sha256": "e1dcd24b9a954d897ac19123a2acc7454c72fac7d4c764435ac0c33b4f2ba7d0"
+    },
+    {
+      "path": "rust/crates/xc-http/src/gateway.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/xc-http/src/gateway.rs",
+      "new": false,
+      "preimage_path": "rust/crates/xc-http/src/gateway.rs",
+      "preimage_sha256": "6978304bda5bc838966ea3efe306ab26cb4f1134fb1adbb358bb5f160f7ca912",
+      "sha256": "ec68139e57792576a892faa108f52f28ef47e813cddddf3699d3a316c008db80"
+    },
+    {
+      "path": "rust/crates/xmltv-http/src/content.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/xmltv-http/src/content.rs",
+      "new": false,
+      "preimage_path": "artifacts/rust/m7-stream-name-1/overlay/rust/crates/xmltv-http/src/content.rs",
+      "preimage_sha256": "7bec111bdd2c2d6c4c88de741cc1f7cae9fa1353b8f17312ef71d31032acbc09",
+      "sha256": "82cf0cea5cf9340924606265d005e02351da6c964cf6c794a409e8fadb85bfe8"
+    },
+    {
+      "path": "rust/crates/xmltv-http/src/gateway.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/xmltv-http/src/gateway.rs",
+      "new": false,
+      "preimage_path": "rust/crates/xmltv-http/src/gateway.rs",
+      "preimage_sha256": "996b7b56abeaf0db4f5e54f8318ff374222cd2179e82612d42fff7b77017a2b7",
+      "sha256": "25a7b5dc4425a6e3932e5496c2b680f95dba12db3cbb7ed79312c7967a445594"
+    },
+    {
+      "path": "rust/crates/xmltv-http/src/render.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/xmltv-http/src/render.rs",
+      "new": false,
+      "preimage_path": "rust/crates/xmltv-http/src/render.rs",
+      "preimage_sha256": "9926d38a3246104c3a74cce7c7880ddc422cb7d299b826be51dd2b53446c18cb",
+      "sha256": "767d40f7a23f6e36515333afe18b1c452f1ee5ce8d120aa8b609587188ca7df1"
+    },
+    {
+      "path": "rust/crates/xmltv-http/src/rows.rs",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/crates/xmltv-http/src/rows.rs",
+      "new": false,
+      "preimage_path": "artifacts/rust/m7-stream-name-1/overlay/rust/crates/xmltv-http/src/rows.rs",
+      "preimage_sha256": "8e89e82f9bdf19a5d950ea8dea182d7fe7dc24a7eb43647c3f9b328bae44a96f",
+      "sha256": "79baad4661ff3c7f5c943ff3132245916cfd9a4c3eef34900f60ff891e587159"
+    },
+    {
+      "path": "rust/runtime/regex_bridge/dispatcharr_native/regex_only.py",
+      "overlay": "artifacts/rust/m7-custom-guide-1/overlay/rust/runtime/regex_bridge/dispatcharr_native/regex_only.py",
+      "new": false,
+      "preimage_path": "rust/runtime/regex_bridge/dispatcharr_native/regex_only.py",
+      "preimage_sha256": "2f6fa5ef0830f02d462122c9a8623e3c9783de0e1130208d013124f9bb000cf7",
+      "sha256": "61b8e198377f2573749414c87acf162cee478b7ce654341d71727cae8e5de26e"
+    }
+  ],
+  "not_a_dependency": "m7-regex-groups-1 mutable draft is NOT applied; its reviewed operation additions are flattened here with real caller/lifecycle joins",
+  "runtime_or_performance_claim": false,
+  "unqualified": [
+    "time/date-pattern timelines and non-UTC/fractional duration configuration",
+    "metadata/template expansion beyond explicit budget",
+    "malformed Source error-body parity",
+    "EPG-download Connect/plugin sideeffects",
+    "fresh packaged normal/held/callerloss/late-drain tests",
+    "Source held HTTP shutdown counterpart",
+    "full M7/M6/Source47 parity and gains"
+  ]
+}

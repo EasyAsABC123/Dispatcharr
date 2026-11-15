@@ -67,6 +67,7 @@ struct Inner {
     store: Store,
     auth: AuthService,
     cache: Cache,
+    custom: dispatcharr_output_http::epg_custom_scope::Registry,
     config: Config,
     requests: Arc<Semaphore>,
     builds: Arc<Semaphore>,
@@ -142,6 +143,7 @@ impl Gateway {
                 store,
                 auth,
                 cache,
+                custom: dispatcharr_output_http::epg_custom_scope::Registry::new(),
                 requests: Arc::new(Semaphore::new(config.max_requests)),
                 builds: Arc::new(Semaphore::new(config.max_builds)),
                 memory: Arc::new(Semaphore::new(config.max_memory_bytes)),
@@ -178,14 +180,18 @@ impl Gateway {
     pub async fn shutdown(&self) -> bool {
         self.inner.stopped.store(true, Ordering::Release);
         self.inner.stop.send_replace(true);
-        tokio::time::timeout(Duration::from_secs(5), async {
+        let deadline = tokio::time::Instant::now() + Duration::from_secs(5);
+        self.inner.custom.begin_drain(deadline);
+        let drained = tokio::time::timeout(Duration::from_secs(5), async {
             while self.inner.workers.load(Ordering::Acquire) > 0 {
                 tokio::time::sleep(Duration::from_millis(10)).await;
             }
             self.inner.cache.drain_cleanup(Duration::from_secs(5)).await
         })
         .await
-        .unwrap_or(false)
+        .unwrap_or(false);
+        let custom = self.inner.custom.shutdown(deadline).await;
+        drained && custom
     }
     fn attachment(&self, body: Body) -> Response {
         (
@@ -201,6 +207,8 @@ impl Gateway {
         )
             .into_response()
     }
+    // Keep independent request authority and lifecycle guards explicit.
+    #[allow(clippy::too_many_arguments)]
     async fn response(
         &self,
         identity: PlaybackRequest,
@@ -209,6 +217,7 @@ impl Gateway {
         headers: HeaderMap,
         body: Vec<u8>,
         lease: Arc<RequestLease>,
+        scope: Arc<dispatcharr_output_http::epg_custom_scope::Scope>,
     ) -> Result<Response, StoreError> {
         if let Some(failure) =
             dispatcharr_output_http::source_csrf_failure(&method, &headers, &body)
@@ -334,7 +343,7 @@ impl Gateway {
             )
             .await?
             {
-                if channels.iter().any(rows::requires_custom_adapter) {
+                if channels.iter().any(rows::requires_scoped_adapter) {
                     return Err(StoreError::StatusBody(
                         501,
                         json!({"detail":"Custom XMLTV source properties require a verified regex adapter."}),
@@ -366,12 +375,16 @@ impl Gateway {
             max_frame_bytes: self.inner.config.max_frame_bytes,
             numbering_bytes: self.inner.config.max_number_bytes,
         };
-        let source: Option<Source> = if build.is_some() {
-            Some(content::generate_counted(
+        let leader = build.is_some();
+        let physical_guard: Arc<dyn Send + Sync> = Arc::new((lease.clone(), build));
+        scope.retain(physical_guard.clone())?;
+        let source: Option<Source> = if leader {
+            Some(content::generate_counted_scoped(
                 self.inner.store.clone(),
                 ctx,
                 self.inner.config.rows.clone(),
                 Some(channel_count.clone()),
+                Some(scope.clone()),
             ))
         } else {
             None
@@ -391,13 +404,13 @@ impl Gateway {
         let engine = self.clone();
         tokio::spawn(async move {
             let _worker = worker;
-            let physical_guard: Arc<dyn Send + Sync> = Arc::new((lease.clone(), build));
+            let mut completed = false;
             loop {
                 if *stopped.borrow() {
                     break;
                 }
-                let reply = tokio::select! {value=receiver.recv()=>match value{Some(value)=>value,None=>break},_=stopped.changed()=>break};
-                let next = tokio::select! {value=delivery.next(physical_guard.clone())=>value,_=stopped.changed()=>break};
+                let mut reply = tokio::select! {value=receiver.recv()=>match value{Some(value)=>value,None=>break},_=stopped.changed()=>break};
+                let next = tokio::select! {value=delivery.next(physical_guard.clone())=>value,_=reply.closed()=>break,_=stopped.changed()=>break};
                 match next {
                     Ok(Some(mut bytes)) => {
                         bytes.retain_frame_guard(lease.memory.clone());
@@ -406,6 +419,7 @@ impl Gateway {
                         }
                     }
                     Ok(None) => {
+                        completed = true;
                         if delivery.completed_build()
                             && matches!(
                                 engine
@@ -435,6 +449,7 @@ impl Gateway {
                 }
             }
             drop(delivery);
+            let _ = scope.finish(!completed).await;
             drop(engine);
         });
         let stream = futures_util::stream::unfold(demand, |demand| async move {
@@ -529,10 +544,11 @@ async fn dispatch(
         if uri.query().is_some_and(|q|q.len()>65536) || uri.path().len()>8192 || request.headers().len()>4096 || request.headers().iter().try_fold(0usize,|n,(key,value)|n.checked_add(key.as_str().len()+value.as_bytes().len())).is_none_or(|n|n>65536){return Err(unavailable())}
         let peer_ip=request.extensions().get::<ConnectInfo<SocketAddr>>().ok_or_else(unavailable)?.0.ip();
         let identity=PlaybackRequest{channel_id:String::new(),peer_ip,query:url::form_urlencoded::parse(uri.query().unwrap_or("").as_bytes()).into_owned().collect(),headers:dispatcharr_contracts::source_headers(request.headers().iter().map(|(key,value)|(key.as_str(),value.as_bytes())))};
+        let scope=engine.inner.custom.open(lease.clone(),tokio::time::Instant::now()+engine.inner.config.setup_deadline+engine.inner.config.stream_deadline)?;
         let method=request.method().clone();let headers=request.headers().clone();let path=uri.path().to_owned();let worker=engine.worker();let owned=engine.clone();
         tokio::spawn(async move {
             let _worker=worker;let mut stopped=owned.inner.stop.subscribe();if *stopped.borrow(){return Err(unavailable())}
-            let work=async {let body=axum::body::to_bytes(request.into_body(),owned.inner.config.max_body_bytes).await.map_err(|_|unavailable())?;owned.response(identity,path,method,headers,body.to_vec(),lease).await};
+            let work=async {let body=axum::body::to_bytes(request.into_body(),owned.inner.config.max_body_bytes).await.map_err(|_|unavailable())?;owned.response(identity,path,method,headers,body.to_vec(),lease,scope).await};
             tokio::select!{value=tokio::time::timeout(owned.inner.config.setup_deadline,work)=>value.map_err(|_|unavailable())?,_=stopped.changed()=>Err(unavailable())}
         }).await.map_err(|_|unavailable())?
     }.await;
