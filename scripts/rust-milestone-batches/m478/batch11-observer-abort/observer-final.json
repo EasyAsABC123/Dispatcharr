@@ -1,0 +1,25 @@
+{
+  "thread_settled": true,
+  "actual_rows": 1504,
+  "written_rows": 1504,
+  "persisted_rows": 1504,
+  "captured_bytes": 310985,
+  "row_limit": 20000,
+  "byte_limit": 16777216,
+  "terminal_reader_error": null,
+  "close_after_cases": true,
+  "terminal_marker": "channel-acceptance-terminal-a3e52ff1045a48b1b80dd19399e8831a",
+  "terminal_marker_read": true,
+  "terminal_barrier_observed": true,
+  "terminal_barrier_fsynced": true,
+  "writer_closed": true,
+  "flush_calls": 3,
+  "fsync_calls": 1,
+  "scope": "All commands through the actual terminal ECHO are buffered in bounded batches then flush/fsync completes before the durable marker event; no subsequent background polls are included.",
+  "observer_error": {
+    "type": "AttributeError",
+    "message": "'str' object has no attribute 'stem'"
+  },
+  "owned_SQL_connection_closed": true,
+  "actual_finished_monotonic": 31297.30921376
+}

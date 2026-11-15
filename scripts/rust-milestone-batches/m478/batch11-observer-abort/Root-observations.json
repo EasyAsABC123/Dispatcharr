@@ -1,0 +1,861 @@
+{
+  "scope": "Selected projection of retained observations, not a full raw/input closure or application milestone acceptance",
+  "image_id": "sha256:6d1cac5939da5e99e1fd41742c0cc34c34dad9a9fdeff7a59585d687cbb3aa8e",
+  "runtime_revision": "91c8ce7f2363a10ab872f79a7c8a727835626840",
+  "raw_refs_sha256": {
+    "artifacts/rust/normal-graph-batch11-functional-1/fixtures/Native-b8a8287d/channel-acceptance-be335a85/report.json": "25ea83f9ff88f1af0ab34e1547d268b48545c3a524abcfe11a5e4d3ccd22a640",
+    "artifacts/rust/normal-graph-batch11-functional-1/fixtures/Native-b8a8287d/channel-acceptance-be335a85/http98.json": "f9d6c03c85288b380398ea2024fc2aef703a1c04f0fd4c8db28b2817bd3f2f5f",
+    "artifacts/rust/m6-channel-source-http-actual-1/source-report.json": "703ce237661a04f19409c24dd059810f13b764a58ad673408b3e381522389b55"
+  },
+  "Source9_counterparts": [
+    {
+      "name": "normal_names",
+      "task_id": "b31823e4-f500-47d8-b26c-9fe7f511cfb1",
+      "status": "SUCCESS",
+      "result": {
+        "status": "completed",
+        "updated_count": 1,
+        "error_count": 0,
+        "errors": []
+      },
+      "checks": {
+        "status": true,
+        "result": true,
+        "identity": true,
+        "children": true,
+        "ttl": true,
+        "progress": true,
+        "success_traceback_null": true,
+        "exact_name_only": true,
+        "all_SQL_changed_rows_and_fields": true
+      },
+      "effect_review": {
+        "passed": true,
+        "checks": {
+          "dispatcharr_channels_channel-delta-cardinalities": true,
+          "dispatcharr_channels_logo-delta-cardinalities": true,
+          "dispatcharr_channels_channelstream-delta-cardinalities": true,
+          "dispatcharr_channels_channelprofilemembership-delta-cardinalities": true,
+          "dispatcharr_channels_channel-inserted-all-fields": true,
+          "dispatcharr_channels_channel-removed-all-fields": true,
+          "dispatcharr_channels_channel-changed-all-fields": true,
+          "dispatcharr_channels_logo-inserted-all-fields": true,
+          "dispatcharr_channels_logo-removed-all-fields": true,
+          "dispatcharr_channels_logo-changed-all-fields": true,
+          "dispatcharr_channels_channelstream-inserted-all-fields": true,
+          "dispatcharr_channels_channelstream-removed-all-fields": true,
+          "dispatcharr_channels_channelstream-changed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-inserted-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-removed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-changed-all-fields": true
+        },
+        "actual_deltas": {
+          "dispatcharr_channels_channel": {
+            "inserted": [],
+            "removed": [],
+            "changed": [
+              {
+                "before": {
+                  "id": 1,
+                  "name": "Old owned name",
+                  "uuid": "eb7b3cf2-7996-4189-b2aa-7ca7d4456879",
+                  "tvg_id": "old.owned.id",
+                  "logo_id": null,
+                  "is_adult": false,
+                  "is_radio": false,
+                  "created_at": "2026-11-15T04:51:53.033537+00:00",
+                  "is_catchup": false,
+                  "updated_at": "2026-11-15T04:51:53.033558+00:00",
+                  "user_level": 0,
+                  "epg_data_id": 3,
+                  "auto_created": false,
+                  "catchup_days": 0,
+                  "channel_number": 7000,
+                  "channel_group_id": null,
+                  "stream_profile_id": null,
+                  "auto_created_by_id": null,
+                  "hidden_from_output": false,
+                  "tvc_guide_stationid": null
+                },
+                "after": {
+                  "id": 1,
+                  "name": "Owned EPG name",
+                  "uuid": "eb7b3cf2-7996-4189-b2aa-7ca7d4456879",
+                  "tvg_id": "old.owned.id",
+                  "logo_id": null,
+                  "is_adult": false,
+                  "is_radio": false,
+                  "created_at": "2026-11-15T04:51:53.033537+00:00",
+                  "is_catchup": false,
+                  "updated_at": "2026-11-15T04:51:53.033558+00:00",
+                  "user_level": 0,
+                  "epg_data_id": 3,
+                  "auto_created": false,
+                  "catchup_days": 0,
+                  "channel_number": 7000,
+                  "channel_group_id": null,
+                  "stream_profile_id": null,
+                  "auto_created_by_id": null,
+                  "hidden_from_output": false,
+                  "tvc_guide_stationid": null
+                }
+              }
+            ]
+          },
+          "dispatcharr_channels_logo": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelstream": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        "explicit_new_bindings": []
+      },
+      "passed": true
+    },
+    {
+      "name": "normal_tvg",
+      "task_id": "62762cec-5151-4a5e-84a1-373d5d241a7a",
+      "status": "SUCCESS",
+      "result": {
+        "status": "completed",
+        "updated_count": 1,
+        "error_count": 0,
+        "errors": []
+      },
+      "checks": {
+        "status": true,
+        "result": true,
+        "identity": true,
+        "children": true,
+        "ttl": true,
+        "progress": true,
+        "success_traceback_null": true,
+        "exact_tvg_only": true,
+        "all_SQL_changed_rows_and_fields": true
+      },
+      "effect_review": {
+        "passed": true,
+        "checks": {
+          "dispatcharr_channels_channel-delta-cardinalities": true,
+          "dispatcharr_channels_logo-delta-cardinalities": true,
+          "dispatcharr_channels_channelstream-delta-cardinalities": true,
+          "dispatcharr_channels_channelprofilemembership-delta-cardinalities": true,
+          "dispatcharr_channels_channel-inserted-all-fields": true,
+          "dispatcharr_channels_channel-removed-all-fields": true,
+          "dispatcharr_channels_channel-changed-all-fields": true,
+          "dispatcharr_channels_logo-inserted-all-fields": true,
+          "dispatcharr_channels_logo-removed-all-fields": true,
+          "dispatcharr_channels_logo-changed-all-fields": true,
+          "dispatcharr_channels_channelstream-inserted-all-fields": true,
+          "dispatcharr_channels_channelstream-removed-all-fields": true,
+          "dispatcharr_channels_channelstream-changed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-inserted-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-removed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-changed-all-fields": true
+        },
+        "actual_deltas": {
+          "dispatcharr_channels_channel": {
+            "inserted": [],
+            "removed": [],
+            "changed": [
+              {
+                "before": {
+                  "id": 1,
+                  "name": "Owned EPG name",
+                  "uuid": "eb7b3cf2-7996-4189-b2aa-7ca7d4456879",
+                  "tvg_id": "old.owned.id",
+                  "logo_id": null,
+                  "is_adult": false,
+                  "is_radio": false,
+                  "created_at": "2026-11-15T04:51:53.033537+00:00",
+                  "is_catchup": false,
+                  "updated_at": "2026-11-15T04:51:53.033558+00:00",
+                  "user_level": 0,
+                  "epg_data_id": 3,
+                  "auto_created": false,
+                  "catchup_days": 0,
+                  "channel_number": 7000,
+                  "channel_group_id": null,
+                  "stream_profile_id": null,
+                  "auto_created_by_id": null,
+                  "hidden_from_output": false,
+                  "tvc_guide_stationid": null
+                },
+                "after": {
+                  "id": 1,
+                  "name": "Owned EPG name",
+                  "uuid": "eb7b3cf2-7996-4189-b2aa-7ca7d4456879",
+                  "tvg_id": "owned.epg.id",
+                  "logo_id": null,
+                  "is_adult": false,
+                  "is_radio": false,
+                  "created_at": "2026-11-15T04:51:53.033537+00:00",
+                  "is_catchup": false,
+                  "updated_at": "2026-11-15T04:51:53.033558+00:00",
+                  "user_level": 0,
+                  "epg_data_id": 3,
+                  "auto_created": false,
+                  "catchup_days": 0,
+                  "channel_number": 7000,
+                  "channel_group_id": null,
+                  "stream_profile_id": null,
+                  "auto_created_by_id": null,
+                  "hidden_from_output": false,
+                  "tvc_guide_stationid": null
+                }
+              }
+            ]
+          },
+          "dispatcharr_channels_logo": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelstream": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        "explicit_new_bindings": []
+      },
+      "passed": true
+    },
+    {
+      "name": "normal_logos",
+      "task_id": "a5a3ae36-aa39-400f-a8f0-27bdf82d140d",
+      "status": "SUCCESS",
+      "result": {
+        "status": "completed",
+        "updated_count": 1,
+        "error_count": 0,
+        "errors": [],
+        "created_logos_count": 1
+      },
+      "checks": {
+        "status": true,
+        "result": true,
+        "identity": true,
+        "children": true,
+        "ttl": true,
+        "progress": true,
+        "success_traceback_null": true,
+        "exact_logo_only": true,
+        "all_SQL_changed_rows_and_fields": true
+      },
+      "effect_review": {
+        "passed": true,
+        "checks": {
+          "dispatcharr_channels_channel-delta-cardinalities": true,
+          "dispatcharr_channels_logo-delta-cardinalities": true,
+          "dispatcharr_channels_channelstream-delta-cardinalities": true,
+          "dispatcharr_channels_channelprofilemembership-delta-cardinalities": true,
+          "dispatcharr_channels_channel-inserted-all-fields": true,
+          "dispatcharr_channels_channel-removed-all-fields": true,
+          "dispatcharr_channels_channel-changed-all-fields": true,
+          "dispatcharr_channels_logo-inserted-all-fields": true,
+          "dispatcharr_channels_logo-removed-all-fields": true,
+          "dispatcharr_channels_logo-changed-all-fields": true,
+          "dispatcharr_channels_channelstream-inserted-all-fields": true,
+          "dispatcharr_channels_channelstream-removed-all-fields": true,
+          "dispatcharr_channels_channelstream-changed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-inserted-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-removed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-changed-all-fields": true
+        },
+        "actual_deltas": {
+          "dispatcharr_channels_channel": {
+            "inserted": [],
+            "removed": [],
+            "changed": [
+              {
+                "before": {
+                  "id": 1,
+                  "name": "Owned EPG name",
+                  "uuid": "eb7b3cf2-7996-4189-b2aa-7ca7d4456879",
+                  "tvg_id": "owned.epg.id",
+                  "logo_id": null,
+                  "is_adult": false,
+                  "is_radio": false,
+                  "created_at": "2026-11-15T04:51:53.033537+00:00",
+                  "is_catchup": false,
+                  "updated_at": "2026-11-15T04:51:53.033558+00:00",
+                  "user_level": 0,
+                  "epg_data_id": 3,
+                  "auto_created": false,
+                  "catchup_days": 0,
+                  "channel_number": 7000,
+                  "channel_group_id": null,
+                  "stream_profile_id": null,
+                  "auto_created_by_id": null,
+                  "hidden_from_output": false,
+                  "tvc_guide_stationid": null
+                },
+                "after": {
+                  "id": 1,
+                  "name": "Owned EPG name",
+                  "uuid": "eb7b3cf2-7996-4189-b2aa-7ca7d4456879",
+                  "tvg_id": "owned.epg.id",
+                  "logo_id": 1,
+                  "is_adult": false,
+                  "is_radio": false,
+                  "created_at": "2026-11-15T04:51:53.033537+00:00",
+                  "is_catchup": false,
+                  "updated_at": "2026-11-15T04:51:53.033558+00:00",
+                  "user_level": 0,
+                  "epg_data_id": 3,
+                  "auto_created": false,
+                  "catchup_days": 0,
+                  "channel_number": 7000,
+                  "channel_group_id": null,
+                  "stream_profile_id": null,
+                  "auto_created_by_id": null,
+                  "hidden_from_output": false,
+                  "tvc_guide_stationid": null
+                }
+              }
+            ]
+          },
+          "dispatcharr_channels_logo": {
+            "inserted": [
+              {
+                "id": 1,
+                "url": "http://owned.invalid/logo.png",
+                "name": "Owned EPG name"
+              }
+            ],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelstream": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        "explicit_new_bindings": [
+          {
+            "table": "dispatcharr_channels_logo",
+            "Source_id": 1,
+            "Native_id": 1,
+            "basis": "actual unique inserted URL"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "normal_bulk",
+      "task_id": "6565ecc8-c888-42dc-a020-001ccf29e6a6",
+      "status": "SUCCESS",
+      "result": {
+        "status": "completed",
+        "created_count": 1,
+        "error_count": 0,
+        "errors": []
+      },
+      "checks": {
+        "status": true,
+        "result": true,
+        "identity": true,
+        "children": true,
+        "ttl": true,
+        "progress": true,
+        "success_traceback_null": true,
+        "one_insert": true,
+        "all_nongenerative_fields": true,
+        "actual_epg_binding": true,
+        "real_uuid4": true,
+        "actual_time_bounds": true,
+        "logo_binding": true,
+        "exact_stream_link": true,
+        "no_profile_membership": true,
+        "all_SQL_changed_rows_and_fields": true
+      },
+      "effect_review": {
+        "passed": true,
+        "checks": {
+          "dispatcharr_channels_channel-delta-cardinalities": true,
+          "dispatcharr_channels_logo-delta-cardinalities": true,
+          "dispatcharr_channels_channelstream-delta-cardinalities": true,
+          "dispatcharr_channels_channelprofilemembership-delta-cardinalities": true,
+          "dispatcharr_channels_channel-inserted-all-fields": true,
+          "dispatcharr_channels_channel-removed-all-fields": true,
+          "dispatcharr_channels_channel-changed-all-fields": true,
+          "dispatcharr_channels_logo-inserted-all-fields": true,
+          "dispatcharr_channels_logo-removed-all-fields": true,
+          "dispatcharr_channels_logo-changed-all-fields": true,
+          "dispatcharr_channels_channelstream-inserted-all-fields": true,
+          "dispatcharr_channels_channelstream-removed-all-fields": true,
+          "dispatcharr_channels_channelstream-changed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-inserted-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-removed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-changed-all-fields": true
+        },
+        "actual_deltas": {
+          "dispatcharr_channels_channel": {
+            "inserted": [
+              {
+                "id": 7,
+                "name": "Owned stream",
+                "uuid": "9ed13c72-c2d5-4093-b29f-34d7d2c0b1ac",
+                "tvg_id": "owned.epg.id",
+                "logo_id": 2,
+                "is_adult": false,
+                "is_radio": false,
+                "created_at": "2026-11-15T04:51:58.181051+00:00",
+                "is_catchup": false,
+                "updated_at": "2026-11-15T04:51:58.181051+00:00",
+                "user_level": 0,
+                "epg_data_id": 3,
+                "auto_created": false,
+                "catchup_days": 0,
+                "channel_number": 1,
+                "channel_group_id": null,
+                "stream_profile_id": null,
+                "auto_created_by_id": null,
+                "hidden_from_output": false,
+                "tvc_guide_stationid": null
+              }
+            ],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_logo": {
+            "inserted": [
+              {
+                "id": 2,
+                "url": "http://owned.invalid/stream.png",
+                "name": "Owned stream"
+              }
+            ],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelstream": {
+            "inserted": [
+              {
+                "id": 1,
+                "order": 0,
+                "stream_id": 24,
+                "channel_id": 7
+              }
+            ],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        "explicit_new_bindings": [
+          {
+            "table": "dispatcharr_channels_logo",
+            "Source_id": 2,
+            "Native_id": 2,
+            "basis": "actual unique inserted URL"
+          },
+          {
+            "table": "dispatcharr_channels_channel",
+            "Source_id": 7,
+            "Native_id": 7,
+            "basis": "actual one new channel of the actual bulk task"
+          },
+          {
+            "table": "dispatcharr_channels_channelstream",
+            "Source_id": 1,
+            "Native_id": 1,
+            "basis": "actual one new channel-stream association"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "names_P0001",
+      "task_id": "0f7868e3-237b-4e11-ad4b-25b7f6f083cb",
+      "status": "FAILURE",
+      "result": {
+        "exc_type": "ProgrammingError",
+        "exc_module": "django.db.utils",
+        "exc_message": [
+          "owned channel name update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+        ]
+      },
+      "checks": {
+        "status": true,
+        "result": true,
+        "identity": true,
+        "children": true,
+        "ttl": true,
+        "progress": true,
+        "honest_Native_diagnostic": true,
+        "failed_channel_rollback": true,
+        "all_SQL_changed_rows_and_fields": true
+      },
+      "effect_review": {
+        "passed": true,
+        "checks": {
+          "dispatcharr_channels_channel-delta-cardinalities": true,
+          "dispatcharr_channels_logo-delta-cardinalities": true,
+          "dispatcharr_channels_channelstream-delta-cardinalities": true,
+          "dispatcharr_channels_channelprofilemembership-delta-cardinalities": true,
+          "dispatcharr_channels_channel-inserted-all-fields": true,
+          "dispatcharr_channels_channel-removed-all-fields": true,
+          "dispatcharr_channels_channel-changed-all-fields": true,
+          "dispatcharr_channels_logo-inserted-all-fields": true,
+          "dispatcharr_channels_logo-removed-all-fields": true,
+          "dispatcharr_channels_logo-changed-all-fields": true,
+          "dispatcharr_channels_channelstream-inserted-all-fields": true,
+          "dispatcharr_channels_channelstream-removed-all-fields": true,
+          "dispatcharr_channels_channelstream-changed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-inserted-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-removed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-changed-all-fields": true
+        },
+        "actual_deltas": {
+          "dispatcharr_channels_channel": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_logo": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelstream": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        "explicit_new_bindings": []
+      },
+      "passed": true
+    },
+    {
+      "name": "tvg_22001",
+      "task_id": "777a22c3-52f6-4032-875a-d35e93755805",
+      "status": "FAILURE",
+      "result": {
+        "exc_type": "DataError",
+        "exc_module": "django.db.utils",
+        "exc_message": [
+          "owned channel tvg update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+        ]
+      },
+      "checks": {
+        "status": true,
+        "result": true,
+        "identity": true,
+        "children": true,
+        "ttl": true,
+        "progress": true,
+        "honest_Native_diagnostic": true,
+        "failed_channel_rollback": true,
+        "all_SQL_changed_rows_and_fields": true
+      },
+      "effect_review": {
+        "passed": true,
+        "checks": {
+          "dispatcharr_channels_channel-delta-cardinalities": true,
+          "dispatcharr_channels_logo-delta-cardinalities": true,
+          "dispatcharr_channels_channelstream-delta-cardinalities": true,
+          "dispatcharr_channels_channelprofilemembership-delta-cardinalities": true,
+          "dispatcharr_channels_channel-inserted-all-fields": true,
+          "dispatcharr_channels_channel-removed-all-fields": true,
+          "dispatcharr_channels_channel-changed-all-fields": true,
+          "dispatcharr_channels_logo-inserted-all-fields": true,
+          "dispatcharr_channels_logo-removed-all-fields": true,
+          "dispatcharr_channels_logo-changed-all-fields": true,
+          "dispatcharr_channels_channelstream-inserted-all-fields": true,
+          "dispatcharr_channels_channelstream-removed-all-fields": true,
+          "dispatcharr_channels_channelstream-changed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-inserted-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-removed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-changed-all-fields": true
+        },
+        "actual_deltas": {
+          "dispatcharr_channels_channel": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_logo": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelstream": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        "explicit_new_bindings": []
+      },
+      "passed": true
+    },
+    {
+      "name": "logos_23505",
+      "task_id": "bddf46b2-e39f-4b19-8b20-aa8182800260",
+      "status": "FAILURE",
+      "result": {
+        "exc_type": "IntegrityError",
+        "exc_module": "django.db.utils",
+        "exc_message": [
+          "owned channel logo insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+        ]
+      },
+      "checks": {
+        "status": true,
+        "result": true,
+        "identity": true,
+        "children": true,
+        "ttl": true,
+        "progress": true,
+        "honest_Native_diagnostic": true,
+        "failed_channel_rollback": true,
+        "all_SQL_changed_rows_and_fields": true
+      },
+      "effect_review": {
+        "passed": true,
+        "checks": {
+          "dispatcharr_channels_channel-delta-cardinalities": true,
+          "dispatcharr_channels_logo-delta-cardinalities": true,
+          "dispatcharr_channels_channelstream-delta-cardinalities": true,
+          "dispatcharr_channels_channelprofilemembership-delta-cardinalities": true,
+          "dispatcharr_channels_channel-inserted-all-fields": true,
+          "dispatcharr_channels_channel-removed-all-fields": true,
+          "dispatcharr_channels_channel-changed-all-fields": true,
+          "dispatcharr_channels_logo-inserted-all-fields": true,
+          "dispatcharr_channels_logo-removed-all-fields": true,
+          "dispatcharr_channels_logo-changed-all-fields": true,
+          "dispatcharr_channels_channelstream-inserted-all-fields": true,
+          "dispatcharr_channels_channelstream-removed-all-fields": true,
+          "dispatcharr_channels_channelstream-changed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-inserted-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-removed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-changed-all-fields": true
+        },
+        "actual_deltas": {
+          "dispatcharr_channels_channel": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_logo": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelstream": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        "explicit_new_bindings": []
+      },
+      "passed": true
+    },
+    {
+      "name": "bulk_23514",
+      "task_id": "92917eb5-fa76-44ce-a16a-f72d4d87df21",
+      "status": "FAILURE",
+      "result": {
+        "exc_type": "IntegrityError",
+        "exc_module": "django.db.utils",
+        "exc_message": [
+          "owned bulk channel insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+        ]
+      },
+      "checks": {
+        "status": true,
+        "result": true,
+        "identity": true,
+        "children": true,
+        "ttl": true,
+        "progress": true,
+        "honest_Native_diagnostic": true,
+        "failed_channel_rollback": true,
+        "all_SQL_changed_rows_and_fields": true
+      },
+      "effect_review": {
+        "passed": true,
+        "checks": {
+          "dispatcharr_channels_channel-delta-cardinalities": true,
+          "dispatcharr_channels_logo-delta-cardinalities": true,
+          "dispatcharr_channels_channelstream-delta-cardinalities": true,
+          "dispatcharr_channels_channelprofilemembership-delta-cardinalities": true,
+          "dispatcharr_channels_channel-inserted-all-fields": true,
+          "dispatcharr_channels_channel-removed-all-fields": true,
+          "dispatcharr_channels_channel-changed-all-fields": true,
+          "dispatcharr_channels_logo-inserted-all-fields": true,
+          "dispatcharr_channels_logo-removed-all-fields": true,
+          "dispatcharr_channels_logo-changed-all-fields": true,
+          "dispatcharr_channels_channelstream-inserted-all-fields": true,
+          "dispatcharr_channels_channelstream-removed-all-fields": true,
+          "dispatcharr_channels_channelstream-changed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-inserted-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-removed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-changed-all-fields": true
+        },
+        "actual_deltas": {
+          "dispatcharr_channels_channel": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_logo": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelstream": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        "explicit_new_bindings": []
+      },
+      "passed": true
+    },
+    {
+      "name": "logos_missing_arguments",
+      "task_id": "39a41744-1a2e-49fc-b7cc-696abcd2d8e0",
+      "status": "FAILURE",
+      "result": {
+        "exc_type": "ValueError",
+        "exc_module": "builtins",
+        "exc_message": [
+          "channel_ids or epg_source_id is required"
+        ]
+      },
+      "checks": {
+        "status": true,
+        "result": true,
+        "identity": true,
+        "children": true,
+        "ttl": true,
+        "progress": true,
+        "honest_Native_diagnostic": true,
+        "failed_channel_rollback": true,
+        "all_SQL_changed_rows_and_fields": true
+      },
+      "effect_review": {
+        "passed": true,
+        "checks": {
+          "dispatcharr_channels_channel-delta-cardinalities": true,
+          "dispatcharr_channels_logo-delta-cardinalities": true,
+          "dispatcharr_channels_channelstream-delta-cardinalities": true,
+          "dispatcharr_channels_channelprofilemembership-delta-cardinalities": true,
+          "dispatcharr_channels_channel-inserted-all-fields": true,
+          "dispatcharr_channels_channel-removed-all-fields": true,
+          "dispatcharr_channels_channel-changed-all-fields": true,
+          "dispatcharr_channels_logo-inserted-all-fields": true,
+          "dispatcharr_channels_logo-removed-all-fields": true,
+          "dispatcharr_channels_logo-changed-all-fields": true,
+          "dispatcharr_channels_channelstream-inserted-all-fields": true,
+          "dispatcharr_channels_channelstream-removed-all-fields": true,
+          "dispatcharr_channels_channelstream-changed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-inserted-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-removed-all-fields": true,
+          "dispatcharr_channels_channelprofilemembership-changed-all-fields": true
+        },
+        "actual_deltas": {
+          "dispatcharr_channels_channel": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_logo": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelstream": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          },
+          "dispatcharr_channels_channelprofilemembership": {
+            "inserted": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        "explicit_new_bindings": []
+      },
+      "passed": true
+    }
+  ],
+  "HTTP_planned_rows": 34,
+  "actual_HTTP_attempts": 1,
+  "first_HTTP": {
+    "name": "names-admin",
+    "status": 200,
+    "JSON": {
+      "message": "Started EPG name setting task for 1 channels",
+      "task_id": "6241ff4a-eb85-4c1e-98f8-be0b80f3fc0c",
+      "channel_count": 1
+    },
+    "raw_body_sha256": "455e83b9903879f8044bde1feba51f0fc941eaafdbc90b2624145d46e0e4de40",
+    "status_JSON_bound_task_identity_semantic_headers_match_Source": true,
+    "actual_physical_HTTP_close": {
+      "fd_after": -1,
+      "original_inode_absent": true,
+      "timer_joined": true,
+      "request_worker": "calling thread; returned after actual I/O unwind"
+    },
+    "consumed_terminal_qualification": false
+  },
+  "remaining_HTTP_rows": "Pre-request dead-observer control failures; not Native application rejections",
+  "full_channel_or_milestone_passed": false,
+  "performance_gains": false,
+  "original_authors_credit_preserved": true
+}
