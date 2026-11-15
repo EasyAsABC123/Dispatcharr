@@ -20,8 +20,16 @@ configuration from 666`: the optional uWSGI argument was supplied as separate
 `--chmod-socket=666`. Workload order, budgets, useful-media requirements and
 performance thresholds remain unchanged.
 
-Both historical strict failures and their cleanup errors remain recorded.
-Independent checks found both owned Docker projects empty and observer scopes
-inactive after teardown. Neither attempt completed a measurement phase, and
-neither establishes a performance gain. A corrected run must execute and
+Attempt3 exited 1 after 93.469 seconds. All six Original roles started and
+subsequently exited0 without forced shutdown, with streams and original process
+generations settled. The readiness CLI exited69 with no ping replies: it did
+not inherit the worker's explicit brokerDB1/resultDB2 environment. Startup also
+recreated scanner schedules and exposed a missing baseline watch directory.
+The correction must align the actual probe environment, create Source watch
+directories and disable recreated schedules before the idle measurement window.
+
+All historical strict failures and their cleanup errors remain recorded.
+Independent checks found the owned Docker projects empty and observer scopes
+inactive after teardown. No attempt completed a measurement phase or
+establishes a performance gain. A corrected run must execute and
 validate the entire declared paired workload separately.

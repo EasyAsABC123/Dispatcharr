@@ -37,9 +37,14 @@ STD sample-URL precedence and non-ASCII username behavior remain unqualified.
 VLC execution, grouped capacity/release/failover, Redirect and output-profile
 delivery require actual paired application acceptance.
 
-This candidate has code-level validation only. Its Docker build, runtime package
-probes, combined Source/Native application acceptance and representative paired
-performance are pending. Candidate16 functional evidence and performance runs
+This candidate has code-level validation only. Its
+[first Docker build](../scripts/rust-integration/milestone-batch17/failed-build.json)
+exited1 after3.919 seconds: the VLC collector requires an owning-package notice
+for a custom `/usr/local` libva binary that has no Debian package owner. The
+pinned Original image contains its actual custom libva license notice; that
+specific packaging correction and a successful rebuild remain required.
+Runtime package probes, combined Source/Native application acceptance and
+representative paired performance are pending. Candidate16 functional evidence and performance runs
 keep their own image identity and cannot be transferred to17. Full M0–M9,
 SQLite compatibility, complete source coverage, enabled plugin behavior,
 soak and restore/rollback acceptance remain open.

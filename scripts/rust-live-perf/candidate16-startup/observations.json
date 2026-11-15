@@ -33,6 +33,29 @@
       "actual_config_mode": "0444",
       "actual_stderr": "[uWSGI] getting INI configuration from /verification/uwsgi.ini\nunable to load configuration from 666\n",
       "correction": "Literal optional argument form --chmod-socket=666; all workload criteria unchanged."
+    },
+    {
+      "attempt": 3,
+      "controller_actual_exit": 1,
+      "elapsed_seconds": 93.46933758900559,
+      "completed_measurement_phases": 0,
+      "gain_accepted": false,
+      "all6_Source_role_stops_actual0_unforced_EOF_generations_absent": true,
+      "actual_roles": [
+        "beat",
+        "celery",
+        "daphne",
+        "dvr",
+        "nginx",
+        "web"
+      ],
+      "readiness_probe": "Celery CLI exit69: No nodes replied within time constraint",
+      "diagnosis": "Readiness CLI did not inherit worker brokerDB1/resultDB2 environment. Real startup also recreated scanner schedules; baseline tmpfs watch directory was absent.",
+      "cleanup_errors_retained": true,
+      "Root_owned_project_inventories_empty": true,
+      "Root_observer_scope_inactive": true,
+      "result_sha256": "2b829a1e7c97e471ae3d640441bac400aa69a9529e3942cccfc371717944ea38",
+      "Root_review_sha256": "547aca44202621fe891c0c77a8d7b00c1712d14f1f376a6a3481f9a8e3840992"
     }
   ],
   "credit": "Original Dispatcharr and dependency authors retain full credit.",
