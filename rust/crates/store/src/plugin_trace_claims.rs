@@ -1,5 +1,5 @@
 //! One-use native execution epochs bound to the actually selected task host.
-//! Only Native runtime after its real broker ACK registers an epoch. Python
+//! Only Native runtime after actual pool admission; early/late ACK remains a separate Source policy registers an epoch. Python
 //! can validate one; it cannot mint one through any callback/HTTP method.
 use super::{plugin_execution_host::Identity, plugin_python_registry::PluginTaskCapability};
 use crate::StoreError;
@@ -46,7 +46,7 @@ impl PluginTraceClaims {
             maximum,
         })
     }
-    pub(crate) fn after_actual_ack(
+    pub(crate) fn after_actual_admission(
         &self,
         id: Uuid,
         capability: &PluginTaskCapability,

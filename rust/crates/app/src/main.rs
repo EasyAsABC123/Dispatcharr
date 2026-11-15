@@ -7,6 +7,7 @@ mod control;
 mod database_config;
 mod playback;
 mod plugin_gpg_trace;
+mod plugin_jobs_bridge;
 mod proxy_health;
 mod realtime;
 mod recording_http_bridge;
@@ -764,6 +765,14 @@ async fn run() -> Result<(), String> {
         let cache_dir = env::var("RUST_EPG_CACHE_DIR")
             .map(std::path::PathBuf::from)
             .unwrap_or_else(|_| cache_root.clone());
+        if !cache_dir.is_absolute()
+            || cache_dir == std::path::Path::new("/")
+            || cache_dir.as_os_str().len() > 4096
+        {
+            return Err("Invalid configured EPG cache directory".into());
+        }
+        std::fs::create_dir_all(&cache_dir)
+            .map_err(|_| "Configured EPG cache directory unavailable")?;
         use std::os::unix::fs::MetadataExt;
         let input_uid = media_root
             .metadata()
@@ -785,7 +794,7 @@ async fn run() -> Result<(), String> {
         .await
         .map_err(|_| "EPG index initialization failed (credentials omitted)")?;
         epg_programs = epg_programs
-            .with_current_file_lookup(index.lookup(), cache_root)
+            .with_current_file_lookup(index.lookup(), cache_dir.clone())
             .map_err(|_| "Invalid EPG current-file path configuration")?;
         // The natural Channel post-save task precedes configured descendants
         // in the real default FIFO. Consume it with its own retained worker;
@@ -796,7 +805,7 @@ async fn run() -> Result<(), String> {
                 broker: broker.clone(),
                 backend: backend.clone(),
                 cache: cache.clone(),
-                input_roots: vec![media_root],
+                input_roots: vec![media_root, cache_dir.clone()],
                 input_uid,
             },
         )
@@ -986,6 +995,10 @@ async fn run() -> Result<(), String> {
         )
     } else {
         None
+    };
+    let plugin_actions = match &selected_jobs {
+        Some(selected) => plugin_actions.with_runtime(selected.plugin_runtime()),
+        None => plugin_actions,
     };
     let backup_files = selected_jobs
         .as_ref()

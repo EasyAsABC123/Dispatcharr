@@ -230,6 +230,8 @@ struct Session {
     profile_demands: AtomicUsize,
     native_initializing: AtomicBool,
     upstream_admitted: AtomicBool,
+    provider_epoch: AtomicU64,
+    source_slot_published: AtomicBool,
     ready_requested: AtomicBool,
     metadata_wake: Notify,
     publisher: Mutex<Option<input_writer::InputWriter>>,
@@ -512,6 +514,8 @@ impl StreamEngine {
                         register_client && self.inner.config.source_initialization,
                     ),
                     upstream_admitted: AtomicBool::new(false),
+                    provider_epoch: AtomicU64::new(0),
+                    source_slot_published: AtomicBool::new(false),
                     ready_requested: AtomicBool::new(false),
                     metadata_wake: Notify::new(),
                     publisher: Mutex::new(None),
@@ -1333,6 +1337,99 @@ async fn run_upstream(
         }
         *session.input_owner.lock().unwrap() = Some(lease.token().to_owned());
     }
+    // Source selects/reuses public assignments before initialize_channel writes
+    // new metadata. Do not overwrite stale metadata into initializing first.
+    let mut assignment_error = None;
+    let mut initial_assignment = None;
+    let mut preview_borrowed = false;
+    let preview_scope = session
+        .source
+        .metadata
+        .iter()
+        .find(|(key, _)| key == "source_preview")
+        .map(|(_, v)| serde_json::from_str::<serde_json::Value>(v));
+    let mut preview_assignment = None;
+    if let Some(scope) = preview_scope {
+        let parsed = scope
+            .ok()
+            .and_then(|v| {
+                Some((
+                    v.get("stream")?.as_i64()?,
+                    v.get("hash")?.as_str()?.to_owned(),
+                    v.get("scoped")?.as_bool()?,
+                ))
+            })
+            .and_then(|(stream, hash, scoped)| {
+                dispatcharr_coordination::LivePreviewAssignment::new(
+                    stream,
+                    &hash,
+                    session.source.provider_profile_id?,
+                    scoped,
+                )
+                .ok()
+            });
+        match (parsed, lease.as_ref()) {
+            (Some(assignment), Some(owner)) => {
+                match owner.prepare_preview_assignment(assignment.clone()).await {
+                    Ok(borrowed) => {
+                        preview_borrowed = borrowed;
+                        preview_assignment = Some(assignment);
+                    }
+                    Err(error) => assignment_error = Some(coordination_error(error)),
+                }
+            }
+            _ => {
+                assignment_error = Some(PlaybackError::new(
+                    503,
+                    "Preview owner or assignment unavailable",
+                ))
+            }
+        }
+    }
+
+    if !session
+        .source
+        .metadata
+        .iter()
+        .any(|(key, _)| key == "source_preview")
+        && uuid::Uuid::parse_str(&session.source.channel_id)
+            .is_ok_and(|id| id.to_string() == session.source.channel_id)
+    {
+        if let (Some(coordinator), Some(numeric)) = (
+            &inner.coordinator,
+            session
+                .source
+                .metadata
+                .iter()
+                .find(|(key, _)| key == "channel_id")
+                .and_then(|(_, value)| value.parse::<i64>().ok()),
+        ) {
+            match coordinator
+                .observe_redirect_assignment(
+                    numeric,
+                    &session.source.channel_id,
+                    Arc::new((session.clone(), worker.clone())),
+                )
+                .await
+            {
+                Ok(value) => initial_assignment = value,
+                Err(error) => assignment_error = Some(coordination_error(error)),
+            }
+        }
+    }
+    if session
+        .source
+        .metadata
+        .iter()
+        .any(|(key, value)| key == "source_assignment_required" && value == "true")
+        && initial_assignment.is_none()
+        && assignment_error.is_none()
+    {
+        assignment_error = Some(PlaybackError::new(
+            503,
+            "Observed Source assignment changed before raw adoption",
+        ));
+    }
     let metadata_task = inner.clients.as_ref().map(|clients| {
         let clients = clients.clone();
         let session = session.clone();
@@ -1367,12 +1464,29 @@ async fn run_upstream(
         }
     }
     let mut retry = crate::retry::RetryState::new();
-    let mut current = 0;
+    let mut current = if let Some(assignment) = initial_assignment.as_ref() {
+        match candidates.iter().position(|candidate| {
+            candidate.stream_id == assignment.stream_id()
+                && candidate.provider_profile_id == Some(assignment.profile_id())
+        }) {
+            Some(index) => index,
+            None => {
+                assignment_error=Some(PlaybackError::new(501,"Raw reuse of an assignment outside current SQL candidates requires the retained-row resolver"));
+                0
+            }
+        }
+    } else {
+        0
+    };
     let mut attempts = 0u64;
     let mut last_candidate = None;
     let mut input = InputAccumulator::new(inner.config.chunk_bytes);
     let mut last_error = PlaybackError::new(502, "Upstream did not provide stream data");
     'session: loop {
+        if let Some(error) = assignment_error.take() {
+            last_error = error;
+            break;
+        }
         if *stop.borrow() || *lost.borrow() {
             break;
         }
@@ -1386,6 +1500,17 @@ async fn run_upstream(
                 502,
                 "Invalid or unsupported upstream URL",
             ))
+        } else if std::mem::take(&mut preview_borrowed) {
+            Ok(())
+        } else if let Some(assignment) = initial_assignment.take() {
+            match lease.as_ref().ok_or_else(||PlaybackError::new(503,"Raw assignment owner unavailable")) {
+                Ok(lease)=>match lease.adopt_source_assignment(&assignment).await {
+                    Ok(())=>Ok(()),
+                    Err(dispatcharr_coordination::Error::AlreadyReserved)=>Err(PlaybackError::new(501,"Native live-owner reassignment requires a separate owner-loss adoption boundary")),
+                    Err(error)=>{last_error=coordination_error(error);break 'session;},
+                },
+                Err(error)=>Err(error),
+            }
         } else if let Some(lease) = &lease {
             match lease
                 .reserve_provider(ProviderReservation {
@@ -1428,7 +1553,34 @@ async fn run_upstream(
                 // Only an actual Channel UUID resolved by Store carries its
                 // numeric Source Channel PK. Stream/profile-scoped previews
                 // never publish a channel's bare assignment aliases.
-                if uuid::Uuid::parse_str(&session.source.channel_id).is_ok() {
+                if let (Some(preview), Some(owner), Some(clients)) = (
+                    preview_assignment.as_ref(),
+                    lease.as_ref(),
+                    inner.clients.as_ref(),
+                ) {
+                    let assignment =
+                        match preview.with_profile(candidate.provider_profile_id.unwrap_or(0)) {
+                            Ok(value) => value,
+                            Err(error) => {
+                                last_error = coordination_error(error);
+                                break 'session;
+                            }
+                        };
+                    if let Err(error) = owner
+                        .publish_preview_assignment(assignment, clients.channel_metadata_ttl())
+                        .await
+                    {
+                        last_error = coordination_error(error);
+                        break 'session;
+                    }
+                    session.source_slot_published.store(true, Ordering::Release);
+                } else if preview_assignment.is_some() {
+                    last_error =
+                        PlaybackError::new(503, "Preview metadata publication unavailable");
+                    break 'session;
+                } else if uuid::Uuid::parse_str(&session.source.channel_id)
+                    .is_ok_and(|id| id.to_string() == session.source.channel_id)
+                {
                     if let (Some(lease), Some(numeric)) = (
                         &lease,
                         session
@@ -1448,15 +1600,29 @@ async fn run_upstream(
                                 break 'session;
                             }
                         };
-                        if let Err(error) = lease.publish_source_assignment(assignment).await {
+                        let published = if let Some(clients) = inner.clients.as_ref() {
+                            lease
+                                .publish_source_assignment_with_metadata(
+                                    assignment,
+                                    clients.channel_metadata_ttl(),
+                                )
+                                .await
+                        } else {
+                            lease.publish_source_assignment(assignment).await
+                        };
+                        if let Err(error) = published {
                             last_error = coordination_error(error);
                             break 'session;
                         }
+                        session
+                            .source_slot_published
+                            .store(inner.clients.is_some(), Ordering::Release);
                     }
                 }
+                *session.current.lock().unwrap() = candidate.clone();
+                session.provider_epoch.fetch_add(1, Ordering::AcqRel);
                 session.upstream_admitted.store(true, Ordering::Release);
                 session.metadata_wake.notify_one();
-                *session.current.lock().unwrap() = candidate.clone();
                 loop {
                     if *stop.borrow() || *lost.borrow() {
                         break 'session;
@@ -1735,6 +1901,7 @@ async fn channel_metadata_worker(
     timer.set_missed_tick_behavior(time::MissedTickBehavior::Skip);
     let mut previous_state = String::new();
     let mut state_changed = session.started_at;
+    let mut published_provider_epoch = 0;
     loop {
         if *stop.borrow() {
             break;
@@ -1822,18 +1989,33 @@ async fn channel_metadata_worker(
                 fields.insert("clients_at_activation".into(), count.to_string());
             }
         }
+        let provider_epoch = session.provider_epoch.load(Ordering::Acquire);
         {
             let current = session.current.lock().unwrap();
             for (name, value) in &session.source.metadata {
-                fields.insert(name.clone(), value.clone());
+                if !matches!(
+                    name.as_str(),
+                    "source_assignment_required" | "source_stream_hash" | "source_preview"
+                ) {
+                    fields.insert(name.clone(), value.clone());
+                }
             }
             for (name, value) in &current.metadata {
-                fields.insert(name.clone(), value.clone());
+                if !matches!(
+                    name.as_str(),
+                    "source_assignment_required" | "source_stream_hash" | "source_preview"
+                ) {
+                    fields.insert(name.clone(), value.clone());
+                }
             }
             fields.insert("url".into(), current.url.clone());
             fields.insert("stream_id".into(), current.stream_id.to_string());
-            if let Some(profile) = current.provider_profile_id {
-                fields.insert("m3u_profile".into(), profile.to_string());
+            if !session.source_slot_published.load(Ordering::Acquire)
+                && provider_epoch > published_provider_epoch
+            {
+                if let Some(profile) = current.provider_profile_id {
+                    fields.insert("m3u_profile".into(), profile.to_string());
+                }
             }
         }
         for (name, value) in [
@@ -1875,6 +2057,7 @@ async fn channel_metadata_worker(
             session.channel.stop();
             break;
         }
+        published_provider_epoch = provider_epoch;
         if promotion {
             session.startup.send_replace(Startup::Ready);
         }

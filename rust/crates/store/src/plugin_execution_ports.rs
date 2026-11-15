@@ -73,6 +73,7 @@ pub(crate) struct NativePorts {
     jobs: Arc<dyn NativePluginJobs>,
     processes: Arc<dyn NativePluginProcesses>,
     closed: AtomicBool,
+    pub(crate) hook_publications: super::plugin_hook_publications::HookPublications,
 }
 impl NativePorts {
     // Each argument is an existing owned production port or sealed registry;
@@ -100,6 +101,7 @@ impl NativePorts {
             jobs,
             processes,
             closed: AtomicBool::new(false),
+            hook_publications: Default::default(),
         }
     }
     pub(crate) fn identity(&self) -> Result<Identity, Error> {
@@ -229,6 +231,14 @@ impl Ports for NativePorts {
                             .map(Value::Bool)
                             .map_err(|_| Error::Protocol);
                     }
+                    let hook_intent = if method == "publish_registered" {
+                        let raw = STANDARD
+                            .decode(params["raw_base64"].as_str().ok_or(Error::Protocol)?)
+                            .map_err(|_| Error::Protocol)?;
+                        self.hook_publications.before(&raw, &scope.owner)?
+                    } else {
+                        None
+                    };
                     let intent = if method == "publish_registered" {
                         let encoded = params["raw_base64"]
                             .as_str()
@@ -263,8 +273,50 @@ impl Ports for NativePorts {
                             .settled(intent, actual_id)
                             .map_err(|_| Error::Protocol)?;
                     }
+                    if let Some(intent) = hook_intent {
+                        if result["settled"] != true {
+                            return Err(Error::Unavailable);
+                        }
+                        intent.settled(result["task_id"].as_str().ok_or(Error::Protocol)?)?;
+                    }
                     Ok(result)
                 }
+                _ => Err(Error::Unavailable),
+            }
+        })
+    }
+    fn callback_reentrant(
+        &self,
+        port: String,
+        method: String,
+        params: Value,
+        scope: Invocation,
+        reentry: Arc<dyn super::plugin_execution_host::Reentry>,
+    ) -> BoxFuture<'_, Result<Value, Error>> {
+        if port == "plugin_events" {
+            return Box::pin(async move {
+                if self.closed.load(Ordering::Acquire)
+                    || self.role != HostRole::Tasks
+                    || scope.sql.is_none()
+                    || method != "dispatch"
+                {
+                    return Err(Error::Unavailable);
+                }
+                super::plugin_event_control::dispatch(scope, reentry).await
+            });
+        }
+        if port != "plugin_control" {
+            return self.callback(port, method, params, scope);
+        }
+        Box::pin(async move {
+            if self.closed.load(Ordering::Acquire)
+                || self.role != HostRole::Actions
+                || scope.sql.is_none()
+            {
+                return Err(Error::Unavailable);
+            }
+            match method.as_str() {
+                "enabled" => super::plugin_enabled_control::change(params, scope, reentry).await,
                 _ => Err(Error::Unavailable),
             }
         })

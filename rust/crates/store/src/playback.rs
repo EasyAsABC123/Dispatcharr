@@ -118,6 +118,20 @@ fn xc_credential_pool(
     })
 }
 
+struct PlaybackLookup<'a> {
+    id: &'a str,
+    preview: Option<PreviewLookup>,
+}
+#[derive(Clone, Copy)]
+struct PreviewLookup {
+    profile_override: Option<i64>,
+    scoped: bool,
+}
+impl<'a> From<&'a str> for PlaybackLookup<'a> {
+    fn from(id: &'a str) -> Self {
+        Self { id, preview: None }
+    }
+}
 impl Store {
     pub async fn resolve_channel(&self, channel_id: &str) -> Result<ResolvedChannel, StoreError> {
         self.resolve_channel_mode(channel_id, false, None)
@@ -130,7 +144,57 @@ impl Store {
         allow_redirect: bool,
         redirect_user: Option<&User>,
     ) -> Result<Option<ResolvedChannel>, StoreError> {
-        self.resolve_channel_mode_inner(channel_id, allow_redirect, redirect_user, None, true)
+        self.resolve_channel_mode_inner(
+            channel_id.into(),
+            allow_redirect,
+            redirect_user,
+            None,
+            true,
+            None,
+        )
+        .await
+    }
+    pub(crate) async fn resolve_preview_channel(
+        &self,
+        hash: &str,
+        profile_override: Option<i64>,
+        selected: Option<(i64, i64)>,
+        scoped: bool,
+    ) -> Result<ResolvedChannel, StoreError> {
+        self.resolve_channel_mode_inner(
+            PlaybackLookup {
+                id: hash,
+                preview: Some(PreviewLookup {
+                    profile_override,
+                    scoped,
+                }),
+            },
+            false,
+            None,
+            selected,
+            false,
+            None,
+        )
+        .await?
+        .ok_or(StoreError::NotFound)
+    }
+    pub(crate) async fn resolve_preview_targets(
+        &self,
+        id: &str,
+        user: Option<&User>,
+    ) -> Result<ResolvedChannel, StoreError> {
+        self.resolve_channel_mode_inner(id.into(), true, user, None, false, None)
+            .await?
+            .ok_or(StoreError::NotFound)
+    }
+    pub(crate) async fn resolve_channel_mode_cached(
+        &self,
+        channel_id: &str,
+        allow_redirect: bool,
+        user: Option<&User>,
+        cache: Option<&crate::NotificationCache>,
+    ) -> Result<Option<ResolvedChannel>, StoreError> {
+        self.resolve_channel_mode_inner(channel_id.into(), allow_redirect, user, None, true, cache)
             .await
     }
     pub(crate) async fn resolve_redirect_alias_candidate(
@@ -141,11 +205,12 @@ impl Store {
     ) -> Result<Option<ProviderStream>, StoreError> {
         let channel = self
             .resolve_channel_mode_inner(
-                channel_id,
+                channel_id.into(),
                 true,
                 None,
                 Some((stream_id, profile_id)),
                 false,
+                None,
             )
             .await?;
         Ok(channel.and_then(|mut channel| {
@@ -161,25 +226,38 @@ impl Store {
         channel_id: &str,
     ) -> Result<Vec<ProviderStream>, StoreError> {
         Ok(self
-            .resolve_channel_mode_inner(channel_id, true, None, None, false)
+            .resolve_channel_mode_inner(channel_id.into(), true, None, None, false, None)
             .await?
             .map_or_else(Vec::new, |channel| channel.streams))
     }
     async fn resolve_channel_mode_inner(
         &self,
-        channel_id: &str,
+        lookup: PlaybackLookup<'_>,
         allow_redirect: bool,
         redirect_user: Option<&User>,
         borrowed: Option<(i64, i64)>,
         defer_redirect: bool,
+        cache: Option<&crate::NotificationCache>,
     ) -> Result<Option<ResolvedChannel>, StoreError> {
-        let uuid = uuid::Uuid::parse_str(channel_id).map_err(|_| StoreError::NotFound)?;
         let settings = self.setting("stream_settings").await?;
         let default_profile = settings
             .get("default_stream_profile")
             .and_then(|value| value.as_i64().or_else(|| value.as_str()?.parse().ok()));
-        let channel = sqlx::query("SELECT c.id::bigint AS id, EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream linked WHERE linked.channel_id=c.id) AS has_streams, COALESCE(o.name,c.name) AS name, COALESCE(o.logo_id,c.logo_id)::bigint AS logo_id, COALESCE(o.stream_profile_id,c.stream_profile_id,$2)::bigint AS profile_id FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE c.uuid=$1")
-            .bind(uuid).bind(default_profile).fetch_optional(self.pool()).await?.ok_or(StoreError::NotFound)?;
+        let preview = lookup.preview;
+        let object_id = if preview.is_some() {
+            lookup.id.to_owned()
+        } else {
+            uuid::Uuid::parse_str(lookup.id)
+                .map_err(|_| StoreError::NotFound)?
+                .to_string()
+        };
+        let channel = if let Some(mode) = preview {
+            sqlx::query("SELECT s.id::bigint AS id, (s.m3u_account_id IS NOT NULL) AS has_streams, s.name, NULL::bigint AS logo_id, COALESCE($2::bigint,s.stream_profile_id,$1::bigint) AS profile_id FROM dispatcharr_channels_stream s WHERE s.stream_hash=$3")
+                .bind(default_profile).bind(mode.profile_override).bind(lookup.id).fetch_optional(self.pool()).await?.ok_or(StoreError::NotFound)?
+        } else {
+            sqlx::query("SELECT c.id::bigint AS id, EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream linked WHERE linked.channel_id=c.id) AS has_streams, COALESCE(o.name,c.name) AS name, COALESCE(o.logo_id,c.logo_id)::bigint AS logo_id, COALESCE(o.stream_profile_id,c.stream_profile_id,$2)::bigint AS profile_id FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE c.uuid=$1")
+            .bind(uuid::Uuid::parse_str(lookup.id).map_err(|_|StoreError::NotFound)?).bind(default_profile).fetch_optional(self.pool()).await?.ok_or(StoreError::NotFound)?
+        };
         let name: String = channel.try_get("name")?;
         let id: i64 = channel.try_get("id")?;
         let has_streams: bool = channel.try_get("has_streams")?;
@@ -205,6 +283,11 @@ impl Store {
         }
         let profile_name: String = profile.try_get("name")?;
         let profile_locked: bool = profile.try_get("locked")?;
+        if preview.is_some() && profile_locked && profile_name == "Redirect" {
+            return Err(StoreError::Unsupported(
+                "Direct Redirect-profile Stream preview without Proxy override is unqualified",
+            ));
+        }
         let redirect = profile_locked && profile_name == "Redirect";
         if !allow_redirect && redirect {
             return Err(StoreError::Unsupported(
@@ -226,7 +309,7 @@ impl Store {
                 numeric_channel_id: id,
                 has_assigned_streams: has_streams,
                 redirect_error: (!has_streams).then(|| "No streams assigned to channel".to_owned()),
-                id: uuid.to_string(),
+                id: object_id.clone(),
                 name,
                 profile_id,
                 streams: Vec::new(),
@@ -234,6 +317,17 @@ impl Store {
                 startup_behind: Duration::ZERO,
             }));
         }
+        // Read-only SQL candidate hint, never reservation authority. The raw
+        // actor must reobserve and adopt the actual sealed alias under its lease.
+        let raw_observed = if !redirect && preview.is_none() && borrowed.is_none() {
+            match cache {
+                Some(cache) => cache.raw_source_assignment(id, &object_id).await?,
+                None => None,
+            }
+        } else {
+            None
+        };
+        let borrowed = borrowed.or(raw_observed);
         let restricted = allowed.is_some();
         let profile_command: String = profile.try_get("command")?;
         let profile_parameters: String = profile.try_get("parameters")?;
@@ -247,6 +341,7 @@ impl Store {
         // timing remains an existing separate migration gate; do not eagerly
         // fill it for an alternate that Source has not actually selected.
         let rows = sqlx::query(r#"SELECT s.id::bigint AS stream_id,
+            CASE WHEN octet_length(s.stream_hash)<=1024 THEN s.stream_hash END AS stream_hash,
             CASE WHEN octet_length(s.name)<=4096 THEN s.name END AS stream_name,
             CASE WHEN octet_length(s.url)<=65536 THEN s.url END AS url,
             a.account_type,a.server_group_id::bigint AS server_group_id,
@@ -261,7 +356,7 @@ impl Store {
             CASE WHEN octet_length(p.replace_pattern)<=65536 THEN p.replace_pattern END AS replace_pattern,
             CASE WHEN octet_length(COALESCE(NULLIF(ua.user_agent,''),du.user_agent))<=65536
               THEN COALESCE(NULLIF(ua.user_agent,''),du.user_agent) END AS user_agent,
-            (COALESCE(octet_length(s.name),0)>4096 OR COALESCE(octet_length(s.url),0)>65536
+            (COALESCE(octet_length(s.stream_hash),0)>1024 OR COALESCE(octet_length(s.name),0)>4096 OR COALESCE(octet_length(s.url),0)>65536
              OR COALESCE(octet_length(p.name),0)>4096 OR COALESCE(octet_length(p.search_pattern),0)>65536
              OR COALESCE(octet_length(p.replace_pattern),0)>65536 OR COALESCE(octet_length(COALESCE(NULLIF(ua.user_agent,''),du.user_agent)),0)>65536
              OR (a.account_type='XC' AND (COALESCE(octet_length(a.server_url),0)>65536
@@ -270,15 +365,15 @@ impl Store {
             FROM dispatcharr_channels_stream s
             JOIN m3u_m3uaccountprofile p ON (($4::bigint IS NULL AND p.m3u_account_id=s.m3u_account_id) OR ($4=s.id AND p.id=$5::bigint))
             JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id
-            LEFT JOIN dispatcharr_channels_channelstream cs ON cs.stream_id=s.id AND cs.channel_id=$1 AND $4::bigint IS NULL
+            LEFT JOIN dispatcharr_channels_channelstream cs ON cs.stream_id=s.id AND cs.channel_id=$1 AND $4::bigint IS NULL AND NOT $6::bool
             LEFT JOIN core_useragent ua ON ua.id=a.user_agent_id
             LEFT JOIN core_useragent du ON du.id=$2::bigint
             WHERE ($4::bigint IS NOT NULL AND s.id=$4 AND p.id=$5::bigint)
-            OR ($4::bigint IS NULL AND cs.channel_id=$1 AND a.is_active AND p.is_active
+            OR ($4::bigint IS NULL AND (($6::bool AND s.id=$1) OR (NOT $6::bool AND cs.channel_id=$1)) AND ($6::bool OR a.is_active) AND p.is_active
             AND ($3::bigint[] IS NULL OR p.id=ANY($3))
-            AND ($3::bigint[] IS NOT NULL OR EXISTS(SELECT 1 FROM m3u_m3uaccountprofile d WHERE d.m3u_account_id=a.id AND d.is_default AND d.is_active)))
+            AND ($6::bool OR $3::bigint[] IS NOT NULL OR EXISTS(SELECT 1 FROM m3u_m3uaccountprofile d WHERE d.m3u_account_id=a.id AND d.is_default AND d.is_active)))
             ORDER BY cs."order",cs.id,p.is_default DESC,p.id LIMIT 33"#)
-            .bind(id).bind(default_ua).bind(allowed).bind(borrowed.map(|v|v.0)).bind(borrowed.map(|v|v.1)).fetch_all(self.pool()).await?;
+            .bind(id).bind(default_ua).bind(allowed).bind(borrowed.map(|v|v.0)).bind(borrowed.map(|v|v.1)).bind(preview.is_some()).fetch_all(self.pool()).await?;
         if rows.len() > MAX_CANDIDATES {
             return Err(playback_capacity());
         }
@@ -355,6 +450,19 @@ impl Store {
                             profile_parameters.as_str(),
                         )
                     };
+                let command_id = if let Some(mode) = preview {
+                    serde_json::json!(if mode.scoped {
+                        format!(
+                            "{}.p{}",
+                            lookup.id,
+                            row.try_get::<i64, _>("provider_profile_id")?
+                        )
+                    } else {
+                        lookup.id.to_owned()
+                    })
+                } else {
+                    serde_json::json!(id)
+                };
                 let mut command = dispatcharr_contracts::StreamCommand::build(
                     command_name,
                     command_locked,
@@ -362,7 +470,7 @@ impl Store {
                     command_parameters,
                     Some(&url),
                     Some(&user_agent),
-                    &serde_json::json!(id),
+                    &command_id,
                 )
                 .map_err(|_| {
                     StoreError::Unsupported(
@@ -435,6 +543,15 @@ impl Store {
                     profile.try_get::<String, _>("name")?,
                 ),
             ];
+            if let Some(hash) = row.try_get::<Option<String>, _>("stream_hash")? {
+                metadata.push(("source_stream_hash".into(), hash));
+            }
+            if let Some(mode) = preview {
+                metadata.push(("source_preview".into(),serde_json::json!({"stream":row.try_get::<i64,_>("stream_id")?,"hash":lookup.id,"scoped":mode.scoped}).to_string()));
+            }
+            if raw_observed.is_some() {
+                metadata.push(("source_assignment_required".into(), "true".into()));
+            }
             if let Some(logo) = logo_id {
                 metadata.push(("logo_id".into(), logo.to_string()));
             }
@@ -487,7 +604,7 @@ impl Store {
             } else {
                 None
             },
-            id: uuid.to_string(),
+            id: object_id.clone(),
             name,
             profile_id,
             streams,
@@ -566,9 +683,15 @@ impl AuthService {
         }
         let channel = self
             .store
-            .resolve_channel(&request.channel_id)
+            .resolve_channel_mode_cached(
+                &request.channel_id,
+                false,
+                None,
+                self.notification_cache.as_ref(),
+            )
             .await
-            .map_err(playback_error)?;
+            .map_err(playback_error)?
+            .ok_or_else(|| PlaybackError::new(404, "Not found"))?;
         self.playback_source_with_channel(request, user, forced, channel)
             .await
     }
@@ -917,6 +1040,41 @@ fn resolve_output_profile_id(request: &PlaybackRequest, user: Option<&User>) -> 
     }
 }
 
+// Source Channel.get_stream checks reusable public assignments before today's
+// active SQL membership. This read grants no provider or ownership capability.
+impl crate::NotificationCache {
+    async fn raw_source_assignment(
+        &self,
+        numeric: i64,
+        worker: &str,
+    ) -> Result<Option<(i64, i64)>, StoreError> {
+        const READ: &str = r#"
+local sid=redis.call('GET',KEYS[1]); if not sid then return {} end
+local pid=redis.call('GET','stream_profile:'..sid); if not pid then return {} end
+if redis.call('EXISTS',KEYS[2])~=0 then
+ local state=redis.call('HGET',KEYS[2],'state')
+ if not (state=='active' or state=='waiting_for_clients' or state=='buffering' or state=='initializing' or state=='connecting') then return {} end
+end
+local s=tonumber(sid);local p=tonumber(pid)
+if not s or not p or s<=0 or p<=0 or s%1~=0 or p%1~=0 then return redis.error_reply('Invalid source assignment IDs') end
+return {sid,pid}
+"#;
+        let mut cmd = redis::cmd("EVAL");
+        cmd.arg(READ)
+            .arg(2)
+            .arg(format!("channel_stream:{numeric}"))
+            .arg(format!("live:channel:{worker}:metadata"));
+        let rows: Vec<i64> = self.command(cmd).await?;
+        match rows.as_slice() {
+            [] => Ok(None),
+            [stream, profile] => Ok(Some((*stream, *profile))),
+            _ => Err(StoreError::Unsupported(
+                "Source assignment read returned an invalid shape",
+            )),
+        }
+    }
+}
+
 #[cfg(test)]
 mod output_tests {
     use super::*;
@@ -1090,5 +1248,72 @@ mod output_tests {
             resolve_output_profile_id(&request(vec![("output_profile", "0")]), Some(&user)),
             Some(0)
         );
+    }
+
+    #[tokio::test]
+    #[ignore = "requires real isolated Redis"]
+    async fn raw_sql_hint_is_read_only_and_distinguishes_missing_from_inactive_metadata() {
+        let url = std::env::var("REDIS_TEST_URL").expect("isolated Redis required");
+        let cache = crate::NotificationCache::connect(&url).await.unwrap();
+        let mut connection = redis::Client::open(url)
+            .unwrap()
+            .get_multiplexed_async_connection()
+            .await
+            .unwrap();
+        let worker = uuid::Uuid::new_v4().to_string();
+        let id = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_micros() as i64;
+        let stream = id + 1;
+        let profile = id + 2;
+        let channel_key = format!("channel_stream:{id}");
+        let stream_key = format!("stream_profile:{stream}");
+        let metadata = format!("live:channel:{worker}:metadata");
+        let counter = format!("profile_connections:{profile}");
+        let _: () = redis::pipe()
+            .set(&channel_key, stream)
+            .set(&stream_key, profile)
+            .set(&counter, 2)
+            .query_async(&mut connection)
+            .await
+            .unwrap();
+        assert_eq!(
+            cache.raw_source_assignment(id, &worker).await.unwrap(),
+            Some((stream, profile))
+        );
+        for state in [
+            "active",
+            "waiting_for_clients",
+            "buffering",
+            "initializing",
+            "connecting",
+            "stopped",
+        ] {
+            let _: () = redis::cmd("HSET")
+                .arg(&metadata)
+                .arg("state")
+                .arg(state)
+                .query_async(&mut connection)
+                .await
+                .unwrap();
+            assert_eq!(
+                cache.raw_source_assignment(id, &worker).await.unwrap(),
+                (state != "stopped").then_some((stream, profile))
+            );
+        }
+        let actual: (i64, i64, i64) = redis::pipe()
+            .get(&channel_key)
+            .get(&stream_key)
+            .get(&counter)
+            .query_async(&mut connection)
+            .await
+            .unwrap();
+        assert_eq!(actual, (stream, profile, 2));
+        let _: () = redis::cmd("DEL")
+            .arg(&[channel_key, stream_key, metadata, counter])
+            .query_async(&mut connection)
+            .await
+            .unwrap();
     }
 }

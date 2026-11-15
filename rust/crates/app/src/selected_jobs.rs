@@ -30,6 +30,8 @@ enum Startup {
     Fault(&'static str),
 }
 struct Inner {
+    plugin_runtime: dispatcharr_store::PluginRuntime,
+    plugin_jobs: crate::plugin_jobs_bridge::PluginJobsBridge,
     plugin_refresh: jobs::normal_plugin_repos::Prepared,
     queue: jobs::normal_queue::Application,
     scanner: jobs::normal_scanner::Prepared,
@@ -191,6 +193,28 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected scanner transport initialization failed")?;
+        let plugin_jobs =
+            crate::plugin_jobs_bridge::PluginJobsBridge::prepare(shared_jobs.clone(), Arc::new(()))
+                .map_err(|_| "Plugin shared Jobs bridge preparation failed")?;
+        let plugin_runtime = dispatcharr_store::PluginRuntime::prepare(
+            auth.clone(),
+            PathBuf::from("/usr/local/bin/dispatcharr-plugin-python"),
+            PathBuf::from("/opt/dispatcharr-python/application"),
+            env::var_os("DISPATCHARR_PLUGINS_DIR")
+                .map(PathBuf::from)
+                .unwrap_or_else(|| PathBuf::from("/data/plugins")),
+            events.clone(),
+            Arc::new(plugin_jobs.clone()),
+            Arc::new(()),
+            1024,
+        )
+        .map_err(|_| "Plugin lazy runtime preparation failed")?;
+        let plugin_tasks = jobs::normal_registered_plugins::Prepared::prepare(
+            shared_jobs.clone(),
+            plugin_runtime.clone(),
+            revoked.clone(),
+        )
+        .map_err(|_| "Plugin selected-family preparation failed")?;
         control
             .bind_backend(shared_jobs.clone())
             .map_err(|_| "Selected pidbox backend binding failed")?;
@@ -291,6 +315,15 @@ impl SelectedJobs {
             recording_jobs.clone(),
             events.clone(),
         );
+        let xml_cache = env::var("RUST_EPG_CACHE_DIR")
+            .map(PathBuf::from)
+            .unwrap_or_else(|_| media_root.join("cached_epg"));
+        let xml_download = dispatcharr_store::xmltv_download::Downloader::prepare(
+            auth.clone(),
+            events.clone(),
+            xml_cache,
+        )
+        .map_err(|_| "Selected XMLTV download preparation failed")?;
         let sd_guide = jobs::normal_sd_guide::Prepared::new(
             shared_jobs.clone(),
             auth.clone(),
@@ -357,7 +390,7 @@ impl SelectedJobs {
                 Family::Refresh,
                 existing
                     .refresh
-                    .into_normal_handler()
+                    .into_normal_handler_with_download(xml_download.clone())
                     .map_err(|_| "Selected Refresh lifecycle unavailable")?,
             ),
             (
@@ -379,10 +412,12 @@ impl SelectedJobs {
                 sd_guide.wrap_tvg(
                     existing
                         .tvg
-                        .into_normal_handler_with_deferred(
+                        .into_normal_handler_with_deferred_download(
                             shared_jobs.clone(),
                             auth.producer_identity_source(),
                             revoked.clone(),
+                            xml_download.clone(),
+                            dispatcharr_store::tvg_programme_stage::Service::prepare(auth.clone()),
                         )
                         .map_err(|_| "Selected TVG lifecycle unavailable")?,
                 ),
@@ -403,11 +438,12 @@ impl SelectedJobs {
         entries.extend(core_tasks.entries());
         entries.extend(channel_tasks.entries());
         entries.push(plugin_refresh.entry());
+        entries.push(plugin_tasks.entry());
         entries.extend(xc.entries());
         entries.push(sd_guide.entry());
         entries.extend(defaults.entries());
         entries.extend(scanner.entries());
-        let queue = jobs::normal_queue::Application::prepare(
+        let queue = jobs::normal_queue::Application::prepare_with_registered_plugins(
             &broker,
             &backend,
             entries,
@@ -415,6 +451,15 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected complete registry initialization failed")?;
+        plugin_jobs
+            .attach_prepared(&queue)
+            .map_err(|_| "Plugin actual shared worker registry unavailable")?;
+        // Discover actual enabled callables using the same Auth4/pool8 ports.
+        // No Python child exists when there are no enabled plugin configurations.
+        plugin_runtime
+            .discover_configured(Arc::new(()))
+            .await
+            .map_err(|_| "Plugin actual startup discovery/SQL settlement failed")?;
         scanner
             .bind_sd(
                 sd_guide
@@ -450,6 +495,8 @@ impl SelectedJobs {
         }
         Ok(Self {
             inner: Arc::new(Inner {
+                plugin_runtime,
+                plugin_jobs,
                 plugin_refresh,
                 queue,
                 scanner,
@@ -473,6 +520,9 @@ impl SelectedJobs {
                 channel_http,
             }),
         })
+    }
+    pub fn plugin_runtime(&self) -> dispatcharr_store::PluginRuntime {
+        self.inner.plugin_runtime.clone()
     }
     pub fn backup_files(&self) -> dispatcharr_store::BackupFiles {
         self.inner.backups.clone()
@@ -692,6 +742,15 @@ impl SelectedJobs {
             .control
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
+        {
+            return false;
+        }
+        if self
+            .inner
+            .plugin_jobs
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+            .is_err()
         {
             return false;
         }

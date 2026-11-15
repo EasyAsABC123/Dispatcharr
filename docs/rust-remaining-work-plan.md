@@ -12,7 +12,15 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The current [Candidate25](rust-milestone-batch25.md) is committed as
+The current source [Candidate26](rust-milestone-batch26.md) passes all four SDK
+gates with1,075 tests, zero failures and782 ignored. It joins preview/inverse
+Redirect, remote/staged XMLTV, guide output and experimental plugin lifecycle.
+Its Python model/framework compatibility, backend-entry guards and remaining
+unsupported effects are documented explicitly; actual execution audits and
+four-action/child-PG/transaction proofs are required before enabled acceptance.
+Docker and application acceptance are pending.
+
+The preceding [Candidate25](rust-milestone-batch25.md) is committed as
 `6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d`:1,061 SDK tests pass, zero fail
 and775 remain ignored. Docker/package and all eighteen joined physical controls
 pass. Selected Source/Native application workflows are qualified across the

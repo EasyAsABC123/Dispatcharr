@@ -313,3 +313,7 @@ mod xml_tvg_protocol;
 
 pub use transport::plugin_registered_transport::{PluginError, PluginPublished};
 pub use transport::plugin_result_transport::PluginResults;
+
+pub mod normal_registered_plugins;
+mod registered_plugin_eta;
+mod registered_plugin_protocol;

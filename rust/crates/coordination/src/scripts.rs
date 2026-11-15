@@ -17,6 +17,26 @@ local function clear_provider(ledger)
     if not profile or not credential or not release_key then
         error('Invalid reservation ledger')
     end
+    -- A borrowed Source slot is claimed through the shared metadata token,
+    -- never treated as a second private allocation. An external Source parent
+    -- may already have consumed it while this raw owner still serves media.
+    local borrowed=redis.call('HGET',ledger,'source_slot_shared')=='1' or redis.call('HGET',ledger,'source_borrowed')=='1'
+    local metadata=redis.call('HGET',ledger,'source_metadata')
+    local claim_metadata=false
+    if borrowed then
+        local token=redis.call('HGET',ledger,'token')
+        local meta_kind=metadata and redis.call('TYPE',metadata).ok or 'none'
+        local meta_profile=metadata and redis.call('HGET',metadata,'m3u_profile') or false
+        local expected=string.match(profile,'^profile_connections:(%d+)$')
+        local meta_owner=metadata and redis.call('HGET',metadata,'owner') or false
+        local alias=redis.call('HGET',ledger,'alias_channel')
+        local stream=redis.call('HGET',ledger,'alias_sid')
+        local preview=redis.call('HGET',ledger,'preview_key')
+        local preview_profile=redis.call('HGET',ledger,'preview_profile')
+        local alias_live=(alias and stream and redis.call('GET',alias)==stream) or (preview and preview_profile and redis.call('GET',preview)==preview_profile)
+        claim_metadata=meta_profile==expected and (not meta_owner or meta_owner==token)
+        reserved=reserved and (claim_metadata or (not meta_profile and alias_live))
+    end
     -- Read and validate every possibly failing value before mutation: Lua
     -- errors do not roll back writes already performed by the script.
     local count = reserved and counter_value(profile) or 0
@@ -32,10 +52,15 @@ local function clear_provider(ledger)
     local current_owner=redis.call('GET',redis.call('HGET',ledger,'owner'))
     local channel_receipt_owned=channel_receipt and redis.call('HGET',channel_receipt,'token')==alias_token
     local stream_receipt_owned=stream_receipt and redis.call('HGET',stream_receipt,'token')==alias_token
-    local channel_owned=alias_channel and channel_receipt_owned and current_owner==alias_token
+    local channel_owned=alias_channel and channel_receipt_owned and (not current_owner or current_owner==alias_token)
         and redis.call('GET',alias_channel)==alias_sid
-    local stream_owned=alias_stream and stream_receipt_owned and current_owner==alias_token
+    local stream_owned=alias_stream and stream_receipt_owned and (not current_owner or current_owner==alias_token)
         and redis.call('GET',alias_stream)==alias_pid
+    local preview=redis.call('HGET',ledger,'preview_key')
+    local preview_profile=redis.call('HGET',ledger,'preview_profile')
+    if preview and (not current_owner or current_owner==alias_token) and redis.call('GET',preview)==preview_profile then redis.call('DEL',preview) end
+    redis.call('HDEL',ledger,'preview_key','preview_profile')
+    if borrowed and metadata and claim_metadata then redis.call('HDEL',metadata,'m3u_profile','stream_id') end
     if channel_owned then redis.call('DEL',alias_channel) end
     if stream_owned then redis.call('DEL',alias_stream) end
     if channel_receipt_owned then redis.call('DEL',channel_receipt) end
@@ -50,7 +75,7 @@ local function clear_provider(ledger)
             end
         end
     end
-    redis.call('HSET', ledger, 'reserved', '0', 'credential', '')
+    redis.call('HSET', ledger, 'reserved', '0', 'credential', '', 'source_borrowed','0','source_parent_token','','source_slot_shared','0','source_metadata','')
     return reserved and 1 or 0
 end
 local function release_record(ledger, index)
@@ -162,10 +187,97 @@ local pid=string.match(profile,'^profile_connections:(%d+)$')
 if not pid or tonumber(pid)<=0 then return -1 end
 for i=4,5 do local kind=redis.call('TYPE',KEYS[i]).ok;if kind~='none' and kind~='string' then return redis.error_reply('Invalid source alias type') end end
 for i=6,7 do local kind=redis.call('TYPE',KEYS[i]).ok;if kind~='none' and kind~='hash' then return redis.error_reply('Invalid source alias receipt') end end
+local borrowed_check=redis.call('HGET',KEYS[2],'source_borrowed')=='1'
+if borrowed_check and (redis.call('GET',KEYS[4])~=ARGV[2] or redis.call('GET',KEYS[5])~=pid) then return -1 end
+local ttl=tonumber(ARGV[3] or '0')
+local metadata=string.gsub(KEYS[1],':owner$',':metadata')
+if ttl>0 then
+ local kind=redis.call('TYPE',metadata).ok;if kind~='none' and kind~='hash' then return redis.error_reply('Invalid source slot metadata') end
+end
 redis.call('SET',KEYS[4],ARGV[2]);redis.call('SET',KEYS[5],pid)
-redis.call('HSET',KEYS[6],'token',ARGV[1],'scope','live','ledger',KEYS[2],'stream',ARGV[2],'profile',pid)
-redis.call('HSET',KEYS[7],'token',ARGV[1],'scope','live','ledger',KEYS[2])
+if ttl>0 then
+ redis.call('HSET',metadata,'m3u_profile',pid,'stream_id',ARGV[2],'owner',ARGV[1],'rust_token',ARGV[1],'state','initializing')
+ redis.call('PEXPIRE',metadata,ttl)
+ redis.call('HSET',KEYS[2],'source_metadata',metadata,'source_slot_shared','1')
+end
+local borrowed=redis.call('HGET',KEYS[2],'source_borrowed')=='1'
+local parent=borrowed and redis.call('HGET',KEYS[2],'source_parent_token') or ''
+redis.call('HSET',KEYS[6],'token',ARGV[1],'scope',borrowed and 'live_borrowed' or 'live','ledger',KEYS[2],'stream',ARGV[2],'profile',pid,
+ 'borrowed_from',parent or '', 'reserved',redis.call('HGET',KEYS[2],'reserved') or '0')
+redis.call('HSET',KEYS[7],'token',ARGV[1],'scope',borrowed and 'live_borrowed' or 'live','ledger',KEYS[2])
 redis.call('HSET',KEYS[2],'alias_channel',KEYS[4],'alias_stream',KEYS[5],
  'alias_channel_receipt',KEYS[6],'alias_stream_receipt',KEYS[7],'alias_sid',ARGV[2],'alias_pid',pid)
+return 1
+"#;
+
+/// Adopt the real public allocation without incrementing profile/credential
+/// counters. A sealed observation is rechecked under this actual raw owner.
+pub const ADOPT_SOURCE_ASSIGNMENT: &str = r#"
+if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'token')~=ARGV[1] then return 0 end
+if redis.call('HGET',KEYS[2],'reserved')=='1' then return -1 end
+if redis.call('GET',KEYS[4])~=ARGV[2] or redis.call('GET',KEYS[5])~=ARGV[3] then return 0 end
+local metadata=string.gsub(KEYS[1],':owner$',':metadata')
+local kind=redis.call('TYPE',metadata).ok
+if kind~='none' and kind~='hash' then return redis.error_reply('Invalid source assignment metadata') end
+local state=redis.call('HGET',metadata,'state')
+if kind~='none' and not (state=='active' or state=='waiting_for_clients' or state=='buffering' or state=='initializing' or state=='connecting') then return 0 end
+local receipt_kind=redis.call('TYPE',KEYS[6]).ok
+if receipt_kind~='none' and receipt_kind~='hash' then return redis.error_reply('Invalid source assignment receipt') end
+local scope=redis.call('HGET',KEYS[6],'scope')
+-- Adoption from an expired native raw owner needs a separate owner-loss
+-- characterization; do not relabel its private allocation as a fresh slot.
+if scope=='live' or scope=='live_borrowed' then return -2 end
+local parent=scope=='redirect' and redis.call('HGET',KEYS[6],'token') or ''
+local profile='profile_connections:'..ARGV[3]
+local count=counter_value(profile)
+local release_key='profile_credential_release:'..ARGV[3]
+local group=redis.call('GET',release_key) or ''
+if string.len(group)>256 or (group~='' and string.sub(group,1,25)~='server_group_connections:') then return redis.error_reply('Invalid source assignment credential') end
+if group~='' then counter_value(group) end
+redis.call('HSET',KEYS[2],'profile',profile,'credential',group,'release_key',release_key,
+ 'reserved',count>0 and '1' or '0','source_borrowed','1','source_metadata',metadata,'source_parent_token',parent or '')
+if parent and parent~='' then redis.call('HSET',KEYS[6],'borrower_ledger',KEYS[2],'borrower_token',ARGV[1]) end
+return 1
+"#;
+
+/// KEYS use the existing actual owner/ledger/index and one preview alias only.
+/// Prepare may retire Source-defined inactive metadata; publish never reserves.
+pub const PREVIEW_ASSIGNMENT: &str = r#"
+if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'token')~=ARGV[1] then return -1 end
+local pid=ARGV[2];local ttl=tonumber(ARGV[3]);local metadata=string.gsub(KEYS[1],':owner$',':metadata')
+local kind=redis.call('TYPE',metadata).ok;if kind~='none' and kind~='hash' then return redis.error_reply('Invalid preview metadata type') end
+local assigned=redis.call('GET',KEYS[4])
+local profile='profile_connections:'..pid
+if ttl==0 then
+ if redis.call('HGET',KEYS[2],'reserved')=='1' then return -2 end
+ if not assigned then return 0 end
+ local state=redis.call('HGET',metadata,'state')
+ local reusable=kind=='none' or state=='active' or state=='waiting_for_clients' or state=='buffering' or state=='initializing' or state=='connecting'
+ if reusable then
+  if assigned~=pid then return -2 end
+  local count=counter_value(profile);local release='profile_credential_release:'..pid;local group=redis.call('GET',release) or ''
+  if string.len(group)>256 or (group~='' and string.sub(group,1,25)~='server_group_connections:') then return redis.error_reply('Invalid preview credential') end
+  if group~='' then counter_value(group) end
+  redis.call('HSET',KEYS[2],'profile',profile,'credential',group,'release_key',release,'reserved',count>0 and '1' or '0','source_borrowed','1','source_metadata',metadata,'preview_key',KEYS[4],'preview_profile',pid)
+  return 1
+ end
+ -- Only actual existing inactive metadata makes a preview assignment stale.
+ local old=tonumber(assigned);if not old or old<=0 or old%1~=0 then return redis.error_reply('Invalid preview profile') end
+ local key='profile_connections:'..assigned;local release='profile_credential_release:'..assigned;local group=redis.call('GET',release) or ''
+ if string.len(group)>256 or (group~='' and string.sub(group,1,25)~='server_group_connections:') then return redis.error_reply('Invalid preview credential') end
+ local count=counter_value(key);local shared=group~='' and counter_value(group) or 0
+ redis.call('DEL',KEYS[4]);redis.call('HDEL',metadata,'m3u_profile','stream_id')
+ if count>0 then redis.call('DECR',key);count=count-1 end
+ if shared>0 then redis.call('DECR',group) end
+ if count<=0 and group~='' then redis.call('DEL',release) end
+ return 0
+end
+if redis.call('HGET',KEYS[2],'profile')~=profile then return -1 end
+if redis.call('HGET',KEYS[2],'source_borrowed')=='1' and assigned~=pid then return -1 end
+if assigned and assigned~=pid then return -2 end
+redis.call('SET',KEYS[4],pid)
+redis.call('HSET',metadata,'m3u_profile',pid,'stream_id',ARGV[4],'owner',ARGV[1],'rust_token',ARGV[1],'state','initializing')
+redis.call('PEXPIRE',metadata,ttl)
+redis.call('HSET',KEYS[2],'source_metadata',metadata,'source_slot_shared','1','preview_key',KEYS[4],'preview_profile',pid)
 return 1
 "#;

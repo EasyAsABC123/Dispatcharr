@@ -4,7 +4,7 @@
 //! Delayed jobs retain weak writers/parents, so they cannot pin Auth4 forever.
 //! Original Dispatcharr authors retain application/algorithm credit.
 use super::plugin_execution_host::Invocation;
-use crate::task_sql_session::TaskSqlWriterWitness;
+use crate::task_sql_session::{TaskSqlPublicationWitness, TaskSqlWriterWitness};
 use crate::{AuthService, StoreError, TaskSqlSession};
 use sha2::{Digest, Sha256};
 use std::{
@@ -76,6 +76,7 @@ impl PluginPublicationOwners {
         let Some(session) = scope.sql.as_ref() else {
             return Ok(None);
         };
+        let provenance = session.publication_provenance(&scope.owner);
         let key = key(id, raw);
         let mut records = self.records.lock().map_err(|_| unavailable())?;
         records.retain(|_, record| !record.settled || record.parent.strong_count() != 0);
@@ -91,8 +92,8 @@ impl PluginPublicationOwners {
             Record {
                 nonce,
                 settled: false,
-                parent: Arc::downgrade(&scope.owner),
-                writer: session.publication_writer(),
+                parent: provenance.parent,
+                writer: provenance.writer,
             },
         );
         Ok(Some(PublicationIntent {
@@ -140,16 +141,42 @@ impl PluginPublicationOwners {
                 ));
             }
             if let Some(parent) = record.parent.upgrade() {
-                if let Some(session) = record
+                let provenance = TaskSqlPublicationWitness {
+                    writer: record.writer.clone(),
+                    parent: Arc::downgrade(&parent),
+                };
+                let session = match record
                     .writer
                     .try_borrow(auth.clone(), Arc::new((owner.clone(), parent)))
                     .await?
                 {
-                    return Ok(session);
-                }
+                    Some(session) => session,
+                    // Busy or non-idle root: remaining ORIGINAL Auth admission
+                    // may execute independently, never another borrowed writer.
+                    None => auth.borrow_task_sql_session(owner).await?,
+                };
+                session.inherit_publication_provenance(provenance)?;
+                return Ok(session);
             }
         }
         auth.borrow_task_sql_session(owner).await
+    }
+    /// Transfer only after actual owner-checked requeue/warm restoration. A
+    /// changed raw JSON supplied by Python cannot mint a causal writer witness.
+    pub(crate) fn restored(&self, id: Uuid, raw: &[u8], restored: &[u8]) -> Result<(), StoreError> {
+        let mut records = self.records.lock().map_err(|_| unavailable())?;
+        let original = key(id, raw);
+        let new = key(id, restored);
+        if original == new {
+            return Ok(());
+        }
+        if records.contains_key(&new) {
+            return Err(unavailable());
+        }
+        if let Some(record) = records.remove(&original) {
+            records.insert(new, record);
+        }
+        Ok(())
     }
     /// Called only after this exact raw head was actually claimed/reserved, never
     /// on selection/preflight (which can race with a foreign head replacement).

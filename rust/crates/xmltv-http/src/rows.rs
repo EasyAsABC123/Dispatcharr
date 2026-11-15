@@ -96,15 +96,32 @@ pub enum Channels {
     MissingProfile,
 }
 pub fn requires_custom_adapter(channel: &Channel) -> bool {
-    channel
-        .source_properties
-        .as_ref()
-        .is_some_and(|value| match value {
-            Value::Object(properties) => !properties.is_empty(),
-            Value::Null => false,
-            _ => true,
-        })
+    let Some(value) = channel.source_properties.as_ref() else {
+        return false;
+    };
+    // Source uses `source.custom_properties or None`. Keep its falsy values
+    // distinct from a truthy malformed object; no credential fields are logged.
+    let truthy = match value {
+        Value::Null => false,
+        Value::Bool(v) => *v,
+        Value::String(v) => !v.is_empty(),
+        Value::Number(v) => v.as_f64().is_none_or(|v| v != 0.0),
+        Value::Array(v) => !v.is_empty(),
+        Value::Object(v) => !v.is_empty(),
+    };
+    if !truthy {
+        return false;
+    }
+    let Value::Object(properties) = value else {
+        return true;
+    };
+    // epg_generator resolves stream-name parsing for any source, but custom
+    // dummy logo/programme generation only runs for source_type='dummy'.
+    // Real XML/SD provider/config properties otherwise do not alter output.
+    channel.source_type.as_deref() == Some("dummy")
+        || properties.get("name_source").and_then(Value::as_str) == Some("stream")
 }
+
 fn capacity() -> StoreError {
     StoreError::StatusBody(
         503,
@@ -248,5 +265,62 @@ mod tests {
             deep = Value::Array(vec![deep]);
         }
         assert!(json_memory(&deep).is_err());
+    }
+}
+
+#[cfg(test)]
+mod source_custom_property_routing {
+    use super::*;
+    fn channel(kind: &str, properties: Value) -> Channel {
+        Channel {
+            id: 1,
+            number: Some(1.),
+            name: "Owned channel".into(),
+            logo: None,
+            tvg_id: None,
+            station: None,
+            epg_id: Some(1),
+            source_type: Some(kind.into()),
+            source_properties: Some(properties),
+        }
+    }
+    #[test]
+    fn stored_xml_and_sd_guides_ignore_provider_properties_without_dummy_regex() {
+        for kind in ["xmltv", "schedules_direct"] {
+            for properties in [
+                json!({"auto_apply_epg_logos":false}),
+                json!({"username":"synthetic-provider-input","password":"synthetic-provider-input","lineup":"owned"}),
+                json!({"title_pattern":"a regex only dummy generation consumes"}),
+            ] {
+                assert!(!requires_custom_adapter(&channel(kind, properties)));
+            }
+            assert!(requires_custom_adapter(&channel(
+                kind,
+                json!({"name_source":"stream","stream_index":1})
+            )));
+        }
+    }
+    #[test]
+    fn source_falsy_properties_use_standard_route_but_custom_or_malformed_stay_gated() {
+        for properties in [
+            Value::Null,
+            json!(false),
+            json!(0),
+            json!(0.0),
+            json!(""),
+            json!([]),
+            json!({}),
+        ] {
+            assert!(!requires_custom_adapter(&channel("dummy", properties)));
+        }
+        for properties in [
+            json!(true),
+            json!(1),
+            json!("truthy"),
+            json!([0]),
+            json!({"title_pattern":"(?|a|b)"}),
+        ] {
+            assert!(requires_custom_adapter(&channel("dummy", properties)));
+        }
     }
 }

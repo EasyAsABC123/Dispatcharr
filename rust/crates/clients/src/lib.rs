@@ -135,6 +135,11 @@ fn keys(channel: &str, id: &str) -> (String, String, String) {
 }
 
 impl ClientStore {
+    /// Actual prepared channel-metadata TTL, reused by Source slot-token publish.
+    pub fn channel_metadata_ttl(&self) -> Duration {
+        self.inner.config.ttl
+    }
+
     pub fn worker_id(&self) -> &str {
         &self.inner.config.worker_id
     }

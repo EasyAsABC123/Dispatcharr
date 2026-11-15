@@ -24,14 +24,7 @@ impl PythonSqlSession {
         // Only actual explicit transaction termination bypasses a causal writer
         // loan. This releases the parent's own locks; it never adds a hidden
         // commit/rollback or permits concurrent parent business statements.
-        let control = matches!(
-            sql.trim()
-                .trim_end_matches(';')
-                .trim()
-                .to_ascii_uppercase()
-                .as_str(),
-            "COMMIT" | "ROLLBACK"
-        );
+        let control = transaction_control(&sql);
         if control {
             self.session
                 .python_transaction_control(move |connection| {
@@ -79,5 +72,69 @@ impl PythonSqlSession {
         Ok::<_, StoreError>(
             json!({"statements":statements,"error":error,"transaction_status":result.transaction_status,"server_version":result.server_version_num,"parameters":result.parameters}),
         )
+    }
+}
+
+fn transaction_control(sql: &str) -> bool {
+    let sql = sql.trim().strip_suffix(';').unwrap_or(sql.trim()).trim();
+    let words = sql.split_ascii_whitespace().collect::<Vec<_>>();
+    if words.len() == 1 {
+        return words[0].eq_ignore_ascii_case("COMMIT")
+            || words[0].eq_ignore_ascii_case("ROLLBACK");
+    }
+    let identifier = |value: &str| {
+        let value = if value.starts_with('"') && value.ends_with('"') && value.len() >= 2 {
+            &value[1..value.len() - 1]
+        } else {
+            value
+        };
+        !value.is_empty()
+            && value.len() <= 63
+            && value
+                .bytes()
+                .all(|v| v.is_ascii_alphanumeric() || v == b'_')
+    };
+    match words.as_slice() {
+        [a, b] if a.eq_ignore_ascii_case("SAVEPOINT") => identifier(b),
+        [a, b, c] if a.eq_ignore_ascii_case("RELEASE") && b.eq_ignore_ascii_case("SAVEPOINT") => {
+            identifier(c)
+        }
+        [a, b, c] if a.eq_ignore_ascii_case("ROLLBACK") && b.eq_ignore_ascii_case("TO") => {
+            identifier(c)
+        }
+        [a, b, c, d]
+            if a.eq_ignore_ascii_case("ROLLBACK")
+                && b.eq_ignore_ascii_case("TO")
+                && c.eq_ignore_ascii_case("SAVEPOINT") =>
+        {
+            identifier(d)
+        }
+        _ => false,
+    }
+}
+#[cfg(test)]
+mod transaction_tests {
+    use super::*;
+    #[test]
+    fn actual_django_atomic_control_can_release_its_own_locks_without_unfencing_business_sql() {
+        for sql in [
+            "COMMIT",
+            "ROLLBACK;",
+            "SAVEPOINT \"s123_x1\"",
+            "RELEASE SAVEPOINT \"s123_x1\"",
+            "ROLLBACK TO SAVEPOINT \"s123_x1\"",
+        ] {
+            assert!(transaction_control(sql), "{sql}");
+        }
+        for sql in [
+            "BEGIN",
+            "SELECT 1",
+            "ROLLBACK; DELETE FROM plugins_pluginconfig",
+            "SAVEPOINT \"x\"; COMMIT",
+            "ROLLBACK TO SAVEPOINT \"x y\"",
+            "COMMIT AND CHAIN",
+        ] {
+            assert!(!transaction_control(sql), "{sql}");
+        }
     }
 }

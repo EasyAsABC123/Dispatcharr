@@ -92,6 +92,24 @@ impl Application {
     }
     /// Reserve this prepared application for the single normal queue shell;
     /// a cloned public handle cannot also start its legacy polling loop.
+    pub fn into_normal_handler_with_deferred_download(
+        self,
+        jobs: crate::transport::Jobs,
+        identity: dispatcharr_store::ProducerIdentitySource,
+        revoked: crate::normal_revocation::Revoked,
+        download: dispatcharr_store::xmltv_download::Downloader,
+        staging: dispatcharr_store::tvg_programme_stage::Service,
+    ) -> Result<Arc<dyn crate::milestone_dispatch::Handler>, &'static str> {
+        self.inner
+            .worker
+            .bind_staging(staging)
+            .map_err(|_| "normal TVG staging port unavailable")?;
+        self.inner
+            .worker
+            .bind_download(download)
+            .map_err(|_| "normal TVG download port unavailable")?;
+        self.into_normal_handler_with_deferred(jobs, identity, revoked)
+    }
     pub fn into_normal_handler_with_deferred(
         self,
         jobs: crate::transport::Jobs,

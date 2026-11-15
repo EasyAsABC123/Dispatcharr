@@ -1,0 +1,262 @@
+{
+  "controller_source_git_revision": null,
+  "controller_source_SDK": "SDK28",
+  "controller_source_inputs": "artifacts/rust/normal-graph-batch17-sdk-1/attempt28/inputs.json",
+  "runtime_image_source_git_revision": "6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d",
+  "runtime_scope": "Candidate25 dependency environment ONLY; unpublished SDK28 host controllers execute; SDK28 production Main not executed",
+  "passed": false,
+  "scope": "Actual owned Redis, raw HTTP and profile actor component controls; not Main/Source media or performance acceptance",
+  "image_id": "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+  "git_revision": "6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d",
+  "controllers": [
+    {
+      "name": "output-store",
+      "package": "dispatcharr-output-store",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-output-store",
+        "--test",
+        "redis",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis-47691684c9e0cadc",
+      "sha256": "fcaecbc6de65167cb02ffaddf7847df9addda0d6b0a36e9b00412ca96d30ebf3",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-sdk28-output-physical-1/output-store"
+    },
+    {
+      "name": "profile-viewers",
+      "package": "dispatcharr-stream-http",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-stream-http",
+        "--test",
+        "output_profiles",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/output_profiles-e6faf834f03a7778",
+      "sha256": "5ab441542a0e00370d864a5ce6679d3dab2bdbba87f829a25b1791d6c166b77b",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-sdk28-output-physical-1/profile-viewers"
+    },
+    {
+      "name": "profile-stop-race",
+      "package": "dispatcharr-stream-http",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-stream-http",
+        "--lib",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_stream_http-3c3a0783cc84ddc5",
+      "sha256": "584a73358d0ed3e722bc9fcf97c06164647d0e956418c2ac4fbf40dbe5a4090e",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-sdk28-output-physical-1/profile-stop-race"
+    },
+    {
+      "name": "fmp4-generation",
+      "package": "dispatcharr-fmp4-http",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-fmp4-http",
+        "--test",
+        "http",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http-19a958f8e88ba3b1",
+      "sha256": "b01fdcc5d6acd6f7678500c762bb27c70fcdeea7531b6e4b8666ddd2974efec3",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-sdk28-output-physical-1/fmp4-generation"
+    },
+    {
+      "name": "redirect-assignments",
+      "package": "dispatcharr-coordination",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-coordination",
+        "--test",
+        "redirect_assignments",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redirect_assignments-5b7031c5e83bca13",
+      "sha256": "25d273ea64abe52780bc8fc865cf6428b8736d7640df7a02acd82a00f9f5ec86",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-sdk28-output-physical-1/redirect-assignments"
+    },
+    {
+      "name": "preview-assignments",
+      "package": "dispatcharr-coordination",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-coordination",
+        "--test",
+        "preview_assignments",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/preview_assignments-d4565f1425af7934",
+      "sha256": "f86284b4548de0209d50e7690bfc0705d117e82eeb9322bb7939822bc89066a6",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-sdk28-output-physical-1/preview-assignments"
+    },
+    {
+      "name": "raw-hint",
+      "package": "dispatcharr-store",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_store-b6509772c8ebe32f",
+      "sha256": "0b33622a3912c12ca2ee0775d1eb0737407d75ebbd9a0e559cfefdef094660ae",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-sdk28-output-physical-1/raw-hint"
+    },
+    {
+      "name": "inverse-engine",
+      "package": "dispatcharr-stream-http",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-stream-http",
+        "--test",
+        "redirect_reuse",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redirect_reuse-3df4494b7c868274",
+      "sha256": "cd65fbae11328a5f0fbb28256f4654ef2d84796af86804c47b52e6a8be00269b",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-sdk28-output-physical-1/inverse-engine"
+    }
+  ],
+  "controller_ELF_dependencies": {
+    "libgcc_s.so.1": {
+      "path": "/usr/lib/libgcc_s.so.1",
+      "sha256": "f0cb09ad25ba16848370f16086d1b5671962431ae2ea878e8eeb4c7bb35a56ed"
+    },
+    "libm.so.6": {
+      "path": "/usr/lib/libm.so.6",
+      "sha256": "58b6b82e39d59d7810d402ba4ec34359fde058204fdb7cd5a269fda256a35421"
+    },
+    "libc.so.6": {
+      "path": "/usr/lib/libc.so.6",
+      "sha256": "071e34179e645b25f8a8c2e7108894dc665caa9f5f8c939cd579a75b6638bc3f"
+    },
+    "ld-linux-x86-64.so.2": {
+      "path": "/usr/lib/ld-linux-x86-64.so.2",
+      "sha256": "2a950d46575efa0210d22440988f5a6b4507ebddc6c86d9a42e6e7ef6f01463e"
+    }
+  },
+  "controller_scope": "SDK28 host-compiled tests with exact separately identified host ELF dependencies; child process environment is the unchanged candidate image; no LD_LIBRARY_PATH override",
+  "Redis_pin_source_sha256": "63c869eeb778ec178ea2cf1ad4475b5401461c665d37d578a8decf5c93637c22",
+  "Redis_image": "redis@sha256:c5d34a98396a4775e223c74e929162c35c5a2182901ba26b50ade939941ce14b",
+  "compose_project": "dispatcharr-output-controls-f806612bce",
+  "published_ports": false,
+  "network_internal": true,
+  "full_milestone_passed": false,
+  "Main_acceptance": false,
+  "performance_verified": false,
+  "Redis_actual_image_id": "sha256:c5d34a98396a4775e223c74e929162c35c5a2182901ba26b50ade939941ce14b",
+  "Redis_PID": 3817309,
+  "Redis_generation": "8446634",
+  "Redis_version": "Redis server v=7.4.12 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=5e6b576434da555d",
+  "project_inventories_empty": true,
+  "original_Redis_generation_absent": true,
+  "cells": [
+    {
+      "name": "output-store",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 7,
+      "stdout_sha256": "ba91859462066d3b734b4d54e392cadf59781624fb1da758169fe7a470a4464d"
+    },
+    {
+      "name": "profile-viewers",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 2,
+      "stdout_sha256": "ae25ef3f019a06e2e8254ba8a7bbd4b2ce5b68abd8056b753812a1a3763881b8"
+    },
+    {
+      "name": "profile-stop-race",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 1,
+      "stdout_sha256": "26143bf74066020dbf97f4528c414640ac7a717d699984a1acae97668f766216"
+    },
+    {
+      "name": "fmp4-generation",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 1,
+      "stdout_sha256": "7e5f18bd5107edbd53e5b51a5a82da4abead565aea6db5db0374d1fc6fec1552"
+    },
+    {
+      "name": "redirect-assignments",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 9,
+      "stdout_sha256": "d8821704ce61a426ce74ee8858cacd263d07a5ed92fd71de9fb9e4f1e45bac0a"
+    },
+    {
+      "name": "preview-assignments",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 3,
+      "stdout_sha256": "092ca17cda583dd65d8a587dc654a7b0a881cb327ab01cf5d032f5642aa984b5"
+    },
+    {
+      "name": "raw-hint",
+      "passed": false,
+      "failure": "AssertionError:"
+    },
+    {
+      "name": "inverse-engine",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 1,
+      "stdout_sha256": "ff3380a4281c99df31e3b511cd62d2957a6de156463d1d7e98e186d1adee126c"
+    }
+  ],
+  "failure": null,
+  "exact_cleanup": true
+}

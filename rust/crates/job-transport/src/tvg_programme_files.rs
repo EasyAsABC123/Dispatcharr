@@ -107,7 +107,7 @@ impl LocalFiles {
                 let m = next.metadata()?;
                 if m.uid() != root.uid
                     || (!final_file && !m.is_dir())
-                    || (final_file && (!m.is_file() || m.len() > 4 * 1024 * 1024))
+                    || (final_file && (!m.is_file() || m.len() > 2 * 1024 * 1024 * 1024))
                 {
                     return Err(io::Error::new(
                         io::ErrorKind::PermissionDenied,

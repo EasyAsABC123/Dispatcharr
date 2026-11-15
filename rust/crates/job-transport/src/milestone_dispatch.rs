@@ -8,6 +8,7 @@ use std::{collections::BTreeMap, sync::Arc};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Family {
+    RegisteredPlugin,
     PluginRefresh,
     BackupCreate,
     BackupScheduled,
@@ -106,6 +107,11 @@ pub trait Handler: Lifecycle + Send + Sync {
     fn head_advance_notifier(&self) -> Option<Arc<tokio::sync::Notify>> {
         None
     }
+    /// Only the sealed loaded-callable handler overrides this. A prefix or
+    /// metadata task name alone never grants registered-plugin execution.
+    fn registered_head(&self, _raw: &[u8]) -> bool {
+        false
+    }
     fn maximum_concurrency(&self) -> usize {
         1
     }
@@ -190,11 +196,22 @@ impl Prepared {
         }
         results
     }
+    pub fn classify(&self, raw: &[u8]) -> Option<Family> {
+        if self
+            .handlers
+            .get(&Family::RegisteredPlugin)
+            .is_some_and(|handler| handler.registered_head(raw))
+        {
+            Some(Family::RegisteredPlugin)
+        } else {
+            classify(raw)
+        }
+    }
     pub async fn run_once(&self, owner: Arc<dyn Send + Sync>) -> Result<Disposition, Disposition> {
         let Some(raw) = self.head.peek(owner.clone()).await? else {
             return Ok(Disposition::Empty);
         };
-        let family = classify(&raw).ok_or(Disposition::UnsupportedHead)?;
+        let family = self.classify(&raw).ok_or(Disposition::UnsupportedHead)?;
         if (family == Family::Recording) != (self.head.queue() == Queue::Dvr) {
             return Err(Disposition::UnsupportedHead);
         }

@@ -60,6 +60,8 @@ pub struct ChildPublisher {
     jobs: Jobs,
     root: Uuid,
     parent: Uuid,
+    parent_key: String,
+    trail_closed: Arc<AtomicBool>,
     owner: Arc<dyn Send + Sync>,
     children: ChildRecords,
     series_children: Arc<Mutex<Vec<Uuid>>>,
@@ -76,12 +78,21 @@ impl ChildPublisher {
             jobs,
             root: message.root,
             parent: message.task_id,
+            parent_key: message.task_id.to_string(),
+            trail_closed: Arc::new(AtomicBool::new(false)),
             owner,
             children: Arc::new(Mutex::new(Vec::new())),
             series_children: Arc::new(Mutex::new(Vec::new())),
             child_slots: Arc::new(Semaphore::new(64)),
             failed: Arc::new(AtomicBool::new(false)),
         }
+    }
+    /// Called only after the actual native producer flow joined all effects.
+    /// A later publication is rejected rather than silently omitted from hooks.
+    pub(crate) fn close_native_trail(&self) -> Result<(), Error> {
+        self.completed_children()?;
+        self.trail_closed.store(true, Ordering::Release);
+        Ok(())
     }
     pub(crate) fn completed_series_children(&self) -> Result<Vec<Uuid>, Error> {
         self.completed_children()?;
@@ -117,7 +128,8 @@ impl RefreshPublisher for ChildPublisher {
         Box::pin(async move {
             let result = async {
                 context.ensure_active()?;
-                if self.failed.load(Ordering::Acquire) {
+                if self.failed.load(Ordering::Acquire) || self.trail_closed.load(Ordering::Acquire)
+                {
                     return Err(ImportError::Worker);
                 }
                 let budget = Arc::new(ChildBudget {
@@ -168,6 +180,51 @@ impl RefreshPublisher for ChildPublisher {
                 self.failed.store(true, Ordering::Release)
             }
             result
+        })
+    }
+}
+/// This trusted compiled port reads only the private vector populated after
+/// validated native publication replies. Tuple metadata grants no job authority.
+impl dispatcharr_store::NativeTaskTrail for ChildPublisher {
+    fn claimed_task_id(&self) -> &str {
+        &self.parent_key
+    }
+    fn settled_after(
+        &self,
+        cursor: u64,
+    ) -> Result<dispatcharr_store::NativeTaskTrailDelta, dispatcharr_store::StoreError> {
+        use dispatcharr_store::{NativeTaskTrailDelta, NativeTaskTrailEntry, NativeTaskTrailState};
+        let children = self.children.lock().map_err(|_| {
+            dispatcharr_store::StoreError::Unsupported("Native refresh trail lock unavailable")
+        })?;
+        let start = usize::try_from(cursor).map_err(|_| {
+            dispatcharr_store::StoreError::Unsupported("Native refresh trail cursor invalid")
+        })?;
+        if start > children.len() {
+            return Err(dispatcharr_store::StoreError::Unsupported(
+                "Native refresh trail cursor beyond settled publications",
+            ));
+        }
+        let entries = children
+            .iter()
+            .enumerate()
+            .skip(start)
+            .map(|(index, (id, _))| NativeTaskTrailEntry {
+                ordinal: index as u64 + 1,
+                source_result_tuple: serde_json::json!([[id.to_string(), null], null]),
+            })
+            .collect();
+        let state = if self.failed.load(Ordering::Acquire) {
+            NativeTaskTrailState::Unsettled
+        } else if self.trail_closed.load(Ordering::Acquire) {
+            NativeTaskTrailState::Closed
+        } else {
+            NativeTaskTrailState::Open
+        };
+        Ok(NativeTaskTrailDelta {
+            next_cursor: children.len() as u64,
+            entries,
+            state,
         })
     }
 }
@@ -328,6 +385,7 @@ impl RefreshExecutor for ServiceExecutor {
                 )
                 .await
                 .map_err(|_| Error::Execution)?;
+            publisher.close_native_trail()?;
             publisher.completed_children()?;
             if let Some(settled) = report.settled_exhaustion {
                 use dispatcharr_ingest_epg::file_job::{
@@ -376,6 +434,12 @@ impl RefreshExecutor for ServiceExecutor {
                         Ok(NormalReturn::MissingSource)
                     }
                 }
+                FileJobOutcome::DownloadRejected(proof)
+                    if proof.source_id() == message.source_id =>
+                {
+                    Ok(NormalReturn::Null)
+                }
+                FileJobOutcome::DownloadRejected(_) => Err(Error::Execution),
                 // Coarse Failed can hide an unclassified channel/SQL/runtime cause. Never
                 // manufacture Source normalSUCCESS before detailed failure gates exist.
                 FileJobOutcome::Failed | FileJobOutcome::Unsupported(_) => Err(Error::Execution),

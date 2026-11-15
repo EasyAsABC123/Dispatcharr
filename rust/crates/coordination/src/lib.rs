@@ -112,6 +112,8 @@ struct Inner {
     clear_provider: Script,
     reserve_provider: Script,
     source_assignment: Script,
+    adopt_source_assignment: Script,
+    preview_assignment: Script,
 }
 
 #[derive(Clone)]
@@ -276,6 +278,16 @@ impl Coordinator {
                 "{}{}",
                 scripts::REAP,
                 scripts::SOURCE_ASSIGNMENT
+            )),
+            adopt_source_assignment: Script::new(&format!(
+                "{}{}",
+                scripts::REAP,
+                scripts::ADOPT_SOURCE_ASSIGNMENT
+            )),
+            preview_assignment: Script::new(&format!(
+                "{}{}",
+                scripts::REAP,
+                scripts::PREVIEW_ASSIGNMENT
             )),
         });
         if let Some(interval) = inner.config.reap_interval {
@@ -635,11 +647,22 @@ impl Drop for Lease {
 // remains held until redis-rs returns the actual reply/disconnect; no mutation
 // is replayed after an ambiguous observer outcome.
 enum LeaseMutation {
+    Preview {
+        assignment: LivePreviewAssignment,
+        publish_ttl: Option<Duration>,
+    },
     Heartbeat,
     Release,
     ClearProvider,
     ReserveProvider(ProviderReservation),
-    SourceAssignment(LiveChannelAssignment),
+    SourceAssignment {
+        assignment: LiveChannelAssignment,
+        metadata_ttl: Option<Duration>,
+    },
+    AdoptSourceAssignment {
+        assignment: LiveChannelAssignment,
+        profile: i64,
+    },
 }
 
 async fn lease_mutation(lease: &LeaseInner, operation: LeaseMutation) -> Result<i64, Error> {
@@ -663,11 +686,13 @@ async fn lease_mutation_observed(
         let _physical_permit = permit;
         let _physical_lease = physical;
         let script = match &operation {
+            LeaseMutation::Preview { .. } => &inner.preview_assignment,
             LeaseMutation::Heartbeat => &inner.heartbeat,
             LeaseMutation::Release => &inner.release,
             LeaseMutation::ClearProvider => &inner.clear_provider,
             LeaseMutation::ReserveProvider(_) => &inner.reserve_provider,
-            LeaseMutation::SourceAssignment(_) => &inner.source_assignment,
+            LeaseMutation::SourceAssignment { .. } => &inner.source_assignment,
+            LeaseMutation::AdoptSourceAssignment { .. } => &inner.adopt_source_assignment,
         };
         let mut invocation = script.prepare_invoke();
         invocation.key(keys.owner).key(keys.ledger).key(keys.index);
@@ -683,7 +708,9 @@ async fn lease_mutation_observed(
                 )
                 .key(format!("profile_credential_release:{profile}"));
         }
-        if let LeaseMutation::SourceAssignment(assignment) = &operation {
+        if let LeaseMutation::SourceAssignment { assignment, .. }
+        | LeaseMutation::AdoptSourceAssignment { assignment, .. } = &operation
+        {
             invocation
                 .key(format!("channel_stream:{}", assignment.channel))
                 .key(format!("stream_profile:{}", assignment.stream))
@@ -696,8 +723,20 @@ async fn lease_mutation_observed(
                     inner.config.namespace, assignment.stream
                 ));
         }
+        if let LeaseMutation::Preview { assignment, .. } = &operation {
+            invocation.key(assignment.alias_key());
+        }
         invocation.arg(token);
         match &operation {
+            LeaseMutation::Preview {
+                assignment,
+                publish_ttl,
+            } => {
+                invocation
+                    .arg(assignment.profile)
+                    .arg(publish_ttl.map_or(0, |ttl| ttl.as_millis() as u64))
+                    .arg(assignment.stream);
+            }
             LeaseMutation::Heartbeat => {
                 invocation.arg(inner.config.ttl.as_millis() as u64);
             }
@@ -709,8 +748,19 @@ async fn lease_mutation_observed(
                         .map_or(0, |pool| pool.max_streams),
                 );
             }
-            LeaseMutation::SourceAssignment(assignment) => {
-                invocation.arg(assignment.stream);
+            LeaseMutation::SourceAssignment {
+                assignment,
+                metadata_ttl,
+            } => {
+                invocation
+                    .arg(assignment.stream)
+                    .arg(metadata_ttl.map_or(0, |ttl| ttl.as_millis() as u64));
+            }
+            LeaseMutation::AdoptSourceAssignment {
+                assignment,
+                profile,
+            } => {
+                invocation.arg(assignment.stream).arg(profile);
             }
             LeaseMutation::Release | LeaseMutation::ClearProvider => {}
         }
@@ -746,3 +796,6 @@ pub use redirect_assignment::{RedirectAssignment, RedirectClaim, RedirectGrant};
 
 mod live_assignment;
 pub use live_assignment::LiveChannelAssignment;
+
+mod preview_assignment;
+pub use preview_assignment::LivePreviewAssignment;

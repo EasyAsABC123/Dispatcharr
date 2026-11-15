@@ -60,6 +60,52 @@ pub struct Receipt {
 /// Implementations use EXISTING shared SQL/Jobs/cache/event/child ports and
 /// must retain owner through actual operations. Missing ports cannot report
 /// ready: enabling a Python plugin remains pre-effect guarded by Main.
+/// Private actual same-thread callback reentry, created only by the owned
+/// actor's live pipe/receipt registry. It cannot be minted by a JSON caller.
+pub trait Reentry: Send + Sync {
+    fn invoke(&self, method: String, args: Value) -> BoxFuture<'_, Result<Value, Error>>;
+}
+#[derive(Default)]
+struct NestedState {
+    serial: std::sync::atomic::AtomicU64,
+    pending:
+        std::sync::Mutex<std::collections::BTreeMap<u64, oneshot::Sender<Result<Value, Error>>>>,
+}
+struct NestedInvoker {
+    state: Arc<NestedState>,
+    input: Arc<Mutex<ChildStdin>>,
+    callback: u64,
+}
+impl Reentry for NestedInvoker {
+    fn invoke(&self, method: String, args: Value) -> BoxFuture<'_, Result<Value, Error>> {
+        Box::pin(async move {
+            let id = self
+                .state
+                .serial
+                .fetch_add(1, Ordering::AcqRel)
+                .checked_add(1)
+                .ok_or(Error::Capacity)?;
+            let (send_result, receive) = oneshot::channel();
+            {
+                let mut pending = self.state.pending.lock().map_err(|_| Error::Protocol)?;
+                if pending.len() >= 64 {
+                    return Err(Error::Capacity);
+                }
+                pending.insert(id, send_result);
+            }
+            let result=send(&mut*self.input.lock().await,&json!({"kind":"callback_invoke","callback":self.callback,"id":id,"method":method,"args":args})).await;
+            if result.is_err() {
+                self.state
+                    .pending
+                    .lock()
+                    .map_err(|_| Error::Protocol)?
+                    .remove(&id);
+                return result.map(|_| Value::Null);
+            }
+            receive.await.map_err(|_| Error::Child)?
+        })
+    }
+}
 pub trait Ports: Send + Sync {
     fn ready_for_execution(&self) -> bool;
     fn child_started(&self, identity: Identity, owner: Owner) -> BoxFuture<'_, Result<(), Error>>;
@@ -70,6 +116,16 @@ pub trait Ports: Send + Sync {
         params: Value,
         scope: Invocation,
     ) -> BoxFuture<'_, Result<Value, Error>>;
+    fn callback_reentrant(
+        &self,
+        port: String,
+        method: String,
+        params: Value,
+        scope: Invocation,
+        _reentry: Arc<dyn Reentry>,
+    ) -> BoxFuture<'_, Result<Value, Error>> {
+        self.callback(port, method, params, scope)
+    }
     /// Must join/reap/verify every actually registered descendant generation,
     /// including process groups created by plugin subprocess APIs. No noop.
     /// Join actual shared SQL/cache/Jobs/event callbacks and close any owned
@@ -128,6 +184,7 @@ struct Running {
     child: Child,
     input: Option<Arc<Mutex<ChildStdin>>>,
     callbacks: tokio::task::JoinSet<Result<(), Error>>,
+    nested: Arc<NestedState>,
     output: mpsc::Receiver<Result<Value, Error>>,
     stdout: tokio::task::JoinHandle<bool>,
     stderr: tokio::task::JoinHandle<(bool, u64)>,
@@ -266,6 +323,7 @@ impl Running {
             child,
             input: Some(Arc::new(Mutex::new(input))),
             callbacks: tokio::task::JoinSet::new(),
+            nested: Arc::new(NestedState::default()),
             output: output_rx,
             stdout,
             stderr,
@@ -314,7 +372,16 @@ impl Running {
                 completion=self.callbacks.join_next(),if !self.callbacks.is_empty()=>{
                     completion.ok_or(Error::Callback)?.map_err(|_|Error::Callback)??;
                 },
-                frame=self.output.recv()=>return frame.ok_or(Error::Child)?,
+                frame=self.output.recv()=>{
+                    let frame=frame.ok_or(Error::Child)??;
+                    if frame["kind"]=="callback_nested_result" {
+                        let id=frame["id"].as_u64().ok_or(Error::Protocol)?;
+                        let sender=self.nested.pending.lock().map_err(|_|Error::Protocol)?.remove(&id).ok_or(Error::Protocol)?;
+                        let result=if frame["error"].is_null(){Ok(frame["result"].clone())}else{Err(Error::Remote(frame["error"].clone()))};
+                        let _=sender.send(result);continue;
+                    }
+                    return Ok(frame);
+                },
             }
         }
     }
@@ -328,13 +395,18 @@ impl Running {
         let params = frame["params"].clone();
         let ports = self.ports.clone();
         let input = self.input.as_ref().ok_or(Error::Closed)?.clone();
+        let reentry: Arc<dyn Reentry> = Arc::new(NestedInvoker {
+            state: self.nested.clone(),
+            input: input.clone(),
+            callback: id,
+        });
         self.callbacks.spawn(async move{
             // Each actual callback retains invocation owner/session through its
             // physical port result AND actual framed reply flush. An infinite
             // logical PubSub read cannot block receipt of unsubscribe/SQL frames.
             let retained_scope=scope.clone();
-            let result=ports.callback(port,method,params,scope).await;
-            let value=match result{Ok(value)=>json!({"kind":"callback_result","id":id,"result":value,"error":null}),Err(_)=>json!({"kind":"callback_result","id":id,"result":null,"error":"Native compatibility callback unavailable"})};
+            let result=ports.callback_reentrant(port,method,params,scope,reentry).await;
+            let value=match result{Ok(value)=>json!({"kind":"callback_result","id":id,"result":value,"error":null}),Err(Error::Remote(error))=>json!({"kind":"callback_result","id":id,"result":null,"error":error}),Err(_)=>json!({"kind":"callback_result","id":id,"result":null,"error":"Native compatibility callback unavailable"})};
             let flushed=send(&mut*input.lock().await,&value).await;
             drop(retained_scope);flushed
         });
@@ -397,6 +469,13 @@ impl Running {
         }
     }
     async fn retire(mut self, mut forced: bool) -> Result<Receipt, Error> {
+        // Wake nested native callbacks before joining them; pipe/child ownership
+        // still remains with this retirement supervisor through actual wait/EOF.
+        self.nested
+            .pending
+            .lock()
+            .map_err(|_| Error::Protocol)?
+            .clear();
         let callbacks_closed = self
             .ports
             .close_callback_admission(self.identity.clone(), self.owner.clone())
@@ -512,6 +591,7 @@ impl Host {
             loop {
                 let command = if let Some(child) = &mut running {
                     tokio::select! {
+                        _=stop_deadline(&mut stopping)=>{closed.store(true,Ordering::Release);break;},
                         command=receiver.recv()=>command,
                         frame=child.next_frame()=>{
                             match frame{Ok(frame)if frame["kind"]=="callback"=>{
@@ -522,7 +602,7 @@ impl Host {
                         }
                     }
                 } else {
-                    receiver.recv().await
+                    tokio::select! {_ =stop_deadline(&mut stopping)=>{closed.store(true,Ordering::Release);break;},command=receiver.recv()=>command}
                 };
                 match command {
                     Some(Command::Call(request)) => {

@@ -205,6 +205,16 @@ impl RefreshApplication {
             }),
         })
     }
+    pub fn into_normal_handler_with_download(
+        self,
+        download: dispatcharr_store::xmltv_download::Downloader,
+    ) -> Result<Arc<dyn crate::milestone_dispatch::Handler>, &'static str> {
+        self.inner
+            .runner
+            .bind_remote(download)
+            .map_err(|_| "normal remote XMLTV binding failed")?;
+        self.into_normal_handler()
+    }
     pub fn into_normal_handler(
         self,
     ) -> Result<Arc<dyn crate::milestone_dispatch::Handler>, &'static str> {

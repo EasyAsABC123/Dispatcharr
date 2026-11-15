@@ -57,7 +57,6 @@ pub struct PluginTaskAdmission {
     capability: PluginTaskCapability,
     id: Uuid,
     name: String,
-    raw: Arc<[u8]>,
     frame: Value,
 }
 fn unavailable() -> StoreError {
@@ -133,6 +132,15 @@ impl PluginRuntime {
             }),
         })
     }
+    pub fn envelope_capability(&self, raw: &[u8]) -> Result<PluginTaskCapability, StoreError> {
+        if raw.len() > 65536 || self.inner.closed.load(Ordering::Acquire) {
+            return Err(unavailable());
+        }
+        let frame: Value = serde_json::from_slice(raw).map_err(|_| unavailable())?;
+        self.inner
+            .registry
+            .envelope_capability(frame["headers"]["task"].as_str().ok_or_else(unavailable)?)
+    }
     pub fn registered_head(&self, raw: &[u8]) -> bool {
         if self.inner.closed.load(Ordering::Acquire) || raw.len() > 65536 {
             return false;
@@ -146,6 +154,33 @@ impl PluginRuntime {
                 .has_registered_name(name)
                 .unwrap_or(false)
         })
+    }
+    pub async fn discover_configured(&self, owner: Owner) -> Result<(), StoreError> {
+        let session = self
+            .inner
+            .auth
+            .borrow_task_sql_session(owner.clone())
+            .await?;
+        let result = async {
+            let enabled = session
+                .run(|c| {
+                    Box::pin(async move {
+                        sqlx::query_scalar::<_, bool>(
+                            "SELECT EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled)",
+                        )
+                        .fetch_one(c)
+                        .await
+                    })
+                })
+                .await??;
+            if enabled {
+                self.discover(session.clone(), owner).await?;
+            }
+            Ok(())
+        }
+        .await;
+        session.close().await?;
+        result
     }
     pub async fn discover(
         &self,
@@ -181,6 +216,76 @@ impl PluginRuntime {
             .call(
                 "run_action".into(),
                 json!({"key":key,"action":action,"params":params}),
+                Invocation {
+                    owner,
+                    sql: Some(session),
+                },
+            )
+            .await
+            .map_err(host_error)
+    }
+    pub async fn list_plugins(
+        &self,
+        origin: String,
+        session: TaskSqlSession,
+        owner: Owner,
+    ) -> Result<Value, StoreError> {
+        self.inner
+            .actions
+            .call(
+                "list_plugins".into(),
+                json!({"origin":origin}),
+                Invocation {
+                    owner,
+                    sql: Some(session),
+                },
+            )
+            .await
+            .map_err(host_error)
+    }
+    pub async fn reload_plugins(
+        &self,
+        session: TaskSqlSession,
+        owner: Owner,
+    ) -> Result<Value, StoreError> {
+        let scope = Invocation {
+            owner,
+            sql: Some(session),
+        };
+        self.inner
+            .actions
+            .call(
+                "stop_all_plugins".into(),
+                json!({"reason":"reload"}),
+                scope.clone(),
+            )
+            .await
+            .map_err(host_error)?;
+        let plugins = self
+            .inner
+            .actions
+            .call(
+                "discover".into(),
+                json!({"sync_db":true,"force_reload":true}),
+                scope,
+            )
+            .await
+            .map_err(host_error)?;
+        Ok(json!({"success":true,"count":plugins.as_array().ok_or_else(unavailable)?.len()}))
+    }
+    pub async fn change_enabled(
+        &self,
+        key: String,
+        enabled: bool,
+        origin: String,
+        session: TaskSqlSession,
+        owner: Owner,
+    ) -> Result<Value, StoreError> {
+        self.inner
+            .actions
+            .call(
+                "change_enabled".into(),
+                json!({"key":key,"enabled":enabled,"origin":origin}),
                 Invocation {
                     owner,
                     sql: Some(session),
@@ -265,7 +370,6 @@ impl PluginRuntime {
                 capability,
                 id,
                 name,
-                raw,
                 frame,
             })
         }
@@ -275,21 +379,75 @@ impl PluginRuntime {
         }
         result
     }
-    /// Called by the actual common selected handler only AFTER its exact queue
-    /// compare/pop or owner-checked ETA ACK settled. No callback exposes this API.
-    pub async fn execute_after_actual_ack(
+    /// Called after actual owner-checked durable reservation and pool admission.
+    /// Early/late ACK is owned by the selected handler, never a Python callback.
+    pub async fn execute_after_actual_admission(
         &self,
         admission: PluginTaskAdmission,
     ) -> Result<Value, StoreError> {
         let runtime = self.clone();
         tokio::spawn(async move{
    let session=admission.scope.sql.as_ref().ok_or_else(unavailable)?.clone();
-   let epoch=runtime.inner.claims.after_actual_ack(admission.id,&admission.capability)?;
-   runtime.inner.publications.consumed(admission.id,&admission.raw)?;
+   let epoch=runtime.inner.claims.after_actual_admission(admission.id,&admission.capability)?;
    let args=json!({"id":admission.id.to_string(),"name":admission.name,"body_base64":admission.frame["body"],"content_type":admission.frame["content-type"],"content_encoding":admission.frame["content-encoding"],"request":request(&admission.frame),"invocation":epoch.token.to_string()});
    let result=admission.actor.host.call("execute_plugin_task".into(),args,admission.scope.clone()).await.map_err(host_error);
    let closed=session.close().await;drop(epoch);closed?;result
   }).await.map_err(|_|unavailable())?
+    }
+    /// Source Request._announce_revoked stores its actual backend metadata
+    /// before ACK, with consumed Context children; this never executes the body.
+    pub async fn announce_revoked(
+        &self,
+        admission: &PluginTaskAdmission,
+        expired: bool,
+    ) -> Result<Value, StoreError> {
+        let runtime = self.clone();
+        let actor = admission.actor.clone();
+        let scope = admission.scope.clone();
+        let capability = admission.capability.clone();
+        let id = admission.id;
+        let name = admission.name.clone();
+        let frame = admission.frame.clone();
+        tokio::spawn(async move {
+            let epoch=runtime.inner.claims.after_actual_admission(id,&capability)?;
+            let result=actor.host.call("announce_plugin_revoked".into(),json!({"id":id.to_string(),"name":name,"request":request(&frame),"body_base64":frame["body"],"invocation":epoch.token.to_string(),"expired":expired}),scope).await.map_err(host_error);
+            drop(epoch);result
+        }).await.map_err(|_|unavailable())?
+    }
+    pub async fn finish_revocation(
+        &self,
+        admission: PluginTaskAdmission,
+        expired: bool,
+    ) -> Result<Value, StoreError> {
+        let runtime = self.clone();
+        tokio::spawn(async move {
+            let session=admission.scope.sql.as_ref().ok_or_else(unavailable)?.clone();
+            let epoch=runtime.inner.claims.after_actual_admission(admission.id,&admission.capability)?;
+            let result=admission.actor.host.call("signal_plugin_revoked".into(),json!({"id":admission.id.to_string(),"name":admission.name,"request":request(&admission.frame),"body_base64":admission.frame["body"],"invocation":epoch.token.to_string(),"expired":expired}),admission.scope.clone()).await.map_err(host_error);
+            let closed=session.close().await;drop(epoch);closed?;result
+        }).await.map_err(|_|unavailable())?
+    }
+    pub async fn release_task(&self, admission: PluginTaskAdmission) -> Result<(), StoreError> {
+        let session = admission
+            .scope
+            .sql
+            .as_ref()
+            .ok_or_else(unavailable)?
+            .clone();
+        session.close().await?;
+        drop(admission);
+        Ok(())
+    }
+    pub fn actual_task_acknowledged(&self, id: Uuid, raw: &[u8]) -> Result<(), StoreError> {
+        self.inner.publications.consumed(id, raw)
+    }
+    pub fn actual_task_restored(
+        &self,
+        id: Uuid,
+        raw: &[u8],
+        restored: &[u8],
+    ) -> Result<(), StoreError> {
+        self.inner.publications.restored(id, raw, restored)
     }
     pub fn stop_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);
@@ -333,7 +491,379 @@ impl PluginTaskAdmission {
 fn request(frame: &Value) -> Value {
     let mut request = frame["headers"].clone();
     request["properties"] = frame["properties"].clone();
-    request["delivery_info"] = frame["properties"]["delivery_info"].clone();
+    request["delivery_info"] = json!({"exchange":frame["properties"]["delivery_info"]["exchange"],"routing_key":frame["properties"]["delivery_info"]["routing_key"],"priority":frame["properties"]["priority"],"redelivered":frame["properties"]["delivery_info"].get("redelivered").cloned().unwrap_or(json!(false))});
+    request["reply_to"] = frame["properties"]["reply_to"].clone();
     request["correlation_id"] = frame["properties"]["correlation_id"].clone();
     request
+}
+
+/// One actually claimed native task's hook context. Retains its existing task
+/// actor/global caller and provided SQL session across repeated event calls.
+pub struct PluginHookSession {
+    inner: Arc<HookInner>,
+}
+struct HookInner {
+    actor: Arc<TaskActor>,
+    scope: Invocation,
+    trail: Arc<dyn crate::plugin_hook_context::NativeTaskTrail>,
+    cursor: tokio::sync::Mutex<u64>,
+    serial: tokio::sync::Mutex<()>,
+    registration: super::plugin_hook_publications::HookRegistration,
+    finished: AtomicBool,
+    task_id: String,
+}
+impl PluginRuntime {
+    pub async fn begin_plugin_hooks(
+        &self,
+        context: crate::PluginHookTaskContext,
+        trail: Arc<dyn crate::NativeTaskTrail>,
+        session: TaskSqlSession,
+        caller: Owner,
+    ) -> Result<PluginHookSession, StoreError> {
+        let runtime = self.clone();
+        tokio::spawn(async move {
+            if runtime.inner.closed.load(Ordering::Acquire)
+                || context.task_id() != trail.claimed_task_id()
+            {
+                return Err(unavailable());
+            }
+            let idle = session
+                .run(|c| Box::pin(async move { c.protocol_transaction_is_idle().await }))
+                .await??;
+            if !idle {
+                return Err(StoreError::Unsupported(
+                    "Native hook context requires an actual idle/autocommit SQL boundary",
+                ));
+            }
+            let actor = runtime
+                .inner
+                .tasks
+                .iter()
+                .find(|a| {
+                    a.busy
+                        .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                        .is_ok()
+                })
+                .cloned()
+                .ok_or_else(|| {
+                    StoreError::StatusBody(503, json!({"detail":"Native plugin task actors busy."}))
+                })?;
+            let owner: Owner = Arc::new((
+                caller,
+                Busy {
+                    actor: actor.clone(),
+                },
+            ));
+            let scope = Invocation {
+                owner,
+                sql: Some(session),
+            };
+            if !actor.loaded.load(Ordering::Acquire) {
+                actor
+                    .host
+                    .call(
+                        "discover".into(),
+                        json!({"sync_db":false,"force_reload":false}),
+                        scope.clone(),
+                    )
+                    .await
+                    .map_err(host_error)?;
+                actor.loaded.store(true, Ordering::Release);
+            }
+            let registration = actor
+                .ports
+                .hook_publications
+                .begin(context.task_id().into(), &scope.owner)
+                .map_err(host_error)?;
+            let began = actor
+                .host
+                .call(
+                    "begin_native_task".into(),
+                    json!({"frame":context.frame}),
+                    scope.clone(),
+                )
+                .await
+                .map_err(host_error)?;
+            if began["task_id"] != context.task_id || began["task_name"] != context.task_name {
+                return Err(unavailable());
+            }
+            Ok(PluginHookSession {
+                inner: Arc::new(HookInner {
+                    actor,
+                    scope,
+                    trail,
+                    cursor: tokio::sync::Mutex::new(0),
+                    serial: tokio::sync::Mutex::new(()),
+                    registration,
+                    finished: AtomicBool::new(false),
+                    task_id: context.task_id,
+                }),
+            })
+        })
+        .await
+        .map_err(|_| unavailable())?
+    }
+}
+impl HookInner {
+    async fn sync_native(&self, require_closed: bool) -> Result<(), StoreError> {
+        let mut cursor = self.cursor.lock().await;
+        loop {
+            let delta = self.trail.settled_after(*cursor)?;
+            if delta.state == crate::NativeTaskTrailState::Unsettled {
+                return Err(unavailable());
+            }
+            if delta.entries.len() > 65536 {
+                return Err(unavailable());
+            }
+            if delta.entries.is_empty() {
+                if delta.next_cursor != *cursor
+                    || require_closed && delta.state != crate::NativeTaskTrailState::Closed
+                {
+                    return Err(unavailable());
+                }
+                return Ok(());
+            }
+            let mut ordinal = *cursor;
+            let mut children = Vec::new();
+            for entry in delta.entries {
+                ordinal = ordinal.checked_add(1).ok_or_else(unavailable)?;
+                if entry.ordinal != ordinal {
+                    return Err(unavailable());
+                }
+                children.push(entry.source_result_tuple);
+            }
+            if ordinal != delta.next_cursor || ordinal > 65536 {
+                return Err(unavailable());
+            }
+            let bytes = serde_json::to_vec(&children).map_err(|_| unavailable())?;
+            if bytes.len() > 4 * 1024 * 1024 {
+                return Err(unavailable());
+            }
+            self.actor
+                .host
+                .call(
+                    "append_native_trail".into(),
+                    json!({"children":children}),
+                    self.scope.clone(),
+                )
+                .await
+                .map_err(host_error)?;
+            // Cursor moves only after the actual same-thread append reply settled.
+            *cursor = ordinal;
+        }
+    }
+    fn report(&self, actual: Value, counts: Value) -> Result<crate::PluginHookReport, StoreError> {
+        if actual["task_id"] != self.task_id || !actual["children"].is_array() {
+            return Err(unavailable());
+        }
+        Ok(crate::PluginHookReport {
+            actual_published_children: self.registration.receipts().map_err(host_error)?,
+            observed_request_children: actual["children"].clone(),
+            attempted: counts["attempted"].as_u64().ok_or_else(unavailable)?,
+            completed: counts["completed"].as_u64().ok_or_else(unavailable)?,
+            caught: counts["caught"].as_u64().ok_or_else(unavailable)?,
+        })
+    }
+}
+impl PluginHookSession {
+    pub async fn begin_event(&self, event: String, payload: Value) -> Result<(), StoreError> {
+        if !matches!(event.as_str(), "epg_error" | "epg_refresh") {
+            return Err(unavailable());
+        }
+        let inner = self.inner.clone();
+        tokio::spawn(async move {
+            let _serial = inner.serial.lock().await;
+            if inner.finished.load(Ordering::Acquire) {
+                return Err(unavailable());
+            }
+            inner.sync_native(false).await?;
+            inner
+                .actor
+                .host
+                .call(
+                    "begin_plugin_event".into(),
+                    json!({"event":event,"payload":payload}),
+                    inner.scope.clone(),
+                )
+                .await
+                .map_err(host_error)?;
+            Ok(())
+        })
+        .await
+        .map_err(|_| unavailable())?
+    }
+    pub async fn current_event_payload(&self) -> Result<Value, StoreError> {
+        let inner = self.inner.clone();
+        tokio::spawn(async move {
+            let _serial = inner.serial.lock().await;
+            inner
+                .actor
+                .host
+                .call(
+                    "plugin_event_payload".into(),
+                    json!({}),
+                    inner.scope.clone(),
+                )
+                .await
+                .map_err(host_error)
+        })
+        .await
+        .map_err(|_| unavailable())?
+    }
+    pub async fn end_event(&self) -> Result<(), StoreError> {
+        let inner = self.inner.clone();
+        tokio::spawn(async move {
+            let _serial = inner.serial.lock().await;
+            inner
+                .actor
+                .host
+                .call("end_plugin_event".into(), json!({}), inner.scope.clone())
+                .await
+                .map_err(host_error)?;
+            Ok(())
+        })
+        .await
+        .map_err(|_| unavailable())?
+    }
+    pub async fn dispatch_plugin_actions(&self) -> Result<crate::PluginHookReport, StoreError> {
+        let inner = self.inner.clone();
+        tokio::spawn(async move {
+            let _serial = inner.serial.lock().await;
+            if inner.finished.load(Ordering::Acquire) {
+                return Err(unavailable());
+            }
+            inner.sync_native(false).await?;
+            let counts = inner
+                .actor
+                .host
+                .call(
+                    "dispatch_plugin_event".into(),
+                    json!({}),
+                    inner.scope.clone(),
+                )
+                .await
+                .map_err(host_error)?;
+            let actual = inner
+                .actor
+                .host
+                .call(
+                    "snapshot_native_task".into(),
+                    json!({}),
+                    inner.scope.clone(),
+                )
+                .await
+                .map_err(host_error)?;
+            inner.report(actual, counts)
+        })
+        .await
+        .map_err(|_| unavailable())?
+    }
+    pub async fn render_connect_template(
+        &self,
+        template: String,
+    ) -> Result<crate::PluginTemplateOutcome, StoreError> {
+        if template.len() > 65536 {
+            return Err(unavailable());
+        }
+        let inner = self.inner.clone();
+        tokio::spawn(async move {
+            let _serial = inner.serial.lock().await;
+            if inner.finished.load(Ordering::Acquire) {
+                return Err(unavailable());
+            }
+            inner.sync_native(false).await?;
+            let result = inner
+                .actor
+                .host
+                .call(
+                    "render_connect_template".into(),
+                    json!({"template":template}),
+                    inner.scope.clone(),
+                )
+                .await
+                .map_err(host_error)?;
+            let render = match result["actual_render_succeeded"].as_bool() {
+                Some(true) => Ok(crate::PluginTemplateRender::Rendered(
+                    result["rendered"]
+                        .as_str()
+                        .ok_or_else(unavailable)?
+                        .to_owned(),
+                )),
+                Some(false) => Ok(crate::PluginTemplateRender::Caught {
+                    actual_class: result["actual_exception_class"]
+                        .as_str()
+                        .ok_or_else(unavailable)?
+                        .to_owned(),
+                    message: result["message"]
+                        .as_str()
+                        .ok_or_else(unavailable)?
+                        .to_owned(),
+                }),
+                None => Err(unavailable()),
+            }?;
+            Ok(crate::PluginTemplateOutcome {
+                render,
+                current_payload: result["current_payload"].clone(),
+                source_json_loads_succeeded: result["source_json_loads_succeeded"].as_bool(),
+            })
+        })
+        .await
+        .map_err(|_| unavailable())?
+    }
+    pub async fn finish(&self) -> Result<crate::PluginHookReport, StoreError> {
+        let inner = self.inner.clone();
+        tokio::spawn(async move {
+            let _serial = inner.serial.lock().await;
+            if inner.finished.load(Ordering::Acquire) {
+                return Err(unavailable());
+            }
+            inner.sync_native(true).await?;
+            let actual = inner
+                .actor
+                .host
+                .call("finish_native_task".into(), json!({}), inner.scope.clone())
+                .await
+                .map_err(host_error)?;
+            inner.finished.store(true, Ordering::Release);
+            inner.report(actual, json!({"attempted":0,"completed":0,"caught":0}))
+        })
+        .await
+        .map_err(|_| unavailable())?
+    }
+}
+impl Drop for PluginHookSession {
+    fn drop(&mut self) {
+        let inner = self.inner.clone();
+        if inner.finished.load(Ordering::Acquire) {
+            return;
+        }
+        tokio::spawn(async move {
+            let _serial = inner.serial.lock().await;
+            if inner.finished.load(Ordering::Acquire) {
+                return;
+            }
+            // Cancellation never turns into a fake report: pop the actual task context
+            // while retaining actor/caller/SQL ownership through actual result/retirement.
+            let result = inner
+                .actor
+                .host
+                .call("finish_native_task".into(), json!({}), inner.scope.clone())
+                .await;
+            if result.is_err() {
+                inner.actor.host.interrupt_at(tokio::time::Instant::now());
+                // An observer/cancellation cannot release actual caller/SQL/slot
+                // ownership before this child has physically retired. Missing
+                // receipts remain unsettled, never a fabricated normal drain.
+                loop {
+                    if inner.actor.host.last_receipt().await.is_some_and(|r| {
+                        r.wait_observed && r.stdout_eof && r.stderr_eof && r.descendants_absent
+                    }) {
+                        break;
+                    }
+                    tokio::time::sleep(Duration::from_millis(25)).await;
+                }
+            }
+            inner.finished.store(true, Ordering::Release);
+        });
+    }
 }

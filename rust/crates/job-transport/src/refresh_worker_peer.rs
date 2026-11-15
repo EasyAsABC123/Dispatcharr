@@ -73,7 +73,35 @@ impl RefreshExecutor for Expected {
             assert_eq!(message.task_id, self.id);
             assert_eq!(message.source_id, self.source);
             self.calls.fetch_add(1, Ordering::SeqCst);
-            self.service.execute(message, publisher, owner).await
+            use dispatcharr_store::{NativeTaskTrail, NativeTaskTrailState};
+            assert_eq!(publisher.claimed_task_id(), message.task_id.to_string());
+            let before = publisher.settled_after(0).unwrap();
+            assert_eq!(before.next_cursor, 0);
+            assert!(before.entries.is_empty());
+            assert_eq!(before.state, NativeTaskTrailState::Open);
+            let result = self
+                .service
+                .execute(message, publisher.clone(), owner)
+                .await?;
+            let children = publisher.completed_children().unwrap();
+            let after = publisher.settled_after(0).unwrap();
+            assert_eq!(after.state, NativeTaskTrailState::Closed);
+            assert_eq!(after.next_cursor, children.len() as u64);
+            assert_eq!(after.entries.len(), children.len());
+            for ((index, entry), id) in after.entries.iter().enumerate().zip(children) {
+                assert_eq!(entry.ordinal, index as u64 + 1);
+                assert_eq!(
+                    entry.source_result_tuple,
+                    json!([[id.to_string(), null], null])
+                );
+            }
+            assert!(publisher
+                .settled_after(after.next_cursor)
+                .unwrap()
+                .entries
+                .is_empty());
+            assert!(publisher.settled_after(after.next_cursor + 1).is_err());
+            Ok(result)
         })
     }
 }

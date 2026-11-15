@@ -324,6 +324,26 @@ impl PluginTaskRegistry {
             .values()
             .any(|host| host.records.contains_key(name) && live(&host.identity)))
     }
+    /// Actual live module witness for envelope admission; a task actor supplies
+    /// its own independently registered witness again before execution.
+    pub(crate) fn envelope_capability(
+        &self,
+        name: &str,
+    ) -> Result<PluginTaskCapability, StoreError> {
+        let hosts = self.hosts.lock().map_err(|_| unavailable())?;
+        hosts
+            .values()
+            .filter(|h| live(&h.identity))
+            .find_map(|h| {
+                h.records.get(name).map(|record| PluginTaskCapability {
+                    record: record.clone(),
+                    identity: h.identity.clone(),
+                    witness: h.witness,
+                    registry: Arc::downgrade(&self.hosts),
+                })
+            })
+            .ok_or_else(unavailable)
+    }
     pub(crate) fn task_capability(
         &self,
         identity: &Identity,

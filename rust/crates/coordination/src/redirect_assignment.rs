@@ -6,6 +6,8 @@ use super::*;
 pub struct RedirectAssignment {
     stream: i64,
     profile: i64,
+    pub(super) numeric: i64,
+    pub(super) channel: String,
 }
 impl RedirectAssignment {
     pub fn stream_id(&self) -> i64 {
@@ -82,7 +84,12 @@ impl Coordinator {
         .await?;
         match kind {
             0 => Ok(None),
-            1 => Ok(Some(RedirectAssignment { stream, profile })),
+            1 => Ok(Some(RedirectAssignment {
+                stream,
+                profile,
+                numeric,
+                channel: channel.to_owned(),
+            })),
             _ => Err(Error::InvalidRequest),
         }
     }
@@ -150,6 +157,8 @@ impl Coordinator {
                 1 => Ok(RedirectClaim::Borrowed(RedirectAssignment {
                     stream: selected,
                     profile: selected_profile,
+                    numeric,
+                    channel: channel.clone(),
                 })),
                 2 => Ok(RedirectClaim::Owned(RedirectGrant {
                     inner: Some(Grant {
@@ -309,7 +318,7 @@ local function existing()
  local stale_profile=profile or number(meta)
  local receipt=KEYS[7] or KEYS[3]
  local native_ledger=nil
- if receipt and redis.call('TYPE',receipt).ok=='hash' and redis.call('HGET',receipt,'scope')=='live'
+ if receipt and redis.call('TYPE',receipt).ok=='hash' and (redis.call('HGET',receipt,'scope')=='live' or redis.call('HGET',receipt,'scope')=='live_borrowed')
   and redis.call('HGET',receipt,'stream')==string.format('%.0f',stream)
   and stale_profile and redis.call('HGET',receipt,'profile')==string.format('%.0f',stale_profile) then
   local ledger=redis.call('HGET',receipt,'ledger');local token=redis.call('HGET',receipt,'token')
@@ -355,17 +364,23 @@ const RELEASE_ALIAS: &str = r#"
 local kind=redis.call('TYPE',KEYS[4]).ok
 if kind=='none' then return 0 end
 if kind~='hash' then error('CORRUPT native alias receipt') end
-if redis.call('HGET',KEYS[4],'token')~=ARGV[1] then return 0 end
+local direct=redis.call('HGET',KEYS[4],'token')==ARGV[1]
+local borrowed=redis.call('HGET',KEYS[4],'borrowed_from')==ARGV[1]
+if not direct and not borrowed then return 0 end
 local raw=bounded(KEYS[1],128)
 if raw~=ARGV[2] then return 0 end
 local meta=redis.call('HGET',KEYS[2],'m3u_profile')
 -- Same-native-generation receipts protect native successor cleanup. They do
 -- NOT certify versions of a foreign Source SET with identical integer bytes.
-local stream_owned=redis.call('HGET',KEYS[5],'token')==ARGV[1]
+local stream_owned=redis.call('HGET',KEYS[5],'token')==ARGV[1] or (borrowed and redis.call('HGET',KEYS[5],'token')==redis.call('HGET',KEYS[4],'token'))
 if stream_owned and bounded(KEYS[3],128)~=ARGV[3] then return 0 end
+local ledger=borrowed and redis.call('HGET',KEYS[4],'ledger') or redis.call('HGET',KEYS[4],'borrower_ledger')
+local ledger_token=borrowed and redis.call('HGET',KEYS[4],'token') or redis.call('HGET',KEYS[4],'borrower_token')
 local reserved=redis.call('HGET',KEYS[4],'reserved')=='1'
 release_profile(tonumber(ARGV[3]),KEYS[2],meta,reserved)
-redis.call('DEL',KEYS[1],KEYS[4])
-if stream_owned then redis.call('DEL',KEYS[3],KEYS[5]) end
+if ledger and redis.call('TYPE',ledger).ok=='hash' and redis.call('HGET',ledger,'token')==ledger_token and redis.call('HGET',ledger,'source_parent_token')==ARGV[1] then redis.call('HSET',ledger,'reserved','0','credential','') end
+redis.call('DEL',KEYS[1])
+if direct then redis.call('DEL',KEYS[4]) else redis.call('HSET',KEYS[4],'reserved','0','borrowed_from','') end
+if stream_owned then redis.call('DEL',KEYS[3]);if direct then redis.call('DEL',KEYS[5]) end end
 return 1
 "#;

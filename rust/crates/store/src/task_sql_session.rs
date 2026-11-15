@@ -5,8 +5,8 @@ use dispatcharr_contracts::BoxFuture;
 use serde_json::Value;
 use sqlx::{Connection, PgConnection, Row};
 use std::sync::{
-    atomic::{AtomicU8, Ordering},
-    Arc, Weak,
+    atomic::{AtomicBool, AtomicU8, Ordering},
+    Arc, OnceLock, Weak,
 };
 use tokio::sync::{mpsc, oneshot, Notify, OwnedMutexGuard, OwnedSemaphorePermit};
 
@@ -23,6 +23,7 @@ trait Operation: Send {
 struct Query<F, T> {
     // Actual existing writer remains exclusive through work AND Ready/ping.
     _writer_guard: Option<OwnedMutexGuard<()>>,
+    state: Arc<State>,
     work: Option<F>,
     reply: Option<oneshot::Sender<T>>,
 }
@@ -38,10 +39,13 @@ where
         let work = self.work.take();
         let reply = self.reply.take();
         Box::pin(async move {
+            self.state.actual_ready_idle.store(false, Ordering::Release);
             let value = work.ok_or_else(unavailable)?(connection).await;
             // Observe Ready on THAT connection, including any helper rollback,
             // before returning even a caught SQL ErrorResponse to its observer.
             connection.ping().await?;
+            let idle = connection.protocol_transaction_is_idle().await?;
+            self.state.actual_ready_idle.store(idle, Ordering::Release);
             if let Some(reply) = reply {
                 let _ = reply.send(value);
             }
@@ -55,6 +59,10 @@ enum Command {
 }
 struct State {
     phase: AtomicU8,
+    // False until the actual owned connection has reported ReadyForQuery idle.
+    actual_ready_idle: AtomicBool,
+    causal_root: OnceLock<TaskSqlPublicationWitness>,
+    borrowed_child: AtomicBool,
     done: Notify,
     writer: Arc<OwnedSemaphorePermit>,
     writer_gate: Arc<tokio::sync::Mutex<()>>,
@@ -88,6 +96,13 @@ impl AuthService {
         &self,
         owner: Owner,
     ) -> Result<TaskSqlSession, StoreError> {
+        self.borrow_task_sql_session_with_gate(owner, None).await
+    }
+    async fn borrow_task_sql_session_with_gate(
+        &self,
+        owner: Owner,
+        writer_gate: Option<Arc<tokio::sync::Mutex<()>>>,
+    ) -> Result<TaskSqlSession, StoreError> {
         let writer = self.task_sql_writer()?;
         // Keep the actual PoolConnection slot until physical close. Detaching
         // would let the pool replace it while this worker still owns a socket.
@@ -95,9 +110,12 @@ impl AuthService {
         let (sender, mut receiver) = mpsc::channel::<Command>(1);
         let state = Arc::new(State {
             phase: AtomicU8::new(0),
+            actual_ready_idle: AtomicBool::new(false),
+            causal_root: OnceLock::new(),
+            borrowed_child: AtomicBool::new(false),
             done: Notify::new(),
             writer,
-            writer_gate: Arc::new(tokio::sync::Mutex::new(())),
+            writer_gate: writer_gate.unwrap_or_else(|| Arc::new(tokio::sync::Mutex::new(()))),
         });
         let retained = state.clone();
         tokio::spawn(async move {
@@ -163,6 +181,7 @@ impl TaskSqlSession {
                 work: Some(work),
                 reply: Some(reply),
                 _writer_guard: guard,
+                state: self.state.clone(),
             })))
             .await
             .map_err(|_| unavailable())?;
@@ -180,15 +199,39 @@ impl TaskSqlSession {
     }
     /// Native plugin runtime calls this ONLY for an actual settled publication
     /// owned by this parent invocation, never a caller-supplied parent/task ID.
-    /// Exactly ONE child borrows the existing writer at a time. It acquires a
+    /// Exactly ONE live child session borrows this existing writer. Its SQL
+    /// shares the parent query gate; extra children need remaining original
+    /// Auth admission. It acquires a
     /// distinct physical connection from the SAME pool8; it never detaches or
-    /// borrows the parent's connection/transaction. Parent business SQL waits
-    /// for physical child closure. Explicit parent rollback/commit is separate.
-    pub(crate) fn publication_writer(&self) -> TaskSqlWriterWitness {
-        TaskSqlWriterWitness {
-            writer: Arc::downgrade(&self.state.writer),
-            gate: self.state.writer_gate.clone(),
+    /// borrows the parent's connection/transaction. The same actual query gate
+    /// serializes parent and borrowed-child SQL, without fencing a timed-out
+    /// parent until its entire child task completes. Explicit control remains separate.
+    pub(crate) fn publication_provenance(&self, owner: &Owner) -> TaskSqlPublicationWitness {
+        if let Some(root) = self
+            .state
+            .causal_root
+            .get()
+            .filter(|r| r.parent.strong_count() != 0)
+        {
+            return root.clone();
         }
+        TaskSqlPublicationWitness {
+            writer: TaskSqlWriterWitness {
+                writer: Arc::downgrade(&self.state.writer),
+                state: Arc::downgrade(&self.state),
+                gate: self.state.writer_gate.clone(),
+            },
+            parent: Arc::downgrade(owner),
+        }
+    }
+    pub(crate) fn inherit_publication_provenance(
+        &self,
+        root: TaskSqlPublicationWitness,
+    ) -> Result<(), StoreError> {
+        // Only the sealed actual-publication adapter invokes this; a JSON root
+        // UUID cannot choose a permit, owner or gate. No strong parent survives
+        // in a delayed retry record after the actual waiting parent disappears.
+        self.state.causal_root.set(root).map_err(|_| unavailable())
     }
     pub async fn fence(&self) -> Result<(), StoreError> {
         self.run(|_connection| Box::pin(async {})).await
@@ -309,7 +352,23 @@ mod main_worker_admission_regression {
 #[derive(Clone)]
 pub(crate) struct TaskSqlWriterWitness {
     writer: Weak<OwnedSemaphorePermit>,
+    state: Weak<State>,
     gate: Arc<tokio::sync::Mutex<()>>,
+}
+#[derive(Clone)]
+pub(crate) struct TaskSqlPublicationWitness {
+    pub writer: TaskSqlWriterWitness,
+    pub parent: Weak<dyn Send + Sync>,
+}
+struct BorrowedTaskWriter {
+    parent: Weak<State>,
+}
+impl Drop for BorrowedTaskWriter {
+    fn drop(&mut self) {
+        if let Some(parent) = self.parent.upgrade() {
+            parent.borrowed_child.store(false, Ordering::Release);
+        }
+    }
 }
 impl TaskSqlWriterWitness {
     pub(crate) async fn try_borrow(
@@ -323,18 +382,44 @@ impl TaskSqlWriterWitness {
         if !Arc::ptr_eq(writer.semaphore(), &auth.user_agent_workers) {
             return Err(unavailable());
         }
-        let gate = self.gate.clone().try_lock_owned().map_err(|_| {
-            StoreError::StatusBody(
-                503,
-                serde_json::json!({"detail":"Causal SQL writer is still active."}),
-            )
-        })?;
+        let gate = match self.gate.clone().try_lock_owned() {
+            Ok(v) => v,
+            Err(_) => return Ok(None),
+        };
+        let Some(state) = self.state.upgrade() else {
+            return Ok(None);
+        };
+        if state.phase.load(Ordering::Acquire) != 0
+            || !state.actual_ready_idle.load(Ordering::Acquire)
+        {
+            // Never loan an active transaction's writer. Source may issue more
+            // parent business SQL after get() timeout, before atomic rollback.
+            // Independent remaining Auth admission may still execute that task;
+            // otherwise report real capacity, not a fake match/result/commit.
+            return Ok(None);
+        }
+        if state
+            .borrowed_child
+            .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+            .is_err()
+        {
+            return Ok(None);
+        }
+        let marker = BorrowedTaskWriter {
+            parent: Arc::downgrade(&state),
+        };
+        let shared_gate = self.gate.clone();
+        // Reserve one actual borrowed session, but release the query gate now.
+        // Both physical sessions acquire that SAME gate for each actual command.
+        // CPU work/result waiting after a query cannot fence parent continuation.
+        drop(gate);
         let auth = auth.with_request_writer_permit(writer)?;
-        // Losing the initializer observer never drops a physical connection or
-        // its writer loan early. An unobserved returned Session closes its actor.
-        tokio::spawn(async move { auth.borrow_task_sql_session(Arc::new((owner, gate))).await })
-            .await
-            .map_err(|_| unavailable())?
-            .map(Some)
+        tokio::spawn(async move {
+            auth.borrow_task_sql_session_with_gate(Arc::new((owner, marker)), Some(shared_gate))
+                .await
+        })
+        .await
+        .map_err(|_| unavailable())?
+        .map(Some)
     }
 }

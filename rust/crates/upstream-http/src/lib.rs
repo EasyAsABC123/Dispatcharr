@@ -273,14 +273,27 @@ impl std::fmt::Display for ResourceLimitExceeded {
 }
 impl std::error::Error for ResourceLimitExceeded {}
 pub fn body(response: Response) -> io::Result<ByteStream> {
-    body_with_wire_limit(response, None)
+    body_with_wire_limit(response, None, None)
 }
 /// Preserve the existing streaming decoder while charging actual received bytes
 /// before any decoder prefix/output buffers allocate from each incoming frame.
 pub fn body_limited(response: Response, max_wire_bytes: usize) -> io::Result<ByteStream> {
-    body_with_wire_limit(response, Some(max_wire_bytes))
+    body_with_wire_limit(response, Some(max_wire_bytes), None)
 }
-fn body_with_wire_limit(response: Response, maximum: Option<usize>) -> io::Result<ByteStream> {
+/// Actual received wire bytes before existing content decoding, for Source
+/// iter_content/raw.tell progress. The observer does not change stream ownership.
+pub fn body_measured(
+    response: Response,
+    max_wire_bytes: usize,
+    received: std::sync::Arc<std::sync::atomic::AtomicU64>,
+) -> io::Result<ByteStream> {
+    body_with_wire_limit(response, Some(max_wire_bytes), Some(received))
+}
+fn body_with_wire_limit(
+    response: Response,
+    maximum: Option<usize>,
+    wire: Option<std::sync::Arc<std::sync::atomic::AtomicU64>>,
+) -> io::Result<ByteStream> {
     if response
         .headers()
         .iter()
@@ -316,6 +329,7 @@ fn body_with_wire_limit(response: Response, maximum: Option<usize>) -> io::Resul
             let mut received = 0usize;
             while let Some(frame) = incoming.next().await {
                 let frame = frame.map_err(io::Error::other)?;
+                if let Some(wire)=wire.as_ref(){wire.fetch_add(frame.len() as u64,std::sync::atomic::Ordering::AcqRel);}
                 if let Some(maximum) = maximum {
                     received = received.checked_add(frame.len())
                         .filter(|total| *total <= maximum)
@@ -664,5 +678,63 @@ mod tests {
             );
         }
         assert!(first.exceeded.load(Ordering::Relaxed));
+    }
+}
+
+#[cfg(test)]
+mod measured_wire_control {
+    use super::*;
+    #[tokio::test]
+    async fn actual_gzip_response_counts_encoded_wire_before_decoding() {
+        use std::io::{Read, Write};
+        let payload = vec![b'a'; 100_000];
+        let mut compressor =
+            flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::default());
+        compressor.write_all(&payload).unwrap();
+        let encoded = compressor.finish().unwrap();
+        let actual_wire = encoded.len();
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = std::thread::spawn(move || {
+            let (mut socket, _) = listener.accept().unwrap();
+            socket
+                .set_read_timeout(Some(Duration::from_secs(5)))
+                .unwrap();
+            let mut request = Vec::new();
+            let mut byte = [0];
+            while !request.ends_with(b"\r\n\r\n") {
+                socket.read_exact(&mut byte).unwrap();
+                request.push(byte[0]);
+                assert!(request.len() <= 8192);
+            }
+            socket.write_all(format!("HTTP/1.1 200 OK\r\nContent-Length: {}\r\nContent-Encoding: gzip\r\nConnection: close\r\n\r\n",encoded.len()).as_bytes()).unwrap();
+            socket.write_all(&encoded).unwrap();
+            socket.flush().unwrap();
+            drop(socket);
+        });
+        let attempt = Attempt::new(Duration::from_secs(5), Duration::from_secs(5)).unwrap();
+        let response = attempt
+            .request(
+                &format!("http://{address}/guide"),
+                "owned-Requests-agent",
+                &[],
+            )
+            .unwrap()
+            .send()
+            .await
+            .unwrap();
+        let count = std::sync::Arc::new(std::sync::atomic::AtomicU64::new(0));
+        let mut body = body_measured(response, actual_wire, count.clone()).unwrap();
+        let mut decoded = Vec::new();
+        while let Some(bytes) = body.next().await {
+            decoded.extend_from_slice(&bytes.unwrap());
+        }
+        server.join().unwrap();
+        assert_eq!(decoded, payload);
+        assert_eq!(
+            count.load(std::sync::atomic::Ordering::Acquire),
+            actual_wire as u64
+        );
+        assert_ne!(actual_wire, decoded.len());
     }
 }

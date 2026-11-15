@@ -43,6 +43,16 @@ impl PythonSqlRegistry {
         if self.closed.load(Ordering::Acquire) && method != "close" {
             return Err(unavailable());
         }
+        if method == "settings" {
+            let options = self.auth.store.pool().connect_options();
+            let host = options
+                .get_socket()
+                .map(|p| p.to_string_lossy().into_owned())
+                .unwrap_or_else(|| options.get_host().to_owned());
+            return Ok(
+                serde_json::json!({"NAME":options.get_database().unwrap_or(options.get_username()),"USER":options.get_username(),"HOST":host,"PORT":options.get_port().to_string(),"ENGINE":"dispatcharr_native.db"}),
+            );
+        }
         let key = params["connection"]
             .as_str()
             .filter(|v| v.len() == 32 && v.bytes().all(|b| b.is_ascii_hexdigit()))

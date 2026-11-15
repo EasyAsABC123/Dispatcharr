@@ -24,7 +24,9 @@ pub(crate) const CELERY_CONCURRENCY: usize = 6;
 fn validate_family_admission(family: Family, maximum: usize, selected: bool) -> Result<(), Error> {
     let allowed = match family {
         Family::Recording => (1..=20).contains(&maximum),
-        Family::AutoChannels | Family::SdGuide => maximum == CELERY_CONCURRENCY,
+        Family::AutoChannels | Family::SdGuide | Family::RegisteredPlugin => {
+            maximum == CELERY_CONCURRENCY
+        }
         _ => maximum == 1,
     };
     if !allowed || !selected {
@@ -75,6 +77,10 @@ struct OwnedFamily {
 #[derive(Clone)]
 struct FamilyAdapter(Arc<OwnedFamily>);
 impl Handler for FamilyAdapter {
+    fn registered_head(&self, raw: &[u8]) -> bool {
+        self.0.inner.registered_head(raw)
+    }
+
     fn maintenance(&self, owner: Arc<dyn Send + Sync>) -> BoxFuture<'_, Result<(), Disposition>> {
         self.0.inner.maintenance(owner)
     }
@@ -205,6 +211,7 @@ struct Inner {
     families: BTreeMap<Family, Arc<OwnedFamily>>,
     poll: Duration,
     lifecycle: Mutex<(bool, bool)>,
+    require_registered: bool,
 }
 struct Lifetime(watch::Sender<bool>);
 impl Drop for Lifetime {
@@ -249,6 +256,23 @@ impl Application {
         entries: Vec<(Family, Arc<dyn Handler>)>,
         poll: Duration,
     ) -> Result<Self, Error> {
+        Self::prepare_inner(broker, backend, entries, poll, false).await
+    }
+    pub async fn prepare_with_registered_plugins(
+        broker: &str,
+        backend: &str,
+        entries: Vec<(Family, Arc<dyn Handler>)>,
+        poll: Duration,
+    ) -> Result<Self, Error> {
+        Self::prepare_inner(broker, backend, entries, poll, true).await
+    }
+    async fn prepare_inner(
+        broker: &str,
+        backend: &str,
+        entries: Vec<(Family, Arc<dyn Handler>)>,
+        poll: Duration,
+        require_registered: bool,
+    ) -> Result<Self, Error> {
         if !(Duration::from_millis(25)..=Duration::from_secs(5)).contains(&poll) {
             return Err(Error::Configuration);
         }
@@ -265,6 +289,9 @@ impl Application {
             if !seen.contains(&family) {
                 return Err(Error::MissingFamily(family));
             }
+        }
+        if require_registered && !seen.contains(&Family::RegisteredPlugin) {
+            return Err(Error::MissingFamily(Family::RegisteredPlugin));
         }
         let mut families = BTreeMap::new();
         for (family, inner) in entries {
@@ -319,12 +346,24 @@ impl Application {
                     done: watch::channel(true).0,
                 }),
                 heads: [celery, dvr],
+                require_registered,
                 families,
                 poll,
                 lifecycle: Mutex::new((false, false)),
             }),
             lifetime: Arc::new(Lifetime(watch::channel(false).0)),
         })
+    }
+    pub fn registered_plugin_prepared(&self) -> bool {
+        self.inner.require_registered
+            && self
+                .inner
+                .families
+                .get(&Family::RegisteredPlugin)
+                .is_some_and(|family| {
+                    family.inner.maximum_concurrency() == CELERY_CONCURRENCY
+                        && family.inner.supports_selected_head()
+                })
     }
     pub fn readiness(&self) -> Readiness {
         let celery = self.inner.celery.state.borrow().clone();
@@ -340,7 +379,9 @@ impl Application {
             ready: active(&celery) && active(&dvr),
             celery,
             dvr,
-            required_families: milestone_dispatch::REQUIRED.len() + 2,
+            required_families: milestone_dispatch::REQUIRED.len()
+                + 2
+                + usize::from(self.inner.require_registered),
             prepared_families: self.inner.celery.prepared.prepared_families(),
             scheduler_enabled: false,
         }
@@ -708,8 +749,15 @@ async fn celery_lane(
         if !*stop.borrow() && fault.is_none() && tasks.len() < maximum && backoff.can_peek() {
             match head.peek(caller.clone()).await {
                 Ok(Some(raw)) => {
-                    let selected = milestone_dispatch::classify(&raw)
-                        .filter(|family| *family != Family::Recording);
+                    let selected = if handlers
+                        .get(&Family::RegisteredPlugin)
+                        .is_some_and(|handler| handler.registered_head(&raw))
+                    {
+                        Some(Family::RegisteredPlugin)
+                    } else {
+                        milestone_dispatch::classify(&raw)
+                    }
+                    .filter(|family| *family != Family::Recording);
                     if selected.is_none_or(|family| !handlers.contains_key(&family)) {
                         lane.state
                             .send_replace(State::Blocked(Disposition::UnsupportedHead));
@@ -1125,6 +1173,113 @@ mod tests {
 #[cfg(test)]
 #[path = "normal_queue_eta_tests.rs"]
 mod delayed_tests;
+
+#[cfg(test)]
+mod registered_plugin_admission_tests {
+    use super::*;
+    struct Metadata {
+        maximum: usize,
+        selected: bool,
+    }
+    impl Lifecycle for Metadata {
+        fn shutdown(&self, _timeout: Duration) -> BoxFuture<'_, Result<(), Disposition>> {
+            Box::pin(async { Ok(()) })
+        }
+    }
+    impl Handler for Metadata {
+        fn maximum_concurrency(&self) -> usize {
+            self.maximum
+        }
+        fn supports_selected_head(&self) -> bool {
+            self.selected
+        }
+        fn run_once(
+            &self,
+            _owner: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
+            Box::pin(async { Err(Disposition::UnsupportedDomain) })
+        }
+    }
+    fn entries(plugin: Option<(usize, bool)>) -> Vec<(Family, Arc<dyn Handler>)> {
+        let mut entries = milestone_dispatch::REQUIRED
+            .into_iter()
+            .chain([Family::BackupCreate, Family::BackupScheduled])
+            .map(|f| {
+                (
+                    f,
+                    Arc::new(Metadata {
+                        maximum: 1,
+                        selected: true,
+                    }) as Arc<dyn Handler>,
+                )
+            })
+            .collect::<Vec<_>>();
+        if let Some((maximum, selected)) = plugin {
+            entries.push((
+                Family::RegisteredPlugin,
+                Arc::new(Metadata { maximum, selected }),
+            ));
+        }
+        entries
+    }
+    #[tokio::test]
+    async fn actual_extended_constructor_rejects_missing_or_duplicate_registered_family() {
+        let absent = Application::prepare_with_registered_plugins(
+            "not-a-redis-url",
+            "not-a-redis-url",
+            entries(None),
+            Duration::from_millis(100),
+        )
+        .await;
+        assert!(matches!(
+            absent,
+            Err(Error::MissingFamily(Family::RegisteredPlugin))
+        ));
+        let mut duplicate = entries(Some((6, true)));
+        duplicate.push((
+            Family::RegisteredPlugin,
+            Arc::new(Metadata {
+                maximum: 6,
+                selected: true,
+            }),
+        ));
+        let duplicate = Application::prepare_with_registered_plugins(
+            "not-a-redis-url",
+            "not-a-redis-url",
+            duplicate,
+            Duration::from_millis(100),
+        )
+        .await;
+        assert!(matches!(
+            duplicate,
+            Err(Error::DuplicateFamily(Family::RegisteredPlugin))
+        ));
+    }
+    #[tokio::test]
+    async fn actual_extended_constructor_admits_selected_six_to_transport_but_not_bad_metadata() {
+        // Invalid URL prevents sockets. Reaching the real transport branch proves
+        // the actual application validator accepted metadata; this is NOT Main
+        // startup/runtime proof, which belongs to the grouped physical cohort.
+        let accepted = Application::prepare_with_registered_plugins(
+            "not-a-redis-url",
+            "not-a-redis-url",
+            entries(Some((6, true))),
+            Duration::from_millis(100),
+        )
+        .await;
+        assert!(matches!(accepted, Err(Error::Transport)));
+        for invalid in [(1, true), (5, true), (7, true), (6, false)] {
+            let rejected = Application::prepare_with_registered_plugins(
+                "not-a-redis-url",
+                "not-a-redis-url",
+                entries(Some(invalid)),
+                Duration::from_millis(100),
+            )
+            .await;
+            assert!(matches!(rejected, Err(Error::Configuration)));
+        }
+    }
+}
 
 #[cfg(test)]
 mod sd_registry_controls {

@@ -463,3 +463,151 @@ async fn vod_and_profile_scoped_preview_owners_cannot_mint_bare_channel_assignme
         .unwrap();
     assert!(after.is_none());
 }
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn pending_redirect_and_raw_borrower_share_one_slot_and_either_teardown_claims_it_once() {
+    use dispatcharr_coordination::{AcquireRequest, LiveChannelAssignment};
+    for parent_first in [true, false] {
+        let (coordinator, mut conn, _, numeric, profile) = setup().await;
+        let channel = uuid::Uuid::new_v4().to_string();
+        let stream = profile + 1;
+        let RedirectClaim::Owned(parent) = coordinator
+            .reserve_redirect_assignment(numeric, &channel, stream, provider(profile), Arc::new(()))
+            .await
+            .unwrap()
+        else {
+            panic!("actual new redirect grant")
+        };
+        let raw = coordinator
+            .acquire(AcquireRequest {
+                channel_id: channel.clone(),
+                provider_profile_id: None,
+                provider_max_streams: 0,
+                credential_pool: None,
+            })
+            .await
+            .unwrap();
+        let observed = coordinator
+            .observe_redirect_assignment(numeric, &channel, Arc::new(()))
+            .await
+            .unwrap()
+            .unwrap();
+        raw.adopt_source_assignment(&observed).await.unwrap();
+        raw.publish_source_assignment_with_metadata(
+            LiveChannelAssignment::new(numeric, stream).unwrap(),
+            Duration::from_secs(60),
+        )
+        .await
+        .unwrap();
+        let count: i64 = redis::cmd("GET")
+            .arg(format!("profile_connections:{profile}"))
+            .query_async(&mut conn)
+            .await
+            .unwrap();
+        assert_eq!(count, 1, "adoption and metadata publication do not INCR");
+        if parent_first {
+            assert!(parent.release().await.unwrap());
+            let actual: (i64, Option<String>) = redis::pipe()
+                .get(format!("profile_connections:{profile}"))
+                .hget(format!("live:channel:{channel}:metadata"), "m3u_profile")
+                .query_async(&mut conn)
+                .await
+                .unwrap();
+            assert_eq!(actual, (0, None));
+            let other = coordinator
+                .acquire(AcquireRequest {
+                    channel_id: uuid::Uuid::new_v4().to_string(),
+                    provider_profile_id: Some(profile),
+                    provider_max_streams: 1,
+                    credential_pool: None,
+                })
+                .await
+                .unwrap();
+            raw.release().await.unwrap();
+            let count: i64 = redis::cmd("GET")
+                .arg(format!("profile_connections:{profile}"))
+                .query_async(&mut conn)
+                .await
+                .unwrap();
+            assert_eq!(
+                count, 1,
+                "later raw cleanup cannot release a genuinely new owner"
+            );
+            other.release().await.unwrap();
+        } else {
+            raw.release().await.unwrap();
+            let other = coordinator
+                .acquire(AcquireRequest {
+                    channel_id: uuid::Uuid::new_v4().to_string(),
+                    provider_profile_id: Some(profile),
+                    provider_max_streams: 1,
+                    credential_pool: None,
+                })
+                .await
+                .unwrap();
+            assert!(!parent.release().await.unwrap());
+            let count: i64 = redis::cmd("GET")
+                .arg(format!("profile_connections:{profile}"))
+                .query_async(&mut conn)
+                .await
+                .unwrap();
+            assert_eq!(
+                count, 1,
+                "late redirect finally cannot release a genuinely new owner"
+            );
+            other.release().await.unwrap();
+        }
+        let _: usize = redis::cmd("DEL")
+            .arg(format!("live:channel:{channel}:metadata"))
+            .query_async(&mut conn)
+            .await
+            .unwrap();
+    }
+}
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn parent_release_before_raw_metadata_publication_cannot_resurrect_public_assignment() {
+    use dispatcharr_coordination::{AcquireRequest, LiveChannelAssignment};
+    let (coordinator, mut conn, _, numeric, profile) = setup().await;
+    let channel = uuid::Uuid::new_v4().to_string();
+    let stream = profile + 1;
+    let RedirectClaim::Owned(parent) = coordinator
+        .reserve_redirect_assignment(numeric, &channel, stream, provider(profile), Arc::new(()))
+        .await
+        .unwrap()
+    else {
+        panic!("parent")
+    };
+    let raw = coordinator
+        .acquire(AcquireRequest {
+            channel_id: channel.clone(),
+            provider_profile_id: None,
+            provider_max_streams: 0,
+            credential_pool: None,
+        })
+        .await
+        .unwrap();
+    let observed = coordinator
+        .observe_redirect_assignment(numeric, &channel, Arc::new(()))
+        .await
+        .unwrap()
+        .unwrap();
+    raw.adopt_source_assignment(&observed).await.unwrap();
+    parent.release().await.unwrap();
+    assert!(raw
+        .publish_source_assignment_with_metadata(
+            LiveChannelAssignment::new(numeric, stream).unwrap(),
+            Duration::from_secs(60)
+        )
+        .await
+        .is_err());
+    raw.release().await.unwrap();
+    let actual: (Option<String>, i64) = redis::pipe()
+        .get(format!("channel_stream:{numeric}"))
+        .get(format!("profile_connections:{profile}"))
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(actual, (None, 0));
+}

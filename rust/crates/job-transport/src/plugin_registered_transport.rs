@@ -35,6 +35,8 @@ fn frame(capability: &PluginTaskCapability, raw: &[u8]) -> Result<Frame, PluginE
     }
     // Keep unsupported custom IDs/codecs/body shapes BEFORE publication until
     // the generic selected runtime supports them; never poison an accepted FIFO.
+    crate::registered_plugin_protocol::parse(raw, capability)
+        .map_err(|_| PluginError::Unsupported)?;
     let value: Value = serde_json::from_slice(raw).map_err(|_| PluginError::Corrupt)?;
     let h = value["headers"].as_object().ok_or(PluginError::Corrupt)?;
     let text = |key: &str| {
@@ -47,22 +49,6 @@ fn frame(capability: &PluginTaskCapability, raw: &[u8]) -> Result<Frame, PluginE
         return Err(PluginError::Unsupported);
     }
     let id = text("id")?.to_owned();
-    let parsed = uuid::Uuid::parse_str(&id).map_err(|_| PluginError::Unsupported)?;
-    if parsed.to_string() != id {
-        return Err(PluginError::Unsupported);
-    }
-    use base64::Engine;
-    let body = base64::engine::general_purpose::STANDARD
-        .decode(value["body"].as_str().ok_or(PluginError::Unsupported)?)
-        .map_err(|_| PluginError::Unsupported)?;
-    let body: Value = serde_json::from_slice(&body).map_err(|_| PluginError::Unsupported)?;
-    if !body
-        .as_array()
-        .is_some_and(|v| v.len() == 3 && v[0].is_array() && v[1].is_object() && v[2].is_object())
-    {
-        return Err(PluginError::Unsupported);
-    }
-
     let props = value["properties"]
         .as_object()
         .ok_or(PluginError::Corrupt)?;
@@ -92,13 +78,9 @@ fn frame(capability: &PluginTaskCapability, raw: &[u8]) -> Result<Frame, PluginE
     {
         return Err(PluginError::Unsupported);
     }
-    // Source future/expiry receipts require the actual common durable reservation
-    // path; until that generic port is wired, refuse BEFORE enqueue, never early
-    // ACK/sleep or a forever unsupported head after reported publication success.
-    if h.get("eta").is_some_and(|v| !v.is_null()) || h.get("expires").is_some_and(|v| !v.is_null())
-    {
-        return Err(PluginError::Unsupported);
-    }
+    // The extended Main registry now owns plain/ETA/expiry through the SAME
+    // durable reservation budget. This module is joined with that actual
+    // selected handler; the earlier compiler-only slice keeps its refusal.
     Ok(Frame { id })
 }
 impl Jobs {

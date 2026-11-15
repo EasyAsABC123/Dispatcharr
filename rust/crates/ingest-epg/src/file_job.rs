@@ -92,6 +92,7 @@ pub enum FileJobOutcome {
     AlreadyRunning,
     MissingSource(String),
     Failed,
+    DownloadRejected(dispatcharr_store::xmltv_download::Rejected),
     Unsupported(&'static str),
 }
 /// A reason known from the exact busy/exhaustion branches. This is not a
@@ -149,6 +150,7 @@ pub struct FileJobRunner {
 }
 struct Inner {
     services: FileJobServices,
+    remote: std::sync::OnceLock<dispatcharr_store::xmltv_download::Downloader>,
     config: FileJobConfig,
     transport: RedisTransport,
     orphans: OrphanCleanup,
@@ -212,6 +214,7 @@ struct LeaseContext {
     _watch: LossWatch,
     _guard: Arc<dyn Send + Sync>,
 }
+#[derive(Clone)]
 struct Source {
     id: i64,
     name: String,
@@ -223,6 +226,17 @@ struct Source {
     properties: serde_json::Value,
 }
 impl FileJobRunner {
+    /// Bind only the actual Main-owned downloader. Legacy constructors remain
+    /// local-only until normal application composition installs this port.
+    pub fn bind_remote(
+        &self,
+        remote: dispatcharr_store::xmltv_download::Downloader,
+    ) -> Result<(), ImportError> {
+        self.inner
+            .remote
+            .set(remote)
+            .map_err(|_| ImportError::Worker)
+    }
     pub async fn connect(
         services: FileJobServices,
         config: FileJobConfig,
@@ -266,6 +280,7 @@ impl FileJobRunner {
                 jobs: Mutex::new(HashMap::new()),
                 next: AtomicU64::new(1),
                 changed: Notify::new(),
+                remote: std::sync::OnceLock::new(),
             }),
         })
     }
@@ -621,9 +636,50 @@ impl Inner {
         context: SwapPolicyContext,
         dispatcher: &dyn GuideTaskDispatcher,
     ) -> Result<FileJobOutcome, ImportError> {
-        if source.url.as_deref().is_some_and(|v| !v.is_empty()) {
-            return Ok(FileJobOutcome::Unsupported("remote XMLTV download"));
-        }
+        let remote_download = source.url.as_deref().is_some_and(|v| !v.is_empty());
+        let downloaded = if remote_download {
+            let Some(remote) = self.remote.get() else {
+                return Ok(FileJobOutcome::Unsupported("remote XMLTV download"));
+            };
+            match remote
+                .run(
+                    source.id,
+                    context.retained.clone(),
+                    context.cancelled.clone(),
+                )
+                .await
+            {
+                Ok(dispatcharr_store::xmltv_download::Outcome::Installed(file))
+                    if file.source_id() == source.id =>
+                {
+                    let mut actual = source.clone();
+                    actual.path = Some(
+                        file.path()
+                            .to_str()
+                            .ok_or(ImportError::Capacity("remote cache path"))?
+                            .to_owned(),
+                    );
+                    actual.extracted = None;
+                    Some(actual)
+                }
+                Ok(dispatcharr_store::xmltv_download::Outcome::HandledFailure(proof))
+                    if proof.source_id() == source.id =>
+                {
+                    return Ok(FileJobOutcome::DownloadRejected(proof))
+                }
+                Ok(_) => return Err(ImportError::Worker),
+                Err(dispatcharr_store::xmltv_download::Error::Cancelled) => {
+                    return Err(ImportError::Cancelled)
+                }
+                Err(dispatcharr_store::xmltv_download::Error::Capacity) => {
+                    return Err(ImportError::Capacity("remote XMLTV"))
+                }
+                Err(_) => return Err(ImportError::Worker),
+            }
+        } else {
+            None
+        };
+        let source = downloaded.as_ref().unwrap_or(source);
         let path = source
             .path
             .as_ref()
@@ -738,15 +794,17 @@ impl Inner {
                 .await?;
             return Ok(FileJobOutcome::Failed);
         }
-        self.services
-            .reporter
-            .execute(
-                ReportAction::LocalDownloadComplete {
-                    source_id: source.id,
-                },
-                context.clone(),
-            )
-            .await?;
+        if !remote_download {
+            self.services
+                .reporter
+                .execute(
+                    ReportAction::LocalDownloadComplete {
+                        source_id: source.id,
+                    },
+                    context.clone(),
+                )
+                .await?;
+        }
         let path = check_path.unwrap();
         let channel = self
             .services
@@ -757,7 +815,7 @@ impl Inner {
                     source_name: source.name.clone(),
                     path: path.clone(),
                     cache_file: self.config.cache_dir.join(format!("{}.tmp", source.id)),
-                    source_has_url: false,
+                    source_has_url: remote_download,
                     source_properties: source.properties.clone(),
                     cancelled: context.cancelled.clone(),
                 },
@@ -790,7 +848,7 @@ impl Inner {
                 ImportReporting {
                     reporter: self.services.reporter.clone(),
                     source_name: source.name.clone(),
-                    source_has_url: false,
+                    source_has_url: remote_download,
                 },
             )
             .await;

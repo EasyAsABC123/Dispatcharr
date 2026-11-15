@@ -4,7 +4,7 @@
 use crate::Store;
 use chrono::{DateTime, Utc};
 use dispatcharr_ingest_core::XmltvProgramme;
-use sqlx::{Connection, PgConnection, Postgres, QueryBuilder, Row};
+use sqlx::{pool::PoolConnection, Connection, Postgres, QueryBuilder, Row};
 use std::sync::Arc;
 #[derive(Debug)]
 pub enum Error {
@@ -50,12 +50,15 @@ impl From<(&'static str, sqlx::Error)> for Fault {
     }
 }
 async fn finish<T>(
-    mut connection: PgConnection,
+    mut connection: PoolConnection<Postgres>,
     outcome: Result<T, Fault>,
     transaction_open: bool,
 ) -> Result<T, Error> {
     let rollback = if outcome.is_err() && transaction_open {
-        sqlx::query("ROLLBACK").execute(&mut connection).await.err()
+        sqlx::query("ROLLBACK")
+            .execute(&mut *connection)
+            .await
+            .err()
     } else {
         None
     };
@@ -104,20 +107,16 @@ impl Store {
         let pool = self.pool().clone();
         tokio::spawn(async move {
             let _owner = owner;
-            let mut c = pool
-                .acquire()
-                .await
-                .map_err(|source| Error::Sql {
-                    stage: "acquire",
-                    source,
-                    rollback: None,
-                    ready: None,
-                    close: None,
-                })?
-                .detach();
+            let mut c = pool.acquire().await.map_err(|source| Error::Sql {
+                stage: "acquire",
+                source,
+                rollback: None,
+                ready: None,
+                close: None,
+            })?;
             let result = sqlx::query_scalar::<_, i64>(CATCHUP_SQL)
                 .bind(epg_id)
-                .fetch_one(&mut c)
+                .fetch_one(&mut *c)
                 .await
                 .map_err(|e| Fault::Sql("catchup", e));
             let days = finish(c, result, false)
@@ -139,21 +138,17 @@ impl Store {
         let pool = self.pool().clone();
         tokio::spawn(async move {
             let _owner = owner;
-            let mut c = pool
-                .acquire()
-                .await
-                .map_err(|source| Error::Sql {
-                    stage: "acquire",
-                    source,
-                    rollback: None,
-                    ready: None,
-                    close: None,
-                })?
-                .detach();
+            let mut c = pool.acquire().await.map_err(|source| Error::Sql {
+                stage: "acquire",
+                source,
+                rollback: None,
+                ready: None,
+                close: None,
+            })?;
             let result = async {
                 let row = sqlx::query(CONTEXT_SQL)
                     .bind(epg_id)
-                    .fetch_optional(&mut c)
+                    .fetch_optional(&mut *c)
                     .await?;
                 row.map(|row| {
                     if row.try_get::<bool, _>("oversized")? {
@@ -214,25 +209,25 @@ impl Store {
         }
         let pool = self.pool().clone();
         tokio::spawn(async move {
-            let _owner=owner;let mut c=pool.acquire().await.map_err(|source|Error::Sql {stage:"acquire",source,rollback:None,ready:None,close:None})?.detach();
+            let _owner=owner;let mut c=pool.acquire().await.map_err(|source|Error::Sql {stage:"acquire",source,rollback:None,ready:None,close:None})?;
             let mut transaction_open=false;
             let result=async {
-                sqlx::query("BEGIN").execute(&mut c).await.map_err(|e|("begin",e))?;transaction_open=true;
+                sqlx::query("BEGIN").execute(&mut *c).await.map_err(|e|("begin",e))?;transaction_open=true;
                 let mut deleted=0;let mut inserted=0;
                 if !rows.is_empty() {
                     let mut rows:Vec<_>=rows.into_iter().filter(|r|r.end_time>=cutoff).collect();
                     let first=rows.iter().filter(|r|r.start_time>=cutoff).map(|r|r.start_time).min();
-                    deleted=sqlx::query(DELETE_SQL).bind(epg_id).bind(cutoff).bind(first).execute(&mut c).await.map_err(|e|("delete",e))?.rows_affected();
-                    let kept=sqlx::query_scalar::<_,DateTime<Utc>>(KEPT_SQL).bind(epg_id).bind(cutoff).fetch_all(&mut c).await.map_err(|e|("kept-starts",e))?;
+                    deleted=sqlx::query(DELETE_SQL).bind(epg_id).bind(cutoff).bind(first).execute(&mut *c).await.map_err(|e|("delete",e))?.rows_affected();
+                    let kept=sqlx::query_scalar::<_,DateTime<Utc>>(KEPT_SQL).bind(epg_id).bind(cutoff).fetch_all(&mut *c).await.map_err(|e|("kept-starts",e))?;
                     if kept.len()>4096 { return Err(Fault::Capacity); }
                     rows.retain(|r|r.start_time>=cutoff||!kept.contains(&r.start_time));
                     for chunk in rows.chunks(2500) {
                         let mut q:QueryBuilder<Postgres>=QueryBuilder::new("INSERT INTO epg_programdata(epg_id,start_time,end_time,title,description,sub_title,tvg_id,custom_properties) ");
                         q.push_values(chunk,|mut b,r|{b.push_bind(r.epg_id).push_bind(r.start_time).push_bind(r.end_time).push_bind(&r.title).push_bind(&r.description).push_bind(&r.sub_title).push_bind(&r.tvg_id).push_bind(&r.custom_properties);});
-                        inserted+=q.build().execute(&mut c).await.map_err(|e|("insert",e))?.rows_affected();
+                        inserted+=q.build().execute(&mut *c).await.map_err(|e|("insert",e))?.rows_affected();
                     }
                 }
-                sqlx::query("COMMIT").execute(&mut c).await.map_err(|e|("commit",e))?;transaction_open=false;Ok((deleted,inserted))
+                sqlx::query("COMMIT").execute(&mut *c).await.map_err(|e|("commit",e))?;transaction_open=false;Ok((deleted,inserted))
             }.await;
             finish(c,result,transaction_open).await
         }).await.map_err(|_|Error::Supervisor)?

@@ -59,6 +59,7 @@ struct Inner {
     done: Notify,
     cache: Mutex<Option<Cached>>,
     schedule: Option<Arc<dyn PluginRepositorySchedule>>,
+    runtime: std::sync::OnceLock<crate::PluginRuntime>,
 }
 struct Live {
     inner: Arc<Inner>,
@@ -110,8 +111,16 @@ impl PluginActions {
                 done: Notify::new(),
                 cache: Mutex::new(None),
                 schedule: None,
+                runtime: std::sync::OnceLock::new(),
             }),
         }
+    }
+    /// Attach only normal Main's actual prepared shared-family runtime.
+    pub fn with_runtime(self, runtime: crate::PluginRuntime) -> Self {
+        // Startup's physical session can retain an Arc briefly after close;
+        // attachment must not silently fail because Arc::get_mut returns None.
+        let _ = self.inner.runtime.set(runtime);
+        self
     }
     pub fn with_repository_schedule(mut self, schedule: Arc<dyn PluginRepositorySchedule>) -> Self {
         // Inert construction only; no service has been cloned or started yet.
@@ -415,7 +424,38 @@ impl PluginActions {
                     403,
                     json!({"success":false,"error":"Plugin is disabled"}),
                 )),
-                Some(_) => Err(guard()),
+                Some(_) => {
+                    let runtime = self.inner.runtime.get().ok_or_else(guard)?;
+                    let result = runtime
+                        .run_action(
+                            key.clone().ok_or_else(guard)?,
+                            value["action"].clone(),
+                            value.get("params").cloned().unwrap_or(json!({})),
+                            session.clone(),
+                            live,
+                        )
+                        .await?;
+                    if result["source_rendering_failed"] == true {
+                        return Err(StoreError::UnhandledRestFault);
+                    }
+                    let status = result["status"]
+                        .as_u64()
+                        .and_then(|v| u16::try_from(v).ok())
+                        .filter(|v| matches!(v, 200 | 403 | 500))
+                        .ok_or_else(guard)?;
+                    use base64::Engine;
+                    let raw = base64::engine::general_purpose::STANDARD
+                        .decode(result["body_base64"].as_str().ok_or_else(guard)?)
+                        .map_err(|_| guard())?;
+                    if raw.len() > 8 * 1024 * 1024 {
+                        return Err(guard());
+                    }
+                    Ok(Response::builder()
+                        .status(status)
+                        .header("content-type", "application/json")
+                        .body(Body::from(raw))
+                        .map_err(|_| guard())?)
+                }
             };
         }
         if matches!(action, Action::Enabled) {
@@ -439,6 +479,12 @@ impl PluginActions {
                     404,
                     json!({"success":false,"error":"Plugin not found"}),
                 ));
+            }
+            if let Some(runtime) = self.inner.runtime.get() {
+                let result = runtime
+                    .change_enabled(key, enable, origin.to_owned(), session.clone(), live)
+                    .await?;
+                return rendered_response(result);
             }
             // Enabling imports real Python and may resume dynamic tasks. The
             // absent compatibility host is a pre-effect guard, never fake success.
@@ -500,6 +546,30 @@ impl PluginActions {
             let plugins = discovery(self.inner.clone(), true).await?;
             registry::sync_caught(session, plugins).await?;
             return Ok(reply(200, json!({"success":true})));
+        }
+        let executable_history = snapshot.configs.iter().any(|c| {
+            c["enabled"] == true
+                || c["ever_enabled"] == true
+                || c["owned_tasks"].as_array().is_some_and(|a| !a.is_empty())
+                || c["suspended_schedules"]
+                    .as_array()
+                    .is_some_and(|a| !a.is_empty())
+        });
+        if executable_history {
+            let runtime = self.inner.runtime.get().ok_or_else(guard)?;
+            if matches!(action, Action::List) {
+                return rendered_response(
+                    runtime
+                        .list_plugins(origin.to_owned(), session.clone(), live)
+                        .await?,
+                );
+            }
+            if matches!(action, Action::Reload) {
+                return Ok(reply(
+                    200,
+                    runtime.reload_plugins(session.clone(), live).await?,
+                ));
+            }
         }
         registry::no_history(&snapshot)?;
         if matches!(action, Action::Import | Action::Reload) {
@@ -1065,4 +1135,27 @@ mod request_compat_tests {
             _ => panic!("actual unsupported MIME must return DRF detail"),
         }
     }
+}
+
+fn rendered_response(result: Value) -> Result<Response, StoreError> {
+    if result["source_rendering_failed"] == true {
+        return Err(StoreError::UnhandledRestFault);
+    }
+    let status = result["status"]
+        .as_u64()
+        .and_then(|v| u16::try_from(v).ok())
+        .filter(|v| matches!(v, 200 | 403 | 404 | 500))
+        .ok_or_else(guard)?;
+    use base64::Engine;
+    let raw = base64::engine::general_purpose::STANDARD
+        .decode(result["body_base64"].as_str().ok_or_else(guard)?)
+        .map_err(|_| guard())?;
+    if raw.len() > 8 * 1024 * 1024 {
+        return Err(guard());
+    }
+    Response::builder()
+        .status(status)
+        .header("content-type", "application/json")
+        .body(Body::from(raw))
+        .map_err(|_| guard())
 }

@@ -9,7 +9,14 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate25](rust-milestone-batch25.md): all four
+The newest source candidate is [Candidate26](rust-milestone-batch26.md): all four
+SDK gates pass with1,075 tests, zero failures and782 ignored. It joins inverse
+Redirect/scoped previews, remote/staged XMLTV, ordinary guide output and
+experimental plugin lifecycle/task/SQL/event ports. Original Python compatibility
+libraries remain explicit; actual execution/packaging and enabled-plugin
+acceptance are unmeasured. Docker, whole application and resource checks remain.
+
+The preceding source candidate is [Candidate25](rust-milestone-batch25.md): all four
 SDK gates pass with1,061 tests, zero failures and775 ignored. It joins common
 Redirect assignments and native proxy alias sharing with guarded plugin runtime,
 SQL/result/cache infrastructure and owned host deadlines. Docker/package and

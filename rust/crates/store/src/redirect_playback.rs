@@ -7,6 +7,7 @@ use dispatcharr_contracts::{
     PlaybackViewer, UserLimitPolicy,
 };
 use serde_json::Value;
+use sqlx::Row;
 pub(crate) fn allowed(user: Option<&User>) -> Result<Option<Vec<i64>>, PlaybackError> {
     let Some(value) = user.and_then(|u| u.custom_properties.get("allowed_m3u_profile_ids")) else {
         return Ok(None);
@@ -96,6 +97,13 @@ impl dispatcharr_contracts::RedirectAliasResolver for BorrowedResolver {
         })
     }
 }
+struct PreviewSelection<'a> {
+    hash: &'a str,
+    override_profile: Option<i64>,
+    stream: i64,
+    provider: i64,
+    scoped: bool,
+}
 impl AuthService {
     pub(crate) async fn resolve_direct_response(
         &self,
@@ -119,12 +127,28 @@ impl AuthService {
         {
             return Err(PlaybackError::new(404, "Not found"));
         }
-        let channel = self
+        let skip = request
+            .parameter("skip_redirect")
+            .is_some_and(|v| v.eq_ignore_ascii_case("true"))
+            && user.as_ref().is_some_and(|u| u.user_level >= 1);
+        let channel = match self
             .store
-            .resolve_channel_mode(&request.channel_id, true, user.as_ref())
+            .resolve_channel_mode_cached(
+                &request.channel_id,
+                true,
+                user.as_ref(),
+                self.notification_cache.as_ref(),
+            )
             .await
-            .map_err(playback_error)?
-            .ok_or_else(|| PlaybackError::new(404, "Not found"))?;
+        {
+            Ok(Some(channel)) => channel,
+            Ok(None) | Err(crate::StoreError::NotFound) => {
+                return self
+                    .resolve_direct_stream_preview(request, user, skip)
+                    .await
+            }
+            Err(error) => return Err(playback_error(error)),
+        };
         if !channel.redirect {
             return self
                 .playback_source_with_channel(request, user, None, channel)
@@ -132,15 +156,44 @@ impl AuthService {
                 .map(|v| PlaybackResolution::Stream(Box::new(v)));
         }
         let capacity_only = allowed(user.as_ref())?.is_some();
-        if request
-            .parameter("skip_redirect")
-            .is_some_and(|v| v.eq_ignore_ascii_case("true"))
-            && user.as_ref().is_some_and(|u| u.user_level >= 1)
-        {
-            return Err(PlaybackError::new(
-                501,
-                "Profile-scoped Redirect preview identity is not implemented",
-            ));
+        if skip {
+            if let Some(proxy) = self.locked_proxy_profile().await? {
+                let candidates = self
+                    .store
+                    .resolve_preview_targets(&request.channel_id, user.as_ref())
+                    .await
+                    .map_err(playback_error)?;
+                for candidate in candidates.streams {
+                    if self.preview_profile_available(&candidate, true).await? {
+                        let hash = candidate
+                            .metadata
+                            .iter()
+                            .find(|(k, _)| k == "source_stream_hash")
+                            .map(|(_, v)| v.clone())
+                            .filter(|v| !v.is_empty())
+                            .ok_or_else(|| PlaybackError::new(503, "Stream has no preview id"))?;
+                        return self
+                            .selected_stream_preview(
+                                request,
+                                user,
+                                PreviewSelection {
+                                    hash: &hash,
+                                    override_profile: Some(proxy),
+                                    stream: candidate.stream_id,
+                                    provider: candidate.provider_profile_id,
+                                    scoped: true,
+                                },
+                            )
+                            .await;
+                    }
+                }
+                return Err(PlaybackError::new(
+                    503,
+                    "No compatible streams available for preview",
+                ));
+            }
+            // Source Channel Redirect falls back to ordinary handoff when the
+            // locked Proxy template does not exist. Stream preview differs.
         }
         let proxy = self
             .store
@@ -214,6 +267,259 @@ impl AuthService {
                 selection_error: channel.redirect_error,
             },
         )))
+    }
+    async fn locked_proxy_profile(&self) -> Result<Option<i64>, PlaybackError> {
+        let row = sqlx::query(
+            "SELECT id::bigint AS id FROM core_streamprofile WHERE name='Proxy' AND locked",
+        )
+        .fetch_optional(self.store.pool())
+        .await
+        .map_err(crate::StoreError::from)
+        .map_err(playback_error)?;
+        row.map(|row| {
+            row.try_get("id")
+                .map_err(crate::StoreError::from)
+                .map_err(playback_error)
+        })
+        .transpose()
+    }
+    async fn preview_profile_available(
+        &self,
+        candidate: &crate::playback::ProviderStream,
+        scoped: bool,
+    ) -> Result<bool, PlaybackError> {
+        let hash = candidate
+            .metadata
+            .iter()
+            .find(|(k, _)| k == "source_stream_hash")
+            .map_or("", |(_, v)| v.as_str());
+        let worker = if scoped {
+            format!("{hash}.p{}", candidate.provider_profile_id)
+        } else {
+            hash.to_owned()
+        };
+        let alias = if scoped {
+            format!(
+                "stream_profile:{}:p{}",
+                candidate.stream_id, candidate.provider_profile_id
+            )
+        } else {
+            format!("stream_profile:{}:preview", candidate.stream_id)
+        };
+        let cache = self
+            .notification_cache
+            .as_ref()
+            .ok_or_else(|| PlaybackError::new(503, "Preview cache unavailable"))?;
+        const READ: &str = r#"
+local assigned=redis.call('GET',KEYS[1])
+if assigned and assigned~='' then
+ local state=redis.call('HGET',KEYS[2],'state')
+ if redis.call('EXISTS',KEYS[2])==0 or state=='active' or state=='waiting_for_clients' or state=='buffering' or state=='initializing' or state=='connecting' then return 1 end
+end
+if tonumber(ARGV[1])==0 then return 1 end
+local count=tonumber(redis.call('GET',KEYS[3])or'0');local group=KEYS[4]~='' and tonumber(redis.call('GET',KEYS[4])or'0')or 0
+if not count or not group then return redis.error_reply('Invalid preview capacity') end
+if count<tonumber(ARGV[1]) and (tonumber(ARGV[2])==0 or group<tonumber(ARGV[2])) then return 1 end
+return 0
+"#;
+        let mut command = redis::cmd("EVAL");
+        command
+            .arg(READ)
+            .arg(4)
+            .arg(alias)
+            .arg(format!("live:channel:{worker}:metadata"))
+            .arg(format!(
+                "profile_connections:{}",
+                candidate.provider_profile_id
+            ))
+            .arg(
+                candidate
+                    .credential_pool
+                    .as_ref()
+                    .map_or("", |p| p.counter_key.as_str()),
+            )
+            .arg(candidate.provider_max_streams)
+            .arg(
+                candidate
+                    .credential_pool
+                    .as_ref()
+                    .map_or(0, |p| p.max_streams),
+            );
+        let value: i64 = cache.command(command).await.map_err(playback_error)?;
+        Ok(value == 1)
+    }
+    async fn selected_stream_preview(
+        &self,
+        mut request: PlaybackRequest,
+        user: Option<User>,
+        selection: PreviewSelection<'_>,
+    ) -> Result<PlaybackResolution, PlaybackError> {
+        let PreviewSelection {
+            hash,
+            override_profile,
+            stream,
+            provider,
+            scoped,
+        } = selection;
+        let mut channel = self
+            .store
+            .resolve_preview_channel(hash, override_profile, Some((stream, provider)), scoped)
+            .await
+            .map_err(playback_error)?;
+        channel.id = if scoped {
+            format!("{hash}.p{provider}")
+        } else {
+            hash.to_owned()
+        };
+        request.channel_id = channel.id.clone();
+        self.playback_source_with_channel(request, user, None, channel)
+            .await
+            .map(|v| PlaybackResolution::Stream(Box::new(v)))
+    }
+    async fn resolve_direct_stream_preview(
+        &self,
+        request: PlaybackRequest,
+        user: Option<User>,
+        skip: bool,
+    ) -> Result<PlaybackResolution, PlaybackError> {
+        let row=sqlx::query("SELECT s.id::bigint AS id,s.m3u_account_id::bigint AS account,a.is_active AS account_active, COALESCE(s.stream_profile_id,$2::bigint)::bigint AS profile_id FROM dispatcharr_channels_stream s LEFT JOIN m3u_m3uaccount a ON a.id=s.m3u_account_id WHERE s.stream_hash=$1")
+            .bind(&request.channel_id).bind(self.store.setting("stream_settings").await.map_err(playback_error)?.get("default_stream_profile").and_then(|v|v.as_i64().or_else(||v.as_str()?.parse().ok()))).fetch_optional(self.store.pool()).await.map_err(crate::StoreError::from).map_err(playback_error)?.ok_or_else(||PlaybackError::new(404,"Not found"))?;
+        let id: i64 = row
+            .try_get("id")
+            .map_err(crate::StoreError::from)
+            .map_err(playback_error)?;
+        let account: Option<i64> = row
+            .try_get("account")
+            .map_err(crate::StoreError::from)
+            .map_err(playback_error)?;
+        if account.is_none() {
+            return Err(PlaybackError::new(503, "Stream has no M3U account"));
+        }
+        let profile: Option<i64> = row
+            .try_get("profile_id")
+            .map_err(crate::StoreError::from)
+            .map_err(playback_error)?;
+        let named = sqlx::query("SELECT name,locked FROM core_streamprofile WHERE id=$1")
+            .bind(profile)
+            .fetch_optional(self.store.pool())
+            .await
+            .map_err(crate::StoreError::from)
+            .map_err(playback_error)?
+            .ok_or_else(|| PlaybackError::new(500, "Stream profile not found"))?;
+        let redirect = named
+            .try_get::<bool, _>("locked")
+            .map_err(crate::StoreError::from)
+            .map_err(playback_error)?
+            && named
+                .try_get::<String, _>("name")
+                .map_err(crate::StoreError::from)
+                .map_err(playback_error)?
+                == "Redirect";
+        let override_profile = if skip && redirect {
+            Some(
+                self.locked_proxy_profile()
+                    .await?
+                    .ok_or_else(|| PlaybackError::new(500, "Proxy stream profile not found"))?,
+            )
+        } else {
+            None
+        };
+        let allowed = if skip { allowed(user.as_ref())? } else { None };
+        if skip
+            && !row
+                .try_get::<Option<bool>, _>("account_active")
+                .map_err(crate::StoreError::from)
+                .map_err(playback_error)?
+                .unwrap_or(false)
+        {
+            return Err(PlaybackError::new(
+                503,
+                "No compatible M3U profile available for preview",
+            ));
+        }
+        // Read the default preview's already selected profile before capacity.
+        let existing = if !skip {
+            self.default_preview_profile(id, &request.channel_id)
+                .await?
+        } else {
+            None
+        };
+        if let Some(provider) = existing {
+            return self
+                .selected_stream_preview(
+                    request.clone(),
+                    user,
+                    PreviewSelection {
+                        hash: &request.channel_id,
+                        override_profile: None,
+                        stream: id,
+                        provider,
+                        scoped: false,
+                    },
+                )
+                .await;
+        }
+        if allowed.is_none() {
+            let exists:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3uaccountprofile WHERE m3u_account_id=$1 AND is_default AND (NOT $2::bool OR is_active))").bind(account).bind(skip).fetch_one(self.store.pool()).await.map_err(crate::StoreError::from).map_err(playback_error)?;
+            if !exists {
+                return Err(PlaybackError::new(
+                    503,
+                    "No compatible M3U profile available for preview",
+                ));
+            }
+        }
+        let candidates = self
+            .store
+            .resolve_preview_channel(&request.channel_id, override_profile, None, skip)
+            .await
+            .map_err(playback_error)?;
+        if !skip {
+            return self
+                .playback_source_with_channel(request, user, None, candidates)
+                .await
+                .map(|source| PlaybackResolution::Stream(Box::new(source)));
+        }
+        for candidate in candidates.streams {
+            if allowed
+                .as_ref()
+                .is_some_and(|ids| !ids.contains(&candidate.provider_profile_id))
+            {
+                continue;
+            }
+            if self.preview_profile_available(&candidate, skip).await? {
+                return self
+                    .selected_stream_preview(
+                        request.clone(),
+                        user,
+                        PreviewSelection {
+                            hash: &request.channel_id,
+                            override_profile,
+                            stream: id,
+                            provider: candidate.provider_profile_id,
+                            scoped: skip,
+                        },
+                    )
+                    .await;
+            }
+        }
+        Err(PlaybackError::new(
+            503,
+            "No compatible M3U profile available for preview",
+        ))
+    }
+    async fn default_preview_profile(
+        &self,
+        stream: i64,
+        hash: &str,
+    ) -> Result<Option<i64>, PlaybackError> {
+        let cache = self
+            .notification_cache
+            .as_ref()
+            .ok_or_else(|| PlaybackError::new(503, "Preview cache unavailable"))?;
+        let mut command = redis::cmd("EVAL");
+        command.arg(r#"local pid=redis.call('GET',KEYS[1]);if not pid or pid=='' then return {} end;local state=redis.call('HGET',KEYS[2],'state');if redis.call('EXISTS',KEYS[2])==0 or state=='active' or state=='waiting_for_clients' or state=='buffering' or state=='initializing' or state=='connecting' then return {pid} end;return {}"#).arg(2).arg(format!("stream_profile:{stream}:preview")).arg(format!("live:channel:{hash}:metadata"));
+        let values: Vec<i64> = cache.command(command).await.map_err(playback_error)?;
+        Ok(values.first().copied())
     }
 }
 #[cfg(test)]

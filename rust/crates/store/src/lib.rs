@@ -475,6 +475,7 @@ pub use core_settings_special_effects::{
 };
 
 pub mod tvg_programme;
+pub mod tvg_programme_stage;
 
 pub mod recording_existing_artwork;
 
@@ -564,3 +565,20 @@ pub mod plugin_trace_claims;
 pub use plugin_execution_ports::{NativePluginJobs, NativePluginProcesses};
 pub use plugin_python_registry::{PluginTaskCapability, PluginTaskPolicy};
 pub use plugin_runtime::{PluginRuntime, PluginTaskAdmission};
+
+pub use plugin_execution_host::{
+    Error as PluginHostError, Identity as PluginHostIdentity, Invocation as PluginInvocation,
+};
+
+mod plugin_enabled_control;
+pub mod xmltv_download;
+
+mod plugin_event_control;
+mod plugin_hook_context;
+mod plugin_hook_publications;
+pub use plugin_hook_context::{
+    NativeTaskTrail, NativeTaskTrailDelta, NativeTaskTrailEntry, NativeTaskTrailState,
+    PluginHookChildReceipt, PluginHookReport, PluginHookTaskContext, PluginTemplateOutcome,
+    PluginTemplateRender,
+};
+pub use plugin_runtime::PluginHookSession;

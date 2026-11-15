@@ -40,6 +40,9 @@ RUN /dispatcharrpy/bin/python /tmp/collect_static.py
 COPY rust/runtime/collect_regex_host.py /tmp/collect_regex_host.py
 RUN /dispatcharrpy/bin/python /tmp/collect_regex_host.py
 COPY --chmod=0555 rust/runtime/regex_bridge/ /media-runtime/opt/dispatcharr-python/bridge/
+COPY rust/runtime/collect_python_host.py /tmp/collect_python_host.py
+RUN /dispatcharrpy/bin/python /tmp/collect_python_host.py
+COPY --chmod=0555 rust/runtime/plugin_bridge/ /media-runtime/opt/dispatcharr-python/plugin-bridge/
 
 FROM debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
 LABEL org.opencontainers.image.title="Dispatcharr derivative Rust backend port" \
