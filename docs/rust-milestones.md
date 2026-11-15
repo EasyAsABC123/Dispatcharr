@@ -12,8 +12,9 @@ alone does not establish application parity or an application performance gain.
 The newest source candidate is [Candidate20](rust-milestone-batch20.md): all four
 SDK gates pass with 1,025 tests, zero failures and 761 ignored tests. It corrects
 the actual Main AutoChannels registry ceiling mismatch and drives owned regex
-drain before lane joins. Its Docker and combined application/resource acceptance
-remain required.
+drain before lane joins. Its Docker build and package checks pass; combined
+application acceptance is collecting failures and independent results. Resource
+acceptance remains required.
 
 The preceding source candidate is [Candidate19](rust-milestone-batch19.md): all four
 SDK gates pass, with 1,023 tests, zero failures and 758 ignored tests. It joins
@@ -40,8 +41,10 @@ committed Git blobs. It adds plugin actions/managed ZIP installation, remote
 playlist/full-result handling and VLC/grouped-credential input work. Its Docker
 build and application acceptance remain pending.
 
-The latest built runtime is Candidate19 at
-`4f9ba334bf5db99b982a4f7ff91774bb9da45094`; its Main registry gate remains open.
+The latest built runtime is Candidate20 at
+`1cdf0c15ff4d8265409337f6b0ce29a0debe29e3`; actual Main startup now succeeds.
+Auto-sync completion and live VLC acceptance remain open. The preceding built
+runtime is Candidate19 at `4f9ba334bf5db99b982a4f7ff91774bb9da45094`.
 The preceding built runtime is Candidate18 at
 `8cf704d2794ec3230b3c2856fd66dffe2d01720d`.
 The preceding runtime

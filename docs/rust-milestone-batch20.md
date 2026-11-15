@@ -33,3 +33,13 @@ Held-search diagnostics remain distinct from ordinary shutdown. Compact/manual
 numbering, SD guide work, wider input/output profiles, enabled plugins and other
 Source gaps are separate prepared or open work. No full milestone or application
 performance gain is accepted.
+
+The image now builds from `1cdf0c15ff4d8265409337f6b0ce29a0debe29e3` as
+`sha256:cb2e36ee6ee6e76a4da8f3832e0fa1ee47f069b2619f39ec8be0e617357ab41e`.
+All 1,293 SDK inputs match committed Git blobs; the 1,784-file image source
+archive also matches that revision. Package checks pass as UID 65532: original
+React/credit retention, crypto, PostgreSQL, all 648 Python/regex/bridge/notice
+hashes, real isolated framed regex request/shutdown, and paired VLC useful core.
+The [package evidence](../scripts/rust-integration/milestone-batch20/package/)
+retains their actual scope. Combined Main/Compose acceptance is running; its
+results and performance remain unaccepted until the batch completes.
