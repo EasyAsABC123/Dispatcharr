@@ -1,0 +1,403 @@
+{
+  "scope": "Separate new read-only retained-file acceptance: positive A/V decoding, either clean stderr or exact audio timestamp-equality-only null-mux warning matched to actual container audio equality. No original strict gate is changed.",
+  "rows": [
+    {
+      "backend": "Native",
+      "recording_id": 3,
+      "media_sha256": "b52563435fa76e75b36a41e13b166eee40f87d9f45e9dc0b54fb7247da90be21",
+      "media_bytes": 10654187,
+      "probe_exit": 0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "time_base": "1/1000",
+          "nb_read_frames": "1860"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "time_base": "1/1000",
+          "nb_read_frames": "3490"
+        }
+      ],
+      "actual_decode_exit": 0,
+      "stderr_lines": [
+        "[null @ 0x562ce9f73740] Application provided invalid, non monotonically increasing dts to muxer in stream 1: 384000 >= 384000"
+      ],
+      "strict_no_stderr_passed": false,
+      "actual_EOF_and_group_settled": true,
+      "positive_video_and_audio_frames": true,
+      "output_mux_timestamp_warning_only": true,
+      "warning_times_match_container_audio_equality": true,
+      "separate_codec_decode_qualification": true,
+      "media_unchanged_after": true,
+      "actual_audio_packet_equality_transitions": [
+        {
+          "index": 376,
+          "previous": {
+            "pts": 8000,
+            "pts_time": "8.000000",
+            "dts": 8000,
+            "dts_time": "8.000000",
+            "size": "343",
+            "pos": "1187566"
+          },
+          "current": {
+            "pts": 8000,
+            "pts_time": "8.000000",
+            "dts": 8000,
+            "dts_time": "8.000000",
+            "size": "437",
+            "pos": "1187916"
+          }
+        },
+        {
+          "index": 377,
+          "previous": {
+            "pts": 8000,
+            "pts_time": "8.000000",
+            "dts": 8000,
+            "dts_time": "8.000000",
+            "size": "437",
+            "pos": "1187916"
+          },
+          "current": {
+            "pts": 8000,
+            "pts_time": "8.000000",
+            "dts": 8000,
+            "dts_time": "8.000000",
+            "size": "372",
+            "pos": "1188360"
+          }
+        }
+      ],
+      "strict_container_audio_backwards_count": 0,
+      "actual_decode_seconds": 0.38865101400006097,
+      "probe_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-3-probe.json",
+        "sha256": "b1a4b33c978462a437b92f36c952c669c15451c8398b3c26e674acaa928fdc21"
+      },
+      "decode_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-3-decode.json",
+        "sha256": "5917edb2adb51046318b83343ef60c1142a8408b75b7f7b046412c46cb7034b2"
+      },
+      "decoder_stdout_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-3-decode.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "decoder_stderr_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-3-decode.stderr",
+        "sha256": "20650ec467faa4f6a1647eeee3fe3d494a8e0ff9398962cb103eec48b8e3ff05"
+      },
+      "previously_unreached_check_newly_executed": false
+    },
+    {
+      "backend": "Native",
+      "recording_id": 4,
+      "media_sha256": "b31eee64af4bed1e408a4eb93d576a4c84ffc79b19b91549d31114021eb1ba45",
+      "media_bytes": 17906476,
+      "probe_exit": 0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "time_base": "1/1000",
+          "nb_read_frames": "3145"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "time_base": "1/1000",
+          "nb_read_frames": "5898"
+        }
+      ],
+      "actual_decode_exit": 0,
+      "stderr_lines": [],
+      "strict_no_stderr_passed": true,
+      "actual_EOF_and_group_settled": true,
+      "positive_video_and_audio_frames": true,
+      "output_mux_timestamp_warning_only": true,
+      "warning_times_match_container_audio_equality": true,
+      "separate_codec_decode_qualification": true,
+      "media_unchanged_after": true,
+      "actual_audio_packet_equality_transitions": [],
+      "strict_container_audio_backwards_count": 0,
+      "actual_decode_seconds": 0.5719341969961533,
+      "probe_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-4-probe.json",
+        "sha256": "3390814ffe7ac02847312b3ada3bd2d54ebaca48d64ceb6d756157a962357416"
+      },
+      "decode_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-4-decode.json",
+        "sha256": "e7055cb94b9420c699ec0cbdaf71d7efe45e3557cad3dbd86ac4b17914a9bec2"
+      },
+      "decoder_stdout_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-4-decode.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "decoder_stderr_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-4-decode.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "previously_unreached_check_newly_executed": true
+    },
+    {
+      "backend": "Native",
+      "recording_id": 5,
+      "media_sha256": "ca932de4136fdcec2b9dac48fb62bd82c2395f2d0429646f2675f7138787e2d6",
+      "media_bytes": 10936230,
+      "probe_exit": 0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "time_base": "1/1000",
+          "nb_read_frames": "1917"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "time_base": "1/1000",
+          "nb_read_frames": "3594"
+        }
+      ],
+      "actual_decode_exit": 0,
+      "stderr_lines": [],
+      "strict_no_stderr_passed": true,
+      "actual_EOF_and_group_settled": true,
+      "positive_video_and_audio_frames": true,
+      "output_mux_timestamp_warning_only": true,
+      "warning_times_match_container_audio_equality": true,
+      "separate_codec_decode_qualification": true,
+      "media_unchanged_after": true,
+      "actual_audio_packet_equality_transitions": [],
+      "strict_container_audio_backwards_count": 0,
+      "actual_decode_seconds": 0.4064451320009539,
+      "probe_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-5-probe.json",
+        "sha256": "3fffe356c5773e096843c9c281e6055b350cec6cb81566eb51e2a492affa6ccd"
+      },
+      "decode_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-5-decode.json",
+        "sha256": "2b4f3215eab27534166482d130bf035e6c2e9aa0a6c628c049e227150921edca"
+      },
+      "decoder_stdout_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-5-decode.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "decoder_stderr_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Native-5-decode.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "previously_unreached_check_newly_executed": true
+    },
+    {
+      "backend": "Original",
+      "recording_id": 3,
+      "media_sha256": "e10a4b5bf0f7daa5a20cf4adafc65d4302e08ccc770de0d6a67cebff5aa29725",
+      "media_bytes": 9787658,
+      "probe_exit": 0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "time_base": "1/1000",
+          "nb_read_frames": "1707"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "time_base": "1/1000",
+          "nb_read_frames": "3202"
+        }
+      ],
+      "actual_decode_exit": 0,
+      "stderr_lines": [
+        "[null @ 0x5606537e7740] Application provided invalid, non monotonically increasing dts to muxer in stream 1: 384000 >= 384000"
+      ],
+      "strict_no_stderr_passed": false,
+      "actual_EOF_and_group_settled": true,
+      "positive_video_and_audio_frames": true,
+      "output_mux_timestamp_warning_only": true,
+      "warning_times_match_container_audio_equality": true,
+      "separate_codec_decode_qualification": true,
+      "media_unchanged_after": true,
+      "actual_audio_packet_equality_transitions": [
+        {
+          "index": 376,
+          "previous": {
+            "pts": 8000,
+            "pts_time": "8.000000",
+            "dts": 8000,
+            "dts_time": "8.000000",
+            "size": "343",
+            "pos": "1187566"
+          },
+          "current": {
+            "pts": 8000,
+            "pts_time": "8.000000",
+            "dts": 8000,
+            "dts_time": "8.000000",
+            "size": "437",
+            "pos": "1187916"
+          }
+        },
+        {
+          "index": 377,
+          "previous": {
+            "pts": 8000,
+            "pts_time": "8.000000",
+            "dts": 8000,
+            "dts_time": "8.000000",
+            "size": "437",
+            "pos": "1187916"
+          },
+          "current": {
+            "pts": 8000,
+            "pts_time": "8.000000",
+            "dts": 8000,
+            "dts_time": "8.000000",
+            "size": "372",
+            "pos": "1188360"
+          }
+        }
+      ],
+      "strict_container_audio_backwards_count": 0,
+      "actual_decode_seconds": 0.35329875699972035,
+      "probe_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-3-probe.json",
+        "sha256": "3861a482d77bd568011e11d4c0b943014c3a677278321360fe9ae7203a3b98ff"
+      },
+      "decode_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-3-decode.json",
+        "sha256": "b81b36bed19ef611b83e7fcf4ddab3dfb6564320e932d72f324efd655de1b273"
+      },
+      "decoder_stdout_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-3-decode.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "decoder_stderr_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-3-decode.stderr",
+        "sha256": "9c3724289080b0bc67491fe2227ee5918e34a9e56e808ed3ce1a0b3e4f7d15ab"
+      },
+      "previously_unreached_check_newly_executed": false
+    },
+    {
+      "backend": "Original",
+      "recording_id": 4,
+      "media_sha256": "62393b42fd15ff2ddfd7edd1a80df0545c387ec1e40265e94e4e3f3739c46b25",
+      "media_bytes": 17041372,
+      "probe_exit": 0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "time_base": "1/1000",
+          "nb_read_frames": "2992"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "time_base": "1/1000",
+          "nb_read_frames": "5610"
+        }
+      ],
+      "actual_decode_exit": 0,
+      "stderr_lines": [],
+      "strict_no_stderr_passed": true,
+      "actual_EOF_and_group_settled": true,
+      "positive_video_and_audio_frames": true,
+      "output_mux_timestamp_warning_only": true,
+      "warning_times_match_container_audio_equality": true,
+      "separate_codec_decode_qualification": true,
+      "media_unchanged_after": true,
+      "actual_audio_packet_equality_transitions": [],
+      "strict_container_audio_backwards_count": 0,
+      "actual_decode_seconds": 0.5704591550020268,
+      "probe_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-4-probe.json",
+        "sha256": "313c119b85c795c97952a06c2571c14a21045e4c081817c68a365d293e6aae59"
+      },
+      "decode_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-4-decode.json",
+        "sha256": "575e90c07d08869ba795e8a56156a0262680186f073456437324f34f2ac59f01"
+      },
+      "decoder_stdout_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-4-decode.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "decoder_stderr_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-4-decode.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "previously_unreached_check_newly_executed": true
+    },
+    {
+      "backend": "Original",
+      "recording_id": 5,
+      "media_sha256": "8dad19650b1da0e8805a1683de4b0f85da89f8b0e2d0f13966651568d31935a4",
+      "media_bytes": 9922432,
+      "probe_exit": 0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "time_base": "1/1000",
+          "nb_read_frames": "1738"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "time_base": "1/1000",
+          "nb_read_frames": "3258"
+        }
+      ],
+      "actual_decode_exit": 0,
+      "stderr_lines": [],
+      "strict_no_stderr_passed": true,
+      "actual_EOF_and_group_settled": true,
+      "positive_video_and_audio_frames": true,
+      "output_mux_timestamp_warning_only": true,
+      "warning_times_match_container_audio_equality": true,
+      "separate_codec_decode_qualification": true,
+      "media_unchanged_after": true,
+      "actual_audio_packet_equality_transitions": [],
+      "strict_container_audio_backwards_count": 0,
+      "actual_decode_seconds": 0.3816790460041375,
+      "probe_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-5-probe.json",
+        "sha256": "7ceea79d8255a83ba73c2246d03fb9cc28587a4b5b456ecb8f8edf025a5c5515"
+      },
+      "decode_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-5-decode.json",
+        "sha256": "e2869a05193273ac69cc2eab892a02abd4632930ee87d4e5f44ff2d4919bad01"
+      },
+      "decoder_stdout_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-5-decode.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "decoder_stderr_reference": {
+        "path": "artifacts/rust/m6-recovery-media-readonly-review-1/Original-5-decode.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "previously_unreached_check_newly_executed": true
+    }
+  ],
+  "all_six_new_codec_qualifications": true,
+  "old_strict_false_remains": {
+    "Native3": true,
+    "Original3": true
+  },
+  "exact_Source_and_Native_equality_time_seconds": 8,
+  "observed_equality_note": "Each3 file has three distinct adjacent audio packets with identical8s PTS/DTS; both null outputs warn384000>=384000 at48kHz. No strict backwards transitions were observed in those packet indexes.",
+  "bitstream_corruption_claimed": false,
+  "Source_Native_whole_contexts_retroactively_passed": false,
+  "performance_verified": false
+}

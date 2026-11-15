@@ -1,0 +1,106 @@
+{
+  "actual_active_playback_cells": [
+    {
+      "cell": "hls-playlist",
+      "status": "failed",
+      "actual_status": 403
+    },
+    {
+      "cell": "hls-query-token",
+      "status": "failed",
+      "actual_status": 403
+    },
+    {
+      "cell": "hls-ts",
+      "status": "failed",
+      "actual_status": 403
+    },
+    {
+      "cell": "hls-ts-range-ignored",
+      "status": "failed",
+      "actual_status": 403
+    },
+    {
+      "cell": "actual-HLS-segment-decode",
+      "status": "passed",
+      "actual_status": null
+    },
+    {
+      "cell": "hls-heartbeat",
+      "status": "failed",
+      "actual_status": null
+    },
+    {
+      "cell": "file-to-hls",
+      "status": "failed",
+      "actual_status": 403
+    },
+    {
+      "cell": "hls-missing",
+      "status": "failed",
+      "actual_status": 403
+    },
+    {
+      "cell": "hls-unsupported",
+      "status": "failed",
+      "actual_status": 403
+    },
+    {
+      "cell": "hls-symlink-escape",
+      "status": "passed",
+      "actual_status": 403
+    },
+    {
+      "cell": "hls-traversal",
+      "status": "passed",
+      "actual_status": 403
+    },
+    {
+      "cell": "no-playback-converter",
+      "status": "passed",
+      "actual_status": null
+    }
+  ],
+  "actual_idle_cells": [
+    {
+      "backend": "Native",
+      "status": "failed",
+      "actual_Main_readiness_status": 200,
+      "error_type": "TimeoutError",
+      "error_label": "actual-idle-viewer-media-owner:None",
+      "decoder_count": 0,
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch15-functional-2/results/Native/idle-viewing.json",
+        "sha256": "457233d2a5f9089f5c9a07d16506c9ab2821fa723fb1949d701ba26b72cf1ab8"
+      }
+    },
+    {
+      "backend": "Original",
+      "status": "failed",
+      "actual_Main_readiness_status": 401,
+      "error_type": "TimeoutError",
+      "error_label": "actual-idle-viewer-media-owner:None",
+      "decoder_count": 0,
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch15-functional-2/results/Original/idle-viewing.json",
+        "sha256": "c8ad6258fd705c05591aeaf7fa356950eaa09eb027ea5ca478d399555ec36586"
+      }
+    }
+  ],
+  "controls_failure": "Ordinary viewer HTTPError before selective-control body finished; no current controls pass",
+  "pinned_seed_STREAMS": "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1/128",
+  "new_owned_networks": [
+    "11.254.252.0/29",
+    "11.254.251.0/29"
+  ],
+  "diagnosis": "Owned public-shape ingress is excluded by the real pinned STREAMS allowlist. Consistent policy-denial fixture mismatch; this does not establish a playback runtime regression. Idle reader state was not saved on timeout in this frozen helper.",
+  "next_fixture_fix": {
+    "path": "artifacts/rust/m6-owned-network-viewer-fixture-fix-1/overlay-map.json",
+    "sha256": "98285c694832de03d269d62e9d8cce1262538936c81f8a1e300fda7abf26bbec"
+  },
+  "source_seed_reference": {
+    "path": "artifacts/rust/image54-package-plan-1/support/scripts/rust-playback-baseline/seed.py",
+    "sha256": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76"
+  },
+  "all_old_failure_statuses_preserved": true
+}

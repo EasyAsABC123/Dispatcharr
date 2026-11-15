@@ -1,0 +1,176 @@
+{
+  "candidate_image_id": "sha256:f2f6010a20c370a4098417b0cdd65fac2f1057cbed2e393047545de259596674",
+  "candidate_git_revision": "71055d14908c02588b205b564752a25f8cee9760",
+  "actual_controller_exit": 1,
+  "actual_seconds": 1248.7489797649978,
+  "process_group_settled": true,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "actual_case_statuses": {
+    "Native": [
+      {
+        "case": "core-produced",
+        "status": "passed",
+        "reason_type": ""
+      },
+      {
+        "case": "normal-backup",
+        "status": "passed",
+        "reason_type": ""
+      },
+      {
+        "case": "nonempty-restart",
+        "status": "failed",
+        "reason_type": "AssertionError"
+      },
+      {
+        "case": "authorization",
+        "status": "passed",
+        "reason_type": ""
+      },
+      {
+        "case": "artwork",
+        "status": "passed",
+        "reason_type": ""
+      },
+      {
+        "case": "grouped-m6",
+        "status": "passed",
+        "reason_type": ""
+      },
+      {
+        "case": "channel-maintenance",
+        "status": "failed",
+        "reason_type": "ValueError"
+      },
+      {
+        "case": "overlap",
+        "status": "failed",
+        "reason_type": "AssertionError"
+      },
+      {
+        "case": "controls",
+        "status": "failed",
+        "reason_type": "RuntimeError"
+      },
+      {
+        "case": "streams-denial",
+        "status": "passed",
+        "reason_type": ""
+      },
+      {
+        "case": "held-drain",
+        "status": "passed",
+        "reason_type": ""
+      },
+      {
+        "case": "backup-held-graceful",
+        "status": "passed",
+        "reason_type": ""
+      },
+      {
+        "case": "backup-delete-refusal",
+        "status": "passed",
+        "reason_type": ""
+      },
+      {
+        "case": "backup-held-deadline",
+        "status": "passed",
+        "reason_type": ""
+      },
+      {
+        "case": "idle-viewing",
+        "status": "failed",
+        "reason_type": "AssertionError"
+      },
+      {
+        "case": "recording-provider-artwork",
+        "status": "failed",
+        "reason_type": "AssertionError"
+      },
+      {
+        "case": "plugin-eta-fifo",
+        "status": "failed",
+        "reason_type": "TypeError"
+      },
+      {
+        "case": "plugin-eta-warm",
+        "status": "failed",
+        "reason_type": "TimeoutError"
+      },
+      {
+        "case": "plugin-eta-crash",
+        "status": "failed",
+        "reason_type": "TimeoutError"
+      }
+    ],
+    "Original": [
+      {
+        "case": "source-slow-reader",
+        "status": "retained_source_authority",
+        "reason_type": ""
+      },
+      {
+        "case": "nonempty-restart",
+        "status": "retained_source_authority",
+        "reason_type": ""
+      },
+      {
+        "case": "normal-backup",
+        "status": "retained_source_authority",
+        "reason_type": ""
+      },
+      {
+        "case": "backup-held-graceful",
+        "status": "retained_source_authority",
+        "reason_type": ""
+      },
+      {
+        "case": "backup-delete-refusal",
+        "status": "retained_source_authority",
+        "reason_type": ""
+      },
+      {
+        "case": "idle-viewing",
+        "status": "failed",
+        "reason_type": "AssertionError"
+      },
+      {
+        "case": "recording-provider-artwork",
+        "status": "failed",
+        "reason_type": "AssertionError"
+      },
+      {
+        "case": "plugin-eta-fifo",
+        "status": "failed",
+        "reason_type": "TypeError"
+      },
+      {
+        "case": "plugin-eta-warm",
+        "status": "failed",
+        "reason_type": "AssertionError"
+      },
+      {
+        "case": "plugin-eta-crash",
+        "status": "failed",
+        "reason_type": "AssertionError"
+      }
+    ]
+  },
+  "full_milestone_passed": false,
+  "scoped_workflow_passed": false,
+  "performance_verified": false,
+  "Driver8": {
+    "path": "artifacts/rust/m6-recording-following-driver-8/closure.json",
+    "sha256": "42f695727e84d2a8c546a43252e0db307c0d228aaac3488dfe7fff5037a37d72"
+  },
+  "build": {
+    "path": "artifacts/rust/milestone-batch15-build-1/build.json",
+    "sha256": "28b3bb201d04c20128de2722099d6d3dd7d32ac724453918794592d048a23056"
+  },
+  "physical_proof": {
+    "path": "artifacts/rust/milestone-batch15-build-1/Root-build-review.json",
+    "sha256": "6d75d98b448a0e61752138cb7c3f45ac28a085b9e9ae7b2d75bffb700396989c"
+  },
+  "scope": "Full combined actual app batch. Independent passes retained; failed fixture/runtime/media domains remain explicit. Original authors retain all application/dependency credit; React unchanged."
+}

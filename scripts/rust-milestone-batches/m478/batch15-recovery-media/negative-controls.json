@@ -1,0 +1,26 @@
+{
+  "actual_interior_32768_byte_removal_rejected": true,
+  "control_sha256": "2ea749c00a6d4f348783cb8703eb268200ec3c8156a4af4dde19896e9e2eea3c",
+  "source_sha256": "b52563435fa76e75b36a41e13b166eee40f87d9f45e9dc0b54fb7247da90be21",
+  "removed_offset": 5327093,
+  "removed_bytes": 32768,
+  "strict_backwards_rejected": true,
+  "codec_error_rejected": true,
+  "nonzero_exit_rejected": true,
+  "wrong_stream_rejected": true,
+  "actual_corruption_decoder_exit": 0,
+  "actual_corruption_stderr": "[null @ 0x55e860d34740] Application provided invalid, non monotonically increasing dts to muxer in stream 1: 384000 >= 384000\n[in#0/matroska,webm @ 0x55e860cd4cc0] 0x00 at pos 5327095 (0x5148f7) invalid as first byte of an EBML number\n",
+  "actual_corruption_receipt": {
+    "path": "artifacts/rust/m6-recovery-media-readonly-review-1/interior-corruption-decode.json",
+    "sha256": "b81a49928a93b7fcaf18cd2627f5679ff27ab532dd18d235393fdd2852c0fc6c"
+  },
+  "actual_corruption_stdout": {
+    "path": "artifacts/rust/m6-recovery-media-readonly-review-1/interior-corruption-decode.stdout",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "actual_corruption_stderr_reference": {
+    "path": "artifacts/rust/m6-recovery-media-readonly-review-1/interior-corruption-decode.stderr",
+    "sha256": "c0ba75e1c8d887a7934eb1553adc813dbbdf5e26647d69e99d86d7349616a53f"
+  },
+  "interpretation": "Actual interior32KiB deletion exited0 but emitted additional Matroska/demux errors, correctly rejected by the exact warning-only acceptor. Exit0 alone never qualifies it."
+}

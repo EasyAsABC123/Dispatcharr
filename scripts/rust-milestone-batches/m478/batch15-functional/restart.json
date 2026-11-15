@@ -1,0 +1,54 @@
+{
+  "independent_predicates": {
+    "old_frame_actual_cas": true,
+    "named_and_UUID_keys_preserved": true,
+    "due_actual_media": true,
+    "expired_actual_remux": true,
+    "expired_missing_playlist_interrupted": true,
+    "future_periodic_repaired": true,
+    "queued_deleted_row_consumed": true,
+    "revoked_deleted_row_consumed": true,
+    "original_recording_window_preserved": true,
+    "all_owned_recording_children_retired": true
+  },
+  "all10_state_predicates_passed": true,
+  "preclaim_before_control": {
+    "raw_queued": true,
+    "backend_absent": true
+  },
+  "preclaim_after_control": {
+    "raw_queued": true,
+    "six_field_REVOKED_children_null": true
+  },
+  "after_consumer": {
+    "raw_absent_and_REVOKED_children_array": true
+  },
+  "decoder3": {
+    "actual_exit": 0,
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "process_group_settled": true,
+    "video_frames": 1860,
+    "audio_frames": 3490,
+    "actual_file_bytes": 10654187,
+    "file_sha256": "b52563435fa76e75b36a41e13b166eee40f87d9f45e9dc0b54fb7247da90be21",
+    "internal_damage_detected": true,
+    "decoder_stderr_sha256": "22c0bb39e87f878e90d877b13d5783d4448458e3995dfffaf28fdd0f56b9ad22"
+  },
+  "actual_stderr": "[null @ 0x55e2a246b680] Application provided invalid, non monotonically increasing dts to muxer in stream 1: 384000 >= 384000",
+  "warning_scope": "Same null-output equal audio DTS384000 warning as immutable Source; not proven bitstream corruption. Original strict any-stderr predicate remains failed.",
+  "later_decoder4_5": "not_run after first decoder assertion; prepared separate pinned-tool review is not executed",
+  "whole_restart_passed": false,
+  "raw_state_reference": {
+    "path": "artifacts/rust/normal-graph-batch15-functional-2/results/Native/restart-recovery.json",
+    "sha256": "a5371dde14126e348acd7ba65c0c50063011a776236328fd7bf27c6b3f948df1"
+  },
+  "raw_gate_reference": {
+    "path": "artifacts/rust/normal-graph-batch15-functional-2/fixtures/Native-850ca902/restart-Native-preclaim-control.json",
+    "sha256": "886b8de4e1ba873e011ecd99a8cc7c0ad4de495b7a3849dbaa2fc1397719f83f"
+  },
+  "raw_decoder_reference": {
+    "path": "artifacts/rust/normal-graph-batch15-functional-2/results/Native/nonempty-restart-decoder-3.json",
+    "sha256": "40a94d09e5df002d9aea2dbfdfa1e71f9607067d86e19e97353c69f65bffc14f"
+  }
+}

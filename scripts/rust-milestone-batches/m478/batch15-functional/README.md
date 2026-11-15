@@ -1,0 +1,7 @@
+# Candidate15 combined functional evidence
+
+Native Core, backup12, authorization, artwork, grouped families, STREAMS denial, held-write drain and all three physical backup contexts passed. All ten restart state predicates and immediate preclaim six-field REVOKED/then-consumer children-array checks passed. Recovery decoder3 exited0 with positive A/V frames but produced the same null-output audio DTS equality warning observed in Original; the declared strict no-stderr gate stays false, and later decoder4/5 were not reached.
+
+Viewing/playback received actual403 or no owner media. The new public-shape owned subnet is excluded by the pinned fixture STREAMS allowlist; no runtime bypass or retrospective pass is applied. Channel's old two-root callback guard, FIFO's unsupported context manager, and flat Source manifest expectation remain literal fixture failures. Native proxy/NO_PROXY handling and Source provider TLS transport retain their separate grounded scopes and pending corrections.
+
+Ordinary contexts captured exactly three natural startup tasks, actual observer UID/GID65532 and terminal journal settlement. Both project cleanups settled26 exact container/host generations with empty inventories, CLI groups settled and no errors. Full migration, whole-workflow and performance acceptance remain false. Only allowlisted summaries/references are included; no tokens, environments, SQL dumps, archive contents or private error logs are copied. Original authors retain full application/dependency credit; React unchanged.

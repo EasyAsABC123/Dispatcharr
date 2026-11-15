@@ -1,0 +1,238 @@
+{
+  "actual_literal_results": [
+    {
+      "backend": "Native",
+      "case": "recording-provider-artwork",
+      "passed": null,
+      "status": "failed",
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch15-functional-2/results/Native/recording-provider-artwork.json",
+        "sha256": "d291285f70c1e3a53965b4ce933e07e805635feb5978ac39a5f3fc20e1b73575"
+      },
+      "cells": [
+        {
+          "name": "epg",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "vod",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "tmdb-find",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "tmdb-search",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "omdb",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "tvmaze",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "itunes",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "direct",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "direct-cache",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "existing-logo",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "channel-logo",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "caught-errors",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "logo-reuse",
+          "status": "passed",
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "backend": "Original",
+      "case": "recording-provider-artwork",
+      "passed": null,
+      "status": "failed",
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch15-functional-2/results/Original/recording-provider-artwork.json",
+        "sha256": "f493ff4317a82795308c396f197e1d429462637e97fe9b4509faa4367e39a55c"
+      },
+      "cells": [
+        {
+          "name": "epg",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "vod",
+          "status": "passed",
+          "error_type": null
+        },
+        {
+          "name": "tmdb-find",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "tmdb-search",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "omdb",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "tvmaze",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "itunes",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "direct",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "direct-cache",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "existing-logo",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "channel-logo",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "caught-errors",
+          "status": "failed",
+          "error_type": "AssertionError"
+        },
+        {
+          "name": "logo-reuse",
+          "status": "failed",
+          "error_type": "AssertionError"
+        }
+      ]
+    },
+    {
+      "backend": "Native",
+      "case": "plugin-eta-fifo",
+      "passed": false,
+      "status": null,
+      "actual_origin_before_eta": 0,
+      "actual_origin_after_due": null,
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch15-functional-2/fixtures/Native-850ca902/plugin-eta-fifo-observations.json",
+        "sha256": "0bd0e7298e543c169d1b2460dae34cfa94134401904d17c5faed06261e6f5aca"
+      }
+    },
+    {
+      "backend": "Native",
+      "case": "plugin-eta-warm",
+      "passed": false,
+      "status": null,
+      "actual_origin_before_eta": 0,
+      "actual_origin_after_due": null,
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch15-functional-2/fixtures/Native-850ca902/plugin-eta-warm-observations.json",
+        "sha256": "b1f8b9ae64c8abec6a4e4550ea271fd33c750e551fb8db264f7eff4ae3bfb045"
+      }
+    },
+    {
+      "backend": "Native",
+      "case": "plugin-eta-crash",
+      "passed": false,
+      "status": null,
+      "actual_origin_before_eta": 0,
+      "actual_origin_after_due": null,
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch15-functional-2/fixtures/Native-850ca902/plugin-eta-crash-observations.json",
+        "sha256": "29fe0d660889ffe29cc2355975d41bce07d02b0289bee44c48e83c008277b016"
+      }
+    },
+    {
+      "backend": "Original",
+      "case": "plugin-eta-fifo",
+      "passed": false,
+      "status": null,
+      "actual_origin_before_eta": 0,
+      "actual_origin_after_due": null,
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch15-functional-2/fixtures/Original-e6898d99/plugin-eta-fifo-observations.json",
+        "sha256": "cc5deac30258907f2edc6366cbf13470e6cef22d424679bc9915e5bdb85d89be"
+      }
+    },
+    {
+      "backend": "Original",
+      "case": "plugin-eta-warm",
+      "passed": false,
+      "status": null,
+      "actual_origin_before_eta": 0,
+      "actual_origin_after_due": null,
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch15-functional-2/fixtures/Original-e6898d99/plugin-eta-warm-observations.json",
+        "sha256": "5294196cdbf79d18b94fa9e6ac960d15956102000223d7c1e42f8b21cc450715"
+      }
+    },
+    {
+      "backend": "Original",
+      "case": "plugin-eta-crash",
+      "passed": false,
+      "status": null,
+      "actual_origin_before_eta": 2,
+      "actual_origin_after_due": null,
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch15-functional-2/fixtures/Original-e6898d99/plugin-eta-crash-observations.json",
+        "sha256": "03f514c16af540523800df375ebf13fc3b9052b6357d9ae5633e20f6cb6f05a9"
+      }
+    }
+  ],
+  "grounded_separate_findings": [
+    "Channel callback failed before business due legacy2 startup guard; actual startup3 succeeded, next typed guard correction18fd1482 prepared.",
+    "FIFO Observation lacks context-manager protocol: no actual later HTTP call; next explicit request/complete/cancel correction1a622e1b prepared.",
+    "Source warm/crash fetched owned manifestHTTP200 and retained wrapped cached_manifest; old flat expected shape failed, original false kept.",
+    "Native plugin fetch currently rejects any proxy environment despite exact owned NO_PROXY; Ops owns runtime compatibility fix.",
+    "Provider existing-cache expectation/Source TLS trust were observer/transport boundaries; Jobs owns strict-trust and conditional direct-only acceptance followups. No blanket provider runtime conclusion."
+  ],
+  "no_failed_cell_retroactively_passed": true
+}

@@ -9,6 +9,8 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [Candidate15 grouped run](rust-batch15-functional-observations.md) passes10 of19 Native contexts and all ten restart state predicates, with26-container cleanup verified. A separate pinned review qualifies all six retained Source/Native media files without rewriting original strict failures. Fixture failures and a real proxy/NO_PROXY transport gap remain; no full milestone or new performance gain is accepted.
+
 The newest SDK runtime is `71055d14908c02588b205b564752a25f8cee9760`: [964 workspace tests and the real-Redis durable ETA test pass](rust-milestone-batch15.md). It adds natural plugin startup/periodic scheduling; the next grouped runtime cohort combines these changes with provider/restart/idle-viewing acceptance. Full milestones and new performance remain open.
 
 The preceding SDK runtime is `f2602aa54e0a50eead6e9c9f0bc7f7c0b3658cad`: [960 workspace tests plus three real-Redis ownership checks pass](rust-milestone-batch14.md). Provider runtime acceptance and new performance remain pending; all full milestones remain open.
