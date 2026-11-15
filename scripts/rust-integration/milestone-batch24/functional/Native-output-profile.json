@@ -1,0 +1,215 @@
+{
+  "status": "passed",
+  "scope": "one actual raw upstream, one output-profile process shared by TS/HLS/fMP4 clients; no active DVR or performance claim",
+  "cells": [
+    {
+      "name": "raw-plus-two-profile-TS-one-input",
+      "status": "passed",
+      "observation": {
+        "actual_output_process_pids": [
+          "3471810"
+        ],
+        "actual_origin_connections": 2,
+        "actual_origin_connection_delta": 1,
+        "actual_origin_active": 1,
+        "actual_clients": 3,
+        "actual_profile_state": "active",
+        "actual_profile_index": "4"
+      }
+    },
+    {
+      "name": "same-profile-HLS-output-and-decoder",
+      "status": "passed",
+      "observation": {
+        "playlist_sha256": "e0c491f235e8e2344d08c82ce3643e2079234c7757218f8b5c85097487671421",
+        "actual_segments": 2,
+        "actual_bytes": 617580,
+        "decoded": {
+          "viewer": "hls",
+          "actual_exit": 0,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "stderr_bytes": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "video_frames": 74,
+          "video_and_audio": true,
+          "file_bytes": 617580,
+          "file_sha256": "3e207c62abebbf6f61eac35170ad8bd80f4de854a8075a0f24d5fb44157b94e9",
+          "scope": "3-second positive A/V prefix; whole-file tail and full M3 remain distinct"
+        },
+        "profile_processes": 1
+      }
+    },
+    {
+      "name": "same-profile-fMP4-output-and-decoder",
+      "status": "passed",
+      "observation": {
+        "decoded": {
+          "viewer": "fmp4",
+          "actual_exit": 0,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "stderr_bytes": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "video_frames": 74,
+          "video_and_audio": true,
+          "file_bytes": 877632,
+          "file_sha256": "bd575c6b9d6302a44f52ea3fdee62a5bf4ef6a60de0e69818782629f3ceb6f42",
+          "scope": "3-second positive A/V prefix; whole-file tail and full M3 remain distinct"
+        },
+        "ownership": {
+          "actual_process_pids": [
+            "3471810"
+          ],
+          "actual_origin_connections": 2,
+          "actual_origin_connection_delta": 1
+        }
+      }
+    },
+    {
+      "name": "profile-one-decoder",
+      "status": "passed",
+      "observation": {
+        "viewer": "profile-one",
+        "actual_exit": 0,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true,
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "video_frames": 74,
+        "video_and_audio": true,
+        "file_bytes": 1535208,
+        "file_sha256": "65774264c1b0c9155f7ae2cf741fa2330ac29867528b311103a7f77ff4c75fd8",
+        "scope": "3-second positive A/V prefix; whole-file tail and full M3 remain distinct"
+      }
+    },
+    {
+      "name": "profile-two-decoder",
+      "status": "passed",
+      "observation": {
+        "viewer": "profile-two",
+        "actual_exit": 0,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true,
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "video_frames": 74,
+        "video_and_audio": true,
+        "file_bytes": 1535208,
+        "file_sha256": "65774264c1b0c9155f7ae2cf741fa2330ac29867528b311103a7f77ff4c75fd8",
+        "scope": "3-second positive A/V prefix; whole-file tail and full M3 remain distinct"
+      }
+    },
+    {
+      "name": "profile-retirement-preserves-ordinary-raw-viewer",
+      "status": "passed",
+      "observation": {
+        "Source_or_Native_retired_observed": true,
+        "raw_viewer_continues": true,
+        "raw_nonnull_bytes_before": 1976820,
+        "raw_nonnull_bytes_after": 2296232,
+        "actual_origin_connections": 2,
+        "actual_origin_connection_delta": 1,
+        "timing_parity_claimed": false
+      }
+    }
+  ],
+  "full_M3_passed": false,
+  "performance_verified": false,
+  "actual_origin_baseline": {
+    "active": 0,
+    "maximum_active": 1,
+    "connections": 1,
+    "bytes": 15222172,
+    "disconnections": 1,
+    "eof_connections": 0,
+    "fault_requests": 0,
+    "fixture_sha256": "fe0ba32eb0a98a65d765b67916d7c0f199c6519447756cc98105518787aed226",
+    "fixture_bytes": 450002064,
+    "bytes_per_second": 250000,
+    "duration_seconds": 1800,
+    "codec": "h264",
+    "video": "h264 320x180 25fps",
+    "audio": "aac 48kHz",
+    "paths": {
+      "/live/0.ts": {
+        "active": 0,
+        "connections": 1,
+        "bytes": 15222172
+      }
+    }
+  },
+  "readers": [
+    {
+      "viewer": "raw",
+      "bytes": 3582152,
+      "media_bytes": 2296232,
+      "packets": 19054,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "transport": "mpegts",
+      "TS_packet_metrics_available": true,
+      "http_status": 200,
+      "content_type": "video/mp2t",
+      "first_byte_seconds": 4.105749616996036
+    },
+    {
+      "viewer": "profile-one",
+      "bytes": 1535208,
+      "media_bytes": 1535208,
+      "packets": 8166,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "transport": "mpegts",
+      "TS_packet_metrics_available": true,
+      "http_status": 200,
+      "content_type": "video/mp2t",
+      "first_byte_seconds": 2.2191155170003185
+    },
+    {
+      "viewer": "profile-two",
+      "bytes": 1535208,
+      "media_bytes": 1535208,
+      "packets": 8166,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "transport": "mpegts",
+      "TS_packet_metrics_available": true,
+      "http_status": 200,
+      "content_type": "video/mp2t",
+      "first_byte_seconds": 0.007905314996605739
+    },
+    {
+      "viewer": "fmp4",
+      "bytes": 877632,
+      "media_bytes": 0,
+      "packets": 0,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "transport": "fmp4",
+      "TS_packet_metrics_available": false,
+      "http_status": 200,
+      "content_type": "video/mp4",
+      "first_byte_seconds": 0.05570419300056528
+    }
+  ],
+  "actual_all_reader_HTTP_worker_settlement_errors_and_TS_sync": true,
+  "actual_Main_stop": {
+    "actual_exit": 0,
+    "oom_killed": false,
+    "expected_exit": 0
+  },
+  "actual_origin_and_profile_retired": true
+}

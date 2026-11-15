@@ -1,0 +1,417 @@
+{
+  "status": "failed",
+  "cases": [
+    {
+      "name": "actual-full-grammar-search-include-exclude-branchreset-rename",
+      "status": "passed",
+      "actual": {
+        "parent": "e5bb0643-1c31-42b0-b348-a0ccb03b6d5c",
+        "backend": {
+          "status": "SUCCESS",
+          "result": "Dispatched jobs complete.",
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-15T17:43:31.851885+00:00",
+          "task_id": "e5bb0643-1c31-42b0-b348-a0ccb03b6d5c"
+        },
+        "before": {
+          "account_status": "idle",
+          "last_message": null,
+          "rows": [],
+          "account_streams": [],
+          "stream_links": 0,
+          "memberships": 0
+        },
+        "after": {
+          "account_status": "success",
+          "last_message": "Processing completed in 0.2 seconds. Streams: 5 created, 0 updated, 0 marked stale, 0 removed. Total processed: 5. Auto-sync: 2 channel(s) created.",
+          "rows": [
+            {
+              "id": 6015,
+              "uuid": "b1a4c249-9428-4701-9724-c1cf2a7014d6",
+              "name": "Selected 00001",
+              "channel_number": 30000.0
+            },
+            {
+              "id": 6016,
+              "uuid": "c7c75885-3c0a-4f11-8de7-0b0bcba28828",
+              "name": "Selected Stra\u00dfe",
+              "channel_number": 30002.0
+            }
+          ],
+          "account_streams": [
+            {
+              "id": 6025,
+              "m3u_account_id": 6,
+              "stream_hash": "91c9f249bd8b83af60ab1e810e8eb6cb42d7696cbf7480b9f9dcdd1a9296a762",
+              "name": "Auto 00001",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6026,
+              "m3u_account_id": 6,
+              "stream_hash": "348f5514829c0d5fe1750e0530746cf08d3700105e2c2ecfee0558c0dc2debeb",
+              "name": "Auto 00002",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6027,
+              "m3u_account_id": 6,
+              "stream_hash": "0df04126e2d0b18e51b7c5d50b0967159cc8058481418e0f8eca82abf9fe6203",
+              "name": "foo",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6028,
+              "m3u_account_id": 6,
+              "stream_hash": "46d62d4d68c2c959dbea4192f8951b859097c26ad643102f066018a388b2fe55",
+              "name": "Stra\u00dfe",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6029,
+              "m3u_account_id": 6,
+              "stream_hash": "33940bb3e215def5c726cafd6b8177b5d21be8d6171d092c44e5f9191d24f041",
+              "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+              "channel_group_id": 4
+            }
+          ],
+          "stream_links": 2,
+          "memberships": 2
+        }
+      }
+    },
+    {
+      "name": "actual-invalid-filter-skipped-preserves-source-list-distinction",
+      "status": "passed",
+      "actual": {
+        "parent": "db263d58-68cb-4bfd-899c-b17730bbac73",
+        "backend": {
+          "status": "SUCCESS",
+          "result": "Dispatched jobs complete.",
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-15T17:43:34.967365+00:00",
+          "task_id": "db263d58-68cb-4bfd-899c-b17730bbac73"
+        },
+        "before": {
+          "account_status": "success",
+          "last_message": "Processing completed in 0.2 seconds. Streams: 5 created, 0 updated, 0 marked stale, 0 removed. Total processed: 5. Auto-sync: 2 channel(s) created.",
+          "rows": [
+            {
+              "id": 6015,
+              "uuid": "b1a4c249-9428-4701-9724-c1cf2a7014d6",
+              "name": "Selected 00001",
+              "channel_number": 30000.0
+            },
+            {
+              "id": 6016,
+              "uuid": "c7c75885-3c0a-4f11-8de7-0b0bcba28828",
+              "name": "Selected Stra\u00dfe",
+              "channel_number": 30002.0
+            }
+          ],
+          "account_streams": [
+            {
+              "id": 6025,
+              "m3u_account_id": 6,
+              "stream_hash": "91c9f249bd8b83af60ab1e810e8eb6cb42d7696cbf7480b9f9dcdd1a9296a762",
+              "name": "Auto 00001",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6026,
+              "m3u_account_id": 6,
+              "stream_hash": "348f5514829c0d5fe1750e0530746cf08d3700105e2c2ecfee0558c0dc2debeb",
+              "name": "Auto 00002",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6027,
+              "m3u_account_id": 6,
+              "stream_hash": "0df04126e2d0b18e51b7c5d50b0967159cc8058481418e0f8eca82abf9fe6203",
+              "name": "foo",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6028,
+              "m3u_account_id": 6,
+              "stream_hash": "46d62d4d68c2c959dbea4192f8951b859097c26ad643102f066018a388b2fe55",
+              "name": "Stra\u00dfe",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6029,
+              "m3u_account_id": 6,
+              "stream_hash": "33940bb3e215def5c726cafd6b8177b5d21be8d6171d092c44e5f9191d24f041",
+              "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+              "channel_group_id": 4
+            }
+          ],
+          "stream_links": 2,
+          "memberships": 2
+        },
+        "after": {
+          "account_status": "success",
+          "last_message": "Processing completed in 0.2 seconds. Streams: 0 created, 0 updated, 0 marked stale, 0 removed. Total processed: 5. Auto-sync: 3 channel(s) created, 2 updated.",
+          "rows": [
+            {
+              "id": 6015,
+              "uuid": "b1a4c249-9428-4701-9724-c1cf2a7014d6",
+              "name": "Auto 00001",
+              "channel_number": 30000.0
+            },
+            {
+              "id": 6016,
+              "uuid": "c7c75885-3c0a-4f11-8de7-0b0bcba28828",
+              "name": "Stra\u00dfe",
+              "channel_number": 30002.0
+            },
+            {
+              "id": 6017,
+              "uuid": "625096a3-770f-4926-9e55-b4cb81821812",
+              "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+              "channel_number": 30003.0
+            },
+            {
+              "id": 6018,
+              "uuid": "5e711686-ee3b-426c-b9c9-8ae131a35758",
+              "name": "Auto 00002",
+              "channel_number": 30004.0
+            },
+            {
+              "id": 6019,
+              "uuid": "aa3651b0-30f5-47b8-8585-f95a5f68c40c",
+              "name": "foo",
+              "channel_number": 30005.0
+            }
+          ],
+          "account_streams": [
+            {
+              "id": 6025,
+              "m3u_account_id": 6,
+              "stream_hash": "91c9f249bd8b83af60ab1e810e8eb6cb42d7696cbf7480b9f9dcdd1a9296a762",
+              "name": "Auto 00001",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6026,
+              "m3u_account_id": 6,
+              "stream_hash": "348f5514829c0d5fe1750e0530746cf08d3700105e2c2ecfee0558c0dc2debeb",
+              "name": "Auto 00002",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6027,
+              "m3u_account_id": 6,
+              "stream_hash": "0df04126e2d0b18e51b7c5d50b0967159cc8058481418e0f8eca82abf9fe6203",
+              "name": "foo",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6028,
+              "m3u_account_id": 6,
+              "stream_hash": "46d62d4d68c2c959dbea4192f8951b859097c26ad643102f066018a388b2fe55",
+              "name": "Stra\u00dfe",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6029,
+              "m3u_account_id": 6,
+              "stream_hash": "33940bb3e215def5c726cafd6b8177b5d21be8d6171d092c44e5f9191d24f041",
+              "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+              "channel_group_id": 4
+            }
+          ],
+          "stream_links": 5,
+          "memberships": 5
+        }
+      }
+    },
+    {
+      "name": "actual-nonstring-filter-error-boundary",
+      "status": "passed",
+      "actual": {
+        "parent": "419885e8-92ed-4981-8ef5-2147cf857ac9",
+        "backend": {
+          "status": "SUCCESS",
+          "result": "Dispatched jobs complete.",
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-15T17:43:38.055369+00:00",
+          "task_id": "419885e8-92ed-4981-8ef5-2147cf857ac9"
+        },
+        "before": {
+          "account_status": "success",
+          "last_message": "Processing completed in 0.2 seconds. Streams: 0 created, 0 updated, 0 marked stale, 0 removed. Total processed: 5. Auto-sync: 3 channel(s) created, 2 updated.",
+          "rows": [
+            {
+              "id": 6015,
+              "uuid": "b1a4c249-9428-4701-9724-c1cf2a7014d6",
+              "name": "Auto 00001",
+              "channel_number": 30000.0
+            },
+            {
+              "id": 6016,
+              "uuid": "c7c75885-3c0a-4f11-8de7-0b0bcba28828",
+              "name": "Stra\u00dfe",
+              "channel_number": 30002.0
+            },
+            {
+              "id": 6017,
+              "uuid": "625096a3-770f-4926-9e55-b4cb81821812",
+              "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+              "channel_number": 30003.0
+            },
+            {
+              "id": 6018,
+              "uuid": "5e711686-ee3b-426c-b9c9-8ae131a35758",
+              "name": "Auto 00002",
+              "channel_number": 30004.0
+            },
+            {
+              "id": 6019,
+              "uuid": "aa3651b0-30f5-47b8-8585-f95a5f68c40c",
+              "name": "foo",
+              "channel_number": 30005.0
+            }
+          ],
+          "account_streams": [
+            {
+              "id": 6025,
+              "m3u_account_id": 6,
+              "stream_hash": "91c9f249bd8b83af60ab1e810e8eb6cb42d7696cbf7480b9f9dcdd1a9296a762",
+              "name": "Auto 00001",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6026,
+              "m3u_account_id": 6,
+              "stream_hash": "348f5514829c0d5fe1750e0530746cf08d3700105e2c2ecfee0558c0dc2debeb",
+              "name": "Auto 00002",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6027,
+              "m3u_account_id": 6,
+              "stream_hash": "0df04126e2d0b18e51b7c5d50b0967159cc8058481418e0f8eca82abf9fe6203",
+              "name": "foo",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6028,
+              "m3u_account_id": 6,
+              "stream_hash": "46d62d4d68c2c959dbea4192f8951b859097c26ad643102f066018a388b2fe55",
+              "name": "Stra\u00dfe",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6029,
+              "m3u_account_id": 6,
+              "stream_hash": "33940bb3e215def5c726cafd6b8177b5d21be8d6171d092c44e5f9191d24f041",
+              "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+              "channel_group_id": 4
+            }
+          ],
+          "stream_links": 5,
+          "memberships": 5
+        },
+        "after": {
+          "account_status": "success",
+          "last_message": "Processing completed in 0.1 seconds. Streams: 0 created, 0 updated, 0 marked stale, 0 removed. Total processed: 5. Auto-sync error: first argument must be a string or compiled pattern.",
+          "rows": [
+            {
+              "id": 6015,
+              "uuid": "b1a4c249-9428-4701-9724-c1cf2a7014d6",
+              "name": "Auto 00001",
+              "channel_number": 30000.0
+            },
+            {
+              "id": 6016,
+              "uuid": "c7c75885-3c0a-4f11-8de7-0b0bcba28828",
+              "name": "Stra\u00dfe",
+              "channel_number": 30002.0
+            },
+            {
+              "id": 6017,
+              "uuid": "625096a3-770f-4926-9e55-b4cb81821812",
+              "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+              "channel_number": 30003.0
+            },
+            {
+              "id": 6018,
+              "uuid": "5e711686-ee3b-426c-b9c9-8ae131a35758",
+              "name": "Auto 00002",
+              "channel_number": 30004.0
+            },
+            {
+              "id": 6019,
+              "uuid": "aa3651b0-30f5-47b8-8585-f95a5f68c40c",
+              "name": "foo",
+              "channel_number": 30005.0
+            }
+          ],
+          "account_streams": [
+            {
+              "id": 6025,
+              "m3u_account_id": 6,
+              "stream_hash": "91c9f249bd8b83af60ab1e810e8eb6cb42d7696cbf7480b9f9dcdd1a9296a762",
+              "name": "Auto 00001",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6026,
+              "m3u_account_id": 6,
+              "stream_hash": "348f5514829c0d5fe1750e0530746cf08d3700105e2c2ecfee0558c0dc2debeb",
+              "name": "Auto 00002",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6027,
+              "m3u_account_id": 6,
+              "stream_hash": "0df04126e2d0b18e51b7c5d50b0967159cc8058481418e0f8eca82abf9fe6203",
+              "name": "foo",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6028,
+              "m3u_account_id": 6,
+              "stream_hash": "46d62d4d68c2c959dbea4192f8951b859097c26ad643102f066018a388b2fe55",
+              "name": "Stra\u00dfe",
+              "channel_group_id": 4
+            },
+            {
+              "id": 6029,
+              "m3u_account_id": 6,
+              "stream_hash": "33940bb3e215def5c726cafd6b8177b5d21be8d6171d092c44e5f9191d24f041",
+              "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+              "channel_group_id": 4
+            }
+          ],
+          "stream_links": 5,
+          "memberships": 5
+        }
+      }
+    },
+    {
+      "name": "actual-rename100ms-timeout-fallback-final512",
+      "status": "failed",
+      "error_type": "AssertionError"
+    },
+    {
+      "name": "actual-nonstring-replacement-perstream-error-boundary",
+      "status": "failed",
+      "error_type": "AssertionError"
+    }
+  ],
+  "Source_authority": "new Source authority; no previously qualified task replay",
+  "full_regex_parity": false,
+  "performance_verified": false,
+  "startup_handshake_drain": "separate component scope, not naturally injectable through Main",
+  "required_unmeasured": [
+    "exact full progress/Channels failure-detail payloads",
+    "held search physical cancellation diagnostic",
+    "component startup/drain",
+    "complete arbitrary regex grammar coverage"
+  ]
+}

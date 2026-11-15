@@ -33,9 +33,28 @@ passes ten controls: seven output-store, two profile lifetime/ownership-loss,
 and one observed-stop race. The new fMP4 generation control initially lacks its
 required fixture; with the actual six-second H264/AAC fixture mounted, it still
 ends before returning init bytes. Both failed attempts and exact container,
-Compose and Redis-generation cleanup remain recorded. This control is unresolved.
-Independent production Main workflows are running; the physical failure blocks
-acceptance. Paired resource measurement remains pending. Source23 compact
+Compose and Redis-generation cleanup remain recorded. The unchanged control passes in attempt3 with a declared twelve-second,
+one-second-GOP fixture: twelve actual IDR points and no transport errors. The
+old finite six-second single-IDR input was followed by a permanently pending
+Origin, supplying neither another keyframe nor EOF to the delayed remuxer.
+All eleven physical controls now pass across identified attempts, with exact
+container, project and Redis-generation cleanup. Production arguments and
+generation assertions remain unchanged. Paired resource measurement is pending.
+
+The [Source-first Main batch](../scripts/rust-integration/milestone-batch24/functional/report.json)
+exits1 after1,116.077 seconds and cleans all seven containers, both projects,
+original process generations and command groups. Both backends pass eight SD
+cells, all five auto-sync cells (including actual EPG descendants and full5001
+child metadata), and all four recording-profile cells. Native also passes three
+compact cells, six HTTP/model callback cells and all six output-profile cells.
+XMLTV warm restore passes on both. Known observer/scenario errors invalidate
+the remaining SD/XMLTV/VLC rows; corrected helpers are prepared. Both pass three
+regex cells; the remaining assertions used incorrect case/retention expectations.
+Retained SQL qualifies narrower identity/name effects, but unequal reservation
+state prevents absolute numbering comparison. Source compact/API reuse lacked
+the state needed by later regex; the next batch must reconstruct that causal
+state. The original failed rows remain unchanged. No whole Main or milestone
+acceptance follows from these scoped successes. Source23 compact
 numbering and its HTTP/model callbacks provide new reference observations;
 Native23's normal output-profile workflow passes, but neither observation
 accepts this candidate. Remote XMLTV downloads, enabled plugin hooks, broader

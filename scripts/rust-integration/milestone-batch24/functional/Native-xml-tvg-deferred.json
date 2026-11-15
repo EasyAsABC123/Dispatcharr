@@ -1,0 +1,33 @@
+{
+  "status": "failed",
+  "cases": [
+    {
+      "name": "source-refresh-busy-durable-retry",
+      "status": "failed",
+      "error_type": "KeyError"
+    },
+    {
+      "name": "source-refresh-defer-limit480",
+      "status": "failed",
+      "error_type": "AssertionError"
+    },
+    {
+      "name": "source-refresh-deferred-revoked",
+      "status": "failed",
+      "error_type": "AssertionError"
+    },
+    {
+      "name": "source-refresh-warm-restored-restart",
+      "status": "passed",
+      "actual": {
+        "actual_normal_stop0_and_owner_receipt": true,
+        "actual_restored_pair_and_same_child_consumed_after_restart": true
+      }
+    }
+  ],
+  "unqualified": [
+    "cold visibility/revoke races beyond this warm restart",
+    "held physical shutdown",
+    "missing-file download and incomplete-file policies"
+  ]
+}

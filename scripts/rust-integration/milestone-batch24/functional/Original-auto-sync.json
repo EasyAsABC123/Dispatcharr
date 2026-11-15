@@ -1,0 +1,76 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "name": "actual-API-remoteSTD-large-inline-regex-profile-EPG-lineage",
+      "status": "passed",
+      "actual": {
+        "channels": 6001,
+        "Source_batch500_crossed": true,
+        "previous4096_limit_crossed": true,
+        "actual_EPG_children": 3,
+        "parent": "a102eb45-206e-4e76-bfd9-d9e9b69aa13e",
+        "normalized_rows_sha256": "e6819b9235d796d4b1d25627fa7965c532c7b13cf46873c59a20ee714e835267"
+      }
+    },
+    {
+      "name": "same-boot-provider-drop-rename-never-policy-preserve-orphans",
+      "status": "passed",
+      "actual": {
+        "actual_deleted_channels": 0,
+        "actual_orphan_channels_preserved_by_never_policy": 1000,
+        "UUIDs_preserved_for_observed_survivors": true,
+        "unchanged_EPG_no_children": true,
+        "parent": "346bece9-8f7f-433d-8eb9-15a80b4830a1",
+        "normalized_rows_sha256": "9ae103acc71664ad6cc133d3b79052d8d18245520890d20b6a2d77e956f37c28"
+      }
+    },
+    {
+      "name": "same-boot-explicit-always-policy-Collector-delete1000",
+      "status": "passed",
+      "actual": {
+        "new_Source_characterization_required": true,
+        "actual_policy": "always",
+        "actual_Collector_deleted_channels": 1000,
+        "parent": "bc3d5126-294e-4610-a83e-d3764e1a6b0a",
+        "normalized_rows_sha256": "1dea18ba86c89dacaec114934ebc9d326f1aa87776340860dded90d4525aff54"
+      }
+    },
+    {
+      "name": "actual-Source-produced-standalone-auto-frame",
+      "status": "passed",
+      "actual": {
+        "actual_producer": "pinned Source Celery/Kombu",
+        "actual_consumer": "Original",
+        "id": "814f2e51-e501-4f4d-8629-aaa2fa67c349",
+        "no_reexec_or_restart_claim": true,
+        "unchanged_SQL_digest": true
+      }
+    },
+    {
+      "name": "actual-large-parent-5001-descendants-full-metadata",
+      "status": "passed",
+      "actual": {
+        "actual_children": 5001,
+        "actual_complete_metadata_bytes": 280361,
+        "actual_metadata_TTL": 3600,
+        "all_actual_child_results": "EPG not found",
+        "actual_parent_root_lineage": true,
+        "read_scope": "actual Redis complete bytes; packaged Jobs full-reader API unmeasured",
+        "old_SUCCESS_preservation": "unmeasured",
+        "completion_PUBLISH_event": "unmeasured"
+      }
+    }
+  ],
+  "new_Source_characterization": true,
+  "performance_verified": false,
+  "Source47_parity": false,
+  "unrun_required": [
+    "nonempty queue restart with surviving Source auto frame",
+    "held Collector physical uncertainty",
+    "mixed recording/live contention",
+    "regex timeout/invalid pattern branches",
+    "compact numbering",
+    "new SchedulesDirect guide"
+  ]
+}

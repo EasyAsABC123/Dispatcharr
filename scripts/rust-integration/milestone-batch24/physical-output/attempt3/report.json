@@ -1,0 +1,214 @@
+{
+  "controller_source_git_revision": "df815fbb3d312d191654bf4079f337ecae216430",
+  "runtime_image_source_git_revision": "df815fbb3d312d191654bf4079f337ecae216430",
+  "runtime_scope": "Candidate24 packaged dependency environment; physical component controllers execute, production Main not executed",
+  "passed": true,
+  "scope": "Actual owned Redis, raw HTTP and profile actor component controls; not Main/Source media or performance acceptance",
+  "image_id": "sha256:44ec31e5db05255b2c4643994ddffb7996e3c23451e5e6f60dc212294ebea023",
+  "git_revision": "df815fbb3d312d191654bf4079f337ecae216430",
+  "controllers": [
+    {
+      "name": "fmp4-generation",
+      "package": "dispatcharr-fmp4-http",
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "dispatcharr-fmp4-http",
+        "--test",
+        "http",
+        "--no-run",
+        "--message-format=json",
+        "--offline",
+        "--locked"
+      ],
+      "actual_exit": 0,
+      "executable": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/http-19a958f8e88ba3b1",
+      "sha256": "f40e844f69d50f8f7acd9f06acfeee90a3abf851cff3ae173ca3ac5a63c24b3f",
+      "retained_controller": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch24-output-physical-3/fmp4-generation"
+    }
+  ],
+  "controller_ELF_dependencies": {
+    "libgcc_s.so.1": {
+      "path": "/usr/lib/libgcc_s.so.1",
+      "sha256": "f0cb09ad25ba16848370f16086d1b5671962431ae2ea878e8eeb4c7bb35a56ed"
+    },
+    "libm.so.6": {
+      "path": "/usr/lib/libm.so.6",
+      "sha256": "58b6b82e39d59d7810d402ba4ec34359fde058204fdb7cd5a269fda256a35421"
+    },
+    "libc.so.6": {
+      "path": "/usr/lib/libc.so.6",
+      "sha256": "071e34179e645b25f8a8c2e7108894dc665caa9f5f8c939cd579a75b6638bc3f"
+    },
+    "ld-linux-x86-64.so.2": {
+      "path": "/usr/lib/ld-linux-x86-64.so.2",
+      "sha256": "2a950d46575efa0210d22440988f5a6b4507ebddc6c86d9a42e6e7ef6f01463e"
+    }
+  },
+  "controller_scope": "SDK20 host-compiled tests with exact separately identified host ELF dependencies; child process environment is the unchanged candidate image; no LD_LIBRARY_PATH override",
+  "Redis_pin_source_sha256": "63c869eeb778ec178ea2cf1ad4475b5401461c665d37d578a8decf5c93637c22",
+  "Redis_image": "redis@sha256:c5d34a98396a4775e223c74e929162c35c5a2182901ba26b50ade939941ce14b",
+  "compose_project": "dispatcharr-output-controls-ec9f642dc9",
+  "published_ports": false,
+  "network_internal": true,
+  "full_milestone_passed": false,
+  "Main_acceptance": false,
+  "performance_verified": false,
+  "fixture": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch24-output-physical-3/fixture-12s-g25.ts",
+    "sha256": "b2ddb80a6f647c01b2eb4753b38dd6d6aa77a20365aca761265a9be25651c4b6",
+    "bytes": 643900,
+    "explicit_video_audio_threads": 1,
+    "encoder_GOP": 25,
+    "keyint_min": 25,
+    "scene_cut_threshold": 0,
+    "actual_random_access_points": [
+      {
+        "offset": 564,
+        "pts90k": 127920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          6,
+          5
+        ]
+      },
+      {
+        "offset": 53392,
+        "pts90k": 217920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "offset": 101332,
+        "pts90k": 307920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "offset": 157168,
+        "pts90k": 397920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "offset": 212440,
+        "pts90k": 487920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "offset": 268652,
+        "pts90k": 577920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "offset": 321856,
+        "pts90k": 667920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "offset": 378068,
+        "pts90k": 757920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "offset": 433340,
+        "pts90k": 847920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "offset": 486356,
+        "pts90k": 937920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "offset": 537304,
+        "pts90k": 1027920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "offset": 591448,
+        "pts90k": 1117920,
+        "nal_types": [
+          9,
+          7,
+          8,
+          5
+        ]
+      }
+    ],
+    "transport_errors": [],
+    "parser_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3-vlc-packaged-probe-4/complete_units.py",
+    "parser_sha256": "f1cad689d3259cd796d94e8fc9607348d9b34801112d5ae04303b926fab0bfc9",
+    "precondition_at_least_two_IDRs": true,
+    "production_fMP4_arguments_unchanged": true,
+    "physical_control_binary_and_generation_assertions_unchanged": true,
+    "old_single_IDR_failure_preserved": true
+  },
+  "Redis_actual_image_id": "sha256:c5d34a98396a4775e223c74e929162c35c5a2182901ba26b50ade939941ce14b",
+  "Redis_PID": 3474948,
+  "Redis_generation": "7823859",
+  "Redis_version": "Redis server v=7.4.12 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=5e6b576434da555d",
+  "project_inventories_empty": true,
+  "original_Redis_generation_absent": true,
+  "cells": [
+    {
+      "name": "fmp4-generation",
+      "passed": true,
+      "actual_exit": 0,
+      "passed_tests": 1,
+      "stdout_sha256": "7e5f18bd5107edbd53e5b51a5a82da4abead565aea6db5db0374d1fc6fec1552"
+    }
+  ],
+  "failure": null,
+  "exact_cleanup": true
+}
