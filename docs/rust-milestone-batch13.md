@@ -43,3 +43,13 @@ performance gain, full task graph or complete M0–M9 milestone is claimed.
 The [SDK evidence](../scripts/rust-integration/milestone-batch13/inventory.json)
 binds every input to runtime `b646f64f49ff0b4b4cd85af9d9051793c2c584f2` and retains the earlier
 logging compile failure. No Docker/runtime receipt is inferred.
+
+The [production Docker build](../scripts/rust-integration/milestone-batch13-build/inventory.json)
+is `sha256:589432c5f2535258195a9b21712bd7d6f7b00aaec085468436fbf6a70a755119`.
+All1720 archived inputs match Git:1223 Rust,495 React and two original credit
+files. All114 previous installed React/credit hashes and120 selected asset/
+notices match. UID65532, `/app` and the production entrypoint are configured;
+the ELF hash is `d14f9bf8874787f3a13dbd65b34f4b95b6b85b4b9c18358d47836883a926efcb`.
+Crypto27-file/GPG2.4.8 and PostgreSQL17.11 clients/528 component and license hash
+probes pass. All probes are absent afterward. New application/task acceptance
+remains pending; the same-image controller retry continues to use Candidate12.
