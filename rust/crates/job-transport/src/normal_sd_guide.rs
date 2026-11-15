@@ -23,12 +23,15 @@ use std::{
     time::Duration,
 };
 use tokio::sync::Notify;
+#[path = "sd_hook_trail.rs"]
+mod hook_trail;
 #[path = "normal_sd_tvg.rs"]
 mod tvg;
 type Owner = Arc<dyn Send + Sync>;
 struct Inner {
     entry: Mutex<Option<std::sync::Weak<dyn Handler>>>,
     jobs: Jobs,
+    hook_runtime: std::sync::OnceLock<dispatcharr_store::PluginRuntime>,
     auth: AuthService,
     identity: ProducerIdentitySource,
     events: Arc<dyn UpdateEventSink>,
@@ -101,6 +104,7 @@ impl Prepared {
             inner: Arc::new(Inner {
                 entry: Mutex::new(None),
                 jobs,
+                hook_runtime: std::sync::OnceLock::new(),
                 auth,
                 identity,
                 events,
@@ -116,6 +120,12 @@ impl Prepared {
                 next_visibility: Mutex::new(None),
             }),
         })
+    }
+    pub fn bind_hook_runtime(&self, runtime: dispatcharr_store::PluginRuntime) -> Result<(), D> {
+        self.inner
+            .hook_runtime
+            .set(runtime)
+            .map_err(|_| D::UnsupportedDomain)
     }
     pub fn wrap_tvg(&self, xml: Arc<dyn Handler>) -> Arc<dyn Handler> {
         Arc::new(tvg::Bridge::new(self.clone(), xml))
@@ -302,13 +312,38 @@ impl Prepared {
                         force: message.force,
                     },
                 };
-                let admission = Admission::prepare(
-                    inner.auth.clone().with_retained_scope(owner.clone()),
-                    request,
-                    inner.events.clone(),
-                    owner.clone(),
-                )
-                .await
+                let actual_raw = if due {
+                    reservation
+                        .as_ref()
+                        .ok_or(D::NotDue)?
+                        .receipt
+                        .queued_bytes
+                        .clone()
+                } else {
+                    candidate
+                        .as_ref()
+                        .ok_or(D::HeadChanged)?
+                        .queued_bytes()
+                        .to_vec()
+                };
+                let admission = if let Some(runtime) = inner.hook_runtime.get() {
+                    Admission::prepare_with_hook_runtime(
+                        inner.auth.clone().with_retained_scope(owner.clone()),
+                        request,
+                        inner.events.clone(),
+                        owner.clone(),
+                        runtime.clone(),
+                    )
+                    .await
+                } else {
+                    Admission::prepare(
+                        inner.auth.clone().with_retained_scope(owner.clone()),
+                        request,
+                        inner.events.clone(),
+                        owner.clone(),
+                    )
+                    .await
+                }
                 .map_err(|error| match error {
                     dispatcharr_store::sd_guide::Error::Store(
                         dispatcharr_store::StoreError::StatusBody(503, _),
@@ -371,9 +406,52 @@ impl Prepared {
                         .map_err(|_| fault("revoked result"))?;
                     return Ok(D::Revoked(id));
                 }
+                let trail = Arc::new(hook_trail::Trail::new(id));
+                if let Err(_error) =
+                    admission.bind_native_hooks(&actual_raw, trail.clone(), owner.clone())
+                {
+                    trail.fault();
+                    admission
+                        .close()
+                        .await
+                        .map_err(|_| fault("hook setup SQL close"))?;
+                    return Err(fault("hook context setup"));
+                }
                 let body = execute_body(&inner, &message, &mut admission, owner.clone()).await;
+                let (value, children) = match body {
+                    Ok(body) => body,
+                    Err(error) => {
+                        trail.fault();
+                        admission
+                            .close()
+                            .await
+                            .map_err(|_| fault("failed hook/SQL close"))?;
+                        return Err(error);
+                    }
+                };
+                trail
+                    .close(&children)
+                    .map_err(|_| fault("native publication trail close"))?;
+                let hooks = admission.finish_hooks().await;
                 admission.close().await.map_err(|_| fault("SQL close"))?;
-                let (value, children) = body?;
+                let hooks = hooks.map_err(|_| fault("hook context finish"))?;
+                if let Some(hooks) = hooks {
+                    let ack = inner
+                        .jobs
+                        .write_sd_hook_success(
+                            &message.common,
+                            value,
+                            hooks.observed_request_children,
+                            owner,
+                        )
+                        .await
+                        .map_err(|_| fault("hook backend"))?;
+                    return Ok(if ack {
+                        D::Completed(id)
+                    } else {
+                        D::CompletedWithoutId
+                    });
+                }
                 let ack = inner
                     .jobs
                     .write_xc_live(&message.common, value, children, owner)

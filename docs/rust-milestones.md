@@ -9,12 +9,17 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate26](rust-milestone-batch26.md): all four
-SDK gates pass with1,075 tests, zero failures and782 ignored. It joins inverse
-Redirect/scoped previews, remote/staged XMLTV, ordinary guide output and
-experimental plugin lifecycle/task/SQL/event ports. Original Python compatibility
-libraries remain explicit; actual execution/packaging and enabled-plugin
-acceptance are unmeasured. Docker, whole application and resource checks remain.
+The newest source candidate is [Candidate27](rust-milestone-batch27.md): all four
+SDK gates pass with1,078 tests, zero failures and782 ignored. It adds the normal
+SD Connect/scoped-plugin event caller, supervised unknown-SQL hook quarantine/
+readiness and numeric preview command substitution. Docker, Main, enabled-plugin
+physical execution and paired performance remain required.
+
+[Candidate26](rust-milestone-batch26.md) passes1,075 SDK tests and all four gates.
+It joins inverse Redirect/scoped previews, remote/staged XMLTV, ordinary guide
+output and experimental plugin lifecycle ports. The corrected `d96d5d13` image
+passes Docker/package checks, including the explicit Original Python compatibility
+closure. Actual Main/enabled-plugin execution and performance remain unaccepted.
 
 The preceding source candidate is [Candidate25](rust-milestone-batch25.md): all four
 SDK gates pass with1,061 tests, zero failures and775 ignored. It joins common

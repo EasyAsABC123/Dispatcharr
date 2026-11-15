@@ -903,7 +903,7 @@ async fn json_body(request: Request) -> Result<Value, StoreError> {
 }
 /// Same qualified Source PG primary/detail/hint/context spelling as normal
 /// channel errors; no invented Python stack or diagnostic fields.
-fn setting_error(error: &StoreError) -> Option<String> {
+pub(crate) fn setting_error(error: &StoreError) -> Option<String> {
     let StoreError::Database(error) = error else {
         return None;
     };

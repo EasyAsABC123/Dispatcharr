@@ -68,3 +68,21 @@ exact version/path/size/hash, retains its evidence in shipped notices, and still
 fails on unresolved libraries in retained files. The existing test-directory
 exclusions remain distinct from this inventory. Docker/runtime acceptance is
 still required; no application performance was measured.
+
+The [fourth Docker build and package checks](../scripts/rust-integration/milestone-batch26/package/inventory.json)
+pass for committed `d96d5d132b01164930aafd657a5cc8bf30d155f5`, image
+`sha256:29955adab0f29ba132bfac82bf8094c2b1eb8a3fc7a8fdec2fec6d7f687080c8`.
+The build takes191.72 seconds. All1,887 archive files match Git, including495
+React inputs;113 original frontend/credit hashes remain unchanged and the
+original attribution bytes remain a prefix. Crypto27, PostgreSQL528 and
+regex648 asset/license checks pass. Actual framed regex calls and paired
+certified useful-core VLC remux pass. These are package checks, not Main parity.
+
+The full compatibility-host audit checks32,500 asset/notice hashes,127
+distributions,425 retained ELF records and328 Original library files. Dependency
+modules load from the relocated prefix; the generic CLI does not configure the
+Django application or add Original libraries to its path. An initial observer
+hit its4MiB output cap on the14.88MB manifest. The corrected observer preserves
+that cap, audits the complete manifest inside the image and emits a bounded
+summary. Both attempts and exact cleanup remain recorded. Actual plugin
+bootstrap/callback execution and backend lifecycle acceptance remain required.

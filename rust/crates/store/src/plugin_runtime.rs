@@ -45,6 +45,7 @@ struct Inner {
     publications: PluginPublicationOwners,
     claims: PluginTraceClaims,
     closed: AtomicBool,
+    unsettled_sql: AtomicBool,
 }
 #[derive(Clone)]
 pub struct PluginRuntime {
@@ -129,6 +130,7 @@ impl PluginRuntime {
                 publications,
                 claims,
                 closed: AtomicBool::new(false),
+                unsettled_sql: AtomicBool::new(false),
             }),
         })
     }
@@ -449,6 +451,10 @@ impl PluginRuntime {
     ) -> Result<(), StoreError> {
         self.inner.publications.restored(id, raw, restored)
     }
+    pub fn accepting(&self) -> bool {
+        !self.inner.closed.load(Ordering::Acquire)
+            && !self.inner.unsettled_sql.load(Ordering::Acquire)
+    }
     pub fn stop_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);
         self.inner.actions.stop_admission();
@@ -465,7 +471,11 @@ impl PluginRuntime {
     pub async fn shutdown(&self, budget: Duration) -> Result<(), StoreError> {
         self.stop_admission();
         let deadline = tokio::time::Instant::now() + budget;
-        let mut failure = None;
+        let mut failure = self
+            .inner
+            .unsettled_sql
+            .load(Ordering::Acquire)
+            .then(unavailable);
         for host in
             std::iter::once(&self.inner.actions).chain(self.inner.tasks.iter().map(|a| &a.host))
         {
@@ -476,6 +486,9 @@ impl PluginRuntime {
             {
                 failure = Some(unavailable());
             }
+        }
+        if self.inner.unsettled_sql.load(Ordering::Acquire) {
+            failure = Some(unavailable());
         }
         failure.map_or(Ok(()), Err)
     }
@@ -503,6 +516,7 @@ pub struct PluginHookSession {
     inner: Arc<HookInner>,
 }
 struct HookInner {
+    runtime: std::sync::Weak<Inner>,
     actor: Arc<TaskActor>,
     scope: Invocation,
     trail: Arc<dyn crate::plugin_hook_context::NativeTaskTrail>,
@@ -589,6 +603,7 @@ impl PluginRuntime {
             }
             Ok(PluginHookSession {
                 inner: Arc::new(HookInner {
+                    runtime: Arc::downgrade(&runtime.inner),
                     actor,
                     scope,
                     trail,
@@ -605,6 +620,59 @@ impl PluginRuntime {
     }
 }
 impl HookInner {
+    async fn interrupt_unknown_sql(&self) {
+        self.actor.host.interrupt_at(tokio::time::Instant::now());
+        if let Some(session) = &self.scope.sql {
+            if let Some(runtime) = self.runtime.upgrade() {
+                runtime.unsettled_sql.store(true, Ordering::Release);
+                PluginRuntime { inner: runtime }.stop_admission();
+            }
+            let _ = session.abort_physical().await;
+        }
+    }
+    async fn abort_serialized(&self) -> Result<(), StoreError> {
+        let _serial = match self.serial.try_lock() {
+            Ok(serial) => serial,
+            Err(_) => {
+                // A callback holding serial may itself be blocked on this SQL
+                // session. Signal physical retirement BEFORE waiting for serial.
+                self.interrupt_unknown_sql().await;
+                self.serial.lock().await
+            }
+        };
+        self.abort_owned().await
+    }
+    async fn abort_owned(&self) -> Result<(), StoreError> {
+        if self.finished.load(Ordering::Acquire) {
+            return Ok(());
+        }
+        let result = self
+            .actor
+            .host
+            .call(
+                "abort_native_task".into(),
+                json!({"task_id":self.task_id}),
+                self.scope.clone(),
+            )
+            .await;
+        if result.as_ref().is_ok_and(|v| v["aborted"] == true) {
+            self.finished.store(true, Ordering::Release);
+            return Ok(());
+        }
+        self.interrupt_unknown_sql().await;
+        // Keep caller/SQL/slot ownership through actual retirement, including
+        // an observer disappearing. Missing receipts stay physically unsettled.
+        loop {
+            if self.actor.host.last_receipt().await.is_some_and(|r| {
+                r.wait_observed && r.stdout_eof && r.stderr_eof && r.descendants_absent
+            }) {
+                break;
+            }
+            tokio::time::sleep(Duration::from_millis(25)).await;
+        }
+        self.finished.store(true, Ordering::Release);
+        Err(unavailable())
+    }
     async fn sync_native(&self, require_closed: bool) -> Result<(), StoreError> {
         let mut cursor = self.cursor.lock().await;
         loop {
@@ -810,6 +878,14 @@ impl PluginHookSession {
         .await
         .map_err(|_| unavailable())?
     }
+    /// Error-path context retirement; no normal trail/terminal report is minted.
+    /// Await this BEFORE the caller closes its provided TaskSqlSession.
+    pub async fn abort(&self) -> Result<(), StoreError> {
+        let inner = self.inner.clone();
+        tokio::spawn(async move { inner.abort_serialized().await })
+            .await
+            .map_err(|_| unavailable())?
+    }
     pub async fn finish(&self) -> Result<crate::PluginHookReport, StoreError> {
         let inner = self.inner.clone();
         tokio::spawn(async move {
@@ -833,37 +909,12 @@ impl PluginHookSession {
 }
 impl Drop for PluginHookSession {
     fn drop(&mut self) {
-        let inner = self.inner.clone();
-        if inner.finished.load(Ordering::Acquire) {
+        if self.inner.finished.load(Ordering::Acquire) {
             return;
         }
+        let inner = self.inner.clone();
         tokio::spawn(async move {
-            let _serial = inner.serial.lock().await;
-            if inner.finished.load(Ordering::Acquire) {
-                return;
-            }
-            // Cancellation never turns into a fake report: pop the actual task context
-            // while retaining actor/caller/SQL ownership through actual result/retirement.
-            let result = inner
-                .actor
-                .host
-                .call("finish_native_task".into(), json!({}), inner.scope.clone())
-                .await;
-            if result.is_err() {
-                inner.actor.host.interrupt_at(tokio::time::Instant::now());
-                // An observer/cancellation cannot release actual caller/SQL/slot
-                // ownership before this child has physically retired. Missing
-                // receipts remain unsettled, never a fabricated normal drain.
-                loop {
-                    if inner.actor.host.last_receipt().await.is_some_and(|r| {
-                        r.wait_observed && r.stdout_eof && r.stderr_eof && r.descendants_absent
-                    }) {
-                        break;
-                    }
-                    tokio::time::sleep(Duration::from_millis(25)).await;
-                }
-            }
-            inner.finished.store(true, Ordering::Release);
+            let _ = inner.abort_serialized().await;
         });
     }
 }

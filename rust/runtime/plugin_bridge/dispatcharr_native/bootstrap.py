@@ -73,12 +73,13 @@ def main():
    elif method=='execution_audit':
     from dispatcharr_native.execution_guard import snapshot
     result=snapshot()
-   elif method in('begin_native_task','append_native_trail','dispatch_plugin_event','snapshot_native_task','finish_native_task','render_connect_template','begin_plugin_event','end_plugin_event','plugin_event_payload'):
+   elif method in('begin_native_task','append_native_trail','dispatch_plugin_event','snapshot_native_task','finish_native_task','render_connect_template','begin_plugin_event','end_plugin_event','plugin_event_payload','abort_native_task'):
     if args.role!='tasks':raise CompatibilityUnavailable('Action host cannot impersonate native task context')
     from dispatcharr_native import plugin_events
     if method=='begin_native_task':result=plugin_events.begin(value)
     elif method=='append_native_trail':result=plugin_events.append_native(value)
     elif method=='dispatch_plugin_event':result=plugin_events.dispatch(value)
+    elif method=='abort_native_task':result=plugin_events.abort(value)
     elif method=='begin_plugin_event':result=plugin_events.begin_event(value)
     elif method=='end_plugin_event':result=plugin_events.end_event()
     elif method=='plugin_event_payload':result=plugin_events.event_payload()

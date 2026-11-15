@@ -1,0 +1,44 @@
+{
+  "scope": "Normal SD Connect/scoped event caller, supervised unknown-SQL hook abort/readiness, numeric preview command substitution",
+  "source_base": "d96d5d132b01164930aafd657a5cc8bf30d155f5",
+  "all_four_SDK_gates_passed": true,
+  "inputs": 1400,
+  "Rust_tree_inputs": 1394,
+  "changed_paths": [
+    "rust/crates/app/src/selected_jobs.rs",
+    "rust/crates/job-transport/src/normal_sd_guide.rs",
+    "rust/crates/job-transport/src/sd_guide_transport.rs",
+    "rust/crates/job-transport/src/sd_hook_trail.rs",
+    "rust/crates/store/src/epg_connect.rs",
+    "rust/crates/store/src/epg_connect_http.rs",
+    "rust/crates/store/src/epg_connect_templates.rs",
+    "rust/crates/store/src/lib.rs",
+    "rust/crates/store/src/playback.rs",
+    "rust/crates/store/src/plugin_actions.rs",
+    "rust/crates/store/src/plugin_runtime.rs",
+    "rust/crates/store/src/sd_guide.rs",
+    "rust/crates/store/src/task_sql_session.rs",
+    "rust/runtime/plugin_bridge/dispatcharr_native/bootstrap.py",
+    "rust/runtime/plugin_bridge/dispatcharr_native/plugin_events.py"
+  ],
+  "all_canonical_preimages_verified": true,
+  "test_totals": [
+    1078,
+    0,
+    782
+  ],
+  "test_result_blocks": 179,
+  "Docker_built": false,
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "full_milestones_accepted": false,
+  "known_guards": [
+    "XML refresh/download hook caller propagation",
+    "enabled scripts",
+    "wider Connect HTTP exception/charset/header/form domains",
+    "large hook child metadata",
+    "builtin direct/producers",
+    "physical plugin actor/SQL lifecycle proof"
+  ],
+  "credit": "Original Dispatcharr and dependency authors retain all application, media, algorithm and licensing credit."
+}

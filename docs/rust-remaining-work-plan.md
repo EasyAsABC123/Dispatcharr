@@ -12,13 +12,16 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The current source [Candidate26](rust-milestone-batch26.md) passes all four SDK
-gates with1,075 tests, zero failures and782 ignored. It joins preview/inverse
-Redirect, remote/staged XMLTV, guide output and experimental plugin lifecycle.
-Its Python model/framework compatibility, backend-entry guards and remaining
-unsupported effects are documented explicitly; actual execution audits and
-four-action/child-PG/transaction proofs are required before enabled acceptance.
-Docker and application acceptance are pending.
+The current source [Candidate27](rust-milestone-batch27.md) passes all four SDK
+gates with1,078 tests, zero failures and782 ignored. Normal SD Connect/scoped
+plugin callers, unknown-SQL abort/readiness and numeric preview substitution
+are integrated. Docker, Main and actual plugin lifecycle proofs remain required.
+
+[Candidate26](rust-milestone-batch26.md) passes1,075 SDK tests and its corrected
+Docker/package checks at `d96d5d13`. Python model/framework compatibility and
+remaining guards are explicit. Actual execution audits and four-action/child-PG/
+transaction acceptance remain open. Candidate25's fixed resource preflight
+stopped before measurement on fixture permissions; no gain follows from it.
 
 The preceding [Candidate25](rust-milestone-batch25.md) is committed as
 `6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d`:1,061 SDK tests pass, zero fail

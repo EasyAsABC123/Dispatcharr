@@ -97,3 +97,13 @@ def render_template(value):
  except Exception:parsed=False
  else:parsed=True
  return{'actual_render_succeeded':True,'rendered':rendered,'current_payload':_active['payload'],'source_json_loads_succeeded':parsed}
+
+def abort(value):
+ global _active
+ if _active is None:return{'aborted':True,'actual_context_existed':False}
+ if _active['context'].id!=value['task_id']:raise CompatibilityUnavailable('Actual native task context mismatch on abort')
+ from celery._state import pop_current_task
+ task=_active['task'];context=_active['context'];_active=None
+ popped=task.request_stack.pop();current=pop_current_task()
+ if popped is not context or current is not task:raise CompatibilityUnavailable('Actual native task stack unsettled on abort')
+ return{'aborted':True,'actual_context_existed':True}

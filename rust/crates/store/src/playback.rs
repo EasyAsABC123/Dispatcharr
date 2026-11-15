@@ -450,19 +450,6 @@ impl Store {
                             profile_parameters.as_str(),
                         )
                     };
-                let command_id = if let Some(mode) = preview {
-                    serde_json::json!(if mode.scoped {
-                        format!(
-                            "{}.p{}",
-                            lookup.id,
-                            row.try_get::<i64, _>("provider_profile_id")?
-                        )
-                    } else {
-                        lookup.id.to_owned()
-                    })
-                } else {
-                    serde_json::json!(id)
-                };
                 let mut command = dispatcharr_contracts::StreamCommand::build(
                     command_name,
                     command_locked,
@@ -470,7 +457,7 @@ impl Store {
                     command_parameters,
                     Some(&url),
                     Some(&user_agent),
-                    &command_id,
+                    &serde_json::json!(id),
                 )
                 .map_err(|_| {
                     StoreError::Unsupported(

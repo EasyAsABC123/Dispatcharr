@@ -63,6 +63,8 @@ struct State {
     actual_ready_idle: AtomicBool,
     causal_root: OnceLock<TaskSqlPublicationWitness>,
     borrowed_child: AtomicBool,
+    interrupted: AtomicBool,
+    interrupt: Notify,
     done: Notify,
     writer: Arc<OwnedSemaphorePermit>,
     writer_gate: Arc<tokio::sync::Mutex<()>>,
@@ -72,6 +74,16 @@ pub struct TaskSqlSession {
     sender: mpsc::Sender<Command>,
     state: Arc<State>,
 }
+async fn wait_interruption(state: &State) {
+    loop {
+        let wake = state.interrupt.notified();
+        if state.interrupted.load(Ordering::Acquire) {
+            return;
+        }
+        wake.await;
+    }
+}
+
 impl AuthService {
     /// HTTP callers already own their validated writer. Main task callers do
     /// not have request-local state: admit from the SAME four-slot budget.
@@ -113,6 +125,8 @@ impl AuthService {
             actual_ready_idle: AtomicBool::new(false),
             causal_root: OnceLock::new(),
             borrowed_child: AtomicBool::new(false),
+            interrupted: AtomicBool::new(false),
+            interrupt: Notify::new(),
             done: Notify::new(),
             writer,
             writer_gate: writer_gate.unwrap_or_else(|| Arc::new(tokio::sync::Mutex::new(()))),
@@ -122,14 +136,15 @@ impl AuthService {
             let _owner = owner;
             let mut connection = connection;
             let mut failed = false;
-            while let Some(command) = receiver.recv().await {
+            let mut interrupted = false;
+            loop {
+                let command = tokio::select! {biased;_ = wait_interruption(&retained)=>{interrupted=true;break;},command=receiver.recv()=>command};
+                let Some(command) = command else { break };
                 match command {
                     Command::Close => break,
                     Command::Query(mut operation) => {
                         use futures_util::FutureExt;
-                        let result = std::panic::AssertUnwindSafe(operation.run(&mut connection))
-                            .catch_unwind()
-                            .await;
+                        let result = tokio::select! {biased;_ =wait_interruption(&retained)=>{interrupted=true;break;},result=std::panic::AssertUnwindSafe(operation.run(&mut connection)).catch_unwind()=>result};
                         if !matches!(result, Ok(Ok(()))) {
                             failed = true;
                             break;
@@ -138,10 +153,23 @@ impl AuthService {
                 }
             }
             retained.phase.store(1, Ordering::Release);
-            let ready = connection.ping().await;
+            if interrupted {
+                // A dropped query future or client socket is NOT evidence the
+                // owned server query/transaction ended. Quarantine the ACTUAL
+                // PoolConnection, writer and caller; never permit replacement.
+                // Operator/process retirement is required: no normal close or
+                // server-side completion is certified by this error receipt.
+                retained.phase.store(3, Ordering::Release);
+                retained.done.notify_waiters();
+                let quarantine = (connection, retained, _owner);
+                std::future::pending::<()>().await;
+                drop(quarantine);
+                return;
+            }
+            let ready = connection.ping().await.is_ok();
             let closed = connection.close().await;
             retained.phase.store(
-                if failed || ready.is_err() || closed.is_err() {
+                if interrupted || failed || !ready || closed.is_err() {
                     3
                 } else {
                     2
@@ -235,6 +263,20 @@ impl TaskSqlSession {
     }
     pub async fn fence(&self) -> Result<(), StoreError> {
         self.run(|_connection| Box::pin(async {})).await
+    }
+    /// Forced-error path: actual admission/session/caller are QUARANTINED.
+    /// The pending server outcome is unknown; no local close releases capacity.
+    /// This always errors and requires operator/process retirement.
+    pub(crate) async fn abort_physical(&self) -> Result<(), StoreError> {
+        self.state.interrupted.store(true, Ordering::Release);
+        self.state.interrupt.notify_waiters();
+        loop {
+            let done = self.state.done.notified();
+            if matches!(self.state.phase.load(Ordering::Acquire), 2 | 3) {
+                return Err(unavailable());
+            }
+            done.await;
+        }
     }
     pub async fn close(&self) -> Result<(), StoreError> {
         if self

@@ -538,6 +538,7 @@ mod compact_unhide;
 
 mod source_input_profile;
 
+pub mod epg_connect;
 pub mod sd_guide;
 mod sd_guide_auth;
 mod sd_guide_fetch;

@@ -88,6 +88,14 @@ pub struct Admission {
     already_present: bool,
     events: Arc<dyn UpdateEventSink>,
     owner: Owner,
+    hook_runtime: Option<crate::PluginRuntime>,
+    hook_task: Option<HookTask>,
+    hooks: tokio::sync::Mutex<Option<Arc<crate::PluginHookSession>>>,
+}
+struct HookTask {
+    context: crate::PluginHookTaskContext,
+    trail: Arc<dyn crate::NativeTaskTrail>,
+    owner: Owner,
 }
 impl Admission {
     pub async fn prepare(
@@ -96,13 +104,32 @@ impl Admission {
         events: Arc<dyn UpdateEventSink>,
         owner: Owner,
     ) -> Result<Self, Error> {
+        Self::prepare_inner(auth, request, events, owner, None).await
+    }
+    pub async fn prepare_with_hook_runtime(
+        auth: AuthService,
+        request: Request,
+        events: Arc<dyn UpdateEventSink>,
+        owner: Owner,
+        runtime: crate::PluginRuntime,
+    ) -> Result<Self, Error> {
+        Self::prepare_inner(auth, request, events, owner, Some(runtime)).await
+    }
+    async fn prepare_inner(
+        auth: AuthService,
+        request: Request,
+        events: Arc<dyn UpdateEventSink>,
+        owner: Owner,
+        hook_runtime: Option<crate::PluginRuntime>,
+    ) -> Result<Self, Error> {
         let session = auth.borrow_task_sql_session(owner.clone()).await?;
         let read=async{
    let (source_id,already_present)=match request{Request::Mapped{source,..}=>(Some(source),false),Request::Single{epg,..}=>session.run(move|c|Box::pin(async move{let row=sqlx::query("SELECT epg_source_id::bigint,EXISTS(SELECT 1 FROM epg_programdata p WHERE p.epg_id=e.id) AS has_data FROM epg_epgdata e WHERE e.id=$1").bind(epg).fetch_optional(c).await?;match row{None=>Ok::<(Option<i64>,bool),sqlx::Error>((None,false)),Some(row)=>Ok((row.try_get("epg_source_id")?,row.try_get("has_data")?))}})).await??};
    let (source,wrong_type)=match source_id{None=>(None,false),Some(id)=>match Source::read(id,session.clone(),auth.clone(),owner.clone()).await?{auth::Read::Missing=>(None,false),auth::Read::Other=>(None,true),auth::Read::Source(source)=>(Some(*source),false)}};
-   // No disconnected fake hooks: enabled application hooks remain outside this
-   // service until the real shared M8 bridge is supplied to this constructor.
-   let forbidden=session.run(|c|Box::pin(async move{sqlx::query_scalar::<_,bool>("SELECT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('epg_refresh','epg_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled)").fetch_one(c).await.map_err(StoreError::from)})).await??;
+   // Legacy constructors remain gated. The typed real runtime supplies
+   // the scoped template/plugin port; scripts still need their physical port.
+   let bound=hook_runtime.is_some();
+   let forbidden=session.run(move|c|Box::pin(async move{sqlx::query_scalar::<_,bool>("SELECT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('epg_refresh','epg_error') AND (NOT $1 OR i.type='script')) OR (NOT $1 AND EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled))").bind(bound).fetch_one(c).await.map_err(StoreError::from)})).await??;
    if forbidden{return Err(Error::Unsupported)}
    Ok::<_,Error>((source,wrong_type,already_present))
   }.await;
@@ -115,11 +142,67 @@ impl Admission {
                 already_present,
                 events,
                 owner,
+                hook_runtime,
+                hook_task: None,
+                hooks: tokio::sync::Mutex::new(None),
             }),
             Err(error) => {
                 session.close().await?;
                 Err(error)
             }
+        }
+    }
+    /// Bind actual already-claimed bytes only. Empty/default event paths start
+    /// no interpreter; enabled subscriptions/plugins lazily acquire the real
+    /// task actor only at the idle audit boundary after INSERT.
+    pub fn bind_native_hooks(
+        &mut self,
+        raw: &[u8],
+        trail: Arc<dyn crate::NativeTaskTrail>,
+        owner: Owner,
+    ) -> Result<(), Error> {
+        if self.hook_runtime.is_some() {
+            self.hook_task = Some(HookTask {
+                context: crate::PluginHookTaskContext::from_native_claim(raw)?,
+                trail,
+                owner,
+            });
+        }
+        Ok(())
+    }
+    async fn event_hooks(
+        &self,
+        event: &str,
+    ) -> Result<Option<Arc<crate::PluginHookSession>>, Error> {
+        let event = event.to_owned();
+        let needed=self.session.run(move|c|Box::pin(async move{sqlx::query_scalar::<_,bool>("SELECT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event=$1) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled)").bind(event).fetch_one(c).await.map_err(StoreError::from)})).await??;
+        if !needed {
+            return Ok(None);
+        }
+        let mut stored = self.hooks.lock().await;
+        if let Some(hooks) = stored.as_ref() {
+            return Ok(Some(hooks.clone()));
+        }
+        let runtime = self.hook_runtime.as_ref().ok_or(Error::Unsupported)?;
+        let task = self.hook_task.as_ref().ok_or(Error::Unsupported)?;
+        let hooks = Arc::new(
+            runtime
+                .begin_plugin_hooks(
+                    task.context.clone(),
+                    task.trail.clone(),
+                    self.session.clone(),
+                    task.owner.clone(),
+                )
+                .await?,
+        );
+        *stored = Some(hooks.clone());
+        Ok(Some(hooks))
+    }
+    pub async fn finish_hooks(&self) -> Result<Option<crate::PluginHookReport>, Error> {
+        let hooks = self.hooks.lock().await.clone();
+        match hooks {
+            Some(hooks) => Ok(Some(hooks.finish().await?)),
+            None => Ok(None),
         }
     }
     pub fn source_id(&self) -> Option<i64> {
@@ -140,6 +223,10 @@ impl Admission {
         }
     }
     pub async fn close(&self) -> Result<(), Error> {
+        let hooks = self.hooks.lock().await.clone();
+        if let Some(hooks) = hooks {
+            hooks.abort().await?;
+        }
         self.session.close().await?;
         Ok(())
     }
@@ -205,12 +292,27 @@ impl Admission {
         Ok(())
     }
     async fn audit(&self, kind: &str, details: Value) -> Result<(), Error> {
+        let event_kind = kind.to_owned();
+        let event_payload = details.clone();
         let kind = kind.to_owned();
         let inserted=self.session.run(move|c|Box::pin(async move{sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$3,NULL,NULL,$2)").bind(kind).bind(details).bind(Utc::now()).execute(c).await.map(|_|()).map_err(StoreError::from)})).await?;
         match inserted {
             Ok(()) => {}
             Err(StoreError::Database(sqlx::Error::Database(_))) => return Ok(()),
             Err(error) => return Err(error.into()),
+        }
+        if let Some(hooks) = self.event_hooks(&event_kind).await? {
+            // A known Connect abort skips plugins but still permits the Source
+            // outer audit trim. Unsupported/unknown physical outcomes fault.
+            crate::epg_connect::dispatch_scoped_event(
+                event_kind,
+                event_payload,
+                self.session.clone(),
+                hooks.clone(),
+                self.owner.clone(),
+            )
+            .await
+            .map_err(|_| Error::Operational)?;
         }
         // Source reads current cached settings AFTER actual event creation, not
         // once at admission before a potentially long provider operation.

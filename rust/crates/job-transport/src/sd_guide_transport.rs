@@ -13,6 +13,27 @@ impl SdGuideCandidate {
     }
 }
 impl Jobs {
+    /// Actual scoped Context trail metadata ONLY. No contained UUID becomes an
+    /// execution/parent-publication authority. Same existing result lease,
+    /// SUCCESS preservation/EX3600/PUBLISH and explicit legacy wire budget.
+    pub(crate) async fn write_sd_hook_success(
+        &self,
+        message: &crate::normal_xc_live::Message,
+        result: serde_json::Value,
+        children: serde_json::Value,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if !children.is_array() {
+            return Err(Error::Protocol);
+        }
+        let mut meta = serde_json::json!({"status":"SUCCESS","result":result,"traceback":null,"children":children,"date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string()});
+        if let Some(parent) = message.parent {
+            meta["parent_id"] = serde_json::json!(parent.to_string());
+        }
+        meta["task_id"] = serde_json::json!(message.id.to_string());
+        let bytes = serde_json::to_vec(&meta).map_err(|_| Error::Protocol)?;
+        self.write_metadata(message.id, bytes, owner).await
+    }
     pub(crate) async fn peek_sd_tvg_head(
         &self,
         owner: Arc<dyn Send + Sync>,

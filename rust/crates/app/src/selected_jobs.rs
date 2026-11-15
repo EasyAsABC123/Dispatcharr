@@ -332,6 +332,9 @@ impl SelectedJobs {
             revoked.clone(),
         )
         .map_err(|_| "Selected SD guide initialization failed")?;
+        sd_guide
+            .bind_hook_runtime(plugin_runtime.clone())
+            .map_err(|_| "Selected SD hook runtime binding failed")?;
         let scanner = jobs::normal_scanner::Prepared::connect_with_auto(
             shared_jobs.clone(),
             store.clone(),
@@ -545,6 +548,7 @@ impl SelectedJobs {
             _ => None,
         };
         let ready = !self.inner.closed.load(Ordering::Acquire)
+            && self.inner.plugin_runtime.accepting()
             && matches!(startup, Startup::Started)
             && control == jobs::normal_control::State::Subscribed
             && queue.ready
