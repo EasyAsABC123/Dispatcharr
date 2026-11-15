@@ -1,0 +1,128 @@
+{
+  "scope": "Candidate20 actual default Main/Compose batch; package/SDK remain qualified separately",
+  "candidate_git": "1cdf0c15ff4d8265409337f6b0ce29a0debe29e3",
+  "image_id": "sha256:cb2e36ee6ee6e76a4da8f3832e0fa1ee47f069b2619f39ec8be0e617357ab41e",
+  "actual_command_exit": 1,
+  "seconds": 1822.0151338009964,
+  "command_process_group_settled": true,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "Native_cases": [
+    {
+      "case": "auto-sync",
+      "status": "failed"
+    },
+    {
+      "case": "vlc-live",
+      "status": "failed"
+    },
+    {
+      "case": "channel-maintenance",
+      "status": "failed"
+    },
+    {
+      "case": "overlap",
+      "status": "passed"
+    },
+    {
+      "case": "controls",
+      "status": "failed"
+    },
+    {
+      "case": "streams-denial",
+      "status": "passed"
+    },
+    {
+      "case": "idle-viewing",
+      "status": "passed"
+    },
+    {
+      "case": "recording-provider-artwork",
+      "status": "passed"
+    },
+    {
+      "case": "plugin-eta-fifo",
+      "status": "passed"
+    },
+    {
+      "case": "plugin-eta-warm",
+      "status": "passed"
+    },
+    {
+      "case": "plugin-eta-crash",
+      "status": "passed"
+    },
+    {
+      "case": "xc-live",
+      "status": "failed"
+    }
+  ],
+  "Source_cases": [
+    {
+      "case": "auto-sync",
+      "status": "failed"
+    },
+    {
+      "case": "vlc-live",
+      "status": "failed"
+    }
+  ],
+  "Source_auto_cells": [
+    {
+      "name": "actual-API-remoteSTD-large-inline-regex-profile-EPG-lineage",
+      "status": "passed",
+      "actual": {
+        "channels": 6001,
+        "Source_batch500_crossed": true,
+        "previous4096_limit_crossed": true,
+        "actual_EPG_children": 3,
+        "parent": "093f6646-216f-4fa0-bd73-6c593ff594a9",
+        "normalized_rows_sha256": "e6819b9235d796d4b1d25627fa7965c532c7b13cf46873c59a20ee714e835267"
+      }
+    },
+    {
+      "name": "same-boot-provider-drop-rename-Collector-delete-preserveUUID",
+      "status": "failed",
+      "error_type": "AssertionError"
+    },
+    {
+      "name": "actual-Source-produced-standalone-auto-frame",
+      "status": "failed",
+      "error_type": "RuntimeError"
+    },
+    {
+      "name": "actual-large-parent-5001-descendants-full-metadata",
+      "status": "failed",
+      "error_type": "RuntimeError"
+    }
+  ],
+  "findings": {
+    "Main_registry_startup": "actual Main starts; previous startup blocker corrected",
+    "Native_auto": "first real API returns202 and publishes3EPG children, parent terminal metadata times out; normal5regex blocked",
+    "configured_media_root": "actual packaged default alias conflicts with metadata spool symlink ancestor check; code-level defect fixed in next SDK, exact failing runtime stage was not observed",
+    "channel_maintenance": "observer frozen-input list retained preceding build/map paths; failed guard is literal, not business acceptance",
+    "controls": "decoder actualexit183,284video576audio,1635537bytes; process group and pipes settled; internal_damage_detected true retained",
+    "Native_XC": "actual normal task completion timeouts; no XC parity accepted",
+    "Source_comparisons": "first6001-channel API auto cell passes. Changed task actually SUCCESS with6001channels/5001streamlinks: orphan_channel_cleanup=never preserves1000 disconnected channels; callback incorrectly expected5001channels, so literal assertion failure remains. Downstream SQL commands exit1; VLC fails to produce media near absolute budget. No full comparison acceptance.",
+    "deadline": "1800s absolute functional budget; comparisons require sufficient-budget rerun",
+    "exceptional_range_transport": "Source returns206 with negative content length; Native closes without status; mismatch remains open"
+  },
+  "cleanup": {
+    "passed": true,
+    "exact_containers": 19,
+    "projects": 2,
+    "original_process_generations_absent": true,
+    "host_CLI_groups_settled": true,
+    "all_project_inventories_empty": true
+  },
+  "raw_evidence_hashes": {
+    "artifacts/rust/normal-graph-batch20-functional-1/results/report.json": "f095e0a5069a909b563e7baa3e4ba5212ddce6716a67d299c75ca4ddc3bb66a9",
+    "artifacts/rust/normal-graph-batch20-functional-1/dispatch/execution.json": "a27247d06a41ce238441b3ba27a8957eb5bf4fd10e8453a5beb54c1e4ea587dd",
+    "artifacts/rust/normal-graph-batch20-functional-1/results/Native/report.json": "dcb986e5758c6bc040649534684f8433526d190539994eb60f70218501dd5514",
+    "artifacts/rust/normal-graph-batch20-functional-1/results/Original/report.json": "2274dd4d727e5858b6a65b47a8454a203f779d3c8a0aa8650d668800ab9b5bae",
+    "artifacts/rust/normal-graph-batch20-functional-1/Root-channel-authority-binding-diagnostic.json": "315bb65695f6c2557b4f8b66536fe20bab036e4a16ed1505d669630693c03087"
+  },
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr and dependency authors retain full application, algorithm and license credit."
+}

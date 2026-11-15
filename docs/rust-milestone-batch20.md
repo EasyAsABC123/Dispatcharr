@@ -27,7 +27,7 @@ zero failures, 761 ignored and 175 result blocks. The
 controls require execution with the actual packaged interpreter; their presence
 does not establish Main cancellation acceptance.
 
-The next image must pass real Main startup and the combined Compose cohort:
+The image must pass real Main startup and the combined Compose cohort:
 auto-sync, large actual child metadata, normal regex, VLC and Native regressions.
 Held-search diagnostics remain distinct from ordinary shutdown. Compact/manual
 numbering, SD guide work, wider input/output profiles, enabled plugins and other
@@ -41,5 +41,20 @@ archive also matches that revision. Package checks pass as UID 65532: original
 React/credit retention, crypto, PostgreSQL, all 648 Python/regex/bridge/notice
 hashes, real isolated framed regex request/shutdown, and paired VLC useful core.
 The [package evidence](../scripts/rust-integration/milestone-batch20/package/)
-retains their actual scope. Combined Main/Compose acceptance is running; its
-results and performance remain unaccepted until the batch completes.
+retains their actual scope. The combined Main/Compose batch has completed with exit1; application acceptance
+and performance remain unaccepted.
+
+The [functional evidence](../scripts/rust-integration/milestone-batch20/functional/report.json)
+records seven passing Native contexts and five failures. Actual Main startup is
+corrected. Auto-sync publishes real EPG children but lacks parent completion; a
+configured-media alias/spool conflict is a grounded defect for the next candidate.
+VLC produces no useful live media, controls retain a decoder failure, and XC
+task completion times out. Channel maintenance fails a fixture authority binding
+guard, which must be corrected before rerun. Source first-import6001 passes;
+changed-source assertion fails because the fixture expected orphan pruning while
+its actual policy is `never`. Source successfully keeps6,001 channels with5,001
+stream links. That observation corrects the next fixture; the failed assertion
+remains literal. Descendant and live VLC comparisons remain unaccepted.
+The absolute batch budget expires near the Source phase. All19 exact containers,
+both projects, original process generations and host CLI groups settle. No full
+milestone or performance gain is established.
