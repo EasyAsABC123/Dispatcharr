@@ -1,0 +1,41 @@
+{
+  "candidate_git": "921c5c40b2eb7a7073a0006b43fae86b41cd2728",
+  "image_id": "sha256:93443e136512344dbcf7309ba18e1999b32f5bc94cbddbcf7781bea3aa28ba3e",
+  "scope": "Failed premeasurement startup observations only, not CPU/memory samples or application acceptance",
+  "attempts": [
+    {
+      "attempt": 1,
+      "controller_actual_exit": 1,
+      "elapsed_seconds": 82.06202237000252,
+      "completed_measurement_phases": 0,
+      "gain_accepted": false,
+      "Source_web_actual_exit": 1,
+      "cleanup_errors_retained": true,
+      "Root_owned_project_inventories_empty": true,
+      "Root_observer_scope_inactive": true,
+      "result_sha256": "e613c12046054748c11aefe25b16cd50f142b0d5511f3fdc7d84f886d830bdfd",
+      "Root_review_sha256": "e135e876a784bd77f1dcb46fa0ac51e2f0e594fad6ddf69f8f834fbfd16300e9",
+      "diagnosis": "Mounted uWSGI configuration mode0600 is unreadable by actual role UID65532; original exact stderr was not retained."
+    },
+    {
+      "attempt": 2,
+      "controller_actual_exit": 1,
+      "elapsed_seconds": 82.26541385600285,
+      "completed_measurement_phases": 0,
+      "gain_accepted": false,
+      "Source_web_actual_exit": 1,
+      "cleanup_errors_retained": true,
+      "Root_owned_project_inventories_empty": true,
+      "Root_observer_scope_inactive": true,
+      "result_sha256": "7fcd3aa95d47f96944d96a53ac00c746e294003c34ab14261f17ff39e2356ae8",
+      "Root_review_sha256": "316930f46741357bdb78c126665166d5402d2785ce5eb1184f2adbfb0c7dc679",
+      "actual_UID65532_configuration_read_passed": true,
+      "actual_config_mode": "0444",
+      "actual_stderr": "[uWSGI] getting INI configuration from /verification/uwsgi.ini\nunable to load configuration from 666\n",
+      "correction": "Literal optional argument form --chmod-socket=666; all workload criteria unchanged."
+    }
+  ],
+  "credit": "Original Dispatcharr and dependency authors retain full credit.",
+  "full_milestone_passed": false,
+  "performance_verified": false
+}
