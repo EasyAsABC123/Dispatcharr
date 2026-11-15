@@ -1,0 +1,126 @@
+{
+  "candidate_image_id": "sha256:f2f6010a20c370a4098417b0cdd65fac2f1057cbed2e393047545de259596674",
+  "candidate_git_revision": "71055d14908c02588b205b564752a25f8cee9760",
+  "scope": "Fixture infrastructure failure before candidate Main/business entry; no application behavior pass/fail inferred",
+  "actual_controller_exit": -2,
+  "actual_seconds": 273.11476056600077,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "process_group_settled": true,
+  "old_helper_modes": {
+    "startup_observer.py": "0o600",
+    "startup_hooks.py": "0o600",
+    "provider_origin.py": "0o600",
+    "idle_viewing.py": "0o600"
+  },
+  "observer_child_target_UID": 65532,
+  "actual_observer_exits": [
+    2
+  ],
+  "failed_before_ready": true,
+  "actual_case_records": [
+    {
+      "backend": "Native",
+      "case_statuses": [
+        {
+          "case": "core-produced",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "normal-backup",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "nonempty-restart",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "authorization",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "artwork",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "grouped-m6",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "channel-maintenance",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "overlap",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "controls",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "streams-denial",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "held-drain",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "backup-held-graceful",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "backup-delete-refusal",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "backup-held-deadline",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "idle-viewing",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        },
+        {
+          "case": "recording-provider-artwork",
+          "status": "failed",
+          "reason_type": "TimeoutError"
+        }
+      ]
+    }
+  ],
+  "Root_SIGINT_scope": "Only exact owned controller; Python with/finally attempted cleanup; interruption during Compose down required independently verified external cleanup",
+  "external_cleanup_passed": true,
+  "Driver7_unchanged": {
+    "path": "artifacts/rust/m6-recording-following-driver-7/closure.json",
+    "sha256": "f41b1b78a201a79f86425fc51f218242171f9cf47a615bdef1b5935155ed31ca"
+  },
+  "Driver8_replacement": {
+    "path": "artifacts/rust/m6-recording-following-driver-8/closure.json",
+    "sha256": "42f695727e84d2a8c546a43252e0db307c0d228aaac3488dfe7fff5037a37d72"
+  },
+  "readable_tools_inventory": {
+    "path": "artifacts/rust/m6-recording-following-driver-8/guest-readable-tools.json",
+    "sha256": "a977b16584ebbe186ba56f8bc4106a818bab1eecd62d4cb8c9f8c7249a728ce5"
+  },
+  "new_business_acceptance": false,
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr/dependency authors retain all application credit. Fixture code readability was missed during agent preparation."
+}
