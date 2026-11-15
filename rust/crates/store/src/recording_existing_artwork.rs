@@ -5,6 +5,8 @@ use crate::json_compat::python_equal;
 use serde_json::{json, Value};
 use sqlx::{Connection, PgPool};
 use std::sync::Arc;
+#[path = "recording_artwork_normal.rs"]
+mod normal;
 #[derive(Debug)]
 pub enum Error {
     Unsupported(&'static str),
@@ -70,56 +72,7 @@ impl Store {
         recording: i64,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Prepared, Error> {
-        match self.prepare(recording, owner.clone()).await {
-            Ok(value) => Ok(value),
-            Err(error @ Error::Unsupported(_)) => {
-                let pool = self.pool.clone();
-                let exists = tokio::spawn(async move {
-                    let _owner = owner;
-                    let mut connection = pool.acquire().await.map_err(sql)?.detach();
-                    let observed = sqlx::query_scalar::<_, bool>(
-                        "SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_recording WHERE id=$1)",
-                    )
-                    .bind(recording)
-                    .fetch_one(&mut connection)
-                    .await;
-                    let ready = connection.ping().await.err().map(Box::new);
-                    let close = connection.close().await.err().map(Box::new);
-                    match observed {
-                        Err(error) => Err(Error::Sql {
-                            primary: Some(Box::new(error)),
-                            ready,
-                            close,
-                        }),
-                        Ok(exists) => {
-                            if ready.is_some() || close.is_some() {
-                                Err(Error::Sql {
-                                    primary: None,
-                                    ready,
-                                    close,
-                                })
-                            } else {
-                                Ok(exists)
-                            }
-                        }
-                    }
-                })
-                .await
-                .map_err(|_| Error::Supervisor)??;
-                if exists {
-                    Err(error)
-                } else {
-                    Ok(Prepared {
-                        origin: self.origin.clone(),
-                        recording,
-                        resolved: Value::Null,
-                        changed: false,
-                        skip: Some("error: Recording matching query does not exist.".into()),
-                    })
-                }
-            }
-            Err(error) => Err(error),
-        }
+        normal::prepare(self, recording, owner).await
     }
     pub async fn prepare(
         &self,
@@ -163,6 +116,21 @@ impl Store {
         prepared: Prepared,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Completed, Error> {
+        self.execute_mode(prepared, owner, false).await
+    }
+    pub async fn execute_normal(
+        &self,
+        prepared: Prepared,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Completed, Error> {
+        self.execute_mode(prepared, owner, true).await
+    }
+    async fn execute_mode(
+        &self,
+        prepared: Prepared,
+        owner: Arc<dyn Send + Sync>,
+        normal: bool,
+    ) -> Result<Completed, Error> {
         if !Arc::ptr_eq(&self.origin, &prepared.origin) {
             return Err(Error::Unsupported("foreign preparation"));
         }
@@ -184,7 +152,7 @@ impl Store {
         tokio::spawn(async move{
    let _owner=owner;let mut c=pool.acquire().await.map_err(sql)?.detach();let result=async{
     let fresh:Option<Value>=sqlx::query_scalar("SELECT CASE WHEN custom_properties IS NULL THEN '{}'::jsonb WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END FROM dispatcharr_channels_recording WHERE id=$1").bind(prepared.recording).fetch_optional(&mut c).await.map_err(sql)?.flatten();let fresh=fresh.ok_or(Error::Unsupported("fresh recording capacity/missing"))?;
-    let mut merged=fresh.as_object().cloned().ok_or(Error::Unsupported("fresh recording object"))?;let resolved=prepared.resolved.as_object().ok_or(Error::Unsupported("resolved object"))?;
+    let mut merged=if normal&&!truth(&fresh){serde_json::Map::new()}else{fresh.as_object().cloned().ok_or(Error::Unsupported("fresh recording object"))?};let resolved=prepared.resolved.as_object().ok_or(Error::Unsupported("resolved object"))?;
     for key in ["program","poster_logo_id","poster_url","rating","rating_system","season","episode","onscreen_episode"]{if let Some(value)=resolved.get(key){merged.insert(key.into(),value.clone());}}
     let merged=Value::Object(merged);if serde_json::to_vec(&merged).map_err(|_|Error::Unsupported("metadata encoding"))?.len()>8192{return Err(Error::Unsupported("merged metadata capacity"));}
     let changed=sqlx::query("UPDATE dispatcharr_channels_recording SET custom_properties=$1 WHERE id=$2 AND COALESCE(custom_properties,'{}'::jsonb)=$3").bind(merged).bind(prepared.recording).bind(fresh).execute(&mut c).await.map_err(sql)?.rows_affected();if changed!=1{return Err(Error::Unsupported("concurrent metadata write"));}Ok(Completed{recording:prepared.recording,changed:true,value:"ok".into()})

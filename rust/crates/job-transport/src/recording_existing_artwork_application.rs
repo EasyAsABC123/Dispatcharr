@@ -276,11 +276,12 @@ async fn run_mode(
         .claim_local_artwork(candidate, owner.clone())
         .await
         .map_err(Error::Transport)?;
-    let completed = inner
-        .store
-        .execute(prepared, owner.clone())
-        .await
-        .map_err(Error::Domain)?;
+    let completed = if adopt {
+        inner.store.execute_normal(prepared, owner.clone()).await
+    } else {
+        inner.store.execute(prepared, owner.clone()).await
+    }
+    .map_err(Error::Domain)?;
     if completed.changed {
         let (tx, rx) = oneshot::channel();
         let receipt = Arc::new(Receipt {
@@ -450,7 +451,7 @@ async fn run_root(
         .map_err(Error::Transport)?;
     let completed = inner
         .store
-        .execute(prepared, owner.clone())
+        .execute_normal(prepared, owner.clone())
         .await
         .map_err(Error::Domain)?;
     if completed.changed {

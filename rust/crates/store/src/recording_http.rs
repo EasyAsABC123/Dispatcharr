@@ -224,6 +224,18 @@ impl RecordingHttp {
             .route("/api/channels/recordings/{*tail}", any(handle))
             .with_state(self)
     }
+    /// Keep one pair of outer paths: matchit's sibling catchall cannot merge
+    /// with a separate dynamic playback subtree. Main supplies the same Auth.
+    /// Playback's own authentication/STREAMS/DVR checks run before manage/UI.
+    pub fn router_with_playback(self, playback: crate::RecordingPlayback) -> Router {
+        Router::new()
+            .route("/api/channels/recordings/", any(handle_with_playback))
+            .route(
+                "/api/channels/recordings/{*tail}",
+                any(handle_with_playback),
+            )
+            .with_state((self, playback))
+    }
     pub fn close_admission(&self) {
         self.state.closed.store(true, Ordering::Release);
         self.state.slots.close();
@@ -238,6 +250,32 @@ impl RecordingHttp {
             tokio::time::sleep(Duration::from_millis(5)).await;
         }
         true
+    }
+}
+async fn handle_with_playback(
+    State((api, playback)): State<(RecordingHttp, crate::RecordingPlayback)>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Response {
+    let eligible = matches!(*request.method(), Method::GET | Method::HEAD)
+        && request
+            .uri()
+            .path()
+            .strip_prefix("/api/channels/recordings/")
+            .and_then(|tail| tail.split_once('/'))
+            .is_some_and(|(id, action)| {
+                !id.is_empty()
+                    && (action == "file/"
+                        || action
+                            .strip_prefix("hls/")
+                            .is_some_and(|segment| !segment.is_empty()))
+            });
+    if eligible {
+        // No management admission, account_user UI policy or body buffering here.
+        // The actual playback service enforces its original Auth4/SQL/file ports.
+        playback.dispatch(peer, request).await
+    } else {
+        handle(State(api), ConnectInfo(peer), request).await
     }
 }
 async fn handle(

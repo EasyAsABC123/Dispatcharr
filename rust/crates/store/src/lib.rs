@@ -478,3 +478,7 @@ pub mod recording_existing_artwork;
 
 pub mod recording_http;
 mod recording_http_files;
+
+mod recording_playback;
+mod recording_playback_files;
+pub use recording_playback::{RecordingPlayback, RecordingPlaybackOrigin};

@@ -44,6 +44,7 @@ struct Inner {
     closed: AtomicBool,
     local: SocketAddr,
     recording_http: dispatcharr_store::recording_http::RecordingHttp,
+    recording_playback: dispatcharr_store::RecordingPlayback,
     beat_enabled: bool,
 }
 #[derive(Clone)]
@@ -189,6 +190,10 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected scanner locks initialization failed")?;
+        let recording_playback = dispatcharr_store::RecordingPlayback::prepare(
+            auth.clone(),
+            dispatcharr_output_http::source_output_origin,
+        );
         let recording_http = dispatcharr_store::recording_http::RecordingHttp::prepare(
             auth.clone(),
             crate::recording_http_bridge::port(
@@ -323,12 +328,16 @@ impl SelectedJobs {
                 closed: AtomicBool::new(false),
                 local,
                 recording_http,
+                recording_playback,
                 beat_enabled,
             }),
         })
     }
     pub fn recordings_router(&self) -> axum::Router {
-        self.inner.recording_http.clone().router()
+        self.inner
+            .recording_http
+            .clone()
+            .router_with_playback(self.inner.recording_playback.clone())
     }
     pub fn readiness(&self) -> (bool, serde_json::Value) {
         let queue = self.inner.queue.readiness();
@@ -434,6 +443,7 @@ impl SelectedJobs {
     }
     pub fn stop_producers(&self) {
         self.inner.recording_http.close_admission();
+        self.inner.recording_playback.close_admission();
         self.inner.closed.store(true, Ordering::Release);
         self.inner.startup.send_replace(Startup::Stopping);
         self.inner.scheduler.stop_admission();
@@ -456,6 +466,15 @@ impl SelectedJobs {
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
         {
+            return false;
+        }
+        if !self
+            .inner
+            .recording_playback
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            eprintln!("Recording playback drain remains physically unsettled");
             return false;
         }
         if self
