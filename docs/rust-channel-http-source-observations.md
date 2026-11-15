@@ -1,0 +1,7 @@
+# Original channel HTTP producer authority
+
+All original application/protocol credit belongs to the Dispatcharr and dependency authors. One new ordinary Source-only warm uWSGI/gevent fixture completed98 actual TCP calls and captured29 target task frames. Source9 task bodies were not repeated: no task worker/Beat/media consumer ran, task business tables stayed unchanged and result backend stayed empty. One natural startup plugin-repository refresh frame was captured separately and remained unconsumed.
+
+The read-only evaluator passed333 checks. Web master/children and role owner exited normally with actual waits/pipes/generation proofs; project/CID/network/volume and all CLI process groups are absent. Default database62tables/59sequences/Redis7 remained unchanged. The ordinary lease lasted18.31seconds; this is functional evidence, not a performance comparison.
+
+Actual Source confirms noninteger children, fractional starts and4097-ID selections are accepted and published. An invalid logo source ID publishes a task before a later count query raises HTTP500. These expose gaps in the current bounded Native producer profile. The corresponding task body semantics are not qualified by publication alone. Real credentials were used but key/JWT values were never recorded; only subject metadata and credential hashes are retained. Complete frozen tools/schema/pg-init/archive/coordinator hashes preceded application execution. Native counterparts and remaining task/error profiles still require acceptance; full M6/rewrite/performance remain open.

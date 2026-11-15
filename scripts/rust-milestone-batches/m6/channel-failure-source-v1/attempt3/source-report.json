@@ -1,0 +1,1123 @@
+{
+  "passed": true,
+  "Source_API_calls": 0,
+  "cases": [
+    {
+      "name": "normal_names",
+      "task": "apps.channels.tasks.set_channels_names_from_epg",
+      "args": [
+        [
+          1
+        ]
+      ],
+      "kwargs": {},
+      "expected_state": "SUCCESS",
+      "before": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Old owned name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [],
+        "dispatcharr_channels_channelstream": [],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "actual_task_id": "e092451a-2b00-49fb-8a41-ddf3211fd395",
+      "raw_backend_base64": "eyJzdGF0dXMiOiAiU1VDQ0VTUyIsICJyZXN1bHQiOiB7InN0YXR1cyI6ICJjb21wbGV0ZWQiLCAidXBkYXRlZF9jb3VudCI6IDEsICJlcnJvcl9jb3VudCI6IDAsICJlcnJvcnMiOiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAiY2hpbGRyZW4iOiBbXSwgImRhdGVfZG9uZSI6ICIyMDI2LTExLTE1VDAyOjIwOjAzLjMwNjU0NyswMDowMCIsICJ0YXNrX2lkIjogImUwOTI0NTFhLTJiMDAtNDlmYi04YTQxLWRkZjMyMTFmZDM5NSJ9",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": {
+          "status": "completed",
+          "updated_count": 1,
+          "error_count": 0,
+          "errors": []
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-15T02:20:03.306547+00:00",
+        "task_id": "e092451a-2b00-49fb-8a41-ddf3211fd395"
+      },
+      "ttl": 3600,
+      "after": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [],
+        "dispatcharr_channels_channelstream": [],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "Channels": {
+        "key_base64": "YXNnaXNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3Qh",
+        "raw_base64": [
+          "QOyZWgNHLBXs0ehcg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBluWVwZ19uYW1lX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkZTA5MjQ1MWEtMmIwMC00OWZiLThhNDEtZGRmMzIxMWZkMzk1qHByb2dyZXNzAKV0b3RhbAGmc3RhdHVzp3J1bm5pbmenbWVzc2FnZbxTdGFydGluZyBFUEcgbmFtZSBzZXR0aW5nLi4usF9fYXNnaV9jaGFubmVsX1+R2ShzcGVjaWZpYy5vd25lZF9jaGFubmVsX2NvbnRyYWN0IXJlY2VpdmVy",
+          "RoNnTGNCzReQemkWg6R0eXBlpnVwZGF0ZaRkYXRhh6R0eXBluWVwZ19uYW1lX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkZTA5MjQ1MWEtMmIwMC00OWZiLThhNDEtZGRmMzIxMWZkMzk1qHByb2dyZXNzAaV0b3RhbAGmc3RhdHVzp3J1bm5pbmenbWVzc2FnZbpVcGRhdGVkIDEgY2hhbm5lbCBuYW1lcy4uLq11cGRhdGVkX2NvdW50AbBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg==",
+          "AykSCs3DIUKNkNEGg6R0eXBlpnVwZGF0ZaRkYXRhiaR0eXBluWVwZ19uYW1lX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkZTA5MjQ1MWEtMmIwMC00OWZiLThhNDEtZGRmMzIxMWZkMzk1qHByb2dyZXNzAaV0b3RhbAGmc3RhdHVzqWNvbXBsZXRlZKdtZXNzYWdl2TJTdWNjZXNzZnVsbHkgdXBkYXRlZCAxIGNoYW5uZWwgbmFtZXMgZnJvbSBFUEcgZGF0Ya11cGRhdGVkX2NvdW50AatlcnJvcl9jb3VudACmZXJyb3JzkLBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg=="
+        ],
+        "decoded": [
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_name_setting_progress",
+              "task_id": "e092451a-2b00-49fb-8a41-ddf3211fd395",
+              "progress": 0,
+              "total": 1,
+              "status": "running",
+              "message": "Starting EPG name setting..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_name_setting_progress",
+              "task_id": "e092451a-2b00-49fb-8a41-ddf3211fd395",
+              "progress": 1,
+              "total": 1,
+              "status": "running",
+              "message": "Updated 1 channel names...",
+              "updated_count": 1
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_name_setting_progress",
+              "task_id": "e092451a-2b00-49fb-8a41-ddf3211fd395",
+              "progress": 1,
+              "total": 1,
+              "status": "completed",
+              "message": "Successfully updated 1 channel names from EPG data",
+              "updated_count": 1,
+              "error_count": 0,
+              "errors": []
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          }
+        ]
+      },
+      "expected_state_match": true
+    },
+    {
+      "name": "normal_tvg",
+      "task": "apps.channels.tasks.set_channels_tvg_ids_from_epg",
+      "args": [
+        [
+          1
+        ]
+      ],
+      "kwargs": {},
+      "expected_state": "SUCCESS",
+      "before": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [],
+        "dispatcharr_channels_channelstream": [],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "actual_task_id": "bfcc5a70-85c7-48a6-b147-65eea2f1c276",
+      "raw_backend_base64": "eyJzdGF0dXMiOiAiU1VDQ0VTUyIsICJyZXN1bHQiOiB7InN0YXR1cyI6ICJjb21wbGV0ZWQiLCAidXBkYXRlZF9jb3VudCI6IDEsICJlcnJvcl9jb3VudCI6IDAsICJlcnJvcnMiOiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAiY2hpbGRyZW4iOiBbXSwgImRhdGVfZG9uZSI6ICIyMDI2LTExLTE1VDAyOjIwOjAzLjM3NjQ3MyswMDowMCIsICJ0YXNrX2lkIjogImJmY2M1YTcwLTg1YzctNDhhNi1iMTQ3LTY1ZWVhMmYxYzI3NiJ9",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": {
+          "status": "completed",
+          "updated_count": 1,
+          "error_count": 0,
+          "errors": []
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-15T02:20:03.376473+00:00",
+        "task_id": "bfcc5a70-85c7-48a6-b147-65eea2f1c276"
+      },
+      "ttl": 3600,
+      "after": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [],
+        "dispatcharr_channels_channelstream": [],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "Channels": {
+        "key_base64": "YXNnaXNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3Qh",
+        "raw_base64": [
+          "AD0ShTzlCnjJUB4bg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBlu2VwZ190dmdfaWRfc2V0dGluZ19wcm9ncmVzc6d0YXNrX2lk2SRiZmNjNWE3MC04NWM3LTQ4YTYtYjE0Ny02NWVlYTJmMWMyNzaocHJvZ3Jlc3MApXRvdGFsAaZzdGF0dXOncnVubmluZ6dtZXNzYWdlvlN0YXJ0aW5nIEVQRyBUVkctSUQgc2V0dGluZy4uLrBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg==",
+          "gLxLZqEd4ZoRVoVEg6R0eXBlpnVwZGF0ZaRkYXRhh6R0eXBlu2VwZ190dmdfaWRfc2V0dGluZ19wcm9ncmVzc6d0YXNrX2lk2SRiZmNjNWE3MC04NWM3LTQ4YTYtYjE0Ny02NWVlYTJmMWMyNzaocHJvZ3Jlc3MBpXRvdGFsAaZzdGF0dXOncnVubmluZ6dtZXNzYWdlvFVwZGF0ZWQgMSBjaGFubmVsIFRWRy1JRHMuLi6tdXBkYXRlZF9jb3VudAGwX19hc2dpX2NoYW5uZWxfX5HZKHNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3QhcmVjZWl2ZXI=",
+          "LnkjRmNKdGRhp/Ybg6R0eXBlpnVwZGF0ZaRkYXRhiaR0eXBlu2VwZ190dmdfaWRfc2V0dGluZ19wcm9ncmVzc6d0YXNrX2lk2SRiZmNjNWE3MC04NWM3LTQ4YTYtYjE0Ny02NWVlYTJmMWMyNzaocHJvZ3Jlc3MBpXRvdGFsAaZzdGF0dXOpY29tcGxldGVkp21lc3NhZ2XZNFN1Y2Nlc3NmdWxseSB1cGRhdGVkIDEgY2hhbm5lbCBUVkctSURzIGZyb20gRVBHIGRhdGGtdXBkYXRlZF9jb3VudAGrZXJyb3JfY291bnQApmVycm9yc5CwX19hc2dpX2NoYW5uZWxfX5HZKHNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3QhcmVjZWl2ZXI="
+        ],
+        "decoded": [
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_tvg_id_setting_progress",
+              "task_id": "bfcc5a70-85c7-48a6-b147-65eea2f1c276",
+              "progress": 0,
+              "total": 1,
+              "status": "running",
+              "message": "Starting EPG TVG-ID setting..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_tvg_id_setting_progress",
+              "task_id": "bfcc5a70-85c7-48a6-b147-65eea2f1c276",
+              "progress": 1,
+              "total": 1,
+              "status": "running",
+              "message": "Updated 1 channel TVG-IDs...",
+              "updated_count": 1
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_tvg_id_setting_progress",
+              "task_id": "bfcc5a70-85c7-48a6-b147-65eea2f1c276",
+              "progress": 1,
+              "total": 1,
+              "status": "completed",
+              "message": "Successfully updated 1 channel TVG-IDs from EPG data",
+              "updated_count": 1,
+              "error_count": 0,
+              "errors": []
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          }
+        ]
+      },
+      "expected_state_match": true
+    },
+    {
+      "name": "normal_logos",
+      "task": "apps.channels.tasks.set_channels_logos_from_epg",
+      "args": [],
+      "kwargs": {
+        "channel_ids": [
+          1
+        ]
+      },
+      "expected_state": "SUCCESS",
+      "before": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [],
+        "dispatcharr_channels_channelstream": [],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "actual_task_id": "37fee0b8-5a56-46dc-8f12-bb8e5d1aae67",
+      "raw_backend_base64": "eyJzdGF0dXMiOiAiU1VDQ0VTUyIsICJyZXN1bHQiOiB7InN0YXR1cyI6ICJjb21wbGV0ZWQiLCAidXBkYXRlZF9jb3VudCI6IDEsICJjcmVhdGVkX2xvZ29zX2NvdW50IjogMSwgImVycm9yX2NvdW50IjogMCwgImVycm9ycyI6IFtdfSwgInRyYWNlYmFjayI6IG51bGwsICJjaGlsZHJlbiI6IFtdLCAiZGF0ZV9kb25lIjogIjIwMjYtMTEtMTVUMDI6MjA6MDMuNDA2NTE2KzAwOjAwIiwgInRhc2tfaWQiOiAiMzdmZWUwYjgtNWE1Ni00NmRjLThmMTItYmI4ZTVkMWFhZTY3In0=",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": {
+          "status": "completed",
+          "updated_count": 1,
+          "created_logos_count": 1,
+          "error_count": 0,
+          "errors": []
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-15T02:20:03.406516+00:00",
+        "task_id": "37fee0b8-5a56-46dc-8f12-bb8e5d1aae67"
+      },
+      "ttl": 3600,
+      "after": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}"
+        ],
+        "dispatcharr_channels_channelstream": [],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "Channels": {
+        "key_base64": "YXNnaXNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3Qh",
+        "raw_base64": [
+          "3WexWVgg9ZUlTedZg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBluWVwZ19sb2dvX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkMzdmZWUwYjgtNWE1Ni00NmRjLThmMTItYmI4ZTVkMWFhZTY3qHByb2dyZXNzAKV0b3RhbAGmc3RhdHVzp3J1bm5pbmenbWVzc2FnZbxTdGFydGluZyBFUEcgbG9nbyBzZXR0aW5nLi4usF9fYXNnaV9jaGFubmVsX1+R2ShzcGVjaWZpYy5vd25lZF9jaGFubmVsX2NvbnRyYWN0IXJlY2VpdmVy",
+          "EMFdp4yi21IXR0H0g6R0eXBlpnVwZGF0ZaRkYXRhiKR0eXBluWVwZ19sb2dvX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkMzdmZWUwYjgtNWE1Ni00NmRjLThmMTItYmI4ZTVkMWFhZTY3qHByb2dyZXNzAaV0b3RhbAGmc3RhdHVzp3J1bm5pbmenbWVzc2FnZdkvVXBkYXRlZCAxIGNoYW5uZWwgbG9nb3MsIGNyZWF0ZWQgMSBuZXcgbG9nb3MuLi6tdXBkYXRlZF9jb3VudAGzY3JlYXRlZF9sb2dvc19jb3VudAGwX19hc2dpX2NoYW5uZWxfX5HZKHNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3QhcmVjZWl2ZXI=",
+          "GwAqDJweeGNJ4BtTg6R0eXBlpnVwZGF0ZaRkYXRhiqR0eXBluWVwZ19sb2dvX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkMzdmZWUwYjgtNWE1Ni00NmRjLThmMTItYmI4ZTVkMWFhZTY3qHByb2dyZXNzAaV0b3RhbAGmc3RhdHVzqWNvbXBsZXRlZKdtZXNzYWdl2UpTdWNjZXNzZnVsbHkgdXBkYXRlZCAxIGNoYW5uZWwgbG9nb3MgYW5kIGNyZWF0ZWQgMSBuZXcgbG9nb3MgZnJvbSBFUEcgZGF0Ya11cGRhdGVkX2NvdW50AbNjcmVhdGVkX2xvZ29zX2NvdW50AatlcnJvcl9jb3VudACmZXJyb3JzkLBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg=="
+        ],
+        "decoded": [
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_logo_setting_progress",
+              "task_id": "37fee0b8-5a56-46dc-8f12-bb8e5d1aae67",
+              "progress": 0,
+              "total": 1,
+              "status": "running",
+              "message": "Starting EPG logo setting..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_logo_setting_progress",
+              "task_id": "37fee0b8-5a56-46dc-8f12-bb8e5d1aae67",
+              "progress": 1,
+              "total": 1,
+              "status": "running",
+              "message": "Updated 1 channel logos, created 1 new logos...",
+              "updated_count": 1,
+              "created_logos_count": 1
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_logo_setting_progress",
+              "task_id": "37fee0b8-5a56-46dc-8f12-bb8e5d1aae67",
+              "progress": 1,
+              "total": 1,
+              "status": "completed",
+              "message": "Successfully updated 1 channel logos and created 1 new logos from EPG data",
+              "updated_count": 1,
+              "created_logos_count": 1,
+              "error_count": 0,
+              "errors": []
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          }
+        ]
+      },
+      "expected_state_match": true
+    },
+    {
+      "name": "normal_bulk",
+      "task": "apps.channels.tasks.bulk_create_channels_from_streams",
+      "args": [
+        [
+          1
+        ],
+        [],
+        0
+      ],
+      "kwargs": {},
+      "expected_state": "SUCCESS",
+      "before": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}"
+        ],
+        "dispatcharr_channels_channelstream": [],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "actual_task_id": "6e8a60a3-1dce-439c-9bdc-05223e2e6fab",
+      "raw_backend_base64": "eyJzdGF0dXMiOiAiU1VDQ0VTUyIsICJyZXN1bHQiOiB7InN0YXR1cyI6ICJjb21wbGV0ZWQiLCAiY3JlYXRlZF9jb3VudCI6IDEsICJlcnJvcl9jb3VudCI6IDAsICJlcnJvcnMiOiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAiY2hpbGRyZW4iOiBbXSwgImRhdGVfZG9uZSI6ICIyMDI2LTExLTE1VDAyOjIwOjAzLjQ0OTg2OCswMDowMCIsICJ0YXNrX2lkIjogIjZlOGE2MGEzLTFkY2UtNDM5Yy05YmRjLTA1MjIzZTJlNmZhYiJ9",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": {
+          "status": "completed",
+          "created_count": 1,
+          "error_count": 0,
+          "errors": []
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-15T02:20:03.449868+00:00",
+        "task_id": "6e8a60a3-1dce-439c-9bdc-05223e2e6fab"
+      },
+      "ttl": 3600,
+      "after": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "Channels": {
+        "key_base64": "YXNnaXNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3Qh",
+        "raw_base64": [
+          "kl+X1bXQgX8Od86bg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBlvmJ1bGtfY2hhbm5lbF9jcmVhdGlvbl9wcm9ncmVzc6d0YXNrX2lk2SQ2ZThhNjBhMy0xZGNlLTQzOWMtOWJkYy0wNTIyM2UyZTZmYWKocHJvZ3Jlc3MApXRvdGFsAaZzdGF0dXOoc3RhcnRpbmenbWVzc2FnZdknU3RhcnRpbmcgYnVsayBjcmVhdGlvbiBvZiAxIGNoYW5uZWxzLi4usF9fYXNnaV9jaGFubmVsX1+R2ShzcGVjaWZpYy5vd25lZF9jaGFubmVsX2NvbnRyYWN0IXJlY2VpdmVy",
+          "ShcebqkTm9Gu5moHg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBlvmJ1bGtfY2hhbm5lbF9jcmVhdGlvbl9wcm9ncmVzc6d0YXNrX2lk2SQ2ZThhNjBhMy0xZGNlLTQzOWMtOWJkYy0wNTIyM2UyZTZmYWKocHJvZ3Jlc3MApXRvdGFsAaZzdGF0dXOqcHJvY2Vzc2luZ6dtZXNzYWdlvlByb2Nlc3Npbmcgc3RyZWFtcyAxLTEgb2YgMS4uLrBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg==",
+          "HaXm1/pIKOMgMPuZg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBlvmJ1bGtfY2hhbm5lbF9jcmVhdGlvbl9wcm9ncmVzc6d0YXNrX2lk2SQ2ZThhNjBhMy0xZGNlLTQzOWMtOWJkYy0wNTIyM2UyZTZmYWKocHJvZ3Jlc3MBpXRvdGFsAaZzdGF0dXOuY3JlYXRpbmdfbG9nb3OnbWVzc2FnZbNDcmVhdGluZyAxIGxvZ29zLi4usF9fYXNnaV9jaGFubmVsX1+R2ShzcGVjaWZpYy5vd25lZF9jaGFubmVsX2NvbnRyYWN0IXJlY2VpdmVy",
+          "Pe/QXFmqMDrHii83g6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBlvmJ1bGtfY2hhbm5lbF9jcmVhdGlvbl9wcm9ncmVzc6d0YXNrX2lk2SQ2ZThhNjBhMy0xZGNlLTQzOWMtOWJkYy0wNTIyM2UyZTZmYWKocHJvZ3Jlc3MBpXRvdGFsAaZzdGF0dXOxY3JlYXRpbmdfY2hhbm5lbHOnbWVzc2FnZdkiQ3JlYXRpbmcgMSBjaGFubmVscyBpbiBkYXRhYmFzZS4uLrBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg==",
+          "ror2kpglUMynw/v/g6R0eXBlpnVwZGF0ZaRkYXRhiaR0eXBlvmJ1bGtfY2hhbm5lbF9jcmVhdGlvbl9wcm9ncmVzc6d0YXNrX2lk2SQ2ZThhNjBhMy0xZGNlLTQzOWMtOWJkYy0wNTIyM2UyZTZmYWKocHJvZ3Jlc3MBpXRvdGFsAaZzdGF0dXOpY29tcGxldGVkp21lc3NhZ2W/U3VjY2Vzc2Z1bGx5IGNyZWF0ZWQgMSBjaGFubmVsc61jcmVhdGVkX2NvdW50AatlcnJvcl9jb3VudACmZXJyb3JzkLBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg==",
+          "2HMSsZwAq1Gx39Xpg6R0eXBlpnVwZGF0ZaRkYXRhgqR0eXBlsGNoYW5uZWxzX2NyZWF0ZWSlY291bnQBsF9fYXNnaV9jaGFubmVsX1+R2ShzcGVjaWZpYy5vd25lZF9jaGFubmVsX2NvbnRyYWN0IXJlY2VpdmVy"
+        ],
+        "decoded": [
+          {
+            "type": "update",
+            "data": {
+              "type": "bulk_channel_creation_progress",
+              "task_id": "6e8a60a3-1dce-439c-9bdc-05223e2e6fab",
+              "progress": 0,
+              "total": 1,
+              "status": "starting",
+              "message": "Starting bulk creation of 1 channels..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "bulk_channel_creation_progress",
+              "task_id": "6e8a60a3-1dce-439c-9bdc-05223e2e6fab",
+              "progress": 0,
+              "total": 1,
+              "status": "processing",
+              "message": "Processing streams 1-1 of 1..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "bulk_channel_creation_progress",
+              "task_id": "6e8a60a3-1dce-439c-9bdc-05223e2e6fab",
+              "progress": 1,
+              "total": 1,
+              "status": "creating_logos",
+              "message": "Creating 1 logos..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "bulk_channel_creation_progress",
+              "task_id": "6e8a60a3-1dce-439c-9bdc-05223e2e6fab",
+              "progress": 1,
+              "total": 1,
+              "status": "creating_channels",
+              "message": "Creating 1 channels in database..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "bulk_channel_creation_progress",
+              "task_id": "6e8a60a3-1dce-439c-9bdc-05223e2e6fab",
+              "progress": 1,
+              "total": 1,
+              "status": "completed",
+              "message": "Successfully created 1 channels",
+              "created_count": 1,
+              "error_count": 0,
+              "errors": []
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "channels_created",
+              "count": 1
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          }
+        ]
+      },
+      "expected_state_match": true
+    },
+    {
+      "name": "names_P0001",
+      "task": "apps.channels.tasks.set_channels_names_from_epg",
+      "args": [
+        [
+          2
+        ]
+      ],
+      "kwargs": {},
+      "expected_state": "FAILURE",
+      "before": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "controlled_owned_PG_error": {
+        "table": "dispatcharr_channels_channel",
+        "verb": "UPDATE",
+        "sqlstate": "P0001",
+        "message": "owned channel name update"
+      },
+      "actual_task_id": "38e03df3-dfc2-4548-858e-62c26fde78a7",
+      "raw_backend_base64": "eyJzdGF0dXMiOiAiRkFJTFVSRSIsICJyZXN1bHQiOiB7ImV4Y190eXBlIjogIlByb2dyYW1taW5nRXJyb3IiLCAiZXhjX21lc3NhZ2UiOiBbIm93bmVkIGNoYW5uZWwgbmFtZSB1cGRhdGVcbkNPTlRFWFQ6ICBQTC9wZ1NRTCBmdW5jdGlvbiBvd25lZF9jaGFubmVsX2ZhaWx1cmUoKSBsaW5lIDEgYXQgUkFJU0UiXSwgImV4Y19tb2R1bGUiOiAiZGphbmdvLmRiLnV0aWxzIn0sICJ0cmFjZWJhY2siOiAiVHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3QpOlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvYmFja2VuZHMvdXRpbHMucHlcIiwgbGluZSAxMDUsIGluIF9leGVjdXRlXG4gICAgcmV0dXJuIHNlbGYuY3Vyc29yLmV4ZWN1dGUoc3FsLCBwYXJhbXMpXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3BzeWNvcGcvY3Vyc29yLnB5XCIsIGxpbmUgMTE3LCBpbiBleGVjdXRlXG4gICAgcmFpc2UgZXgud2l0aF90cmFjZWJhY2soTm9uZSlcbnBzeWNvcGcuZXJyb3JzLlJhaXNlRXhjZXB0aW9uOiBvd25lZCBjaGFubmVsIG5hbWUgdXBkYXRlXG5DT05URVhUOiAgUEwvcGdTUUwgZnVuY3Rpb24gb3duZWRfY2hhbm5lbF9mYWlsdXJlKCkgbGluZSAxIGF0IFJBSVNFXG5cblRoZSBhYm92ZSBleGNlcHRpb24gd2FzIHRoZSBkaXJlY3QgY2F1c2Ugb2YgdGhlIGZvbGxvd2luZyBleGNlcHRpb246XG5cblRyYWNlYmFjayAobW9zdCByZWNlbnQgY2FsbCBsYXN0KTpcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvY2VsZXJ5L2FwcC90cmFjZS5weVwiLCBsaW5lIDU4NSwgaW4gdHJhY2VfdGFza1xuICAgIFIgPSByZXR2YWwgPSBmdW4oKmFyZ3MsICoqa3dhcmdzKVxuICAgICAgICAgICAgICAgICB+fn5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9jZWxlcnkvYXBwL3RyYWNlLnB5XCIsIGxpbmUgODU4LCBpbiBfX3Byb3RlY3RlZF9jYWxsX19cbiAgICByZXR1cm4gc2VsZi5ydW4oKmFyZ3MsICoqa3dhcmdzKVxuICAgICAgICAgICB+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2FzZ2lyZWYvc3luYy5weVwiLCBsaW5lIDQxMiwgaW4gbWFpbl93cmFwXG4gICAgcmFpc2UgZXhjX2luZm9bMV1cbiAgRmlsZSBcIi9hcHAvYXBwcy9jaGFubmVscy90YXNrcy5weVwiLCBsaW5lIDQzMzcsIGluIHNldF9jaGFubmVsc19uYW1lc19mcm9tX2VwZ1xuICAgIENoYW5uZWwub2JqZWN0cy5idWxrX3VwZGF0ZShiYXRjaF91cGRhdGVzLCBbJ25hbWUnXSlcbiAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9tb2RlbHMvbWFuYWdlci5weVwiLCBsaW5lIDg3LCBpbiBtYW5hZ2VyX21ldGhvZFxuICAgIHJldHVybiBnZXRhdHRyKHNlbGYuZ2V0X3F1ZXJ5c2V0KCksIG5hbWUpKCphcmdzLCAqKmt3YXJncylcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9tb2RlbHMvcXVlcnkucHlcIiwgbGluZSA5NjMsIGluIGJ1bGtfdXBkYXRlXG4gICAgcm93c191cGRhdGVkICs9IHF1ZXJ5c2V0LmZpbHRlcihwa19faW49cGtzKS51cGRhdGUoKip1cGRhdGVfa3dhcmdzKVxuICAgICAgICAgICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL21vZGVscy9xdWVyeS5weVwiLCBsaW5lIDEzMDAsIGluIHVwZGF0ZVxuICAgIHJvd3MgPSBxdWVyeS5nZXRfY29tcGlsZXIoc2VsZi5kYikuZXhlY3V0ZV9zcWwoUk9XX0NPVU5UKVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvbW9kZWxzL3NxbC9jb21waWxlci5weVwiLCBsaW5lIDIxMTEsIGluIGV4ZWN1dGVfc3FsXG4gICAgcm93X2NvdW50ID0gc3VwZXIoKS5leGVjdXRlX3NxbChyZXN1bHRfdHlwZSlcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL21vZGVscy9zcWwvY29tcGlsZXIucHlcIiwgbGluZSAxNjI0LCBpbiBleGVjdXRlX3NxbFxuICAgIGN1cnNvci5leGVjdXRlKHNxbCwgcGFyYW1zKVxuICAgIH5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvYmFja2VuZHMvdXRpbHMucHlcIiwgbGluZSA3OSwgaW4gZXhlY3V0ZVxuICAgIHJldHVybiBzZWxmLl9leGVjdXRlX3dpdGhfd3JhcHBlcnMoXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fl5cbiAgICAgICAgc3FsLCBwYXJhbXMsIG1hbnk9RmFsc2UsIGV4ZWN1dG9yPXNlbGYuX2V4ZWN1dGVcbiAgICAgICAgXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgICApXG4gICAgXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvYmFja2VuZHMvdXRpbHMucHlcIiwgbGluZSA5MiwgaW4gX2V4ZWN1dGVfd2l0aF93cmFwcGVyc1xuICAgIHJldHVybiBleGVjdXRvcihzcWwsIHBhcmFtcywgbWFueSwgY29udGV4dClcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL2JhY2tlbmRzL3V0aWxzLnB5XCIsIGxpbmUgMTAwLCBpbiBfZXhlY3V0ZVxuICAgIHdpdGggc2VsZi5kYi53cmFwX2RhdGFiYXNlX2Vycm9yczpcbiAgICAgICAgIF5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL3V0aWxzLnB5XCIsIGxpbmUgOTQsIGluIF9fZXhpdF9fXG4gICAgcmFpc2UgZGpfZXhjX3ZhbHVlLndpdGhfdHJhY2ViYWNrKHRyYWNlYmFjaykgZnJvbSBleGNfdmFsdWVcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL2JhY2tlbmRzL3V0aWxzLnB5XCIsIGxpbmUgMTA1LCBpbiBfZXhlY3V0ZVxuICAgIHJldHVybiBzZWxmLmN1cnNvci5leGVjdXRlKHNxbCwgcGFyYW1zKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9wc3ljb3BnL2N1cnNvci5weVwiLCBsaW5lIDExNywgaW4gZXhlY3V0ZVxuICAgIHJhaXNlIGV4LndpdGhfdHJhY2ViYWNrKE5vbmUpXG5kamFuZ28uZGIudXRpbHMuUHJvZ3JhbW1pbmdFcnJvcjogb3duZWQgY2hhbm5lbCBuYW1lIHVwZGF0ZVxuQ09OVEVYVDogIFBML3BnU1FMIGZ1bmN0aW9uIG93bmVkX2NoYW5uZWxfZmFpbHVyZSgpIGxpbmUgMSBhdCBSQUlTRVxuIiwgImNoaWxkcmVuIjogW10sICJkYXRlX2RvbmUiOiAiMjAyNi0xMS0xNVQwMjoyMDowMy40OTQyMTYrMDA6MDAiLCAidGFza19pZCI6ICIzOGUwM2RmMy1kZmMyLTQ1NDgtODU4ZS02MmMyNmZkZTc4YTcifQ==",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "ProgrammingError",
+          "exc_message": [
+            "owned channel name update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+          ],
+          "exc_module": "django.db.utils"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.RaiseException: owned channel name update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/asgiref/sync.py\", line 412, in main_wrap\n    raise exc_info[1]\n  File \"/app/apps/channels/tasks.py\", line 4337, in set_channels_names_from_epg\n    Channel.objects.bulk_update(batch_updates, ['name'])\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 963, in bulk_update\n    rows_updated += queryset.filter(pk__in=pks).update(**update_kwargs)\n                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1300, in update\n    rows = query.get_compiler(self.db).execute_sql(ROW_COUNT)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 2111, in execute_sql\n    row_count = super().execute_sql(result_type)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1624, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: owned channel name update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE\n",
+        "children": [],
+        "date_done": "2026-11-15T02:20:03.494216+00:00",
+        "task_id": "38e03df3-dfc2-4548-858e-62c26fde78a7"
+      },
+      "ttl": 3600,
+      "after": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "Channels": {
+        "key_base64": "YXNnaXNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3Qh",
+        "raw_base64": [
+          "qcfacHe7QgJXKPKvg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBluWVwZ19uYW1lX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkMzhlMDNkZjMtZGZjMi00NTQ4LTg1OGUtNjJjMjZmZGU3OGE3qHByb2dyZXNzAKV0b3RhbAGmc3RhdHVzp3J1bm5pbmenbWVzc2FnZbxTdGFydGluZyBFUEcgbmFtZSBzZXR0aW5nLi4usF9fYXNnaV9jaGFubmVsX1+R2ShzcGVjaWZpYy5vd25lZF9jaGFubmVsX2NvbnRyYWN0IXJlY2VpdmVy",
+          "WCM4ka6VBwsA/jCDg6R0eXBlpnVwZGF0ZaRkYXRhh6R0eXBluWVwZ19uYW1lX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkMzhlMDNkZjMtZGZjMi00NTQ4LTg1OGUtNjJjMjZmZGU3OGE3qHByb2dyZXNzAKV0b3RhbAGmc3RhdHVzpmZhaWxlZKdtZXNzYWdl2WpUYXNrIGZhaWxlZDogb3duZWQgY2hhbm5lbCBuYW1lIHVwZGF0ZQpDT05URVhUOiAgUEwvcGdTUUwgZnVuY3Rpb24gb3duZWRfY2hhbm5lbF9mYWlsdXJlKCkgbGluZSAxIGF0IFJBSVNFpWVycm9y2V1vd25lZCBjaGFubmVsIG5hbWUgdXBkYXRlCkNPTlRFWFQ6ICBQTC9wZ1NRTCBmdW5jdGlvbiBvd25lZF9jaGFubmVsX2ZhaWx1cmUoKSBsaW5lIDEgYXQgUkFJU0WwX19hc2dpX2NoYW5uZWxfX5HZKHNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3QhcmVjZWl2ZXI="
+        ],
+        "decoded": [
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_name_setting_progress",
+              "task_id": "38e03df3-dfc2-4548-858e-62c26fde78a7",
+              "progress": 0,
+              "total": 1,
+              "status": "running",
+              "message": "Starting EPG name setting..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_name_setting_progress",
+              "task_id": "38e03df3-dfc2-4548-858e-62c26fde78a7",
+              "progress": 0,
+              "total": 1,
+              "status": "failed",
+              "message": "Task failed: owned channel name update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE",
+              "error": "owned channel name update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          }
+        ]
+      },
+      "expected_state_match": true
+    },
+    {
+      "name": "tvg_22001",
+      "task": "apps.channels.tasks.set_channels_tvg_ids_from_epg",
+      "args": [
+        [
+          3
+        ]
+      ],
+      "kwargs": {},
+      "expected_state": "FAILURE",
+      "before": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "controlled_owned_PG_error": {
+        "table": "dispatcharr_channels_channel",
+        "verb": "UPDATE",
+        "sqlstate": "22001",
+        "message": "owned channel tvg update"
+      },
+      "actual_task_id": "a7580935-41a4-4dc2-8fa2-4f07f47a7f07",
+      "raw_backend_base64": "eyJzdGF0dXMiOiAiRkFJTFVSRSIsICJyZXN1bHQiOiB7ImV4Y190eXBlIjogIkRhdGFFcnJvciIsICJleGNfbWVzc2FnZSI6IFsib3duZWQgY2hhbm5lbCB0dmcgdXBkYXRlXG5DT05URVhUOiAgUEwvcGdTUUwgZnVuY3Rpb24gb3duZWRfY2hhbm5lbF9mYWlsdXJlKCkgbGluZSAxIGF0IFJBSVNFIl0sICJleGNfbW9kdWxlIjogImRqYW5nby5kYi51dGlscyJ9LCAidHJhY2ViYWNrIjogIlRyYWNlYmFjayAobW9zdCByZWNlbnQgY2FsbCBsYXN0KTpcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL2JhY2tlbmRzL3V0aWxzLnB5XCIsIGxpbmUgMTA1LCBpbiBfZXhlY3V0ZVxuICAgIHJldHVybiBzZWxmLmN1cnNvci5leGVjdXRlKHNxbCwgcGFyYW1zKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9wc3ljb3BnL2N1cnNvci5weVwiLCBsaW5lIDExNywgaW4gZXhlY3V0ZVxuICAgIHJhaXNlIGV4LndpdGhfdHJhY2ViYWNrKE5vbmUpXG5wc3ljb3BnLmVycm9ycy5TdHJpbmdEYXRhUmlnaHRUcnVuY2F0aW9uOiBvd25lZCBjaGFubmVsIHR2ZyB1cGRhdGVcbkNPTlRFWFQ6ICBQTC9wZ1NRTCBmdW5jdGlvbiBvd25lZF9jaGFubmVsX2ZhaWx1cmUoKSBsaW5lIDEgYXQgUkFJU0VcblxuVGhlIGFib3ZlIGV4Y2VwdGlvbiB3YXMgdGhlIGRpcmVjdCBjYXVzZSBvZiB0aGUgZm9sbG93aW5nIGV4Y2VwdGlvbjpcblxuVHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3QpOlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9jZWxlcnkvYXBwL3RyYWNlLnB5XCIsIGxpbmUgNTg1LCBpbiB0cmFjZV90YXNrXG4gICAgUiA9IHJldHZhbCA9IGZ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgICAgICAgIH5+fl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2NlbGVyeS9hcHAvdHJhY2UucHlcIiwgbGluZSA4NTgsIGluIF9fcHJvdGVjdGVkX2NhbGxfX1xuICAgIHJldHVybiBzZWxmLnJ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgIH5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvYXNnaXJlZi9zeW5jLnB5XCIsIGxpbmUgNDEyLCBpbiBtYWluX3dyYXBcbiAgICByYWlzZSBleGNfaW5mb1sxXVxuICBGaWxlIFwiL2FwcC9hcHBzL2NoYW5uZWxzL3Rhc2tzLnB5XCIsIGxpbmUgNDYwNCwgaW4gc2V0X2NoYW5uZWxzX3R2Z19pZHNfZnJvbV9lcGdcbiAgICBDaGFubmVsLm9iamVjdHMuYnVsa191cGRhdGUoYmF0Y2hfdXBkYXRlcywgWyd0dmdfaWQnXSlcbiAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL21vZGVscy9tYW5hZ2VyLnB5XCIsIGxpbmUgODcsIGluIG1hbmFnZXJfbWV0aG9kXG4gICAgcmV0dXJuIGdldGF0dHIoc2VsZi5nZXRfcXVlcnlzZXQoKSwgbmFtZSkoKmFyZ3MsICoqa3dhcmdzKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL21vZGVscy9xdWVyeS5weVwiLCBsaW5lIDk2MywgaW4gYnVsa191cGRhdGVcbiAgICByb3dzX3VwZGF0ZWQgKz0gcXVlcnlzZXQuZmlsdGVyKHBrX19pbj1wa3MpLnVwZGF0ZSgqKnVwZGF0ZV9rd2FyZ3MpXG4gICAgICAgICAgICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvbW9kZWxzL3F1ZXJ5LnB5XCIsIGxpbmUgMTMwMCwgaW4gdXBkYXRlXG4gICAgcm93cyA9IHF1ZXJ5LmdldF9jb21waWxlcihzZWxmLmRiKS5leGVjdXRlX3NxbChST1dfQ09VTlQpXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9tb2RlbHMvc3FsL2NvbXBpbGVyLnB5XCIsIGxpbmUgMjExMSwgaW4gZXhlY3V0ZV9zcWxcbiAgICByb3dfY291bnQgPSBzdXBlcigpLmV4ZWN1dGVfc3FsKHJlc3VsdF90eXBlKVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvbW9kZWxzL3NxbC9jb21waWxlci5weVwiLCBsaW5lIDE2MjQsIGluIGV4ZWN1dGVfc3FsXG4gICAgY3Vyc29yLmV4ZWN1dGUoc3FsLCBwYXJhbXMpXG4gICAgfn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9iYWNrZW5kcy91dGlscy5weVwiLCBsaW5lIDc5LCBpbiBleGVjdXRlXG4gICAgcmV0dXJuIHNlbGYuX2V4ZWN1dGVfd2l0aF93cmFwcGVycyhcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+XlxuICAgICAgICBzcWwsIHBhcmFtcywgbWFueT1GYWxzZSwgZXhlY3V0b3I9c2VsZi5fZXhlY3V0ZVxuICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgIClcbiAgICBeXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9iYWNrZW5kcy91dGlscy5weVwiLCBsaW5lIDkyLCBpbiBfZXhlY3V0ZV93aXRoX3dyYXBwZXJzXG4gICAgcmV0dXJuIGV4ZWN1dG9yKHNxbCwgcGFyYW1zLCBtYW55LCBjb250ZXh0KVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvYmFja2VuZHMvdXRpbHMucHlcIiwgbGluZSAxMDAsIGluIF9leGVjdXRlXG4gICAgd2l0aCBzZWxmLmRiLndyYXBfZGF0YWJhc2VfZXJyb3JzOlxuICAgICAgICAgXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvdXRpbHMucHlcIiwgbGluZSA5NCwgaW4gX19leGl0X19cbiAgICByYWlzZSBkal9leGNfdmFsdWUud2l0aF90cmFjZWJhY2sodHJhY2ViYWNrKSBmcm9tIGV4Y192YWx1ZVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvYmFja2VuZHMvdXRpbHMucHlcIiwgbGluZSAxMDUsIGluIF9leGVjdXRlXG4gICAgcmV0dXJuIHNlbGYuY3Vyc29yLmV4ZWN1dGUoc3FsLCBwYXJhbXMpXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3BzeWNvcGcvY3Vyc29yLnB5XCIsIGxpbmUgMTE3LCBpbiBleGVjdXRlXG4gICAgcmFpc2UgZXgud2l0aF90cmFjZWJhY2soTm9uZSlcbmRqYW5nby5kYi51dGlscy5EYXRhRXJyb3I6IG93bmVkIGNoYW5uZWwgdHZnIHVwZGF0ZVxuQ09OVEVYVDogIFBML3BnU1FMIGZ1bmN0aW9uIG93bmVkX2NoYW5uZWxfZmFpbHVyZSgpIGxpbmUgMSBhdCBSQUlTRVxuIiwgImNoaWxkcmVuIjogW10sICJkYXRlX2RvbmUiOiAiMjAyNi0xMS0xNVQwMjoyMDowMy41MjE4MzUrMDA6MDAiLCAidGFza19pZCI6ICJhNzU4MDkzNS00MWE0LTRkYzItOGZhMi00ZjA3ZjQ3YTdmMDcifQ==",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "DataError",
+          "exc_message": [
+            "owned channel tvg update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+          ],
+          "exc_module": "django.db.utils"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.StringDataRightTruncation: owned channel tvg update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/asgiref/sync.py\", line 412, in main_wrap\n    raise exc_info[1]\n  File \"/app/apps/channels/tasks.py\", line 4604, in set_channels_tvg_ids_from_epg\n    Channel.objects.bulk_update(batch_updates, ['tvg_id'])\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 963, in bulk_update\n    rows_updated += queryset.filter(pk__in=pks).update(**update_kwargs)\n                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1300, in update\n    rows = query.get_compiler(self.db).execute_sql(ROW_COUNT)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 2111, in execute_sql\n    row_count = super().execute_sql(result_type)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1624, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.DataError: owned channel tvg update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE\n",
+        "children": [],
+        "date_done": "2026-11-15T02:20:03.521835+00:00",
+        "task_id": "a7580935-41a4-4dc2-8fa2-4f07f47a7f07"
+      },
+      "ttl": 3600,
+      "after": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "Channels": {
+        "key_base64": "YXNnaXNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3Qh",
+        "raw_base64": [
+          "6cK6CSB4dMHg6NUWg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBlu2VwZ190dmdfaWRfc2V0dGluZ19wcm9ncmVzc6d0YXNrX2lk2SRhNzU4MDkzNS00MWE0LTRkYzItOGZhMi00ZjA3ZjQ3YTdmMDeocHJvZ3Jlc3MApXRvdGFsAaZzdGF0dXOncnVubmluZ6dtZXNzYWdlvlN0YXJ0aW5nIEVQRyBUVkctSUQgc2V0dGluZy4uLrBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg==",
+          "1n3Tc10X3zaHWjq3g6R0eXBlpnVwZGF0ZaRkYXRhh6R0eXBlu2VwZ190dmdfaWRfc2V0dGluZ19wcm9ncmVzc6d0YXNrX2lk2SRhNzU4MDkzNS00MWE0LTRkYzItOGZhMi00ZjA3ZjQ3YTdmMDeocHJvZ3Jlc3MApXRvdGFsAaZzdGF0dXOmZmFpbGVkp21lc3NhZ2XZaVRhc2sgZmFpbGVkOiBvd25lZCBjaGFubmVsIHR2ZyB1cGRhdGUKQ09OVEVYVDogIFBML3BnU1FMIGZ1bmN0aW9uIG93bmVkX2NoYW5uZWxfZmFpbHVyZSgpIGxpbmUgMSBhdCBSQUlTRaVlcnJvctlcb3duZWQgY2hhbm5lbCB0dmcgdXBkYXRlCkNPTlRFWFQ6ICBQTC9wZ1NRTCBmdW5jdGlvbiBvd25lZF9jaGFubmVsX2ZhaWx1cmUoKSBsaW5lIDEgYXQgUkFJU0WwX19hc2dpX2NoYW5uZWxfX5HZKHNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3QhcmVjZWl2ZXI="
+        ],
+        "decoded": [
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_tvg_id_setting_progress",
+              "task_id": "a7580935-41a4-4dc2-8fa2-4f07f47a7f07",
+              "progress": 0,
+              "total": 1,
+              "status": "running",
+              "message": "Starting EPG TVG-ID setting..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_tvg_id_setting_progress",
+              "task_id": "a7580935-41a4-4dc2-8fa2-4f07f47a7f07",
+              "progress": 0,
+              "total": 1,
+              "status": "failed",
+              "message": "Task failed: owned channel tvg update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE",
+              "error": "owned channel tvg update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          }
+        ]
+      },
+      "expected_state_match": true
+    },
+    {
+      "name": "logos_23505",
+      "task": "apps.channels.tasks.set_channels_logos_from_epg",
+      "args": [],
+      "kwargs": {
+        "channel_ids": [
+          4
+        ]
+      },
+      "expected_state": "FAILURE",
+      "before": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "controlled_owned_PG_error": {
+        "table": "dispatcharr_channels_logo",
+        "verb": "INSERT",
+        "sqlstate": "23505",
+        "message": "owned channel logo insert"
+      },
+      "actual_task_id": "0c308279-8ce2-431b-82a8-27112563d06a",
+      "raw_backend_base64": "eyJzdGF0dXMiOiAiRkFJTFVSRSIsICJyZXN1bHQiOiB7ImV4Y190eXBlIjogIkludGVncml0eUVycm9yIiwgImV4Y19tZXNzYWdlIjogWyJvd25lZCBjaGFubmVsIGxvZ28gaW5zZXJ0XG5DT05URVhUOiAgUEwvcGdTUUwgZnVuY3Rpb24gb3duZWRfY2hhbm5lbF9mYWlsdXJlKCkgbGluZSAxIGF0IFJBSVNFIl0sICJleGNfbW9kdWxlIjogImRqYW5nby5kYi51dGlscyJ9LCAidHJhY2ViYWNrIjogIlRyYWNlYmFjayAobW9zdCByZWNlbnQgY2FsbCBsYXN0KTpcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL2JhY2tlbmRzL3V0aWxzLnB5XCIsIGxpbmUgMTA1LCBpbiBfZXhlY3V0ZVxuICAgIHJldHVybiBzZWxmLmN1cnNvci5leGVjdXRlKHNxbCwgcGFyYW1zKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9wc3ljb3BnL2N1cnNvci5weVwiLCBsaW5lIDExNywgaW4gZXhlY3V0ZVxuICAgIHJhaXNlIGV4LndpdGhfdHJhY2ViYWNrKE5vbmUpXG5wc3ljb3BnLmVycm9ycy5VbmlxdWVWaW9sYXRpb246IG93bmVkIGNoYW5uZWwgbG9nbyBpbnNlcnRcbkNPTlRFWFQ6ICBQTC9wZ1NRTCBmdW5jdGlvbiBvd25lZF9jaGFubmVsX2ZhaWx1cmUoKSBsaW5lIDEgYXQgUkFJU0VcblxuVGhlIGFib3ZlIGV4Y2VwdGlvbiB3YXMgdGhlIGRpcmVjdCBjYXVzZSBvZiB0aGUgZm9sbG93aW5nIGV4Y2VwdGlvbjpcblxuVHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3QpOlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9jZWxlcnkvYXBwL3RyYWNlLnB5XCIsIGxpbmUgNTg1LCBpbiB0cmFjZV90YXNrXG4gICAgUiA9IHJldHZhbCA9IGZ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgICAgICAgIH5+fl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2NlbGVyeS9hcHAvdHJhY2UucHlcIiwgbGluZSA4NTgsIGluIF9fcHJvdGVjdGVkX2NhbGxfX1xuICAgIHJldHVybiBzZWxmLnJ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgIH5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvYXNnaXJlZi9zeW5jLnB5XCIsIGxpbmUgNDEyLCBpbiBtYWluX3dyYXBcbiAgICByYWlzZSBleGNfaW5mb1sxXVxuICBGaWxlIFwiL2FwcC9hcHBzL2NoYW5uZWxzL3Rhc2tzLnB5XCIsIGxpbmUgNDQ5MywgaW4gc2V0X2NoYW5uZWxzX2xvZ29zX2Zyb21fZXBnXG4gICAgYmF0Y2hfc3RhdHMgPSBhcHBseV9sb2dvc19mcm9tX2VwZ19pY29uX3VybChjaGFubmVscylcbiAgRmlsZSBcIi9hcHAvYXBwcy9jaGFubmVscy91dGlscy5weVwiLCBsaW5lIDI3OSwgaW4gYXBwbHlfbG9nb3NfZnJvbV9lcGdfaWNvbl91cmxcbiAgICBMb2dvLm9iamVjdHMuYnVsa19jcmVhdGUobG9nb3NfdG9fY3JlYXRlLCBpZ25vcmVfY29uZmxpY3RzPVRydWUpXG4gICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvbW9kZWxzL21hbmFnZXIucHlcIiwgbGluZSA4NywgaW4gbWFuYWdlcl9tZXRob2RcbiAgICByZXR1cm4gZ2V0YXR0cihzZWxmLmdldF9xdWVyeXNldCgpLCBuYW1lKSgqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2FwcC9hcHBzL2NoYW5uZWxzL21vZGVscy5weVwiLCBsaW5lIDE0MTYsIGluIGJ1bGtfY3JlYXRlXG4gICAgcmV0dXJuIHN1cGVyKCkuYnVsa19jcmVhdGUob2JqcywgKmFyZ3MsICoqa3dhcmdzKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL21vZGVscy9xdWVyeS5weVwiLCBsaW5lIDgzMywgaW4gYnVsa19jcmVhdGVcbiAgICByZXR1cm5lZF9jb2x1bW5zID0gc2VsZi5fYmF0Y2hlZF9pbnNlcnQoXG4gICAgICAgIG9ianNfd2l0aG91dF9wayxcbiAgICAuLi48NCBsaW5lcz4uLi5cbiAgICAgICAgdW5pcXVlX2ZpZWxkcz11bmlxdWVfZmllbGRzLFxuICAgIClcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL21vZGVscy9xdWVyeS5weVwiLCBsaW5lIDE5NTYsIGluIF9iYXRjaGVkX2luc2VydFxuICAgIHNlbGYuX2luc2VydChcbiAgICB+fn5+fn5+fn5+fn5eXG4gICAgICAgIGl0ZW0sXG4gICAgICAgIF5eXl5eXG4gICAgLi4uPDUgbGluZXM+Li4uXG4gICAgICAgIHJldHVybmluZ19maWVsZHM9cmV0dXJuaW5nX2ZpZWxkcyxcbiAgICAgICAgXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgIClcbiAgICBeXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9tb2RlbHMvcXVlcnkucHlcIiwgbGluZSAxOTE4LCBpbiBfaW5zZXJ0XG4gICAgcmV0dXJuIHF1ZXJ5LmdldF9jb21waWxlcih1c2luZz11c2luZykuZXhlY3V0ZV9zcWwocmV0dXJuaW5nX2ZpZWxkcylcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvbW9kZWxzL3NxbC9jb21waWxlci5weVwiLCBsaW5lIDE5MjUsIGluIGV4ZWN1dGVfc3FsXG4gICAgY3Vyc29yLmV4ZWN1dGUoc3FsLCBwYXJhbXMpXG4gICAgfn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9iYWNrZW5kcy91dGlscy5weVwiLCBsaW5lIDc5LCBpbiBleGVjdXRlXG4gICAgcmV0dXJuIHNlbGYuX2V4ZWN1dGVfd2l0aF93cmFwcGVycyhcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+XlxuICAgICAgICBzcWwsIHBhcmFtcywgbWFueT1GYWxzZSwgZXhlY3V0b3I9c2VsZi5fZXhlY3V0ZVxuICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgIClcbiAgICBeXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9iYWNrZW5kcy91dGlscy5weVwiLCBsaW5lIDkyLCBpbiBfZXhlY3V0ZV93aXRoX3dyYXBwZXJzXG4gICAgcmV0dXJuIGV4ZWN1dG9yKHNxbCwgcGFyYW1zLCBtYW55LCBjb250ZXh0KVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvYmFja2VuZHMvdXRpbHMucHlcIiwgbGluZSAxMDAsIGluIF9leGVjdXRlXG4gICAgd2l0aCBzZWxmLmRiLndyYXBfZGF0YWJhc2VfZXJyb3JzOlxuICAgICAgICAgXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvdXRpbHMucHlcIiwgbGluZSA5NCwgaW4gX19leGl0X19cbiAgICByYWlzZSBkal9leGNfdmFsdWUud2l0aF90cmFjZWJhY2sodHJhY2ViYWNrKSBmcm9tIGV4Y192YWx1ZVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvYmFja2VuZHMvdXRpbHMucHlcIiwgbGluZSAxMDUsIGluIF9leGVjdXRlXG4gICAgcmV0dXJuIHNlbGYuY3Vyc29yLmV4ZWN1dGUoc3FsLCBwYXJhbXMpXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3BzeWNvcGcvY3Vyc29yLnB5XCIsIGxpbmUgMTE3LCBpbiBleGVjdXRlXG4gICAgcmFpc2UgZXgud2l0aF90cmFjZWJhY2soTm9uZSlcbmRqYW5nby5kYi51dGlscy5JbnRlZ3JpdHlFcnJvcjogb3duZWQgY2hhbm5lbCBsb2dvIGluc2VydFxuQ09OVEVYVDogIFBML3BnU1FMIGZ1bmN0aW9uIG93bmVkX2NoYW5uZWxfZmFpbHVyZSgpIGxpbmUgMSBhdCBSQUlTRVxuIiwgImNoaWxkcmVuIjogW10sICJkYXRlX2RvbmUiOiAiMjAyNi0xMS0xNVQwMjoyMDowMy41NTIzNzcrMDA6MDAiLCAidGFza19pZCI6ICIwYzMwODI3OS04Y2UyLTQzMWItODJhOC0yNzExMjU2M2QwNmEifQ==",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "IntegrityError",
+          "exc_message": [
+            "owned channel logo insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+          ],
+          "exc_module": "django.db.utils"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.UniqueViolation: owned channel logo insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/asgiref/sync.py\", line 412, in main_wrap\n    raise exc_info[1]\n  File \"/app/apps/channels/tasks.py\", line 4493, in set_channels_logos_from_epg\n    batch_stats = apply_logos_from_epg_icon_url(channels)\n  File \"/app/apps/channels/utils.py\", line 279, in apply_logos_from_epg_icon_url\n    Logo.objects.bulk_create(logos_to_create, ignore_conflicts=True)\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/channels/models.py\", line 1416, in bulk_create\n    return super().bulk_create(objs, *args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 833, in bulk_create\n    returned_columns = self._batched_insert(\n        objs_without_pk,\n    ...<4 lines>...\n        unique_fields=unique_fields,\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1956, in _batched_insert\n    self._insert(\n    ~~~~~~~~~~~~^\n        item,\n        ^^^^^\n    ...<5 lines>...\n        returning_fields=returning_fields,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1918, in _insert\n    return query.get_compiler(using=using).execute_sql(returning_fields)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1925, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.IntegrityError: owned channel logo insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE\n",
+        "children": [],
+        "date_done": "2026-11-15T02:20:03.552377+00:00",
+        "task_id": "0c308279-8ce2-431b-82a8-27112563d06a"
+      },
+      "ttl": 3600,
+      "after": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "Channels": {
+        "key_base64": "YXNnaXNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3Qh",
+        "raw_base64": [
+          "B+1otmAPKwI8NEZ2g6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBluWVwZ19sb2dvX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkMGMzMDgyNzktOGNlMi00MzFiLTgyYTgtMjcxMTI1NjNkMDZhqHByb2dyZXNzAKV0b3RhbAGmc3RhdHVzp3J1bm5pbmenbWVzc2FnZbxTdGFydGluZyBFUEcgbG9nbyBzZXR0aW5nLi4usF9fYXNnaV9jaGFubmVsX1+R2ShzcGVjaWZpYy5vd25lZF9jaGFubmVsX2NvbnRyYWN0IXJlY2VpdmVy",
+          "6qAeocuhcMM+yLUZg6R0eXBlpnVwZGF0ZaRkYXRhh6R0eXBluWVwZ19sb2dvX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkMGMzMDgyNzktOGNlMi00MzFiLTgyYTgtMjcxMTI1NjNkMDZhqHByb2dyZXNzAKV0b3RhbAGmc3RhdHVzpmZhaWxlZKdtZXNzYWdl2WpUYXNrIGZhaWxlZDogb3duZWQgY2hhbm5lbCBsb2dvIGluc2VydApDT05URVhUOiAgUEwvcGdTUUwgZnVuY3Rpb24gb3duZWRfY2hhbm5lbF9mYWlsdXJlKCkgbGluZSAxIGF0IFJBSVNFpWVycm9y2V1vd25lZCBjaGFubmVsIGxvZ28gaW5zZXJ0CkNPTlRFWFQ6ICBQTC9wZ1NRTCBmdW5jdGlvbiBvd25lZF9jaGFubmVsX2ZhaWx1cmUoKSBsaW5lIDEgYXQgUkFJU0WwX19hc2dpX2NoYW5uZWxfX5HZKHNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3QhcmVjZWl2ZXI="
+        ],
+        "decoded": [
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_logo_setting_progress",
+              "task_id": "0c308279-8ce2-431b-82a8-27112563d06a",
+              "progress": 0,
+              "total": 1,
+              "status": "running",
+              "message": "Starting EPG logo setting..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_logo_setting_progress",
+              "task_id": "0c308279-8ce2-431b-82a8-27112563d06a",
+              "progress": 0,
+              "total": 1,
+              "status": "failed",
+              "message": "Task failed: owned channel logo insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE",
+              "error": "owned channel logo insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          }
+        ]
+      },
+      "expected_state_match": true
+    },
+    {
+      "name": "bulk_23514",
+      "task": "apps.channels.tasks.bulk_create_channels_from_streams",
+      "args": [
+        [
+          1
+        ],
+        [],
+        0
+      ],
+      "kwargs": {},
+      "expected_state": "FAILURE",
+      "before": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "controlled_owned_PG_error": {
+        "table": "dispatcharr_channels_channel",
+        "verb": "INSERT",
+        "sqlstate": "23514",
+        "message": "owned bulk channel insert"
+      },
+      "actual_task_id": "12e70dd0-fc48-427f-97f3-b89985a6758d",
+      "raw_backend_base64": "eyJzdGF0dXMiOiAiRkFJTFVSRSIsICJyZXN1bHQiOiB7ImV4Y190eXBlIjogIkludGVncml0eUVycm9yIiwgImV4Y19tZXNzYWdlIjogWyJvd25lZCBidWxrIGNoYW5uZWwgaW5zZXJ0XG5DT05URVhUOiAgUEwvcGdTUUwgZnVuY3Rpb24gb3duZWRfY2hhbm5lbF9mYWlsdXJlKCkgbGluZSAxIGF0IFJBSVNFIl0sICJleGNfbW9kdWxlIjogImRqYW5nby5kYi51dGlscyJ9LCAidHJhY2ViYWNrIjogIlRyYWNlYmFjayAobW9zdCByZWNlbnQgY2FsbCBsYXN0KTpcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL2JhY2tlbmRzL3V0aWxzLnB5XCIsIGxpbmUgMTA1LCBpbiBfZXhlY3V0ZVxuICAgIHJldHVybiBzZWxmLmN1cnNvci5leGVjdXRlKHNxbCwgcGFyYW1zKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9wc3ljb3BnL2N1cnNvci5weVwiLCBsaW5lIDExNywgaW4gZXhlY3V0ZVxuICAgIHJhaXNlIGV4LndpdGhfdHJhY2ViYWNrKE5vbmUpXG5wc3ljb3BnLmVycm9ycy5DaGVja1Zpb2xhdGlvbjogb3duZWQgYnVsayBjaGFubmVsIGluc2VydFxuQ09OVEVYVDogIFBML3BnU1FMIGZ1bmN0aW9uIG93bmVkX2NoYW5uZWxfZmFpbHVyZSgpIGxpbmUgMSBhdCBSQUlTRVxuXG5UaGUgYWJvdmUgZXhjZXB0aW9uIHdhcyB0aGUgZGlyZWN0IGNhdXNlIG9mIHRoZSBmb2xsb3dpbmcgZXhjZXB0aW9uOlxuXG5UcmFjZWJhY2sgKG1vc3QgcmVjZW50IGNhbGwgbGFzdCk6XG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2NlbGVyeS9hcHAvdHJhY2UucHlcIiwgbGluZSA1ODUsIGluIHRyYWNlX3Rhc2tcbiAgICBSID0gcmV0dmFsID0gZnVuKCphcmdzLCAqKmt3YXJncylcbiAgICAgICAgICAgICAgICAgfn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvY2VsZXJ5L2FwcC90cmFjZS5weVwiLCBsaW5lIDg1OCwgaW4gX19wcm90ZWN0ZWRfY2FsbF9fXG4gICAgcmV0dXJuIHNlbGYucnVuKCphcmdzLCAqKmt3YXJncylcbiAgICAgICAgICAgfn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9hc2dpcmVmL3N5bmMucHlcIiwgbGluZSA0MTIsIGluIG1haW5fd3JhcFxuICAgIHJhaXNlIGV4Y19pbmZvWzFdXG4gIEZpbGUgXCIvYXBwL2FwcHMvY2hhbm5lbHMvdGFza3MucHlcIiwgbGluZSA0MTYwLCBpbiBidWxrX2NyZWF0ZV9jaGFubmVsc19mcm9tX3N0cmVhbXNcbiAgICBjcmVhdGVkX2NoYW5uZWxzID0gQ2hhbm5lbC5vYmplY3RzLmJ1bGtfY3JlYXRlKGNoYW5uZWxzX3RvX2NyZWF0ZSlcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL21vZGVscy9tYW5hZ2VyLnB5XCIsIGxpbmUgODcsIGluIG1hbmFnZXJfbWV0aG9kXG4gICAgcmV0dXJuIGdldGF0dHIoc2VsZi5nZXRfcXVlcnlzZXQoKSwgbmFtZSkoKmFyZ3MsICoqa3dhcmdzKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL21vZGVscy9xdWVyeS5weVwiLCBsaW5lIDgzMywgaW4gYnVsa19jcmVhdGVcbiAgICByZXR1cm5lZF9jb2x1bW5zID0gc2VsZi5fYmF0Y2hlZF9pbnNlcnQoXG4gICAgICAgIG9ianNfd2l0aG91dF9wayxcbiAgICAuLi48NCBsaW5lcz4uLi5cbiAgICAgICAgdW5pcXVlX2ZpZWxkcz11bmlxdWVfZmllbGRzLFxuICAgIClcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvZGphbmdvL2RiL21vZGVscy9xdWVyeS5weVwiLCBsaW5lIDE5NTYsIGluIF9iYXRjaGVkX2luc2VydFxuICAgIHNlbGYuX2luc2VydChcbiAgICB+fn5+fn5+fn5+fn5eXG4gICAgICAgIGl0ZW0sXG4gICAgICAgIF5eXl5eXG4gICAgLi4uPDUgbGluZXM+Li4uXG4gICAgICAgIHJldHVybmluZ19maWVsZHM9cmV0dXJuaW5nX2ZpZWxkcyxcbiAgICAgICAgXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgIClcbiAgICBeXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9tb2RlbHMvcXVlcnkucHlcIiwgbGluZSAxOTE4LCBpbiBfaW5zZXJ0XG4gICAgcmV0dXJuIHF1ZXJ5LmdldF9jb21waWxlcih1c2luZz11c2luZykuZXhlY3V0ZV9zcWwocmV0dXJuaW5nX2ZpZWxkcylcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvbW9kZWxzL3NxbC9jb21waWxlci5weVwiLCBsaW5lIDE5MjUsIGluIGV4ZWN1dGVfc3FsXG4gICAgY3Vyc29yLmV4ZWN1dGUoc3FsLCBwYXJhbXMpXG4gICAgfn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9iYWNrZW5kcy91dGlscy5weVwiLCBsaW5lIDc5LCBpbiBleGVjdXRlXG4gICAgcmV0dXJuIHNlbGYuX2V4ZWN1dGVfd2l0aF93cmFwcGVycyhcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+XlxuICAgICAgICBzcWwsIHBhcmFtcywgbWFueT1GYWxzZSwgZXhlY3V0b3I9c2VsZi5fZXhlY3V0ZVxuICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgIClcbiAgICBeXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2RqYW5nby9kYi9iYWNrZW5kcy91dGlscy5weVwiLCBsaW5lIDkyLCBpbiBfZXhlY3V0ZV93aXRoX3dyYXBwZXJzXG4gICAgcmV0dXJuIGV4ZWN1dG9yKHNxbCwgcGFyYW1zLCBtYW55LCBjb250ZXh0KVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvYmFja2VuZHMvdXRpbHMucHlcIiwgbGluZSAxMDAsIGluIF9leGVjdXRlXG4gICAgd2l0aCBzZWxmLmRiLndyYXBfZGF0YWJhc2VfZXJyb3JzOlxuICAgICAgICAgXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvdXRpbHMucHlcIiwgbGluZSA5NCwgaW4gX19leGl0X19cbiAgICByYWlzZSBkal9leGNfdmFsdWUud2l0aF90cmFjZWJhY2sodHJhY2ViYWNrKSBmcm9tIGV4Y192YWx1ZVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvYmFja2VuZHMvdXRpbHMucHlcIiwgbGluZSAxMDUsIGluIF9leGVjdXRlXG4gICAgcmV0dXJuIHNlbGYuY3Vyc29yLmV4ZWN1dGUoc3FsLCBwYXJhbXMpXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3BzeWNvcGcvY3Vyc29yLnB5XCIsIGxpbmUgMTE3LCBpbiBleGVjdXRlXG4gICAgcmFpc2UgZXgud2l0aF90cmFjZWJhY2soTm9uZSlcbmRqYW5nby5kYi51dGlscy5JbnRlZ3JpdHlFcnJvcjogb3duZWQgYnVsayBjaGFubmVsIGluc2VydFxuQ09OVEVYVDogIFBML3BnU1FMIGZ1bmN0aW9uIG93bmVkX2NoYW5uZWxfZmFpbHVyZSgpIGxpbmUgMSBhdCBSQUlTRVxuIiwgImNoaWxkcmVuIjogW10sICJkYXRlX2RvbmUiOiAiMjAyNi0xMS0xNVQwMjoyMDowMy41OTE4NTUrMDA6MDAiLCAidGFza19pZCI6ICIxMmU3MGRkMC1mYzQ4LTQyN2YtOTdmMy1iODk5ODVhNjc1OGQifQ==",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "IntegrityError",
+          "exc_message": [
+            "owned bulk channel insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+          ],
+          "exc_module": "django.db.utils"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.CheckViolation: owned bulk channel insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/asgiref/sync.py\", line 412, in main_wrap\n    raise exc_info[1]\n  File \"/app/apps/channels/tasks.py\", line 4160, in bulk_create_channels_from_streams\n    created_channels = Channel.objects.bulk_create(channels_to_create)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 833, in bulk_create\n    returned_columns = self._batched_insert(\n        objs_without_pk,\n    ...<4 lines>...\n        unique_fields=unique_fields,\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1956, in _batched_insert\n    self._insert(\n    ~~~~~~~~~~~~^\n        item,\n        ^^^^^\n    ...<5 lines>...\n        returning_fields=returning_fields,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1918, in _insert\n    return query.get_compiler(using=using).execute_sql(returning_fields)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1925, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.IntegrityError: owned bulk channel insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE\n",
+        "children": [],
+        "date_done": "2026-11-15T02:20:03.591855+00:00",
+        "task_id": "12e70dd0-fc48-427f-97f3-b89985a6758d"
+      },
+      "ttl": 3600,
+      "after": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "Channels": {
+        "key_base64": "YXNnaXNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3Qh",
+        "raw_base64": [
+          "p5Egc+KMgTCqG7rCg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBlvmJ1bGtfY2hhbm5lbF9jcmVhdGlvbl9wcm9ncmVzc6d0YXNrX2lk2SQxMmU3MGRkMC1mYzQ4LTQyN2YtOTdmMy1iODk5ODVhNjc1OGSocHJvZ3Jlc3MApXRvdGFsAaZzdGF0dXOoc3RhcnRpbmenbWVzc2FnZdknU3RhcnRpbmcgYnVsayBjcmVhdGlvbiBvZiAxIGNoYW5uZWxzLi4usF9fYXNnaV9jaGFubmVsX1+R2ShzcGVjaWZpYy5vd25lZF9jaGFubmVsX2NvbnRyYWN0IXJlY2VpdmVy",
+          "VxR6V3awc7HamLzZg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBlvmJ1bGtfY2hhbm5lbF9jcmVhdGlvbl9wcm9ncmVzc6d0YXNrX2lk2SQxMmU3MGRkMC1mYzQ4LTQyN2YtOTdmMy1iODk5ODVhNjc1OGSocHJvZ3Jlc3MApXRvdGFsAaZzdGF0dXOqcHJvY2Vzc2luZ6dtZXNzYWdlvlByb2Nlc3Npbmcgc3RyZWFtcyAxLTEgb2YgMS4uLrBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg==",
+          "1hZI+PlFk3YhELJeg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBlvmJ1bGtfY2hhbm5lbF9jcmVhdGlvbl9wcm9ncmVzc6d0YXNrX2lk2SQxMmU3MGRkMC1mYzQ4LTQyN2YtOTdmMy1iODk5ODVhNjc1OGSocHJvZ3Jlc3MBpXRvdGFsAaZzdGF0dXOuY3JlYXRpbmdfbG9nb3OnbWVzc2FnZbNDcmVhdGluZyAxIGxvZ29zLi4usF9fYXNnaV9jaGFubmVsX1+R2ShzcGVjaWZpYy5vd25lZF9jaGFubmVsX2NvbnRyYWN0IXJlY2VpdmVy",
+          "g9Lx/Jvo9gJ7uWZmg6R0eXBlpnVwZGF0ZaRkYXRhhqR0eXBlvmJ1bGtfY2hhbm5lbF9jcmVhdGlvbl9wcm9ncmVzc6d0YXNrX2lk2SQxMmU3MGRkMC1mYzQ4LTQyN2YtOTdmMy1iODk5ODVhNjc1OGSocHJvZ3Jlc3MBpXRvdGFsAaZzdGF0dXOxY3JlYXRpbmdfY2hhbm5lbHOnbWVzc2FnZdkiQ3JlYXRpbmcgMSBjaGFubmVscyBpbiBkYXRhYmFzZS4uLrBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg==",
+          "m1gXklzxlOvZkBJQg6R0eXBlpnVwZGF0ZaRkYXRhh6R0eXBlvmJ1bGtfY2hhbm5lbF9jcmVhdGlvbl9wcm9ncmVzc6d0YXNrX2lk2SQxMmU3MGRkMC1mYzQ4LTQyN2YtOTdmMy1iODk5ODVhNjc1OGSocHJvZ3Jlc3MApXRvdGFsAaZzdGF0dXOmZmFpbGVkp21lc3NhZ2XZalRhc2sgZmFpbGVkOiBvd25lZCBidWxrIGNoYW5uZWwgaW5zZXJ0CkNPTlRFWFQ6ICBQTC9wZ1NRTCBmdW5jdGlvbiBvd25lZF9jaGFubmVsX2ZhaWx1cmUoKSBsaW5lIDEgYXQgUkFJU0WlZXJyb3LZXW93bmVkIGJ1bGsgY2hhbm5lbCBpbnNlcnQKQ09OVEVYVDogIFBML3BnU1FMIGZ1bmN0aW9uIG93bmVkX2NoYW5uZWxfZmFpbHVyZSgpIGxpbmUgMSBhdCBSQUlTRbBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg=="
+        ],
+        "decoded": [
+          {
+            "type": "update",
+            "data": {
+              "type": "bulk_channel_creation_progress",
+              "task_id": "12e70dd0-fc48-427f-97f3-b89985a6758d",
+              "progress": 0,
+              "total": 1,
+              "status": "starting",
+              "message": "Starting bulk creation of 1 channels..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "bulk_channel_creation_progress",
+              "task_id": "12e70dd0-fc48-427f-97f3-b89985a6758d",
+              "progress": 0,
+              "total": 1,
+              "status": "processing",
+              "message": "Processing streams 1-1 of 1..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "bulk_channel_creation_progress",
+              "task_id": "12e70dd0-fc48-427f-97f3-b89985a6758d",
+              "progress": 1,
+              "total": 1,
+              "status": "creating_logos",
+              "message": "Creating 1 logos..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "bulk_channel_creation_progress",
+              "task_id": "12e70dd0-fc48-427f-97f3-b89985a6758d",
+              "progress": 1,
+              "total": 1,
+              "status": "creating_channels",
+              "message": "Creating 1 channels in database..."
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "bulk_channel_creation_progress",
+              "task_id": "12e70dd0-fc48-427f-97f3-b89985a6758d",
+              "progress": 0,
+              "total": 1,
+              "status": "failed",
+              "message": "Task failed: owned bulk channel insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE",
+              "error": "owned bulk channel insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE"
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          }
+        ]
+      },
+      "expected_state_match": true
+    },
+    {
+      "name": "logos_missing_arguments",
+      "task": "apps.channels.tasks.set_channels_logos_from_epg",
+      "args": [],
+      "kwargs": {},
+      "expected_state": "FAILURE",
+      "before": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "actual_task_id": "72ee32d6-0eaf-485b-82a0-6ac4f6303a52",
+      "raw_backend_base64": "eyJzdGF0dXMiOiAiRkFJTFVSRSIsICJyZXN1bHQiOiB7ImV4Y190eXBlIjogIlZhbHVlRXJyb3IiLCAiZXhjX21lc3NhZ2UiOiBbImNoYW5uZWxfaWRzIG9yIGVwZ19zb3VyY2VfaWQgaXMgcmVxdWlyZWQiXSwgImV4Y19tb2R1bGUiOiAiYnVpbHRpbnMifSwgInRyYWNlYmFjayI6ICJUcmFjZWJhY2sgKG1vc3QgcmVjZW50IGNhbGwgbGFzdCk6XG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2NlbGVyeS9hcHAvdHJhY2UucHlcIiwgbGluZSA1ODUsIGluIHRyYWNlX3Rhc2tcbiAgICBSID0gcmV0dmFsID0gZnVuKCphcmdzLCAqKmt3YXJncylcbiAgICAgICAgICAgICAgICAgfn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvY2VsZXJ5L2FwcC90cmFjZS5weVwiLCBsaW5lIDg1OCwgaW4gX19wcm90ZWN0ZWRfY2FsbF9fXG4gICAgcmV0dXJuIHNlbGYucnVuKCphcmdzLCAqKmt3YXJncylcbiAgICAgICAgICAgfn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9hc2dpcmVmL3N5bmMucHlcIiwgbGluZSA0MTIsIGluIG1haW5fd3JhcFxuICAgIHJhaXNlIGV4Y19pbmZvWzFdXG4gIEZpbGUgXCIvYXBwL2FwcHMvY2hhbm5lbHMvdGFza3MucHlcIiwgbGluZSA0NTE1LCBpbiBzZXRfY2hhbm5lbHNfbG9nb3NfZnJvbV9lcGdcbiAgICByYWlzZSBWYWx1ZUVycm9yKFwiY2hhbm5lbF9pZHMgb3IgZXBnX3NvdXJjZV9pZCBpcyByZXF1aXJlZFwiKVxuVmFsdWVFcnJvcjogY2hhbm5lbF9pZHMgb3IgZXBnX3NvdXJjZV9pZCBpcyByZXF1aXJlZFxuIiwgImNoaWxkcmVuIjogW10sICJkYXRlX2RvbmUiOiAiMjAyNi0xMS0xNVQwMjoyMDowMy42MDY0NjQrMDA6MDAiLCAidGFza19pZCI6ICI3MmVlMzJkNi0wZWFmLTQ4NWItODJhMC02YWM0ZjYzMDNhNTIifQ==",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "ValueError",
+          "exc_message": [
+            "channel_ids or epg_source_id is required"
+          ],
+          "exc_module": "builtins"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/asgiref/sync.py\", line 412, in main_wrap\n    raise exc_info[1]\n  File \"/app/apps/channels/tasks.py\", line 4515, in set_channels_logos_from_epg\n    raise ValueError(\"channel_ids or epg_source_id is required\")\nValueError: channel_ids or epg_source_id is required\n",
+        "children": [],
+        "date_done": "2026-11-15T02:20:03.606464+00:00",
+        "task_id": "72ee32d6-0eaf-485b-82a0-6ac4f6303a52"
+      },
+      "ttl": 3600,
+      "after": {
+        "dispatcharr_channels_channel": [
+          "{\"id\": 1, \"name\": \"Owned EPG name\", \"uuid\": \"1f0e3f7e-3506-4c56-b9ca-76de98e3b6c8\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 1, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959082+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959102+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7000, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 2, \"name\": \"Old owned name\", \"uuid\": \"577295f0-1216-437d-a182-354f87846778\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959089+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959104+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7001, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 3, \"name\": \"Old owned name\", \"uuid\": \"a6e60d1c-ce8d-43a1-9e56-9e76244418b8\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959092+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959106+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7002, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 4, \"name\": \"Old owned name\", \"uuid\": \"bf25408a-2f77-4fdb-976c-5492a52d285a\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959095+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959108+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7003, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 5, \"name\": \"Old owned name\", \"uuid\": \"2e1fca1c-297b-41e1-86c2-d392e2fb7d9c\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.95911+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7004, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 6, \"name\": \"Old owned name\", \"uuid\": \"6aaa599e-f71a-41c0-81b9-1ed730d36c0b\", \"tvg_id\": \"old.owned.id\", \"logo_id\": null, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:01.959099+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:01.959112+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 7005, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}",
+          "{\"id\": 7, \"name\": \"Owned stream\", \"uuid\": \"2803c109-6c16-4ae1-bf19-4df2b8153df7\", \"tvg_id\": \"owned.epg.id\", \"logo_id\": 2, \"is_adult\": false, \"is_radio\": false, \"created_at\": \"2026-11-15T02:20:03.44097+00:00\", \"is_catchup\": false, \"updated_at\": \"2026-11-15T02:20:03.440992+00:00\", \"user_level\": 0, \"epg_data_id\": 1, \"auto_created\": false, \"catchup_days\": 0, \"channel_number\": 1, \"channel_group_id\": null, \"stream_profile_id\": null, \"auto_created_by_id\": null, \"hidden_from_output\": false, \"tvc_guide_stationid\": null}"
+        ],
+        "dispatcharr_channels_logo": [
+          "{\"id\": 1, \"url\": \"http://owned.invalid/logo.png\", \"name\": \"Owned EPG name\"}",
+          "{\"id\": 2, \"url\": \"http://owned.invalid/stream.png\", \"name\": \"Owned stream\"}"
+        ],
+        "dispatcharr_channels_channelstream": [
+          "{\"id\": 1, \"order\": 0, \"stream_id\": 1, \"channel_id\": 7}"
+        ],
+        "dispatcharr_channels_channelprofilemembership": []
+      },
+      "Channels": {
+        "key_base64": "YXNnaXNwZWNpZmljLm93bmVkX2NoYW5uZWxfY29udHJhY3Qh",
+        "raw_base64": [
+          "QZr0gRD6O5Ce7h3Gg6R0eXBlpnVwZGF0ZaRkYXRhh6R0eXBluWVwZ19sb2dvX3NldHRpbmdfcHJvZ3Jlc3OndGFza19pZNkkNzJlZTMyZDYtMGVhZi00ODViLTgyYTAtNmFjNGY2MzAzYTUyqHByb2dyZXNzAKV0b3RhbACmc3RhdHVzpmZhaWxlZKdtZXNzYWdl2TVUYXNrIGZhaWxlZDogY2hhbm5lbF9pZHMgb3IgZXBnX3NvdXJjZV9pZCBpcyByZXF1aXJlZKVlcnJvctkoY2hhbm5lbF9pZHMgb3IgZXBnX3NvdXJjZV9pZCBpcyByZXF1aXJlZLBfX2FzZ2lfY2hhbm5lbF9fkdkoc3BlY2lmaWMub3duZWRfY2hhbm5lbF9jb250cmFjdCFyZWNlaXZlcg=="
+        ],
+        "decoded": [
+          {
+            "type": "update",
+            "data": {
+              "type": "epg_logo_setting_progress",
+              "task_id": "72ee32d6-0eaf-485b-82a0-6ac4f6303a52",
+              "progress": 0,
+              "total": 0,
+              "status": "failed",
+              "message": "Task failed: channel_ids or epg_source_id is required",
+              "error": "channel_ids or epg_source_id is required"
+            },
+            "__asgi_channel__": [
+              "specific.owned_channel_contract!receiver"
+            ]
+          }
+        ]
+      },
+      "expected_state_match": true
+    }
+  ],
+  "source_functions": {
+    "apps.channels.tasks.bulk_create_channels_from_streams": {
+      "sha256": "3d02bba07c4dc9262635229278e4a60854c937e999e7b82fe57d46da9033fab1",
+      "attributes": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "reject_on_worker_lost": null
+      }
+    },
+    "apps.channels.tasks.set_channels_names_from_epg": {
+      "sha256": "c328298b2f6d76632172f596d8de3149346841b930811c1886217f5c9ed56e6b",
+      "attributes": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "reject_on_worker_lost": null
+      }
+    },
+    "apps.channels.tasks.set_channels_logos_from_epg": {
+      "sha256": "7ef3315b102974d176f0b14e1456ae52ea8af32010cdc1802e95a279a2a76abf",
+      "attributes": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "reject_on_worker_lost": null
+      }
+    },
+    "apps.channels.tasks.set_channels_tvg_ids_from_epg": {
+      "sha256": "5544ef51e3277a06d68abdc5846689d3b737f84e8975861483d0e449d376491c",
+      "attributes": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "reject_on_worker_lost": null
+      }
+    }
+  },
+  "worker": {
+    "pid": 194,
+    "start_generation": "2217001",
+    "actual_wait_exit": 0,
+    "leader_absent": true,
+    "remaining_group": []
+  }
+}

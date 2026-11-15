@@ -1,0 +1,278 @@
+[uWSGI] getting INI configuration from /tools/uwsgi.ini
+*** Starting uWSGI 2.0.31 (64bit) on [Sun Nov 15 03:25:50 2026] ***
+compiled with version: 15.2.0 on 03 November 2026 01:07:14
+os: Linux-7.3.3-1-cachyos #1 SMP PREEMPT_DYNAMIC Sat, 07 Nov 2026 13:54:44 +0000
+nodename: 46e7703a5714
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 32
+current working directory: /app
+detected binary path: /dispatcharrpy/bin/uwsgi
+chdir() to /app
+your processes number limit is 256428
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+- async cores set to 400 - fd table size: 1024
+lock engine: pthread robust mutexes
+thunder lock: enabled
+uWSGI http bound on 0.0.0.0:5656 fd 4
+uwsgi socket 0 bound to TCP address 127.0.0.1:38487 (port auto-assigned) fd 3
+Python version: 3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]
+PEP 405 virtualenv detected: /dispatcharrpy
+Set PythonHome to /dispatcharrpy
+Python main interpreter initialized at 0x7fdaa617a208
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 64181728 bytes (62677 KB) for 400 cores
+*** Operational MODE: async ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 167)
+spawned uWSGI worker 1 (pid: 174, cores: 400)
+spawned uWSGI http 1 (pid: 175)
+2026-11-15 03:25:51,197 INFO core.scheduling Updated periodic task 'backup-scheduled-task' (cron, enabled=True)
+2026-11-15 03:25:51,603 INFO core.developer_notifications Developer notification sync complete: 0 added, 1 updated, 0 removed, 0 skipped
+2026-11-15 03:25:51,625 INFO dispatcharr.celery Celery configuring loggers with level: DEBUG
+2026-11-15 03:25:51,639 INFO core.scheduling Updated periodic task 'plugin-repo-refresh-task' (interval, enabled=True)
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x7fdaa617a208 pid: 174 (default app)
+*** running gevent loop engine [addr:0x55815e3abc50] ***
+2026-11-15 03:25:51,998 WARNING django.request Unauthorized: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,007 WARNING django.request Forbidden: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,015 WARNING django.request Unauthorized: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,022 WARNING django.request Unauthorized: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,064 WARNING django.request Unauthorized: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,074 WARNING django.request Method Not Allowed: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,083 WARNING django.request Forbidden: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,102 WARNING django.request Bad Request: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,117 ERROR django.request Internal Server Error: /api/channels/channels/set-names-from-epg/
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/app/apps/channels/api_views.py", line 1970, in set_names_from_epg
+    channel_ids = data.get("channel_ids", [])
+                  ^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+2026-11-15 03:25:52,129 WARNING django.request Bad Request: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,139 WARNING django.request Forbidden: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,187 WARNING django.request Forbidden: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,198 WARNING django.request Forbidden: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,209 WARNING django.request Forbidden: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:52,241 WARNING django.request Unauthorized: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,252 WARNING django.request Forbidden: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,262 WARNING django.request Unauthorized: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,271 WARNING django.request Unauthorized: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,323 WARNING django.request Unauthorized: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,335 WARNING django.request Method Not Allowed: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,349 WARNING django.request Forbidden: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,380 WARNING django.request Bad Request: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,393 ERROR django.request Internal Server Error: /api/channels/channels/set-logos-from-epg/
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/app/apps/channels/api_views.py", line 2002, in set_logos_from_epg
+    channel_ids = data.get("channel_ids")
+                  ^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+2026-11-15 03:25:52,408 WARNING django.request Bad Request: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,422 WARNING django.request Forbidden: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,481 WARNING django.request Forbidden: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,494 WARNING django.request Forbidden: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,507 WARNING django.request Forbidden: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:52,540 WARNING django.request Unauthorized: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,553 WARNING django.request Forbidden: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,565 WARNING django.request Unauthorized: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,576 WARNING django.request Unauthorized: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,629 WARNING django.request Unauthorized: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,645 WARNING django.request Method Not Allowed: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,658 WARNING django.request Forbidden: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,686 WARNING django.request Bad Request: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,699 ERROR django.request Internal Server Error: /api/channels/channels/set-tvg-ids-from-epg/
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/app/apps/channels/api_views.py", line 2052, in set_tvg_ids_from_epg
+    channel_ids = data.get("channel_ids", [])
+                  ^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+2026-11-15 03:25:52,714 WARNING django.request Bad Request: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,728 WARNING django.request Forbidden: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,791 WARNING django.request Forbidden: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,807 WARNING django.request Forbidden: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,820 WARNING django.request Forbidden: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:52,857 WARNING django.request Unauthorized: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:52,873 WARNING django.request Forbidden: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:52,886 WARNING django.request Unauthorized: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:52,900 WARNING django.request Unauthorized: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:52,963 WARNING django.request Unauthorized: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:52,978 WARNING django.request Method Not Allowed: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:52,994 WARNING django.request Forbidden: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:53,028 WARNING django.request Bad Request: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:53,046 ERROR django.request Internal Server Error: /api/channels/channels/from-stream/bulk/
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/app/apps/channels/api_views.py", line 2545, in from_stream_bulk
+    stream_ids = request.data.get("stream_ids", [])
+                 ^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+2026-11-15 03:25:53,064 WARNING django.request Bad Request: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:53,080 WARNING django.request Forbidden: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:53,147 WARNING django.request Forbidden: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:53,163 WARNING django.request Forbidden: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:53,178 WARNING django.request Forbidden: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:53,225 WARNING django.request Bad Request: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:53,245 WARNING django.request Bad Request: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:53,261 WARNING django.request Bad Request: /api/channels/channels/set-logos-from-epg/
+2026-11-15 03:25:53,289 ERROR django.request Internal Server Error: /api/channels/channels/set-logos-from-epg/
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/fields/__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'not-an-integer'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/app/apps/channels/api_views.py", line 2034, in set_logos_from_epg
+    channel_count = channels_with_epg_icon_queryset(
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        epg_source_id=epg_source_id,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ).count()
+    ^
+  File "/app/apps/channels/utils.py", line 313, in channels_with_epg_icon_queryset
+    qs = qs.filter(epg_data__epg_source_id=epg_source_id)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1618, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1445, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/lookups.py", line 35, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/fields/related_lookups.py", line 113, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/fields/__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got 'not-an-integer'.
+2026-11-15 03:25:53,517 WARNING django.request Bad Request: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:53,540 WARNING django.request Bad Request: /api/channels/channels/set-names-from-epg/
+2026-11-15 03:25:53,564 WARNING django.request Bad Request: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:53,587 WARNING django.request Bad Request: /api/channels/channels/set-tvg-ids-from-epg/
+2026-11-15 03:25:53,610 WARNING django.request Bad Request: /api/channels/channels/from-stream/bulk/
+2026-11-15 03:25:53,634 WARNING django.request Bad Request: /api/channels/channels/from-stream/bulk/
+SIGINT/SIGTERM received...killing workers...
+Brutally killing worker 1 (pid: 174)...
+Sun Nov 15 03:25:53 2026 - stopping gevent signals watchers for worker 1 (pid: 174)...
+Sun Nov 15 03:25:53 2026 - stopping gevent sockets watchers for worker 1 (pid: 174)...
+Sun Nov 15 03:25:53 2026 - main gevent watchers stopped for worker 1 (pid: 174)...
+goodbye to the gevent Hub on worker 1 (pid: 174)
+gateway "uWSGI http 1" has been buried (pid: 175)
+worker 1 buried after 1 seconds
+goodbye to uWSGI.

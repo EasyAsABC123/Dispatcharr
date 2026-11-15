@@ -1,0 +1,48 @@
+{
+  "node": {
+    "id": "source/channel-maintenance-new-failure",
+    "depends_on": [],
+    "heavy": false,
+    "resources": [
+      "owned-channel-source-fixture"
+    ],
+    "entrypoint": "new actual Original four-channel-task failure cohort"
+  },
+  "candidate": {
+    "kind": "newSource4channel-failure-authority",
+    "pinned_Original": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "Source_API_replay": false
+  },
+  "binding": {
+    "argv": [
+      "/usr/bin/python3",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-source-failure-prep-2/run.py",
+      "--controller",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-source-failure-actual-2"
+    ],
+    "cleanup_argv": [
+      "/usr/bin/python3",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-source-failure-prep-2/run.py",
+      "--cleanup",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-source-failure-actual-2"
+    ],
+    "evaluator_argv": [
+      "/usr/bin/python3",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-source-failure-prep-2/run.py",
+      "--evaluate",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-source-failure-actual-2"
+    ],
+    "seconds": 690,
+    "cleanup_seconds": 90,
+    "output_bytes": 4194304,
+    "input_sha256": {
+      "/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-source-failure-prep-2/run.py": "748796cbe148a90b998948215079abd5634fce26d33b765c26b4bf0b47598f16",
+      "/home/justin/github/Dispatcharr/scripts/rust-milestone-batches/coordinator.py": "5b19406426de7dcec739ffdf6f8d7ab7caa90603ac836a19a413b15ecbab70af",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m5-core-settings-source-executor-2/inputs/original-source.tar": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-source-failure-prep-2/tools/start.sh": "af4cbe358b61063b6f87197c30947415958734631ff0f285ec9c2e46e866ecec",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-source-failure-prep-2/tools/bootstrap_env.py": "2fa13defc359a745e87b71e011105d7e6c8d04149ad7000e4dfa3c2c20aff5cf",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-source-failure-prep-2/tools/guest.py": "65e5a1a62148a704d3b9d1d6a9b08cc34cbe1815b0726f473f77e5afada6a426"
+    }
+  },
+  "attempt": 1
+}

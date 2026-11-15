@@ -1,0 +1,322 @@
+2026-11-15 02:20:02,177 INFO dispatcharr.startup PostgreSQL: standard backend for Celery (Dispatcharr-celery-beat-194)
+2026-11-15 02:20:02,177 INFO dispatcharr.celery Celery configuring loggers with level: DEBUG
+2026-11-15 02:20:03,193 WARNING py.warnings /dispatcharrpy/lib/python3.13/site-packages/celery/platforms.py:841: SecurityWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  warnings.warn(SecurityWarning(ROOT_DISCOURAGED.format(
+
+ 
+ -------------- owned-channels@fixture v5.6.3 (recovery)
+--- ***** ----- 
+-- ******* ---- Linux-7.3.3-1-cachyos-x86_64-with-glibc2.43 2026-11-15 02:20:03
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         dispatcharr:0x7f2f90f9f230
+- ** ---------- .> transport:   redis://:**@127.0.0.1:6379/8
+- ** ---------- .> results:     redis://:**@127.0.0.1:6379/9
+- *** --- * --- .> concurrency: 1 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+2026-11-15 02:20:03,267 INFO celery.worker.consumer.connection Connected to redis://:**@127.0.0.1:6379/8
+2026-11-15 02:20:03,273 INFO celery.apps.worker owned-channels@fixture ready.
+2026-11-15 02:20:03,282 INFO apps.channels.tasks Starting EPG name setting task for 1 channels
+2026-11-15 02:20:03,306 INFO apps.channels.tasks EPG name setting task completed. Updated 1 channels
+2026-11-15 02:20:03,366 INFO apps.channels.tasks Starting EPG TVG-ID setting task for 1 channels
+2026-11-15 02:20:03,376 INFO apps.channels.tasks EPG TVG-ID setting task completed. Updated 1 channels
+2026-11-15 02:20:03,395 INFO apps.channels.tasks Starting EPG logo setting task for 1 channels
+2026-11-15 02:20:03,406 INFO apps.channels.tasks EPG logo setting task completed. Updated 1 channels, created 1 logos
+2026-11-15 02:20:03,480 INFO apps.channels.tasks Starting EPG name setting task for 1 channels
+2026-11-15 02:20:03,486 ERROR apps.channels.tasks EPG name setting task failed: owned channel name update
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+2026-11-15 02:20:03,494 ERROR celery.app.trace Task apps.channels.tasks.set_channels_names_from_epg[38e03df3-dfc2-4548-858e-62c26fde78a7] raised unexpected: ProgrammingError('owned channel name update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE')
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.RaiseException: owned channel name update
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 585, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 858, in __protected_call__
+    return self.run(*args, **kwargs)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/asgiref/sync.py", line 412, in main_wrap
+    raise exc_info[1]
+  File "/app/apps/channels/tasks.py", line 4337, in set_channels_names_from_epg
+    Channel.objects.bulk_update(batch_updates, ['name'])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 963, in bulk_update
+    rows_updated += queryset.filter(pk__in=pks).update(**update_kwargs)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1300, in update
+    rows = query.get_compiler(self.db).execute_sql(ROW_COUNT)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 2111, in execute_sql
+    row_count = super().execute_sql(result_type)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+django.db.utils.ProgrammingError: owned channel name update
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+2026-11-15 02:20:03,510 INFO apps.channels.tasks Starting EPG TVG-ID setting task for 1 channels
+2026-11-15 02:20:03,517 ERROR apps.channels.tasks EPG TVG-ID setting task failed: owned channel tvg update
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+2026-11-15 02:20:03,522 ERROR celery.app.trace Task apps.channels.tasks.set_channels_tvg_ids_from_epg[a7580935-41a4-4dc2-8fa2-4f07f47a7f07] raised unexpected: DataError('owned channel tvg update\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE')
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.StringDataRightTruncation: owned channel tvg update
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 585, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 858, in __protected_call__
+    return self.run(*args, **kwargs)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/asgiref/sync.py", line 412, in main_wrap
+    raise exc_info[1]
+  File "/app/apps/channels/tasks.py", line 4604, in set_channels_tvg_ids_from_epg
+    Channel.objects.bulk_update(batch_updates, ['tvg_id'])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 963, in bulk_update
+    rows_updated += queryset.filter(pk__in=pks).update(**update_kwargs)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1300, in update
+    rows = query.get_compiler(self.db).execute_sql(ROW_COUNT)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 2111, in execute_sql
+    row_count = super().execute_sql(result_type)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+django.db.utils.DataError: owned channel tvg update
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+2026-11-15 02:20:03,541 INFO apps.channels.tasks Starting EPG logo setting task for 1 channels
+2026-11-15 02:20:03,547 ERROR apps.channels.tasks EPG logo setting task failed: owned channel logo insert
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+2026-11-15 02:20:03,552 ERROR celery.app.trace Task apps.channels.tasks.set_channels_logos_from_epg[0c308279-8ce2-431b-82a8-27112563d06a] raised unexpected: IntegrityError('owned channel logo insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE')
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.UniqueViolation: owned channel logo insert
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 585, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 858, in __protected_call__
+    return self.run(*args, **kwargs)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/asgiref/sync.py", line 412, in main_wrap
+    raise exc_info[1]
+  File "/app/apps/channels/tasks.py", line 4493, in set_channels_logos_from_epg
+    batch_stats = apply_logos_from_epg_icon_url(channels)
+  File "/app/apps/channels/utils.py", line 279, in apply_logos_from_epg_icon_url
+    Logo.objects.bulk_create(logos_to_create, ignore_conflicts=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/app/apps/channels/models.py", line 1416, in bulk_create
+    return super().bulk_create(objs, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 833, in bulk_create
+    returned_columns = self._batched_insert(
+        objs_without_pk,
+    ...<4 lines>...
+        unique_fields=unique_fields,
+    )
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1956, in _batched_insert
+    self._insert(
+    ~~~~~~~~~~~~^
+        item,
+        ^^^^^
+    ...<5 lines>...
+        returning_fields=returning_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+django.db.utils.IntegrityError: owned channel logo insert
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+2026-11-15 02:20:03,586 ERROR apps.channels.tasks Bulk channel creation failed: owned bulk channel insert
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+2026-11-15 02:20:03,592 ERROR celery.app.trace Task apps.channels.tasks.bulk_create_channels_from_streams[12e70dd0-fc48-427f-97f3-b89985a6758d] raised unexpected: IntegrityError('owned bulk channel insert\nCONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE')
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.CheckViolation: owned bulk channel insert
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 585, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 858, in __protected_call__
+    return self.run(*args, **kwargs)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/asgiref/sync.py", line 412, in main_wrap
+    raise exc_info[1]
+  File "/app/apps/channels/tasks.py", line 4160, in bulk_create_channels_from_streams
+    created_channels = Channel.objects.bulk_create(channels_to_create)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 833, in bulk_create
+    returned_columns = self._batched_insert(
+        objs_without_pk,
+    ...<4 lines>...
+        unique_fields=unique_fields,
+    )
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1956, in _batched_insert
+    self._insert(
+    ~~~~~~~~~~~~^
+        item,
+        ^^^^^
+    ...<5 lines>...
+        returning_fields=returning_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+django.db.utils.IntegrityError: owned bulk channel insert
+CONTEXT:  PL/pgSQL function owned_channel_failure() line 1 at RAISE
+2026-11-15 02:20:03,603 ERROR apps.channels.tasks EPG logo setting task failed: channel_ids or epg_source_id is required
+2026-11-15 02:20:03,606 ERROR celery.app.trace Task apps.channels.tasks.set_channels_logos_from_epg[72ee32d6-0eaf-485b-82a0-6ac4f6303a52] raised unexpected: ValueError('channel_ids or epg_source_id is required')
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 585, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py", line 858, in __protected_call__
+    return self.run(*args, **kwargs)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/asgiref/sync.py", line 412, in main_wrap
+    raise exc_info[1]
+  File "/app/apps/channels/tasks.py", line 4515, in set_channels_logos_from_epg
+    raise ValueError("channel_ids or epg_source_id is required")
+ValueError: channel_ids or epg_source_id is required
+
+worker: Warm shutdown (MainProcess)
