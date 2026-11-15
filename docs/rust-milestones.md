@@ -9,7 +9,12 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate22](rust-milestone-batch22.md): all four
+The newest source candidate is [Candidate23](rust-milestone-batch23.md): all four
+SDK gates pass with1,034 tests, zero failures and764 ignored. It corrects follower
+retirement while profile demand remains. Physical, Docker, combined Main and
+performance acceptance remain required.
+
+The preceding source candidate is [Candidate22](rust-milestone-batch22.md): all four
 SDK gates pass with1,034 tests, zero failures and764 ignored. It joins shared
 output-profile ownership across TS/HLS/fMP4 and corrects post-await stop admission.
 Docker/package checks and seven Redis/stop controls pass. The two-replica viewer

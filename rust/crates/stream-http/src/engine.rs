@@ -223,6 +223,9 @@ struct Session {
     manager_visible: AtomicBool,
     health: Mutex<health::Health>,
     idle_watching: AtomicBool,
+    /// Internal profile consumers hold channel demand without a raw data
+    /// subscription, client metadata, user slot or provider reservation.
+    profile_demands: AtomicUsize,
     native_initializing: AtomicBool,
     upstream_admitted: AtomicBool,
     ready_requested: AtomicBool,
@@ -502,6 +505,7 @@ impl StreamEngine {
                     manager_visible: AtomicBool::new(false),
                     health: Mutex::new(health::Health::new(epoch_seconds())),
                     idle_watching: AtomicBool::new(false),
+                    profile_demands: AtomicUsize::new(0),
                     native_initializing: AtomicBool::new(
                         register_client && self.inner.config.source_initialization,
                     ),
@@ -999,7 +1003,7 @@ struct ViewerGuard {
 impl Drop for ViewerGuard {
     fn drop(&mut self) {
         if *self.session.stop.borrow()
-            || self.session.channel.viewer_count() != 0
+            || self.session.has_local_demand()
             || self.session.idle_watching.swap(true, Ordering::AcqRel)
         {
             return;
@@ -1016,10 +1020,10 @@ impl Drop for ViewerGuard {
                     if *stop.borrow() {
                         break;
                     }
-                    if session.channel.viewer_count() > 0 {
+                    if session.has_local_demand() {
                         session.idle_watching.store(false, Ordering::Release);
                         // Close the last-drop/reset race without creating duplicate watchers.
-                        if session.channel.viewer_count() == 0
+                        if !session.has_local_demand()
                             && session
                                 .idle_watching
                                 .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
@@ -1053,7 +1057,7 @@ impl Drop for ViewerGuard {
                         let began = *empty_since.get_or_insert_with(Instant::now);
                         if began.elapsed() >= session.source.shutdown_delay {
                             let mut sessions = inner.sessions.lock().unwrap();
-                            if session.channel.viewer_count() == 0
+                            if !session.has_local_demand()
                                 && sessions
                                     .get(&key)
                                     .is_some_and(|current| Arc::ptr_eq(current, &session))
@@ -1590,6 +1594,9 @@ fn epoch_seconds() -> f64 {
 }
 
 impl Session {
+    fn has_local_demand(&self) -> bool {
+        self.channel.viewer_count() > 0 || self.profile_demands.load(Ordering::Acquire) > 0
+    }
     fn record_received_bytes(&self, length: usize, now: f64) {
         let total = self
             .received_bytes

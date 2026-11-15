@@ -214,7 +214,11 @@ impl StreamEngine {
             "channel_id":channel,"profile_id":profile,"stopping":*session.stop.borrow(),
             "physical_done":*session.done.borrow(),"uncertain":session.fault.load(Ordering::Acquire),
         })).collect::<Vec<_>>();
-        serde_json::json!({"configured":true,"profiles":sessions,"actual_profile_producer_admissions":profiles.admitted.load(Ordering::Acquire),"event_reader_closed":event.reader_closed,
+        let demands=self.inner.sessions.lock().unwrap().iter().map(|(channel,session)|serde_json::json!({
+            "channel_id":channel,"internal_profile_demands":session.profile_demands.load(Ordering::Acquire),
+            "raw_transport_subscriptions":session.channel.viewer_count(),
+        })).collect::<Vec<_>>();
+        serde_json::json!({"configured":true,"profiles":sessions,"local_channel_demand":demands,"actual_profile_producer_admissions":profiles.admitted.load(Ordering::Acquire),"event_reader_closed":event.reader_closed,
             "event_callbacks_completed":event.applied,"event_requests_observed":event.observed,
             "event_requests_rejected":event.rejected})
     }
@@ -366,6 +370,29 @@ impl StreamEngine {
             }
             time::sleep(Duration::from_millis(100)).await;
         };
+        // Transfer the temporary internal raw viewer to a lightweight demand
+        // guard BEFORE dropping it. A follower with no raw data viewers must
+        // still retain its real transformed clients; retiring that follower
+        // calls stop_local_channel and would cancel these live clients.
+        let demand = {
+            let sessions = self.inner.sessions.lock().unwrap();
+            let session = sessions
+                .get(&source.channel_id)
+                .cloned()
+                .ok_or_else(|| PlaybackError::new(503, "Profile raw follower disappeared"))?;
+            if *session.stop.borrow() || self.inner.slots.is_closed() {
+                return Err(PlaybackError::new(503, "Profile raw follower is stopping"));
+            }
+            // Every demand owns the already acquired profile-reader admission;
+            // counts cannot exceed that existing bounded semaphore.
+            session.profile_demands.fetch_add(1, Ordering::AcqRel);
+            Arc::new(ProfileDemand {
+                inner: Arc::downgrade(&self.inner),
+                session,
+                key: source.channel_id.clone(),
+                _reader: reader.clone(),
+            })
+        };
         drop(raw_subscription);
         let expected = first.owner.unwrap();
         let behind = source.startup_behind.as_secs_f64();
@@ -386,8 +413,12 @@ impl StreamEngine {
                 .map_or(first.index.saturating_add(1), |(seq, _)| *seq)
         };
         let health_engine = self.clone();
-        let health_retained: Arc<dyn Send + Sync> =
-            Arc::new((client.clone(), reader.clone(), profiles.clone()));
+        let health_retained: Arc<dyn Send + Sync> = Arc::new((
+            client.clone(),
+            reader.clone(),
+            profiles.clone(),
+            demand.clone(),
+        ));
         let raw_owner = self
             .inner
             .sessions
@@ -415,6 +446,7 @@ impl StreamEngine {
         let stream = async_stream::stream! {
             let _profiles=profiles;
             let reader=reader;
+            let demand=demand;
             let client=client;
             let mut stopped=client.as_ref().map(ClientLease::stopped);
             let mut keepalive=source_keepalive::SourceKeepalive::new();
@@ -432,7 +464,7 @@ impl StreamEngine {
                             if let Some(client)=client.as_ref(){client.record_bytes(data.as_ref().len());}
                             // Actual media-frame ownership retains the profile
                             // client beyond stream cancellation/backpressure.
-                            let frame=HeldFrame{data,_client:client.clone(),_profiles:_profiles.clone(),_reader:reader.clone()};
+                            let frame=HeldFrame{data,_client:client.clone(),_profiles:_profiles.clone(),_reader:reader.clone(),_demand:demand.clone()};
                             yield Ok(MediaFrame{data:Bytes::from_owner(frame),discontinuity:false});
                         },
                         Ok(None)=>sequence=sequence.saturating_add(1),
@@ -451,7 +483,7 @@ impl StreamEngine {
                             source_keepalive::Decision::Wait=>{},
                             source_keepalive::Decision::Send=>{
                                 if let Some(client)=client.as_ref(){client.record_keepalive(188);}
-                                yield Ok(MediaFrame{data:Bytes::from_owner(ProfileKeepalive{_client:client.clone(),_reader:reader.clone(),_profiles:_profiles.clone()}),discontinuity:false});
+                                yield Ok(MediaFrame{data:Bytes::from_owner(ProfileKeepalive{_client:client.clone(),_reader:reader.clone(),_profiles:_profiles.clone(),_demand:demand.clone()}),discontinuity:false});
                             },
                         }
                     }
@@ -463,6 +495,27 @@ impl StreamEngine {
         Ok(Box::pin(stream))
     }
 }
+/// A profile viewer is channel demand, not an additional ordinary raw client.
+/// Keep no media stream/payload queue here. Its existing reader permit bounds
+/// demand count, and every handed-off frame retains this same guard.
+struct ProfileDemand {
+    inner: Weak<Inner>,
+    session: Arc<Session>,
+    key: String,
+    _reader: Arc<OwnedSemaphorePermit>,
+}
+impl Drop for ProfileDemand {
+    fn drop(&mut self) {
+        self.session.profile_demands.fetch_sub(1, Ordering::AcqRel);
+        // Reuse the existing last-local-demand idle/remote-client cleanup path.
+        // Its pointer fence never retires a successor session at the same key.
+        drop(ViewerGuard {
+            inner: self.inner.clone(),
+            session: self.session.clone(),
+            key: self.key.clone(),
+        });
+    }
+}
 fn self_stopped(stopped: &Option<watch::Receiver<bool>>) -> bool {
     stopped.as_ref().is_some_and(|s| *s.borrow())
 }
@@ -471,6 +524,7 @@ struct HeldFrame {
     _client: Option<ClientLease>,
     _profiles: Arc<Profiles>,
     _reader: Arc<OwnedSemaphorePermit>,
+    _demand: Arc<ProfileDemand>,
 }
 impl AsRef<[u8]> for HeldFrame {
     fn as_ref(&self) -> &[u8] {
@@ -481,6 +535,7 @@ struct ProfileKeepalive {
     _client: Option<ClientLease>,
     _reader: Arc<OwnedSemaphorePermit>,
     _profiles: Arc<Profiles>,
+    _demand: Arc<ProfileDemand>,
 }
 impl AsRef<[u8]> for ProfileKeepalive {
     fn as_ref(&self) -> &[u8] {

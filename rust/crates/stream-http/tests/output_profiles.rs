@@ -71,6 +71,26 @@ async fn engine(url: &str) -> (StreamEngine, ClientStore, OutputStore) {
     assert!(engine.output_profiles_ready(Duration::from_secs(2)).await);
     (engine, clients, outputs)
 }
+async fn diagnostics(
+    first: &StreamEngine,
+    second: &StreamEngine,
+    clients: &ClientStore,
+    outputs: &OutputStore,
+    channel: &str,
+) -> serde_json::Value {
+    let metadata = clients.channel_clients(channel).await.map(|rows| {
+        rows.into_iter().map(|row|serde_json::json!({
+        "output_format":row["output_format"],"output_profile_id":row["output_profile_id"],
+    })).collect::<Vec<_>>()
+    });
+    let lane = outputs.profile(7).unwrap();
+    let snapshot=lane.snapshot(channel).await.map(|value|serde_json::json!({
+        "owner_present":value.owner.is_some(),"index":value.index,"retained_chunks":value.segments.len(),
+    }));
+    serde_json::json!({"first":first.output_profile_diagnostics(),"second":second.output_profile_diagnostics(),
+        "first_raw":first.status(),"second_raw":second.status(),"clients":metadata.ok(),
+        "profile":snapshot.ok(),"profile_state":lane.state(channel).await.ok()})
+}
 #[tokio::test]
 #[ignore = "requires real isolated Redis and actual child processes"]
 async fn raw_owner_serves_two_replica_profile_viewers_with_one_process_one_provider_and_selective_retirement(
@@ -128,22 +148,29 @@ async fn raw_owner_serves_two_replica_profile_viewers_with_one_process_one_provi
         .await
         .unwrap()
         .into_body();
-    assert!(!remote
-        .frame()
-        .await
-        .unwrap()
+    let remote_frame = remote.frame().await;
+    eprintln!(
+        "actual-profile-before-frame-check {}",
+        diagnostics(&first, &second, &first_clients, &outputs, &channel).await
+    );
+    eprintln!(
+        "actual-profile-launch-log {:?}",
+        std::fs::read_to_string(&launches)
+    );
+    let held_remote = remote_frame
+        .expect("actual remote profile frame; diagnostics retained")
         .unwrap()
         .into_data()
-        .unwrap()
-        .is_empty());
-    assert!(!local
+        .unwrap();
+    let held_local = local
         .frame()
         .await
-        .unwrap()
+        .expect("actual local profile frame")
         .unwrap()
         .into_data()
-        .unwrap()
-        .is_empty());
+        .unwrap();
+    assert!(!held_remote.is_empty());
+    assert!(!held_local.is_empty());
     assert_eq!(counts.load(Ordering::SeqCst), 1);
     let launches_raw = std::fs::read_to_string(&launches).unwrap();
     assert_eq!(
@@ -158,12 +185,86 @@ async fn raw_owner_serves_two_replica_profile_viewers_with_one_process_one_provi
             .unwrap(),
         2
     );
+    let mut counter_connection = redis::Client::open(redis.clone())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let actual_provider_count: Option<u32> = redis::cmd("GET")
+        .arg("profile_connections:7")
+        .query_async(&mut counter_connection)
+        .await
+        .unwrap();
+    assert_eq!(
+        actual_provider_count,
+        Some(1),
+        "profile consumers cannot reserve another upstream provider slot"
+    );
+    let actual_clients = first_clients.channel_clients(&channel).await.unwrap();
+    assert_eq!(
+        actual_clients.len(),
+        3,
+        "exact actual raw1 + profile2 client metadata, no phantom ordinary client"
+    );
+    assert_eq!(
+        actual_clients
+            .iter()
+            .filter(|client| client["output_profile_id"].as_i64().is_none())
+            .count(),
+        1
+    );
+    // Cancelling the remote body with its actual frame still held must retain
+    // both actual metadata and internal follower demand until that frame drops.
+    drop(remote);
+    assert_eq!(
+        first_clients
+            .output_profile_client_count(&channel, 7, ())
+            .await
+            .unwrap(),
+        2
+    );
+    assert_eq!(second.status().len(), 1);
+    assert_eq!(
+        second.status()[0].viewer_count,
+        0,
+        "internal demand is not another raw transport viewer"
+    );
+    assert_eq!(
+        second.output_profile_diagnostics()["local_channel_demand"][0]["internal_profile_demands"],
+        1
+    );
+    drop(held_remote);
+    time::timeout(Duration::from_secs(3), async {
+        while !second.status().is_empty()
+            || first_clients
+                .output_profile_client_count(&channel, 7, ())
+                .await
+                .unwrap()
+                != 1
+        {
+            time::sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert!(
+        !local
+            .frame()
+            .await
+            .unwrap()
+            .unwrap()
+            .into_data()
+            .unwrap()
+            .is_empty(),
+        "other replica profile viewer survives remote follower retirement"
+    );
+    drop(held_local);
     let profile = outputs.profile(7).unwrap();
     assert_eq!(
         profile.state(&channel).await.unwrap().as_deref(),
         Some("active")
     );
-    drop((remote, local));
+    drop(local);
     time::timeout(Duration::from_secs(10), async {
         while profile.snapshot(&channel).await.unwrap().owner.is_some() {
             time::sleep(Duration::from_millis(50)).await;
