@@ -64,7 +64,7 @@ pub struct TaskSqlSession {
 impl AuthService {
     /// HTTP callers already own their validated writer. Main task callers do
     /// not have request-local state: admit from the SAME four-slot budget.
-    fn task_sql_writer(&self) -> Result<Arc<OwnedSemaphorePermit>, StoreError> {
+    pub(crate) fn task_sql_writer(&self) -> Result<Arc<OwnedSemaphorePermit>, StoreError> {
         if self.request_writer_permit.is_some() {
             return self.rest_writer();
         }

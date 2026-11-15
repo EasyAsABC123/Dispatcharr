@@ -284,3 +284,8 @@ mod normal_backup_schedule;
 pub mod normal_channel_tasks;
 
 pub mod core_settings_broker;
+
+pub mod normal_plugin_repos;
+pub mod normal_xc_accounts;
+
+mod xc_profile_notifications;

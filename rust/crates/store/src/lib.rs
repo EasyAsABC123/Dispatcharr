@@ -8,7 +8,9 @@ mod auth;
 mod auth_events;
 mod auth_network;
 mod plugin_repositories;
-pub use plugin_repositories::PluginRepositories;
+pub use plugin_repositories::{
+    PluginRefreshAdmission, PluginRepositories, PluginRepositoryRefresh,
+};
 mod rest_reads;
 pub use rest_reads::{RestReadLimits, RetainedRestReads, RetainedRestSubject};
 mod auth_throttle;
@@ -490,3 +492,6 @@ pub mod channel_maintenance_http;
 
 mod core_task_broker;
 pub use core_task_broker::{CoreTaskBroker, CoreTaskPublication};
+pub mod xc_account_http;
+mod xc_account_provider;
+pub mod xc_account_tasks;

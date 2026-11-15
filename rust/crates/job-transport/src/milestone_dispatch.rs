@@ -8,8 +8,11 @@ use std::{collections::BTreeMap, sync::Arc};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Family {
+    PluginRefresh,
     BackupCreate,
     BackupScheduled,
+    XcAccountInfo,
+    XcAccountProfiles,
     StartupRecovery,
     RehashStreams,
     RescheduleOffsets,
@@ -188,8 +191,11 @@ pub fn classify(raw: &[u8]) -> Option<Family> {
     let frame: serde_json::Value = serde_json::from_slice(raw).ok()?;
     let task = frame.get("headers")?.get("task")?.as_str()?;
     Some(match task {
+        "apps.plugins.tasks.refresh_plugin_repos" => Family::PluginRefresh,
         "apps.backups.tasks.create_backup_task" => Family::BackupCreate,
         "apps.backups.tasks.scheduled_backup_task" => Family::BackupScheduled,
+        "apps.m3u.tasks.refresh_account_info" => Family::XcAccountInfo,
+        "apps.m3u.tasks.refresh_account_profiles" => Family::XcAccountProfiles,
         "core.tasks.rehash_streams" => Family::RehashStreams,
         "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change" => {
             Family::RescheduleOffsets

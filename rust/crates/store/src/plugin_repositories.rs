@@ -547,3 +547,66 @@ async fn manifest_refresh(
         )
         .await
 }
+
+/// Plain shared-family plugin refresh uses the SAME Main auth admission/pool.
+#[derive(Clone)]
+pub struct PluginRepositoryRefresh {
+    auth: AuthService,
+}
+pub struct PluginRefreshAdmission {
+    auth: AuthService,
+    _owner: Arc<dyn Send + Sync>,
+    _permit: Arc<tokio::sync::OwnedSemaphorePermit>,
+}
+impl PluginRepositoryRefresh {
+    pub fn new(auth: AuthService) -> Self {
+        Self { auth }
+    }
+    pub fn try_admit(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<PluginRefreshAdmission, StoreError> {
+        let permit = Arc::new(
+            self.auth
+                .user_agent_workers
+                .clone()
+                .try_acquire_owned()
+                .map_err(|_| capacity())?,
+        );
+        let auth = self
+            .auth
+            .clone()
+            .with_request_writer_permit(permit.clone())?
+            .with_retained_scope(owner.clone());
+        Ok(PluginRefreshAdmission {
+            auth,
+            _owner: owner,
+            _permit: permit,
+        })
+    }
+}
+impl PluginRefreshAdmission {
+    pub async fn preflight(&self) -> Result<(), StoreError> {
+        let mut connection = self.auth.store.pool().acquire().await?;
+        connection.close_on_drop();
+        let observed = manifest_fetch::refresh_preflight(&mut connection).await;
+        let ready = connection.ping().await;
+        let close = connection.close().await;
+        ready?;
+        close?;
+        observed
+    }
+    /// Returns only after the actual one-session query/fetch/mutation loop and
+    /// physical Ready+close. An unresolved transport/classification is a fault,
+    /// never a fabricated Source caught-error status or successful None result.
+    pub async fn execute(&self) -> Result<serde_json::Value, StoreError> {
+        let mut connection = self.auth.store.pool().acquire().await?;
+        connection.close_on_drop();
+        let observed = manifest_fetch::refresh_enabled(&mut connection).await;
+        let ready = connection.ping().await;
+        let close = connection.close().await;
+        ready?;
+        close?;
+        observed
+    }
+}

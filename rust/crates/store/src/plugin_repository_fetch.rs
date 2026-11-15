@@ -484,8 +484,7 @@ async fn save(
             .ok_or_else(capacity)?,
     )
 }
-async fn refresh_children(
-    auth: &AuthService,
+async fn sync_managed_plugins(
     connection: &mut sqlx::PgConnection,
     id: i64,
     data: &Value,
@@ -530,6 +529,20 @@ async fn refresh_children(
                 .await?;
         }
     }
+    Ok(())
+}
+async fn refresh_children(
+    auth: &AuthService,
+    connection: &mut sqlx::PgConnection,
+    id: i64,
+    data: &Value,
+) -> Result<(), StoreError> {
+    sync_managed_plugins(connection, id, data).await?;
+    let manifest = inner(data);
+    let plugins = manifest
+        .get("plugins")
+        .and_then(Value::as_array)
+        .ok_or_else(|| unqualified("Non-list plugin collections remain unqualified"))?;
     let root = raw_text(manifest.get("root_url"))?
         .trim_end_matches('/')
         .to_owned();
@@ -899,3 +912,150 @@ mod peers;
 #[cfg(test)]
 #[path = "plugin_repository_fetch_remaining_peers.rs"]
 mod remaining_peers;
+
+struct RefreshRepo {
+    id: i64,
+    url: String,
+    name: String,
+    official: bool,
+    key: String,
+}
+async fn enabled_repos(
+    connection: &mut sqlx::PgConnection,
+) -> Result<Vec<RefreshRepo>, StoreError> {
+    let row=sqlx::query("WITH bounded AS (SELECT id,url,name,is_official,public_key FROM plugins_pluginrepo WHERE enabled ORDER BY is_official DESC,name LIMIT 257), payload AS (SELECT count(*) AS n,COALESCE(jsonb_agg(to_jsonb(bounded) ORDER BY is_official DESC,name),'[]'::jsonb)::text AS raw FROM bounded) SELECT n,CASE WHEN n<=256 AND octet_length(raw)<=65536 THEN raw END AS raw FROM payload").fetch_one(&mut*connection).await?;
+    let count: i64 = row.try_get("n")?;
+    let raw: Option<String> = row.try_get("raw")?;
+    if count > 256 {
+        return Err(unqualified("Plugin refresh enabled-repository capacity"));
+    }
+    let values: Value =
+        serde_json::from_str(&raw.ok_or_else(capacity)?).map_err(|_| framework_shape())?;
+    values
+        .as_array()
+        .ok_or_else(framework_shape)?
+        .iter()
+        .map(|v| {
+            let text = |field: &str| {
+                v[field]
+                    .as_str()
+                    .map(str::to_owned)
+                    .ok_or_else(framework_shape)
+            };
+            Ok(RefreshRepo {
+                id: v["id"].as_i64().ok_or_else(framework_shape)?,
+                url: text("url")?,
+                name: text("name")?,
+                official: v["is_official"].as_bool().ok_or_else(framework_shape)?,
+                key: text("public_key")?,
+            })
+        })
+        .collect()
+}
+pub(super) async fn refresh_preflight(
+    connection: &mut sqlx::PgConnection,
+) -> Result<(), StoreError> {
+    enabled_repos(connection).await.map(|_| ())
+}
+fn settled_fetch_status(error: Failure) -> Result<String, StoreError> {
+    match error {
+        Failure::Http(code) => Ok(code.to_string()),
+        Failure::Policy(_) | Failure::MissingPlugins => Ok("ValueError".into()),
+        // Existing HTTP-facing ports deliberately collapse distinct Python
+        // exception classes. Never persist a guessed class or successful None.
+        Failure::Json => Err(unqualified(
+            "Plugin refresh JSON/Unicode exception-class causality is not qualified",
+        )),
+        Failure::Timeout | Failure::Connect => Err(unqualified(
+            "Plugin refresh transport exception-class causality is not qualified",
+        )),
+        Failure::Unexpected => Err(unqualified(
+            "Plugin refresh unexpected exception-class causality is not qualified",
+        )),
+        Failure::Unqualified(message) => Err(unqualified(message)),
+    }
+}
+fn settled_sql_status(error: StoreError) -> Result<String, StoreError> {
+    if let StoreError::Database(sql) = &error {
+        if let Some(db) = sql.as_database_error() {
+            if let Some(code) = db.code() {
+                if code.starts_with("22") {
+                    return Ok("DataError".into());
+                }
+                if code.starts_with("23") {
+                    return Ok("IntegrityError".into());
+                }
+                if code == "P0001" || code.starts_with("42") {
+                    return Ok("ProgrammingError".into());
+                }
+            }
+        }
+    }
+    Err(error)
+}
+async fn save_task_failure(
+    connection: &mut sqlx::PgConnection,
+    id: i64,
+    status: &str,
+) -> Result<(), StoreError> {
+    sqlx::query("UPDATE plugins_pluginrepo SET last_fetch_status=$2,last_fetched=$3,updated_at=$4 WHERE id=$1").bind(id).bind(status.chars().take(255).collect::<String>()).bind(Utc::now()).bind(Utc::now()).execute(&mut*connection).await?;
+    Ok(())
+}
+pub(super) async fn refresh_enabled(
+    connection: &mut sqlx::PgConnection,
+) -> Result<Value, StoreError> {
+    let repos = enabled_repos(connection).await?;
+    for repo in repos {
+        let key = if repo.official {
+            None
+        } else {
+            Some(repo.key.as_str())
+        };
+        let (data, verified) = match fetch_verified(&repo.url, key).await {
+            Ok(value) => value,
+            Err(error) => {
+                let status = settled_fetch_status(error)?;
+                save_task_failure(connection, repo.id, &status).await?;
+                tracing::warn!(target:"dispatcharr::plugin_refresh",repo_id=repo.id,status=%status,"Failed to refresh plugin repository");
+                continue;
+            }
+        };
+        let name = text(inner(&data).get("registry_name"))?;
+        if name.is_empty() || (!repo.official && official(&name)) {
+            tracing::warn!(target:"dispatcharr::plugin_refresh",repo_id=repo.id,"Skipping plugin repository with invalid registry name");
+            continue;
+        }
+        let observed = async {
+            save(connection, repo.id, &data, verified).await?;
+            // Source task invokes only _unmanage_dropped_slugs. Cache-detail
+            // invalidation belongs to the HTTP refresh action, never this task.
+            let plugins = inner(&data)
+                .get("plugins")
+                .and_then(Value::as_array)
+                .ok_or_else(|| {
+                    unqualified("Task plugin entry collection outside qualified array domain")
+                })?;
+            if plugins.iter().any(|v| {
+                !v.is_object()
+                    || v.get("slug")
+                        .is_some_and(|slug| !slug.is_null() && !slug.is_string())
+            }) {
+                return Err(unqualified(
+                    "Task plugin entry/slug exception class outside qualified domain",
+                ));
+            }
+            sync_managed_plugins(connection, repo.id, &data).await
+        }
+        .await;
+        if let Err(error) = observed {
+            let status = settled_sql_status(error)?;
+            save_task_failure(connection, repo.id, &status).await?;
+            tracing::warn!(target:"dispatcharr::plugin_refresh",repo_id=repo.id,status=%status,"Failed to refresh plugin repository");
+        } else {
+            tracing::info!(target:"dispatcharr::plugin_refresh",repo_id=repo.id,repo_name=%repo.name,"Refreshed plugin repository");
+        }
+    }
+    // Actual Source body has no explicit return. Reach this only after every
+    // enabled row has actually executed, skipped validation, or caught above.
+    Ok(Value::Null)
+}

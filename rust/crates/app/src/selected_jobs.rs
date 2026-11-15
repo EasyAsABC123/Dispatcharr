@@ -1,4 +1,4 @@
-//! Experimental selected16 + startup recovery assembly. Original Dispatcharr,
+//! Experimental selected-family + startup recovery assembly. Original Dispatcharr,
 //! Celery/Kombu/django-celery-beat and dependency authors retain all credit.
 //! Does not claim Source47 parity or default-on/full scheduler acceptance.
 use dispatcharr_contracts::UpdateEventSink;
@@ -44,6 +44,7 @@ struct Inner {
     closed: AtomicBool,
     local: SocketAddr,
     recording_http: dispatcharr_store::recording_http::RecordingHttp,
+    xc_http: dispatcharr_store::xc_account_http::Http,
     recording_playback: dispatcharr_store::RecordingPlayback,
     beat_enabled: bool,
     backups: dispatcharr_store::BackupFiles,
@@ -220,6 +221,23 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected scanner locks initialization failed")?;
+        let xc_delay = env::var("XC_PROFILE_REFRESH_DELAY")
+            .unwrap_or_else(|_| "2.5".into())
+            .parse::<f64>()
+            .map_err(|_| "XC profile delay must be numeric")?;
+        let xc_delay = Duration::try_from_secs_f64(xc_delay)
+            .map_err(|_| "XC profile delay must be nonnegative and finite")?;
+        let xc = jobs::normal_xc_accounts::Prepared::new(
+            shared_jobs.clone(),
+            auth.clone(),
+            events.clone(),
+            locks.clone(),
+            revoked.clone(),
+            xc_delay,
+        )
+        .map_err(|_| "Selected XC account task configuration unsupported")?;
+        let xc_http =
+            dispatcharr_store::xc_account_http::Http::prepare(auth.clone(), Arc::new(xc.clone()));
         let recording_playback = dispatcharr_store::RecordingPlayback::prepare(
             auth.clone(),
             dispatcharr_output_http::source_output_origin,
@@ -240,6 +258,12 @@ impl SelectedJobs {
             revoked.clone(),
         )
         .map_err(|_| "Selected Core downstream task initialization failed")?;
+        let plugin_refresh = jobs::normal_plugin_repos::Prepared::new(
+            shared_jobs.clone(),
+            auth.clone(),
+            revoked.clone(),
+        )
+        .map_err(|_| "Selected plugin repository refresh initialization failed")?;
         let channel_tasks = jobs::normal_channel_tasks::Prepared::new(
             shared_jobs.clone(),
             store.clone(),
@@ -355,6 +379,8 @@ impl SelectedJobs {
         ];
         entries.extend(core_tasks.entries());
         entries.extend(channel_tasks.entries());
+        entries.push(plugin_refresh.entry());
+        entries.extend(xc.entries());
         entries.extend(defaults.entries());
         entries.extend(scanner.entries());
         let queue = jobs::normal_queue::Application::prepare(
@@ -397,6 +423,7 @@ impl SelectedJobs {
                 closed: AtomicBool::new(false),
                 local,
                 recording_http,
+                xc_http,
                 recording_playback,
                 beat_enabled,
                 backups,
@@ -414,6 +441,7 @@ impl SelectedJobs {
             .clone()
             .router_with_playback(self.inner.recording_playback.clone())
             .merge(self.inner.channel_http.clone().router())
+            .merge(self.inner.xc_http.clone().router())
     }
     pub fn readiness(&self) -> (bool, serde_json::Value) {
         let queue = self.inner.queue.readiness();
@@ -435,7 +463,7 @@ impl SelectedJobs {
                 ));
         (
             ready,
-            serde_json::json!({"scope":"experimental selected16 plus startup recovery; not Source47 parity","ready":ready,"startup":format!("{startup:?}"),"startup_error":startup_error,"control":format!("{control:?}"),"celery":format!("{:?}",queue.celery),"dvr":format!("{:?}",queue.dvr),"clocked_scheduler":format!("{scheduler:?}"),"clocked_scheduler_enabled":self.inner.beat_enabled,"parity_complete":false}),
+            serde_json::json!({"scope":"experimental selected normal families plus startup recovery; not Source47 parity","ready":ready,"startup":format!("{startup:?}"),"startup_error":startup_error,"control":format!("{control:?}"),"celery":format!("{:?}",queue.celery),"dvr":format!("{:?}",queue.dvr),"clocked_scheduler":format!("{scheduler:?}"),"clocked_scheduler_enabled":self.inner.beat_enabled,"parity_complete":false}),
         )
     }
     pub fn start_after_serving(&self) -> Result<(), String> {
@@ -521,6 +549,7 @@ impl SelectedJobs {
         self.inner.backup_jobs.close_admission();
         self.inner.channel_http.close_admission();
         self.inner.recording_http.close_admission();
+        self.inner.xc_http.close_admission();
         self.inner.recording_playback.close_admission();
         self.inner.closed.store(true, Ordering::Release);
         self.inner.startup.send_replace(Startup::Stopping);
@@ -549,6 +578,14 @@ impl SelectedJobs {
         if !self
             .inner
             .recording_http
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            return false;
+        }
+        if !self
+            .inner
+            .xc_http
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
         {
