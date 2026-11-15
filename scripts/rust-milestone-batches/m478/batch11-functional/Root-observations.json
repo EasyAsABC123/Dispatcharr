@@ -1,0 +1,240 @@
+{
+  "scope": "Selected observations and exact safe reports, not a portable closure of all raw inputs. Private request tokens, database credentials and full container environments omitted.",
+  "runtime_revision": "91c8ce7f2363a10ab872f79a7c8a727835626840",
+  "image_id": "sha256:6d1cac5939da5e99e1fd41742c0cc34c34dad9a9fdeff7a59585d687cbb3aa8e",
+  "backends": [
+    {
+      "backend": "Native",
+      "original_status": "failed",
+      "cases": [
+        {
+          "case": "authorization",
+          "status": "retained_native_authority",
+          "has_retained_primary_reason": false
+        },
+        {
+          "case": "artwork",
+          "status": "retained_native_authority",
+          "has_retained_primary_reason": false
+        },
+        {
+          "case": "grouped-m6",
+          "status": "retained_native_authority",
+          "has_retained_primary_reason": false
+        },
+        {
+          "case": "channel-maintenance",
+          "status": "failed",
+          "has_retained_primary_reason": true
+        },
+        {
+          "case": "normal-backup",
+          "status": "failed",
+          "has_retained_primary_reason": true
+        },
+        {
+          "case": "core-produced",
+          "status": "failed",
+          "has_retained_primary_reason": true
+        },
+        {
+          "case": "overlap",
+          "status": "passed",
+          "has_retained_primary_reason": false
+        },
+        {
+          "case": "controls",
+          "status": "passed",
+          "has_retained_primary_reason": false
+        },
+        {
+          "case": "nonempty-restart",
+          "status": "failed",
+          "has_retained_primary_reason": true
+        },
+        {
+          "case": "streams-denial",
+          "status": "passed",
+          "has_retained_primary_reason": false
+        },
+        {
+          "case": "held-drain",
+          "status": "passed",
+          "has_retained_primary_reason": false
+        }
+      ]
+    },
+    {
+      "backend": "Original",
+      "original_status": "failed",
+      "cases": [
+        {
+          "case": "source-slow-reader",
+          "status": "passed",
+          "has_retained_primary_reason": false
+        },
+        {
+          "case": "nonempty-restart",
+          "status": "failed",
+          "has_retained_primary_reason": true
+        },
+        {
+          "case": "normal-backup",
+          "status": "passed",
+          "has_retained_primary_reason": false
+        }
+      ]
+    }
+  ],
+  "raw_refs_sha256": {
+    "artifacts/rust/normal-graph-batch11-functional-2/results/Native/report.json": "b5b241e74ffcec60733e5fe7ad01c30ae58d71d456cf1189bf8fee4b96145b40",
+    "artifacts/rust/normal-graph-batch11-functional-2/results/Original/report.json": "97df65d29edd75050418efa2db34a14be7c9bbe3fb4ad200c772e8b9e355d94a",
+    "artifacts/rust/normal-graph-batch11-functional-2/fixtures/Native-a48fb814/normal-backup/report.json": "1d463ff5e1d54ce93aecc9dfe90adbd0c2e876a6631df40ef275a2b89f53d934",
+    "artifacts/rust/normal-graph-batch11-functional-2/fixtures/Original-63220052/normal-backup/report.json": "29ef5784fadf23c49e468254d4a64d717160039f1ebc047d802d659694c5efc4",
+    "artifacts/rust/normal-graph-batch11-functional-2/fixtures/Native-a48fb814/channel-acceptance-45696b39/report.json": "87cf62d5132c8f25619d8ca23be0558a53a733053da965d7e7730051af7ed18f",
+    "artifacts/rust/normal-graph-batch11-functional-2/fixtures/Native-a48fb814/channel-acceptance-45696b39/http98.json": "5646e5e0330f25d5675f9c6035e6c642ef1f5b8c2cb272fbd51fd71272c079ff"
+  },
+  "full_milestone_passed": false,
+  "new_performance_gains": false,
+  "original_author_credit_preserved": true,
+  "Native_backup": {
+    "cells": [
+      {
+        "name": "startup-default-row",
+        "status": "passed"
+      },
+      {
+        "name": "packaged-PG-clients",
+        "status": "passed"
+      },
+      {
+        "name": "actual-timezone-UTC",
+        "status": "passed"
+      },
+      {
+        "name": "nonempty-source-snapshot",
+        "status": "passed"
+      },
+      {
+        "name": "actual-publication-observer",
+        "status": "passed"
+      },
+      {
+        "name": "normal-create-status-ZIP",
+        "status": "passed"
+      },
+      {
+        "name": "owned-Source-restore",
+        "status": "passed"
+      },
+      {
+        "name": "actual-scheduled-UTC-retention",
+        "status": "passed"
+      },
+      {
+        "name": "actual-timezone-Honolulu",
+        "status": "passed"
+      },
+      {
+        "name": "per-job-timezone-create",
+        "status": "passed"
+      },
+      {
+        "name": "actual-filename-retention-self-delete",
+        "status": "failed"
+      },
+      {
+        "name": "schedule-disable",
+        "status": "passed"
+      }
+    ],
+    "passed": 11,
+    "total": 12,
+    "unmeasured": [
+      "held-pgdump/table-lock pending and beyond-deadline shutdown",
+      "per-file delete-refusal continuation",
+      "Source subprocess error-text parity",
+      "production/historical restore lifecycle",
+      "per-job filename timezone comparison beyond selectedzones"
+    ],
+    "full_M8_M9_passed": false
+  },
+  "Original_backup": {
+    "cells": [
+      {
+        "name": "startup-default-row",
+        "status": "passed"
+      },
+      {
+        "name": "packaged-PG-clients",
+        "status": "passed"
+      },
+      {
+        "name": "actual-timezone-UTC",
+        "status": "passed"
+      },
+      {
+        "name": "nonempty-source-snapshot",
+        "status": "passed"
+      },
+      {
+        "name": "actual-publication-observer",
+        "status": "passed"
+      },
+      {
+        "name": "normal-create-status-ZIP",
+        "status": "passed"
+      },
+      {
+        "name": "owned-Source-restore",
+        "status": "passed"
+      },
+      {
+        "name": "actual-scheduled-UTC-retention",
+        "status": "passed"
+      },
+      {
+        "name": "actual-timezone-Honolulu",
+        "status": "passed"
+      },
+      {
+        "name": "per-job-timezone-create",
+        "status": "passed"
+      },
+      {
+        "name": "actual-filename-retention-self-delete",
+        "status": "passed"
+      },
+      {
+        "name": "schedule-disable",
+        "status": "passed"
+      }
+    ],
+    "passed": 12,
+    "total": 12,
+    "unmeasured": [
+      "held-pgdump/table-lock pending and beyond-deadline shutdown",
+      "per-file delete-refusal continuation",
+      "Source subprocess error-text parity",
+      "production/historical restore lifecycle",
+      "per-job filename timezone comparison beyond selectedzones"
+    ],
+    "full_M8_M9_passed": false
+  },
+  "channel": {
+    "ordinary9_passed": true,
+    "HTTP98_actual_and_passed": true,
+    "physical_pool_and_drain_passed": true,
+    "original_wire_and_parent_report_passed": false,
+    "derived_source_bound_cached_CAS_qualified": true,
+    "scope": "Native29 terminal observations are functional, Source98 did not consume those frames; no Source task-result parity added for those shapes",
+    "full_channel_or_M6_passed": false
+  },
+  "remaining_failures": [
+    "Native Core1001 SQL saves/1000 artwork publications, partialprefix/physicalfault; historical negativecapacityreply inferrednotdirectlycaptured",
+    "Native Honolulu cron failed before publication; Source corresponding self-delete caught-error task passed",
+    "Native recording_end event omitted SQL microseconds though recoverymedia/other13effects succeeded",
+    "Source designated revoke returnedSUCCESS, notREVOKED; no preclaim ordering proof, newcontrolledSourceorderingtestrequired",
+    "Paired malformed-range transport divergence remains literal"
+  ]
+}

@@ -9,7 +9,7 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest committed Core/scheduler candidate is `3cd82adfb0c95bf30eb7cc537dceba21a0384464`: [930 workspace tests pass](rust-milestone-batch9.md), including the background SQL admission and date-only save corrections. Its new Docker/cohort acceptance is pending; candidate8 results below keep their original scope.
+The newest committed runtime is `8faa6b9c444c8cdfec6cdfd3d1baa4d585ab2b2f`: [945 workspace tests pass](rust-milestone-batch12.md), including observed Core backpressure, Honolulu scheduling and event-precision corrections. Its affected Compose batch is under validation. The [Candidate11 grouped observations](rust-batch11-functional-observations.md) qualify98 channel HTTP comparisons, selected task/physical checks, real backup/Source restore and recording leaves while preserving the failed whole result. All full milestones remain open; no new performance gain is accepted. Older results below retain their original scope.
 
 The latest packaged recording candidate is `cb1ba69af8e0623222391a707a2b9fc03b5995f6`:
 [915 tests and its Docker build pass](rust-milestone-batch8.md), and the selected

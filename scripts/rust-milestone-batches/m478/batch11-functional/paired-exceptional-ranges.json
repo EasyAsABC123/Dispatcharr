@@ -1,0 +1,65 @@
+{
+  "status": "failed",
+  "Source_reference_shape": "HTTP status observed",
+  "actual": {
+    "Original": {
+      "range-reversed-transport": {
+        "status_code": "206",
+        "content_length": "-4",
+        "content_range_offsets": [
+          7,
+          2
+        ],
+        "transfer_encoding": null,
+        "accept_ranges": "bytes",
+        "content_type": "video/x-matroska",
+        "peer_EOF": true,
+        "transport_failure": null,
+        "body_bytes": 0,
+        "wire_bytes_if_no_HTTP": null
+      },
+      "range-outside-transport": {
+        "status_code": "206",
+        "content_length": "-100",
+        "content_range_offsets": [
+          100,
+          -1
+        ],
+        "transfer_encoding": null,
+        "accept_ranges": "bytes",
+        "content_type": "video/x-matroska",
+        "peer_EOF": true,
+        "transport_failure": null,
+        "body_bytes": 0,
+        "wire_bytes_if_no_HTTP": null
+      }
+    },
+    "Native": {
+      "range-reversed-transport": {
+        "status_code": null,
+        "content_length": null,
+        "content_range_offsets": null,
+        "transfer_encoding": null,
+        "accept_ranges": null,
+        "content_type": null,
+        "peer_EOF": true,
+        "transport_failure": null,
+        "body_bytes": null,
+        "wire_bytes_if_no_HTTP": 0
+      },
+      "range-outside-transport": {
+        "status_code": null,
+        "content_length": null,
+        "content_range_offsets": null,
+        "transfer_encoding": null,
+        "accept_ranges": null,
+        "content_type": null,
+        "peer_EOF": true,
+        "transport_failure": null,
+        "body_bytes": null,
+        "wire_bytes_if_no_HTTP": 0
+      }
+    }
+  },
+  "scope": "only this paired actual exceptional-range transport; no broader HTTP/error-domain acceptance"
+}

@@ -1,0 +1,489 @@
+{
+  "passed": true,
+  "scope": "Derived read-only cached-script predicate on retained actual batch11 frames; original failure remains immutable. No app/Source replay. Not full M6 or full channel parity.",
+  "binding_sha256": "773ab946291dd800466f56ca176f0dc15979f971ced7f92dd94e8865b398444c",
+  "original_report_sha256": "87cf62d5132c8f25619d8ca23be0558a53a733053da965d7e7730051af7ed18f",
+  "journal_sha256": "d72ac5c54c151a0280f964332ae8529900294b09b0e343ea8aa76291caa85f6a",
+  "candidate_git": "91c8ce7f2363a10ab872f79a7c8a727835626840",
+  "candidate_image": "sha256:6d1cac5939da5e99e1fd41742c0cc34c34dad9a9fdeff7a59585d687cbb3aa8e",
+  "source_map_sha256": "d640324c8c14246a68039c197726c78471cad56e7fb76bfeebe2767f4d7453ae",
+  "candidate_transport_sha256": "f1da775262465ba113693813123ae90e71f958a9ac7cf3e54ea2a19969e7f3f1",
+  "claim_script_sha1": "950f869063e0d6e833b71c5f6c178eb202333f31",
+  "claim_script_sha256": "5c997b2d9b6e8f64acf03c1d8682bc11974789fbb6bf05679c5b6e1fa23fee24",
+  "claim_script_utf8": "\nif redis.call('TYPE',KEYS[1]).ok~='list'then return 0 end\nif redis.call('LINDEX',KEYS[1],-1)~=ARGV[1]then return 0 end\nredis.call('RPOP',KEYS[1]);return 1\n",
+  "original_wire_passed": false,
+  "original_report_passed": false,
+  "cases": [
+    {
+      "name": "normal_names",
+      "task_id": "35419705-aeb5-4bde-80b7-33f38bb3eef9",
+      "checks": {
+        "same_source_case_identity": true,
+        "original_sole_wire_failure_is_literal_eval_predicate": true,
+        "all_actual_body_results_SQL_events_passed": true,
+        "exactly_one_actual_publication": true,
+        "exactly_one_actual_cached_exact_raw_claim_and_atomic_RPOP": true
+      },
+      "passed": true,
+      "actual_CAS_evidence": [
+        {
+          "journal_index": 85,
+          "actual_cached_script": {
+            "time": 1794719286.167783,
+            "db": 1,
+            "client_address": "127.0.0.1",
+            "client_port": "45578",
+            "client_type": "tcp",
+            "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tbMV1dLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.set_channels_names_from_epg\",\"id\":\"35419705-aeb5-4bde-80b7-33f38bb3eef9\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"35419705-aeb5-4bde-80b7-33f38bb3eef9\",\"parent_id\":null,\"argsrepr\":\"([1],)\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@3d9f76755141\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"35419705-aeb5-4bde-80b7-33f38bb3eef9\",\"reply_to\":\"ecf00eb2-fd51-3e88-a864-c5ea72cb668e\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"6bd2ac42-a885-4098-8103-ac9f1cfac2c0\"}}"
+          },
+          "actual_atomic_commands": [
+            {
+              "time": 1794719286.167821,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "TYPE celery"
+            },
+            {
+              "time": 1794719286.167827,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "LINDEX celery -1"
+            },
+            {
+              "time": 1794719286.167835,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "RPOP celery"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "normal_tvg",
+      "task_id": "b34bb5d7-67b4-4287-869b-f83b4092857f",
+      "checks": {
+        "same_source_case_identity": true,
+        "original_sole_wire_failure_is_literal_eval_predicate": true,
+        "all_actual_body_results_SQL_events_passed": true,
+        "exactly_one_actual_publication": true,
+        "exactly_one_actual_cached_exact_raw_claim_and_atomic_RPOP": true
+      },
+      "passed": true,
+      "actual_CAS_evidence": [
+        {
+          "journal_index": 224,
+          "actual_cached_script": {
+            "time": 1794719287.38588,
+            "db": 1,
+            "client_address": "127.0.0.1",
+            "client_port": "45578",
+            "client_type": "tcp",
+            "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tbMV1dLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.set_channels_tvg_ids_from_epg\",\"id\":\"b34bb5d7-67b4-4287-869b-f83b4092857f\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"b34bb5d7-67b4-4287-869b-f83b4092857f\",\"parent_id\":null,\"argsrepr\":\"([1],)\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@3d9f76755141\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"b34bb5d7-67b4-4287-869b-f83b4092857f\",\"reply_to\":\"ecf00eb2-fd51-3e88-a864-c5ea72cb668e\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"58ea4dea-06da-48c7-9115-30ec8bea98ba\"}}"
+          },
+          "actual_atomic_commands": [
+            {
+              "time": 1794719287.385901,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "TYPE celery"
+            },
+            {
+              "time": 1794719287.385903,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "LINDEX celery -1"
+            },
+            {
+              "time": 1794719287.385909,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "RPOP celery"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "normal_logos",
+      "task_id": "16606678-ee11-487b-b56c-64759c84e121",
+      "checks": {
+        "same_source_case_identity": true,
+        "original_sole_wire_failure_is_literal_eval_predicate": true,
+        "all_actual_body_results_SQL_events_passed": true,
+        "exactly_one_actual_publication": true,
+        "exactly_one_actual_cached_exact_raw_claim_and_atomic_RPOP": true
+      },
+      "passed": true,
+      "actual_CAS_evidence": [
+        {
+          "journal_index": 372,
+          "actual_cached_script": {
+            "time": 1794719288.711165,
+            "db": 1,
+            "client_address": "127.0.0.1",
+            "client_port": "45578",
+            "client_type": "tcp",
+            "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tdLHsiY2hhbm5lbF9pZHMiOlsxXX0seyJjYWxsYmFja3MiOm51bGwsImVycmJhY2tzIjpudWxsLCJjaGFpbiI6bnVsbCwiY2hvcmQiOm51bGx9XQ==\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.set_channels_logos_from_epg\",\"id\":\"16606678-ee11-487b-b56c-64759c84e121\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"16606678-ee11-487b-b56c-64759c84e121\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{'channel_ids': [1]}\",\"origin\":\"gen1@3d9f76755141\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"16606678-ee11-487b-b56c-64759c84e121\",\"reply_to\":\"5b95d1e0-fd9e-3126-9434-885cd99aee96\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"570bc69e-0ee3-4668-8279-1dd6f03b83b4\"}}"
+          },
+          "actual_atomic_commands": [
+            {
+              "time": 1794719288.711189,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "TYPE celery"
+            },
+            {
+              "time": 1794719288.711191,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "LINDEX celery -1"
+            },
+            {
+              "time": 1794719288.711198,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "RPOP celery"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "normal_bulk",
+      "task_id": "69d6d611-0b31-417e-bc84-a3cebe150efe",
+      "checks": {
+        "same_source_case_identity": true,
+        "original_sole_wire_failure_is_literal_eval_predicate": true,
+        "all_actual_body_results_SQL_events_passed": true,
+        "exactly_one_actual_publication": true,
+        "exactly_one_actual_cached_exact_raw_claim_and_atomic_RPOP": true
+      },
+      "passed": true,
+      "actual_CAS_evidence": [
+        {
+          "journal_index": 510,
+          "actual_cached_script": {
+            "time": 1794719289.93588,
+            "db": 1,
+            "client_address": "127.0.0.1",
+            "client_port": "45578",
+            "client_type": "tcp",
+            "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tbMjRdLFtdLDBdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.bulk_create_channels_from_streams\",\"id\":\"69d6d611-0b31-417e-bc84-a3cebe150efe\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"69d6d611-0b31-417e-bc84-a3cebe150efe\",\"parent_id\":null,\"argsrepr\":\"([24], [], 0)\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@3d9f76755141\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"69d6d611-0b31-417e-bc84-a3cebe150efe\",\"reply_to\":\"5b95d1e0-fd9e-3126-9434-885cd99aee96\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"32aab059-2be7-4aa9-8f43-ca3ab1438b13\"}}"
+          },
+          "actual_atomic_commands": [
+            {
+              "time": 1794719289.935916,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "TYPE celery"
+            },
+            {
+              "time": 1794719289.935921,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "LINDEX celery -1"
+            },
+            {
+              "time": 1794719289.93593,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "RPOP celery"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "names_P0001",
+      "task_id": "273262a5-00c1-408f-907e-c04013c2d833",
+      "checks": {
+        "same_source_case_identity": true,
+        "original_sole_wire_failure_is_literal_eval_predicate": true,
+        "all_actual_body_results_SQL_events_passed": true,
+        "exactly_one_actual_publication": true,
+        "exactly_one_actual_cached_exact_raw_claim_and_atomic_RPOP": true
+      },
+      "passed": true,
+      "actual_CAS_evidence": [
+        {
+          "journal_index": 686,
+          "actual_cached_script": {
+            "time": 1794719291.365476,
+            "db": 1,
+            "client_address": "127.0.0.1",
+            "client_port": "45578",
+            "client_type": "tcp",
+            "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tbMl1dLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.set_channels_names_from_epg\",\"id\":\"273262a5-00c1-408f-907e-c04013c2d833\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"273262a5-00c1-408f-907e-c04013c2d833\",\"parent_id\":null,\"argsrepr\":\"([2],)\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@3d9f76755141\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"273262a5-00c1-408f-907e-c04013c2d833\",\"reply_to\":\"5b95d1e0-fd9e-3126-9434-885cd99aee96\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"fc736d60-04ef-4841-9207-c4eb716e8b0f\"}}"
+          },
+          "actual_atomic_commands": [
+            {
+              "time": 1794719291.365511,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "TYPE celery"
+            },
+            {
+              "time": 1794719291.365517,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "LINDEX celery -1"
+            },
+            {
+              "time": 1794719291.365524,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "RPOP celery"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tvg_22001",
+      "task_id": "2ca1169c-949a-48a9-b9bb-d4bb702ef84c",
+      "checks": {
+        "same_source_case_identity": true,
+        "original_sole_wire_failure_is_literal_eval_predicate": true,
+        "all_actual_body_results_SQL_events_passed": true,
+        "exactly_one_actual_publication": true,
+        "exactly_one_actual_cached_exact_raw_claim_and_atomic_RPOP": true
+      },
+      "passed": true,
+      "actual_CAS_evidence": [
+        {
+          "journal_index": 840,
+          "actual_cached_script": {
+            "time": 1794719293.09101,
+            "db": 1,
+            "client_address": "127.0.0.1",
+            "client_port": "45578",
+            "client_type": "tcp",
+            "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tbM11dLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.set_channels_tvg_ids_from_epg\",\"id\":\"2ca1169c-949a-48a9-b9bb-d4bb702ef84c\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"2ca1169c-949a-48a9-b9bb-d4bb702ef84c\",\"parent_id\":null,\"argsrepr\":\"([3],)\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@3d9f76755141\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"2ca1169c-949a-48a9-b9bb-d4bb702ef84c\",\"reply_to\":\"5b95d1e0-fd9e-3126-9434-885cd99aee96\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"3e26d521-20e5-4632-8469-8721898a26a3\"}}"
+          },
+          "actual_atomic_commands": [
+            {
+              "time": 1794719293.091037,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "TYPE celery"
+            },
+            {
+              "time": 1794719293.09104,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "LINDEX celery -1"
+            },
+            {
+              "time": 1794719293.091047,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "RPOP celery"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "logos_23505",
+      "task_id": "3a91c28f-37d8-4d88-8022-6b36b150b62e",
+      "checks": {
+        "same_source_case_identity": true,
+        "original_sole_wire_failure_is_literal_eval_predicate": true,
+        "all_actual_body_results_SQL_events_passed": true,
+        "exactly_one_actual_publication": true,
+        "exactly_one_actual_cached_exact_raw_claim_and_atomic_RPOP": true
+      },
+      "passed": true,
+      "actual_CAS_evidence": [
+        {
+          "journal_index": 995,
+          "actual_cached_script": {
+            "time": 1794719295.01971,
+            "db": 1,
+            "client_address": "127.0.0.1",
+            "client_port": "45578",
+            "client_type": "tcp",
+            "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tdLHsiY2hhbm5lbF9pZHMiOls0XX0seyJjYWxsYmFja3MiOm51bGwsImVycmJhY2tzIjpudWxsLCJjaGFpbiI6bnVsbCwiY2hvcmQiOm51bGx9XQ==\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.set_channels_logos_from_epg\",\"id\":\"3a91c28f-37d8-4d88-8022-6b36b150b62e\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"3a91c28f-37d8-4d88-8022-6b36b150b62e\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{'channel_ids': [4]}\",\"origin\":\"gen1@3d9f76755141\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"3a91c28f-37d8-4d88-8022-6b36b150b62e\",\"reply_to\":\"ecf00eb2-fd51-3e88-a864-c5ea72cb668e\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"244c290e-19db-4480-8195-2a1dacdfaecd\"}}"
+          },
+          "actual_atomic_commands": [
+            {
+              "time": 1794719295.01973,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "TYPE celery"
+            },
+            {
+              "time": 1794719295.019732,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "LINDEX celery -1"
+            },
+            {
+              "time": 1794719295.019738,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "RPOP celery"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bulk_23514",
+      "task_id": "d05c3ef5-6445-417e-9955-0e24b3ceb1e1",
+      "checks": {
+        "same_source_case_identity": true,
+        "original_sole_wire_failure_is_literal_eval_predicate": true,
+        "all_actual_body_results_SQL_events_passed": true,
+        "exactly_one_actual_publication": true,
+        "exactly_one_actual_cached_exact_raw_claim_and_atomic_RPOP": true
+      },
+      "passed": true,
+      "actual_CAS_evidence": [
+        {
+          "journal_index": 1139,
+          "actual_cached_script": {
+            "time": 1794719296.751072,
+            "db": 1,
+            "client_address": "127.0.0.1",
+            "client_port": "45578",
+            "client_type": "tcp",
+            "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tbMjRdLFtdLDBdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.bulk_create_channels_from_streams\",\"id\":\"d05c3ef5-6445-417e-9955-0e24b3ceb1e1\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"d05c3ef5-6445-417e-9955-0e24b3ceb1e1\",\"parent_id\":null,\"argsrepr\":\"([24], [], 0)\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@3d9f76755141\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"d05c3ef5-6445-417e-9955-0e24b3ceb1e1\",\"reply_to\":\"5b95d1e0-fd9e-3126-9434-885cd99aee96\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"525f5b74-64af-47a1-aa4d-70b599da82a5\"}}"
+          },
+          "actual_atomic_commands": [
+            {
+              "time": 1794719296.751104,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "TYPE celery"
+            },
+            {
+              "time": 1794719296.751109,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "LINDEX celery -1"
+            },
+            {
+              "time": 1794719296.751116,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "RPOP celery"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "logos_missing_arguments",
+      "task_id": "b6b5f944-50c6-417a-9b16-0e7471b220ca",
+      "checks": {
+        "same_source_case_identity": true,
+        "original_sole_wire_failure_is_literal_eval_predicate": true,
+        "all_actual_body_results_SQL_events_passed": true,
+        "exactly_one_actual_publication": true,
+        "exactly_one_actual_cached_exact_raw_claim_and_atomic_RPOP": true
+      },
+      "passed": true,
+      "actual_CAS_evidence": [
+        {
+          "journal_index": 1318,
+          "actual_cached_script": {
+            "time": 1794719298.376955,
+            "db": 1,
+            "client_address": "127.0.0.1",
+            "client_port": "45578",
+            "client_type": "tcp",
+            "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.set_channels_logos_from_epg\",\"id\":\"b6b5f944-50c6-417a-9b16-0e7471b220ca\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"b6b5f944-50c6-417a-9b16-0e7471b220ca\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{}\",\"origin\":\"gen363@a965f85033ee\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"b6b5f944-50c6-417a-9b16-0e7471b220ca\",\"reply_to\":\"3cbbec46-c94f-342d-8780-b4213824faeb\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"0fe9433a-2b06-4a95-a03c-7cd2c302d423\"}}"
+          },
+          "actual_atomic_commands": [
+            {
+              "time": 1794719298.376976,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "TYPE celery"
+            },
+            {
+              "time": 1794719298.376978,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "LINDEX celery -1"
+            },
+            {
+              "time": 1794719298.376985,
+              "db": 1,
+              "client_address": "lua",
+              "client_port": "",
+              "client_type": "lua",
+              "command": "RPOP celery"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "retained_independent_components": {
+    "no_primary_or_cleanup_error": true,
+    "observer_role_normal0": true,
+    "ordinary9": true,
+    "HTTP98": true,
+    "physical": true,
+    "observer_terminal": true,
+    "outer_cleanup_not_qualified_by_this_reader": true
+  },
+  "derived_wire_passed": true,
+  "full_milestone_accepted": false,
+  "performance_claims": false
+}

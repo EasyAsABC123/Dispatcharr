@@ -1,0 +1,49 @@
+{
+  "stage": "Beat load/timezone admission before second scheduled publication",
+  "actual_UTC_scheduled_publications": 1,
+  "all_actual_publication_names": [
+    "apps.backups.tasks.create_backup_task",
+    "core.tasks.scan_and_process_files",
+    "apps.epg.tasks.build_programme_index_task",
+    "apps.backups.tasks.scheduled_backup_task",
+    "apps.backups.tasks.create_backup_task"
+  ],
+  "retained_archive_names": [
+    "dispatcharr-backup-2026.11.14.19.12.01.zip",
+    "dispatcharr-backup-2026.11.15.05.12.00.zip"
+  ],
+  "actual_failed_cell_type": "TimeoutError",
+  "actual_timeout_boundary": "ActualBeatBackupPublication",
+  "production_path": [
+    "normal_backup_schedule accepts chrono_tz::TZ_VARIANTS and returns200",
+    "normal_beat::load ->database_schedule::normal_query_offset",
+    "calendar_schedule::query_hour_offset ->calendar_tz::offset",
+    "calendar_tz::zone does not include Pacific/Honolulu ->Unsupported",
+    "load maps error to Configuration(crontab timezone) before publication"
+  ],
+  "runtime_case_remains_failed": true,
+  "fix_runtime_verified": false,
+  "source_Honolulu_TZif_required": true,
+  "inputs": [
+    {
+      "path": "artifacts/rust/normal-graph-batch11-functional-2/fixtures/Native-a48fb814/normal-backup/actual-filename-retention-self-delete.json",
+      "sha256": "27279bc9ae1171501661c3940a6b7ad3484eaa576338e517d0b3114753638e8d"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch11-functional-2/fixtures/Native-a48fb814/normal-backup/actual-scheduled-UTC-retention.json",
+      "sha256": "e76889f2add8141aa5c80b84eabf2810b008f80f78f56b7914d2e226e934afa4"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch11-functional-2/fixtures/Native-a48fb814/normal-backup/actual-timezone-Honolulu.json",
+      "sha256": "e8e84a53c3f30c34bbc8db2581ee1028f6d32d7c974561e06ef9ef2d556b61b5"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch11-functional-2/fixtures/Native-a48fb814/normal-backup/per-job-timezone-create.json",
+      "sha256": "ea418d4c94c526a2e664f864c34763fc092ea10f202257abb449e8f3f85c48ab"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch11-functional-2/fixtures/Native-a48fb814/data/normal-backup/normal-backup-publications.jsonl",
+      "sha256": "0cf089f677f96a6841d5ca605b8c931dec511eda41ac59d2f0cdb69bd5a5813b"
+    }
+  ]
+}
