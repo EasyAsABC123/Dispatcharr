@@ -1,0 +1,35 @@
+{
+  "services": {
+    "redis": {
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "pull_policy": "never",
+      "entrypoint": [
+        "redis-server"
+      ],
+      "command": [
+        "--bind",
+        "0.0.0.0",
+        "--port",
+        "6379",
+        "--save",
+        "",
+        "--appendonly",
+        "no",
+        "--requirepass",
+        "playback-fixture-only"
+      ],
+      "ports": [
+        "127.0.0.1::6379"
+      ],
+      "tmpfs": [
+        "/data"
+      ],
+      "working_dir": "/data",
+      "mem_limit": "128m",
+      "pids_limit": 32
+    }
+  },
+  "networks": {
+    "default": {}
+  }
+}

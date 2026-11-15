@@ -9,7 +9,9 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest SDK runtime is `f2602aa54e0a50eead6e9c9f0bc7f7c0b3658cad`: [960 workspace tests plus three real-Redis ownership checks pass](rust-milestone-batch14.md). Provider runtime acceptance and new performance remain pending; all full milestones remain open.
+The newest SDK runtime is `71055d14908c02588b205b564752a25f8cee9760`: [964 workspace tests and the real-Redis durable ETA test pass](rust-milestone-batch15.md). It adds natural plugin startup/periodic scheduling; the next grouped runtime cohort combines these changes with provider/restart/idle-viewing acceptance. Full milestones and new performance remain open.
+
+The preceding SDK runtime is `f2602aa54e0a50eead6e9c9f0bc7f7c0b3658cad`: [960 workspace tests plus three real-Redis ownership checks pass](rust-milestone-batch14.md). Provider runtime acceptance and new performance remain pending; all full milestones remain open.
 
 The preceding SDK candidate is `b646f64f49ff0b4b4cd85af9d9051793c2c584f2`: [952 workspace tests pass](rust-milestone-batch13.md), with new plugin/XC handlers whose runtime gates remain open. The newest measured functional scope remains runtime `8faa6b9c444c8cdfec6cdfd3d1baa4d585ab2b2f` ([945 tests](rust-milestone-batch12.md)): its [grouped Compose run](rust-batch12-functional-observations.md) passes12 of14 Native contexts, all12 normal backup cells and five paired/Native physical backup checks. Core/restart fixture and observer failures remain literal; the event precision runtime assertion was not reached. All19 containers and both project inventories cleaned up. The earlier [Candidate11 observations](rust-batch11-functional-observations.md) retain their own scope. All full milestones remain open; no new performance gain is accepted.
 
