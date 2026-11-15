@@ -68,3 +68,16 @@ the actual restart workflow must verify the correction.
 No new CPU or memory gain is accepted. Functional Compose acceptance, paired
 whole-graph performance, soak, restore and rollback remain required; ignored
 tests and passing components do not close those criteria.
+
+The [committed production build](../scripts/rust-integration/milestone-batch10-build/inventory.json)
+is `sha256:bde08ef79a963fb9c6592b06940364b8468d4360b7966162e0f561df47176938`.
+All1708 archived inputs match Git:1211 Rust,495 React and two original credit
+files. All114 prior installed React/credit hashes and120 selected installed
+asset/notices match. The runtime config uses UID65532, `/app` and the production
+Rust entrypoint; its ELF hash is
+`c47ca3345bf18350ef7efba1c7d93438d668f107ce90e6b3c26a08826a05046f`.
+Actual GPG2.4.8 checks cover27 crypto/trust/license files. Actual pg_dump,
+pg_restore and psql execute as PostgreSQL17.11, with528 exact PG dependency,
+auxiliary, wrapper and owning-license file hashes verified. All owned probe
+containers are absent. These checks establish packaging, not a database
+dump/restore workflow or new application/performance acceptance.
