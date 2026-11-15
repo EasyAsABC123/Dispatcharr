@@ -1,0 +1,62 @@
+{
+  "qualified": true,
+  "diagnostic_only": false,
+  "durable_journal_complete": true,
+  "pending_ETA_head_intervals": [
+    {
+      "task_id": "c1d14cb0-7dd7-4ebc-a3bc-2d9b48382eef",
+      "task": "apps.channels.tasks.prefetch_recording_artwork",
+      "head_since_epoch": 1794703538.133086,
+      "eta_epoch": 1794703539.132921,
+      "actual_peek_times": [
+        1794703538.133995,
+        1794703538.134081,
+        1794703538.23477,
+        1794703538.234863,
+        1794703538.335871,
+        1794703538.335958,
+        1794703538.436996,
+        1794703538.437084,
+        1794703538.537946,
+        1794703538.538022,
+        1794703538.638842,
+        1794703538.638934,
+        1794703538.739687,
+        1794703538.739858,
+        1794703538.840445,
+        1794703538.840556,
+        1794703538.941575,
+        1794703538.941666,
+        1794703539.042409,
+        1794703539.0425
+      ],
+      "actual_pop_epoch": 1794703539.148564,
+      "interval_end_epoch": 1794703539.132921,
+      "pending_seconds": 0.9998350143432617,
+      "configured_poll_ms": 100,
+      "deadline_turns_including_initial_boundary": 11,
+      "actual_other_backend_completion_ids_in_interval": [
+        "5f0987f8-51bc-47f7-8f2d-f1374c3073ce"
+      ],
+      "actual_prior_claim_ids_for_boundary_overhang": [
+        "cc7ce588-30ca-4cb0-b590-3405b2cd506f",
+        "ef1ae104-279f-46ff-9abd-5a41d9198167",
+        "52ca249b-2500-4c7a-ad98-05cdd8bbff11",
+        "a3c3cc92-2496-4c3a-a2b4-ff0f6923d301",
+        "b658e929-da69-455c-8485-35d8e2c8106b",
+        "5f0987f8-51bc-47f7-8f2d-f1374c3073ce"
+      ],
+      "named_completion_wake_allowance": 7,
+      "maximum_peeks": 47,
+      "actual_peeks": 20,
+      "passed": true
+    }
+  ],
+  "all_actual_peeks": 20,
+  "functional_resource_bound": "Configured100ms poll +lane/owned admission/boundary reads +actual named claimed-completion wakeups; no allowance for unclaimed NotDue spin",
+  "DVR_claimNotify_wakeups_in_this_Celery_only_window": 0,
+  "CPU_threshold_used": false,
+  "paired_performance_gain_claimed": false,
+  "Source_or_app_replays": 0,
+  "policy_sha256": "bd16c565e476cb3ddd9020df9f4b20a2f2c32a851cedb99e09545ecb420a08d3"
+}
