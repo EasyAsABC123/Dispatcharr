@@ -374,3 +374,13 @@ License: ICU
   #    future claims in that contribution or in the TZ Database.
 
 ```
+
+## Requests and CPython proxy compatibility
+
+The finite manifest proxy-environment selector follows Requests2.34.2 and
+CPython3.13.18 urllib algorithms. Full credit belongs to their original authors
+and contributors. Their original licenses are retained in
+[rust/crates/store/third-party/REQUESTS-LICENSE](rust/crates/store/third-party/REQUESTS-LICENSE)
+and [rust/crates/store/third-party/PYTHON-COPYRIGHT](rust/crates/store/third-party/PYTHON-COPYRIGHT),
+and copied into the packaged runtime documentation. The port adds no claim of
+authorship or upstream endorsement.

@@ -15,6 +15,7 @@ pub struct Prepared {
     service: crate::scanner_m3u::Service,
     _ports: ScannerFilesPorts,
     registry: Registry,
+    xc: crate::normal_xc_live::Worker,
 }
 impl Prepared {
     #[allow(clippy::too_many_arguments)]
@@ -31,6 +32,7 @@ impl Prepared {
         m3u_roots: crate::scanner_m3u::Roots,
         date: crate::scanner_m3u::DateClock,
         clock: Arc<dyn Clock>,
+        revoked: crate::normal_revocation::Revoked,
     ) -> Result<Self, Disposition> {
         if !auth.uses_store_pool(&store) {
             return Err(Disposition::UnsupportedDomain);
@@ -58,24 +60,36 @@ impl Prepared {
             clock.clone(),
             registry.clone(),
         );
-        let m3u_ports = M3uPorts::from_shared(jobs, ports.marker_transport());
+        let m3u_ports = M3uPorts::from_shared(jobs.clone(), ports.marker_transport());
         let service = crate::scanner_m3u::Service::new_owned_shared(
-            store,
-            auth,
-            sink,
-            locks,
+            store.clone(),
+            auth.clone(),
+            sink.clone(),
+            locks.clone(),
             m3u_ports.clone(),
-            m3u_roots,
+            m3u_roots.clone(),
             date,
             clock,
         )
         .map_err(|e| Disposition::Operational(format!("M3U configuration: {e:?}")))?;
         let m3u = crate::scanner_m3u_worker::Worker::new_normal(
             service.clone(),
-            m3u_ports,
+            m3u_ports.clone(),
             registry.clone(),
         );
+        let xc = crate::normal_xc_live::Worker::new(
+            jobs,
+            m3u_ports,
+            store,
+            auth,
+            sink,
+            locks,
+            m3u.admission(),
+            revoked,
+            m3u_roots.cache,
+        );
         Ok(Self {
+            xc,
             scanner,
             m3u,
             service,
@@ -87,7 +101,7 @@ impl Prepared {
         self.registry.clone()
     }
     pub fn entries(&self) -> Vec<(Family, Arc<dyn Handler>)> {
-        let m3u: Arc<dyn Handler> = Arc::new(M3u(self.m3u.clone()));
+        let m3u: Arc<dyn Handler> = Arc::new(M3u(self.m3u.clone(), self.xc.clone()));
         vec![
             (Family::Scanner, Arc::new(Scanner(self.scanner.clone()))),
             (Family::M3uGroups, m3u.clone()),
@@ -100,6 +114,7 @@ impl Prepared {
         let end = tokio::time::Instant::now() + timeout;
         self.scanner.stop_admission();
         self.m3u.stop_admission();
+        self.xc.stop();
         if !self
             .scanner
             .shutdown_shared(end.saturating_duration_since(tokio::time::Instant::now()))
@@ -111,6 +126,13 @@ impl Prepared {
             .shutdown(end.saturating_duration_since(tokio::time::Instant::now()))
             .await
             .map_err(|e| Disposition::Operational(format!("M3U intake drain: {e:?}")))?;
+        if !self
+            .xc
+            .shutdown(end.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            return Err(Disposition::Operational("XC live drain".into()));
+        }
         self.service
             .shutdown(end.saturating_duration_since(tokio::time::Instant::now()))
             .await
@@ -181,10 +203,14 @@ impl Handler for Scanner {
     }
 }
 
-struct M3u(crate::scanner_m3u_worker::Worker);
+struct M3u(
+    crate::scanner_m3u_worker::Worker,
+    crate::normal_xc_live::Worker,
+);
 impl Lifecycle for M3u {
     fn stop_admission(&self) {
         self.0.stop_admission();
+        self.1.stop();
     }
     fn shutdown(&self, t: Duration) -> BoxFuture<'_, Result<(), Disposition>> {
         Box::pin(async move {
@@ -232,6 +258,9 @@ impl Handler for M3u {
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
         Box::pin(async move {
+            if let Some(result) = self.1.run(Some(expected.clone()), owner.clone()).await? {
+                return Ok(result);
+            }
             self.mapped(self.0.run_selected(expected, owner).await)
                 .await
         })
@@ -240,6 +269,11 @@ impl Handler for M3u {
         &self,
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
-        Box::pin(async move { self.mapped(self.0.run_once(owner).await).await })
+        Box::pin(async move {
+            if let Some(result) = self.1.run(None, owner.clone()).await? {
+                return Ok(result);
+            }
+            self.mapped(self.0.run_once(owner).await).await
+        })
     }
 }

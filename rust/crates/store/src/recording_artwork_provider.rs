@@ -675,82 +675,7 @@ pub(super) async fn execute(
     store.execute_mode(prepared, owner, true).await
 }
 
-// Two passes bound retained JSON nodes/strings before allocating Value trees.
-// Same accounting policy as the existing provider-refresh JSON admission, without
-// making the private/unwired VOD draft a dependency of production recordings.
-struct Admission<'a> {
-    remaining: &'a mut usize,
-    depth: usize,
-    exhausted: &'a mut bool,
-}
-impl Admission<'_> {
-    fn charge<E: serde::de::Error>(&mut self, n: usize) -> Result<(), E> {
-        if let Some(left) = self.remaining.checked_sub(n) {
-            *self.remaining = left;
-            Ok(())
-        } else {
-            *self.exhausted = true;
-            Err(E::custom("artwork JSON capacity"))
-        }
-    }
-    fn child(&mut self) -> Admission<'_> {
-        Admission {
-            remaining: self.remaining,
-            depth: self.depth + 1,
-            exhausted: self.exhausted,
-        }
-    }
-}
-impl<'de> serde::de::DeserializeSeed<'de> for Admission<'_> {
-    type Value = ();
-    fn deserialize<D: serde::Deserializer<'de>>(mut self, d: D) -> Result<(), D::Error> {
-        if self.depth > 64 {
-            *self.exhausted = true;
-            return Err(serde::de::Error::custom("artwork JSON depth"));
-        }
-        self.charge::<D::Error>(256)?;
-        d.deserialize_any(self)
-    }
-}
-impl<'de> serde::de::Visitor<'de> for Admission<'_> {
-    type Value = ();
-    fn expecting(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("bounded artwork JSON")
-    }
-    fn visit_unit<E: serde::de::Error>(self) -> Result<(), E> {
-        Ok(())
-    }
-    fn visit_bool<E: serde::de::Error>(self, _: bool) -> Result<(), E> {
-        Ok(())
-    }
-    fn visit_i64<E: serde::de::Error>(self, _: i64) -> Result<(), E> {
-        Ok(())
-    }
-    fn visit_u64<E: serde::de::Error>(self, _: u64) -> Result<(), E> {
-        Ok(())
-    }
-    fn visit_f64<E: serde::de::Error>(self, _: f64) -> Result<(), E> {
-        Ok(())
-    }
-    fn visit_str<E: serde::de::Error>(mut self, v: &str) -> Result<(), E> {
-        self.charge(v.len().saturating_mul(2))
-    }
-    fn visit_string<E: serde::de::Error>(mut self, v: String) -> Result<(), E> {
-        self.charge(v.capacity().saturating_mul(2))
-    }
-    fn visit_seq<A: serde::de::SeqAccess<'de>>(mut self, mut a: A) -> Result<(), A::Error> {
-        while a.next_element_seed(self.child())?.is_some() {}
-        Ok(())
-    }
-    fn visit_map<A: serde::de::MapAccess<'de>>(mut self, mut a: A) -> Result<(), A::Error> {
-        while a.next_key_seed(self.child())?.is_some() {
-            a.next_value_seed(self.child())?;
-        }
-        Ok(())
-    }
-}
 fn decoded_json(bytes: &[u8]) -> Result<Option<Value>, Error> {
-    use serde::de::DeserializeSeed;
     if bytes.starts_with(&[239, 187, 191]) || std::str::from_utf8(bytes).is_err() {
         return Err(Error::Unsupported("artwork nonUTF8 JSON encoding"));
     }
@@ -774,23 +699,20 @@ fn decoded_json(bytes: &[u8]) -> Result<Option<Value>, Error> {
             return Err(Error::Unsupported("artwork nonfinite provider JSON"));
         }
     }
-    let mut remaining = 8 * 1024 * 1024;
-    let mut exhausted = false;
-    let mut decoder = serde_json::Deserializer::from_slice(bytes);
-    if (Admission {
-        remaining: &mut remaining,
-        depth: 0,
-        exhausted: &mut exhausted,
-    })
-    .deserialize(&mut decoder)
-    .and_then(|()| decoder.end())
-    .is_err()
-    {
-        return if exhausted {
-            Err(Error::Unsupported("artwork decoded JSON capacity"))
-        } else {
-            Ok(None)
-        };
+    match crate::provider_json_admission::admit(
+        bytes,
+        crate::provider_json_admission::Limits {
+            work_bytes: 8 * 1024 * 1024,
+            depth: 64,
+            string_bytes: usize::MAX,
+            string_copies: 2,
+        },
+    ) {
+        Ok(()) => {}
+        Err(crate::provider_json_admission::Error::Capacity) => {
+            return Err(Error::Unsupported("artwork decoded JSON capacity"))
+        }
+        Err(crate::provider_json_admission::Error::Syntax(_)) => return Ok(None),
     }
     let mut value: Value =
         serde_json::from_slice(bytes).map_err(|_| Error::Unsupported("artwork admitted JSON"))?;

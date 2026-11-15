@@ -31,6 +31,13 @@ pub struct ImportedStream {
     pub catchup_days: i64,
     pub is_radio: bool,
 }
+/// Source XC parser preserves null icon/EPG ID; application credentials are never Debug.
+#[derive(Clone, Serialize)]
+pub struct ImportedXcStream {
+    pub stream: ImportedStream,
+    pub logo_url: Option<String>,
+    pub tvg_id: Option<String>,
+}
 impl From<dispatcharr_ingest_core::ProjectedStream> for ImportedStream {
     fn from(row: dispatcharr_ingest_core::ProjectedStream) -> Self {
         Self {
@@ -84,10 +91,23 @@ fn invalid() -> StoreError {
 }
 
 fn changed(old: &PgRow, new: &ImportedStream) -> Result<bool, sqlx::Error> {
+    changed_text(
+        old,
+        new,
+        Some(new.logo_url.as_str()),
+        Some(new.tvg_id.as_str()),
+    )
+}
+fn changed_text(
+    old: &PgRow,
+    new: &ImportedStream,
+    logo: Option<&str>,
+    tvg: Option<&str>,
+) -> Result<bool, sqlx::Error> {
     Ok(old.try_get::<String, _>("name")? != new.name
         || old.try_get::<Option<String>, _>("url")?.as_deref() != Some(new.url.as_str())
-        || old.try_get::<Option<String>, _>("logo_url")?.as_deref() != Some(new.logo_url.as_str())
-        || old.try_get::<Option<String>, _>("tvg_id")?.as_deref() != Some(new.tvg_id.as_str())
+        || old.try_get::<Option<String>, _>("logo_url")?.as_deref() != logo
+        || old.try_get::<Option<String>, _>("tvg_id")?.as_deref() != tvg
         || !crate::json_compat::python_equal(
             old.try_get::<Option<Value>, _>("custom_properties")?
                 .as_ref()
@@ -154,6 +174,14 @@ pub struct ScannerM3uLookupCap {
 impl ScannerM3uLookupCap {
     /// Same serialized-text cap for early admission and the actual Store fetch.
     pub const FIELD_TEXT_BYTES: i64 = 8192;
+    /// Source process_m3u_batch uses batches of 1000, under the existing 8MiB budget.
+    pub const fn xc_batch1000() -> Self {
+        Self {
+            unique_hashes: 1000,
+            logo_bytes: Self::FIELD_TEXT_BYTES,
+            properties_text_bytes: Self::FIELD_TEXT_BYTES,
+        }
+    }
     pub const fn local_std_file8() -> Self {
         Self {
             unique_hashes: 8,
@@ -233,7 +261,18 @@ async fn execute_import_mutations(
 
 // One mutation engine supports both legacy pool and explicit owned-session paths.
 macro_rules! owned_batch_import {
-    ($executor:expr, $begin:expr, $account_id:expr, $rows:expr, $cap:expr) => {{
+    ($executor:expr, $begin:expr, $account_id:expr, $rows:expr, $cap:expr) => {
+        owned_batch_import!(
+            $executor,
+            $begin,
+            $account_id,
+            $rows,
+            $cap,
+            HashMap::<String, (Option<String>, Option<String>)>::new()
+        )
+    };
+    ($executor:expr, $begin:expr, $account_id:expr, $rows:expr, $cap:expr, $nullable:expr) => {{
+        let nullable = $nullable;
         let account_id = $account_id;
         let rows = $rows;
         let cap = $cap;
@@ -342,11 +381,21 @@ macro_rules! owned_batch_import {
         let mut touches = Vec::new();
         for row in &unique {
             let mut data = record(row, account_id);
+            let text = nullable.get(&row.stream_hash);
+            if let Some((logo, tvg)) = text {
+                data["logo_url"] = json!(logo);
+                data["tvg_id"] = json!(tvg);
+            }
             if let Some(old) = existing.get(&row.stream_hash) {
                 data["id"] = json!(old
                     .try_get::<i64, _>("id")
                     .map_err(BoundedM3uBatchError::SnapshotDecode)?);
-                if changed(old, row).map_err(BoundedM3uBatchError::SnapshotDecode)? {
+                let differs = match text {
+                    Some((logo, tvg)) => changed_text(old, row, logo.as_deref(), tvg.as_deref()),
+                    None => changed(old, row),
+                }
+                .map_err(BoundedM3uBatchError::SnapshotDecode)?;
+                if differs {
                     updates.push(data);
                 } else {
                     touches.push(data);
@@ -473,6 +522,40 @@ impl Store {
         cap: ScannerM3uLookupCap,
     ) -> Result<ImportCounts, BoundedM3uBatchError> {
         owned_batch_import!(&self.pool, self.pool.begin(), account_id, rows, cap)
+    }
+
+    /// Nullable XC fields remain SQL NULL rather than empty-string substitutions.
+    /// First duplicate hash wins, matching the shared Source batch algorithm.
+    pub async fn import_xc_batch_on_connection(
+        &self,
+        connection: &mut sqlx::PgConnection,
+        account_id: i64,
+        rows: Vec<ImportedXcStream>,
+    ) -> Result<ImportCounts, BoundedM3uBatchError> {
+        if rows.len() > 1000 {
+            return Err(BoundedM3uBatchError::Input(invalid()));
+        }
+        let mut nullable = HashMap::new();
+        let mut projected = Vec::with_capacity(rows.len());
+        let mut budget = Budget {
+            remaining: MAX_IMPORT_BATCH_BYTES,
+        };
+        for row in rows {
+            serde_json::to_writer(&mut budget, &row)
+                .map_err(|_| BoundedM3uBatchError::Input(invalid()))?;
+            nullable
+                .entry(row.stream.stream_hash.clone())
+                .or_insert((row.logo_url, row.tvg_id));
+            projected.push(row.stream);
+        }
+        owned_batch_import!(
+            &mut *connection,
+            sqlx::Connection::begin(&mut *connection),
+            account_id,
+            projected,
+            ScannerM3uLookupCap::xc_batch1000(),
+            nullable
+        )
     }
 
     /// Same statement engine on the caller-owned session; no pool lookup or

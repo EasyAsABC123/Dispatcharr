@@ -165,6 +165,47 @@ impl Prepared {
     }
 }
 impl dispatcharr_store::xc_account_http::Publisher for Prepared {
+    fn publish_refresh(
+        &self,
+        account: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), StoreError>> {
+        Box::pin(async move {
+            if self.inner.closed.load(Ordering::Acquire) {
+                return Err(StoreError::Unsupported("XC producer closed"));
+            }
+            let identity = self.inner.identity.current()?;
+            let id = Uuid::new_v4();
+            let raw = crate::protocol::encode(
+                &crate::protocol::Task::CreateBackup,
+                id,
+                identity.reply_to,
+                Uuid::new_v4(),
+                &identity.origin,
+            )
+            .map_err(|_| StoreError::Unsupported("XC refresh envelope"))?;
+            let mut frame: Value = serde_json::from_slice(&raw)
+                .map_err(|_| StoreError::Unsupported("XC refresh JSON"))?;
+            frame["headers"]["task"] = json!("apps.m3u.tasks.refresh_single_m3u_account");
+            frame["headers"]["argsrepr"] = json!(format!("({account},)"));
+            frame["headers"]["timelimit"] = json!([3600, 3500]);
+            frame["body"]=json!(STANDARD.encode(serde_json::to_vec(&json!([[account],{},{"callbacks":null,"errbacks":null,"chain":null,"chord":null}])).map_err(|_|StoreError::Unsupported("XC refresh body"))?));
+            let raw = serde_json::to_vec(&frame)
+                .map_err(|_| StoreError::Unsupported("XC refresh encoding"))?;
+            self.inner
+                .jobs
+                .publish_xc_live_root(&raw, owner)
+                .await
+                .map_err(|_| {
+                    StoreError::StatusBody(
+                        503,
+                        json!({"error":"M3U broker publication did not acknowledge"}),
+                    )
+                })?;
+            Ok(())
+        })
+    }
+
     fn publish_info(
         &self,
         profile: i64,

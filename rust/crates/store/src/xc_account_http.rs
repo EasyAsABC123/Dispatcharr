@@ -22,6 +22,18 @@ use std::{
 };
 use tokio::sync::Semaphore;
 pub trait Publisher: Send + Sync {
+    fn publish_refresh(
+        &self,
+        _account: i64,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "Normal account refresh producer is unavailable",
+            ))
+        })
+    }
+
     fn publish_info(
         &self,
         profile: i64,
@@ -52,6 +64,7 @@ impl Http {
     pub fn router(self) -> Router {
         Router::new()
             .route("/api/m3u/refresh-account-info/{profile}/", any(handle))
+            .route("/api/m3u/refresh/{account}/", any(refresh_handle))
             .with_state(self)
     }
     pub fn close_admission(&self) {
@@ -109,6 +122,69 @@ async fn handle(
         }.await;
         let close=session.close().await;close?;work
     }).await;
+    match result {
+        Ok(Ok((status, value))) => (
+            axum::http::StatusCode::from_u16(status)
+                .unwrap_or(axum::http::StatusCode::INTERNAL_SERVER_ERROR),
+            Json(value),
+        )
+            .into_response(),
+        Ok(Err(error)) => error.into_response(),
+        Err(_) => unavailable().into_response(),
+    }
+}
+async fn refresh_handle(
+    State(api): State<Http>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(account): Path<i64>,
+    request: Request,
+) -> Response {
+    if api.inner.closed.load(Ordering::Acquire) {
+        return unavailable().into_response();
+    }
+    let slot = match api.inner.slots.clone().try_acquire_owned() {
+        Ok(v) => v,
+        Err(_) => return unavailable().into_response(),
+    };
+    let method = request.method().clone();
+    let headers = request.headers().clone();
+    if to_bytes(request.into_body(), 65536).await.is_err() {
+        return (
+            axum::http::StatusCode::PAYLOAD_TOO_LARGE,
+            Json(json!({"detail":"Request body too large."})),
+        )
+            .into_response();
+    }
+    // The supervised operation outlives HTTP observer loss until actual SQL and
+    // Redis acknowledgement, keeping the same Auth4 writer session throughout.
+    let result = tokio::spawn(async move {
+        let owner = Arc::new((slot, api.inner.clone()));
+        let auth = api.inner.auth.clone().with_retained_scope(owner.clone());
+        let user = auth.account_user(peer, headers, false).await?;
+        let required = if matches!(method, Method::GET | Method::HEAD) {
+            1
+        } else {
+            10
+        };
+        if user.user_level < required {
+            return Err(StoreError::PermissionDenied);
+        }
+        if method != Method::POST {
+            return Ok((
+                405,
+                json!({"detail":format!("Method \"{method}\" not allowed.")}),
+            ));
+        }
+        if api.inner.closed.load(Ordering::Acquire) {
+            return Err(unavailable());
+        }
+        api.inner.publisher.publish_refresh(account, owner).await?;
+        Ok::<_, StoreError>((
+            202,
+            json!({"success":true,"message":format!("M3U account {account} refresh initiated.")}),
+        ))
+    })
+    .await;
     match result {
         Ok(Ok((status, value))) => (
             axum::http::StatusCode::from_u16(status)

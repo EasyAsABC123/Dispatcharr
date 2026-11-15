@@ -291,3 +291,5 @@ pub mod normal_xc_accounts;
 mod xc_profile_notifications;
 
 mod plugin_eta;
+
+mod normal_xc_live;

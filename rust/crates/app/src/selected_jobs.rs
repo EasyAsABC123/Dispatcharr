@@ -309,6 +309,7 @@ impl SelectedJobs {
             },
             Arc::new(|| std::time::SystemTime::now().into()),
             Arc::new(jobs::logo_task::SystemClock),
+            revoked.clone(),
         )
         .await
         .map_err(|_| {

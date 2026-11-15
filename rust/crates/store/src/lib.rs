@@ -80,7 +80,7 @@ pub mod realtime;
 mod startup;
 mod startup_bootstrap;
 pub use import_batches::{
-    BoundedM3uBatchError, BoundedM3uSnapshotIssue, ImportCounts, ImportedStream,
+    BoundedM3uBatchError, BoundedM3uSnapshotIssue, ImportCounts, ImportedStream, ImportedXcStream,
     M3uMutationStatement, ScannerM3uLookupCap, MAX_IMPORT_BATCH_BYTES, MAX_IMPORT_BATCH_ROWS,
 };
 mod image_proxy;
@@ -495,3 +495,11 @@ pub use core_task_broker::{CoreTaskBroker, CoreTaskPublication};
 pub mod xc_account_http;
 mod xc_account_provider;
 pub mod xc_account_tasks;
+
+mod xc_live_provider;
+pub mod xc_live_tasks;
+
+mod provider_json_admission;
+
+mod xc_live_filters;
+mod xc_live_rollup;

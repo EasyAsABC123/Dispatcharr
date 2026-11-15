@@ -75,6 +75,10 @@ impl Worker {
             }),
         }
     }
+    /// One actual slot shared by normal STD and XC adapters.
+    pub(crate) fn admission(&self) -> Arc<Semaphore> {
+        self.inner.slots.clone()
+    }
     pub fn stop_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);
     }

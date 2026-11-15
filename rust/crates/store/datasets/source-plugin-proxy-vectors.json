@@ -1,0 +1,1684 @@
+{
+  "scope": "Pure exact pinned Requests2.34.2+CPython3.13.18 function bodies, evaluated without application or network; actual runtime owned-origin authority is separate",
+  "evaluator": {
+    "python": "3.14.9",
+    "pinned_urllib_parse": true,
+    "global_environment_mutated": false,
+    "DNS_HTTP_DB_Redis_calls": 0
+  },
+  "source_sha256": {
+    "artifacts/rust/m8-plugin-proxy-source-authority-1/source/requests/sessions.py": "96fbb30bbbf06a59a5268d13b57885149756aa3f31695b5c15e41dd7bb2f67a6",
+    "artifacts/rust/m8-plugin-proxy-source-authority-1/source/requests/utils.py": "657fd02343b2586bbd138a4ec0f03ceeb7610c2712f96ac54f28a708bf7d079c",
+    "artifacts/rust/m8-plugin-proxy-source-authority-1/source/urllib/parse.py": "491b233e8d87a2ab73964afff029717177d53ad8def328ed9b00575db983da27",
+    "artifacts/rust/m8-plugin-proxy-source-authority-1/source/urllib/request.py": "e3bf4446c45300c800f62e869ce1ee89fa745fa073c03e6655f4f4e20fde6eb2"
+  },
+  "cases": [
+    {
+      "name": "ipv4:11.254.252.3",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "11.254.252.3"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "ipv4:11.254.252.0/29",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "11.254.252.0/29"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "ipv4:11.254.252.3/32",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "11.254.252.3/32"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "ipv4:11.254.252.0/0",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "11.254.252.0/0"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "ipv4:11.254.252.0/33",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "11.254.252.0/33"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "ipv4:11.254.252.4",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "11.254.252.4"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "ipv4: 11.254.252.3 ",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          " 11.254.252.3 "
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "ipv4:11.254.252.3:8080",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "11.254.252.3:8080"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "ipv4:*",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "*"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "ipv4: * ",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          " * "
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "ipv4:x,*",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "x,*"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "ipv4:11.0/8",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "11.0/8"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "ipv4:0x0b000000/8",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "0x0b000000/8"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "ipv4:11.254.252.0/+29",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "11.254.252.0/+29"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "ipv4:11.254.252.0/٢٩",
+      "url": "http://11.254.252.3:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "11.254.252.0/٢٩"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:example.com:example.com",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:child.example.com:example.com",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:badexample.com:example.com",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:example.com:.example.com",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          ".example.com"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:child.example.com:.example.com",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          ".example.com"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:badexample.com:.example.com",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          ".example.com"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:example.com:..example.com",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "..example.com"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:child.example.com:..example.com",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "..example.com"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:badexample.com:..example.com",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "..example.com"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:example.com:EXAMPLE.COM",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "EXAMPLE.COM"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:child.example.com:EXAMPLE.COM",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "EXAMPLE.COM"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:badexample.com:EXAMPLE.COM",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "EXAMPLE.COM"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:example.com:example.com:8080",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com:8080"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:child.example.com:example.com:8080",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com:8080"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:badexample.com:example.com:8080",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com:8080"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:example.com:EXAMPLE.COM:8080",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "EXAMPLE.COM:8080"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:child.example.com:EXAMPLE.COM:8080",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "EXAMPLE.COM:8080"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:badexample.com:EXAMPLE.COM:8080",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "EXAMPLE.COM:8080"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:example.com:badexample.com",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "badexample.com"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:child.example.com:badexample.com",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "badexample.com"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:badexample.com:badexample.com",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "badexample.com"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:example.com:*.example.com",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "*.example.com"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:child.example.com:*.example.com",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "*.example.com"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:badexample.com:*.example.com",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "*.example.com"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:example.com:*",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "*"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:child.example.com:*",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "*"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:badexample.com:*",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "*"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:example.com: * ",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          " * "
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:child.example.com: * ",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          " * "
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:badexample.com: * ",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          " * "
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:example.com:x,*",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "x,*"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:child.example.com:x,*",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "x,*"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:badexample.com:x,*",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "x,*"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:example.com:example.com,other.invalid",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com,other.invalid"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:child.example.com:example.com,other.invalid",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com,other.invalid"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:badexample.com:example.com,other.invalid",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com,other.invalid"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "host:example.com:\texample.com\t",
+      "url": "http://example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "\texample.com\t"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:child.example.com:\texample.com\t",
+      "url": "http://child.example.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "\texample.com\t"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "host:badexample.com:\texample.com\t",
+      "url": "http://badexample.com:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "\texample.com\t"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "explicit-default-port:http80",
+      "url": "http://example.com:80/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com:80"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "explicit-default-port:https443",
+      "url": "https://example.com:443/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com:443"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "explicit-default-port:http0",
+      "url": "http://example.com:0/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com:0"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "ipv6:::1",
+      "url": "http://[2001:4860:4860::8888]:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "::1"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "ipv6:[::1]",
+      "url": "http://[2001:4860:4860::8888]:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "[::1]"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "ipv6:::1:8080",
+      "url": "http://[2001:4860:4860::8888]:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "::1:8080"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "ipv6:*",
+      "url": "http://[2001:4860:4860::8888]:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "*"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "ipv6:2001:4860:4860::8888",
+      "url": "http://[2001:4860:4860::8888]:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "2001:4860:4860::8888"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "ipv6:[2001:4860:4860::8888]",
+      "url": "http://[2001:4860:4860::8888]:8080/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "[2001:4860:4860::8888]"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "none",
+      "url": "http://example.com/a",
+      "environment": [],
+      "selected": null
+    },
+    {
+      "name": "only-unused-scheme",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTPS_PROXY",
+          "http://proxy.invalid:9"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "all-fallback",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "lower-empty-removes-upper",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "http_proxy",
+          ""
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "lower-overrides-upper",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "http_proxy",
+          "http://other.invalid:10"
+        ]
+      ],
+      "selected": "http://other.invalid:10"
+    },
+    {
+      "name": "mixed-lower-suffix-overrides",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "HTTP_proxy",
+          "http://other.invalid:10"
+        ]
+      ],
+      "selected": "http://other.invalid:10"
+    },
+    {
+      "name": "cgi-drops-upper",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "REQUEST_METHOD",
+          "GET"
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "cgi-preserves-lower",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "http_proxy",
+          "http://other.invalid:10"
+        ],
+        [
+          "REQUEST_METHOD",
+          "GET"
+        ]
+      ],
+      "selected": "http://other.invalid:10"
+    },
+    {
+      "name": "host-specific",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "http://example.com_proxy",
+          "http://other.invalid:10"
+        ]
+      ],
+      "selected": "http://other.invalid:10"
+    },
+    {
+      "name": "all-host-specific",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "ALL_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "all://example.com_proxy",
+          "http://other.invalid:10"
+        ]
+      ],
+      "selected": "http://other.invalid:10"
+    },
+    {
+      "name": "no-proxy-lower-priority",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com"
+        ],
+        [
+          "no_proxy",
+          "other.invalid"
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "lower-empty-upper-exact",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "example.com"
+        ],
+        [
+          "no_proxy",
+          ""
+        ]
+      ],
+      "selected": null
+    },
+    {
+      "name": "lower-empty-upper-star",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "NO_PROXY",
+          "*"
+        ],
+        [
+          "no_proxy",
+          ""
+        ]
+      ],
+      "selected": "http://proxy.invalid:9"
+    },
+    {
+      "name": "mixed-no-proxy-fallback",
+      "url": "http://example.com/a",
+      "environment": [
+        [
+          "HTTP_PROXY",
+          "http://proxy.invalid:9"
+        ],
+        [
+          "No_PrOxY",
+          "EXAMPLE.COM"
+        ]
+      ],
+      "selected": null
+    }
+  ],
+  "actual_pinned_utility": {
+    "path": "artifacts/rust/m8-plugin-proxy-pure-actual-1/report.json",
+    "sha256": "eb814e52e8c3e09593523e79d55cf4a69d6aed30297ba6b98cb864f39a62e284",
+    "cleanup_path": "artifacts/rust/m8-plugin-proxy-pure-actual-1/cleanup.json",
+    "cleanup_sha256": "f24ebecedbe465f2a26c38c76bd618c0976f3cf8829d0acb417142c62f9ba5a1",
+    "cases": 77,
+    "actual_exit": 0,
+    "DNS_HTTP_DB_Redis_calls": 0
+  }
+}

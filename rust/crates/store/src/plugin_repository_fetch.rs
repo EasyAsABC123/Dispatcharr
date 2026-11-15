@@ -5,6 +5,8 @@
 use super::*;
 #[path = "plugin_manifest_signature.rs"]
 mod manifest_signature;
+#[path = "plugin_proxy_environment.rs"]
+mod proxy_environment;
 #[path = "plugin_repository_tls.rs"]
 mod tls_transport;
 use md5::{Digest, Md5};
@@ -272,8 +274,12 @@ async fn read_bytes(
         })?
         .map_err(|_| Failure::Connect)
 }
-async fn one_get_literal(url: &reqwest::Url) -> Result<(u16, Option<String>, Vec<u8>), Failure> {
+async fn one_get_literal(
+    url: &reqwest::Url,
+    proxy_port: Option<u16>,
+) -> Result<(u16, Option<String>, Vec<u8>), Failure> {
     let ip = policy(url)?;
+    proxy_environment::enforce(url, proxy_port)?;
     let socket = SocketAddr::new(ip, url.port_or_known_default().unwrap_or(80));
     let mut stream = tokio::time::timeout(INACTIVITY, tokio::net::TcpStream::connect(socket))
         .await
@@ -329,43 +335,33 @@ async fn one_get_literal(url: &reqwest::Url) -> Result<(u16, Option<String>, Vec
     }
     result
 }
-async fn one_get(url: &reqwest::Url) -> Result<(u16, Option<String>, Vec<u8>), Failure> {
+async fn one_get(
+    url: &reqwest::Url,
+    proxy_port: Option<u16>,
+) -> Result<(u16, Option<String>, Vec<u8>), Failure> {
     let literal = url
         .host_str()
         .and_then(|h| h.trim_matches(['[', ']']).parse::<IpAddr>().ok());
     if url.scheme() == "http" && literal.is_some() {
-        return one_get_literal(url).await;
+        return one_get_literal(url, proxy_port).await;
     }
     let bundle = std::env::var_os("REQUESTS_CA_BUNDLE")
         .filter(|v| !v.is_empty())
         .or_else(|| std::env::var_os("CURL_CA_BUNDLE").filter(|v| !v.is_empty()))
         .map(std::path::PathBuf::from);
-    tls_transport::one_get(url, bundle.as_deref()).await
+    tls_transport::one_get(url, bundle.as_deref(), proxy_port).await
 }
 async fn fetch(raw: &str) -> Result<Value, Failure> {
-    if [
-        "HTTP_PROXY",
-        "HTTPS_PROXY",
-        "ALL_PROXY",
-        "http_proxy",
-        "https_proxy",
-        "all_proxy",
-    ]
-    .iter()
-    .any(|key| std::env::var(key).is_ok_and(|value| !value.is_empty()))
-    {
-        return Err(Failure::Unqualified(
-            "Proxy-configured manifest transports remain unqualified",
-        ));
-    }
     let mut current =
         reqwest::Url::parse(raw).map_err(|_| Failure::Policy("URL has no hostname.".into()))?;
+    let mut proxy_port = proxy_environment::explicit_port(raw);
     for _ in 0..=5 {
-        let (status, location, body) = one_get(&current).await?;
+        let (status, location, body) = one_get(&current, proxy_port).await?;
         if [301, 302, 303, 307, 308].contains(&status) {
             let location = location.filter(|v| !v.is_empty()).ok_or_else(|| {
                 Failure::Policy("Redirect response missing Location header.".into())
             })?;
+            proxy_port = proxy_environment::redirect_port(proxy_port, &location)?;
             current = current.join(&location).map_err(|_| Failure::Json)?;
             continue;
         }

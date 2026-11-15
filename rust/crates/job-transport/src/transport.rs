@@ -1748,3 +1748,6 @@ mod plugin_eta_transport;
 
 #[path = "plugin_visibility.rs"]
 mod plugin_visibility;
+
+#[path = "xc_live_transport.rs"]
+mod xc_live_transport;

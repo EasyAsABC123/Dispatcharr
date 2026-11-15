@@ -124,8 +124,10 @@ fn client(ca_bundle: Option<&Path>) -> Result<Client, Failure> {
 pub(super) async fn one_get(
     url: &Url,
     ca_bundle: Option<&Path>,
+    proxy_port: Option<u16>,
 ) -> Result<(u16, Option<String>, Vec<u8>), Failure> {
     validate(url).await?;
+    super::proxy_environment::enforce(url, proxy_port)?;
     let client = client(ca_bundle)?;
     let request = client
         .get(url.clone())
