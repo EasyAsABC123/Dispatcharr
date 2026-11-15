@@ -178,7 +178,10 @@ for name,args in [('vlc',[]),('cvlc',arguments)]:
     wrapper=root/'usr/local/bin'/name
     if wrapper.exists():raise ValueError('conflicting VLC wrapper')
     wrapper.parent.mkdir(parents=True,exist_ok=True)
-    wrapper.write_text('#!/bin/sh\nexec '+launcher+''.join(' '+shlex.quote(value)for value in args)+' "$@"\n')
+    # libvlccore discovers its compiled default relative to its own location.
+    # Its isolated ELF prefix therefore needs the retained original plugin path
+    # explicitly. Preserve caller-supplied additional plugin search paths.
+    wrapper.write_text('#!/bin/sh\nVLC_PLUGIN_PATH="/usr/lib/x86_64-linux-gnu/vlc/plugins${VLC_PLUGIN_PATH:+:$VLC_PLUGIN_PATH}"\nexport VLC_PLUGIN_PATH\nexec '+launcher+''.join(' '+shlex.quote(value)for value in args)+' "$@"\n')
     wrapper.chmod(0o755)
     manifest['wrappers'][name]={'path':'/'+str(wrapper.relative_to(root)),'sha256':sha(wrapper)}
 (docs/'vlc-runtime.json').write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n')

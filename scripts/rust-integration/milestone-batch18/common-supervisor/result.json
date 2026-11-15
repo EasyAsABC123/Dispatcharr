@@ -1,0 +1,145 @@
+{
+  "scope": "New common-supervisor full loaded graph integration and complete-media acceptance; no accepted performance gains",
+  "candidate_image_id": "sha256:7ede9938178cfdfae4f447fcdfce4ff5fd9f072596188d954710e52f09776f74",
+  "candidate_git_revision": "8cf704d2794ec3230b3c2856fd66dffe2d01720d",
+  "overlay_map_sha256": "a14570f12106c3da4c701354b34fb31feafe1826ea2d527e2aeb397af86123fe",
+  "input_hashes": {
+    "certified_media.py": "e2d4399eb52489766ed5376cb9aa32a827b709eb47da2bfe96a8a67f67c7bd24",
+    "complete_media.py": "f6f2e224d2a32977d5fa7b29ff28614eb1e96c9bfbfeb9cae7fb4efdc43604e4",
+    "complete_units.py": "f1cad689d3259cd796d94e8fc9607348d9b34801112d5ae04303b926fab0bfc9",
+    "media_authority.py": "4b7fa807d67db220638da4e31ad5b94e6a8d07cacf4a19ad4391371e23bd4b05",
+    "phase.py": "0acfbbda029df1ad3820688f8ee51efb840190082efe8ace57a97a902bf190a9",
+    "profile_input_fixture.py": "f4d194621ea9450055ac4b44ab24acd6ce3f3333bc493496becce2d7721b03f0",
+    "protocol.json": "4972b31341f657c8d734d9d277a62c26d355f0c0a146a9df44c4ac71c275d0ee",
+    "queue_observer.py": "80837d1d5dd51bf94681d1fc43f4c292a8b715be02131998822fb0539e0d4847",
+    "role_owner.py": "4bc0afb8ac6040807ea8f62d11a9cbe427b3793c06a38587ae48607ea9a9233d",
+    "run.py": "b9a22026520811d52a024f446ea3f0cdceae131dfd593da5230a6acf47a2ae84",
+    "sampler.py": "3b02ce83e1f3bbc7a0976cb72600771d3079b9d0be250386f06e16f2b7bfd1b7",
+    "shared_roles.py": "2afa9559d2b9f5463605dce3095eaa2524500a70630aacdffc27cea4cfbd6a5b",
+    "shared_supervisor.py": "fcfd838442b608849edabd7864d9d4559c3fa5da5f2f4881176ab97e8e0ffa3e",
+    "source-nginx-server.conf.in": "c96911de9034e9ea7988e98e5afeec91b756094c34e75a9d58482a8d4846bfd3",
+    "window_offsets.py": "2d9611d2591f221e53f8a6e243814a57d23e889c1c5cd5174fad34674ef5bd47"
+  },
+  "phases": [
+    {
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-common18-6f9bc94d601244e68a1617f5ec659151.scope",
+        "--",
+        "python",
+        "-B",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-common-supervisor-1/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-common-supervisor-candidate18-1/baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-source18",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:7ede9938178cfdfae4f447fcdfce4ff5fd9f072596188d954710e52f09776f74",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch18-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-common18-6f9bc94d601244e68a1617f5ec659151.scope",
+      "actual_exit": 0,
+      "seconds": 145.14363341699936,
+      "project": "dispatcharr-shared-ts-0975c6246a8d",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "report_sha256": "22474eb6dcc9259e61b9f893cac79728f3e162fa55e74e73d49de422e8c2de87"
+    },
+    {
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-common18-d1c0fc81759045cd826f243dbf72c02a.scope",
+        "--",
+        "python",
+        "-B",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-common-supervisor-1/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-common-supervisor-candidate18-1/candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-source18",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:7ede9938178cfdfae4f447fcdfce4ff5fd9f072596188d954710e52f09776f74",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch18-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-common18-d1c0fc81759045cd826f243dbf72c02a.scope",
+      "actual_exit": 0,
+      "seconds": 134.98330406599416,
+      "project": "dispatcharr-shared-ts-3561c13c2622",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "report_sha256": "8ef8057bc97d101d4def318aa873f2f8274fc1f902554ada1776570236d4d8f7"
+    }
+  ],
+  "gain_accepted": false,
+  "full_milestone_accepted": false,
+  "changed_inputs": [],
+  "passed": true
+}

@@ -1,0 +1,441 @@
+{
+  "baseline": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "baseline:actual-post-reload-schedule-disabled",
+        "passed": true,
+        "details": []
+      },
+      {
+        "name": "baseline:actual-post-start-schedule-disabled",
+        "passed": true,
+        "details": []
+      },
+      {
+        "name": "baseline:shared-demand:owner-first-media-active",
+        "passed": true,
+        "details": {
+          "owner": "a8d110ea1705:279",
+          "provider_slots": 1,
+          "clients": 1,
+          "metadata_fields": 34,
+          "owned_identity_count": 1,
+          "identity_key_count": 1,
+          "all_owned_user_id": true,
+          "input_index": 4,
+          "timestamps": 4,
+          "state": "active"
+        }
+      },
+      {
+        "name": "baseline:shared-demand:one-real-input-profile-process",
+        "passed": true,
+        "details": [
+          {
+            "service": "baseline",
+            "row": "2326441             2323905             2326441             ffmpeg -fflags +genpts+discardcorrupt -user_agent TiviMate/5.1.6 (Android 12) -i http://origin:8080/live/0.ts -map 0 -max_interleave_delta 100K -c copy -mpegts_flags +pat_pmt_at_frames+resend_headers+initial_discontinuity -f mpegts pipe:1"
+          }
+        ]
+      },
+      {
+        "name": "baseline:shared-demand:one-origin-and-provider",
+        "passed": true,
+        "details": {
+          "owner": "a8d110ea1705:279",
+          "provider_slots": 1,
+          "clients": 1,
+          "metadata_fields": 34,
+          "owned_identity_count": 1,
+          "identity_key_count": 1,
+          "all_owned_user_id": true,
+          "input_index": 4,
+          "timestamps": 4,
+          "state": "active"
+        }
+      },
+      {
+        "name": "baseline:continuous-through-fixed-drain",
+        "passed": true,
+        "details": null
+      },
+      {
+        "name": "baseline:shared-demand:input-profile-process-retired",
+        "passed": true,
+        "details": null
+      },
+      {
+        "name": "baseline:actual-post-window-schedule-disabled",
+        "passed": true,
+        "details": []
+      },
+      {
+        "name": "baseline:shared-demand:packet-sync",
+        "passed": true,
+        "details": null
+      },
+      {
+        "name": "baseline:shared-demand:actual-decoder",
+        "passed": true,
+        "details": [
+          {
+            "frames": 124,
+            "video_and_audio": true,
+            "sha256": "19c13742c1cbb0973a7ea7a58bc5058b2993469bf4cfa74c31e5a8467bd4bf0a"
+          }
+        ]
+      }
+    ],
+    "common_supervisor": {
+      "owner_pid": 1,
+      "owner_starttime": "5838898",
+      "role_slots": [
+        "web",
+        "daphne",
+        "nginx",
+        "celery",
+        "dvr",
+        "beat"
+      ],
+      "fixed_drain_worker_count": 12,
+      "separate_role_owner_processes": 0,
+      "separate_role_owner_generations": []
+    },
+    "ticks": 61,
+    "elapsed_seconds": 59.99850091999542,
+    "media_passed": true,
+    "one_batch_PTS_seconds": 2.0480000000000587,
+    "readers": [
+      {
+        "reader": "owner",
+        "passed": true,
+        "streams": {
+          "0": {
+            "complete_units": 1491,
+            "encoded_useful_bytes": 7492222,
+            "useful_duration_seconds": 59.64,
+            "first_pts90k": 1992720,
+            "last_pts90k": 7356720,
+            "independent_expected_encoded_bytes_60s": 7532530,
+            "useful_rate_fraction": 0.9946488098952145
+          },
+          "1": {
+            "complete_units": 2792,
+            "encoded_useful_bytes": 974996,
+            "useful_duration_seconds": 59.562666666666665,
+            "first_pts90k": 1988400,
+            "last_pts90k": 7347120,
+            "independent_expected_encoded_bytes_60s": 981998,
+            "useful_rate_fraction": 0.9928696392457012
+          }
+        },
+        "certificate": {
+          "raw_sha256": "1157cda0b2f2223814728ed5031b8e9dbb45fe14087ab8e837340ac0e046c888",
+          "raw_bytes": 13561004,
+          "derivative_sha256": "30aca1ed3e7799fcc2002a38497771ef385d05037230275012284342606b22e3",
+          "derivative_bytes": 13558372,
+          "drain_offset": 13561004,
+          "selected_window": [
+            3330380,
+            12793400
+          ],
+          "removed_ranges": [
+            {
+              "start": 13558372,
+              "end": 13561004,
+              "pid": 256,
+              "reason": "outer_unclosed_PES"
+            }
+          ],
+          "PID_lower": {
+            "256": 564,
+            "257": 27448
+          },
+          "PID_upper": {
+            "256": 13558372,
+            "257": 13561004
+          },
+          "closure_proven": true
+        },
+        "decode_context": {
+          "compared_complete_context_units": {
+            "video": 2135,
+            "audio": 4002
+          },
+          "outer_AAC_priming_difference": []
+        },
+        "window_bytes": 9463020,
+        "window_encoded_useful_bytes": 8467218,
+        "ledger_sha256": "30c59edfea059394a8b9a6d232ef7af3698afa49bdd815dfb16b4d433a0921c4",
+        "raw_decode": {
+          "actual_exit": 0,
+          "stderr_bytes": 98,
+          "stdout_sha256": "84a5f280d27b4b88d5b87f4919c0e9f6b67e8fdf4222e1f487fb4a7b5b2cff04",
+          "stderr_sha256": "6467833163c4e7236cbae071a4d1da093bc0811d83922c6371272de2de58f7a1",
+          "media_sha256": "1157cda0b2f2223814728ed5031b8e9dbb45fe14087ab8e837340ac0e046c888"
+        },
+        "certified_decode": {
+          "actual_exit": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "cb42b04bcbdc5906f7e2c288d71139a21435b88849882fef00727887d4853714",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "media_sha256": "30aca1ed3e7799fcc2002a38497771ef385d05037230275012284342606b22e3"
+        }
+      }
+    ],
+    "roles_stop": {
+      "beat": {
+        "actual_exit": 0,
+        "forced": false,
+        "actual_wait_completed": true,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "all_original_process_generations_absent": true
+      },
+      "dvr": {
+        "actual_exit": 0,
+        "forced": false,
+        "actual_wait_completed": true,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "all_original_process_generations_absent": true
+      },
+      "celery": {
+        "actual_exit": 0,
+        "forced": false,
+        "actual_wait_completed": true,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "all_original_process_generations_absent": true
+      },
+      "nginx": {
+        "actual_exit": 0,
+        "forced": false,
+        "actual_wait_completed": true,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "all_original_process_generations_absent": true
+      },
+      "daphne": {
+        "actual_exit": 0,
+        "forced": false,
+        "actual_wait_completed": true,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "all_original_process_generations_absent": true
+      },
+      "web": {
+        "actual_exit": 0,
+        "forced": false,
+        "actual_wait_completed": true,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "all_original_process_generations_absent": true
+      }
+    }
+  },
+  "candidate": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "candidate:immutable-image",
+        "passed": true,
+        "details": null
+      },
+      {
+        "name": "candidate:actual-post-reload-schedule-disabled",
+        "passed": true,
+        "details": []
+      },
+      {
+        "name": "candidate:actual-post-start-schedule-disabled",
+        "passed": true,
+        "details": []
+      },
+      {
+        "name": "candidate:shared-demand:owner-first-media-active",
+        "passed": true,
+        "details": {
+          "owner": "rust:38ce39a4-f5fd-4b9a-b3c2-2bb371cfe2ac",
+          "provider_slots": 1,
+          "clients": 1,
+          "metadata_fields": 18,
+          "owned_identity_count": 1,
+          "identity_key_count": 1,
+          "all_owned_user_id": true,
+          "input_index": 4,
+          "timestamps": 4,
+          "state": "active"
+        }
+      },
+      {
+        "name": "candidate:shared-demand:one-real-input-profile-process",
+        "passed": true,
+        "details": [
+          {
+            "service": "candidate",
+            "row": "2345498             2343460             2345498             /opt/dispatcharr-media/lib/ld-linux-x86-64.so.2 --library-path /opt/dispatcharr-media/lib /opt/dispatcharr-media/bin/ffmpeg -fflags +genpts+discardcorrupt -user_agent TiviMate/5.1.6 (Android 12) -i http://origin:8080/live/0.ts -map 0 -max_interleave_delta 100K -c copy -mpegts_flags +pat_pmt_at_frames+resend_headers+initial_discontinuity -f mpegts pipe:1"
+          }
+        ]
+      },
+      {
+        "name": "candidate:shared-demand:one-origin-and-provider",
+        "passed": true,
+        "details": {
+          "owner": "rust:38ce39a4-f5fd-4b9a-b3c2-2bb371cfe2ac",
+          "provider_slots": 1,
+          "clients": 1,
+          "metadata_fields": 18,
+          "owned_identity_count": 1,
+          "identity_key_count": 1,
+          "all_owned_user_id": true,
+          "input_index": 4,
+          "timestamps": 4,
+          "state": "active"
+        }
+      },
+      {
+        "name": "candidate:continuous-through-fixed-drain",
+        "passed": true,
+        "details": null
+      },
+      {
+        "name": "candidate:shared-demand:input-profile-process-retired",
+        "passed": true,
+        "details": null
+      },
+      {
+        "name": "candidate:actual-post-window-schedule-disabled",
+        "passed": true,
+        "details": []
+      },
+      {
+        "name": "candidate:shared-demand:packet-sync",
+        "passed": true,
+        "details": null
+      },
+      {
+        "name": "candidate:shared-demand:actual-decoder",
+        "passed": true,
+        "details": [
+          {
+            "frames": 124,
+            "video_and_audio": true,
+            "sha256": "19c13742c1cbb0973a7ea7a58bc5058b2993469bf4cfa74c31e5a8467bd4bf0a"
+          }
+        ]
+      }
+    ],
+    "common_supervisor": {
+      "owner_pid": 1,
+      "owner_starttime": "5853414",
+      "role_slots": [
+        "web",
+        "daphne",
+        "nginx",
+        "celery",
+        "dvr",
+        "beat"
+      ],
+      "fixed_drain_worker_count": 12,
+      "separate_role_owner_processes": 0,
+      "separate_role_owner_generations": []
+    },
+    "ticks": 61,
+    "elapsed_seconds": 59.9985869680022,
+    "media_passed": true,
+    "one_batch_PTS_seconds": 2.0480000000000587,
+    "readers": [
+      {
+        "reader": "owner",
+        "passed": true,
+        "streams": {
+          "0": {
+            "complete_units": 1489,
+            "encoded_useful_bytes": 7482485,
+            "useful_duration_seconds": 59.56,
+            "first_pts90k": 1999920,
+            "last_pts90k": 7356720,
+            "independent_expected_encoded_bytes_60s": 7532439,
+            "useful_rate_fraction": 0.9933681507410813
+          },
+          "1": {
+            "complete_units": 2792,
+            "encoded_useful_bytes": 974996,
+            "useful_duration_seconds": 59.562666666666665,
+            "first_pts90k": 1988400,
+            "last_pts90k": 7347120,
+            "independent_expected_encoded_bytes_60s": 981998,
+            "useful_rate_fraction": 0.9928696392457012
+          }
+        },
+        "certificate": {
+          "raw_sha256": "1157cda0b2f2223814728ed5031b8e9dbb45fe14087ab8e837340ac0e046c888",
+          "raw_bytes": 13561004,
+          "derivative_sha256": "30aca1ed3e7799fcc2002a38497771ef385d05037230275012284342606b22e3",
+          "derivative_bytes": 13558372,
+          "drain_offset": 13561004,
+          "selected_window": [
+            3340757,
+            12793400
+          ],
+          "removed_ranges": [
+            {
+              "start": 13558372,
+              "end": 13561004,
+              "pid": 256,
+              "reason": "outer_unclosed_PES"
+            }
+          ],
+          "PID_lower": {
+            "256": 564,
+            "257": 27448
+          },
+          "PID_upper": {
+            "256": 13558372,
+            "257": 13561004
+          },
+          "closure_proven": true
+        },
+        "decode_context": {
+          "compared_complete_context_units": {
+            "video": 2135,
+            "audio": 4002
+          },
+          "outer_AAC_priming_difference": []
+        },
+        "window_bytes": 9452643,
+        "window_encoded_useful_bytes": 8457481,
+        "ledger_sha256": "34ad56c6c3a9c7051183aa31a9c1ada8f46d0eeea8c4110f58c72fb45b2756c5",
+        "raw_decode": {
+          "actual_exit": 0,
+          "stderr_bytes": 98,
+          "stdout_sha256": "84a5f280d27b4b88d5b87f4919c0e9f6b67e8fdf4222e1f487fb4a7b5b2cff04",
+          "stderr_sha256": "8731f51a1786e2548a5273f2d1121346990fc399292d81593f9dce5b16bb0901",
+          "media_sha256": "1157cda0b2f2223814728ed5031b8e9dbb45fe14087ab8e837340ac0e046c888"
+        },
+        "certified_decode": {
+          "actual_exit": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "cb42b04bcbdc5906f7e2c288d71139a21435b88849882fef00727887d4853714",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "media_sha256": "30aca1ed3e7799fcc2002a38497771ef385d05037230275012284342606b22e3"
+        }
+      }
+    ],
+    "roles_stop": {},
+    "Main_shutdown": {
+      "Status": "exited",
+      "Running": false,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 0,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-11-15T12:26:22.027402126Z",
+      "FinishedAt": "2026-11-15T12:28:14.132241089Z"
+    }
+  }
+}

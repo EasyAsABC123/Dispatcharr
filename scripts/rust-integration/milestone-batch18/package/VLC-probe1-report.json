@@ -1,0 +1,69 @@
+{
+  "passed": false,
+  "image_id": "sha256:7ede9938178cfdfae4f447fcdfce4ff5fd9f072596188d954710e52f09776f74",
+  "git_revision": "8cf704d2794ec3230b3c2856fd66dffe2d01720d",
+  "build_sha256": "35c18a64e4769ec9249276cd2b591077ab7d99a3f57d7d9bd0d32ea6e5c69b91",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "apps_DB_network_calls": 0,
+  "performance_claims": false,
+  "VLC_failover_or_upstream_workflow_acceptance": false,
+  "cells": [],
+  "manifest": {
+    "sha256": "42932d5766e2f472ceb93c2dbeba5342e2c199fe27ec1a474d1c5b298ff0b8ca",
+    "exact_hashed_files": 798,
+    "category_counts": {
+      "binaries": 2,
+      "libraries": 202,
+      "plugins": 345,
+      "data": 63,
+      "wrappers": 2
+    },
+    "actual_three_custom_ELF_notice_links": [
+      {
+        "installed": "/opt/dispatcharr-vlc/lib/libva-drm.so.2",
+        "ELF_sha256": "804f3166ed4039a9cb241dd1c5a6822abb3c538975479ce1c9a4a0b7e77ab83d",
+        "notice": {
+          "actual_ELF_sha256": "804f3166ed4039a9cb241dd1c5a6822abb3c538975479ce1c9a4a0b7e77ab83d",
+          "actual_resolved_ELF": "/usr/local/lib/x86_64-linux-gnu/libva-drm.so.2.2400.0",
+          "component": "libva",
+          "origin": "pinned-Original-custom-build",
+          "retained_path": "/usr/share/doc/dispatcharr/vlc-copyright/Original-custom-libva/COPYING",
+          "sha256": "c86a782ee845b52472dae9b9d79fb915d333628ac0efe49cdce63644814931de",
+          "source": "/usr/local/share/doc/dispatcharr-ffmpeg/intel-media-licenses/libva/COPYING"
+        }
+      },
+      {
+        "installed": "/opt/dispatcharr-vlc/lib/libva.so.2",
+        "ELF_sha256": "bdd61c4f35cc33ae3ce26e42e980424ccbf412c787d1b3bb92b5a3397984bf0c",
+        "notice": {
+          "actual_ELF_sha256": "bdd61c4f35cc33ae3ce26e42e980424ccbf412c787d1b3bb92b5a3397984bf0c",
+          "actual_resolved_ELF": "/usr/local/lib/x86_64-linux-gnu/libva.so.2.2400.0",
+          "component": "libva",
+          "origin": "pinned-Original-custom-build",
+          "retained_path": "/usr/share/doc/dispatcharr/vlc-copyright/Original-custom-libva/COPYING",
+          "sha256": "c86a782ee845b52472dae9b9d79fb915d333628ac0efe49cdce63644814931de",
+          "source": "/usr/local/share/doc/dispatcharr-ffmpeg/intel-media-licenses/libva/COPYING"
+        }
+      },
+      {
+        "installed": "/opt/dispatcharr-vlc/lib/libvpl.so.2",
+        "ELF_sha256": "3cd00a3cab96737296106e801610a4b62f26993cc5c60e34d770a8b7a2d03fbe",
+        "notice": {
+          "actual_ELF_sha256": "3cd00a3cab96737296106e801610a4b62f26993cc5c60e34d770a8b7a2d03fbe",
+          "actual_resolved_ELF": "/usr/local/lib/x86_64-linux-gnu/libvpl.so.2.17",
+          "component": "libvpl",
+          "origin": "pinned-Original-custom-build",
+          "retained_path": "/usr/share/doc/dispatcharr/vlc-copyright/Original-custom-libvpl/LICENSE",
+          "sha256": "bf1cfac2e2792b6e1e995ce103d70796aecaf2ec7e4c5fe5474f7acec7b4a677",
+          "source": "/usr/local/share/doc/dispatcharr-ffmpeg/intel-media-licenses/libvpl/LICENSE"
+        }
+      }
+    ]
+  },
+  "actual_final_uid": 65532,
+  "source_environment": "HOME=/\nXDG_CONFIG_HOME=\nXDG_CACHE_HOME=\nVLC_PLUGIN_PATH=\nLD_LIBRARY_PATH=\n",
+  "physical_cleanup_passed": true,
+  "failure": "AssertionError:",
+  "all_tool_process_and_pipe_receipts": "commands.json",
+  "cleanup_receipts": "cleanup.json"
+}

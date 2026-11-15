@@ -13,8 +13,11 @@ failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
 The current code is [Candidate18](rust-milestone-batch18.md):1,008 workspace tests,
-compilation and strict lint pass; Docker and application acceptance are pending.
-The latest built runtime remains [Candidate16](rust-milestone-batch16.md),
+compilation and strict lint pass; Docker build and asset/credit, GPG and
+PostgreSQL probes pass. Actual VLC remux exposed missing relocated plugin
+discovery; its launcher correction requires a new image and acceptance.
+Combined application acceptance remains pending. The preceding built runtime is
+[Candidate16](rust-milestone-batch16.md),
 `921c5c40b2eb7a7073a0006b43fae86b41cd2728`. Its
 [functional record](rust-batch16-functional-observations.md) includes paired
 shared viewing and seven paired XC business cells, preserving strict fixture

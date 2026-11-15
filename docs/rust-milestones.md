@@ -12,8 +12,10 @@ alone does not establish application parity or an application performance gain.
 The newest code is [Candidate18](rust-milestone-batch18.md): formatting,
 compilation, strict Clippy and1,008 tests pass (zero failures,756 ignored).
 Its real HTTP regression fails on the preceding engine and passes after the
-local healthy-owner keepalive correction. Docker/runtime acceptance remains
-required; remote-owner health integration is a separate open gate.
+local healthy-owner keepalive correction. Its Docker build and physical
+asset/credit, GPG and PostgreSQL probes pass. VLC remux acceptance exposed a
+plugin discovery defect; the launcher correction awaits a rebuilt image.
+Combined application acceptance and remote-owner health remain open gates.
 
 The preceding code `49ad42e2f48ea11f3d6a991e8bbb45702d89906f`,
 [Candidate17](rust-milestone-batch17.md), passes formatting, compilation, strict
@@ -22,7 +24,9 @@ committed Git blobs. It adds plugin actions/managed ZIP installation, remote
 playlist/full-result handling and VLC/grouped-credential input work. Its Docker
 build and application acceptance remain pending.
 
-The latest built runtime remains
+The latest built runtime is Candidate18 at
+`8cf704d2794ec3230b3c2856fd66dffe2d01720d`.
+The preceding runtime
 `921c5c40b2eb7a7073a0006b43fae86b41cd2728`:
 [Candidate16](rust-milestone-batch16.md) passes984 tests and package probes.
 Its [functional observations](rust-batch16-functional-observations.md) include
