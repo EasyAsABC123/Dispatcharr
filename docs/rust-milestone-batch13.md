@@ -39,3 +39,7 @@ The previously qualified image12 remains immutable and is used for its
 same-image Core/restart controller retry. These new additions do not inherit its
 application acceptance. Experimental flags stay off by default. No new paired
 performance gain, full task graph or complete M0–M9 milestone is claimed.
+
+The [SDK evidence](../scripts/rust-integration/milestone-batch13/inventory.json)
+binds every input to runtime `b646f64f49ff0b4b4cd85af9d9051793c2c584f2` and retains the earlier
+logging compile failure. No Docker/runtime receipt is inferred.

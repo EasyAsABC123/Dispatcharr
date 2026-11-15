@@ -1,0 +1,62 @@
+{
+  "Source_authority_new": true,
+  "actual_archive": {
+    "archive_bytes": 50528,
+    "archive_sha256": "feb489b612295d69feaa85b50cc3f3b8b4a633e629096e1f708290bcf4235696",
+    "database_signature": "PGDMP",
+    "members": [
+      "database.dump",
+      "metadata.json"
+    ],
+    "metadata": {
+      "created_at": "2026-11-15T06:16:00.075944+00:00",
+      "database_file": "database.dump",
+      "database_type": "postgresql",
+      "format": "dispatcharr-backup",
+      "version": 2
+    }
+  },
+  "actual_backend": [
+    {
+      "children": {},
+      "date_done": "2026-11-15T06:16:00.076699+00:00",
+      "result": {
+        "deleted_count": 2,
+        "filename": "dispatcharr-backup-2026.11.15.06.16.00.zip",
+        "size": 50528,
+        "status": "completed"
+      },
+      "status": "SUCCESS",
+      "task_id": "3825cb84-9d01-4848-8499-9414e8e7def2",
+      "traceback": null
+    }
+  ],
+  "actual_disable_HTTP_status": 200,
+  "actual_remaining_entries": [
+    "dispatcharr-backup-2000.02.01.00.00.00.zip",
+    "dispatcharr-backup-2026.11.15.06.16.00.zip"
+  ],
+  "actual_result_scope": {
+    "actual_task_key_prefix": "celery-tasks:celery-task-meta-",
+    "authority": "actual Source backend.get_key_for_task with running worker result URL",
+    "database": 2
+  },
+  "declared_owned_entries": {
+    "directory_mode": "0o1777",
+    "entry_modes": [
+      "0o444",
+      "0o555",
+      "0o444"
+    ],
+    "ordered_old_entries": [
+      "dispatcharr-backup-2000.03.01.00.00.00.zip",
+      "dispatcharr-backup-2000.02.01.00.00.00.zip",
+      "dispatcharr-backup-2000.01.01.00.00.00.zip"
+    ],
+    "refusal_kind": "directory rejected by actual is_file guard, independent of root DAC bypass"
+  },
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "root_DAC_denial_claimed": false,
+  "status": "passed"
+}

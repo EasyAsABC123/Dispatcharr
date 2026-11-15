@@ -1,0 +1,83 @@
+{
+  "Source_authority_new": false,
+  "actual_Main_stop": {
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "oom_killed": false
+  },
+  "actual_backend_after_failed_drain": null,
+  "actual_blocked_pg_dump_SQL": [
+    [
+      19963,
+      "pg_dump",
+      "Lock",
+      "relation"
+    ]
+  ],
+  "actual_child_generations_absent": true,
+  "actual_children_before_TERM": [
+    {
+      "actual_executable": "pg_dump",
+      "host_pid": 1384664,
+      "starttime": "3615374"
+    }
+  ],
+  "actual_lock": {
+    "actual_lock_acquired": true,
+    "database": "normal_dvr_84fbe78bf044458d",
+    "pid": 19951
+  },
+  "actual_lock_release": {
+    "actual_argv": [
+      "/dispatcharrpy/bin/python",
+      "-c",
+      "import os,signal,time,json,psycopg\nfrom pathlib import Path\nrunning=[True];signal.signal(signal.SIGTERM,lambda *_:running.__setitem__(0,False))\nc=psycopg.connect(dbname=os.environ['POSTGRES_DB'],user=os.environ['POSTGRES_USER'],password=os.environ['POSTGRES_PASSWORD'],host='/var/run/postgresql')\nx=c.cursor();x.execute('LOCK TABLE dispatcharr_channels_recording IN ACCESS EXCLUSIVE MODE')\nPath('/shared/backup-held-deadline/backup-lock.ready').write_text(json.dumps({'database':os.environ['POSTGRES_DB'],'pid':os.getpid(),'actual_lock_acquired':True}))\nwhile running[0]:time.sleep(.05)\nc.rollback();c.close()\n"
+    ],
+    "actual_exit": 0,
+    "actual_master_SIGTERM_sent": true,
+    "actual_pgid": 19951,
+    "actual_reaped_adopted_children": [],
+    "actual_wait_completed": true,
+    "all_original_process_generations_absent": true,
+    "failures": [],
+    "forced": false,
+    "log_paths": {
+      "stderr": "/tmp/normal-dvr-roles/c3b0e4856af646a3ab6c94a614d7078e/stderr.log",
+      "stdout": "/tmp/normal-dvr-roles/c3b0e4856af646a3ab6c94a614d7078e/stdout.log"
+    },
+    "owned_generations": [
+      {
+        "absent": true,
+        "pid": 19951,
+        "starttime": "3615358"
+      }
+    ],
+    "owner_pid": 19950,
+    "owner_starttime": "3615356",
+    "pid": 19951,
+    "process_group_authority": "successful Popen(start_new_session=True)",
+    "role": "backup-table-lock",
+    "running": false,
+    "shutdown_settled": true,
+    "shutdown_started": true,
+    "signal_settled": true,
+    "socket": "/tmp/normal-dvr-roles/c3b0e4856af646a3ab6c94a614d7078e.sock",
+    "starttime": "3615358",
+    "stderr_EOF": true,
+    "stdout_EOF": true
+  },
+  "actual_pending_before_TERM": true,
+  "actual_result_scope": {
+    "actual_task_key_prefix": "celery-tasks:celery-task-meta-",
+    "authority": "actual Source backend.get_key_for_task with running worker result URL",
+    "database": 2
+  },
+  "actual_task_id": "025e891f-f547-4c28-8cd7-dd8371aa3b7a",
+  "backend": "Native",
+  "configured_Native_shutdown_seconds": 45,
+  "expected_fail_closed": true,
+  "full_milestone_passed": false,
+  "held_through_actual_process_exit": true,
+  "performance_verified": false,
+  "status": "passed"
+}

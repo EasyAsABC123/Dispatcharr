@@ -1,0 +1,55 @@
+{
+  "scope": "new controlled Source preclaim revocation ordering only",
+  "task_key": "dvr-now-7-ed69c87e8fbb475d9202a43032f67459",
+  "control_queue": "normal-control-only-a10545fe7de045a88381b9ee93d70cd2",
+  "target": "normal-dvr@owned",
+  "initial_Source_producer_graph_unchanged": true,
+  "historical_SUCCESS_outcome_rewritten": false,
+  "actions": [
+    {
+      "action": "actual-targeted-active-queues",
+      "status": "captured",
+      "observation": [
+        "normal-control-only-a10545fe7de045a88381b9ee93d70cd2"
+      ]
+    },
+    {
+      "action": "one-targeted-revoke-publication",
+      "status": "captured",
+      "observation": [
+        {
+          "normal-dvr@owned": {
+            "ok": "tasks {'dvr-now-7-ed69c87e8fbb475d9202a43032f67459'} flagged as revoked"
+          }
+        }
+      ]
+    },
+    {
+      "action": "actual-targeted-inspect-revoked",
+      "status": "captured",
+      "observation": [
+        "dvr-now-7-ed69c87e8fbb475d9202a43032f67459"
+      ]
+    }
+  ],
+  "before_revoke": {
+    "exact_target_raw_still_queued": true,
+    "all_prior_raw_frames_still_queued": true,
+    "target_backend_absent": true
+  },
+  "actual_revoke_reply": [
+    {
+      "normal-dvr@owned": {
+        "ok": "tasks {'dvr-now-7-ed69c87e8fbb475d9202a43032f67459'} flagged as revoked"
+      }
+    }
+  ],
+  "actual_applied_revoked_keys_before_intake": [
+    "dvr-now-7-ed69c87e8fbb475d9202a43032f67459"
+  ],
+  "after_applied_before_add_consumer": {
+    "exact_target_raw_still_queued": true,
+    "all_prior_raw_frames_still_queued": true,
+    "target_backend_absent": false
+  }
+}

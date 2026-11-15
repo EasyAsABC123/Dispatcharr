@@ -1,0 +1,160 @@
+{
+  "Source_authority_new": true,
+  "actual_Source_begin_stop": {
+    "actual_argv": [
+      "/dispatcharrpy/bin/celery",
+      "-A",
+      "dispatcharr",
+      "worker",
+      "--pool=prefork",
+      "--concurrency=1",
+      "-Q",
+      "celery",
+      "--without-gossip",
+      "--without-mingle",
+      "--without-heartbeat",
+      "--loglevel=WARNING",
+      "--hostname=normal-default@owned"
+    ],
+    "actual_exit": null,
+    "actual_master_SIGTERM_sent": true,
+    "actual_pgid": 1536,
+    "log_paths": {
+      "stderr": "/tmp/normal-dvr-roles/045e6d999d884dadbb012f1e60a887e0/stderr.log",
+      "stdout": "/tmp/normal-dvr-roles/045e6d999d884dadbb012f1e60a887e0/stdout.log"
+    },
+    "owner_pid": 1535,
+    "owner_starttime": "3627511",
+    "pid": 1536,
+    "process_group_authority": "successful Popen(start_new_session=True)",
+    "role": "celery",
+    "running": true,
+    "shutdown_settled": false,
+    "shutdown_started": true,
+    "signal_settled": true,
+    "socket": "/tmp/normal-dvr-roles/045e6d999d884dadbb012f1e60a887e0.sock",
+    "starttime": "3627514"
+  },
+  "actual_Source_stop": {
+    "actual_argv": [
+      "/dispatcharrpy/bin/celery",
+      "-A",
+      "dispatcharr",
+      "worker",
+      "--pool=prefork",
+      "--concurrency=1",
+      "-Q",
+      "celery",
+      "--without-gossip",
+      "--without-mingle",
+      "--without-heartbeat",
+      "--loglevel=WARNING",
+      "--hostname=normal-default@owned"
+    ],
+    "actual_exit": 0,
+    "actual_master_SIGTERM_sent": true,
+    "actual_pgid": 1536,
+    "actual_reaped_adopted_children": [],
+    "actual_wait_completed": true,
+    "all_original_process_generations_absent": true,
+    "failures": [],
+    "forced": false,
+    "log_paths": {
+      "stderr": "/tmp/normal-dvr-roles/045e6d999d884dadbb012f1e60a887e0/stderr.log",
+      "stdout": "/tmp/normal-dvr-roles/045e6d999d884dadbb012f1e60a887e0/stdout.log"
+    },
+    "owned_generations": [
+      {
+        "absent": true,
+        "pid": 1536,
+        "starttime": "3627514"
+      },
+      {
+        "absent": true,
+        "pid": 1583,
+        "starttime": "3627634"
+      },
+      {
+        "absent": true,
+        "pid": 1769,
+        "starttime": "3628169"
+      }
+    ],
+    "owner_pid": 1535,
+    "owner_starttime": "3627511",
+    "pid": 1536,
+    "process_group_authority": "successful Popen(start_new_session=True)",
+    "role": "celery",
+    "running": false,
+    "shutdown_settled": true,
+    "shutdown_started": true,
+    "signal_settled": true,
+    "socket": "/tmp/normal-dvr-roles/045e6d999d884dadbb012f1e60a887e0.sock",
+    "starttime": "3627514",
+    "stderr_EOF": true,
+    "stdout_EOF": true
+  },
+  "actual_archive": {
+    "archive_bytes": 41132,
+    "archive_sha256": "94c7f82c5dea96b00ca897a4490a1cc12574cd88f86e0764df213cb406d83ed8",
+    "database_signature": "PGDMP",
+    "members": [
+      "database.dump",
+      "metadata.json"
+    ],
+    "metadata": {
+      "created_at": "2026-11-15T06:15:16.234222+00:00",
+      "database_file": "database.dump",
+      "database_type": "postgresql",
+      "format": "dispatcharr-backup",
+      "version": 2
+    }
+  },
+  "actual_backend": {
+    "children": [],
+    "date_done": "2026-11-15T06:15:16.234567+00:00",
+    "result": {
+      "filename": "dispatcharr-backup-2026.11.15.06.15.13.zip",
+      "size": 41132,
+      "status": "completed"
+    },
+    "status": "SUCCESS",
+    "task_id": "a240bb0e-4262-41c7-811c-511cf0d08831",
+    "traceback": null
+  },
+  "actual_blocked_pg_dump_SQL": [
+    [
+      1770,
+      "pg_dump",
+      "Lock",
+      "relation"
+    ]
+  ],
+  "actual_child_generations_absent": true,
+  "actual_children_before_TERM": [
+    {
+      "actual_executable": "pg_dump",
+      "actual_uid_line": "Uid:\t65532\t65532\t65532\t65532",
+      "namespace_pid": 1769,
+      "starttime": "3628169"
+    }
+  ],
+  "actual_lock": {
+    "actual_lock_acquired": true,
+    "database": "normal_dvr_3ad050b909c2467b",
+    "pid": 1764
+  },
+  "actual_pending_before_TERM": true,
+  "actual_result_scope": {
+    "actual_task_key_prefix": "celery-tasks:celery-task-meta-",
+    "authority": "actual Source backend.get_key_for_task with running worker result URL",
+    "database": 2
+  },
+  "actual_task_id": "a240bb0e-4262-41c7-811c-511cf0d08831",
+  "backend": "Original",
+  "configured_Native_shutdown_seconds": 45,
+  "expected_fail_closed": false,
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "status": "passed"
+}

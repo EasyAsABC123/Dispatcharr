@@ -1,0 +1,73 @@
+{
+  "Source_authority_new": false,
+  "actual_Main_stop": {
+    "actual_exit": 0,
+    "actual_finished_at": "2026-11-15T06:11:59.716035731Z",
+    "actual_started_at": "2026-11-15T06:11:55.452104898Z",
+    "explicit_SIGTERM_only_once": true,
+    "oom_killed": false
+  },
+  "actual_SIGTERM_command_settled": true,
+  "actual_archive": {
+    "archive_bytes": 40948,
+    "archive_sha256": "5065ca17c7a600fd98cf28d2979fa9df9bf5f585de5fcb43afc1f9f717a2ad3d",
+    "database_signature": "PGDMP",
+    "members": [
+      "database.dump",
+      "metadata.json"
+    ],
+    "metadata": {
+      "created_at": "2026-11-15T06:11:59.608331+00:00",
+      "database_file": "database.dump",
+      "database_type": "postgresql",
+      "format": "dispatcharr-backup",
+      "version": 2
+    }
+  },
+  "actual_backend": {
+    "children": [],
+    "date_done": "2026-11-15T06:11:59.609641+00:00",
+    "result": {
+      "filename": "dispatcharr-backup-2026.11.15.06.11.57.zip",
+      "size": 40948,
+      "status": "completed"
+    },
+    "status": "SUCCESS",
+    "task_id": "00953a0c-5705-455f-a545-b985d949c8c7",
+    "traceback": null
+  },
+  "actual_blocked_pg_dump_SQL": [
+    [
+      19085,
+      "pg_dump",
+      "Lock",
+      "relation"
+    ]
+  ],
+  "actual_child_generations_absent": true,
+  "actual_children_before_TERM": [
+    {
+      "actual_executable": "pg_dump",
+      "host_pid": 1380129,
+      "starttime": "3608530"
+    }
+  ],
+  "actual_lock": {
+    "actual_lock_acquired": true,
+    "database": "normal_dvr_7a6699ba59f549e8",
+    "pid": 19078
+  },
+  "actual_pending_before_TERM": true,
+  "actual_result_scope": {
+    "actual_task_key_prefix": "celery-tasks:celery-task-meta-",
+    "authority": "actual Source backend.get_key_for_task with running worker result URL",
+    "database": 2
+  },
+  "actual_task_id": "00953a0c-5705-455f-a545-b985d949c8c7",
+  "backend": "Native",
+  "configured_Native_shutdown_seconds": 45,
+  "expected_fail_closed": false,
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "status": "passed"
+}

@@ -1,0 +1,169 @@
+{
+  "scope": "Selected original reports and labelled projections only, not all raw/input closure. Private request/backup tokens and full environments are omitted.",
+  "runtime_revision": "8faa6b9c444c8cdfec6cdfd3d1baa4d585ab2b2f",
+  "image_id": "sha256:b9e4b90ab971d1eaf0e36e3c6a9109a5f845950c29a6dd9d41ea4fe5b6170ebf",
+  "backends": [
+    {
+      "backend": "Native",
+      "original_status": "failed",
+      "cases": [
+        {
+          "case": "core-produced",
+          "status": "failed"
+        },
+        {
+          "case": "normal-backup",
+          "status": "passed"
+        },
+        {
+          "case": "nonempty-restart",
+          "status": "failed"
+        },
+        {
+          "case": "authorization",
+          "status": "passed"
+        },
+        {
+          "case": "artwork",
+          "status": "passed"
+        },
+        {
+          "case": "grouped-m6",
+          "status": "passed"
+        },
+        {
+          "case": "channel-maintenance",
+          "status": "passed"
+        },
+        {
+          "case": "overlap",
+          "status": "passed"
+        },
+        {
+          "case": "controls",
+          "status": "passed"
+        },
+        {
+          "case": "streams-denial",
+          "status": "passed"
+        },
+        {
+          "case": "held-drain",
+          "status": "passed"
+        },
+        {
+          "case": "backup-held-graceful",
+          "status": "passed"
+        },
+        {
+          "case": "backup-delete-refusal",
+          "status": "passed"
+        },
+        {
+          "case": "backup-held-deadline",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "backend": "Original",
+      "original_status": "failed",
+      "cases": [
+        {
+          "case": "source-slow-reader",
+          "status": "retained_source_authority"
+        },
+        {
+          "case": "nonempty-restart",
+          "status": "failed"
+        },
+        {
+          "case": "normal-backup",
+          "status": "retained_source_authority"
+        },
+        {
+          "case": "backup-held-graceful",
+          "status": "passed"
+        },
+        {
+          "case": "backup-delete-refusal",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "raw_refs_sha256": {
+    "artifacts/rust/normal-graph-batch12-functional-1/results/Native/report.json": "54cb32aa639902d5b3121fd35eca77c34cd3195f038fda5c08ff344973783059",
+    "artifacts/rust/normal-graph-batch12-functional-1/results/Original/report.json": "fa395c71faf469b7dc354b775a1324214a5abfee5de92ff058ab0ffada47a2ea",
+    "artifacts/rust/normal-graph-batch12-functional-1/fixtures/Native-d580aa96/normal-backup/report.json": "b2b5556cbf82c215e4c7a1f1da9ae00ccffce80ca177048798859d097952fdf5",
+    "artifacts/rust/normal-graph-batch12-functional-1/fixtures/Native-d580aa96/backup-held-graceful/report.json": "cd94d22521e7f1406ea4d7c26ff00645263fb90c60009442da17bf46eaf91c07",
+    "artifacts/rust/normal-graph-batch12-functional-1/fixtures/Native-d580aa96/backup-delete-refusal/report.json": "33689378e7721e3566bbf99fcd3f050c3ebe144088d634b627bc0e6672b792b4",
+    "artifacts/rust/normal-graph-batch12-functional-1/fixtures/Native-d580aa96/backup-held-deadline/report.json": "51b2ff2334d49ef7760e80a67aa3e1ab7dbb3f160acebccfe5a536dee4519691",
+    "artifacts/rust/normal-graph-batch12-functional-1/fixtures/Original-59484061/backup-held-graceful/report.json": "423d1f04142404a0bcad1ebeda0704b240160c495fec0b641bd0b5bf585b0d8e",
+    "artifacts/rust/normal-graph-batch12-functional-1/fixtures/Original-59484061/backup-delete-refusal/report.json": "be1df1dad8a5c7c650a897f4c02ed8c2774af3c7e2964e79bf587ab4e5957b62"
+  },
+  "full_milestone_passed": false,
+  "performance_gains": false,
+  "original_authors_credit_preserved": true,
+  "normal_backup": {
+    "actual_passed": 12,
+    "actual_cells": [
+      {
+        "name": "startup-default-row",
+        "status": "passed"
+      },
+      {
+        "name": "packaged-PG-clients",
+        "status": "passed"
+      },
+      {
+        "name": "actual-timezone-UTC",
+        "status": "passed"
+      },
+      {
+        "name": "nonempty-source-snapshot",
+        "status": "passed"
+      },
+      {
+        "name": "actual-publication-observer",
+        "status": "passed"
+      },
+      {
+        "name": "normal-create-status-ZIP",
+        "status": "passed"
+      },
+      {
+        "name": "owned-Source-restore",
+        "status": "passed"
+      },
+      {
+        "name": "actual-scheduled-UTC-retention",
+        "status": "passed"
+      },
+      {
+        "name": "actual-timezone-Honolulu",
+        "status": "passed"
+      },
+      {
+        "name": "per-job-timezone-create",
+        "status": "passed"
+      },
+      {
+        "name": "actual-filename-retention-self-delete",
+        "status": "passed"
+      },
+      {
+        "name": "schedule-disable",
+        "status": "passed"
+      }
+    ],
+    "Source_reference": "exact qualified Source12 on previous image11 cohort, explicitly retained",
+    "full_M8_M9_passed": false
+  },
+  "remaining_failures": {
+    "Core": "Generated seed .replace applied only to final concatenand, leaving programme literal __CHANNEL_NAME__, selecting genuinely unimplemented provider-artwork branch. Backpressure remains waiting at bounded1000, stopped honestly. Corrected generated input is a new scenario; oldSourceproviderinputs not upgraded.",
+    "Native_restart": "Combined cache-loss assert failed before Native startup and discarded separate before/after outcomes; event serializer runtime assertion not reached. Future observer settles web and records atomic cache-zero plus independent broker proof.",
+    "Source_restart": "Before revoke target raw queued/backend absent. After confirmed revoke allraw stillqueued, but backendexists; pinned Celery control immediately mark_as_revoked. Absent-after-revoke assertion invalid; status must be captured and queued removal verified only after ADD.",
+    "range": "Retained literal malformed-range transport divergence remains unqualified."
+  }
+}

@@ -9,7 +9,7 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest committed runtime is `8faa6b9c444c8cdfec6cdfd3d1baa4d585ab2b2f`: [945 workspace tests pass](rust-milestone-batch12.md), including observed Core backpressure, Honolulu scheduling and event-precision corrections. Its affected Compose batch is under validation. The [Candidate11 grouped observations](rust-batch11-functional-observations.md) qualify98 channel HTTP comparisons, selected task/physical checks, real backup/Source restore and recording leaves while preserving the failed whole result. All full milestones remain open; no new performance gain is accepted. Older results below retain their original scope.
+The newest committed runtime is `8faa6b9c444c8cdfec6cdfd3d1baa4d585ab2b2f`: [945 workspace tests pass](rust-milestone-batch12.md), including observed Core backpressure, Honolulu scheduling and event-precision corrections. Its [grouped Compose run](rust-batch12-functional-observations.md) passes12 of14 Native contexts, all12 normal backup cells and five paired/Native physical backup checks. Core/restart fixture and observer failures remain literal; the event precision runtime assertion was not reached. All19 containers and both project inventories cleaned up. The earlier [Candidate11 observations](rust-batch11-functional-observations.md) retain their own scope. All full milestones remain open; no new performance gain is accepted.
 
 The latest packaged recording candidate is `cb1ba69af8e0623222391a707a2b9fc03b5995f6`:
 [915 tests and its Docker build pass](rust-milestone-batch8.md), and the selected
