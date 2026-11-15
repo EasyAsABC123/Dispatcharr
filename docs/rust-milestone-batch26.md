@@ -50,3 +50,11 @@ LICENSE remain included. Offline checks reproduce the archive and reject corrupt
 traversal and incomplete inputs. The original failed build is retained in the
 [packaging evidence](../scripts/rust-integration/milestone-batch26/packaging/initial-build-failure.json).
 The repaired image still requires an actual rebuild and runtime acceptance.
+
+The second build from `03e84ede` passed Source-library collection and failed after
+16.47 seconds on a missing dependency notice. One metadata-only inventory checked
+all127 pinned distributions. The correction recognizes wheel-owned `LICENCE`
+files and retains exact-version upstream legal text for tokenizers0.23.3 and
+tqdm4.70.1. Offline review covers127/127 distributions and286 installed legal
+files; missing notices still fail the build. Actual image qualification remains
+pending. Neither failed build ran Main or measured performance.

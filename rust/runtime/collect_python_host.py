@@ -85,15 +85,35 @@ for name,data in validated:
 copy_file(source_input/'manifest.json',DOCS/'source-manifest.json')
 excluded_source_assets.extend(source_manifest['excluded'])
 licenses={};wheel_owners={}
+legal_input=Path('/tmp/python_host_licenses')
+legal_manifest=json.loads((legal_input/'manifest.json').read_text())
+if legal_manifest.get('schema')!=1:raise RuntimeError('Unsupported pinned upstream legal inventory')
+upstream_legal={}
+for item in legal_manifest['notices']:
+ key=(item['distribution'].lower(),item['version'])
+ path=legal_input/item['file']
+ if not path.resolve().is_relative_to(legal_input.resolve())or not path.is_file()or sha(path)!=item['sha256']:raise RuntimeError('Pinned upstream legal input missing or changed')
+ upstream_legal.setdefault(key,[]).append((path,item))
+def legal_name(path):return any(word in path.name.upper()for word in('LICENSE','LICENCE','COPYING','COPYRIGHT','NOTICE'))
 for distribution in metadata.distributions(path=[str(site)]):
  name=distribution.metadata['Name'];version=distribution.version
  if not name or not re.fullmatch(r'[a-zA-Z0-9_.+-]+',name):raise RuntimeError('Invalid installed distribution name')
  info=Path(distribution._path)
- notices=[p for p in info.rglob('*')if p.is_file()and any(word in p.name.upper()for word in('LICENSE','COPYING','COPYRIGHT','NOTICE'))]
- if not notices:raise RuntimeError('Installed distribution lacks retained license text: '+name)
+ notices={p.resolve():p for p in info.rglob('*')if p.is_file()and legal_name(p)}
+ # Some wheels place legal texts in their package rather than dist-info; wheel
+ # RECORD supplies ownership. British LICENCE spelling is equally legal text.
+ for item in distribution.files or[]:
+  candidate=Path(distribution.locate_file(item))
+  if legal_name(candidate)and candidate.is_file():notices.setdefault(candidate.resolve(),candidate)
  retained=[]
- for notice in sorted(notices):
-  dest=DOCS/'distributions'/name/notice.relative_to(info);copy_file(notice,dest);retained.append({'source':str(notice),'retained':'/'+str(dest.relative_to(OUT)),'sha256':sha(notice)})
+ for number,notice in enumerate(sorted(notices.values())):
+  relative=notice.relative_to(info)if notice.is_relative_to(info)else Path('record-owned')/(str(number)+'-'+notice.name)
+  dest=DOCS/'distributions'/name/relative;copy_file(notice,dest);retained.append({'source':str(notice),'retained':'/'+str(dest.relative_to(OUT)),'sha256':sha(notice),'authority':'installed-wheel'})
+ # A deficient wheel is never silently accepted. Exact-version upstream legal
+ # bytes are immutable tracked inputs, explicitly identified in runtime notices.
+ for notice,item in upstream_legal.get((name.lower(),version),[]):
+  dest=DOCS/'distributions'/name/'pinned-upstream'/notice.name;copy_file(notice,dest);retained.append({'source':item['source'],'retained':'/'+str(dest.relative_to(OUT)),'sha256':sha(notice),'authority':'exact-version-upstream','version':version})
+ if not retained:raise RuntimeError('Installed distribution lacks retained license text: '+name+' '+version)
  licenses[name]={'version':version,'notices':retained}
  for item in distribution.files or[]:
   source=Path(distribution.locate_file(item))
