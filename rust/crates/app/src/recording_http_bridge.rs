@@ -42,13 +42,20 @@ impl RecordingJobs for Bridge {
         &'a self,
         recording: i64,
         parent: dispatcharr_store::recording_http::RecordingChannelId,
+        revoked_before_date_save: bool,
         connection: &'a mut dispatcharr_store::recording_http::RecordingTaskConnection,
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'a, Result<Vec<String>, Effect>> {
         Box::pin(async move {
             let published = self
                 .publisher
-                .schedule_booking_child_on(recording, parent, connection, owner)
+                .schedule_booking_child_on(
+                    recording,
+                    parent,
+                    revoked_before_date_save,
+                    connection,
+                    owner,
+                )
                 .await
                 .map_err(publication_error)?;
             let mut children = Vec::new();

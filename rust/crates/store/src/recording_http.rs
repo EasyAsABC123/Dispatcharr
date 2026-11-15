@@ -55,6 +55,7 @@ pub trait RecordingJobs: Send + Sync {
         &'a self,
         _recording: i64,
         _parent: Uuid,
+        _revoked_before_date_save: bool,
         _connection: &'a mut RecordingTaskConnection,
         _owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'a, Result<Vec<String>, RecordingEffectError>> {

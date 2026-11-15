@@ -152,9 +152,9 @@ pub async fn execute(
                 if let Some(key)=revoke{
                     match jobs.revoke_on(key.clone(),&mut connection,owner.clone()).await{Ok(())=>{},Err(RecordingEffectError::SettledFailure)=>continue,Err(e)=>return Err(effect(e))}
                 }
-                let update=sqlx::query("UPDATE dispatcharr_channels_recording SET start_time=$2,end_time=$3,task_id=CASE WHEN $4 THEN NULL ELSE task_id END WHERE id=$1::bigint").bind(id).bind(start).bind(end).bind(revoke.is_some()).execute(&mut*connection).await;
+                let update=sqlx::query("UPDATE dispatcharr_channels_recording SET start_time=$2,end_time=$3 WHERE id=$1::bigint").bind(id).bind(start).bind(end).execute(&mut*connection).await;
                 match update{Ok(v)if v.rows_affected()==1=>{},Ok(_)=>continue,Err(error)if error.as_database_error().is_some()=>continue,Err(error)=>return Err(error.into())}
-                match jobs.schedule_from_task_on(id,task,&mut connection,owner.clone()).await{Ok(ids)=>{for id in ids{let bytes=serde_json::to_vec(&json!([[id,null],null])).map_err(|_|unsupported())?.len()+1;child_bytes=child_bytes.checked_add(bytes).ok_or_else(unsupported)?;if child_bytes>240000{return Err(StoreError::Unsupported("Offset descendants exceed existing backend wire budget; scalable encoding is unqualified"));}children.push(id);}},Err(RecordingEffectError::SettledFailure)=>{},Err(e)=>return Err(effect(e))}
+                match jobs.schedule_from_task_on(id,task,revoke.is_some(),&mut connection,owner.clone()).await{Ok(ids)=>{for id in ids{let bytes=serde_json::to_vec(&json!([[id,null],null])).map_err(|_|unsupported())?.len()+1;child_bytes=child_bytes.checked_add(bytes).ok_or_else(unsupported)?;if child_bytes>240000{return Err(StoreError::Unsupported("Offset descendants exceed existing backend wire budget; scalable encoding is unqualified"));}children.push(id);}},Err(RecordingEffectError::SettledFailure)=>{},Err(e)=>return Err(effect(e))}
                 changed+=1;
             }
         }

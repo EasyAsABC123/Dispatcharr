@@ -9,6 +9,7 @@ impl NormalRecordingPublisher {
         &self,
         recording: i64,
         parent: Uuid,
+        revoked_before_date_save: bool,
         connection: &mut PgConnection,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<BookingPublication, Error> {
@@ -26,11 +27,13 @@ impl NormalRecordingPublisher {
             _caller: caller,
             _producer: self.inner.clone(),
         });
-        let row = read(connection, recording).await?;
+        let persisted = read(connection, recording).await?;
+        // Source pre_save clears only the in-memory instance after revocation.
+        // save(update_fields=[start_time,end_time]) preserves the stored task_id
+        // until post_save actually assigns a replacement schedule/publication.
+        let row = save_signal_row(persisted, revoked_before_date_save);
         let now = Utc::now();
-        let task = if row.task_key.as_ref().is_some_and(|key| !key.is_empty())
-            || !(row.start > now - chrono::Duration::seconds(1) || row.end > now)
-        {
+        let task = if !needs_booking(&row, now) {
             BookingTask::Unchanged {
                 task_key: row.task_key.clone(),
             }
@@ -174,4 +177,54 @@ async fn future_on(connection: &mut PgConnection, row: &BookingRow) -> Result<Bo
         ));
     }
     Ok(BookingTask::Periodic { name, periodic_id })
+}
+
+fn save_signal_row(mut row: BookingRow, revoked_before_date_save: bool) -> BookingRow {
+    if revoked_before_date_save {
+        row.task_key = None;
+    }
+    row
+}
+fn needs_booking(row: &BookingRow, now: DateTime<Utc>) -> bool {
+    row.task_key.as_ref().is_none_or(|key| key.is_empty())
+        && (row.start > now - chrono::Duration::seconds(1) || row.end > now)
+}
+#[cfg(test)]
+mod save_signal_tests {
+    use super::*;
+    fn row(now: DateTime<Utc>, start: i64, end: i64) -> BookingRow {
+        BookingRow {
+            recording: 41,
+            channel: 9,
+            start: now + chrono::Duration::seconds(start),
+            end: now + chrono::Duration::seconds(end),
+            task_key: Some("dvr-recording-41".into()),
+            artwork: true,
+        }
+    }
+    #[test]
+    fn offset_date_only_save_preserves_persisted_key_when_shifted_entirely_past() {
+        let now = Utc::now();
+        let persisted = row(now, -600, -300);
+        let instance = save_signal_row(persisted.clone(), true);
+        assert!(!needs_booking(&instance, now));
+        assert!(instance.artwork, "Source still dispatches eligible artwork");
+        assert_eq!(persisted.task_key.as_deref(), Some("dvr-recording-41"));
+        assert_eq!(instance.task_key, None);
+    }
+    #[test]
+    fn offset_date_only_save_rebooks_future_and_running_windows_after_revoke_only() {
+        let now = Utc::now();
+        for (start, end) in [(600, 1200), (-600, 300)] {
+            let persisted = row(now, start, end);
+            assert!(!needs_booking(
+                &save_signal_row(persisted.clone(), false),
+                now
+            ));
+            let instance = save_signal_row(persisted.clone(), true);
+            assert!(needs_booking(&instance, now));
+            assert_eq!(instance.start > now, start > 0);
+            assert_eq!(persisted.task_key.as_deref(), Some("dvr-recording-41"));
+        }
+    }
 }
