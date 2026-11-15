@@ -1,0 +1,27 @@
+{
+  "format_version": 1,
+  "passed": false,
+  "tag": "dispatcharr-rust-candidate:milestone26",
+  "source_tree_sha256": "f0950e3cf82ade0d0cdbf3fe5f837fbc27db67e78bdaae2a4a01767264cffade",
+  "git_revision": "936e6557558d5374cc265af7b7d8201290cd8407",
+  "worktree_status": "",
+  "source_scope": "immutable Rust tree, tracked unchanged React frontend, LICENSE and ATTRIBUTION.md; excludes local environment/dependency/build artifacts",
+  "source_input_mode": "committed-revision-snapshot",
+  "candidate_overlay_scope": "current workspace deployment template; not archived application source",
+  "source_archive_sha256": "81f686ee68fa30a0226a4a0d7354969f2915b8a933e238d74d3f4e0363afd3ee",
+  "source_archive": "source.tar",
+  "command": [
+    "docker",
+    "build",
+    "-f",
+    "rust/Dockerfile.app",
+    "-t",
+    "dispatcharr-rust-candidate:milestone26",
+    "--label",
+    "org.opencontainers.image.source-tree-sha256=f0950e3cf82ade0d0cdbf3fe5f837fbc27db67e78bdaae2a4a01767264cffade",
+    "-"
+  ],
+  "exit_code": 1,
+  "failure": "Docker build failed; inspect build.log",
+  "elapsed_seconds": 20.086537976996624
+}

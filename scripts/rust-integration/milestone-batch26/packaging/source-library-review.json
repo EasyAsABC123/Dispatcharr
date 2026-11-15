@@ -1,0 +1,21 @@
+{
+  "scope": "Exact collector source-validation block only; no dependency imports, application/bootstrap, Cargo, Docker or runtime acceptance.",
+  "collector_sha256": "d1cd71ecc1e46bf107e208760f8b116c5cbb86552dff70b8a543db440ab2ac61",
+  "results": {
+    "qualified": {
+      "all_retained_hashes_verified": 328
+    },
+    "wrong_archive_hash": {
+      "rejected_before_application_write": true,
+      "reason": "Compatibility source archive hash mismatch"
+    },
+    "traversal": {
+      "rejected_before_application_write": true,
+      "reason": "Unexpected compatibility source member"
+    },
+    "missing_members": {
+      "rejected_before_application_write": true,
+      "reason": "Missing compatibility source members"
+    }
+  }
+}

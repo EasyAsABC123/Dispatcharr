@@ -40,3 +40,13 @@ Docker/module-origin/license proof, Source/Native preview/download/staging/outpu
 actual enabled-plugin four-action/child-PG/transaction/lifecycle proof, full
 workflow acceptance and paired performance remain required. No full M0–M9
 milestone or new application performance gain is accepted.
+
+The first Docker build from `936e6557` failed after20.09 seconds: the pinned
+dependency image has no `/app/apps` checkout. The repair supplies a deterministic
+328-file Original compatibility-library archive through the committed Rust build
+context. Every retained input matches the qualified Original archive; the full
+archive inventory is checked before library writes. Original author credit and
+LICENSE remain included. Offline checks reproduce the archive and reject corrupt,
+traversal and incomplete inputs. The original failed build is retained in the
+[packaging evidence](../scripts/rust-integration/milestone-batch26/packaging/initial-build-failure.json).
+The repaired image still requires an actual rebuild and runtime acceptance.

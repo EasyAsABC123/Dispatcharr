@@ -56,11 +56,34 @@ tree(site,retained_site)
 # Preserve actual Source application modules, never a second always-on backend.
 # These assets are loaded only by the explicit lazy owned host bootstrap.
 app=PREFIX/'application'
-for name in['apps','core','dispatcharr']:tree(Path('/app')/name,app/name)
-# Top-level manage/server scripts and templates are not a plugin dependency.
-# Declarative version constants are imported by normal library user-agent helpers.
-copy_file(Path('/app/version.py'),app/'version.py')
-copy_file(Path('/app/LICENSE'),DOCS/'Dispatcharr-LICENSE')
+# Immutable reviewed Original library subset is supplied by the build context.
+# The pinned dependency image deliberately has no /app application checkout.
+import tarfile
+source_input=Path('/tmp/plugin_compat_source')
+source_manifest=json.loads((source_input/'manifest.json').read_text())
+if source_manifest.get('schema')!=1:raise RuntimeError('Unsupported compatibility source manifest')
+source_archive=source_input/'source.tar.gz'
+if sha(source_archive)!=source_manifest['archive_sha256']:raise RuntimeError('Compatibility source archive hash mismatch')
+expected={item['path']:item for item in source_manifest['retained']}
+if len(expected)!=len(source_manifest['retained'])or len(expected)>1211:raise RuntimeError('Invalid compatibility source inventory')
+validated=[];seen=set()
+with tarfile.open(source_archive,mode='r:gz')as archive:
+ for member in archive:
+  name=member.name;parts=Path(name).parts
+  if not member.isfile()or name not in expected or name in seen or name.startswith('/')or '..'in parts:raise RuntimeError('Unexpected compatibility source member')
+  item=expected[name]
+  if member.size!=item['bytes']or member.size>16*1024*1024:raise RuntimeError('Compatibility source size mismatch')
+  data=archive.extractfile(member).read(member.size+1)
+  if len(data)!=member.size or hashlib.sha256(data).hexdigest()!=item['sha256']:raise RuntimeError('Compatibility source byte mismatch')
+  if name not in('LICENSE','version.py')and parts[0]not in('apps','core','dispatcharr'):raise RuntimeError('Compatibility source outside declared libraries')
+  seen.add(name);validated.append((name,data))
+if seen!=set(expected):raise RuntimeError('Missing compatibility source members')
+# Validate the entire closure before writing any application library file.
+for name,data in validated:
+ target=DOCS/'Dispatcharr-LICENSE'if name=='LICENSE'else app/name
+ target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data);target.chmod(0o444)
+copy_file(source_input/'manifest.json',DOCS/'source-manifest.json')
+excluded_source_assets.extend(source_manifest['excluded'])
 licenses={};wheel_owners={}
 for distribution in metadata.distributions(path=[str(site)]):
  name=distribution.metadata['Name'];version=distribution.version
@@ -97,7 +120,7 @@ def owners(path):
    notice=Path('/usr/share/doc')/package/'copyright';dest=DOCS/'debian'/package/'copyright';copy_file(notice,dest);package_cache[package]={'source':str(notice),'retained':'/'+str(dest.relative_to(OUT)),'sha256':sha(notice)}
   result.append({'package':owner,**package_cache[package]})
  return result
-manifest={'excluded_source_assets':excluded_source_assets,'source_application_assets_copied':True,'original_http_admin_management_entrypoints_excluded':True,'actual_execution_audit_required':True,'source_backend_started':False,'source_image':IMAGE,'python':sys.version,'base_prefix':sys.base_prefix,'distributions':licenses,'ELF':[],'files':[],'application_started':False,'external_key_homes_or_runtime_data_copied':False,'distribution_fixture_key_audit_required':True}
+manifest={'source_library_original_archive_sha256':source_manifest['original_archive_sha256'],'source_library_archive_sha256':source_manifest['archive_sha256'],'excluded_source_assets':excluded_source_assets,'source_application_assets_copied':True,'original_http_admin_management_entrypoints_excluded':True,'actual_execution_audit_required':True,'source_backend_started':False,'source_image':IMAGE,'python':sys.version,'base_prefix':sys.base_prefix,'distributions':licenses,'ELF':[],'files':[],'application_started':False,'external_key_homes_or_runtime_data_copied':False,'distribution_fixture_key_audit_required':True}
 loader=None;lib=PREFIX/'elf';lib.mkdir(exist_ok=True)
 # Inspect only real retained ELF, preserving site-package-relative RPATH assets.
 # ldd is bounded and runs only against binaries from the pinned image.

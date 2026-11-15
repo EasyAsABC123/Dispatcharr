@@ -40,6 +40,7 @@ RUN /dispatcharrpy/bin/python /tmp/collect_static.py
 COPY rust/runtime/collect_regex_host.py /tmp/collect_regex_host.py
 RUN /dispatcharrpy/bin/python /tmp/collect_regex_host.py
 COPY --chmod=0555 rust/runtime/regex_bridge/ /media-runtime/opt/dispatcharr-python/bridge/
+COPY rust/runtime/plugin_compat_source/ /tmp/plugin_compat_source/
 COPY rust/runtime/collect_python_host.py /tmp/collect_python_host.py
 RUN /dispatcharrpy/bin/python /tmp/collect_python_host.py
 COPY --chmod=0555 rust/runtime/plugin_bridge/ /media-runtime/opt/dispatcharr-python/plugin-bridge/
