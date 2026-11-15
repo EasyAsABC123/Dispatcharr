@@ -44,3 +44,7 @@ Experimental worker/Beat flags remain off by default. Full Source task/calendar/
 role coverage, SQLite, malformed-range transport compatibility, production
 restore, soak, rollback and paired whole-graph performance remain open. No new
 performance gain or full M0–M9 completion is claimed.
+
+The [SDK evidence](../scripts/rust-integration/milestone-batch12/inventory.json)
+binds every input to runtime `8faa6b9c444c8cdfec6cdfd3d1baa4d585ab2b2f` and preserves the failed
+first peer run plus the exact pinned Source timezone extraction.

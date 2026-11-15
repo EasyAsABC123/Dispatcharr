@@ -1,0 +1,922 @@
+
+running 3 tests
+test tests::owned_admission_survives_observer_drop ... ok
+test tests::diagnostics_bound_utf8_and_critical_text_beyond_retained_prefix ... ok
+test tests::running_command_cancel_and_timeout_reap_owned_process_group ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+
+running 1 test
+test original_native_copied_database_cross_restore ... ignored, Requires explicitly guarded disposable original PG17 container and three copied databases
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 7 tests
+test statistics::tests::abandoned_era_notifies_only_removed_clients_and_preserves_preowner_registration ... ignored, requires owned disposable Redis
+test statistics::tests::cancelled_registration_notifies_only_after_actual_redis_replies ... ignored, requires owned disposable Redis; pauses all commands250ms
+test statistics::tests::channel_stop_notifies_after_atomic_cleanup_without_waiting_for_held_leases ... ignored, requires owned disposable Redis
+test statistics::tests::registration_waits_for_metadata_and_releases_exactly_once ... ignored, requires owned disposable Redis; serial with delayed-command tests
+test statistics_catalog::tests::cancelled_catalog_reads_retain_global_byte_admission_through_actual_reply ... ignored, requires owned disposable Redis; pauses all commands250ms
+test statistics_catalog::tests::global_catalog_reads_foreign_channel_and_removes_only_missing_hash_ghosts ... ignored, requires owned disposable Redis; serial with pause tests
+test statistics_catalog::tests::retained_catalog_scope_survives_abort_and_logical_timeout_until_actual_reply ... ignored, owned Redis physical reply retention; serial CLIENT PAUSE
+
+test result: ok. 0 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 10 tests
+test cancelled_explicit_release_keeps_budget_until_actual_cleanup_reply ... ignored, requires isolated Redis
+test cancelled_register_keeps_local_budget_through_actual_reply_and_cleanup ... ignored, requires isolated Redis
+test concurrent_cross_channel_drop_and_local_stop_do_not_deadlock_registry ... ignored, requires isolated Redis
+test final_drop_on_plain_thread_schedules_supervised_cleanup_on_creation_runtime ... ignored, requires isolated Redis
+test held_lease_clone_retains_admission_after_acknowledged_release ... ignored, requires isolated Redis
+test local_channel_stop_removes_accounting_without_polling_held_lease_and_preserves_remote ... ignored, requires isolated Redis
+test local_stop_deadline_does_not_cancel_owned_cleanup_or_free_held_body_budget ... ignored, requires isolated Redis
+test local_stop_waits_for_pending_register_and_prevents_late_metadata_resurrection ... ignored, requires isolated Redis
+test pending_rejected_registration_does_not_deadlock_local_stop_supervisor ... ignored, requires isolated Redis
+test register_deadline_keeps_budget_until_undelivered_lease_is_released ... ignored, requires isolated Redis
+
+test result: ok. 0 passed; 0 failed; 10 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 6 tests
+test abandoned_cleanup_finishes_after_caller_deadline_and_notifies_held_local_lease ... ignored, requires isolated Redis
+test abandoned_metadata_cleanup_matches_old_fence_and_preflights_types ... ignored, requires isolated Redis
+test binding_only_local_empty_same_era_and_abandoned_cleanup_preserves_new_and_unbound_rows ... ignored, requires isolated Redis
+test corrupt_target_capability_does_not_partially_remove_other_old_clients ... ignored, requires isolated Redis
+test malformed_owner_is_rejected_before_any_user_preemption ... ignored, requires isolated Redis
+test queued_register_before_bind_reads_current_owner_without_missing_pending_client ... ignored, requires isolated Redis
+
+test result: ok. 0 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 11 tests
+test atomic_limit_across_replicas_admits_exactly_one ... ignored, requires disposable Redis; execute run-redis.py --clients
+test channel_stop_cancels_all_formats_caps_and_admission_but_respects_owner_fence ... ignored, requires disposable Redis; execute run-redis.py --clients
+test existing_python_live_vod_and_timeshift_count_against_limit ... ignored, requires disposable Redis; execute run-redis.py --clients
+test full_byte_owner_lifetime_does_not_release_metadata_early ... ignored, requires disposable Redis; execute run-redis.py --clients
+test hls_capability_remint_touch_and_release_are_atomic ... ignored, requires disposable Redis; execute run-redis.py --clients
+test hls_cold_reconnect_and_published_descriptor_prevent_abandonment ... ignored, requires disposable Redis; execute run-redis.py --clients
+test hls_readonly_inspection_validates_binding_without_activity_or_ttl_refresh ... ignored, requires disposable Redis
+test legacy_metadata_and_batched_stats_and_admin_stop_match_keys ... ignored, requires disposable Redis; execute run-redis.py --clients
+test missing_metadata_and_stalled_clients_cancel_and_shutdown_removes_owned_data ... ignored, requires disposable Redis; execute run-redis.py --clients
+test output_and_channel_metadata_are_fenced_against_stale_publish_and_release ... ignored, requires disposable Redis; execute run-redis.py --clients
+test unique_channel_reconnect_then_oldest_channel_preemption_is_atomic ... ignored, requires disposable Redis; execute run-redis.py --clients
+
+test result: ok. 0 passed; 0 failed; 11 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test persistent_client_owner_protocol ... ignored, owned restart protocol fixture only
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test literal_same_channel_hop_happens_before_another_live_connection_causes_cap_refusal ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test mixed_live_timeshift_one_winner_and_bidirectional_preemption_use_actual_namespaces ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test vod_preemption_retains_literal_stop_value_and_corrupt_stop_fails_before_hop_mutations ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+
+test result: ok. 0 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test original_source_hop_limit_order_and_existing_connection_effects_match ... ignored, requires disposable REDIS_TEST_URL and TIMESHIFT_ADMISSION_ORACLE original-source capture
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test mixed_live_vod_race_admits_one_and_preemption_stops_correct_namespace ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test vod_never_gets_live_same_channel_cap_exemption_and_corrupt_stop_is_atomic ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test source_header_tests::source_latin1_preserves_mixed_forwarding_and_utf8_bytes ... ok
+test profile_command::tests::actual_original_stream_profile18_argument_observations ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test task_locks::detailed_cause_tests::detailed_io_cause_keeps_original_errno_without_inventing_python_exception ... ok
+test task_locks::detailed_cause_tests::detailed_server_error_does_not_retain_oversized_reply_text ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test cancelled_and_timed_out_all_scopes_keep_budget_until_reply_and_fenced_cleanup ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test retained_vod_acquire_context_survives_observer_and_actual_cleanup_reply ... ignored, requires disposable actual Redis retained acquisition reply
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 13 tests
+test cancelled_clear_provider_retains_command_budget ... ignored, actual owned Redis canceled observer physical command budget
+test cancelled_heartbeat_retains_command_budget ... ignored, actual owned Redis canceled observer physical command budget
+test cancelled_release_retains_command_budget ... ignored, actual owned Redis canceled observer physical command budget
+test cancelled_reserve_provider_retains_command_budget ... ignored, actual owned Redis canceled observer physical command budget
+test held_clear_provider_retains_command_budget ... ignored, actual owned Redis held/lost reply physical command budget
+test held_drop_release_retains_command_budget ... ignored, actual owned Redis held/lost reply physical command budget
+test held_explicit_release_retains_command_budget ... ignored, actual owned Redis held/lost reply physical command budget
+test held_heartbeat_retains_command_budget ... ignored, actual owned Redis held/lost reply physical command budget
+test held_reserve_provider_retains_command_budget ... ignored, actual owned Redis held/lost reply physical command budget
+test lost_clear_provider_is_not_replayed ... ignored, actual owned Redis held/lost reply physical command budget
+test lost_explicit_release_is_not_replayed ... ignored, actual owned Redis held/lost reply physical command budget
+test lost_heartbeat_is_not_replayed ... ignored, actual owned Redis held/lost reply physical command budget
+test lost_reserve_provider_is_not_replayed ... ignored, actual owned Redis held/lost reply physical command budget
+
+test result: ok. 0 passed; 0 failed; 13 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 10 tests
+test corrupt_credential_counter_cannot_partially_decrement_profile_on_release ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test credential_capacity_is_atomic_with_profile_and_release_mapping ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test expired_owner_is_reaped_and_stale_heartbeat_or_release_cannot_touch_successor ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test heartbeat_extends_owner_and_drop_releases_once ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test independent_replicas_share_provider_capacity_and_python_counters ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test provider_handoff_keeps_fence_and_failed_backup_claims_no_slot ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test reaper_recovers_expired_profile_and_credential_without_new_channel ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test same_channel_has_exactly_one_fenced_owner ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test timeshift_owner_is_scoped_but_provider_capacity_is_shared_with_live ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+test vod_owner_is_scoped_but_provider_capacity_is_shared_with_live ... ignored, requires REDIS_TEST_URL pointing to disposable real Redis
+
+test result: ok. 0 passed; 0 failed; 10 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test uncertain_set_is_not_replayed_and_its_owned_cleanup_uses_recovered_connection ... ignored, requires actual Redis and dropped SET response proxy
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 7 tests
+test ordinary_two_second_observer_remains_unchanged ... ignored, actual disposable Redis physical reply/no replay
+test retained_actual_redis_error_not_success ... ignored, actual disposable Redis physical reply/no replay
+test retained_busy_actual_typed_reply_after_two_seconds ... ignored, actual disposable Redis physical reply/no replay
+test retained_caller_loss_keeps_physical_admission ... ignored, actual disposable Redis physical reply/no replay
+test retained_lost_reply_never_infers_success_or_replays ... ignored, actual disposable Redis physical reply/no replay
+test retained_outer_observer_expires_but_transition_still_settles ... ignored, actual disposable Redis physical reply/no replay
+test retained_success_actual_reply_after_two_seconds ... ignored, actual disposable Redis physical reply/no replay
+
+test result: ok. 0 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test global_series_key_no_renewal_and_foreign_owner_fencing ... ignored, Owned disposable Source fixture Redis global SeriesRules key only
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 6 tests
+test cancelled_acquisition_and_release_keep_caller_and_single_budget_through_actual_replies ... ignored, requires owned actual Redis and delayed reply proxy
+test cancelled_m3u_residual_confirmation_keeps_caller_and_lease_until_actual_reply ... ignored, requires owned actual Redis and held real confirmation reply
+test detailed_release_keeps_server_cause_and_never_deletes_replacement ... ignored, requires actual Redis owner replacement and Lua error
+test detailed_set_error_settles_cleanup_without_single_command_deadlock_and_preserves_legacy_mapping ... ignored, requires actual Redis ACL error and delayed cleanup response
+test failed_m3u_groups_retains_key_without_drop_delete_and_preserves_foreign_owner ... ignored, requires disposable actual Redis; short-window residual M3U lease contract
+test non_m3u_groups_cannot_gain_no_delete_disposition ... ignored, requires disposable actual Redis for wrong-kind capability refusal
+
+test result: ok. 0 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test original_mutual_exclusion_renewal_fencing_and_cancelled_commands ... ignored, requires disposable TASK_LOCK_DISPOSABLE_FIXTURE plus original helper peer
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test tests::absent_moof_and_unbounded_fragment_fail_closed_and_clear_memory ... ok
+test tests::invalid_size_resynchronization_and_extended_size_follow_source ... ok
+test tests::partial_reads_preserve_init_and_complete_fragment_boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test positioning_tests::source_last_consumed_cursor_includes_the_selected_fragment ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test actual_remux_shared_upstream_and_late_viewer_decode_and_cleanup ... ignored, requires disposable REDIS_TEST_URL and FMP4_TEST_FIXTURE H264/AAC TS
+test explicit_shutdown_reaps_remux_even_while_a_response_frame_is_held ... ignored, requires disposable REDIS_TEST_URL and FMP4_TEST_FIXTURE H264/AAC TS
+test hundred_viewers_retry_bounded_read_admission_without_dropping_streams ... ignored, requires disposable REDIS_TEST_URL and FMP4_TEST_FIXTURE
+
+test result: ok. 0 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test gateway::tests::amplified_lineup_is_capped_and_allocation_capacity_is_leased ... ignored, requires disposable original PostgreSQL schema
+test gateway::tests::cancelled_caller_holds_admission_until_actual_query_completes ... ignored, requires disposable original PostgreSQL schema
+test gateway::tests::held_final_frame_retains_budget_after_shutdown ... ignored, requires disposable original PostgreSQL schema
+test read::tests::default_profile_python_int ... ok
+
+test result: ok. 1 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 13 tests
+test tests::cached_parameter_sets_are_injected_with_preceding_continuity_counter ... ok
+test tests::audio_only_mode_cuts_on_audio_pts_immediately ... ok
+test tests::codec_aware_keyframe_detection_does_not_confuse_repeated_parameters_or_mpeg_slices ... ok
+test tests::forced_mid_gop_segment_closes_at_next_keyframe_then_recovers_target ... ok
+test tests::discontinuity_cuts_measured_tail_and_tags_only_next_playable_segment ... ok
+test tests::open_gop_presentation_max_outlives_next_keyframe_boundary ... ok
+test tests::hevc_parameter_injection_contains_vps_sps_pps ... ok
+test tests::pat_pmt_pts_and_truncated_pmt_match_original_expectations ... ok
+test tests::resource_limits_reject_invalid_configuration_and_bound_untimed_media ... ok
+test tests::playlist_keeps_frozen_target_discontinuity_sequence_and_join_offset ... ok
+test tests::startup_ladder_uses_one_second_floor_then_returns_to_target ... ok
+test tests::wrap_is_not_encoder_reset_but_large_backward_pts_is ... ok
+test tests::packet_chunking_and_garbage_resync_do_not_change_segment_bytes ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 10 tests
+test capability_auth_and_head_are_checked_before_token_or_origin_work ... ignored, requires isolated real Redis: REDIS_TEST_URL
+test cold_comments_touch_stop_and_auth_header_fail_closed ... ignored, requires isolated real Redis: REDIS_TEST_URL
+test cold_disconnect_reconnect_grace_request_bound_and_idle_cleanup ... ignored, requires isolated real Redis: REDIS_TEST_URL
+test idle_sessions_and_shutdown_remove_shared_descriptor_without_reviving_tokens ... ignored, requires isolated real Redis: REDIS_TEST_URL
+test response_frame_pins_channel_admission_after_session_stop ... ignored, requires isolated real Redis: REDIS_TEST_URL
+test shared_hls_hundred_viewers_backpressure_without_capacity_errors_or_extra_origin ... ignored, requires isolated real Redis
+test shared_manager_token_scope_and_exact_owner_delete ... ignored, requires isolated real Redis: REDIS_TEST_URL
+test shared_owner_restart_rehydrates_index_window_and_marks_new_media_discontinuous ... ignored, requires isolated real Redis
+test shared_redis_capabilities_and_followers_work_across_two_gateways ... ignored, requires isolated real Redis
+test shared_slow_frame_clones_hold_read_budget_while_next_request_waits ... ignored, requires isolated real Redis
+
+test result: ok. 0 passed; 0 failed; 10 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test shutdown_deadline_covers_all_sessions_and_managers_when_redis_stalls ... ignored, requires isolated real Redis
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 10 tests
+test identity::tests::original_json_spelling_handles_controls_non_ascii_and_supplementary_planes ... ok
+test identity::tests::sql_null_hash_parts_are_not_empty_strings ... ok
+test projection::tests::numeric_conversion_preserves_python_decimal_digits_separators_and_zero_truthiness ... ok
+test identity::tests::xc_identity_survives_credential_changes_but_never_collides_across_accounts ... ok
+test xmltv_extract::tests::cancellation_during_partial_read_discards_uncompleted_block ... ok
+test xmltv_extract::tests::cancelled_before_start_preserves_both_owned_files ... ok
+test validation::tests::validation_keeps_source_permissive_prefixes_and_fixed_head_window ... ok
+test xmltv_extract::tests::corrupt_extensionless_members_cannot_restart_expanded_work_budget ... ok
+test source_numeric_tests::original_xc_float_grammar_and_finite_bits ... ok
+test xmltv_extract::tests::expanded_limit_keeps_compressed_source_and_bounds_output ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+running 3 tests
+test validates_before_atomic_replacement_and_keeps_binary_line_count ... ok
+test invalid_empty_cancelled_and_oversize_downloads_preserve_previous_cache ... ok
+test preserves_unknown_staging_owner_and_rejects_late_valid_header ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 6 tests
+test duplicate_group_names_keep_first_position_and_last_value_like_python_json ... ok
+test rejects_late_corruption_and_invalid_shapes_before_any_consumer_side_effect ... ok
+test cancelled_validation_stops_before_open_or_after_one_bounded_entry ... ok
+test atomic_replacement_does_not_change_validated_file_descriptor_or_retries ... ok
+test reads_prepared_cache_in_original_entry_and_first_seen_group_order ... ok
+test limits_fields_entry_counts_group_counts_and_total_file_size ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 2 tests
+test capacity_failure_discards_pending_and_never_emits_the_rejected_entry ... ok
+test streams_one_pending_entry_and_preserves_explicit_group_and_url_quirks ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test late_trailer_failure_never_replaces_previous_parsed_cache ... ok
+test prepares_source_json_and_preserves_first_seen_group_order ... ok
+test bounds_entry_group_and_serialized_disk_capacity_without_partial_promotion ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test overlong_line_errors_before_reading_the_rest_and_iterator_does_not_resume ... ok
+test small_input_buffers_preserve_unicode_invalid_utf8_and_universal_newlines ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test xz_dictionary_memory_limit_is_not_swallowed_as_trailing_garbage ... ok
+test zip_metadata_limits_apply_before_opening_members ... ok
+test gzip_expansion_and_plain_input_are_limited_at_the_decoded_boundary ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+
+running 3 tests
+test existing_doctype_is_preserved_and_caller_offset_is_ignored ... ok
+test suffix_is_literal_and_io_failure_remains_false ... ok
+test footer_and_prefix_use_original_open_file_after_atomic_path_replacement ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test source_first_empty_rating_suppresses_later_rating ... ok
+test original_air_date_fills_only_absent_start_and_preserves_channel ... ok
+test source_integer_range_and_episode_increment_are_not_limited_to_i64 ... ok
+test nesting_and_total_bytes_are_rejected_before_projection ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test original_last_title_wins_and_missing_description_remains_null ... ok
+test title_limit_counts_unicode_characters ... ok
+test description_fills_only_missing_episode_and_keeps_existing_season ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 31 tests
+test cache_policy::retained_group_tests::original_group_names_and_full_defaults_are_separate ... ok
+test channel_core::tests::source_progress_growth_and_empty_identifier_ticks ... ok
+test channel_core::tests::blank_first_name_is_not_replaced_and_last_icon_wins ... ok
+test channel_core::tests::retained_allocation_is_charged_even_when_content_is_short ... ok
+test channel_core::tests::character_limits_and_literal_empty_icon_match_source ... ok
+test cache_policy::retained_group_tests::admission_cannot_report_complete_before_caller_guard_drops ... ok
+test current_lookup::draft_tests::bounded_writer_rejects_before_growing_past_limit ... ok
+test current_lookup::draft_tests::response_clones_retain_capacity_but_not_parser_working_credits ... ok
+test orphan_cleanup::native_orphan_cleanup_peer ... ignored, requires copied Original orphan79 PostgreSQL fixture
+test current_file::tests::cancellation_precedes_physical_seek_and_read ... ok
+test current_lookup::source_path_tests::context_keeps_literal_source_paths_and_default_cache_layout ... ok
+test auto_logos::tests::source_policy_and_retained_allocations ... ok
+test orphan_cleanup::tests::missing_is_false_without_commits ... ok
+test programme_index::tests::json_guard_accounts_for_controls_utf8_and_large_offsets ... ok
+test programme_index::tests::literal_attribute_and_tag_boundaries ... ok
+test reporter::tests::guarded_sql_diagnostic_bounds_reject_without_truncation ... ok
+test reporter::tests::guarded_sql_diagnostics_are_not_a_sqlstate_allowlist ... ok
+test current_lookup::source_path_tests::symlink_parent_is_resolved_by_filesystem_not_lexical_normalization ... ok
+test reporter::tests::source_retention_truthiness_and_integer_spelling ... ok
+test reporter::tests::source_progress_message_and_timestamp_boundaries ... ok
+test tests::capacity_charges_retained_string_allocation_and_rejects_invalid_queue_limits ... ok
+test orphan_cleanup::tests::config_bounds_do_not_overflow ... ok
+test tests::incomplete_file_cannot_send_a_staging_batch ... ok
+test current_file::tests::draft_factory_first_hit_does_not_reopen ... ok
+test current_file::tests::opened_descriptor_survives_atomic_replacement ... ok
+test tests::mapped_projection_errors_and_unmapped_skips_are_separate ... ok
+test current_file::tests::draft_factory_reopens_after_offset_miss ... ok
+test tests::blocked_parser_keeps_physical_guard_until_queue_is_released ... ok
+test current_file::tests::retained_incomplete_element_and_aggregate_reads_are_bounded ... ok
+test tests::changed_open_file_never_reports_success_after_staging_started ... ok
+test tests::progress_boundary_follows_all_five_thousand_queued_rows ... ok
+
+test result: ok. 30 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.26s
+
+
+running 2 tests
+test original_auto_logo_properties_bulk_mutations_and_swallowed_sql ... ignored, requires isolated original automatic EPG-logo fixture and PostgreSQL
+test physical_sql_admission_and_oversized_driver_row ... ignored, requires isolated original automatic EPG-logo fixture and physical PostgreSQL
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test original_channel_fields_progress_duplicates_and_stale_cleanup ... ignored, requires disposable original channel helper fixture and PostgreSQL/Redis
+test physical_sql_abort_retains_admission_then_joins_blocked_parser ... ignored, requires disposable original channel fixture and PostgreSQL
+test snapshot_capacity_failure_releases_guard_without_creating_rows ... ignored, requires disposable original channel fixture and PostgreSQL
+
+test result: ok. 0 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 5 tests
+test bridge_aborted_waiter_retains_caller_until_actual_index_reply ... ignored, requires physically blocked actual PostgreSQL index query through real bridge
+test real_store_real_lookup_pool_one_source_outcomes_and_retained_bytes ... ignored, requires actual disposable Source current lookup corpus and PostgreSQL
+test standalone::blocked_sql_cancellation_retains_caller_and_physical_admission ... ignored, requires disposable original current lookup fixture and PostgreSQL
+test standalone::final_byte_clones_retain_allocation_and_configured_response_cap_is_explicit ... ignored, requires disposable original current lookup fixture and PostgreSQL
+test standalone::original_lookup_guards_fresh_clock_and_index_with_explicit_shape_boundaries ... ignored, requires disposable original current lookup fixture and PostgreSQL
+
+test result: ok. 0 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test dispatch_failure_is_distinct_http500_and_never_parsing_in_real_store_bridge ... ignored, requires Original dependency-failure HTTP golden and copied PostgreSQL
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test blocked_sql_cancellation_retains_caller_and_physical_admission ... ignored, requires disposable original current lookup fixture and PostgreSQL
+test final_byte_clones_retain_allocation_and_configured_response_cap_is_explicit ... ignored, requires disposable original current lookup fixture and PostgreSQL
+test original_lookup_guards_fresh_clock_and_index_with_explicit_shape_boundaries ... ignored, requires disposable original current lookup fixture and PostgreSQL
+
+test result: ok. 0 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test literal_paths_precedence_cache_and_fresh_index_keep_owned_resources ... ignored, requires owned original path corpus and copied PostgreSQL
+test relative_two_open_replacement_and_deletion_keep_original_file_semantics ... ignored, requires owned original two-open relative-path corpus
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test per_execution_refresh_trace_and_cancelled_physical_reply_are_retained ... ignored, requires copied owned Original refresh-import fixture and real Redis
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test native_file_job_exhaustion_resources ... ignored, requires copied Source exhaustion fixture PostgreSQL/Redis and owned source IDs
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test cancellation_holds_physical_sql_and_delayed_file_release ... ignored, requires isolated original local-file job fixture and physical PostgreSQL/Redis
+test original_local_refresh_progress_lock_and_dispatch_order ... ignored, requires isolated original local-file job fixture and PostgreSQL/Redis
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test default_and_concurrent_overrides_do_not_share_task_trace_or_release_before_redis_reply ... ignored, requires disposable copied Source path database and isolated real Redis
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test detailed_reports_preserve_commit_on_release_failure_and_ambiguity_without_early_caller_drop ... ignored, requires copied Original corpus, actual PostgreSQL and Redis ACL/reply gates
+test detailed_service_preserves_tolerant_success_directory_errno_and_sql_cause ... ignored, requires copied Original136 effects, PostgreSQL trigger and actual Redis
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test tolerant_raw_index_cases_commit_exact_original_json_before_normal_success ... ignored, requires copied Original136 worker corpus and actual PostgreSQL/Redis
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test original_index_task_stored_shape_and_file_lease_deferral ... ignored, requires disposable original index task fixture and real PostgreSQL/Redis
+test physical_index_memory_sql_cancel_replacement_and_json_guards ... ignored, requires disposable original fixture and physical PostgreSQL/Redis
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test original_cached_history_policy_and_version_fence ... ignored, requires actual original disposable cached history policy oracle
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test original_byte_index_maps_and_bounded_file_cases ... ignored, requires captured original byte-index corpus
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test aborted_reporter_waiter_keeps_physical_sql_guard_and_admission ... ignored, requires disposable original reporter fixture and PostgreSQL/Redis
+test committed_generation_and_status_precede_actual_audit_reply_then_completion ... ignored, requires disposable original reporter fixture and PostgreSQL/Redis
+test original_file_import_publication_status_and_audit_order ... ignored, requires disposable original reporter fixture and PostgreSQL/Redis
+test system_default_group_matches_original_empty_database_and_django_cache ... ignored, requires disposable original reporter fixture and PostgreSQL/Redis
+
+test result: ok. 0 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test native_series_dvr_policy_peer ... ignored, Owned copied database and isolated Source DVR cache only
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test original_file_import_rows_skips_errors_and_retention ... ignored, requires actual original disposable file-to-guide oracle
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test unknown_staging_owner_fails_promptly_even_with_stalled_body ... ok
+test invalid_empty_oversize_and_http_error_keep_prior_cache_and_clean_staging ... ok
+test accepts_all_source_success_statuses_and_reuses_no_cookie_between_downloads ... ok
+test abort_and_shutdown_hold_admission_until_actual_worker_cleanup ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test cancelled_reaper_holds_operation_until_actual_redis_reply ... ignored, requires isolated real Redis; --test-threads=1; FLUSHDB
+test catalog_admission_is_atomic_bounded_and_normal_cleanup_releases_it ... ignored, requires isolated real Redis; --test-threads=1; FLUSHDB
+test restart_after_all_workers_and_fences_expire_reclaims_only_known_rust_index ... ignored, requires isolated real Redis; --test-threads=1; FLUSHDB
+test successors_and_changed_legacy_indexes_are_preserved ... ignored, requires isolated real Redis; --test-threads=1; FLUSHDB
+
+test result: ok. 0 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 7 tests
+test abandoned_cleanup_requires_absent_owner_and_exact_old_buffer_fence ... ignored, requires real Redis
+test age_cursor_matches_actual_upstream_lua_including_equal_scores_and_oldest_fallback ... ignored, requires real Redis and original source checkout
+test bounded_retention_evicts_oldest_and_ttl_does_not_drop_coordinator_owner ... ignored, requires real Redis
+test cancelled_queued_binary_read_holds_budget_until_actual_response ... ignored, requires real Redis
+test exact_legacy_keys_shared_bytes_timestamps_discontinuities_and_age_selection ... ignored, requires real Redis
+test owner_change_hides_stale_media_before_first_put_and_fences_cleanup ... ignored, requires real Redis
+test status_samples_real_shared_chunks_and_reports_expired_latest_key ... ignored, requires real Redis
+
+test result: ok. 0 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test retained_diagnostics_are_exact_readonly_and_report_stale_owner_fences ... ignored, requires isolated real Redis: REDIS_TEST_URL
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test original_same_producer_after_ttl_has_no_new_discontinuity ... ignored, requires owned disposable real Redis
+test source_expiry_receipt_never_adopts_foreign_missing_or_corrupt_era ... ignored, requires owned disposable real Redis
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 320 tests
+test active_resources::actual_channels_late_reply_retains_committed_task ... ignored
+test active_resources::actual_collector_error_rolls_back_children_before_owner_release ... ignored
+test active_resources::actual_sql_preflight_cancellation_retains_owner ... ignored
+test active_resources::actual_upsert_reply_cancel_retains_domain_and_partial_commit ... ignored
+test active_resources::bounded_rows_refuse_before_ack_and_default_authority_isolated ... ignored
+test active_resources::fetched_profile_bytes_refuse_before_ack_without_mutation ... ignored
+test active_resources::four_domain_admissions_retain_waiting_sql_owners_after_abort ... ignored
+test active_resources::profile_cap_and_legacy_constructor_refuse_before_ack ... ignored
+test active_resources::snapshot_sql_guard_cancellation_retains_owner ... ignored
+test backup_application::physical_job_tests::real_backup_publish_fd_loss_retains_original_caller_until_reply ... ignored, requires Root-reviewed owned physical case5 controller; no Source or Main
+test backup_application::physical_job_tests::real_backup_status_logical_deadline_retains_original_caller_until_reply ... ignored, requires Root-reviewed owned physical case6 controller; no Source or Main
+test backup_application::source16_peer::source16_real_credentials_router_and_worker_capture ... ignored, reviewed owned Native Source16 PG/Redis/archive fixture only; no Source/Main
+test cleanup_expiry::tests::strict_expiry_boundary_and_bounded_input ... ok
+test configured_recording_peer::actual_configured_recording_parent_peer ... ignored
+test clocked_recording_envelope::tests::every_refusal_leaves_caller_raw_bytes_unchanged ... ok
+test backup_application::tests::actual_source16_absent_and_completed_results_project_without_new_ids_or_clocks ... ok
+test backup_application::tests::unobserved_nonobject_success_and_tagged_values_keep_explicit_gaps ... ok
+test configured_recordings::tests::microseconds_use_python_six_digit_serialization ... ok
+test configured_recordings::tests::missing_identity_refuses_instead_of_suppressing_unrelated_airings ... ok
+test database_schedule::peer::native_database_scheduler_peer ... ignored, Requires guarded disposable copied PostgreSQL fixture
+test database_schedule::physical::calendar_delayed_replies_retain_each_caller_and_final_dirty_sync ... ignored, Requires guarded copied PG plus isolated Redis broker8/result9
+test database_schedule::physical::cancelled_setup_retains_two_admissions_and_rollback_until_actual_sql_settles ... ignored, Requires guarded copied PostgreSQL fixture
+test configured_recordings::tests::recurring_disabled_is_noop_and_repeat_creates_no_second_intent ... ok
+test database_schedule::physical::driver_shutdown_deadline_and_cancelled_wait_retain_actual_sql_tick ... ignored, Requires guarded copied PostgreSQL fixture
+test database_schedule::physical::multi_entry_delayed_replies_retain_each_caller_and_final_dirty_sync ... ignored, Requires guarded copied PG plus isolated Redis broker8/result9
+test database_schedule::physical::oversized_fields_aggregate_and_count_return_only_bounded_wire_sentinel ... ignored, Requires guarded copied PostgreSQL fixture
+test database_schedule::physical::tick_deadlines_and_aborted_callers_retain_job_admission_until_real_publish_and_final_sync ... ignored, Requires guarded copied PG plus isolated Redis broker8/result9
+test configured_recordings::tests::refresh_changes_programme_id_and_times_but_episode_still_deduplicates ... ok
+test configured_recordings::tests::same_episode_keeps_earliest_and_preserves_other_episode_order ... ok
+test clocked_recording_envelope::tests::actual_expired_source_wire_remains_exact_data_and_never_due_authority ... ok
+test configured_recording_service::caught_insert_tests::captured_source_error_is_normal_ordered_result_not_traceback ... ok
+test default_peer::native_default_family_peer ... ignored
+test default_resources::actual_peek_claim_reply_cancellation_keeps_shared_permits ... ignored
+test default_resources::actual_result_reply_cancel_and_same_id_reexec_guard ... ignored
+test default_resources::actual_sql_reply_caller_retention_and_poller_fault_visibility ... ignored
+test default_resources::production_family_authorities_cannot_publish_or_peek_defaults ... ignored
+test default_resources::shared_candidate_budget_origin_and_claim_race ... ignored
+test decode::tests::actual_missing_file_descriptor_is_data_only_and_not_generic_oserror ... ok
+test decode::tests::corrupt_oversized_wrong_identity_or_unobserved_types_never_become_success ... ok
+test configured_recording_service::normal_defaults_controls::normal_no_rules_uses_source_filter_before_offsets_sql_or_events ... ok
+test expiry_resources::expiry_after_actual_held_peek_skips_body_and_retains_owner ... ignored
+test expiry_resources::normal_unexpired_body_result_complete_while_early_ack_reply_is_held ... ignored
+test expiry_resources::one_credit_unexpired_scope_is_refused_before_pop ... ignored
+test clocked_recording_envelope::tests::date_shape_calendar_and_order_are_strict_without_a_now_gate ... ok
+test clocked_recording_envelope::tests::capacity_depth_duplicates_and_decoded_alias_keys_refuse ... ok
+test expiry_resources::receipt_pool_cap_origin_and_replacement_fences ... ignored
+test expiry_resources::revoked_committed_reply_precedes_ack_and_preserves_foreign_tuple ... ignored
+test default_task_terminal::tests::scanner_failure_is_own_bounded_valueerror_with_honest_diagnostic ... ok
+test expiry_resources::revoked_result_logical_timeout_retains_receipt_and_warm_restores ... ignored
+test inactive_resources::actual_channels_late_reply_retains_committed_task ... ignored
+test inactive_resources::actual_collector_error_rolls_back_children_before_owner_release ... ignored
+test inactive_resources::actual_sql_preflight_cancellation_retains_owner ... ignored
+test inactive_resources::bounded_rows_refuse_before_ack_and_default_authority_isolated ... ignored
+test index_classifier::tests::controls_release_uncertainty_and_inconsistent_stages_never_fabricate_failure ... ok
+test index_classifier::tests::native_classified_service_peer ... ignored, Guarded copiedDB real IndexService classified worker peer; stdin JSON, no app hook.
+test index_classifier::tests::native_permission_report_peer ... ignored, Owned copiedDB same-ACL detailed report audit only; no permission classifier/result writer.
+test index_classifier::tests::normal_outcomes_require_consistent_commit_and_actual_release ... ok
+test index_classifier::tests::known_directory_has_typed_args_and_truthful_native_diagnostic ... ok
+test index_failure::tests::failure_writer_delayed_reply_cancel_and_timeout_retain_physical_owner ... ignored, CopiedDB/internalRedis actual delayed failure-result reply and physical caller ownership.
+test index_failure::tests::failure_writer_wrong_type_does_not_replace_foreign_value ... ignored, CopiedDB/internalRedis wrong-type failure backend preservation.
+test index_failure::tests::native_failure_payload_peer ... ignored, Guarded copiedDB Source result-reader interoperability peer; no worker or classifier.
+test index_driver::tests::public_configuration_rejects_extreme_counts_without_overflow ... ok
+test clocked_recording_envelope::tests::canonical_ids_versions_and_relations_cannot_be_repaired ... ok
+test index_classifier::tests::only_observed_set_or_key_server_denials_classify_after_settled_cleanup ... ok
+test expiry_resources::reply_barrier_counts_complete_frames_and_rejects_oversized_frames ... ok
+test index_terminal::tests::diagnostic_limit_counts_prefix_stage_and_utf8_bytes ... ok
+test index_terminal::tests::unproven_shapes_and_unbounded_diagnostics_do_not_authorize_failure_metadata ... ok
+test logo_scanner::spool::scratch::process_tests::recovery_child ... ignored
+test index_terminal::tests::raised_metadata_preserves_typed_arguments_and_context_without_python_frames ... ok
+test default_expiry_tests::actual_source_warm_restored_cleanup_flags_and_identity ... ok
+test default_expiry_tests::captured_backend_seed_null_children_does_not_widen_result_domain ... ok
+test default_protocol::actual_captured_two_family_direct_envelopes_and_typed_results ... ok
+test logo_scanner::spool::scratch::tests::bounded_slots_reject_corruption_and_generation_conflicts ... ok
+test logo_scanner_peer::native_logo_scanner_peer ... ignored
+test logo_scanner_resources::actual_cache_reply_timeout_caller_abort_waits_before_operational_result ... ignored
+test logo_scanner_resources::actual_channels_reply_held_after_commits_retains_caller_until_delivery_settles ... ignored
+test logo_scanner_resources::actual_sql_lock_caller_abort_retains_admission_until_reply ... ignored
+test logo_scanner_resources::lost_cache_reply_remains_operational_without_guessed_logo_commit ... ignored
+test configured_recordings::source_normal_cases::captured_source_positive_repeat_next_episode_and_recurring_decisions ... ok
+test logo_scanner_tests::aliased_and_overlapping_roots_are_rejected_without_filesystem_access ... ok
+test decode::tests::actual_source_raw_metadata_shapes_decode_with_declared_normalization ... ok
+test logo_scanner_tests::bounded_formatter_reuses_existing_decimal_rules_and_rejects_outside_domain ... ok
+test eta::tests::mismatched_owner_or_partial_redelivery_is_not_accepted ... ok
+test default_protocol::logo_protocol_tests::logo_noarg_identity_and_unqualified_headers_bodies_are_rejected ... ok
+test index_failure::tests::unsupported_classes_parent_shapes_ids_and_arguments_fail_closed ... ok
+test default_expiry_tests::expiry_authority_and_typed_metadata_rejections ... ok
+test decode::tests::observed_exception_names_do_not_authorize_foreign_modules_or_argument_shapes ... ok
+test clocked_recording_envelope::tests::ids_bool_string_float_bounds_and_wrong_argument_count_refuse ... ok
+test index_failure::tests::source136_observed_failure_metadata_semantically_roundtrips_without_imports ... ok
+test clocked_recording_envelope::tests::unknown_task_queue_options_fields_and_named_identity_refuse ... ok
+test logo_spool_peer::native_logo_spool_peer ... ignored
+test logo_spool_resources::a_actual_sql_lock_keeps_spool_caller_and_admission_until_close ... ignored
+test logo_spool_resources::b_actual_cache_reply_keeps_spool_caller_and_admission_until_close ... ignored
+test logo_spool_resources::c_actual_channels_reply_after_commits_keeps_spool_until_delivery_settles ... ignored
+test logo_spool_resources::d_lost_cache_reply_is_operational_with_spool_closed_no_guessed_effects ... ignored
+test index_protocol::tests::changed_task_options_or_noninteger_ids_do_not_widen_supported_family ... ok
+test logo_task_peer::native_logo_task_peer ... ignored
+test logo_task_resources::a_failure_result_reply_abort_retains_worker_and_caller_until_physical_done ... ignored
+test logo_task_resources::b_lost_result_reply_is_operational_even_if_metadata_committed ... ignored
+test logo_task_resources::c_backend_denial_never_fabricates_terminal_after_committed_logo ... ignored
+test logo_task_resources::d_publish_denial_partial_metadata_is_operational_without_parity_claim ... ignored
+test logo_task_resources::z_foreign_expired_cleanup_is_preserved_before_expiry_side_effects ... ignored
+test normal_beat::query_tests::source_predicates_precede_budget_in_actual_production_query ... ignored, Actual owned loopback PostgreSQL query; no fixture is started by this test. Root must grant its shared fixture/Cargo reservation.
+test normal_beat::tests::all_interval_units_and_clocked_use_the_same_start_expiry_one_off_guards ... ok
+test normal_beat::tests::named_fields_keep_the_existing_numeric_calendar_constructor_unchanged ... ok
+test normal_beat::tests::cached_backup_timezone_change_reaches_the_next_honolulu_cron_boundary ... ok
+test decode::channel_failure_records::exact_source_channel_failure_descriptors_are_data_only_and_shape_bounded ... ok
+test decode::tests::observed_index_failure_metadata_is_read_without_importing_exception_classes ... ok
+test eta::tests::source117_real_tuple_and_restored_fields_preserve_identity ... ok
+test normal_control::wire::tests::exact_string_identity_single_and_batch_expiration_are_preserved ... ok
+test normal_control::wire::tests::control_does_not_accept_termination_or_oversized_identity_as_revoke ... ok
+test default_protocol::tests::only_two_known_families_and_typed_normal_values ... ok
+test index_protocol::tests::actual_source109_envelopes_results_and_manual_defer_remain_distinct ... ok
+test normal_recording_publication::normal_booking_publication::normal_booking_session::save_signal_tests::offset_date_only_save_preserves_persisted_key_when_shifted_entirely_past ... ok
+test normal_recording_publication::normal_booking_publication::normal_booking_session::save_signal_tests::offset_date_only_save_rebooks_future_and_running_windows_after_revoke_only ... ok
+test normal_channel_tasks::observed_failures::actual_source_exception_class_message_and_backend_shape_without_python_frames ... ok
+test normal_recording_publication::controls::actual_shape_is_generic_and_preserves_source_datetime_precision ... ok
+test normal_revocation::tests::named_identity_is_not_uuid_alias_and_invalid_batch_is_atomic ... ok
+test notification_failure_resources::actual_failure_reply_cancel_and_timeout_retain_job_until_physical_settlement ... ignored
+test notification_failure_resources::backend_denial_stays_operational_and_writes_no_terminal_record ... ignored
+test notification_failure_resources::committed_failure_lost_reply_is_operational_never_guessed_completed ... ignored
+test default_expiry_tests::actual_source_expiry_envelopes_and_metadata ... ok
+test notification_failure_resources::known_failed_task_poller_continues_to_next_normal_family ... ignored
+test notification_failure_resources::unobserved_sqlstate_is_not_rewritten_as_programming_error ... ignored
+test notification_terminal::tests::typed_data_is_programming_error_with_truthful_opaque_diagnostic ... ok
+test notification_terminal::tests::uncertain_close_and_nonserver_controls_never_become_python_failures ... ok
+test parented_series_peer::actual_parented_series_peer ... ignored
+test notification_terminal::tests::message_and_date_bounds_are_enforced_before_writer ... ok
+test periodic_headers::peer::native_periodic_publisher_peer ... ignored, Requires isolated copied fixture broker8/result9; never starts a worker
+test periodic_headers::tests::only_known_typed_marker_is_removed_and_other_headers_stay_strict ... ok
+test index_protocol::tests::native_initial_and_deferred_match_actual_source_semantic_fields ... ok
+test normal_core_tasks::tests::actual_retained_core_producer_frames_parse_without_execution_or_other_family_authority ... ok
+test pg_failure_format::tests::native_pg_failure_format_peer ... ignored, CopiedDB actual PostgreSQL error-field adapter, Source-created owned functions only.
+test pg_failure_format::tests::unrelated_sqlstates_positions_and_oversized_fields_are_not_classified ... ok
+test protocol::tests::unsupported_path_or_repr_shapes_are_rejected_before_publication ... ok
+test recording_active::captured61_literal_confirmation_controls::exact15_30_45_60_chain_advances_from_actual_issue_not_reply ... ok
+test protocol::tests::supported_wire_values_and_identity_relations_match_observed_source ... ok
+test recording_active::captured61_literal_confirmation_controls::foreign_refresh_origin_or_record_never_advances ... ok
+test recording_active::captured61_literal_confirmation_controls::initial_late_reply_or_reversed_clock_is_uncertain ... ok
+test periodic_headers::observed_workers::actual_source_periodic_workers_keep_body_result_and_common_validation ... ok
+test recording_active::captured61_literal_confirmation_controls::initial_wrong_origin_or_record_cannot_create_confirmation ... ok
+test recording_active::captured61_literal_confirmation_controls::late_success_after_prior45_is_not_reset_authority ... ok
+test recording_active::captured61_literal_confirmation_controls::nx_false_never_produces_confirmation ... ok
+test recording_active::captured61_literal_confirmation_controls::latest_removal_confirmation_still_has_exact45_cap_and_origin ... ok
+test recording_active::captured61_literal_confirmation_controls::prior_expired_before_command_cannot_be_revived_by_integer1 ... ok
+test recording_active::captured61_literal_confirmation_controls::refresh_bad_clock_or_overlap_before_prior_completion_is_uncertain ... ok
+test recording_active::captured61_literal_confirmation_controls::zero_or_negative_refresh_never_advances ... ok
+test recording_active::tests::namespace_cannot_be_tasklease_or_arbitrary_key ... ok
+test pg_failure_format::tests::actual_source_p0001_fields_render_exactly_for_all35_observations ... ok
+test recording_artwork::api_producer_tests::api_scope_rejects_missing_force_true_and_list_producer ... ok
+test recording_artwork::api_producer_tests::actual_source37_false_kwarg_has_explicit_api_constructor_only ... ok
+test recording_artwork::canonical_controls::version_four_with_wrong_variant_is_not_captured_rfc4122_domain ... ok
+test recording_artwork::canonical_controls::raw_uppercase_or_missing_explicit_null_cannot_gain_configured_authority ... ok
+test recording_artwork::tests::captured_artwork_protocol_has_direct_parent_and_countdown_one ... ok
+test recording_artwork::tests::configured_parented_or_foreign_root_is_not_admitted ... ok
+test recording_artwork::tests::publication_refuses_non_recording_identifiers ... ok
+test recording_artwork_peer::actual_local_artwork_peer ... ignored, Owned copied DB+Redis8/9+Original producer; no default consumer
+test recording_artwork::parented_refusals::completion_cannot_authorize_force_deferred_or_unrelated_raw_lineage ... ok
+test recording_artwork::actual_parented_source_controls::completed_parent_is_required_and_cannot_be_replaced_by_arbitrary_uuid ... ok
+test recording_artwork::actual_parented_source_controls::actual_positive_and_repeat_lineages_keep_refresh_root_for_artwork ... ok
+test recording_artwork_protocol::controls::both_actual_children_require_completed_series_and_inherited_refresh_root ... ok
+test recording_artwork_protocol::controls::missing_duplicate_wrong_parent_failed_or_uncaptured_result_cannot_mint_child ... ok
+test recording_artwork_root::controls::parented_countdown_preserves_parent_without_widening_root_authority ... ok
+test recording_artwork_protocol::controls::normal_completion_uses_actual_report_recording_and_exact_eta_without_fixture_literals ... ok
+test recording_artwork_protocol::controls::raw_options_arguments_lineage_spelling_and_eta_cannot_be_normalized_into_authority ... ok
+test recording_artwork_root::controls::root_and_captured_child_authority_remain_disjoint_and_unknown_callbacks_stay_refused ... ok
+test recording_dvr::captured_window_source_controls::actual_source30_and61_wires_have_separate_admission_not_parser_authority ... ok
+test recording_dvr_peer::actual_source_beat_normal_dvr_peer ... ignored, Owned copied DB, natural real Beat dvr frame and local synthetic origin only; Root admission required
+test recording_dvr_physical_peer::actual_captured61_dvr_gate_peer ... ignored, Root-admitted actual captured61 owned local video+MP2 context only; no Main/default graph
+test recording_dvr_physical_peer::actual_retained_dvr_gate_peer ... ignored, Owned copied DB/real Original model+artwork+Beat and exact fixed physical relay gate; explicit Root admission only
+test recording_dvr::captured_window_source_controls::finite_domain_refuses60_62_negative_or_expired_even_if_frame_is_wellformed ... ok
+test recording_dvr::captured_window_source_controls::changed_actual61_parent_or_periodic_identity_still_refuses_before_due_admission ... ok
+test recording_dvr_physical_peer::lossless_stderr_report_controls::boolean_or_non_u8_tail_is_not_projected_as_bytes ... ok
+test recording_dvr_physical_peer::lossless_stderr_report_controls::command_bound16_is_not_raised ... ok
+test recording_dvr::captured61_cleanup_wiring_controls::real_dvr_cleanup_factory_reaches_acquire_for61_with_profile_rules_separate ... ok
+test logo_scanner_tests::dangling_root_symlink_is_rejected_before_directory_open ... ok
+test logo_scanner_tests::late_receipt_holds_admission_after_caller_abort ... ok
+test recording_dvr_physical_peer::lossless_stderr_report_controls::more_than_actual_stderr_tail_cap_is_refused ... ok
+test normal_beat::tests::scheduled_cleanup_frame_reaches_existing_normal_consumer_parser ... ok
+test logo_scanner_tests::observed_positive_then_skip_and_marker_error_keeps_row ... ok
+test logo_scanner_tests::unsupported_extension_skips_unqualified_mtime_and_marker ... ok
+test normal_beat::tests::unknown_configured_name_is_literal_and_uses_real_identity_list_repr_and_queue ... ok
+test logo_scanner_tests::task_preflight_is_readonly_and_rejects_unqualified_marker_scope ... ok
+test logo_scanner_tests::empty_markers_follow_absent_branch_without_float_conversion ... ok
+test recording_dvr_physical_peer::lossless_stderr_report_controls::more_than_two_process_slots_is_refused ... ok
+test logo_scanner_tests::ordinary_nanosecond_mtime_is_processed_without_eighth_restriction ... ok
+test logo_scanner_tests::unsupported_watch_inputs_and_caps_precede_mutations ... ok
+test recording_files::root_context::controls::foreign_uid_refuses_both_existing_and_missing_root ... ok
+test recording_files::root_context::controls::relative_escape_is_refused_before_root_creation ... ok
+test recording_normal::tests::concurrent_stopped_row_is_never_overwritten_as_normal ... ok
+test recording_files::root_context::controls::existing_root_and_parent_identity_are_preserved ... ok
+test recording_dvr_physical_peer::lossless_stderr_report_controls::unknown_unicode_file_refuses_without_deletion_or_panicking ... ok
+test recording_normal::tests::recording_event_window_preserves_python_microsecond_precision ... ok
+test recording_files::root_context::controls::absent_root_inspection_is_readonly_then_source_boundary_creates_owned_tree ... ok
+test recording_normal::tests::effective_cache_settings_not_database_defaults_control_admission ... ok
+test recording_normal_policy::normal_policy_controls::logger_limit_distinguishes_numeric_zero_from_truthy_zero_text ... ok
+test recording_files::root_context::controls::symlink_intermediate_is_refused_without_foreign_mutation ... ok
+test recording_files::root_context::controls::unknown_root_appearing_after_inspection_is_retained_and_refused ... ok
+test recording_normal_policy::normal_policy_controls::unsupported_valid_python_format_cannot_silently_take_source_error_fallback ... ok
+test recording_files::root_context::controls::replaced_configured_parent_refuses_without_writing_foreign_directory ... ok
+test recording_normal::tests::unsafe_or_unqualified_path_domains_are_refused_without_mutation ... ok
+test recording_files::root_context::controls::symlink_root_is_never_followed ... ok
+test recording_normal::tests::source3_paths_and_separate_hls_counter_survive_fresh_merge ... ok
+test recording_normal_policy::normal_policy_controls::normal_paths_follow_metadata_templates_not_captured_duration_or_poster ... ok
+test recording_process::tests::origin_must_come_from_exact_observed_explicit_configuration ... ok
+test refresh_application::peer::native_refresh_application_http_peer ... ignored, Actual owned copied DB/authenticated HTTP application import + drain
+test recording_process::tests::stat_identity_handles_comm_parentheses_and_rejects_wrong_owner ... ok
+test refresh_eta::physical::eta_candidates_clones_owner_replacement_and_empty_head_race_keep_admission_and_queue ... ignored, Owned copied fixture and real RedisDB8/9 only
+test refresh_eta::physical::eta_frames_global_count_bytes_and_unknown_values_are_bounded_before_pop_or_transfer ... ignored, Owned copied fixture and real RedisDB8/9 only
+test refresh_eta::physical::eta_reserve_ack_restore_real_replies_retain_callers_after_cancel_or_ambiguity ... ignored, Owned copied fixture and real RedisDB8/9 only
+test refresh_dispatch::tests::source_clock_precision_is_microseconds_before_eta_arithmetic ... ok
+test recording_process::owned_process_controls::already_reaped_owned_child_refuses_identity_lookup_without_claiming_syscall_esrch ... ok
+test recording_process::owned_process_controls::real_emergency_drop_waits_reader_and_child_before_releasing_original_caller ... ok
+test refresh_protocol::tests::argument_types_duplicates_unknowns_and_bounds_are_rejected ... ok
+test refresh_publish::native_refresh_publication_peer ... ignored, Actual copiedDB fixture broker8/result9 publisher or result read; no native worker
+test refresh_publish::physical::refresh_publication_caller_abort_keeps_physical_owner_and_shutdown_drain ... ignored, Copied owned DB8/9 accepted publication plus caller abort actual reply
+test refresh_publish::physical::refresh_publication_timeout_keeps_owner_capacity_and_incomplete_shutdown ... ignored, Copied owned DB8/9 actual publication reply timeout; no worker
+test refresh_publish::physical::refresh_result_read_abort_retains_owner_until_real_reply ... ignored, Copied owned DB8/9 refresh result read caller abort actual reply
+test recording_process::tests::diagnostic_limit_drains_all_bytes_while_retaining_bounded_tail ... ok
+test refresh_result::tests::actual_initial_import_missing_and_executed_descendant_results_are_distinct ... ok
+test refresh_worker::peer::native_refresh_worker_peer ... ignored, CopiedDB Source producer/native realFileJob/Source AsyncResult; no app startup
+test refresh_worker::peer::release_peer::release_command_parser_is_bounded ... ok
+test refresh_worker::physical::aborted_waiter_keeps_earlyacked_execution_owned_until_result_and_drain ... ignored, Copied ownedDB actual earlyACK/caller abort/owned worker completion
+test refresh_worker::physical::idle_refresh_worker_shutdown_preserves_active_shared_transport ... ignored, Copied ownedDB idle family shutdown cannot close active shared jobs
+test refresh_worker::physical::production_refresh_driver_preserves_foreign_head_and_denies_backups ... ignored, Owned copiedDB production refresh authority and unsupported FIFO retention
+test refresh_worker::physical::production_refresh_driver_shutdown_retains_active_execution ... ignored, Owned copiedDB production poller execution retention and bounded shutdown
+test refresh_worker::physical::result_reply_timeout_retains_worker_caller_and_both_admissions ... ignored, Copied ownedDB refresh normal result actual server reply timeout/drain
+test scanner_files_peer::native_scanner_files_peer ... ignored
+test refresh_result::tests::identity_state_unknown_fields_returns_and_geometry_fail_closed ... ok
+test refresh_protocol::tests::source_microsecond_precision_and_zero_fraction_are_explicit ... ok
+test scanner_files_resources::a_sql_lock_after_early_ack_keeps_caller_until_rollback_close ... ignored
+test scanner_files_resources::b_actual_child_lpush_reply_is_before_model_commit_and_retains_abort ... ignored
+test scanner_files_resources::c_actual_marker_set_reply_after_commit_retains_abort ... ignored
+test scanner_files_resources::d_actual_channels_reply_retains_abort_after_sql_and_children ... ignored
+test scanner_files_resources::e_lost_committed_marker_reply_is_operational_without_guessed_terminal ... ignored
+test scanner_files_resources::f_committed_result_reply_past_timeout_keeps_caller_and_admission ... ignored
+test scanner_files_resources::g_lost_child_reply_rolls_back_model_but_preserves_real_orphan_child ... ignored
+test scanner_files_resources::h_unknown_actual_source_producer_frame_retained_before_ack ... ignored
+test scanner_index_helper::resources::a_actual_second_child_denial_keeps_first_child_and_source_parent_null ... ignored
+test scanner_index_helper::resources::b_child_reply_caller_abort_retains_flag_receipt_and_admission ... ignored
+test scanner_index_helper::resources::c_lost_child_reply_never_marks_first_scan_or_guesses_child_success ... ignored
+test scanner_index_helper::resources::d_actual_sql_wait_retains_caller_admission_and_settles_after_cancel ... ignored
+test scanner_index_peer::native_scanner_index_peer ... ignored
+test scanner_m3u::boundary_tests::audit_limit_has_no_unsupported_configuration_fallback ... ok
+test refresh_eta::tests::source_refresh15_normalized_envelopes_preserve_supplied_tuple_bytes ... ok
+test normal_queue::tests::both_lanes_bound_actual_peeks_and_relaunches_for_unclaimed_heads ... ok
+test scanner_m3u::known_failure_tests::create_stage_alone_does_not_classify_io_protocol_or_input_failure ... ok
+test scanner_m3u::known_failure_tests::invalid_date_or_oversized_diagnostic_cannot_reach_writer ... ok
+test scanner_m3u::known_failure_tests::unrelated_fs_error_or_sql_stage_severity_code_position_never_becomes_known_failure ... ok
+test scanner_m3u::known_failure_tests::actual_two_source_failure_descriptors_and_owned_metadata_without_python_frames ... ok
+test scanner_m3u_peer::native_scanner_m3u_peer ... ignored
+test recording_process::owned_process_controls::real_owned_child_wrong_identity_refuses_then_actual_sigint_is_observed ... ok
+test scanner_m3u_files::tests::missing_owned_leaf_is_distinct_from_missing_root_present_file_and_symlink ... ok
+test scanner_m3u_protocol::tests::image8_groups5_actual_fifo_frame_parses_and_exact_scope_matches ... ok
+test scanner_refresh_peer::native_scanner_refresh_peer ... ignored
+test scanner_refresh::tests::scope_admits_only_proven_immediate_shape ... ok
+test scheduled_refresh_driver::tests::public_configuration_rejects_extreme_counts_without_overflow ... ok
+test refresh_dispatch::tests::all_actual_imported_children_and_deferred_wire_fields_match_except_declared_child_route ... ok
+test series_worker::peer::native_series_worker_peer ... ignored, Actual copied DB/Original Series producer+AsyncResult, no-recording subset
+test stats_peer::native_stats_peer ... ignored, Actual copied DB, broker8/result9, native app scanner and ChannelsRedis dependency helper
+test series_protocol::tests::only_observed_normal_zero_scheduled_returns_are_accepted ... ok
+test stats_resources::stats_cancelled_caller_retains_actual_result_write_and_short_shutdown_is_incomplete ... ignored, owned DB8/9 actual result reply, caller cancellation and shutdown
+test stats_resources::stats_claim_logical_timeout_retains_worker_and_caller_until_actual_peek_reply ... ignored, owned DB8/9 actual Redis delayed claim; serial CLIENT PAUSE
+test stats_resources::stats_sink_logical_error_cannot_write_result_until_physical_owner_receipt_settles ... ignored, owned DB8/9 actual sink reply receipt before normal task result
+test normal_channel_tasks::source_http_gap_frames::all_actual_source_http_frames_remain_consumable_without_early_type_coercion ... ok
+test stats_worker::captured_source_stats_strings_are_exact_without_json_normalization ... ok
+test transport::configured_parent_fixture::tests::only_fixed_copied_parent_route_is_admitted ... ok
+test recording_dvr_physical_peer::lossless_stderr_report_controls::existing_wrong_hash_content_cannot_be_reused ... ok
+test recording_dvr_physical_peer::lossless_stderr_report_controls::symlink_is_retained_and_refused_without_following ... ok
+test scanner_m3u_files::tests::one_entry_exact_source_cache_bytes_and_domain_negatives ... ok
+test transport::parented_series_fixture::controls::only_exact_owned_routes_database_and_disposable_guard ... ok
+test logo_scanner::spool::tests::foreign_scratch_entry_is_retained_without_any_effect ... ok
+test refresh_protocol::tests::unsupported_options_wrong_family_and_repr_are_not_normalized_away ... ok
+test transport::configured_parent_fixture::tests::actual_artwork_descendant_cannot_be_a_parent ... ok
+test transport::recording_artwork_transport::route_controls::dedicated_fixture_authority_retains_copied_db_without_widening_legacy_fixture ... ok
+test logo_scanner::spool::scratch::inheritance_diagnostic::explicit_release_preserves_active_guard_then_releases_despite_inherited_descriptor ... ok
+test scanner_files_protocol::tests::unknown_child_options_or_crossfield_mutations_reject_before_publication ... ok
+test transport::parented_series_fixture::controls::validation_route_clone_does_not_modify_original_cas_bytes ... ok
+test transport::scanner_refresh_io::tests::exact_successful_parent_receipt_only ... ok
+test transport::configured_parent_fixture::tests::only_owned_validation_clone_bridges_legacy_route ... ok
+test transport::scanner_m3u_io::image8_fifo_regression::image8_groups5_actual_parent_backend_passes_existing_receipt_guard ... ok
+test tvg_programme_terminal::source_contract::non_database_and_unsettled_errors_cannot_mint_failure ... ok
+test transport::recording_artwork_transport::route_controls::only_exact_owned_route_projects_validation_and_raw_cas_bytes_remain_separate ... ok
+test transport::configured_parent_fixture::tests::owned_route_still_refuses_noncanonical_ids_and_parented_frames ... ok
+test visibility::tests::source_defaults_are_bounded_component_not_worker_sweep ... ok
+test tvg_programme_terminal::source_contract::retained_source_failure_dto_matches_without_fabricated_python_frames ... ok
+test tvg_programme_protocol::tests::other_queue_and_inherited_identity_are_refused ... ok
+test tvg_programme_protocol::tests::captured_channel_signal_is_producer_only ... ok
+test visibility::tests::visibility_foreign_reservations_mutex_and_score_fences ... ignored, Owned copiedDB/internalRedis required; foreign preservation and token/score fences.
+test visibility::tests::visibility_paused_restore_reply_retains_mutex_caller_and_shutdown ... ignored, Owned copiedDB/internalRedis required; canceled recovery through actual delayed restore reply.
+test visibility::tests::visibility_source119_score_order_and_tie_geometry ... ignored, Owned copiedDB/internalRedis required; Source119 score and lexical-tie order.
+test tvg_programme_protocol::tests::unsupported_force_and_boolean_id_refuse ... ok
+test transport::recording_artwork_root_transport::backpressure_tests::actual_publish_capacity_retries_identical_frame_once_and_ambiguity_never_replays ... FAILED
+test stats_protocol::actual_default_stats_wire_validates_without_other_family_authority ... ok
+test transport::recording_dvr_authority_tests::actual_all_fourteen_generic_methods_refuse_dvr_before_application_network ... ok
+test series_protocol::tests::actual_original_noargs_and_parented_wire_validates_without_family_widening ... ok
+test worker::tests::create_only_shapes_reject_before_ack ... ok
+test version_protocol::tests::captured_default_version_frame_admits_only_its_original_family ... ok
+test recording_dvr_physical_peer::lossless_stderr_report_controls::third_immutable_tail_is_refused_not_capacity_increased ... ok
+test recording_dvr_physical_peer::lossless_stderr_report_controls::completed_outcome_processes_use_same_lossless_tail_references ... ok
+test logo_scanner::spool::scratch::process_tests::stable_control_inode_and_same_process_contention ... ok
+test logo_scanner::spool::scratch::process_tests::settled_cleanup_releases_and_stale_lease_cannot_reenter ... ok
+test logo_scanner::spool::tests::scratch_is_private_and_alias_is_refused ... ok
+test logo_scanner::spool::tests::disk_cap_refuses_all_effects_and_does_not_mark_first ... ok
+test refresh_protocol::tests::actual_source_default_positional_keyword_and_deferred_forms_roundtrip ... ok
+test logo_scanner::spool::tests::batches_preserve_unsorted_inspected_order_and_are_bounded ... ok
+test normal_channel_tasks::tests::concrete_channel_bodies_preserve_duplicates_and_reject_foreign_authority_before_claim ... ok
+test logo_scanner::spool::tests::all_paths_spooled_and_flushed_before_first_effect_then_cleaned ... ok
+test normal_queue::tests::same_selected_head_is_not_launched_twice_and_twenty_real_claims_drain_before_stop ... ok
+test logo_scanner::spool::tests::malformed_length_truncation_and_trailing_bytes_are_bounded_errors ... ok
+test logo_scanner::spool::scratch::process_tests::unknown_and_invalid_owned_shapes_refuse_without_any_deletion ... ok
+test cleanup_expiry::tests::source_limitedset_no_membership_expiry_and_capacity_purge ... ok
+test normal_revocation::tests::membership_does_not_expire_and_add_at_capacity_purges_source_expiry ... ok
+test logo_scanner::spool::scratch::process_tests::actual_active_owner_and_sigkill_windows_recover_only_recorded_scratch ... ok
+test normal_recording_publication::normal_recovery_publication_peer::recovery_waits_for_actual_publisher_then_survives_cancellation_and_drains ... ok
+test scanner_m3u_protocol::tests::actual_source217_both_scanner_children_and_mutations ... ok
+test scanner_files_protocol::tests::captured_source217_children_match_all_typed_headers_bodies_and_relations ... ok
+test recording_process::owned_process_controls::original_caller_remains_held_while_actual_receipt_waits_for_stderr_join ... ok
+test recording_dvr_physical_peer::lossless_stderr_report_controls::repeated_two_actual_tail_shapes_spill_once_under_unchanged_report_cap ... ok
+test transport::recording_artwork_root_transport::backpressure_tests::actual_publish_backpressure_stops_without_extra_write_or_releasing_physical_owner_early ... FAILED
+
+failures:
+
+---- transport::recording_artwork_root_transport::backpressure_tests::actual_publish_capacity_retries_identical_frame_once_and_ambiguity_never_replays stdout ----
+
+thread 'transport::recording_artwork_root_transport::backpressure_tests::actual_publish_capacity_retries_identical_frame_once_and_ambiguity_never_replays' panicked at crates/job-transport/src/recording_artwork_backpressure_tests.rs:70:21:
+assertion failed: matches!(name.as_str(), "EVAL" | "EVALSHA")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'transport::recording_artwork_root_transport::backpressure_tests::actual_publish_capacity_retries_identical_frame_once_and_ambiguity_never_replays' panicked at crates/job-transport/src/recording_artwork_backpressure_tests.rs:100:27:
+called `Result::unwrap()` on an `Err` value: JoinError::Panic(Id(77), "assertion failed: matches!(name.as_str(), \"EVAL\" | \"EVALSHA\")", ...)
+
+thread 'transport::recording_artwork_root_transport::backpressure_tests::actual_publish_capacity_retries_identical_frame_once_and_ambiguity_never_replays' panicked at crates/job-transport/src/recording_artwork_backpressure_tests.rs:153:24:
+called `Result::unwrap()` on an `Err` value: AmbiguousPublication(a24e30b7-7d7b-446e-acee-1d9e6301e19f)
+
+---- transport::recording_artwork_root_transport::backpressure_tests::actual_publish_backpressure_stops_without_extra_write_or_releasing_physical_owner_early stdout ----
+
+thread 'transport::recording_artwork_root_transport::backpressure_tests::actual_publish_backpressure_stops_without_extra_write_or_releasing_physical_owner_early' panicked at crates/job-transport/src/recording_artwork_backpressure_tests.rs:70:21:
+assertion failed: matches!(name.as_str(), "EVAL" | "EVALSHA")
+
+thread 'transport::recording_artwork_root_transport::backpressure_tests::actual_publish_backpressure_stops_without_extra_write_or_releasing_physical_owner_early' panicked at crates/job-transport/src/recording_artwork_backpressure_tests.rs:100:27:
+called `Result::unwrap()` on an `Err` value: JoinError::Panic(Id(78), "assertion failed: matches!(name.as_str(), \"EVAL\" | \"EVALSHA\")", ...)
+
+thread 'transport::recording_artwork_root_transport::backpressure_tests::actual_publish_backpressure_stops_without_extra_write_or_releasing_physical_owner_early' panicked at crates/job-transport/src/recording_artwork_backpressure_tests.rs:139:6:
+called `Result::unwrap()` on an `Err` value: Elapsed(())
+
+
+failures:
+    transport::recording_artwork_root_transport::backpressure_tests::actual_publish_backpressure_stops_without_extra_write_or_releasing_physical_owner_early
+    transport::recording_artwork_root_transport::backpressure_tests::actual_publish_capacity_retries_identical_frame_once_and_ambiguity_never_replays
+
+test result: FAILED. 209 passed; 2 failed; 109 ignored; 0 measured; 0 filtered out; finished in 3.03s
+
