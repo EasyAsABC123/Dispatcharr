@@ -584,6 +584,7 @@ impl QueryFilters {
             "Australia/Lord_Howe",
             "Asia/Kathmandu",
             "Europe/Paris",
+            "Pacific/Honolulu",
         ]
         .into_iter()
         .map(str::to_owned)
@@ -1062,6 +1063,50 @@ mod tests {
             interval: Some((5, "seconds".into())),
             crontab: None,
         }
+    }
+    #[test]
+    fn cached_backup_timezone_change_reaches_the_next_honolulu_cron_boundary() {
+        // Actual batch11: UTC backup ran05:12; API changed the cached timezone
+        // then installed19:13 Honolulu, which is05:13 UTC on the following date.
+        let now = DateTime::parse_from_rfc3339("2026-11-15T05:13:00+00:00")
+            .unwrap()
+            .with_timezone(&Utc);
+        let filters = QueryFilters::new(now).unwrap();
+        let index = filters
+            .zones
+            .iter()
+            .position(|zone| zone == "Pacific/Honolulu")
+            .unwrap();
+        assert_eq!(filters.offsets[index], 10);
+        assert!(filters
+            .hours
+            .contains(&((19 + filters.offsets[index]) % 24)));
+        let mut entry = model("apps.backups.tasks.scheduled_backup_task");
+        entry.last_run_at = now - chrono::Duration::minutes(1);
+        entry.interval = None;
+        entry.crontab = Some((
+            "13".into(),
+            "19".into(),
+            "*".into(),
+            "*".into(),
+            "*".into(),
+            "Pacific/Honolulu".into(),
+        ));
+        let mut cached = Cached {
+            entry,
+            clocked: None,
+            when: 0.0,
+            identity: Arc::new(()),
+        };
+        let actual = decision(&cached, now).unwrap();
+        assert!(actual.due);
+        cached.entry.last_run_at = now;
+        assert!(!decision(&cached, now).unwrap().due);
+        assert!(
+            !decision(&cached, now - chrono::Duration::seconds(1))
+                .unwrap()
+                .due
+        );
     }
     #[test]
     fn named_fields_keep_the_existing_numeric_calendar_constructor_unchanged() {

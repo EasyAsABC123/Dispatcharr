@@ -102,7 +102,7 @@ impl NormalRecordingPublisher {
             )?;
             Some(
                 publisher
-                    .publish(&bytes, owner)
+                    .publish_when_ready(&bytes, owner, &self.inner.booking_backpressure_closed)
                     .await
                     .map_err(Error::Transport)?
                     .task_id,

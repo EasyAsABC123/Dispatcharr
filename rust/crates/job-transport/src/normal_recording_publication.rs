@@ -142,6 +142,7 @@ impl NormalRecordingPublications {
 }
 struct Inner {
     booking_artwork: Mutex<Option<crate::transport::ArtworkRootPublisher>>,
+    booking_backpressure_closed: AtomicBool,
     pool: PgPool,
     jobs: Jobs,
     registry: NormalRecordingPublications,
@@ -183,6 +184,7 @@ impl NormalRecordingPublisher {
             Self {
                 inner: Arc::new(Inner {
                     booking_artwork: Mutex::new(None),
+                    booking_backpressure_closed: AtomicBool::new(false),
                     pool,
                     jobs,
                     registry: registry.clone(),
@@ -390,7 +392,16 @@ impl NormalRecordingPublisher {
         .await
         .map_err(|_| Error::Supervisor)?
     }
+    /// Stop only backpressured booking publications. Already accepted partial
+    /// effects propagate Closed to their supervisor, which retains the fault and
+    /// owner; this is not a Source-complete result. DVR adoption ports stay open.
+    pub fn stop_booking_backpressure(&self) {
+        self.inner
+            .booking_backpressure_closed
+            .store(true, Ordering::Release);
+    }
     pub fn close_admission(&self) {
+        self.stop_booking_backpressure();
         self.inner.closed.store(true, Ordering::Release);
         self.inner.named_admission.close();
         self.inner.registry.inner.slots.close();

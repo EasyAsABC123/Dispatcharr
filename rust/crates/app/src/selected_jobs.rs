@@ -517,6 +517,7 @@ impl SelectedJobs {
         Ok(())
     }
     pub fn stop_producers(&self) {
+        self.inner.publisher.stop_booking_backpressure();
         self.inner.backup_jobs.close_admission();
         self.inner.channel_http.close_admission();
         self.inner.recording_http.close_admission();

@@ -209,7 +209,14 @@ pub(crate) fn prime_patch(
 }
 
 pub(crate) fn source_iso(now: DateTime<Utc>) -> String {
-    now.to_rfc3339_opts(SecondsFormat::Secs, false)
+    // Python datetime.isoformat preserves its actual microsecond precision,
+    // omitting the fractional field only when it is zero.
+    let precision = if now.timestamp_subsec_micros() == 0 {
+        SecondsFormat::Secs
+    } else {
+        SecondsFormat::Micros
+    };
+    now.to_rfc3339_opts(precision, false)
 }
 
 #[cfg(test)]
@@ -226,6 +233,31 @@ mod tests {
             stream: json!({"default_stream_profile":null}),
         }
     }
+    #[test]
+    fn recording_event_window_preserves_python_microsecond_precision() {
+        for (input, expected) in [
+            (
+                "2026-11-15T05:20:29.467240Z",
+                "2026-11-15T05:20:29.467240+00:00",
+            ),
+            (
+                "2026-11-15T05:22:03.000001Z",
+                "2026-11-15T05:22:03.000001+00:00",
+            ),
+            ("2026-11-15T05:22:03Z", "2026-11-15T05:22:03+00:00"),
+        ] {
+            let value: DateTime<Utc> = input.parse().expect("actual SQL window shape");
+            let event = source_iso(value);
+            assert_eq!(event, expected);
+            assert_eq!(
+                DateTime::parse_from_rfc3339(&event)
+                    .expect("event timestamp")
+                    .with_timezone(&Utc),
+                value
+            );
+        }
+    }
+
     #[test]
     fn source3_paths_and_separate_hls_counter_survive_fresh_merge() {
         let base = props();

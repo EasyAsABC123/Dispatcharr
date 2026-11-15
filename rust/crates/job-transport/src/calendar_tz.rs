@@ -92,6 +92,7 @@ static NY: OnceLock<Result<Zone, Error>> = OnceLock::new();
 static LH: OnceLock<Result<Zone, Error>> = OnceLock::new();
 static KTM: OnceLock<Result<Zone, Error>> = OnceLock::new();
 static PARIS: OnceLock<Result<Zone, Error>> = OnceLock::new();
+static HONOLULU: OnceLock<Result<Zone, Error>> = OnceLock::new();
 fn zone(name: &str) -> Result<&'static Zone, Error> {
     let (value, data, utc): (&OnceLock<Result<Zone, Error>>, &[u8], bool) = match name {
         "UTC" => (&UTC, include_bytes!("../datasets/tzdb-2026e/UTC"), true),
@@ -113,6 +114,11 @@ fn zone(name: &str) -> Result<&'static Zone, Error> {
         "Europe/Paris" => (
             &PARIS,
             include_bytes!("../datasets/tzdb-2026e/Europe-Paris"),
+            false,
+        ),
+        "Pacific/Honolulu" => (
+            &HONOLULU,
+            include_bytes!("../datasets/tzdb-2026e/Pacific-Honolulu"),
             false,
         ),
         _ => return Err(Error::Unsupported),

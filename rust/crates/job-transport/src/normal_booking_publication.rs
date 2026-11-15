@@ -116,7 +116,7 @@ impl NormalRecordingPublisher {
                 let raw = booking_lineage(artwork_frame(recording, reply_oid(&inner)?)?, parent)?;
                 Some(
                     publisher
-                        .publish(&raw, owner)
+                        .publish_when_ready(&raw, owner, &inner.booking_backpressure_closed)
                         .await
                         .map_err(Error::Transport)?
                         .task_id,

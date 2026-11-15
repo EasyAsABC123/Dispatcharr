@@ -13,6 +13,27 @@ impl ArtworkRootPublisher {
         }
         Ok(Self { jobs })
     }
+    /// The same already-admitted save signal waits for the bounded queue to
+    /// drain. Only Capacity is safe to retry: real negative PUBLISH reply means
+    /// no LPUSH, and a local operation-lease refusal sends no command. All wire
+    /// ambiguity is returned unchanged, never replayed. The caller/supervisor
+    /// retains this future's SQL session and owner across the bounded sleep.
+    pub(crate) async fn publish_when_ready(
+        &self,
+        raw: &[u8],
+        owner: Arc<dyn Send + Sync>,
+        producer_stopped: &AtomicBool,
+    ) -> Result<Published, Error> {
+        loop {
+            if producer_stopped.load(Ordering::Acquire) {
+                return Err(Error::Closed);
+            }
+            match self.publish(raw, owner.clone()).await {
+                Err(Error::Capacity) => tokio::time::sleep(Duration::from_millis(100)).await,
+                outcome => return outcome,
+            }
+        }
+    }
     pub(crate) async fn publish(
         &self,
         raw: &[u8],
@@ -159,3 +180,7 @@ impl Jobs {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "recording_artwork_backpressure_tests.rs"]
+mod backpressure_tests;
