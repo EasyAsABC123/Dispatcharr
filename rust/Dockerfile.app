@@ -29,6 +29,8 @@ COPY rust/runtime/collect_media.py /tmp/collect_media.py
 RUN /dispatcharrpy/bin/python /tmp/collect_media.py
 COPY rust/runtime/collect_crypto.py /tmp/collect_crypto.py
 RUN /dispatcharrpy/bin/python /tmp/collect_crypto.py
+COPY rust/runtime/collect_postgres.py /tmp/collect_postgres.py
+RUN /dispatcharrpy/bin/python /tmp/collect_postgres.py
 COPY rust/runtime/collect_static.py rust/runtime/drf-static-source-1.json /tmp/
 RUN /dispatcharrpy/bin/python /tmp/collect_static.py
 

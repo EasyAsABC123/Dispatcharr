@@ -1,4 +1,4 @@
-//! Actual bounded Celery + separate DVR lanes over a complete selected14 typed registry.
+//! Actual bounded Celery + separate DVR lanes over a complete selected16 typed registry.
 //! Original Dispatcharr/Celery authors retain all application/protocol credit.
 //! Starts no scheduler; missing families cannot be advertised as prepared.
 pub use crate::normal_default_families::{
@@ -192,7 +192,10 @@ impl Application {
                 return Err(Error::DuplicateFamily(*family));
             }
         }
-        for family in milestone_dispatch::REQUIRED {
+        for family in milestone_dispatch::REQUIRED
+            .into_iter()
+            .chain([Family::BackupCreate, Family::BackupScheduled])
+        {
             if !seen.contains(&family) {
                 return Err(Error::MissingFamily(family));
             }
@@ -273,11 +276,11 @@ impl Application {
             )
         };
         Readiness {
-            scope: "selected14-migration-families; not all Source tasks",
+            scope: "selected16-migration-families; not all Source tasks",
             ready: active(&celery) && active(&dvr),
             celery,
             dvr,
-            required_families: milestone_dispatch::REQUIRED.len(),
+            required_families: milestone_dispatch::REQUIRED.len() + 2,
             prepared_families: self.inner.celery.prepared.prepared_families(),
             scheduler_enabled: false,
         }
@@ -778,6 +781,7 @@ mod tests {
         }));
         let entries = milestone_dispatch::REQUIRED
             .into_iter()
+            .chain([Family::BackupCreate, Family::BackupScheduled])
             .map(|family| (family, Arc::new(wrapped.clone()) as Arc<dyn Handler>))
             .collect();
         let lane = Arc::new(Lane {
@@ -918,6 +922,7 @@ mod tests {
             let head: Arc<dyn Head> = probe.clone();
             let entries = milestone_dispatch::REQUIRED
                 .into_iter()
+                .chain([Family::BackupCreate, Family::BackupScheduled])
                 .map(|family| (family, Arc::new(handler.clone()) as Arc<dyn Handler>))
                 .collect();
             let lane = Arc::new(Lane {

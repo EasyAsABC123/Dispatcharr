@@ -41,6 +41,17 @@ pub trait BackupJobApi: Send + Sync {
         task_id: &'a str,
         caller: Arc<dyn Send + Sync>,
     ) -> dispatcharr_contracts::BoxFuture<'a, Result<Value, StoreError>>;
+    fn update_schedule(
+        &self,
+        _data: Value,
+        _caller: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<Value, StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "Backup schedule update is not migrated",
+            ))
+        })
+    }
     fn shutdown(&self, grace: Duration) -> dispatcharr_contracts::BoxFuture<'_, bool>;
 }
 type Lease = Arc<OwnedSemaphorePermit>;
@@ -198,6 +209,8 @@ impl BackupFiles {
             ("list", None)
         } else if parts.len() == 1 {
             (parts[0], None)
+        } else if parts.len() == 2 && parts[0] == "schedule" && parts[1] == "update" {
+            ("schedule-update", None)
         } else if parts.len() == 2 && parts[0] == "status" {
             ("status", Some(parts[1].to_owned()))
         } else if parts.len() == 2 {
@@ -227,6 +240,7 @@ impl BackupFiles {
             "list" | "download" | "download-token" | "schedule" | "status" => Method::GET,
             "upload" | "create" | "restore" => Method::POST,
             "delete" => Method::DELETE,
+            "schedule-update" => Method::PUT,
             _ => return Ok(reply(404, "Not found.")),
         };
         if request.method() == Method::OPTIONS {
@@ -282,6 +296,20 @@ impl BackupFiles {
                 StatusCode::OK
             };
             return Ok((status, Json(value)).into_response());
+        }
+        if kind == "schedule-update" {
+            let Some(jobs) = &self.jobs else {
+                return Ok(reply(501, "Backup schedule consumer is not prepared"));
+            };
+            let raw =
+                axum::body::to_bytes(std::mem::replace(request.body_mut(), Body::empty()), 65536)
+                    .await
+                    .map_err(|_| {
+                        StoreError::StatusBody(400, json!({"detail":"Invalid request body"}))
+                    })?;
+            let value: Value = serde_json::from_slice(&raw)
+                .map_err(|_| StoreError::StatusBody(400, json!({"detail":"JSON parse error"})))?;
+            return Ok(Json(jobs.update_schedule(value, lease.clone()).await?).into_response());
         }
         if kind == "schedule" {
             return self.schedule().await;

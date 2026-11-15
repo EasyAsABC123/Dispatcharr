@@ -151,7 +151,7 @@ pub(crate) async fn publish(
     {
         return Err(StoreError::Unsupported("Unqualified special settings task"));
     }
-    let cache = auth.notification_cache.as_ref().ok_or_else(unavailable)?;
+
     // Count without cloning argument trees or allocating transport buffers.
     let embed = json!({"callbacks":null,"errbacks":null,"chain":null,"chord":null});
     let envelope = (&args, &kwargs, &embed);
@@ -219,6 +219,21 @@ pub(crate) async fn publish(
     if raw.len() > 65536 {
         return Err(unavailable());
     }
+    if let Some(broker) = auth.core_task_broker.get() {
+        let publication = crate::core_task_broker::CoreTaskPublication::new(raw, &id)?;
+        broker
+            .publish(publication, auth.core_publication_owner(charge))
+            .await?;
+        return Ok(id);
+    }
+    if auth.normal_core_task_broker {
+        return Err(StoreError::Unsupported(
+            "Normal Core task broker has not been composed",
+        ));
+    }
+    // Legacy qualified constructors retain their original explicit cache-DB
+    // publication path; normal Main above can never fall through to this path.
+    let cache = auth.notification_cache.as_ref().ok_or_else(unavailable)?;
     // The existing cache's physical task carries this charge and original request
     // token after logical error/observer loss; no second writer slot is acquired.
     let cache = cache.clone().with_retained_scope(charge);

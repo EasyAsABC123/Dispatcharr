@@ -1,4 +1,5 @@
 //! Derivative Dispatcharr backend port. Original project credit: ATTRIBUTION.md.
+mod backup_config;
 mod combined_statistics;
 mod combined_statistics_html;
 mod combined_statistics_wire;
@@ -235,7 +236,7 @@ async fn run() -> Result<(), String> {
         ))
         .map_err(|_| "Invalid Core settings effects directory")?;
         Some(
-            dispatcharr_store::CoreSettingsWrites::new(auth.clone())
+            dispatcharr_store::CoreSettingsWrites::new_main(auth.clone())
                 .and_then(|core| core.with_special_effects(effects))
                 .map_err(|_| "Core settings require the shared cache and realtime publisher")?,
         )
@@ -947,6 +948,7 @@ async fn run() -> Result<(), String> {
                 .clone()
                 .ok_or("Selected version preparation missing")?,
             completions: artwork_completions,
+            backups: backup_files.clone(),
         };
         Some(
             selected_jobs::SelectedJobs::prepare(
@@ -964,6 +966,10 @@ async fn run() -> Result<(), String> {
     } else {
         None
     };
+    let backup_files = selected_jobs
+        .as_ref()
+        .map(|selected| selected.backup_files())
+        .unwrap_or(backup_files);
     let mut app = Router::new()
         .route("/health/ready", get(health))
         .with_state(HealthState {

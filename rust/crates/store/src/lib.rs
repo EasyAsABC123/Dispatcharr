@@ -484,3 +484,9 @@ mod recording_playback_files;
 pub use recording_playback::{RecordingPlayback, RecordingPlaybackOrigin};
 pub mod core_task_offsets;
 pub mod core_task_rehash;
+
+pub mod channel_maintenance;
+pub mod channel_maintenance_http;
+
+mod core_task_broker;
+pub use core_task_broker::{CoreTaskBroker, CoreTaskPublication};

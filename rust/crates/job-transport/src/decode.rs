@@ -181,6 +181,15 @@ pub fn decode(raw: &[u8], expected: Uuid) -> Result<Metadata, DecodeError> {
         } else {
             match (module, class) {
                 ("builtins", "ValueError" | "KeyError") => true,
+                // Actual Source9 channel SQL failures, plus the pinned Django
+                // integer-preparation TypeError emitted by the new normal task.
+                // These remain data descriptors: no constructor/module import.
+                ("django.db.utils", "DataError" | "IntegrityError") | ("builtins", "TypeError") => {
+                    state == State::Failure
+                        && object.len() == 3
+                        && arguments.len() == 1
+                        && arguments[0].as_str().is_some_and(|v| v.len() <= 8192)
+                }
                 ("builtins", "FileNotFoundError") => {
                     state == State::Failure
                         && object.len() == 3
@@ -361,6 +370,48 @@ mod tests {
         assert_eq!(
             decode(&serde_json::to_vec(&value).unwrap(), id),
             Err(DecodeError::UnsupportedException)
+        );
+    }
+}
+
+#[cfg(test)]
+mod channel_failure_records {
+    use super::*;
+    #[test]
+    fn exact_source_channel_failure_descriptors_are_data_only_and_shape_bounded() {
+        let source: Value = serde_json::from_str(include_str!(
+            "../datasets/source-channel-maintenance-failures.json"
+        ))
+        .unwrap();
+        let mut classes = std::collections::BTreeSet::new();
+        for case in source["cases"].as_array().unwrap() {
+            if case["metadata"]["status"] != "FAILURE" {
+                continue;
+            }
+            let metadata = &case["metadata"];
+            let id = Uuid::parse_str(metadata["task_id"].as_str().unwrap()).unwrap();
+            decode(&serde_json::to_vec(metadata).unwrap(), id).unwrap();
+            classes.insert(metadata["result"]["exc_type"].as_str().unwrap());
+            if matches!(
+                metadata["result"]["exc_type"].as_str(),
+                Some("DataError" | "IntegrityError")
+            ) {
+                let mut bad = metadata.clone();
+                bad["result"]["unknown"] = Value::Bool(true);
+                assert!(decode(&serde_json::to_vec(&bad).unwrap(), id).is_err());
+                let mut bad = metadata.clone();
+                bad["result"]["exc_message"] = serde_json::json!([1]);
+                assert!(decode(&serde_json::to_vec(&bad).unwrap(), id).is_err());
+            }
+        }
+        assert_eq!(
+            classes.into_iter().collect::<Vec<_>>(),
+            vec![
+                "DataError",
+                "IntegrityError",
+                "ProgrammingError",
+                "ValueError"
+            ]
         );
     }
 }

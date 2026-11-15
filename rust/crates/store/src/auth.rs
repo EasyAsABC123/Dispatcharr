@@ -81,6 +81,8 @@ pub struct AuthService {
     pub(crate) event_sink: Option<Arc<dyn dispatcharr_contracts::UpdateEventSink>>,
     // Request-local ownership only; global AuthService remains unscoped.
     retained_scope: Option<Arc<dyn Send + Sync>>,
+    pub(crate) core_task_broker: Arc<std::sync::OnceLock<Arc<dyn crate::CoreTaskBroker>>>,
+    pub(crate) normal_core_task_broker: bool,
     pub(crate) images: crate::image_proxy::ImageRuntime,
     pub(crate) ip_lookup: crate::ip_lookup::IpLookup,
 }
@@ -101,6 +103,8 @@ impl AuthService {
             notification_cache: None,
             event_sink: None,
             retained_scope: None,
+            core_task_broker: Arc::new(std::sync::OnceLock::new()),
+            normal_core_task_broker: false,
             images: crate::image_proxy::ImageRuntime::new(),
             ip_lookup: crate::ip_lookup::IpLookup::new(crate::IpLookupConfig::default()),
         }
@@ -120,6 +124,18 @@ impl AuthService {
         self
     }
 
+    /// Preserve the actual Core request lease/scratch through the existing
+    /// broker supervisor, including a late physical reply after observer loss.
+    pub(crate) fn core_publication_owner(
+        &self,
+        charge: Arc<dyn Send + Sync>,
+    ) -> Arc<dyn Send + Sync> {
+        Arc::new((
+            charge,
+            self.retained_scope.clone(),
+            self.request_writer_permit.clone(),
+        ))
+    }
     pub fn with_notification_cache(mut self, cache: crate::NotificationCache) -> Self {
         self.notification_cache = Some(match self.retained_scope.as_ref() {
             Some(scope) => cache.with_retained_scope(scope.clone()),

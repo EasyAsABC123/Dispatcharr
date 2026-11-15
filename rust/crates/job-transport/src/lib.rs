@@ -275,3 +275,12 @@ mod recording_artwork_root;
 pub mod normal_core_tasks;
 
 pub mod normal_beat;
+
+pub mod normal_backup;
+mod normal_backup_archive;
+mod normal_backup_protocol;
+
+mod normal_backup_schedule;
+pub mod normal_channel_tasks;
+
+pub mod core_settings_broker;

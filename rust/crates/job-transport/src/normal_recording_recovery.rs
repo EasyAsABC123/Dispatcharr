@@ -17,6 +17,8 @@ pub enum Error {
         close: Option<Box<sqlx::Error>>,
     },
     Supervisor,
+    Media(&'static str, RecoveryMediaError),
+    Publication(Box<crate::normal_recording_publication::Error>),
     Unsettled,
 }
 #[derive(Clone)]
@@ -411,7 +413,7 @@ impl Service {
                     };
                     match self.media.revoke_old_task(context, owner.clone()).await {
                         Ok(()) | Err(RecoveryMediaError::SettledFailure) => {}
-                        Err(error) => return Err(media_error(error)),
+                        Err(error) => return Err(Error::Media("revoke_old_task", error)),
                     }
                     children.push(
                         self.publisher
@@ -444,7 +446,7 @@ impl Service {
                         .await
                     {
                         Ok(()) | Err(RecoveryMediaError::SettledFailure) => {}
-                        Err(error) => return Err(media_error(error)),
+                        Err(error) => return Err(Error::Media("finalize_expired", error)),
                     }
                 }
             }
@@ -506,19 +508,8 @@ impl Service {
         })
     }
 }
-fn media_error(error: RecoveryMediaError) -> Error {
-    match error {
-        RecoveryMediaError::SettledFailure => {
-            Error::Unsupported("settled media error used outside Source caught branch")
-        }
-        RecoveryMediaError::Unsupported => {
-            Error::Unsupported("normal recovery media/control capability")
-        }
-        RecoveryMediaError::Unsettled => Error::Unsettled,
-    }
-}
-fn publication_error(_error: crate::normal_recording_publication::Error) -> Error {
-    Error::Unsettled
+fn publication_error(error: crate::normal_recording_publication::Error) -> Error {
+    Error::Publication(Box::new(error))
 }
 enum Repair {
     Scheduled,

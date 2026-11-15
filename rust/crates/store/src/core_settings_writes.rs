@@ -94,6 +94,13 @@ enum Kind {
     Check,
 }
 impl CoreSettingsWrites {
+    /// Normal Main never substitutes the settings/cache Redis DB for Celery.
+    /// Its early Auth clone shares the one late-bound actual Main broker port.
+    pub fn new_main(mut auth: AuthService) -> Result<Self, StoreError> {
+        auth.normal_core_task_broker = true;
+        Self::new(auth)
+    }
+
     pub fn new(auth: AuthService) -> Result<Self, StoreError> {
         if auth.notification_cache.is_none() {
             return Err(StoreError::Unsupported(

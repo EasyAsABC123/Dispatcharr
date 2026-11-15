@@ -8,6 +8,8 @@ use std::{collections::BTreeMap, sync::Arc};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Family {
+    BackupCreate,
+    BackupScheduled,
     StartupRecovery,
     RehashStreams,
     RescheduleOffsets,
@@ -22,6 +24,10 @@ pub enum Family {
     Artwork,
     Recording,
     BackendCleanup,
+    ChannelBulk,
+    ChannelNames,
+    ChannelLogos,
+    ChannelTvgIds,
     ProxyStats,
     VersionCheck,
     AccountExpiration,
@@ -182,6 +188,8 @@ pub fn classify(raw: &[u8]) -> Option<Family> {
     let frame: serde_json::Value = serde_json::from_slice(raw).ok()?;
     let task = frame.get("headers")?.get("task")?.as_str()?;
     Some(match task {
+        "apps.backups.tasks.create_backup_task" => Family::BackupCreate,
+        "apps.backups.tasks.scheduled_backup_task" => Family::BackupScheduled,
         "core.tasks.rehash_streams" => Family::RehashStreams,
         "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change" => {
             Family::RescheduleOffsets
@@ -198,6 +206,10 @@ pub fn classify(raw: &[u8]) -> Option<Family> {
         "apps.channels.tasks.prefetch_recording_artwork" => Family::Artwork,
         "apps.channels.tasks.run_recording" => Family::Recording,
         "celery.backend_cleanup" => Family::BackendCleanup,
+        "apps.channels.tasks.bulk_create_channels_from_streams" => Family::ChannelBulk,
+        "apps.channels.tasks.set_channels_names_from_epg" => Family::ChannelNames,
+        "apps.channels.tasks.set_channels_logos_from_epg" => Family::ChannelLogos,
+        "apps.channels.tasks.set_channels_tvg_ids_from_epg" => Family::ChannelTvgIds,
         "apps.proxy.tasks.fetch_channel_stats" => Family::ProxyStats,
         "core.tasks.check_for_version_update" => Family::VersionCheck,
         "apps.m3u.tasks.check_account_expirations" => Family::AccountExpiration,

@@ -1,4 +1,4 @@
-//! Experimental selected14 + startup recovery assembly. Original Dispatcharr,
+//! Experimental selected16 + startup recovery assembly. Original Dispatcharr,
 //! Celery/Kombu/django-celery-beat and dependency authors retain all credit.
 //! Does not claim Source47 parity or default-on/full scheduler acceptance.
 use dispatcharr_contracts::UpdateEventSink;
@@ -46,6 +46,9 @@ struct Inner {
     recording_http: dispatcharr_store::recording_http::RecordingHttp,
     recording_playback: dispatcharr_store::RecordingPlayback,
     beat_enabled: bool,
+    backups: dispatcharr_store::BackupFiles,
+    backup_jobs: jobs::normal_backup::Application,
+    channel_http: dispatcharr_store::channel_maintenance_http::ChannelMaintenanceHttp,
 }
 #[derive(Clone)]
 pub struct SelectedJobs {
@@ -61,6 +64,7 @@ pub struct Existing {
     pub tvg: jobs::tvg_programme_application::Application,
     pub version: jobs::version_application::Application,
     pub completions: jobs::ArtworkCompletions,
+    pub backups: dispatcharr_store::BackupFiles,
 }
 pub fn enabled() -> Result<bool, String> {
     let worker = flag("RUST_EXPERIMENTAL_SELECTED_JOBS")?;
@@ -185,6 +189,31 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected scanner transport initialization failed")?;
+        let (backup_database, backup_runtime, backup_root, backup_scratch) =
+            crate::backup_config::configured()?;
+        let backup_jobs = jobs::normal_backup::Application::prepare(
+            shared_jobs.clone(),
+            revoked.clone(),
+            store.clone(),
+            cache.clone(),
+            backup_database,
+            backup_runtime,
+            backup_root,
+            backup_scratch,
+            auth.producer_identity_source(),
+        )
+        .map_err(|_| "Normal backup preparation unavailable")?;
+        if backup_jobs.initialize_schedule(Arc::new(())).await.is_err() {
+            eprintln!("Normal backup scheduler startup sync failed");
+        }
+        let backups = existing
+            .backups
+            .clone()
+            .with_jobs(Arc::new(backup_jobs.clone()));
+        auth.bind_core_task_broker(Arc::new(jobs::core_settings_broker::Publisher::new(
+            shared_jobs.clone(),
+        )))
+        .map_err(|_| "Selected Core broker port already bound or unavailable")?;
         let locks = dispatcharr_coordination::TaskLocks::connect(
             &cache,
             dispatcharr_coordination::TaskLockConfig::default(),
@@ -211,6 +240,21 @@ impl SelectedJobs {
             revoked.clone(),
         )
         .map_err(|_| "Selected Core downstream task initialization failed")?;
+        let channel_tasks = jobs::normal_channel_tasks::Prepared::new(
+            shared_jobs.clone(),
+            store.clone(),
+            events.clone(),
+            revoked.clone(),
+        )
+        .map_err(|_| "Selected channel maintenance authority is unsupported")?;
+        let channel_http =
+            dispatcharr_store::channel_maintenance_http::ChannelMaintenanceHttp::prepare(
+                auth.clone(),
+                Arc::new(jobs::normal_channel_tasks::Publisher::new(
+                    shared_jobs.clone(),
+                    auth.producer_identity_source(),
+                )),
+            );
         let recording_http = dispatcharr_store::recording_http::RecordingHttp::prepare(
             auth.clone(),
             recording_jobs,
@@ -303,11 +347,14 @@ impl SelectedJobs {
                     .into_normal_handler()
                     .map_err(|_| "Selected version lifecycle unavailable")?,
             ),
+            (Family::BackupCreate, Arc::new(backup_jobs.clone())),
+            (Family::BackupScheduled, Arc::new(backup_jobs.clone())),
             (Family::ProxyStats, stats),
             (Family::Recording, dvr.clone()),
             (Family::StartupRecovery, Arc::new(recovery.clone())),
         ];
         entries.extend(core_tasks.entries());
+        entries.extend(channel_tasks.entries());
         entries.extend(defaults.entries());
         entries.extend(scanner.entries());
         let queue = jobs::normal_queue::Application::prepare(
@@ -352,14 +399,21 @@ impl SelectedJobs {
                 recording_http,
                 recording_playback,
                 beat_enabled,
+                backups,
+                backup_jobs,
+                channel_http,
             }),
         })
+    }
+    pub fn backup_files(&self) -> dispatcharr_store::BackupFiles {
+        self.inner.backups.clone()
     }
     pub fn recordings_router(&self) -> axum::Router {
         self.inner
             .recording_http
             .clone()
             .router_with_playback(self.inner.recording_playback.clone())
+            .merge(self.inner.channel_http.clone().router())
     }
     pub fn readiness(&self) -> (bool, serde_json::Value) {
         let queue = self.inner.queue.readiness();
@@ -463,6 +517,8 @@ impl SelectedJobs {
         Ok(())
     }
     pub fn stop_producers(&self) {
+        self.inner.backup_jobs.close_admission();
+        self.inner.channel_http.close_admission();
         self.inner.recording_http.close_admission();
         self.inner.recording_playback.close_admission();
         self.inner.closed.store(true, Ordering::Release);
@@ -481,6 +537,14 @@ impl SelectedJobs {
         let Ok(Ok(_startup)) = startup else {
             return false;
         };
+        if !self
+            .inner
+            .channel_http
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            return false;
+        }
         if !self
             .inner
             .recording_http

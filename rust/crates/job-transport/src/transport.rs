@@ -1703,3 +1703,11 @@ mod core_tasks_transport;
 
 #[path = "normal_beat_transport.rs"]
 mod normal_beat_transport;
+
+#[path = "channel_tasks_transport.rs"]
+mod channel_tasks_transport;
+#[path = "normal_backup_transport.rs"]
+mod normal_backup_transport;
+
+#[path = "core_settings_broker_transport.rs"]
+mod core_settings_broker_transport;

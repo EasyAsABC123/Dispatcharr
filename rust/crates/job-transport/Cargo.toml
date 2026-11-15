@@ -5,6 +5,7 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
+zip = {version="=9.5.0",default-features=false,features=["deflate-flate2-zlib-rs"]}
 sha2 = "0.10"
 flate2 = {version="1",default-features=false,features=["zlib-rs"]}
 reqwest = {version="0.12",default-features=false,features=["rustls-tls","blocking","cookies"]}

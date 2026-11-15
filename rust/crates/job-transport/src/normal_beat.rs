@@ -530,13 +530,96 @@ fn date(value: &Value, key: &str) -> Result<Option<DateTime<Utc>>, Error> {
         })
         .transpose()
 }
+// Remaining capacity is intentionally unchanged: >256 ELIGIBLE models or a
+// >1MiB aggregate eligible reply refuses. Generic pagination is still open.
+const LOAD_QUERY: &str = r#"WITH zone_offsets AS (SELECT * FROM unnest($4::text[],$5::integer[]) AS z(zone_name,hour_offset)),
+candidates AS MATERIALIZED (
+ SELECT to_jsonb(p)::text AS raw,
+        (SELECT to_jsonb(i)::text FROM django_celery_beat_intervalschedule i WHERE i.id=p.interval_id) AS interval_spec,
+        to_jsonb(cr)::text AS crontab_spec,
+        cl.clocked_time
+ FROM django_celery_beat_periodictask p
+ LEFT JOIN django_celery_beat_clockedschedule cl ON cl.id=p.clocked_id
+ LEFT JOIN django_celery_beat_crontabschedule cr ON cr.id=p.crontab_id
+ LEFT JOIN zone_offsets z ON z.zone_name=cr.timezone
+ WHERE p.enabled
+   AND (p.clocked_id IS NULL OR cl.clocked_time IS NULL OR cl.clocked_time <= $1::timestamptz)
+   AND (p.crontab_id IS NULL OR cr.id IS NULL OR NOT (cr.hour=ANY($3::text[])) OR z.hour_offset IS NULL
+        OR CASE WHEN cr.hour=ANY($3::text[]) THEN (cr.hour::integer+z.hour_offset+24)%24 END=ANY($2::integer[]))
+ LIMIT 257
+),budget AS (
+ SELECT count(*)::bigint AS rows,
+ COALESCE(sum(octet_length(raw)+COALESCE(octet_length(interval_spec),0)+COALESCE(octet_length(crontab_spec),0)),0)::bigint AS bytes
+ FROM candidates
+)
+SELECT b.rows,b.bytes,
+ CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.raw END AS raw,
+ CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.interval_spec END AS interval_spec,
+ CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.crontab_spec END AS crontab_spec,
+ CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.clocked_time END AS clocked_time
+FROM budget b LEFT JOIN candidates c ON b.rows<=256 AND b.bytes<=1048576"#;
+struct QueryFilters {
+    cutoff: DateTime<Utc>,
+    hours: Vec<i32>,
+    numeric_hours: Vec<String>,
+    zones: Vec<String>,
+    offsets: Vec<i32>,
+}
+impl QueryFilters {
+    fn new(now: DateTime<Utc>) -> Result<Self, Error> {
+        let cutoff = now
+            .checked_add_signed(chrono::Duration::seconds(300))
+            .ok_or(Error::Capacity)?;
+        let mut hours = (0..5)
+            .map(|n| (now.hour() as i32 + 22 + n) % 24)
+            .collect::<Vec<_>>();
+        hours.push(4);
+        let numeric_hours = (0..24)
+            .map(|h| h.to_string())
+            .chain((0..10).map(|h| format!("{h:02}")))
+            .collect();
+        let zones = [
+            "UTC",
+            "America/New_York",
+            "Australia/Lord_Howe",
+            "Asia/Kathmandu",
+            "Europe/Paris",
+        ]
+        .into_iter()
+        .map(str::to_owned)
+        .collect::<Vec<_>>();
+        let offsets = zones
+            .iter()
+            .map(|zone| {
+                database_schedule::normal_query_offset(zone)
+                    .map_err(|_| Error::Configuration("crontab query timezone profile"))
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        Ok(Self {
+            cutoff,
+            hours,
+            numeric_hours,
+            zones,
+            offsets,
+        })
+    }
+}
 async fn load(
     connection: &mut PgConnection,
     now: DateTime<Utc>,
 ) -> Result<(BTreeMap<String, Cached>, usize), Error> {
-    // Both row count and aggregate serialized reply size are checked inside the
-    // SAME statement/snapshot; oversized rows never cross into this process.
-    let rows=sqlx::query("WITH candidates AS MATERIALIZED(SELECT to_jsonb(p)::text AS raw,(SELECT to_jsonb(i)::text FROM django_celery_beat_intervalschedule i WHERE i.id=p.interval_id) AS interval_spec,(SELECT to_jsonb(c)::text FROM django_celery_beat_crontabschedule c WHERE c.id=p.crontab_id) AS crontab_spec,(SELECT cl.clocked_time FROM django_celery_beat_clockedschedule cl WHERE cl.id=p.clocked_id) AS clocked_time FROM django_celery_beat_periodictask p WHERE p.enabled LIMIT 257),budget AS(SELECT count(*)::bigint AS rows,COALESCE(sum(octet_length(raw)+COALESCE(octet_length(interval_spec),0)+COALESCE(octet_length(crontab_spec),0)),0)::bigint AS bytes FROM candidates) SELECT b.rows,b.bytes,CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.raw END AS raw,CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.interval_spec END AS interval_spec,CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.crontab_spec END AS crontab_spec,CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.clocked_time END AS clocked_time FROM budget b LEFT JOIN candidates c ON b.rows<=256 AND b.bytes<=1048576").fetch_all(&mut *connection).await?;
+    // Source enabled_models_qs excludes far-future clocked and simple numeric
+    // calendar hours BEFORE model loading. Apply those exact profile predicates
+    // before LIMIT/serialization budget, not after an unrelated enabled-row cap.
+    let filters = QueryFilters::new(now)?;
+    let rows = sqlx::query(LOAD_QUERY)
+        .bind(filters.cutoff)
+        .bind(&filters.hours)
+        .bind(&filters.numeric_hours)
+        .bind(&filters.zones)
+        .bind(&filters.offsets)
+        .fetch_all(&mut *connection)
+        .await?;
     let budget = rows.first().ok_or(Error::Capacity)?;
     if budget.try_get::<i64, _>("rows")? > 256 || budget.try_get::<i64, _>("bytes")? > 1048576 {
         return Err(Error::Capacity);
@@ -1130,3 +1213,7 @@ mod tests {
         assert!(crate::default_protocol::parse(&serde_json::to_vec(&foreign).unwrap()).is_err());
     }
 }
+
+#[cfg(test)]
+#[path = "normal_beat_query_tests.rs"]
+mod query_tests;

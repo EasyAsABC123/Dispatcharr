@@ -147,6 +147,7 @@ struct Inner {
     registry: NormalRecordingPublications,
     named: crate::normal_named_recording::NormalNamedRecordingPublications,
     slot: Arc<Semaphore>,
+    named_admission: Arc<Semaphore>,
     closed: AtomicBool,
     reply: Mutex<BTreeMap<u64, Uuid>>,
     identity: Arc<()>,
@@ -187,6 +188,7 @@ impl NormalRecordingPublisher {
                     registry: registry.clone(),
                     named,
                     slot: Arc::new(Semaphore::new(1)),
+                    named_admission: Arc::new(Semaphore::new(1)),
                     closed: AtomicBool::new(false),
                     reply: Mutex::new(BTreeMap::new()),
                     identity: Arc::new(()),
@@ -325,22 +327,35 @@ impl NormalRecordingPublisher {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
-        let slot = self
+        // The serialized recovery service has already committed interruption.
+        // Ordinary concurrent DVR admission is backpressure, not uncertainty.
+        let queued = self
             .inner
-            .slot
+            .named_admission
             .clone()
             .try_acquire_owned()
             .map_err(|_| Error::Capacity)?;
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
-        let owner = Arc::new(Owner {
-            _slot: slot,
-            _caller: caller,
-            _producer: self.inner.clone(),
-        });
         let inner = self.inner.clone();
+        // One bounded accepted waiter retains its caller after await cancellation.
         tokio::spawn(async move {
+            let _queued = queued;
+            let slot = inner
+                .slot
+                .clone()
+                .acquire_owned()
+                .await
+                .map_err(|_| Error::Closed)?;
+            if inner.closed.load(Ordering::Acquire) {
+                return Err(Error::Closed);
+            }
+            let owner = Arc::new(Owner {
+                _slot: slot,
+                _caller: caller,
+                _producer: inner.clone(),
+            });
             let pending = inner.named.reserve().await.map_err(|_| Error::Closed)?;
             let key = match kind {
                 crate::normal_named_recording::Kind::Recovery => format!("dvr-recover-{recording}"),
@@ -377,11 +392,23 @@ impl NormalRecordingPublisher {
     }
     pub fn close_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);
+        self.inner.named_admission.close();
         self.inner.registry.inner.slots.close();
     }
     pub async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
         self.close_admission();
         let deadline = tokio::time::Instant::now() + timeout;
+        // An accepted detached waiter might not have polled the physical fence.
+        // Wait for that real operation before claiming publisher drain.
+        while self.inner.named_admission.available_permits() != 1 {
+            if tokio::time::Instant::now() >= deadline {
+                return Err(Error::DrainTimeout);
+            }
+            tokio::time::sleep_until(
+                (tokio::time::Instant::now() + Duration::from_millis(1)).min(deadline),
+            )
+            .await;
+        }
         let _slot = tokio::time::timeout_at(deadline, self.inner.slot.clone().acquire_owned())
             .await
             .map_err(|_| Error::DrainTimeout)?
@@ -843,3 +870,7 @@ mod controls {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "normal_recovery_publication_peer.rs"]
+mod normal_recovery_publication_peer;
