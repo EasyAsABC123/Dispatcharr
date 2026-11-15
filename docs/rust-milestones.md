@@ -9,10 +9,16 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate23](rust-milestone-batch23.md): all four
+The newest source candidate is [Candidate24](rust-milestone-batch24.md) at
+`df815fbb3d312d191654bf4079f337ecae216430`: all four SDK gates pass with
+1,053 passing tests, zero failures and 767 ignored. It joins normal guide jobs,
+XMLTV busy deferral, recording profiles, generation fencing and the configured
+media-root alias. Docker and Main acceptance remain pending.
+
+The preceding source candidate is [Candidate23](rust-milestone-batch23.md): all four
 SDK gates pass with1,034 tests, zero failures and764 ignored. It corrects follower
-retirement while profile demand remains. Physical, Docker, combined Main and
-performance acceptance remain required.
+retirement while profile demand remains. All eight real Redis controls and
+Docker/package checks pass; combined Main and performance acceptance remain open.
 
 The preceding source candidate is [Candidate22](rust-milestone-batch22.md): all four
 SDK gates pass with1,034 tests, zero failures and764 ignored. It joins shared
@@ -59,9 +65,11 @@ committed Git blobs. It adds plugin actions/managed ZIP installation, remote
 playlist/full-result handling and VLC/grouped-credential input work. Its Docker
 build and application acceptance remain pending.
 
-The latest built runtime is Candidate22 at
-`0752ba808cf657c8c0371d75ffdc65de96ecd9e0`; package checks pass, replica-viewer
-acceptance fails and Main acceptance is pending. Candidate21 at
+The latest built runtime is Candidate23 at
+`7e0dd3dd51ae040467d9ea44465843d029e17775`; package and eight physical controls
+pass, while full Main acceptance remains open. Candidate22 at
+`0752ba808cf657c8c0371d75ffdc65de96ecd9e0` retains its failed replica control and
+three passing Native application contexts. Candidate21 at
 `ac9d704943e69b9c343f31063cda1e3df5008791` also passes package checks. The preceding Candidate20 at
 `1cdf0c15ff4d8265409337f6b0ce29a0debe29e3` starts actual Main.
 Auto-sync completion and live VLC acceptance remain open. The preceding built

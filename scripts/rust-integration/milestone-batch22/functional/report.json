@@ -1,0 +1,118 @@
+{
+  "scope": "Candidate22 Source-first whole affected application batch; failed observer/setup rows remain literal",
+  "candidate_git": "0752ba808cf657c8c0371d75ffdc65de96ecd9e0",
+  "image_id": "sha256:36db5ca87400e1534fef5539eccf308e0cbf023267fdf8ba1e7753719952dbbd",
+  "actual_exit": 1,
+  "seconds": 833.3653253039956,
+  "command_process_group_settled": true,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "backends": {
+    "Original": [
+      {
+        "case": "vlc-live",
+        "status": "failed"
+      },
+      {
+        "case": "auto-sync",
+        "status": "failed"
+      },
+      {
+        "case": "input-promotion",
+        "status": "failed"
+      },
+      {
+        "case": "output-profile",
+        "status": "failed"
+      }
+    ],
+    "Native": [
+      {
+        "case": "vlc-live",
+        "status": "failed"
+      },
+      {
+        "case": "auto-sync",
+        "status": "failed"
+      },
+      {
+        "case": "input-promotion",
+        "status": "failed"
+      },
+      {
+        "case": "output-profile",
+        "status": "failed"
+      },
+      {
+        "case": "channel-maintenance",
+        "status": "passed"
+      },
+      {
+        "case": "controls",
+        "status": "passed"
+      },
+      {
+        "case": "xc-live",
+        "status": "passed"
+      }
+    ]
+  },
+  "Native_XC_cases": [
+    {
+      "name": "API-single-groups-provider-batch1000-nullability",
+      "status": "passed"
+    },
+    {
+      "name": "current-rotated-login-stale-importedURL-live-AV",
+      "status": "passed"
+    },
+    {
+      "name": "actual-provider-update-enabled-filter-stale-cleanup",
+      "status": "passed"
+    },
+    {
+      "name": "ordered-account-filters-and-mapped-channel-rollup",
+      "status": "passed"
+    },
+    {
+      "name": "mapped-channel-catchup-self-heal",
+      "status": "passed"
+    },
+    {
+      "name": "empty-provider-caught-no-cleanup",
+      "status": "passed"
+    },
+    {
+      "name": "auth-error-caught-queue-continuation",
+      "status": "passed"
+    }
+  ],
+  "findings": {
+    "channel_maintenance": "Native real Main producer/claim/metadata assertions pass after exact authority binding correction",
+    "controls": "Native selected playback controls pass; no isolated causal attribution or performance transfer",
+    "XC": "all seven Native cases pass: provider batch/nullability, rotated login/liveAV, update/filter/stale cleanup, mapped rollup/self-heal, empty provider and caught auth failure/queue continuation",
+    "auto": "both backends fail DATA setup on duplicate Owned Regex before auto business; compact get_or_create preceded regex create. Next batch orders auto,regex,compact; no parent/large-child acceptance earned",
+    "VLC": "both fresh backends fail media-owner readiness/no useful bytes. Source failure has ample budget; failed Source baseline cannot qualify positive VLC behavior. Source web logs retained only as hashes/signatures in this run",
+    "input_promotion": "both backends pass share/account-agent and failover/retirement observations; both strict owner/follower AV-prefix decoders fail and remain unaccepted",
+    "output_profiles": "both backends decode two profile TS and HLS AV prefixes. Sharing/fMP4/selective-retirement assertions fail because callback incorrectly compares cumulative Origin connections instead of context delta. Failed rows preserved; independent leaf qualification may use retained captures without app replay",
+    "replica_component": "separate two-replica component failure remains open for22; follower-demand correction is candidate23, not retroactive22 acceptance"
+  },
+  "cleanup": {
+    "passed": true,
+    "exact_containers": 10,
+    "projects": 2,
+    "original_generations_absent": true,
+    "host_CLI_groups_settled": true
+  },
+  "raw_evidence_hashes": {
+    "artifacts/rust/normal-graph-batch22-functional-1/results/report.json": "21a3ab895050155d7d1451e93605d1f68774ce6a49c40fa5e30186bc801b5cc9",
+    "artifacts/rust/normal-graph-batch22-functional-1/dispatch/execution.json": "b183751d8c76b2537249161b7a7293abb2fe5e95b519c8612d046a4799e632e8",
+    "artifacts/rust/normal-graph-batch22-functional-1/binding.json": "6a6a0f9358645fb84fc32d3133108df061c4778a1ad3fe9c58c1e6a7fedcd31c",
+    "artifacts/rust/normal-graph-batch22-functional-1/fixtures/Native-496ed82f/xc-live/report.json": "7b9cac6407b5f3ffb68adac91c13b68007a5a6fd9a06a003a6d17a4052052cda",
+    "artifacts/rust/normal-graph-batch22-functional-1/fixtures/Original-034ed896/output-profile-capture/report.json": "febdf2529af9e8833099eea96b754891233b7f364a1f0bfa29655b54ab39c92e",
+    "artifacts/rust/normal-graph-batch22-functional-1/fixtures/Native-496ed82f/output-profile-capture/report.json": "0d10326129dd3473ad15f36b6419a33d801c2709de57a68ef541148cd1c59d97"
+  },
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr and dependency authors retain full application, algorithm and license credit."
+}

@@ -1,0 +1,100 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "name": "actual-manual-POST-statuses-errors-raw-pack",
+      "status": "passed",
+      "actual": {
+        "actual_result": {
+          "assigned": 3,
+          "released": 1,
+          "failed": 0
+        },
+        "actual_error_status_bodies": [
+          {
+            "status": 400,
+            "json": {
+              "detail": "channel_group_id is required"
+            }
+          },
+          {
+            "status": 400,
+            "json": {
+              "detail": "channel_group_id must be an integer"
+            }
+          },
+          {
+            "status": 404,
+            "json": {
+              "detail": "Group is not associated with this account"
+            }
+          }
+        ],
+        "observed_unauthenticated_status": 401,
+        "method_status": 405,
+        "paired_permission_exact_comparison_required": true,
+        "raw_only_changes_no_timestamp_bump": true
+      }
+    },
+    {
+      "name": "actual-PATCH-immediate-hide-unhide",
+      "status": "passed",
+      "actual": {
+        "actual_immediate_hide_raw": null,
+        "actual_immediate_unhide_raw": 30003,
+        "same_request_serializer_refreshed": true,
+        "UUID_preserved": true
+      }
+    },
+    {
+      "name": "Source-lock-held-defer-override-only-no-signal",
+      "status": "passed",
+      "actual": {
+        "actual_manual_lock_409": true,
+        "actual_unhide_deferred_while_Source_lock_held": true,
+        "unrelated_lock_not_deleted": true,
+        "override_only_no_model_signal": true,
+        "subsequent_scalar_save_assigned": true
+      }
+    },
+    {
+      "name": "pinned-override-model-signal",
+      "status": "passed",
+      "actual": {
+        "override_preserved": true,
+        "pinned_unhide_never_assigns_raw": true
+      }
+    },
+    {
+      "name": "actual-parent-atomic-rollback-after-unhide",
+      "status": "passed",
+      "actual": {
+        "actual_SQL_failure_status": 500,
+        "assignment_occurred_before_trigger": true,
+        "outer_row_override_time_rolled_back": true,
+        "shared_lock_released_before_outer_rollback": true
+      }
+    },
+    {
+      "name": "manual-repack-with-compact-disabled",
+      "status": "passed",
+      "actual": {
+        "manual_one_shot_works_when_compact_flag_off": true,
+        "actual_result": {
+          "assigned": 3,
+          "released": 1,
+          "failed": 0
+        }
+      }
+    }
+  ],
+  "new_Source_characterization_required": true,
+  "performance_verified": false,
+  "remaining_required": [
+    "bulk-edit full endpoint",
+    "OPTIONS serializer metadata",
+    "physical held cache/SQL uncertain shutdown",
+    "paired exact permission/header/HTML comparison",
+    "noncanonical numeric/error domains"
+  ]
+}

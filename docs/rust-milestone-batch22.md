@@ -48,8 +48,17 @@ the candidate child runtime. All four containers, the owned Compose project and
 the original Redis generation settle. This failure remains unaccepted while a
 follower/client-lifetime correction is prepared.
 
-The Source-first combined Compose cohort is collecting independent workflows;
-Main and resource acceptance remain pending. Historical Candidate20
+The [Source-first Compose batch](../scripts/rust-integration/milestone-batch22/functional/report.json)
+finishes with exit1 in833.37 seconds. Native channel maintenance, playback
+controls and all seven XC cases pass through real Main. Auto-sync fails fixture
+setup before business on a duplicate regex group; the next driver corrects
+preparation order. Both backends pass input promotion/share/failover observations
+but fail strict AV-prefix decoding. Both decode two output-profile TS prefixes
+and HLS A/V; cumulative Origin counts invalidate later sharing/fMP4/retirement
+assertions. Failed rows remain unchanged. Fresh Source VLC also fails readiness,
+so it cannot qualify positive playback. All10 exact containers, both projects,
+original process generations and CLI groups settle. Main and resource acceptance
+remain open. Historical Candidate20
 passes do not qualify this candidate. Wider profile edits, exceptional commands,
 owner loss/rejoin, enabled plugins, Schedules Direct and other Source gaps remain
 open. No full M0–M9 milestone or application performance gain is accepted.

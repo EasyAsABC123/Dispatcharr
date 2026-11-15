@@ -1,0 +1,64 @@
+{
+  "status": "failed",
+  "cases": [
+    {
+      "name": "actual-full-grammar-search-include-exclude-branchreset-rename",
+      "status": "failed",
+      "error_type": "AssertionError"
+    },
+    {
+      "name": "actual-invalid-filter-skipped-preserves-source-list-distinction",
+      "status": "failed",
+      "error_type": "AssertionError"
+    },
+    {
+      "name": "actual-nonstring-filter-error-boundary",
+      "status": "passed",
+      "actual": {
+        "parent": "1b80ed5a-019d-404e-a744-dfb3d3656632",
+        "backend": {
+          "status": "SUCCESS",
+          "result": "Dispatched jobs complete.",
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-15T16:26:26.227057+00:00",
+          "task_id": "1b80ed5a-019d-404e-a744-dfb3d3656632"
+        },
+        "before": {
+          "account_status": "success",
+          "last_message": "Processing completed in 0.2 seconds. Streams: 0 created, 0 updated, 0 marked stale, 0 removed. Total processed: 5.",
+          "rows": [],
+          "stream_links": 0,
+          "memberships": 0
+        },
+        "after": {
+          "account_status": "success",
+          "last_message": "Processing completed in 0.1 seconds. Streams: 0 created, 0 updated, 0 marked stale, 0 removed. Total processed: 5. Auto-sync error: first argument must be a string or compiled pattern.",
+          "rows": [],
+          "stream_links": 0,
+          "memberships": 0
+        }
+      }
+    },
+    {
+      "name": "actual-rename100ms-timeout-fallback-final512",
+      "status": "failed",
+      "error_type": "AssertionError"
+    },
+    {
+      "name": "actual-nonstring-replacement-perstream-error-boundary",
+      "status": "failed",
+      "error_type": "AssertionError"
+    }
+  ],
+  "Source_authority": "new Source authority; no previously qualified task replay",
+  "full_regex_parity": false,
+  "performance_verified": false,
+  "startup_handshake_drain": "separate component scope, not naturally injectable through Main",
+  "required_unmeasured": [
+    "exact full progress/Channels failure-detail payloads",
+    "held search physical cancellation diagnostic",
+    "component startup/drain",
+    "complete arbitrary regex grammar coverage"
+  ]
+}
