@@ -1,0 +1,374 @@
+{
+  "frozen_sha256": "c20783e27834f09878886459921d21bed98e03c3feea87e2bcdecf93fc8965bd",
+  "preflight_only": false,
+  "gain_accepted": false,
+  "phases": [
+    {
+      "phase": 1,
+      "viewers": 1,
+      "trial": 1,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-b8a608a2d3b3411692a2a294cac330e8.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-3/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-b8a608a2d3b3411692a2a294cac330e8.scope",
+      "actual_exit": 1,
+      "project": "dispatcharr-shared-ts-b7d006d09380",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b7d006d09380"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b7d006d09380"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b7d006d09380"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=c742674c65bee5124a030c6cb5189aea1097cbff627535ab389e8ae240cd2795"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=5bde053e0fa80615a8101fdf89b288b3a0c978880497631c341b0dac322a588a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=b40c1007b36ad972469607371cf4ce858b55e85d1f850bb7700bc0a26a572625"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "useful_media_complete": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": false,
+        "old_v2_requalification": false,
+        "readers": [
+          {
+            "reader": "owner",
+            "raw_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/baseline-shared-demand/owner.ts",
+            "passed": false,
+            "full_raw_decode": {
+              "actual_exit": 0,
+              "failure": null,
+              "stdout_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/baseline-shared-demand/owner.ts.framehash",
+              "stdout_sha256": "75931a022e08342d155485d62bf8c34b94e2baf2043ddfae02c50dffbbe60cc7",
+              "stderr_bytes": 0,
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "command_receipt": {
+                "argv": [
+                  "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+                  "compose",
+                  "-p",
+                  "dispatcharr-shared-ts-b7d006d09380",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-playback.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-candidate.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-replicas.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/candidate-image.json",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/ports.yml",
+                  "exec",
+                  "-T",
+                  "baseline",
+                  "ffmpeg",
+                  "-hide_banner",
+                  "-loglevel",
+                  "error",
+                  "-threads",
+                  "1",
+                  "-filter_threads",
+                  "1",
+                  "-filter_complex_threads",
+                  "1",
+                  "-copyts",
+                  "-i",
+                  "/evidence/baseline-shared-demand/owner.ts",
+                  "-map",
+                  "0:v:0",
+                  "-map",
+                  "0:a:0",
+                  "-fps_mode:v",
+                  "passthrough",
+                  "-c:v",
+                  "rawvideo",
+                  "-threads:v",
+                  "1",
+                  "-threads:a",
+                  "1",
+                  "-pix_fmt",
+                  "yuv420p",
+                  "-c:a",
+                  "pcm_s16le",
+                  "-f",
+                  "framehash",
+                  "-hash",
+                  "sha256",
+                  "pipe:1"
+                ],
+                "actual_exit": 0,
+                "failure": null,
+                "seconds": 0.573220674006734,
+                "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/command-00246.stdout",
+                "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/command-00246.stderr",
+                "stdout_bytes": 694391,
+                "stderr_bytes": 0
+              },
+              "media_sha256": "aec7698e6e38ad3da65f2069b01b57b90b5ba86f1459273a9dad13ff1cad1537"
+            },
+            "certificate": {
+              "raw_sha256": "aec7698e6e38ad3da65f2069b01b57b90b5ba86f1459273a9dad13ff1cad1537",
+              "raw_bytes": 13305136,
+              "derivative_sha256": "aec7698e6e38ad3da65f2069b01b57b90b5ba86f1459273a9dad13ff1cad1537",
+              "derivative_bytes": 13305136,
+              "drain_offset": 13305136,
+              "selected_window": [
+                3330380,
+                12537532
+              ],
+              "removed_ranges": [],
+              "PID_lower": {
+                "200": 564,
+                "100": 1128
+              },
+              "PID_upper": {
+                "200": 13305136,
+                "100": 13305136
+              },
+              "closure_proven": true
+            },
+            "certified_decode": {
+              "actual_exit": 0,
+              "failure": null,
+              "stdout_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/baseline-shared-demand/owner.certified.ts.framehash",
+              "stdout_sha256": "75931a022e08342d155485d62bf8c34b94e2baf2043ddfae02c50dffbbe60cc7",
+              "stderr_bytes": 0,
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "command_receipt": {
+                "argv": [
+                  "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+                  "compose",
+                  "-p",
+                  "dispatcharr-shared-ts-b7d006d09380",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-playback.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-candidate.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-replicas.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/candidate-image.json",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/ports.yml",
+                  "exec",
+                  "-T",
+                  "baseline",
+                  "ffmpeg",
+                  "-hide_banner",
+                  "-loglevel",
+                  "error",
+                  "-threads",
+                  "1",
+                  "-filter_threads",
+                  "1",
+                  "-filter_complex_threads",
+                  "1",
+                  "-copyts",
+                  "-i",
+                  "/evidence/baseline-shared-demand/owner.certified.ts",
+                  "-map",
+                  "0:v:0",
+                  "-map",
+                  "0:a:0",
+                  "-fps_mode:v",
+                  "passthrough",
+                  "-c:v",
+                  "rawvideo",
+                  "-threads:v",
+                  "1",
+                  "-threads:a",
+                  "1",
+                  "-pix_fmt",
+                  "yuv420p",
+                  "-c:a",
+                  "pcm_s16le",
+                  "-f",
+                  "framehash",
+                  "-hash",
+                  "sha256",
+                  "pipe:1"
+                ],
+                "actual_exit": 0,
+                "failure": null,
+                "seconds": 0.5705387179914396,
+                "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/command-00247.stdout",
+                "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/command-00247.stderr",
+                "stdout_bytes": 694391,
+                "stderr_bytes": 0
+              },
+              "media_sha256": "aec7698e6e38ad3da65f2069b01b57b90b5ba86f1459273a9dad13ff1cad1537"
+            },
+            "error": {
+              "type": "ValueError",
+              "message": "MissingDuplicateOrReorderedInteriorUnit"
+            }
+          }
+        ],
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5
+      },
+      "valid": false,
+      "measurement_seconds": 59.99837085400941,
+      "media_byte_deltas": [
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.640737,
+          "cpu_mean_cores": 0.06068059762587215,
+          "charged_memory_median_bytes": 876953600,
+          "charged_memory_max_simultaneous_bytes": 881659904,
+          "working_set_estimate_median_bytes": 837562368,
+          "working_set_estimate_max_simultaneous_bytes": 842268672
+        },
+        "origin": {
+          "cpu_core_seconds": 0.427355,
+          "cpu_mean_cores": 0.0071227767340526355,
+          "charged_memory_median_bytes": 223219712,
+          "charged_memory_max_simultaneous_bytes": 224362496,
+          "working_set_estimate_median_bytes": 100962304,
+          "working_set_estimate_max_simultaneous_bytes": 102105088
+        },
+        "observer": {
+          "cpu_core_seconds": 7.587731,
+          "cpu_mean_cores": 0.126465617182553,
+          "charged_memory_median_bytes": 215666688,
+          "charged_memory_max_simultaneous_bytes": 222113792,
+          "working_set_estimate_median_bytes": 151293952,
+          "working_set_estimate_max_simultaneous_bytes": 152989696
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.655823,
+          "cpu_mean_cores": 0.1942689915424778,
+          "charged_memory_median_bytes": 1316372480,
+          "charged_memory_max_simultaneous_bytes": 1326862336,
+          "working_set_estimate_median_bytes": 1089978368,
+          "working_set_estimate_max_simultaneous_bytes": 1096134656
+        },
+        "primary": {
+          "cpu_core_seconds": 4.068092,
+          "cpu_mean_cores": 0.06780337435992478,
+          "charged_memory_median_bytes": 1100390400,
+          "charged_memory_max_simultaneous_bytes": 1104998400,
+          "working_set_estimate_median_bytes": 938741760,
+          "working_set_estimate_max_simultaneous_bytes": 943349760
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "40e4b1d19bce6010bdafebcf40388dc7966fdf37198a25d15f6579cda65e3a88",
+        "resource-samples.json": "e957bca8e842a7075bb41f5d72cbad359b853ed979814b63ab7d56101e2c5b9b",
+        "useful-media-complete.json": "8d98ada7c2a61a7632db231ab20efd5fc12d9345beacafb630d3763d07db4207"
+      }
+    }
+  ],
+  "all_phases_valid": false,
+  "pairs": [],
+  "live_only_gain_accepted": false,
+  "active_DVR_gain_accepted": false,
+  "full_migration_accepted": false,
+  "changed_inputs": [],
+  "elapsed_seconds": 156.7291444779985
+}

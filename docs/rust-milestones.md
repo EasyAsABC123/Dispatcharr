@@ -12,7 +12,7 @@ alone does not establish application parity or an application performance gain.
 The newest source candidate is [Candidate27](rust-milestone-batch27.md): all four
 SDK gates pass with1,078 tests, zero failures and782 ignored. It adds the normal
 SD Connect/scoped-plugin event caller, supervised unknown-SQL hook quarantine/
-readiness and numeric preview command substitution. Docker, Main, enabled-plugin
+readiness and numeric preview command substitution. Docker/package checks pass. Main, enabled-plugin
 physical execution and paired performance remain required.
 
 [Candidate26](rust-milestone-batch26.md) passes1,075 SDK tests and all four gates.

@@ -1,0 +1,102 @@
+{
+  "status": "new_readonly_predicate_review_only",
+  "old_strict_failure_reproduced": "MissingDuplicateOrReorderedInteriorUnit",
+  "historical_phase_passed": false,
+  "old_raw_reports_unchanged": true,
+  "new_exact_Source_reference_adjacency_passed": true,
+  "all_retained_decoded_rows_exact_reference": 6197,
+  "selected_streams": {
+    "0": {
+      "complete_units": 1493,
+      "encoded_useful_bytes": 7501991,
+      "useful_duration_seconds": 59.72,
+      "first_pts90k": 1960319,
+      "last_pts90k": 7331519,
+      "independent_expected_encoded_bytes_60s": 7535186,
+      "useful_rate_fraction": 0.9955946674707167
+    },
+    "1": {
+      "complete_units": 2800,
+      "encoded_useful_bytes": 977760,
+      "useful_duration_seconds": 59.733333333333334,
+      "first_pts90k": 1959840,
+      "last_pts90k": 7333920,
+      "independent_expected_encoded_bytes_60s": 981977,
+      "useful_rate_fraction": 0.9957056020660362
+    }
+  },
+  "context": {
+    "compared_complete_context_units": {
+      "video": 2155,
+      "audio": 4042
+    },
+    "outer_AAC_priming_difference": []
+  },
+  "negative_controls": [
+    {
+      "name": "remove",
+      "rejected": true,
+      "reason": "MissingDuplicateOrReorderedInteriorUnit"
+    },
+    {
+      "name": "duplicate",
+      "rejected": true,
+      "reason": "MissingDuplicateOrReorderedInteriorUnit"
+    },
+    {
+      "name": "reorder",
+      "rejected": true,
+      "reason": "MissingDuplicateOrReorderedInteriorUnit"
+    },
+    {
+      "name": "one_sample_retime",
+      "rejected": true,
+      "reason": "MissingDuplicateOrReorderedInteriorUnit"
+    },
+    {
+      "name": "changed_decoded_interior",
+      "rejected": true,
+      "reason": "InteriorDecodedContentMismatch"
+    },
+    {
+      "name": "changed_encoded_size",
+      "rejected": true,
+      "reason": "IndependentEncodedUnitMismatch"
+    },
+    {
+      "name": "missing_context_unit",
+      "rejected": true,
+      "reason": "NoncontiguousInternalDecodeContext"
+    }
+  ],
+  "no_extra_timing_tolerance": true,
+  "thresholds_changed": false,
+  "decoder_or_apps_executed": false,
+  "paired_gain_accepted": false,
+  "references": [
+    {
+      "path": "artifacts/rust/m3-fullgraph-resource-viewing25-3/overlay/complete_media.py",
+      "sha256": "a3b64516a095383a91d70331b11b7efb8bfe7b53dad7a6809751269901bc7c2e"
+    },
+    {
+      "path": "artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/useful-media-complete.json",
+      "sha256": "8d98ada7c2a61a7632db231ab20efd5fc12d9345beacafb630d3763d07db4207"
+    },
+    {
+      "path": "artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/baseline-shared-demand/owner.certificate.json",
+      "sha256": "478de3936c1f287b6547cae10e5a235267db61c378ee2a3165355de35a9ebee5"
+    },
+    {
+      "path": "artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/baseline-shared-demand/owner.ts.framehash",
+      "sha256": "75931a022e08342d155485d62bf8c34b94e2baf2043ddfae02c50dffbbe60cc7"
+    },
+    {
+      "path": "artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/reference-fixture.framehash",
+      "sha256": "bee6d136107bbd73aab4fd02884154510f85cf8c716492c044bdd38886f2f8d7"
+    },
+    {
+      "path": "artifacts/rust/m3-fullgraph-resource-candidate25-2/1-1-1-baseline/reference-fixture.media-index.json",
+      "sha256": "5e2c13091f636a6c06107723ebd4da9fbe4b470ae6fef0c746f85672af41fa79"
+    }
+  ]
+}

@@ -27,8 +27,17 @@ blocks. An earlier strict-lint failure is retained; using the double-ended
 iterator's last item directly corrected it without changing header policy.
 
 Candidate26's [Docker/package evidence](rust-milestone-batch26.md) qualifies its
-recorded revision and image. This candidate still needs its own Docker build,
+recorded revision and image. This candidate still needs its own
 Source/Native application batch, actual enabled-plugin four-action/child-PG/
 transaction/timeout execution audit, physical retirement and paired performance.
 The prepared callbacks are not execution evidence. No full M0–M9 milestone or
 new application performance gain is accepted.
+
+The [Docker build and six package families](../scripts/rust-integration/milestone-batch27/package/inventory.json)
+pass for `d4f9bc878ff391af6ca8c19b571eb04519075d0e`, image
+`sha256:8a26ec3ff22657f7566ca94e6405e035ceba51db7354af2f60a158a59faeacde`.
+All1,891 archive files match Git, including all1,394 SDK31 Rust inputs and495
+React inputs. Existing Original attribution, dependency notices, actual UID and
+entrypoint remain verified. Crypto27, PostgreSQL528, regex648, full-host32,500
+hashes and paired certified useful-core VLC checks pass. Full Main and actual
+enabled-plugin execution are still untested on this image.

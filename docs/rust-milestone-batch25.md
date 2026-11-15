@@ -75,3 +75,15 @@ Origin and its proxy exit0 with joined handlers. The incomplete observer/Main
 cleanup diagnostics remain recorded. There are zero completed measurement phases
 and no accepted performance gain. The next attempt must repair directory access
 and distinguish resources that never started without inventing cleanup receipts.
+
+The [second viewing attempt](../scripts/rust-integration/milestone-batch25/performance-attempt2/result.json)
+reaches a59.998-second Source sample with9,211,248 delivered window bytes. Raw
+and certified full-stream decodes both pass without diagnostics. Qualification
+then fails `MissingDuplicateOrReorderedInteriorUnit`; the audio check incorrectly
+assumes1024-sample timestamp steps. The independent pinned Source VLC reference
+has the same actual timestamp sequence. A retained-byte review finds all6,197
+decoded rows match that reference exactly; a corrected exact-reference ordinal
+check is prepared, retaining content, timestamp, size and ordering requirements.
+The original failed report remains false. All three exact container IDs and
+project resources are absent. A separate post-wait wrapper receipt-write failure
+is preserved. This Source-only capture establishes no paired performance gain.
