@@ -1,0 +1,21 @@
+{
+  "required_expired_missing_playlist_predicate": false,
+  "actual_restarted_media_started_before_scheduled_end_microseconds": 147429,
+  "actual_reason": "no_stream_data: ffmpeg_failed",
+  "expected_reason_for_declared_expired_case": "server_restarted_after_end",
+  "diagnosis": "Expired input was not established; actual restarted media began147429microseconds before scheduled end. No evidence of wrong expired-finalizer behavior.",
+  "next_grouped_only_fixture_fix": {
+    "path": "artifacts/rust/m6-restart-expired-input-barrier-1/overlay-map.json",
+    "sha256": "df0183a346f2bbb49427b04c7e8ef24f5e1e2bb5daae73d5b708a38e7bd16e13"
+  },
+  "source_boundary_authority": {
+    "path": "apps/channels/tasks.py",
+    "sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279"
+  },
+  "authority_lines": [
+    3138,
+    3144,
+    3230
+  ],
+  "historical_failure_preserved": true
+}

@@ -11,7 +11,7 @@ alone does not establish application parity or an application performance gain.
 
 The newest committed SDK candidate is `b646f64f49ff0b4b4cd85af9d9051793c2c584f2`: [952 workspace tests pass](rust-milestone-batch13.md), with new plugin/XC handlers whose runtime gates remain open. The newest measured functional scope remains runtime `8faa6b9c444c8cdfec6cdfd3d1baa4d585ab2b2f` ([945 tests](rust-milestone-batch12.md)): its [grouped Compose run](rust-batch12-functional-observations.md) passes12 of14 Native contexts, all12 normal backup cells and five paired/Native physical backup checks. Core/restart fixture and observer failures remain literal; the event precision runtime assertion was not reached. All19 containers and both project inventories cleaned up. The earlier [Candidate11 observations](rust-batch11-functional-observations.md) retain their own scope. All full milestones remain open; no new performance gain is accepted.
 
-The latest packaged recording candidate is `cb1ba69af8e0623222391a707a2b9fc03b5995f6`:
+The earlier packaged recording candidate is `cb1ba69af8e0623222391a707a2b9fc03b5995f6`:
 [915 tests and its Docker build pass](rust-milestone-batch8.md), and the selected
 worker cohort passes223 checks with strict data-only Native mounts. Playback,
 normal artwork and their combined route/drain ownership are assembled. The
@@ -82,6 +82,8 @@ older results retain their recorded source and workload scope.
 The earlier [PATCH405 and plugin attempts](../scripts/rust-milestone-batches/m478/batch3_evidence/README.md)
 remain attached to their original image; the subsequent passing setter workflow
 does not rewrite those failures.
+
+The [same-image targeted continuation](rust-batch12-targeted-observations.md) now passes corrected Core and the event-precision predicate. Native restart retains one unestablished expired-input condition; Source passes all ten task predicates and control ordering but fails its declared media no-stderr check. All seven containers cleaned up. The full workflow and milestones remain open.
 
 ## Earlier scoped evidence
 

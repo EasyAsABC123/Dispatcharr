@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "cells": [
+    {
+      "name": "core-rehash-scale",
+      "status": "passed",
+      "actual_SQL_counts": {
+        "accounts": 1105,
+        "streams": 5024,
+        "future": 1042
+      },
+      "observed_child_list_count": null,
+      "actual_parent_backend_status": "SUCCESS",
+      "route_observation_present": true
+    },
+    {
+      "name": "core-offsets-scale",
+      "status": "passed",
+      "actual_SQL_counts": {
+        "accounts": 1105,
+        "streams": 5024,
+        "future": 1043
+      },
+      "observed_child_list_count": 1026,
+      "actual_parent_backend_status": "SUCCESS",
+      "route_observation_present": true
+    },
+    {
+      "name": "core-offset-shifted-past",
+      "status": "passed",
+      "actual_SQL_counts": null,
+      "observed_child_list_count": 1,
+      "actual_parent_backend_status": "SUCCESS",
+      "route_observation_present": false
+    }
+  ],
+  "scope": "New actual channel-title seed; composes with retained Source artwork6 no-provider guard. Old Source literal-placeholder Core scope is not exact authority; provider HTTP fallback remains unimplemented.",
+  "raw_reference": {
+    "path": "artifacts/rust/normal-graph-batch12-functional-2/results/Native/core-produced.json",
+    "sha256": "6d24b73f7d9c0c9e3c4aede4de0b89f88b5bc9c5504761379a6fffa53df448cf"
+  },
+  "performance_verified": false
+}

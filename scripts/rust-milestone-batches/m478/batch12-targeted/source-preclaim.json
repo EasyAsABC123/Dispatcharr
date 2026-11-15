@@ -1,0 +1,52 @@
+{
+  "task_key": "dvr-now-7-abb3f499d04740b59f2958c413490166",
+  "before_revoke": {
+    "exact_target_raw_still_queued": true,
+    "all_prior_raw_frames_still_queued": true,
+    "target_backend_absent": true,
+    "target_backend_value_type": "NoneType",
+    "target_backend_REVOKED": false,
+    "target_backend_sha256": null,
+    "actual_backend_status": null,
+    "actual_backend_task_id": null
+  },
+  "after_applied_before_add": {
+    "exact_target_raw_still_queued": true,
+    "all_prior_raw_frames_still_queued": true,
+    "target_backend_absent": false,
+    "target_backend_value_type": "str",
+    "target_backend_REVOKED": true,
+    "target_backend_sha256": "487e183dc436155a40230736c4a5cda527d943931b0bee76a6be3bc54fd19718",
+    "actual_backend_status": "REVOKED",
+    "actual_backend_task_id": "dvr-now-7-abb3f499d04740b59f2958c413490166"
+  },
+  "after_add": {
+    "exact_target_raw_still_queued": false,
+    "all_prior_raw_frames_still_queued": false,
+    "target_backend_absent": false,
+    "target_backend_value_type": "str",
+    "target_backend_REVOKED": true,
+    "target_backend_sha256": "f40f1367bd697175c3473b77a2792f28fa69c078026f461de52b1297ba264fd5",
+    "actual_backend_status": "REVOKED",
+    "actual_backend_task_id": "dvr-now-7-abb3f499d04740b59f2958c413490166"
+  },
+  "applied_before_dvr_intake": true,
+  "raw_removed_and_REVOKED_after_add": true,
+  "actual_queue_names_after_add": [
+    "normal-control-only-a62d98e6629248f6b2a5962d9c6bf152",
+    "dvr"
+  ],
+  "pinned_control_authority": {
+    "path": "artifacts/rust/m6-normal-pidbox-1/source/celery/worker/control.py",
+    "sha256": "81635318288a352e3e33b246da55f5d0cc2906ab70f8edbc3c6393dbd8f6109f"
+  },
+  "authority_lines": [
+    214,
+    222
+  ],
+  "scope": "Control backend REVOKED alone is not claim proof. Exact raw queued preADD and absent postADD additionally proven.",
+  "raw_reference": {
+    "path": "artifacts/rust/normal-graph-batch12-functional-2/fixtures/Original-1a020fc0/restart-Source-preclaim-control.json",
+    "sha256": "1af693e6f866a209240af608c81e6acf762c9bde598943815540b4b31cef4d29"
+  }
+}

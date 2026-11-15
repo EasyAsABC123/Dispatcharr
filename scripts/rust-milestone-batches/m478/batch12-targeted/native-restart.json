@@ -1,0 +1,89 @@
+{
+  "independent_predicates": {
+    "old_frame_actual_cas": true,
+    "named_and_UUID_keys_preserved": true,
+    "due_actual_media": true,
+    "expired_actual_remux": true,
+    "expired_missing_playlist_interrupted": false,
+    "future_periodic_repaired": true,
+    "queued_deleted_row_consumed": true,
+    "revoked_deleted_row_consumed": true,
+    "original_recording_window_preserved": true,
+    "all_owned_recording_children_retired": true
+  },
+  "true_count": 9,
+  "required_count": 10,
+  "actual_rows_allowlist": [
+    {
+      "recording_id": 1,
+      "start_time": "2026-11-15 06:46:46.303529+00:00",
+      "end_time": "2026-11-15 06:47:10.303529+00:00",
+      "status": "interrupted",
+      "remux_success": true,
+      "interrupted_reason": "server_restarted_after_end",
+      "started_at": "2026-11-15 06:46:46.346323",
+      "ended_at": null,
+      "fixture_case_label": "actual-expired-recovery"
+    },
+    {
+      "recording_id": 5,
+      "start_time": "2026-11-15 06:47:06.141694+00:00",
+      "end_time": "2026-11-15 06:48:31.137400+00:00",
+      "status": "completed",
+      "remux_success": true,
+      "interrupted_reason": null,
+      "started_at": "2026-11-15 06:47:11.140603",
+      "ended_at": "2026-11-15 06:48:32.101119",
+      "fixture_case_label": "actual-direct-named-frame"
+    },
+    {
+      "recording_id": 8,
+      "start_time": "2026-11-15 06:50:06.529814+00:00",
+      "end_time": "2026-11-15 06:51:06.529821+00:00",
+      "status": null,
+      "remux_success": null,
+      "interrupted_reason": null,
+      "started_at": null,
+      "ended_at": null,
+      "fixture_case_label": "actual-future-repair"
+    },
+    {
+      "recording_id": 2,
+      "start_time": "2026-11-15 06:46:46.303529+00:00",
+      "end_time": "2026-11-15 06:47:11.303529+00:00",
+      "status": "interrupted",
+      "remux_success": false,
+      "interrupted_reason": "no_stream_data: ffmpeg_failed",
+      "started_at": "2026-11-15 06:47:11.156100",
+      "ended_at": "2026-11-15 06:47:11.693442",
+      "fixture_case_label": "actual-expired-missing-playlist"
+    },
+    {
+      "recording_id": 3,
+      "start_time": "2026-11-15 06:46:47.303529+00:00",
+      "end_time": "2026-11-15 06:48:21.303529+00:00",
+      "status": "completed",
+      "remux_success": true,
+      "interrupted_reason": null,
+      "started_at": "2026-11-15 06:47:11.163920",
+      "ended_at": "2026-11-15 06:48:22.925586",
+      "fixture_case_label": "actual-in-window-resume"
+    },
+    {
+      "recording_id": 4,
+      "start_time": "2026-11-15 06:47:02.986971+00:00",
+      "end_time": "2026-11-15 06:49:20.986977+00:00",
+      "status": "completed",
+      "remux_success": true,
+      "interrupted_reason": null,
+      "started_at": "2026-11-15 06:47:11.123509",
+      "ended_at": "2026-11-15 06:49:22.274806",
+      "fixture_case_label": "actual-old-clocked-frame"
+    }
+  ],
+  "raw_reference": {
+    "path": "artifacts/rust/normal-graph-batch12-functional-2/results/Native/restart-recovery.json",
+    "sha256": "2b12dd49e175b5c9911b581604d451dc6760026e3a69bebdc4f5c7571d9fbed9"
+  },
+  "whole_context_passed": false
+}

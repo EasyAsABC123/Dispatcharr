@@ -1,0 +1,57 @@
+{
+  "decoders_reached": [
+    {
+      "recording_id": 1,
+      "actual_exit": 0,
+      "process_group_settled": true,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "video_frames": 200,
+      "audio_frames": 376,
+      "actual_file_bytes": 1181395,
+      "file_sha256": "40249b94f6c2a7d1ff74afde01c0a7b1fbb3b09071cccc51878fa266aaf0577e",
+      "internal_damage_detected": false,
+      "decoder_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch12-functional-2/results/Original/nonempty-restart-decoder-1.json",
+        "sha256": "9ad253574a11ae0322d495b0d8f43c097a5f12967afdf117697c950bb22ca21f"
+      }
+    },
+    {
+      "recording_id": 3,
+      "actual_exit": 0,
+      "process_group_settled": true,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "video_frames": 1707,
+      "audio_frames": 3202,
+      "actual_file_bytes": 9787658,
+      "file_sha256": "e10a4b5bf0f7daa5a20cf4adafc65d4302e08ccc770de0d6a67cebff5aa29725",
+      "internal_damage_detected": true,
+      "decoder_stderr_sha256": "ddc594b711fb9aed70f77e5b497b983c679750c52ebd14ca437e0c599857d44b",
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch12-functional-2/results/Original/nonempty-restart-decoder-3.json",
+        "sha256": "c222af3ce5b12b5a042feb7ccaf26eb6463df2784978e548edd9612bf65d1cab"
+      }
+    }
+  ],
+  "required_no_stderr_passed": false,
+  "later_decoder_recordings_4_5": "not_run: first required no-stderr assertion stopped decoder loop",
+  "actual_warning": "[null @ 0x5555adc0d680] Application provided invalid, non monotonically increasing dts to muxer in stream 1: 384000 >= 384000",
+  "actual_warning_scope": "Null output muxer reports equal audio DTS384000; exit0 and positive AV frames. This is not independent proof of bitstream corruption. Existing internal_damage_detected flag is bool(any stderr), preserved literally.",
+  "actual_command_settlement": {
+    "actual_exit": 0,
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "process_group_settled": true
+  },
+  "stderr_reference": {
+    "path": "artifacts/rust/normal-graph-batch12-functional-2/fixtures/Original-1a020fc0/command-0229.stderr",
+    "sha256": "ddc594b711fb9aed70f77e5b497b983c679750c52ebd14ca437e0c599857d44b"
+  },
+  "receipt_reference": {
+    "path": "artifacts/rust/normal-graph-batch12-functional-2/fixtures/Original-1a020fc0/command-0229.json",
+    "sha256": "019032d72632c6a39882b92026b913c59a78e6b6ef6aa52d5310bbbacfc45fa1"
+  },
+  "historical_failure_preserved": true
+}
