@@ -8,6 +8,8 @@ five Source-backed boundary corrections before its grouped Compose acceptance.
 Formatting, compilation, strict Clippy and the default workspace suite all pass:
 **941 passed, zero failed,752 external-fixture tests ignored**, across173 result
 blocks. The1217 recorded inputs remained unchanged; Cargo.lock is unchanged.
+The [SDK evidence](../scripts/rust-integration/milestone-batch11/inventory.json)
+binds every input to runtime `91c8ce7f2363a10ab872f79a7c8a727835626840`.
 
 Channel OPTIONS now returns the captured31-field ChannelSerializer metadata for
 all four production routes. Authentication and permission checks precede metadata

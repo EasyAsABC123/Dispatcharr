@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "scope": "Combined SDK only; default ignored external-fixture tests are not acceptance",
+  "runtime_git_revision": "91c8ce7f2363a10ab872f79a7c8a727835626840",
+  "all_inputs_exact_Git": true,
+  "total_inputs": 1217,
+  "Rust_inputs": 1212,
+  "workspace_totals": {
+    "passed": 941,
+    "failed": 0,
+    "ignored": 752
+  },
+  "result_blocks": 173,
+  "checks": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "PID": 1005329,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 2.3257837295532227,
+      "source_unchanged": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "check",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 1005359,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 12.763583183288574,
+      "source_unchanged": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "f9f04f561788cf28b5a03c6fb1611f29cd6b67d38c6d3c5bc2ee4bfd3ac7f148"
+    },
+    {
+      "name": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "PID": 1005605,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 36.750399112701416,
+      "source_unchanged": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "7cfafd2758b4fa4b7c5e23d8d5e12cdbcb76930b62361044f5342c474824a559"
+    },
+    {
+      "name": "workspace",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "PID": 1006786,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 108.32887029647827,
+      "source_unchanged": true,
+      "stdout_sha256": "d6685e0a7e8f8aa2a0a48f99b73487280ffac3c4b3c913614535acdfb3d2ab9f",
+      "stderr_sha256": "ab1a5775da56eab213cff8bb463522e3093fa31c1343349e7ccf27a9b8277c3b"
+    }
+  ],
+  "previous_candidate_evidence": "scripts/rust-integration/milestone-batch10/inventory.json",
+  "all_milestones_complete": false,
+  "new_performance_gains": false,
+  "original_authors_credit_preserved": true
+}
