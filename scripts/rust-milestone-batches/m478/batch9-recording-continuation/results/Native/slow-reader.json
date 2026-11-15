@@ -1,0 +1,219 @@
+{
+  "status": "passed",
+  "backend": "Native",
+  "recording_id": 1,
+  "actual_file_bytes": 13414238,
+  "actual_file_sha256": "48a401a42dc1e000ee3ce49c788666cb53efeaadc1093d542faec60964313054",
+  "Source_API_or_task_replay": false,
+  "media_synthesized": false,
+  "performance_claims": false,
+  "phases": [
+    {
+      "name": "live-reader-cancellation",
+      "HTTP": {
+        "actual_status": 200,
+        "headers": {
+          "content-type": "video/x-matroska",
+          "content-length": "13414238",
+          "accept-ranges": "bytes",
+          "content-disposition": "inline; filename=\"20261115_033955.mkv\"",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "DENY",
+          "referrer-policy": "same-origin",
+          "cross-origin-opener-policy": "same-origin",
+          "vary": "origin",
+          "connection": "close",
+          "date": "Sun, 15 Nov 2026 03:41:45 GMT"
+        },
+        "body_prefix_consumed_bytes": 0,
+        "socket_options": {
+          "requested_SO_RCVBUF": 1024,
+          "actual_SO_RCVBUF": 2304,
+          "actual_TCP_WINDOW_CLAMP": 1152,
+          "actual_connected_SO_RCVBUF": 2304,
+          "actual_connected_TCP_WINDOW_CLAMP": 1152
+        },
+        "actual_local_address": [
+          "127.0.0.1",
+          40478
+        ],
+        "actual_peer_address": [
+          "127.0.0.1",
+          64385
+        ]
+      },
+      "held": {
+        "actual_FD": {
+          "pid": 1,
+          "generation": "2695373",
+          "fd": 83,
+          "inode": 28533435,
+          "device": 37,
+          "bytes": 13414238,
+          "position": 7233536,
+          "link": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261115_033955.mkv"
+        },
+        "stable_observations": 6,
+        "stable_seconds": 0.2533886432647705,
+        "actual_socket_unread_bytes": 795,
+        "file_not_fully_read": true,
+        "first_epoch": 1794714105.8669167,
+        "last_epoch": 1794714106.1203053
+      },
+      "reader_cancelled_epoch": 1794714106.120827,
+      "actual_post_cancel_FD_absence": {
+        "epoch": 1794714106.1708748,
+        "monotonic": 27074.218528872,
+        "target_pids": [
+          1
+        ],
+        "fds": [],
+        "errors": []
+      },
+      "passed": true
+    },
+    {
+      "name": "held-reader-Native-SIGTERM",
+      "HTTP": {
+        "actual_status": 200,
+        "headers": {
+          "content-type": "video/x-matroska",
+          "content-length": "13414238",
+          "accept-ranges": "bytes",
+          "content-disposition": "inline; filename=\"20261115_033955.mkv\"",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "DENY",
+          "referrer-policy": "same-origin",
+          "cross-origin-opener-policy": "same-origin",
+          "vary": "origin",
+          "connection": "close",
+          "date": "Sun, 15 Nov 2026 03:41:46 GMT"
+        },
+        "body_prefix_consumed_bytes": 0,
+        "socket_options": {
+          "requested_SO_RCVBUF": 1024,
+          "actual_SO_RCVBUF": 2304,
+          "actual_TCP_WINDOW_CLAMP": 1152,
+          "actual_connected_SO_RCVBUF": 2304,
+          "actual_connected_TCP_WINDOW_CLAMP": 1152
+        },
+        "actual_local_address": [
+          "127.0.0.1",
+          40490
+        ],
+        "actual_peer_address": [
+          "127.0.0.1",
+          64385
+        ]
+      },
+      "held": {
+        "actual_FD": {
+          "pid": 1,
+          "generation": "2695373",
+          "fd": 83,
+          "inode": 28533435,
+          "device": 37,
+          "bytes": 13414238,
+          "position": 8773632,
+          "link": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261115_033955.mkv"
+        },
+        "stable_observations": 6,
+        "stable_seconds": 0.2530817985534668,
+        "actual_socket_unread_bytes": 795,
+        "file_not_fully_read": true,
+        "first_epoch": 1794714106.2721682,
+        "last_epoch": 1794714106.52525
+      },
+      "actual_SIGTERM_epoch": 1794714106.6354282,
+      "new_intake_actual_transport": [
+        {
+          "epoch": 1794714106.6362002,
+          "transport": "refused_or_closed",
+          "error_type": "RemoteDisconnected",
+          "errno": null,
+          "reason_type": "NoneType"
+        }
+      ],
+      "actual_new_intake_closed": true,
+      "external503_required": false,
+      "held_after_SIGTERM": {
+        "actual_FD": {
+          "pid": 1,
+          "generation": "2695373",
+          "fd": 83,
+          "inode": 28533435,
+          "device": 37,
+          "bytes": 13414238,
+          "position": 8773632,
+          "link": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261115_033955.mkv"
+        },
+        "stable_observations": 6,
+        "stable_seconds": 0.253467321395874,
+        "actual_socket_unread_bytes": 795,
+        "file_not_fully_read": true,
+        "first_epoch": 1794714106.6774101,
+        "last_epoch": 1794714106.9308774
+      },
+      "reader_cancelled_epoch": 1794714107.11943,
+      "actual_Main_wait_exit": 0,
+      "actual_Main_state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-11-15T03:39:45.669288194Z",
+        "FinishedAt": "2026-11-15T03:41:47.238529574Z"
+      },
+      "original_Main_host_generation_absent": true,
+      "FD_retired_by_actual_process_exit": true,
+      "normal_stop_receipt": {
+        "actual_exit": 0,
+        "oom_killed": false,
+        "expected_exit": 0
+      },
+      "passed": true
+    }
+  ],
+  "observer": {
+    "actual_CID": "a65d82d2f9bc10a676d4c1a444a6efde3831f12ac887337f4670719854e443ba",
+    "actual_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "actual_same_PID_namespace": true,
+    "actual_UID": 65532,
+    "target_CID": "e3c440d35ebb49a8b8fdb0f8fcac1aa6f930fd3ba3a2305b35cbeda8eb593ba9",
+    "actual_wait_exit": 0,
+    "receipt": {
+      "passed": true,
+      "actual_UID": 65532,
+      "rows": 27,
+      "bytes": 6908,
+      "row_limit": 2000,
+      "byte_limit": 2097152,
+      "period_seconds": 0.05,
+      "wall_limit_seconds": 90,
+      "writer_closed": true,
+      "stop_marker_observed": true,
+      "observer_pid_namespace": "pid:[4026534627]",
+      "target_pid_namespace": "pid:[4026534627]",
+      "target_pid": 1,
+      "target_generation": "2695373",
+      "config_sha256": "c8bd46de6af7d09d1d56886418806604d51f24c2ff6618889ecbb11ee2d55a73",
+      "source_sha256": "3cf46d3a5ef8ea8d0b07d45bdf75e83c30f21cd6fc36e1e12a8ae11f4240631e",
+      "masked_app_mode": "0o0",
+      "masked_app_read_refused": true,
+      "completed_epoch": 1794714107.0156493
+    },
+    "removed": true
+  },
+  "required_scope": "Actual FD/backpressure/cancellation; Native additionally held-reader TERM/drain.",
+  "Source_held_TERM_characterized": false,
+  "required_unmeasured": [],
+  "actual_file_unchanged": true,
+  "executed_slice_passed": true,
+  "physical_reader_shutdown_qualified": true,
+  "output": "/home/justin/github/Dispatcharr/artifacts/rust/core-recording-candidate9-continuation-1/fixtures/Native-842e159f/slow-reader-1-40c633"
+}

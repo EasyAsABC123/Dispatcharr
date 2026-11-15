@@ -1,0 +1,51 @@
+{
+  "status": "failed",
+  "cases": [
+    {
+      "case": "authorization",
+      "status": "passed"
+    },
+    {
+      "case": "artwork",
+      "status": "passed"
+    },
+    {
+      "case": "grouped-m6",
+      "status": "passed"
+    },
+    {
+      "case": "core-produced",
+      "status": "failed",
+      "reason": "AssertionError:{'status': 'failed', 'core': {'status': 'failed', 'cells': [{'name': 'core-rehash-scale', 'status': 'failed', 'began_epoch': 1794713881.412498, 'exception': 'TimeoutError', 'message': 'ActualCoreProducedTask:core.tasks.rehash_streams:None', 'after_counts': {'accounts': 1105, 'streams': 5025, 'future': 1042}, 'ended_epoch': 1794713914.8003912}, {'name': 'core-offsets-scale', 'status': 'failed', 'began_epoch': 1794713914.8005002, 'exception': 'TimeoutError', 'message': 'ActualCoreProducedTask:apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change:None', 'after_counts': {'accounts': 1105, 'streams': 5025, 'future': 1043}, 'ended_epoch': 1794713948.5299854}, {'name': 'core-offset-shifted-past', 'began_epoch': 1794713948.5307999, 'status': 'failed', 'exception': 'TimeoutError', 'message': 'ActualCoreProducedTask:apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change:None', 'ended_epoch': 1794713980.7619834}], 'exact_null_and_string_hash_checks': {'checked': 0, 'mismatches': []}, 'intern"
+    },
+    {
+      "case": "overlap",
+      "status": "passed"
+    },
+    {
+      "case": "controls",
+      "status": "passed"
+    },
+    {
+      "case": "nonempty-restart",
+      "status": "failed",
+      "reason": "TimeoutError:actual-restart-recording-finalization:None"
+    },
+    {
+      "case": "streams-denial",
+      "status": "passed"
+    },
+    {
+      "case": "held-drain",
+      "status": "passed"
+    }
+  ],
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "no_Source_model18_replay": true,
+  "required_playback_unmeasured": [
+    "reversed/outside-range captured transport requires paired Source qualification"
+  ],
+  "required_Source_shutdown_unmeasured": [],
+  "executed_slice_passed": false
+}

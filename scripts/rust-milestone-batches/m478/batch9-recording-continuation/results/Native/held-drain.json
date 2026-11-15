@@ -1,0 +1,32 @@
+{
+  "actual_blocked_SQL": [
+    [
+      11779,
+      "Lock",
+      "UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1 AND custom_properties IS NOT DISTINCT FROM $3"
+    ]
+  ],
+  "native_exit": {
+    "actual_exit": 1,
+    "oom_killed": false,
+    "expected_exit": 1
+  },
+  "actual_HTTP_observer": {
+    "failure": "RemoteDisconnected"
+  },
+  "observer_thread_settled": true,
+  "unknown_write_not_replayed": true,
+  "actual_row_after_release": [
+    {
+      "id": 1,
+      "channel_id": 1,
+      "start_time": "2026-11-15 03:52:10.919652+00:00",
+      "end_time": "2026-11-15 03:53:10.919652+00:00",
+      "task_id": "dvr-recording-1",
+      "custom_properties": {
+        "status": "stopped",
+        "stopped_at": "2026-11-15 03:49:11.655084+00:00"
+      }
+    }
+  ]
+}

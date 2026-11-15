@@ -1,0 +1,399 @@
+{
+  "paired_exceptional_ranges": {
+    "status": "failed",
+    "Source_reference_shape": "HTTP status observed",
+    "actual": {
+      "Original": {
+        "range-reversed-transport": {
+          "status_code": "206",
+          "content_length": "-4",
+          "content_range_offsets": [
+            7,
+            2
+          ],
+          "transfer_encoding": null,
+          "accept_ranges": "bytes",
+          "content_type": "video/x-matroska",
+          "peer_EOF": true,
+          "transport_failure": null,
+          "body_bytes": 0,
+          "wire_bytes_if_no_HTTP": null
+        },
+        "range-outside-transport": {
+          "status_code": "206",
+          "content_length": "-100",
+          "content_range_offsets": [
+            100,
+            -1
+          ],
+          "transfer_encoding": null,
+          "accept_ranges": "bytes",
+          "content_type": "video/x-matroska",
+          "peer_EOF": true,
+          "transport_failure": null,
+          "body_bytes": 0,
+          "wire_bytes_if_no_HTTP": null
+        }
+      },
+      "Native": {
+        "range-reversed-transport": {
+          "status_code": null,
+          "content_length": null,
+          "content_range_offsets": null,
+          "transfer_encoding": null,
+          "accept_ranges": null,
+          "content_type": null,
+          "peer_EOF": true,
+          "transport_failure": null,
+          "body_bytes": null,
+          "wire_bytes_if_no_HTTP": 0
+        },
+        "range-outside-transport": {
+          "status_code": null,
+          "content_length": null,
+          "content_range_offsets": null,
+          "transfer_encoding": null,
+          "accept_ranges": null,
+          "content_type": null,
+          "peer_EOF": true,
+          "transport_failure": null,
+          "body_bytes": null,
+          "wire_bytes_if_no_HTTP": 0
+        }
+      }
+    },
+    "scope": "only this paired actual exceptional-range transport; no broader HTTP/error-domain acceptance"
+  },
+  "backends": [
+    {
+      "status": "failed",
+      "cases": [
+        {
+          "case": "authorization",
+          "status": "passed"
+        },
+        {
+          "case": "artwork",
+          "status": "passed"
+        },
+        {
+          "case": "grouped-m6",
+          "status": "passed"
+        },
+        {
+          "case": "core-produced",
+          "status": "failed",
+          "reason": "AssertionError:{'status': 'failed', 'core': {'status': 'failed', 'cells': [{'name': 'core-rehash-scale', 'status': 'failed', 'began_epoch': 1794713881.412498, 'exception': 'TimeoutError', 'message': 'ActualCoreProducedTask:core.tasks.rehash_streams:None', 'after_counts': {'accounts': 1105, 'streams': 5025, 'future': 1042}, 'ended_epoch': 1794713914.8003912}, {'name': 'core-offsets-scale', 'status': 'failed', 'began_epoch': 1794713914.8005002, 'exception': 'TimeoutError', 'message': 'ActualCoreProducedTask:apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change:None', 'after_counts': {'accounts': 1105, 'streams': 5025, 'future': 1043}, 'ended_epoch': 1794713948.5299854}, {'name': 'core-offset-shifted-past', 'began_epoch': 1794713948.5307999, 'status': 'failed', 'exception': 'TimeoutError', 'message': 'ActualCoreProducedTask:apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change:None', 'ended_epoch': 1794713980.7619834}], 'exact_null_and_string_hash_checks': {'checked': 0, 'mismatches': []}, 'intern"
+        },
+        {
+          "case": "overlap",
+          "status": "passed"
+        },
+        {
+          "case": "controls",
+          "status": "passed"
+        },
+        {
+          "case": "nonempty-restart",
+          "status": "failed",
+          "reason": "TimeoutError:actual-restart-recording-finalization:None"
+        },
+        {
+          "case": "streams-denial",
+          "status": "passed"
+        },
+        {
+          "case": "held-drain",
+          "status": "passed"
+        }
+      ],
+      "full_milestone_passed": false,
+      "performance_verified": false,
+      "no_Source_model18_replay": true,
+      "required_playback_unmeasured": [
+        "reversed/outside-range captured transport requires paired Source qualification"
+      ],
+      "required_Source_shutdown_unmeasured": [],
+      "executed_slice_passed": false
+    },
+    {
+      "status": "failed",
+      "cases": [
+        {
+          "case": "source-slow-reader",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualCommand', 1, None, 'command-0018')"
+        },
+        {
+          "case": "nonempty-restart",
+          "status": "failed",
+          "reason": "TimeoutError:actual-pidbox-subscriber:None"
+        }
+      ],
+      "full_milestone_passed": false,
+      "performance_verified": false,
+      "no_Source_model18_replay": true,
+      "executed_slice_passed": false
+    }
+  ],
+  "cleanup": [
+    {
+      "project": "dispatcharr-normal-dvr-7f0b4f5a26",
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "25fae04e0794b8276918aef195ddb6525efc16993c5c11ca7836730a35aa897f",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "cd27e3d8f56214cb10624cebec913a58e9fa7f170640a68f74b715f13c71d00c",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "cf8821a807679993018535228d98edb47245e3a08159ca071d1535b03a5a2140",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "475f09c0da1329ec54c5eea34fe3337c254001564ea588cfd9228536ab33c038",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "7632a5227cda00598ea33fa4d4d2a5d4a360a356be34e2a6ad13ba9e63f99806",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "8a029a3d76e0a01054116538bdd9529c5e8dc50af6f6411ddb20378725ea3693",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "e3c440d35ebb49a8b8fdb0f8fcac1aa6f930fd3ba3a2305b35cbeda8eb593ba9",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "a65d82d2f9bc10a676d4c1a444a6efde3831f12ac887337f4670719854e443ba",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "b1df445c25785f26fa2d86a8e1f9762e7e2e913533e9487da414e887eb56d9b2",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "1e8cea840ade0782a619544230d1c767c56fc17ad4afceb231d66bc6e0049969",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "b9feb8014bbd9e9968bccd57d2b4041ce95885ec9e532fe4555e1cdc56919b7c",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "a1d96f3b2957c19c3506e10e6faccd2ff1eba7fb9b800f3ba1c949aa121de7ab",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "ccc9ea3e1803ec3a0621b16c3c73052f3b1e5965419731a8419002da32a07f8c",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    },
+    {
+      "project": "dispatcharr-normal-dvr-52d2f1849a",
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "3b96f430134d3109e415e216d8adf07165e9800c917af78d9b8f055f14d3cbdc",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "d9386698a1c5fa38b678d92776e053c9693b42a7a591fdf7b30e31e6b88f2abf",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    }
+  ],
+  "executed_backend_slices_passed": false,
+  "scoped_workflow_passed": false,
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "continuation_order": [
+    "Native whole once",
+    "Original unresolved slow-reader and restart only"
+  ],
+  "retained_Source_scope": {
+    "backend_order": [
+      "Native",
+      "Original"
+    ],
+    "Source_new_contexts": [
+      "source-slow-reader",
+      "nonempty-restart"
+    ],
+    "Source_Core_replay_forbidden": true,
+    "existing_approved_Source_contexts": {
+      "authorization": {
+        "kind": "Source-authorization9",
+        "Root_review": "Root explicitly qualified actual9 HTTP assertions; wrapper failed only subsequent log transport",
+        "observations": [
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/authorization-cases.json",
+            "sha256": "a529acd5e29231ad4d06e87da9f9ae865dca77f54b3ff7546450e12d3c0c3818"
+          }
+        ],
+        "cleanup": {
+          "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/independent-cleanup.json",
+          "sha256": "a34cabce1440ac2cbab215ce1426c266e48b308f28ca82cf5aeaae710fd9fb12"
+        }
+      },
+      "grouped-m6": {
+        "kind": "Source-selected-five-families",
+        "Root_review": "Root explicitly qualified cleanup/scanner/recurring/expiration/empty-stats actualpassed leaf bodies; no fullM6 claim",
+        "observations": [
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/m6-grouped-m6/cleanup.json",
+            "sha256": "72e9ce0419699789dd928926ff761eda34e72cd4c2c49eb4b7ac34970bfafde5"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/m6-grouped-m6/scanner.json",
+            "sha256": "bdfbbafbad715cea84d5ba5d1a15586de976e7c4af26be61db92e41dd6cc31d6"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/m6-grouped-m6/recurring.json",
+            "sha256": "b4251c39c719c5fd264b74d7f6caaf58102610084fd2c4329c1b4d29b0b20d19"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/m6-grouped-m6/expiration.json",
+            "sha256": "3356201c73f8f8787dfa28467396a785104cf460b34eeb4332307a8906c08dd9"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/m6-grouped-m6/empty-stats.json",
+            "sha256": "894e6374548e44aaa1cc76583538dd08aa65294fe228307362c19052788d32c0"
+          }
+        ],
+        "cleanup": {
+          "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/independent-cleanup.json",
+          "sha256": "a34cabce1440ac2cbab215ce1426c266e48b308f28ca82cf5aeaae710fd9fb12"
+        }
+      },
+      "controls": {
+        "kind": "Source-controls",
+        "Root_review": "Root explicitly qualified actual HTTP201/extend200/stop200/delete204, both real decoders, selective preservation/cancellation snapshots and settled ordinary viewer; raw failed wrapper retained",
+        "observations": [
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/controls-final.json",
+            "sha256": "622832abbc1c7854f7f9529190063d4fe6aee7b1e9599c7af2b783d82b3e5c01"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/results6/Original/decoder-1.json",
+            "sha256": "48a596c4eaf99d470396aba521782a284fa5a4893733efeb8cfb9046809e1712"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/results6/Original/decoder-2.json",
+            "sha256": "f6315f9d4dadac3d2160a79b15fbe11e0e2dc8bfad4f2b13bba9efa81308252c"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/ordinary-viewer-20495.json",
+            "sha256": "d179326bb0056ac3ccd19079378a45278f1c09b38b3d9afeaa5065679cf198b3"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/results6/Original/http-0205.json",
+            "sha256": "1e8a951e1c6baf93ab3077f1a44884bdbca6f99d7e644db6546dcb89bfa768dc"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/results6/Original/http-0206.json",
+            "sha256": "b14333e6c46534da187dbae4c9a83811b9179e895d240ca9c410e973404af544"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/results6/Original/http-0207.json",
+            "sha256": "c141bc68ea47aac45032eb5213122301bb6418ba6b6ed8d6c20a2867bfc6a4f5"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/results6/Original/http-0250.json",
+            "sha256": "f03fd3be322d2b937ea885d5d2aef68acfc035ad22f6ccbcd6c3aef9d5cfb08a"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/results6/Original/http-0251.json",
+            "sha256": "53e83264ddb5a50b52bc3063a1ebfcab3f518823f0e8742b2e5944787ca998b5"
+          },
+          {
+            "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/results6/Original/http-0258.json",
+            "sha256": "2ef8072ae793ab74457244fe66171b58eae6f5d2429c23b205bfac738945c07f"
+          }
+        ],
+        "cleanup": {
+          "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/independent-cleanup.json",
+          "sha256": "a34cabce1440ac2cbab215ce1426c266e48b308f28ca82cf5aeaae710fd9fb12"
+        }
+      }
+    },
+    "additional_actual_Source_authorities": {
+      "artwork": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-core-batch9-1/results/Original/artwork.json",
+        "sha256": "b87545c391c3cad0aee48bfe055224957360e23baf4ce573b52fdcb0969cd8b9",
+        "scope": "actual retained Source slice only; not whole old context or full-matrix acceptance"
+      },
+      "completed-playback": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-core-batch9-1/results/Original/overlap-completed-playback.json",
+        "sha256": "c0e4c8216aa6795332aaa30f39df48eca288f5a92379fa8fb76858accf50fac3",
+        "scope": "actual retained Source slice only; not whole old context or full-matrix acceptance"
+      },
+      "streams-denial": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-core-batch9-1/results/Original/streams-denied.json",
+        "sha256": "6a8379540341d9cade53f58527b6d2abee9280970bb8ef4afd1fcff89d8420e2",
+        "scope": "actual retained Source slice only; not whole old context or full-matrix acceptance"
+      },
+      "narrow-Core": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-core-source-leaf-qualification-1/captured-scope-report.json",
+        "sha256": "cb04ad2568fb2b005fd410b29ffe79bae705737ca773e57c40cabf7bc1828953",
+        "scope": "actual retained Source slice only; not whole old context or full-matrix acceptance"
+      }
+    },
+    "strict_Core_coverage_passed": false,
+    "missing_Source_Core_proof": [
+      "raw publication/backend pair6db847fa-2255-4529-b181-3fa77908fe9f",
+      "full observer coverage/success",
+      "final5000-hash SQL summary",
+      "final1025-schedule/manual summary"
+    ],
+    "old_cleanup_false_preserved": true,
+    "later_readonly_cleanup": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-core-batch9-1/late-cleanup-verification/report.json",
+      "sha256": "2a8313601a9ce591b292cd93703a1158bd2dc65ccdb20565fab8c9d7ea5c6feb"
+    }
+  },
+  "missing_Source_Core_proof": [
+    "raw publication/backend pair6db847fa-2255-4529-b181-3fa77908fe9f",
+    "full observer coverage/success",
+    "final5000-hash SQL summary",
+    "final1025-schedule/manual summary"
+  ]
+}
