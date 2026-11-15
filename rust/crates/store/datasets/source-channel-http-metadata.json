@@ -1,0 +1,339 @@
+{
+  "credit": "All application and serializer credit belongs to Original Dispatcharr authors; Django REST framework metadata algorithm belongs to its authors.",
+  "authority": {
+    "source_report": "artifacts/rust/m6-channel-source-http-actual-1/source-report.json",
+    "source_report_sha256": "703ce237661a04f19409c24dd059810f13b764a58ad673408b3e381522389b55",
+    "actual_Source_HTTP_cases": 98,
+    "Source_APIClient_calls": 0,
+    "Source_task_body_calls": 0
+  },
+  "shared": {
+    "renders": [
+      "application/json",
+      "text/html"
+    ],
+    "parses": [
+      "application/json",
+      "application/x-www-form-urlencoded",
+      "multipart/form-data"
+    ],
+    "actions": {
+      "POST": {
+        "id": {
+          "type": "integer",
+          "required": false,
+          "read_only": true,
+          "label": "ID"
+        },
+        "channel_number": {
+          "type": "float",
+          "required": false,
+          "read_only": false,
+          "label": "Channel number"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "read_only": false,
+          "label": "Name",
+          "max_length": 512
+        },
+        "channel_group_id": {
+          "type": "field",
+          "required": false,
+          "read_only": false,
+          "label": "Channel group id"
+        },
+        "tvg_id": {
+          "type": "string",
+          "required": false,
+          "read_only": false,
+          "label": "Tvg id",
+          "max_length": 255
+        },
+        "tvc_guide_stationid": {
+          "type": "string",
+          "required": false,
+          "read_only": false,
+          "label": "Tvc guide stationid",
+          "max_length": 255
+        },
+        "epg_data_id": {
+          "type": "field",
+          "required": false,
+          "read_only": false,
+          "label": "Epg data id"
+        },
+        "streams": {
+          "type": "field",
+          "required": false,
+          "read_only": false,
+          "label": "Streams"
+        },
+        "stream_profile_id": {
+          "type": "field",
+          "required": false,
+          "read_only": false,
+          "label": "Stream profile id"
+        },
+        "uuid": {
+          "type": "string",
+          "required": false,
+          "read_only": true,
+          "label": "Uuid"
+        },
+        "logo_id": {
+          "type": "field",
+          "required": false,
+          "read_only": false,
+          "label": "Logo id"
+        },
+        "user_level": {
+          "type": "integer",
+          "required": false,
+          "read_only": false,
+          "label": "User level",
+          "min_value": -2147483648,
+          "max_value": 2147483647
+        },
+        "is_adult": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Is adult",
+          "help_text": "Whether this channel contains adult content"
+        },
+        "is_catchup": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Is catchup",
+          "help_text": "Whether any stream on this channel supports catch-up (tv_archive=1)"
+        },
+        "catchup_days": {
+          "type": "integer",
+          "required": false,
+          "read_only": false,
+          "label": "Catchup days",
+          "help_text": "Max catch-up archive days across all streams on this channel",
+          "min_value": 0,
+          "max_value": 2147483647
+        },
+        "is_radio": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Is radio",
+          "help_text": "Whether this channel is a radio channel, copied from its source stream"
+        },
+        "hidden_from_output": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Hidden from output",
+          "help_text": "Exclude this channel from downstream client output (HDHR, M3U, EPG, XC). Auto-sync still updates provider metadata."
+        },
+        "auto_created": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Auto created",
+          "help_text": "Whether this channel was automatically created via M3U auto channel sync"
+        },
+        "auto_created_by": {
+          "type": "field",
+          "required": false,
+          "read_only": false,
+          "label": "Auto created by",
+          "help_text": "The M3U account that auto-created this channel"
+        },
+        "auto_created_by_name": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Auto created by name"
+        },
+        "override": {
+          "type": "nested object",
+          "required": false,
+          "read_only": false,
+          "label": "Override",
+          "help_text": "Per-field overrides for an auto-created channel. Send {\"override\": {\"name\": \"ESPN\"}} to upsert the listed fields, {\"override\": {\"name\": null}} to clear specific fields while leaving others, or {\"override\": null} to delete the override row entirely. Omitting the key leaves any existing override unchanged. Only valid for auto_created=True channels. Duplicate channel_number values across channels are permitted; downstream client behavior on duplicates varies by client.",
+          "children": {
+            "name": {
+              "type": "string",
+              "required": false,
+              "read_only": false,
+              "label": "Name",
+              "max_length": 512
+            },
+            "channel_number": {
+              "type": "float",
+              "required": false,
+              "read_only": false,
+              "label": "Channel number",
+              "min_value": 0.0001
+            },
+            "channel_group_id": {
+              "type": "field",
+              "required": false,
+              "read_only": false,
+              "label": "Channel group id"
+            },
+            "logo_id": {
+              "type": "field",
+              "required": false,
+              "read_only": false,
+              "label": "Logo id"
+            },
+            "tvg_id": {
+              "type": "string",
+              "required": false,
+              "read_only": false,
+              "label": "Tvg id",
+              "max_length": 255
+            },
+            "tvc_guide_stationid": {
+              "type": "string",
+              "required": false,
+              "read_only": false,
+              "label": "Tvc guide stationid",
+              "max_length": 255
+            },
+            "epg_data_id": {
+              "type": "field",
+              "required": false,
+              "read_only": false,
+              "label": "Epg data id"
+            },
+            "stream_profile_id": {
+              "type": "field",
+              "required": false,
+              "read_only": false,
+              "label": "Stream profile id"
+            },
+            "is_radio": {
+              "type": "boolean",
+              "required": false,
+              "read_only": false,
+              "label": "Is radio",
+              "help_text": "User override for is_radio; null follows the channel value"
+            }
+          }
+        },
+        "source_stream": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Source stream"
+        },
+        "effective_name": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Effective name"
+        },
+        "effective_channel_number": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Effective channel number"
+        },
+        "effective_channel_group_id": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Effective channel group id"
+        },
+        "effective_logo_id": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Effective logo id"
+        },
+        "effective_tvg_id": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Effective tvg id"
+        },
+        "effective_tvc_guide_stationid": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Effective tvc guide stationid"
+        },
+        "effective_epg_data_id": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Effective epg data id"
+        },
+        "effective_stream_profile_id": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Effective stream profile id"
+        },
+        "effective_is_radio": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Effective is radio"
+        }
+      }
+    }
+  },
+  "routes": {
+    "names": {
+      "name": "Set names from epg",
+      "description": "Trigger a Celery task to set channel names from EPG data"
+    },
+    "logos": {
+      "name": "Set logos from epg",
+      "description": "Trigger a Celery task to set channel logos from EPG data.\nProvide channel_ids or epg_source_id (not both)."
+    },
+    "tvg": {
+      "name": "Set tvg ids from epg",
+      "description": "Trigger a Celery task to set channel TVG-IDs from EPG data"
+    },
+    "bulk": {
+      "name": "From stream bulk",
+      "description": ""
+    }
+  },
+  "malformed": [
+    {
+      "name": "names-malformed-JSON",
+      "raw": "{\"",
+      "status": 400,
+      "JSON": {
+        "detail": "JSON parse error - Unterminated string starting at: line 1 column 2 (char 1)"
+      }
+    },
+    {
+      "name": "logos-malformed-JSON",
+      "raw": "{\"",
+      "status": 400,
+      "JSON": {
+        "detail": "JSON parse error - Unterminated string starting at: line 1 column 2 (char 1)"
+      }
+    },
+    {
+      "name": "tvg-malformed-JSON",
+      "raw": "{\"",
+      "status": 400,
+      "JSON": {
+        "detail": "JSON parse error - Unterminated string starting at: line 1 column 2 (char 1)"
+      }
+    },
+    {
+      "name": "bulk-malformed-JSON",
+      "raw": "{\"",
+      "status": 400,
+      "JSON": {
+        "detail": "JSON parse error - Unterminated string starting at: line 1 column 2 (char 1)"
+      }
+    }
+  ]
+}

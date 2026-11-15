@@ -43,6 +43,37 @@ fn email(value: Option<&Value>) -> Result<String, String> {
 }
 pub(crate) fn json_error(raw: &[u8], e: serde_json::Error) -> String {
     let message = e.to_string();
+    if message.starts_with("EOF while parsing a string") {
+        if let Ok(text) = std::str::from_utf8(raw) {
+            let mut opening = None;
+            let mut escaped = false;
+            for (position, character) in text.chars().enumerate() {
+                if opening.is_some() {
+                    if escaped {
+                        escaped = false;
+                    } else if character == '\\' {
+                        escaped = true;
+                    } else if character == '"' {
+                        opening = None;
+                    }
+                } else if character == '"' {
+                    opening = Some(position);
+                }
+            }
+            if let Some(position) = opening {
+                let prefix: String = text.chars().take(position).collect();
+                let line = prefix.chars().filter(|v| *v == '\n').count() + 1;
+                let column = prefix
+                    .rsplit('\n')
+                    .next()
+                    .unwrap_or_default()
+                    .chars()
+                    .count()
+                    + 1;
+                return format!("Unterminated string starting at: line {line} column {column} (char {position})");
+            }
+        }
+    }
     let (label, line, column) = if raw.iter().all(u8::is_ascii_whitespace) {
         ("Expecting value", 1, 1)
     } else if message.starts_with("EOF while parsing an object")

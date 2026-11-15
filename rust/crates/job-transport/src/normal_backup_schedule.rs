@@ -91,7 +91,7 @@ impl Schedule {
         let mut connection = self.store.pool().acquire().await?;
         let observed=async{
    let row=sqlx::query("SELECT CASE WHEN value IS NULL OR octet_length(value::text)<=65536 THEN value ELSE NULL END AS value,value IS NULL OR octet_length(value::text)<=65536 AS bounded FROM core_coresettings WHERE key='backup_settings' LIMIT 1").fetch_optional(&mut *connection).await?;
-   let mut value=match row{Some(row)=>{if !row.try_get::<bool,_>("bounded")?{return Err(failed("Backup settings capacity unavailable"))}row.try_get::<Option<Value>,_>("value")?.filter(Value::is_object).unwrap_or_else(||if updating{json!({})}else{defaults()})},None=>{let d=defaults();if updating{sqlx::query("INSERT INTO core_coresettings(key,name,value) VALUES('backup_settings','Backup Settings',$1) ON CONFLICT(key) DO NOTHING").bind(&d).execute(&mut *connection).await?;}d}};
+   let mut value=match row{Some(row)=>{if !row.try_get::<bool,_>("bounded")?{return Err(failed("Backup settings capacity unavailable"))}row.try_get::<Option<Value>,_>("value")?.filter(Value::is_object).unwrap_or_else(||if updating{json!({})}else{defaults()})},None=>{let d=defaults();sqlx::query("INSERT INTO core_coresettings(key,name,value) VALUES('backup_settings','Backup Settings',$1) ON CONFLICT(key) DO NOTHING").bind(&d).execute(&mut *connection).await?;d}};
    if let Some(data)=data{
     let fields=data.as_object().ok_or_else(||invalid("Expected an object"))?;
     if let Some(v)=fields.get("frequency"){if !matches!(v.as_str(),Some("daily"|"weekly")){return Err(invalid("frequency must be 'daily' or 'weekly'"))}}

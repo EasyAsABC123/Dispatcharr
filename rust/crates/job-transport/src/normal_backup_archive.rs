@@ -109,6 +109,9 @@ impl Executor {
    let mut result=json!({"status":"completed","filename":complete.filename,"size":complete.size});
    if let Some(count)=retention{
     match retain(&owned.root,&count){Ok(deleted)=>result["deleted_count"]=json!(deleted),Err(error)=>return json!({"status":"failed","error":error})}
+    // Source stats backup_file AFTER cleanup: filename ordering may delete
+    // the freshly created file after a timezone reversal/future-name archive.
+    match std::fs::metadata(owned.root.join(&complete.filename)){Ok(meta)=>result["size"]=json!(meta.len()),Err(_)=>return json!({"status":"failed","error":"Native backup metadata error after retention"})}
    }
    result
   }).await.map_err(|_|Error::Supervisor)
