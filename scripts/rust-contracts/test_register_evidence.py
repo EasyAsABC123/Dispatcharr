@@ -14,6 +14,7 @@ import unittest
 
 # These portable Source-input classes are included in the existing SDK module.
 from test_source_contracts import SourceContracts
+from test_logo_source_contracts import LogoSourceControls
 from test_schema_cache_contracts import SchemaCacheControls
 from test_notification_credential_contracts import CredentialSourceControls
 from test_vod_access_contracts import VODAccessControls
@@ -69,6 +70,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(notification_credential_contracts.dependencies())
         import vod_access_contracts
         refs.update(vod_access_contracts.dependencies())
+        import logo_source_contracts
+        refs.update(logo_source_contracts.dependencies())
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)

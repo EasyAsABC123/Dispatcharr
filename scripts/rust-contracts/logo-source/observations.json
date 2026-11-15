@@ -1,0 +1,43 @@
+{
+  "full_log_sha256": "5ce7a671b204e8b1a444e2edbf51313363aaf385989e8268eee011ea1612ad35",
+  "full_log_bytes": 881752,
+  "selected_test_cases": 5,
+  "new_Source_executions": 0,
+  "cases": {
+    "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_accepts_slash_less_url": {
+      "historical_result": "ok",
+      "framework_log_block": "test_cache_accepts_slash_less_url (apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_accepts_slash_less_url)\nClients that strip trailing slashes still get the image, not HTML or a redirect. ... ok\n",
+      "framework_log_block_sha256": "1835b4c9a7d8796e18848de05486b7be85d0efd7188632bb96163c531bce9fc0",
+      "full_log_byte_start": 132972,
+      "full_log_byte_end": 133193
+    },
+    "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_serves_image_for_image_accept_header": {
+      "historical_result": "ok",
+      "framework_log_block": "test_cache_serves_image_for_image_accept_header (apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_serves_image_for_image_accept_header)\nNative image loaders send Accept: image/*; that must not 406. ... ok\n",
+      "framework_log_block_sha256": "2240ef552c621ce9346897b808672551e8cef3d55003d688643c5ead20ef1278",
+      "full_log_byte_start": 133193,
+      "full_log_byte_end": 133423
+    },
+    "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_non_cache_action_still_negotiates_accept": {
+      "historical_result": "ok",
+      "framework_log_block": "test_non_cache_action_still_negotiates_accept (apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_non_cache_action_still_negotiates_accept)\nNegotiation skip is scoped to cache: other actions still 406 on image/*. ... 2026-11-09 07:40:28,263 WARNING django.request Not Acceptable: /api/channels/logos/9/\nok\n",
+      "framework_log_block_sha256": "6168cee851b9add8c717b034b5d068a9fa8726a33f792a9e599625ccbe81bb8f",
+      "full_log_byte_start": 133423,
+      "full_log_byte_end": 133746
+    },
+    "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_traversal_url_returns_404": {
+      "historical_result": "ok",
+      "framework_log_block": "test_traversal_url_returns_404 (apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_traversal_url_returns_404) ... 2026-11-09 07:40:28,266 ERROR core.image_proxy logo file not found or unsafe path: /data/../etc/passwd\nok\n",
+      "framework_log_block_sha256": "a6a0a4348e1607124408cbe25280f4be9e2429625ebd785959bd4296287a1c50",
+      "full_log_byte_start": 133746,
+      "full_log_byte_end": 133983
+    },
+    "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_valid_local_logo_is_served": {
+      "historical_result": "ok",
+      "framework_log_block": "test_valid_local_logo_is_served (apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_valid_local_logo_is_served) ... ok\n",
+      "framework_log_block_sha256": "452152b5acae6f67a1ff9143df2520eaff4b6de7881e52d1b3945f90d4673a10",
+      "full_log_byte_start": 133983,
+      "full_log_byte_end": 134119
+    }
+  }
+}

@@ -1,0 +1,428 @@
+{
+  "format_version": 1,
+  "binding_kind": "pinned_original_logo_path_tests",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_test_files": [
+    {
+      "path": "scripts/rust-contracts/logo-source/original/apps/channels/tests/test_logo_path_jail.py",
+      "sha256": "65070c5d49db834df07c96296f39ee2099571ce398dea0a6834bb9e3bf737b05"
+    }
+  ],
+  "authorities": [
+    {
+      "path": "scripts/rust-contracts/framework-auth/full-suite-reference.json",
+      "sha256": "494e9945c39e94c2c05301efed9bba3ba89b5da3b60eb55142f2c701729091c6"
+    },
+    {
+      "path": "scripts/rust-contracts/logo-source/observations.json",
+      "sha256": "ff91b04983f6d07c3b3cfc62dcc2143287835311052f6faa1ddaef5d2848b421"
+    }
+  ],
+  "operation_count": 3,
+  "unique_historical_test_cases": 5,
+  "new_Source_cases_this_task": 0,
+  "fixtures": {
+    "Original-logo-jail-TestCase": {
+      "id": "Original-logo-jail-TestCase",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "source_test_file": {
+        "path": "scripts/rust-contracts/logo-source/original/apps/channels/tests/test_logo_path_jail.py",
+        "sha256": "65070c5d49db834df07c96296f39ee2099571ce398dea0a6834bb9e3bf737b05"
+      },
+      "Source_class": "LogoCachePathJailTests",
+      "class_ast_sha256": "dd5803265e43770661d7a89780efc6c6fd31c74cf3d48b1b0dbb9b6ef67015b3",
+      "setup": {
+        "source": "def setUp(self):\n        self.factory = APIRequestFactory()\n        User = get_user_model()\n        self.user, _ = User.objects.get_or_create(\n            username=\"logo_cache_admin\",\n            defaults={\"user_level\": User.UserLevel.ADMIN},\n        )",
+        "ast_sha256": "44871c3a91c316d43efb2e04cccbf1f5acb0428268819ddf9a5c4e9694b0dc0d",
+        "Source_user_declaration": "get_or_create logo_cache_admin with user_level=User.UserLevel.ADMIN in defaults; existing-row actual SQL not separately projected",
+        "real_files": "Actual /data/logos owned UUID PNG files, per-method finally unlink; traversal target /data/../etc/passwd is not served",
+        "helpers_and_teardown": "Original full class/source is retained unchanged; method-specific try/finally is part of each exact test AST."
+      },
+      "execution": {
+        "entrypoint": "scripts/rust-baseline/run.py",
+        "Original_test_labels": [
+          "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_traversal_url_returns_404",
+          "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_valid_local_logo_is_served",
+          "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_accepts_slash_less_url",
+          "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_serves_image_for_image_accept_header",
+          "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_non_cache_action_still_negotiates_accept"
+        ],
+        "new_Source_execution": false,
+        "historical_full_suite": {
+          "path": "scripts/rust-contracts/framework-auth/full-suite-reference.json",
+          "sha256": "494e9945c39e94c2c05301efed9bba3ba89b5da3b60eb55142f2c701729091c6"
+        },
+        "transport": "APIRequestFactory direct explicit as_view mapping OR Django test client resolver; per-case distinction retained",
+        "complete_role_matrix": false
+      },
+      "roles": {
+        "anonymous_factory": {
+          "kind": "anonymous_factory",
+          "credential_backend_bypassed": false,
+          "actual_full_actor_SQL_projected": false
+        },
+        "anonymous_test_client": {
+          "kind": "anonymous_test_client",
+          "credential_backend_bypassed": false,
+          "actual_full_actor_SQL_projected": false
+        },
+        "forced_factory_user": {
+          "kind": "forced_factory_user",
+          "credential_backend_bypassed": true,
+          "actual_full_actor_SQL_projected": false
+        },
+        "forced_login_session": {
+          "kind": "forced_login_session",
+          "credential_backend_bypassed": true,
+          "actual_full_actor_SQL_projected": false
+        }
+      }
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-39e467bea08111013168:GET",
+      "pattern_exact": "api/channels/^logos/(?P<pk>[^/.]+)/cache/$",
+      "source_handler": "apps.channels.api_views.LogoViewSet",
+      "method": "GET",
+      "source_action": "cache",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-logo-jail-TestCase",
+      "source_role_specs": {
+        "anonymous_factory": {
+          "kind": "anonymous_factory",
+          "credential_backend_bypassed": false,
+          "actual_full_actor_SQL_projected": false
+        },
+        "anonymous_test_client": {
+          "kind": "anonymous_test_client",
+          "credential_backend_bypassed": false,
+          "actual_full_actor_SQL_projected": false
+        },
+        "forced_factory_user": {
+          "kind": "forced_factory_user",
+          "credential_backend_bypassed": true,
+          "actual_full_actor_SQL_projected": false
+        }
+      },
+      "observed_roles": [
+        "anonymous_factory",
+        "anonymous_test_client",
+        "forced_factory_user"
+      ],
+      "observed_request_methods": [
+        "GET"
+      ],
+      "cases": [
+        {
+          "test_id": "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_traversal_url_returns_404",
+          "source_file": "apps/channels/tests/test_logo_path_jail.py",
+          "source_method": "test_traversal_url_returns_404",
+          "test_ast_sha256": "7008edbccc80f2b0a295f627fc825ce154fefe50f2d24fceabe98d6708642a69",
+          "source": "def test_traversal_url_returns_404(self):\n        logo = Logo.objects.create(\n            name=\"Traversal\",\n            url=\"/data/../etc/passwd\",\n        )\n        request = self.factory.get(f\"/api/channels/logos/{logo.id}/cache/\")\n        force_authenticate(request, user=self.user)\n        view = LogoViewSet.as_view({\"get\": \"cache\"})\n        response = view(request, pk=logo.id)\n        self.assertEqual(response.status_code, 404)",
+          "setup_fixture_id": "Original-logo-jail-TestCase",
+          "assertion_expressions": [
+            "self.assertEqual(response.status_code, 404)"
+          ],
+          "requests": [
+            {
+              "line": 61,
+              "source": "self.factory.get(f\"/api/channels/logos/{logo.id}/cache/\")",
+              "ast_sha256": "f9eebca121763d129685887a831af9a26662eaf9a1990ab6fb335221873c4324",
+              "method": "GET",
+              "symbolic_path": "/api/channels/logos/{PK}/cache/",
+              "route_id": "route-39e467bea08111013168",
+              "contract_id": "route-39e467bea08111013168:GET",
+              "actor": "forced_factory_user",
+              "transport": "APIRequestFactory direct cache action; resolver not exercised",
+              "asserted_response_status": 404,
+              "response_wire_bytes_captured": false
+            }
+          ],
+          "result": {
+            "historical_result": "ok",
+            "framework_log_block": "test_traversal_url_returns_404 (apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_traversal_url_returns_404) ... 2026-11-09 07:40:28,266 ERROR core.image_proxy logo file not found or unsafe path: /data/../etc/passwd\nok\n",
+            "framework_log_block_sha256": "a6a0a4348e1607124408cbe25280f4be9e2429625ebd785959bd4296287a1c50",
+            "full_log_byte_start": 133746,
+            "full_log_byte_end": 133983
+          },
+          "assertion_scope": "Whole unchanged Original method, including real local files/finally/stream consumption; exact original assertions only, no extra body-byte/authentication/native guarantee"
+        },
+        {
+          "test_id": "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_valid_local_logo_is_served",
+          "source_file": "apps/channels/tests/test_logo_path_jail.py",
+          "source_method": "test_valid_local_logo_is_served",
+          "test_ast_sha256": "0e079ab1870f0623c66097907765d5ce9cdb0074a2d5d036e2409c03b4952ea6",
+          "source": "def test_valid_local_logo_is_served(self):\n        logos_root = Path(\"/data/logos\")\n        logos_root.mkdir(parents=True, exist_ok=True)\n        name = f\"_jail_serve_{uuid.uuid4().hex}.png\"\n        file_path = logos_root / name\n        file_path.write_bytes(b\"\\x89PNG\\r\\n\\x1a\\n\")\n        logo = Logo.objects.create(name=\"Ok\", url=str(file_path))\n        try:\n            request = self.factory.get(f\"/api/channels/logos/{logo.id}/cache/\")\n            view = LogoViewSet.as_view({\"get\": \"cache\"})\n            response = view(request, pk=logo.id)\n            self.assertEqual(response.status_code, 200)\n            b\"\".join(response.streaming_content)\n        finally:\n            file_path.unlink(missing_ok=True)",
+          "setup_fixture_id": "Original-logo-jail-TestCase",
+          "assertion_expressions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "requests": [
+            {
+              "line": 75,
+              "source": "self.factory.get(f\"/api/channels/logos/{logo.id}/cache/\")",
+              "ast_sha256": "f9eebca121763d129685887a831af9a26662eaf9a1990ab6fb335221873c4324",
+              "method": "GET",
+              "symbolic_path": "/api/channels/logos/{PK}/cache/",
+              "route_id": "route-39e467bea08111013168",
+              "contract_id": "route-39e467bea08111013168:GET",
+              "actor": "anonymous_factory",
+              "transport": "APIRequestFactory direct cache action; resolver not exercised",
+              "asserted_response_status": 200,
+              "response_wire_bytes_captured": false
+            }
+          ],
+          "result": {
+            "historical_result": "ok",
+            "framework_log_block": "test_valid_local_logo_is_served (apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_valid_local_logo_is_served) ... ok\n",
+            "framework_log_block_sha256": "452152b5acae6f67a1ff9143df2520eaff4b6de7881e52d1b3945f90d4673a10",
+            "full_log_byte_start": 133983,
+            "full_log_byte_end": 134119
+          },
+          "assertion_scope": "Whole unchanged Original method, including real local files/finally/stream consumption; exact original assertions only, no extra body-byte/authentication/native guarantee"
+        },
+        {
+          "test_id": "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_serves_image_for_image_accept_header",
+          "source_file": "apps/channels/tests/test_logo_path_jail.py",
+          "source_method": "test_cache_serves_image_for_image_accept_header",
+          "test_ast_sha256": "ffd940577b3decdd67fbaab319928cacbaf0c72009d2938327421c52d36f776e",
+          "source": "def test_cache_serves_image_for_image_accept_header(self):\n        \"\"\"Native image loaders send Accept: image/*; that must not 406.\n\n        Browsers and curl send Accept: */* and get 200, so the endpoint looks\n        healthy by hand while image-only clients (e.g. Apple TV) get 406.\n        \"\"\"\n        logos_root = Path(\"/data/logos\")\n        logos_root.mkdir(parents=True, exist_ok=True)\n        name = f\"_jail_accept_{uuid.uuid4().hex}.png\"\n        file_path = logos_root / name\n        file_path.write_bytes(b\"\\x89PNG\\r\\n\\x1a\\n\")\n        logo = Logo.objects.create(name=\"AcceptImg\", url=str(file_path))\n        try:\n            response = self.client.get(\n                f\"/api/channels/logos/{logo.id}/cache/\", HTTP_ACCEPT=\"image/*\"\n            )\n            self.assertEqual(response.status_code, 200)\n            self.assertTrue(response.get(\"Content-Type\", \"\").startswith(\"image/\"))\n            b\"\".join(response.streaming_content)\n        finally:\n            file_path.unlink(missing_ok=True)",
+          "setup_fixture_id": "Original-logo-jail-TestCase",
+          "assertion_expressions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertTrue(response.get(\"Content-Type\", \"\").startswith(\"image/\"))"
+          ],
+          "requests": [
+            {
+              "line": 113,
+              "source": "self.client.get(\n                f\"/api/channels/logos/{logo.id}/cache/\", HTTP_ACCEPT=\"image/*\"\n            )",
+              "ast_sha256": "02d3627476849864d7339222661a15220da2ed0c325a63ac159b93369f5b7cf2",
+              "method": "GET",
+              "symbolic_path": "/api/channels/logos/{PK}/cache/",
+              "route_id": "route-39e467bea08111013168",
+              "contract_id": "route-39e467bea08111013168:GET",
+              "actor": "anonymous_test_client",
+              "transport": "Django test-client real resolver; no TCP",
+              "asserted_response_status": 200,
+              "response_wire_bytes_captured": false
+            }
+          ],
+          "result": {
+            "historical_result": "ok",
+            "framework_log_block": "test_cache_serves_image_for_image_accept_header (apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_serves_image_for_image_accept_header)\nNative image loaders send Accept: image/*; that must not 406. ... ok\n",
+            "framework_log_block_sha256": "2240ef552c621ce9346897b808672551e8cef3d55003d688643c5ead20ef1278",
+            "full_log_byte_start": 133193,
+            "full_log_byte_end": 133423
+          },
+          "assertion_scope": "Whole unchanged Original method, including real local files/finally/stream consumption; exact original assertions only, no extra body-byte/authentication/native guarantee"
+        }
+      ],
+      "assertions": [
+        {
+          "test_id": "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_traversal_url_returns_404",
+          "expressions": [
+            "self.assertEqual(response.status_code, 404)"
+          ],
+          "historical_result": "ok"
+        },
+        {
+          "test_id": "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_valid_local_logo_is_served",
+          "expressions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "historical_result": "ok"
+        },
+        {
+          "test_id": "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_serves_image_for_image_accept_header",
+          "expressions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertTrue(response.get(\"Content-Type\", \"\").startswith(\"image/\"))"
+          ],
+          "historical_result": "ok"
+        }
+      ],
+      "result": {
+        "state": "historical_full3362_named_Original_workflows_passed",
+        "historical_test_cases": 3,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "wire_equality_claimed": false
+      },
+      "fully_verified": false,
+      "remaining": [
+        "Only original assertions/fixture actors, not full endpoint/roles/Native/TCP behavior",
+        "Format aliases, unrelated Logo CRUD/upload/custom grammar remain unassigned",
+        "Factory direct actions do not prove URL resolver dispatch; client cases are distinct"
+      ]
+    },
+    {
+      "contract_id": "route-a53ed9176d67c2be1915:GET",
+      "pattern_exact": "api/channels/logos/<int:pk>/cache",
+      "source_handler": "apps.channels.api_views.LogoViewSet",
+      "method": "GET",
+      "source_action": "cache",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-logo-jail-TestCase",
+      "source_role_specs": {
+        "anonymous_test_client": {
+          "kind": "anonymous_test_client",
+          "credential_backend_bypassed": false,
+          "actual_full_actor_SQL_projected": false
+        }
+      },
+      "observed_roles": [
+        "anonymous_test_client"
+      ],
+      "observed_request_methods": [
+        "GET"
+      ],
+      "cases": [
+        {
+          "test_id": "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_accepts_slash_less_url",
+          "source_file": "apps/channels/tests/test_logo_path_jail.py",
+          "source_method": "test_cache_accepts_slash_less_url",
+          "test_ast_sha256": "b2afd831a8be9b034f7db0f0bf439a865bb1534be3a78e9465c26031dc6c1ecb",
+          "source": "def test_cache_accepts_slash_less_url(self):\n        \"\"\"Clients that strip trailing slashes still get the image, not HTML or a redirect.\"\"\"\n        logos_root = Path(\"/data/logos\")\n        logos_root.mkdir(parents=True, exist_ok=True)\n        name = f\"_jail_noslash_{uuid.uuid4().hex}.png\"\n        file_path = logos_root / name\n        file_path.write_bytes(b\"\\x89PNG\\r\\n\\x1a\\n\")\n        logo = Logo.objects.create(name=\"Noslash\", url=str(file_path))\n        try:\n            response = self.client.get(f\"/api/channels/logos/{logo.id}/cache\")\n            self.assertEqual(response.status_code, 200)\n            self.assertFalse(response.has_header(\"Location\"))\n            self.assertNotIn(\"text/html\", response.get(\"Content-Type\", \"\"))\n            b\"\".join(response.streaming_content)\n        finally:\n            file_path.unlink(missing_ok=True)",
+          "setup_fixture_id": "Original-logo-jail-TestCase",
+          "assertion_expressions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertFalse(response.has_header(\"Location\"))",
+            "self.assertNotIn(\"text/html\", response.get(\"Content-Type\", \"\"))"
+          ],
+          "requests": [
+            {
+              "line": 92,
+              "source": "self.client.get(f\"/api/channels/logos/{logo.id}/cache\")",
+              "ast_sha256": "9a3fd545e9dd57521b0cf9e29971d7e80a2ea4aa88099e417f4eb3ec7877c34e",
+              "method": "GET",
+              "symbolic_path": "/api/channels/logos/{PK}/cache",
+              "route_id": "route-a53ed9176d67c2be1915",
+              "contract_id": "route-a53ed9176d67c2be1915:GET",
+              "actor": "anonymous_test_client",
+              "transport": "Django test-client real resolver; no TCP",
+              "asserted_response_status": 200,
+              "response_wire_bytes_captured": false
+            }
+          ],
+          "result": {
+            "historical_result": "ok",
+            "framework_log_block": "test_cache_accepts_slash_less_url (apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_accepts_slash_less_url)\nClients that strip trailing slashes still get the image, not HTML or a redirect. ... ok\n",
+            "framework_log_block_sha256": "1835b4c9a7d8796e18848de05486b7be85d0efd7188632bb96163c531bce9fc0",
+            "full_log_byte_start": 132972,
+            "full_log_byte_end": 133193
+          },
+          "assertion_scope": "Whole unchanged Original method, including real local files/finally/stream consumption; exact original assertions only, no extra body-byte/authentication/native guarantee"
+        }
+      ],
+      "assertions": [
+        {
+          "test_id": "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_cache_accepts_slash_less_url",
+          "expressions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertFalse(response.has_header(\"Location\"))",
+            "self.assertNotIn(\"text/html\", response.get(\"Content-Type\", \"\"))"
+          ],
+          "historical_result": "ok"
+        }
+      ],
+      "result": {
+        "state": "historical_full3362_named_Original_workflows_passed",
+        "historical_test_cases": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "wire_equality_claimed": false
+      },
+      "fully_verified": false,
+      "remaining": [
+        "Only original assertions/fixture actors, not full endpoint/roles/Native/TCP behavior",
+        "Format aliases, unrelated Logo CRUD/upload/custom grammar remain unassigned",
+        "Factory direct actions do not prove URL resolver dispatch; client cases are distinct"
+      ]
+    },
+    {
+      "contract_id": "route-a71786620f7727bad11a:GET",
+      "pattern_exact": "api/channels/^logos/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.channels.api_views.LogoViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-logo-jail-TestCase",
+      "source_role_specs": {
+        "forced_login_session": {
+          "kind": "forced_login_session",
+          "credential_backend_bypassed": true,
+          "actual_full_actor_SQL_projected": false
+        }
+      },
+      "observed_roles": [
+        "forced_login_session"
+      ],
+      "observed_request_methods": [
+        "GET"
+      ],
+      "cases": [
+        {
+          "test_id": "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_non_cache_action_still_negotiates_accept",
+          "source_file": "apps/channels/tests/test_logo_path_jail.py",
+          "source_method": "test_non_cache_action_still_negotiates_accept",
+          "test_ast_sha256": "404bfbbf8533ab99325f19ea86096466cedfd03ec9a1e96e3a2f48c13094324c",
+          "source": "def test_non_cache_action_still_negotiates_accept(self):\n        \"\"\"Negotiation skip is scoped to cache: other actions still 406 on image/*.\"\"\"\n        logo = Logo.objects.create(name=\"Retrieve\", url=\"/data/logos/none.png\")\n        self.client.force_login(self.user)\n        response = self.client.get(\n            f\"/api/channels/logos/{logo.id}/\", HTTP_ACCEPT=\"image/*\"\n        )\n        self.assertEqual(response.status_code, 406)",
+          "setup_fixture_id": "Original-logo-jail-TestCase",
+          "assertion_expressions": [
+            "self.assertEqual(response.status_code, 406)"
+          ],
+          "requests": [
+            {
+              "line": 126,
+              "source": "self.client.get(\n            f\"/api/channels/logos/{logo.id}/\", HTTP_ACCEPT=\"image/*\"\n        )",
+              "ast_sha256": "d73aad4aa9bd184187ba77e37962f3e3859b5c8bb29e07f278a3b72eff06dbef",
+              "method": "GET",
+              "symbolic_path": "/api/channels/logos/{PK}/",
+              "route_id": "route-a71786620f7727bad11a",
+              "contract_id": "route-a71786620f7727bad11a:GET",
+              "actor": "forced_login_session",
+              "transport": "Django test-client real resolver; no TCP",
+              "asserted_response_status": 406,
+              "response_wire_bytes_captured": false
+            }
+          ],
+          "result": {
+            "historical_result": "ok",
+            "framework_log_block": "test_non_cache_action_still_negotiates_accept (apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_non_cache_action_still_negotiates_accept)\nNegotiation skip is scoped to cache: other actions still 406 on image/*. ... 2026-11-09 07:40:28,263 WARNING django.request Not Acceptable: /api/channels/logos/9/\nok\n",
+            "framework_log_block_sha256": "6168cee851b9add8c717b034b5d068a9fa8726a33f792a9e599625ccbe81bb8f",
+            "full_log_byte_start": 133423,
+            "full_log_byte_end": 133746
+          },
+          "assertion_scope": "Whole unchanged Original method, including real local files/finally/stream consumption; exact original assertions only, no extra body-byte/authentication/native guarantee"
+        }
+      ],
+      "assertions": [
+        {
+          "test_id": "apps.channels.tests.test_logo_path_jail.LogoCachePathJailTests.test_non_cache_action_still_negotiates_accept",
+          "expressions": [
+            "self.assertEqual(response.status_code, 406)"
+          ],
+          "historical_result": "ok"
+        }
+      ],
+      "result": {
+        "state": "historical_full3362_named_Original_workflows_passed",
+        "historical_test_cases": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "wire_equality_claimed": false
+      },
+      "fully_verified": false,
+      "remaining": [
+        "Only original assertions/fixture actors, not full endpoint/roles/Native/TCP behavior",
+        "Format aliases, unrelated Logo CRUD/upload/custom grammar remain unassigned",
+        "Factory direct actions do not prove URL resolver dispatch; client cases are distinct"
+      ]
+    }
+  ],
+  "non_HTTP_contracts": [],
+  "Native_coverage_increased": false,
+  "fully_verified_added": 0
+}
