@@ -1,0 +1,228 @@
+{
+  "format": 1,
+  "status": "not_run",
+  "mode": "verify-ca-allow-v1",
+  "global_fixture_slots": 1,
+  "single_bootstrapped_PG17_fixture": true,
+  "planned_Main_starts": 13,
+  "PostgreSQL_compatibility_cells": 12,
+  "SQLite_required_parity": false,
+  "SQLite_expected_native_unsupported_guard": true,
+  "cases": [
+    {
+      "name": "valid_verify_full",
+      "family": "postgres",
+      "changes": {},
+      "server_phase": "TLS_required",
+      "source_connected": true,
+      "expected_native_ready": true,
+      "expected_native_ssl": true,
+      "expected_native_client_dn": "/CN=dispatch",
+      "expected_Main_exit": 0,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "7c2b2569caca4be34e162e2892afd0323213a11c9516ae8efbe198bbf38b20bb"
+    },
+    {
+      "name": "wrong_ca",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_SSL_CA_CERT": "/tls/wrong-ca.pem"
+      },
+      "server_phase": "TLS_required",
+      "source_connected": false,
+      "expected_native_ready": false,
+      "expected_native_ssl": null,
+      "expected_native_client_dn": null,
+      "expected_Main_exit": 1,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "8b1b612f417e1b4f494dbb5f0101bc9405162cfa71aa84d2fc64a3120758f522"
+    },
+    {
+      "name": "missing_ca_path",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_SSL_CA_CERT": "/tls/missing.pem"
+      },
+      "server_phase": "TLS_required",
+      "source_connected": false,
+      "expected_native_ready": false,
+      "expected_native_ssl": null,
+      "expected_native_client_dn": null,
+      "expected_Main_exit": 1,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "58621af812a114fc27ef36f5326662fe3a4e0318024662ba2486e312ca2e157d"
+    },
+    {
+      "name": "hostname_mismatch",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_HOST": "localhost"
+      },
+      "server_phase": "TLS_required",
+      "source_connected": false,
+      "expected_native_ready": false,
+      "expected_native_ssl": null,
+      "expected_native_client_dn": null,
+      "expected_Main_exit": 1,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "fe48dbae5015068cc62d8a00b613291e1ccc8dcdb7150897fb9dde106ff99216"
+    },
+    {
+      "name": "verify_ca_mismatch",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_HOST": "localhost",
+        "POSTGRES_SSL_MODE": "verify-ca"
+      },
+      "server_phase": "TLS_required",
+      "source_connected": true,
+      "expected_native_ready": true,
+      "expected_native_ssl": true,
+      "expected_native_client_dn": "/CN=dispatch",
+      "expected_Main_exit": 0,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "041a8234356382d8a8f77f4d6198d1aac9e4918748b889720717f827a1811275"
+    },
+    {
+      "name": "no_client_cert",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_SSL_CERT": "",
+        "POSTGRES_SSL_KEY": ""
+      },
+      "server_phase": "TLS_required",
+      "source_connected": false,
+      "expected_native_ready": false,
+      "expected_native_ssl": null,
+      "expected_native_client_dn": null,
+      "expected_Main_exit": 1,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "68f22a1fb60d4f811428a912add9a87c0fd15ecd2539ad315f60d385964dbd8f"
+    },
+    {
+      "name": "require_wrong_ca",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_SSL_MODE": "require",
+        "POSTGRES_SSL_CA_CERT": "/tls/wrong-ca.pem"
+      },
+      "server_phase": "TLS_required",
+      "source_connected": false,
+      "expected_native_ready": false,
+      "expected_native_ssl": null,
+      "expected_native_client_dn": null,
+      "expected_Main_exit": 1,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "bd04e6c30beaf2a434da508dd90f8501aa201521f32c2944d5dfbdbad2fdfc96"
+    },
+    {
+      "name": "unix_socket_ssl_true",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_HOST": "/var/run/postgresql"
+      },
+      "server_phase": "TLS_required",
+      "source_connected": true,
+      "expected_native_ready": true,
+      "expected_native_ssl": false,
+      "expected_native_client_dn": null,
+      "expected_Main_exit": 0,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "9998bacf8d3442e86339db68a3b3ba9c499aa029fdf9be88cfc597fdf0f5c58a"
+    },
+    {
+      "name": "ipv6_verify_ca",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_HOST": "::1",
+        "POSTGRES_SSL_MODE": "verify-ca"
+      },
+      "server_phase": "TLS_required",
+      "source_connected": true,
+      "expected_native_ready": true,
+      "expected_native_ssl": true,
+      "expected_native_client_dn": "/CN=dispatch",
+      "expected_Main_exit": 0,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "7f566e9ff34708f9b3e5ad617d792cd2f6cf7044c599445d67a06c18c99e3506"
+    },
+    {
+      "name": "source_allow",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_SSL_MODE": "allow"
+      },
+      "server_phase": "TLS_required",
+      "source_connected": true,
+      "expected_native_ready": true,
+      "expected_native_ssl": true,
+      "expected_native_client_dn": "/CN=dispatch",
+      "expected_Main_exit": 0,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "8ffd0bc1e1151641fa4961a9ae8901a8fc82dceb1dfd4336c930f3f3b4fc705e"
+    },
+    {
+      "name": "source_prefer",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_SSL_MODE": "prefer"
+      },
+      "server_phase": "TLS_required",
+      "source_connected": true,
+      "expected_native_ready": true,
+      "expected_native_ssl": true,
+      "expected_native_client_dn": "/CN=dispatch",
+      "expected_Main_exit": 0,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "1078e892dd68dd41604804d2141d9c028792eeb2b9453730f3113b6dfbd9b013"
+    },
+    {
+      "name": "sqlite",
+      "family": "sqlite",
+      "changes": {
+        "DB_ENGINE": "sqlite"
+      },
+      "server_phase": "TLS_required",
+      "source_connected": true,
+      "expected_native_ready": false,
+      "expected_native_ssl": null,
+      "expected_native_client_dn": null,
+      "expected_Main_exit": 1,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-tls-authority-3/qualified-source-summary.json",
+      "Source_reference_sha256": "3ef1d4d33c36f724a043e2bdd0db6098ab6e14f77a28cf2871567911d92d26fd",
+      "Source_case_sha256": "8858b6b751a6a91db0ce399627743876406abdcc321e5d30b7ecff38a103a994"
+    },
+    {
+      "name": "source_allow_plaintext_preference",
+      "family": "postgres",
+      "changes": {
+        "POSTGRES_SSL_MODE": "allow"
+      },
+      "server_phase": "plaintext_allowed",
+      "source_connected": true,
+      "expected_native_ready": true,
+      "expected_native_ssl": false,
+      "expected_native_client_dn": null,
+      "expected_Main_exit": 0,
+      "Source_reference": "/home/justin/github/Dispatcharr/artifacts/rust/m478-pg-allow-plaintext-source-1/report.json",
+      "Source_reference_sha256": "10c6761d168467265ef4a1e8b66ad383ca2f4e7ecbd16cbe7a1abb5b516b39e8",
+      "Source_case_sha256": "971ef12b963b9992ec820814110baf778fefc3b2dfd899bce9c68b5058acc87a"
+    }
+  ],
+  "Source_API_calls": 0,
+  "Source_driver_calls": 0,
+  "Source_replays": 0,
+  "Cargo_or_image_builds": 0,
+  "performance_claims": false
+}

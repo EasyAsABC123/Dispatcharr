@@ -1,9 +1,37 @@
-# Actual default Main graph audit after batch3
+# Selected worker graph and remaining acceptance
 
 Original Dispatcharr/Celery/django-celery-beat and dependency authors retain all
-application, algorithm and protocol credit. This is a source audit, not new
-runtime acceptance. Current runtime is bfb4086; public evidence is 3143f9a.
-Do not edit the protected legacy scheduler/EPG/DVR work in progress.
+application, algorithm and protocol credit.
+
+Runtime `52e8ebc7` now registers the selected14 families plus startup recovery in
+one experimental Main assembly. Both worker and clocked-only scheduler flags
+remain off by default. Its [actual selected cohort](rust-batch7-selected-m6-observations.md)
+passes222 checks; this is not full Source47/default-Beat acceptance.
+
+| Family group | Current Main composition | Actual current acceptance |
+| --- | --- | --- |
+| Refresh, index, TVG, Series, version | Registered with real existing services | Selected API chains/retained consumers, failure continuation and version startup pass |
+| Artwork | Registered child/root consumers | Captured configured-Series children pass; normal root/manual/no-image/provider coverage remains incomplete |
+| Recording | Registered generic DVR consumer and actual HTTP controls | Normal media/control/restart workflows await the shared actual Source/Native cohort |
+| Scanner, M3U groups, M3U single | Registered with shared first-scan state and owned SQL sessions | Grouped mixed-file/descendant acceptance prepared, not yet run |
+| Recurring, expiration, cleanup, proxy stats | Registered real services | Grouped empty/active/default/effect acceptance prepared, not yet run |
+| Startup recovery | Real worker-ready publication and consumer | Empty recovery passes; owner/cache-loss/nonempty and warm-restart scopes remain separate |
+| Clocked scheduler | Explicit single-instance opt-in | Startup/readiness and retained import coexistence pass; interval/crontab/full default Beat remains absent |
+
+Ordinary admission allows six concurrent tasks, but some individual services
+still allow only one task per family. Normal DVR admits twenty tasks. Those
+facts do not prove Source concurrency parity. Actual Core rehash and offset
+rescheduling publications need downstream handlers beyond the selected14;
+implementation is in progress. SQLite, physical cancellation/fault variants,
+Source task coverage and equivalent-work performance remain open.
+
+## Historical batch3 audit
+
+The table below records the earlier `bfb4086` implementation, before the
+experimental assembly. Its absent routes, pool-one-only adapters and fixed
+recording-domain restrictions are historical findings, not current Main status.
+Public evidence at that checkpoint was `3143f9a`. Protected legacy scheduler/
+EPG/DVR work in progress remains separate.
 
 This is the selected14-family integration graph, not the complete Source task
 registry. The [Source task coverage audit](rust-source-task-coverage.md) finds47

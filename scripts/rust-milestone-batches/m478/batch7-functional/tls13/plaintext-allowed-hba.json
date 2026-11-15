@@ -1,0 +1,40 @@
+{
+  "ssl": "on",
+  "rules": [
+    {
+      "rule_number": 1,
+      "type": "local",
+      "address": null,
+      "auth_method": "trust",
+      "error": null
+    },
+    {
+      "rule_number": 2,
+      "type": "hostnossl",
+      "address": "127.0.0.1",
+      "auth_method": "trust",
+      "error": null
+    },
+    {
+      "rule_number": 3,
+      "type": "hostnossl",
+      "address": "::1",
+      "auth_method": "trust",
+      "error": null
+    },
+    {
+      "rule_number": 4,
+      "type": "hostssl",
+      "address": "127.0.0.1",
+      "auth_method": "cert",
+      "error": null
+    },
+    {
+      "rule_number": 5,
+      "type": "hostssl",
+      "address": "::1",
+      "auth_method": "cert",
+      "error": null
+    }
+  ]
+}

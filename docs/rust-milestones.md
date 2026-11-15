@@ -9,7 +9,32 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The latest packaged runtime is `95da37d9f0bd6dcca5f678d114bdac994de9b8de`:
+The newest committed runtime is `52e8ebc7e4ce8b92368ec94797d60c0e44678687`:
+[911 tests pass](rust-milestone-batch7.md), with 751 external-fixture tests ignored,
+and its [production image](rust-milestone-batch7-build.md) preserves React and all
+original credits. The [grouped PostgreSQL run](rust-batch7-tls-acceptance.md) now
+passes all 12 retained cases, including IPv6 and both allow branches. SQLite
+remains unsupported; broader TLS branches still need qualification.
+
+The [experimental selected-worker cohort](rust-batch7-selected-m6-observations.md)
+passes 222 checks with real recovery/version startup, configured/no-rules import
+chains and failure continuation. Its future-head retry interval has 20 actual
+reads in about one second, within the declared bound. This is a functional
+resource check, not a paired CPU gain. The broad evidence bind exposed Original
+source files even though Native had no `/app` source bind; a stricter data-only
+fixture is prepared for the next candidate. Earlier
+[permission, journal and queue-spin failures](rust-batch6-functional-observations.md)
+remain unchanged.
+
+Normal recording HTTP and queued-frame adoption are implemented in this runtime;
+playback and broader artwork are under joint validation. Both experimental
+worker/scheduler flags remain off by default. Full Source task/role/input coverage,
+all default scheduling, SQLite, physical faults, soak/rollback and whole-service
+performance remain open. These results do not close M0–M9.
+
+The following candidate5 checkpoint retains its earlier application scope.
+
+The earlier packaged runtime is `95da37d9f0bd6dcca5f678d114bdac994de9b8de`:
 [896 default tests pass](rust-milestone-batch5.md), with 751 external-fixture
 tests ignored. Its [Docker image](rust-milestone-batch5-build.md) preserves the
 React assets and original credits; [all 11 clean-install/React checks pass](rust-milestone-batch5-clean-install.md).
@@ -23,20 +48,19 @@ metadata checks. Five actual publications now include the retained Source
 headers; downstream execution and complete property equality remain unqualified.
 These are scoped integration results, not full milestone completion.
 
-The complete scheduler/worker graph and normal recording HTTP workflows remain
-unfinished. New normal-queue, startup recovery, clocked scheduling, pidbox and
-DVR code is under joint validation and is absent from this packaged image.
+At that checkpoint the scheduler/worker graph and normal recording HTTP
+workflows remained unfinished. The newer runtime above adds experimental
+assembly and HTTP code; those changes are absent from the candidate5 image.
 The [default worker audit](rust-default-worker-graph.md) lists the selected 14
 task families and missing Main integrations. The [Source task audit](rust-source-task-coverage.md)
 finds 47 static application task declarations; producers and callbacks outside
 the selected graph still need an executable coverage crosswalk.
 
-The [actual datastore comparison](rust-batch5-ops-acceptance.md) finds 8 of 11
-PostgreSQL cases compatible. Three mismatches remain: verify-ca hostname and
-IPv6 handling, and allow's TLS fallback. A new Source observation also confirms
-allow's plaintext preference. SQLite remains unsupported in Native; explicit
-rejection is not compatibility. Prepared transport fixes have no runtime
-qualification yet. See the [datastore audit](rust-datastore-compatibility.md).
+At candidate5, the [datastore comparison](rust-batch5-ops-acceptance.md) found
+8 of 11 PostgreSQL cases compatible; the hostname/IPv6/allow fixes were still
+pending. Candidate7's twelve-case acceptance above supersedes that current
+compatibility status without changing the earlier failures. SQLite remains
+unsupported, and explicit rejection is not compatibility.
 
 Both recent [resource preflight protocols](rust-milestone-batch2-resource-preflight.md)
 retain failed useful-work checks. No new performance gain is accepted, and old

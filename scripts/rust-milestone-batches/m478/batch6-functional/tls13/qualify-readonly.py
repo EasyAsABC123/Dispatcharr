@@ -1,0 +1,19 @@
+"""Read-only TLS13 observations; preserves controller/observer failures literally."""
+import argparse,hashlib,json
+from pathlib import Path
+
+def need(v,k):
+ if not v:raise ValueError(k)
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);a=p.parse_args();out=a.output;r=json.loads((out/'report.json').read_text());need(r['actual_controller_exit']==2,'PreserveActualController2');need(len(r['cases'])==len(r['native_cids'])==13,'ActualThirteenStartsAndCells');need(r['exact_cleanup']and r['all_host_generations_absent']and r['default_unchanged'],'ActualPhysicalCleanupDefault')
+ need(len(r['independent_absence'])==17 and all(x['empty']for x in r['independent_absence']),'FourteenCIDsThreeInventories');need(all(x['capture_complete']and not x['forced_termination']and x['actual_wait_exit']==0 for x in r['commands']),'All141RealCLIsSettled')
+ for source in r['definition']['cases']:need(hashlib.sha256(Path(source['Source_reference']).read_bytes()).hexdigest()==source['Source_reference_sha256'],'SameSourceAuthority:'+source['name'])
+ cases={x['name']:x for x in r['cases']};need(set(cases)=={x['name']for x in r['definition']['cases']},'Exact13PlannedActualCaseNames')
+ sqlite=cases['sqlite'];cid=json.loads((out/'sqlite-Main-inspect.json').read_text())['Id'];matches=[(i,c)for i,c in enumerate(r['commands'],1)if c['argv'][3:] == ['logs',cid]];need(len(matches)==1,'OneActualSQLiteLogsCLI');i,command=matches[0];stdout=(out/f'command-{i:03d}.stdout').read_bytes();stderr=(out/f'command-{i:03d}.stderr').read_bytes();guard=b'SQLite backend is not yet implemented'in stderr
+ need(guard and not stdout and sqlite['explicit_unsupported_guard']is False and sqlite['http_ready']is False and sqlite['sqlite_unchanged']and not sqlite['actual']['native_sessions']and sqlite['actual_Main_wait_exit']==1,'ActualGuardInCapturedStderrPreservesObserverMistake')
+ need([x['name']for x in r['cases']if not x['expected_match']]==['ipv6_verify_ca','sqlite'],'ExactActualFailures')
+ need(all(cases[name]['expected_match']for name in ['verify_ca_mismatch','source_allow','source_allow_plaintext_preference']),'HostnameAndBothAllowBranchesActualPass')
+ need(cases['source_allow']['actual']['native_sessions']and all(x['ssl']is True and x['client_dn']=='/CN=dispatch'for x in cases['source_allow']['actual']['native_sessions']),'ActualAllowTLSFallback')
+ need(cases['source_allow_plaintext_preference']['actual']['native_sessions']and all(x['ssl']is False and x['client_dn']is None for x in cases['source_allow_plaintext_preference']['actual']['native_sessions']),'ActualAllowPlainPreference')
+ result={'qualification_executed_readonly':True,'raw_controller_exit':2,'raw_expected_native_behavior_passed':11,'raw_expected_native_behavior_total':13,'PostgreSQL_Source_compatibility_matched':11,'PostgreSQL_Source_compatibility_total':12,'actual_remaining_PostgreSQL_gap':'IPv6 verify-ca Main startup fails1; no target PG session','SQLite_expected_unsupported_guard_verified_from_actual_stderr':True,'SQLite_required_parity':False,'corrected_observation_expected_behavior_passed':12,'corrected_observation_expected_behavior_total':13,'raw_SQLite_stdout_only_guard_mistake_preserved':True,'actual_Main_starts':13,'actual_Main_waits_settled':13,'actual_CIDs_independently_absent':14,'independent_project_CID_checks':17,'actual_host_CLI_generations_absent':len(r['commands']),'default62tables59sequences_Redis7_and_SQLite_unchanged':True,'Source_API_or_driver_replays':0,'new_opaque_oracle_values':0,'apps_or_Cargo_run_by_qualifier':0,'full_TLS_parity':False,'full_migration_accepted':False,'performance_claims':False,'raw_report_sha256':hashlib.sha256((out/'report.json').read_bytes()).hexdigest(),'SQLite_stderr_log_sha256':hashlib.sha256(stderr).hexdigest()};(out/'readonly-review.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result));return 0
+if __name__=='__main__':raise SystemExit(main())

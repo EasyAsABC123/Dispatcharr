@@ -1,0 +1,362 @@
+{"time": 1794699918.077925, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.077979, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-py"}
+{"time": 1794699918.07808, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 6.4.0"}
+{"time": 1794699918.078131, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "SCAN 0"}
+{"time": 1794699918.078291, "db": 0, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.078354, "db": 0, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-py"}
+{"time": 1794699918.078402, "db": 0, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 6.4.0"}
+{"time": 1794699918.078427, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.078492, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "SCAN 0 MATCH celery-tasks:celery-task-meta-*"}
+{"time": 1794699918.374725, "db": 0, "client_address": "127.0.0.1", "client_port": "37100", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.374734, "db": 0, "client_address": "127.0.0.1", "client_port": "37100", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.374736, "db": 0, "client_address": "127.0.0.1", "client_port": "37100", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.374892, "db": 0, "client_address": "127.0.0.1", "client_port": "37100", "client_type": "tcp", "command": "EVAL if redis.call('STRLEN',KEYS[1])>1048576 then return redis.error_reply('cache value exceeds limit') end return redis.call('GET',KEYS[1]) 1 :1:coresettings:group:system_settings"}
+{"time": 1794699918.374948, "db": 0, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "STRLEN :1:coresettings:group:system_settings"}
+{"time": 1794699918.374958, "db": 0, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "GET :1:coresettings:group:system_settings"}
+{"time": 1794699918.375059, "db": 0, "client_address": "127.0.0.1", "client_port": "37100", "client_type": "tcp", "command": "EVAL if redis.call('STRLEN',KEYS[1])>1048576 then return redis.error_reply('cache value exceeds limit') end return redis.call('GET',KEYS[1]) 1 :1:coresettings:groupver:system_settings"}
+{"time": 1794699918.37507, "db": 0, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "STRLEN :1:coresettings:groupver:system_settings"}
+{"time": 1794699918.375075, "db": 0, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "GET :1:coresettings:groupver:system_settings"}
+{"time": 1794699918.376301, "db": 0, "client_address": "127.0.0.1", "client_port": "37100", "client_type": "tcp", "command": "EVAL if redis.call('STRLEN',KEYS[1])>1048576 then return redis.error_reply('cache value exceeds limit') end return redis.call('GET',KEYS[1]) 1 :1:coresettings:groupver:system_settings"}
+{"time": 1794699918.376308, "db": 0, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "STRLEN :1:coresettings:groupver:system_settings"}
+{"time": 1794699918.376311, "db": 0, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "GET :1:coresettings:groupver:system_settings"}
+{"time": 1794699918.376394, "db": 0, "client_address": "127.0.0.1", "client_port": "37100", "client_type": "tcp", "command": "SET :1:coresettings:group:system_settings \\x80\\x04}(X\\t\\x00\\x00\\x00time_zoneX\\x03\\x00\\x00\\x00UTCX\\x10\\x00\\x00\\x00preferred_regionX\\x02\\x00\\x00\\x00usX\\x11\\x00\\x00\\x00max_system_events\\x8b\\x01\\x00\\x00\\x00dX\\x18\\x00\\x00\\x00auto_import_mapped_files\\x88u. EX 300"}
+{"time": 1794699918.376509, "db": 0, "client_address": "127.0.0.1", "client_port": "37102", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.376513, "db": 0, "client_address": "127.0.0.1", "client_port": "37102", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.376515, "db": 0, "client_address": "127.0.0.1", "client_port": "37102", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.376867, "db": 0, "client_address": "127.0.0.1", "client_port": "37116", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.376874, "db": 0, "client_address": "127.0.0.1", "client_port": "37116", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.376875, "db": 0, "client_address": "127.0.0.1", "client_port": "37116", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.377009, "db": 0, "client_address": "127.0.0.1", "client_port": "37132", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.377013, "db": 0, "client_address": "127.0.0.1", "client_port": "37132", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.377015, "db": 0, "client_address": "127.0.0.1", "client_port": "37132", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.377117, "db": 0, "client_address": "127.0.0.1", "client_port": "37132", "client_type": "tcp", "command": "SCRIPT LOAD \\nif redis.call('HGET',KEYS[1],'rust_token')~=ARGV[1] then return 0 end\\nif redis.call('EXISTS',KEYS[3])==1 or redis.call('HGET',KEYS[1],'rust_preempted')=='1' then return -1 end\\nlocal old=redis.call('HGET',KEYS[1],'last_active')\\nif old and tonumber(ARGV[2])-tonumber(old)>tonumber(ARGV[7]) then return -1 end\\nif ARGV[10]~='hls' then\\n  redis.call('HSET',KEYS[1],'bytes_sent',ARGV[3],'current_rate_KBps',ARGV[4],\\n    'chunks_sent',ARGV[8],'avg_rate_KBps',ARGV[9],'stats_updated_at',ARGV[2])\\nend\\nif ARGV[5]=='1' then redis.call('HSET',KEYS[1],'last_active',ARGV[2]) end\\nredis.call('PEXPIRE',KEYS[1],ARGV[6])\\nredis.call('PEXPIRE',KEYS[2],ARGV[6])\\nreturn 1\\n"}
+{"time": 1794699918.37723, "db": 0, "client_address": "127.0.0.1", "client_port": "37142", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.377234, "db": 0, "client_address": "127.0.0.1", "client_port": "37142", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.377236, "db": 0, "client_address": "127.0.0.1", "client_port": "37142", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.377309, "db": 0, "client_address": "127.0.0.1", "client_port": "37150", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.377313, "db": 0, "client_address": "127.0.0.1", "client_port": "37150", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.377314, "db": 0, "client_address": "127.0.0.1", "client_port": "37150", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.377522, "db": 0, "client_address": "127.0.0.1", "client_port": "37158", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.377525, "db": 0, "client_address": "127.0.0.1", "client_port": "37158", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.377526, "db": 0, "client_address": "127.0.0.1", "client_port": "37158", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.377622, "db": 0, "client_address": "127.0.0.1", "client_port": "37168", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.377625, "db": 0, "client_address": "127.0.0.1", "client_port": "37168", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.377626, "db": 0, "client_address": "127.0.0.1", "client_port": "37168", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.377711, "db": 0, "client_address": "127.0.0.1", "client_port": "37176", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.377714, "db": 0, "client_address": "127.0.0.1", "client_port": "37176", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.377715, "db": 0, "client_address": "127.0.0.1", "client_port": "37176", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.377821, "db": 0, "client_address": "127.0.0.1", "client_port": "37192", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.377824, "db": 0, "client_address": "127.0.0.1", "client_port": "37192", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.377825, "db": 0, "client_address": "127.0.0.1", "client_port": "37192", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.377901, "db": 0, "client_address": "127.0.0.1", "client_port": "37208", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.377904, "db": 0, "client_address": "127.0.0.1", "client_port": "37208", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.377905, "db": 0, "client_address": "127.0.0.1", "client_port": "37208", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.377984, "db": 0, "client_address": "127.0.0.1", "client_port": "37212", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.377987, "db": 0, "client_address": "127.0.0.1", "client_port": "37212", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.377988, "db": 0, "client_address": "127.0.0.1", "client_port": "37212", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378074, "db": 0, "client_address": "127.0.0.1", "client_port": "37222", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.378076, "db": 0, "client_address": "127.0.0.1", "client_port": "37222", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.378078, "db": 0, "client_address": "127.0.0.1", "client_port": "37222", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378158, "db": 0, "client_address": "127.0.0.1", "client_port": "37232", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.378161, "db": 0, "client_address": "127.0.0.1", "client_port": "37232", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.378162, "db": 0, "client_address": "127.0.0.1", "client_port": "37232", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378241, "db": 0, "client_address": "127.0.0.1", "client_port": "37240", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.378244, "db": 0, "client_address": "127.0.0.1", "client_port": "37240", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.378245, "db": 0, "client_address": "127.0.0.1", "client_port": "37240", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378327, "db": 0, "client_address": "127.0.0.1", "client_port": "37244", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.37833, "db": 0, "client_address": "127.0.0.1", "client_port": "37244", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.378331, "db": 0, "client_address": "127.0.0.1", "client_port": "37244", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378445, "db": 0, "client_address": "127.0.0.1", "client_port": "37246", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.378449, "db": 8, "client_address": "127.0.0.1", "client_port": "37246", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.37845, "db": 8, "client_address": "127.0.0.1", "client_port": "37246", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.378451, "db": 8, "client_address": "127.0.0.1", "client_port": "37246", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378527, "db": 0, "client_address": "127.0.0.1", "client_port": "37254", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.37853, "db": 9, "client_address": "127.0.0.1", "client_port": "37254", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.378531, "db": 9, "client_address": "127.0.0.1", "client_port": "37254", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.378532, "db": 9, "client_address": "127.0.0.1", "client_port": "37254", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378644, "db": 0, "client_address": "127.0.0.1", "client_port": "37270", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.378647, "db": 8, "client_address": "127.0.0.1", "client_port": "37270", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.378648, "db": 8, "client_address": "127.0.0.1", "client_port": "37270", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.37865, "db": 8, "client_address": "127.0.0.1", "client_port": "37270", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378719, "db": 0, "client_address": "127.0.0.1", "client_port": "37280", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.378721, "db": 9, "client_address": "127.0.0.1", "client_port": "37280", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.378722, "db": 9, "client_address": "127.0.0.1", "client_port": "37280", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.378724, "db": 9, "client_address": "127.0.0.1", "client_port": "37280", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378795, "db": 0, "client_address": "127.0.0.1", "client_port": "37282", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.378797, "db": 0, "client_address": "127.0.0.1", "client_port": "37282", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.378798, "db": 0, "client_address": "127.0.0.1", "client_port": "37282", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378905, "db": 0, "client_address": "127.0.0.1", "client_port": "37298", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.378907, "db": 8, "client_address": "127.0.0.1", "client_port": "37298", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.378908, "db": 8, "client_address": "127.0.0.1", "client_port": "37298", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.37891, "db": 8, "client_address": "127.0.0.1", "client_port": "37298", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.378985, "db": 0, "client_address": "127.0.0.1", "client_port": "37306", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.378988, "db": 9, "client_address": "127.0.0.1", "client_port": "37306", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.37899, "db": 9, "client_address": "127.0.0.1", "client_port": "37306", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.378991, "db": 9, "client_address": "127.0.0.1", "client_port": "37306", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.379063, "db": 0, "client_address": "127.0.0.1", "client_port": "37312", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.379066, "db": 0, "client_address": "127.0.0.1", "client_port": "37312", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.379067, "db": 0, "client_address": "127.0.0.1", "client_port": "37312", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.37914, "db": 0, "client_address": "127.0.0.1", "client_port": "37318", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.379143, "db": 0, "client_address": "127.0.0.1", "client_port": "37318", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.379144, "db": 0, "client_address": "127.0.0.1", "client_port": "37318", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.379298, "db": 0, "client_address": "127.0.0.1", "client_port": "37330", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.379303, "db": 8, "client_address": "127.0.0.1", "client_port": "37330", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.379305, "db": 8, "client_address": "127.0.0.1", "client_port": "37330", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.379307, "db": 8, "client_address": "127.0.0.1", "client_port": "37330", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.379391, "db": 0, "client_address": "127.0.0.1", "client_port": "37340", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.379396, "db": 9, "client_address": "127.0.0.1", "client_port": "37340", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.379398, "db": 9, "client_address": "127.0.0.1", "client_port": "37340", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.3794, "db": 9, "client_address": "127.0.0.1", "client_port": "37340", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.379478, "db": 0, "client_address": "127.0.0.1", "client_port": "37352", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.379481, "db": 0, "client_address": "127.0.0.1", "client_port": "37352", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.379482, "db": 0, "client_address": "127.0.0.1", "client_port": "37352", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.379561, "db": 0, "client_address": "127.0.0.1", "client_port": "37362", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.379564, "db": 0, "client_address": "127.0.0.1", "client_port": "37362", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.379566, "db": 0, "client_address": "127.0.0.1", "client_port": "37362", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.379831, "db": 0, "client_address": "127.0.0.1", "client_port": "37368", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.379835, "db": 0, "client_address": "127.0.0.1", "client_port": "37368", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.379836, "db": 0, "client_address": "127.0.0.1", "client_port": "37368", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.379965, "db": 0, "client_address": "127.0.0.1", "client_port": "37372", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.37997, "db": 8, "client_address": "127.0.0.1", "client_port": "37372", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.379971, "db": 8, "client_address": "127.0.0.1", "client_port": "37372", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.379972, "db": 8, "client_address": "127.0.0.1", "client_port": "37372", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.380172, "db": 0, "client_address": "127.0.0.1", "client_port": "37388", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.380193, "db": 9, "client_address": "127.0.0.1", "client_port": "37388", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.380196, "db": 9, "client_address": "127.0.0.1", "client_port": "37388", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.380197, "db": 9, "client_address": "127.0.0.1", "client_port": "37388", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.380339, "db": 0, "client_address": "127.0.0.1", "client_port": "37404", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.380345, "db": 8, "client_address": "127.0.0.1", "client_port": "37404", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.380476, "db": 8, "client_address": "127.0.0.1", "client_port": "37404", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.38048, "db": 8, "client_address": "127.0.0.1", "client_port": "37404", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.380595, "db": 0, "client_address": "127.0.0.1", "client_port": "37418", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.3806, "db": 9, "client_address": "127.0.0.1", "client_port": "37418", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.380601, "db": 9, "client_address": "127.0.0.1", "client_port": "37418", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.380603, "db": 9, "client_address": "127.0.0.1", "client_port": "37418", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.380681, "db": 0, "client_address": "127.0.0.1", "client_port": "37424", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.380685, "db": 0, "client_address": "127.0.0.1", "client_port": "37424", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.380686, "db": 0, "client_address": "127.0.0.1", "client_port": "37424", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.380767, "db": 0, "client_address": "127.0.0.1", "client_port": "37426", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.380769, "db": 8, "client_address": "127.0.0.1", "client_port": "37426", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.38077, "db": 8, "client_address": "127.0.0.1", "client_port": "37426", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.380772, "db": 8, "client_address": "127.0.0.1", "client_port": "37426", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.380843, "db": 0, "client_address": "127.0.0.1", "client_port": "37438", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.380845, "db": 9, "client_address": "127.0.0.1", "client_port": "37438", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.380846, "db": 9, "client_address": "127.0.0.1", "client_port": "37438", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.380848, "db": 9, "client_address": "127.0.0.1", "client_port": "37438", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.380962, "db": 0, "client_address": "127.0.0.1", "client_port": "37444", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.380965, "db": 0, "client_address": "127.0.0.1", "client_port": "37444", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.380966, "db": 0, "client_address": "127.0.0.1", "client_port": "37444", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.381498, "db": 0, "client_address": "127.0.0.1", "client_port": "37448", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.381504, "db": 8, "client_address": "127.0.0.1", "client_port": "37448", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.381505, "db": 8, "client_address": "127.0.0.1", "client_port": "37448", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.381506, "db": 8, "client_address": "127.0.0.1", "client_port": "37448", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.381575, "db": 0, "client_address": "127.0.0.1", "client_port": "37452", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.381578, "db": 9, "client_address": "127.0.0.1", "client_port": "37452", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.381579, "db": 9, "client_address": "127.0.0.1", "client_port": "37452", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.38158, "db": 9, "client_address": "127.0.0.1", "client_port": "37452", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.381766, "db": 0, "client_address": "127.0.0.1", "client_port": "37468", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.381768, "db": 8, "client_address": "127.0.0.1", "client_port": "37468", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.38177, "db": 8, "client_address": "127.0.0.1", "client_port": "37468", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.381771, "db": 8, "client_address": "127.0.0.1", "client_port": "37468", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.38188, "db": 0, "client_address": "127.0.0.1", "client_port": "37482", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.381883, "db": 9, "client_address": "127.0.0.1", "client_port": "37482", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.381884, "db": 9, "client_address": "127.0.0.1", "client_port": "37482", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.381885, "db": 9, "client_address": "127.0.0.1", "client_port": "37482", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.381981, "db": 0, "client_address": "127.0.0.1", "client_port": "37486", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.381984, "db": 0, "client_address": "127.0.0.1", "client_port": "37486", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.381986, "db": 0, "client_address": "127.0.0.1", "client_port": "37486", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.382076, "db": 0, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.382079, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.38208, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.382081, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.382148, "db": 0, "client_address": "127.0.0.1", "client_port": "37500", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.38215, "db": 9, "client_address": "127.0.0.1", "client_port": "37500", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.382151, "db": 9, "client_address": "127.0.0.1", "client_port": "37500", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.382153, "db": 9, "client_address": "127.0.0.1", "client_port": "37500", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.382243, "db": 0, "client_address": "127.0.0.1", "client_port": "37514", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.382246, "db": 0, "client_address": "127.0.0.1", "client_port": "37514", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.382248, "db": 0, "client_address": "127.0.0.1", "client_port": "37514", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.382322, "db": 0, "client_address": "127.0.0.1", "client_port": "37520", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.382325, "db": 8, "client_address": "127.0.0.1", "client_port": "37520", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.382326, "db": 8, "client_address": "127.0.0.1", "client_port": "37520", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.382328, "db": 8, "client_address": "127.0.0.1", "client_port": "37520", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.382443, "db": 0, "client_address": "127.0.0.1", "client_port": "37522", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.382448, "db": 9, "client_address": "127.0.0.1", "client_port": "37522", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.38245, "db": 9, "client_address": "127.0.0.1", "client_port": "37522", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.382452, "db": 9, "client_address": "127.0.0.1", "client_port": "37522", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.382575, "db": 0, "client_address": "127.0.0.1", "client_port": "37528", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.382581, "db": 0, "client_address": "127.0.0.1", "client_port": "37528", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.382583, "db": 0, "client_address": "127.0.0.1", "client_port": "37528", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.396381, "db": 0, "client_address": "127.0.0.1", "client_port": "37542", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.396386, "db": 8, "client_address": "127.0.0.1", "client_port": "37542", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.396389, "db": 8, "client_address": "127.0.0.1", "client_port": "37542", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.39639, "db": 8, "client_address": "127.0.0.1", "client_port": "37542", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.396509, "db": 0, "client_address": "127.0.0.1", "client_port": "37558", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.396512, "db": 0, "client_address": "127.0.0.1", "client_port": "37558", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.396514, "db": 0, "client_address": "127.0.0.1", "client_port": "37558", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.396622, "db": 0, "client_address": "127.0.0.1", "client_port": "37560", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.396627, "db": 0, "client_address": "127.0.0.1", "client_port": "37560", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.396628, "db": 0, "client_address": "127.0.0.1", "client_port": "37560", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.407415, "db": 0, "client_address": "127.0.0.1", "client_port": "37572", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.40742, "db": 8, "client_address": "127.0.0.1", "client_port": "37572", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.407421, "db": 8, "client_address": "127.0.0.1", "client_port": "37572", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.407423, "db": 8, "client_address": "127.0.0.1", "client_port": "37572", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.407534, "db": 0, "client_address": "127.0.0.1", "client_port": "37588", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.407537, "db": 9, "client_address": "127.0.0.1", "client_port": "37588", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.407539, "db": 9, "client_address": "127.0.0.1", "client_port": "37588", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.40754, "db": 9, "client_address": "127.0.0.1", "client_port": "37588", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.407643, "db": 0, "client_address": "127.0.0.1", "client_port": "37592", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.407646, "db": 8, "client_address": "127.0.0.1", "client_port": "37592", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.407647, "db": 8, "client_address": "127.0.0.1", "client_port": "37592", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.407649, "db": 8, "client_address": "127.0.0.1", "client_port": "37592", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.407765, "db": 0, "client_address": "127.0.0.1", "client_port": "37602", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.407773, "db": 9, "client_address": "127.0.0.1", "client_port": "37602", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.407776, "db": 9, "client_address": "127.0.0.1", "client_port": "37602", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.40778, "db": 9, "client_address": "127.0.0.1", "client_port": "37602", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.407971, "db": 0, "client_address": "127.0.0.1", "client_port": "37618", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.407975, "db": 8, "client_address": "127.0.0.1", "client_port": "37618", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.407976, "db": 8, "client_address": "127.0.0.1", "client_port": "37618", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.407978, "db": 8, "client_address": "127.0.0.1", "client_port": "37618", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.408064, "db": 0, "client_address": "127.0.0.1", "client_port": "37632", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.408067, "db": 9, "client_address": "127.0.0.1", "client_port": "37632", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.408068, "db": 9, "client_address": "127.0.0.1", "client_port": "37632", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.40807, "db": 9, "client_address": "127.0.0.1", "client_port": "37632", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.408152, "db": 0, "client_address": "127.0.0.1", "client_port": "37640", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.408155, "db": 0, "client_address": "127.0.0.1", "client_port": "37640", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.408157, "db": 0, "client_address": "127.0.0.1", "client_port": "37640", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.408242, "db": 0, "client_address": "127.0.0.1", "client_port": "37646", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.408245, "db": 8, "client_address": "127.0.0.1", "client_port": "37646", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.408246, "db": 8, "client_address": "127.0.0.1", "client_port": "37646", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.408247, "db": 8, "client_address": "127.0.0.1", "client_port": "37646", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.40833, "db": 0, "client_address": "127.0.0.1", "client_port": "37654", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.408333, "db": 9, "client_address": "127.0.0.1", "client_port": "37654", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.408356, "db": 9, "client_address": "127.0.0.1", "client_port": "37654", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.40838, "db": 9, "client_address": "127.0.0.1", "client_port": "37654", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.408515, "db": 0, "client_address": "127.0.0.1", "client_port": "37664", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.408522, "db": 8, "client_address": "127.0.0.1", "client_port": "37664", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.408524, "db": 8, "client_address": "127.0.0.1", "client_port": "37664", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.408526, "db": 8, "client_address": "127.0.0.1", "client_port": "37664", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.408683, "db": 0, "client_address": "127.0.0.1", "client_port": "37676", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.408689, "db": 9, "client_address": "127.0.0.1", "client_port": "37676", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.40869, "db": 9, "client_address": "127.0.0.1", "client_port": "37676", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.408692, "db": 9, "client_address": "127.0.0.1", "client_port": "37676", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.408849, "db": 0, "client_address": "127.0.0.1", "client_port": "37686", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.408855, "db": 8, "client_address": "127.0.0.1", "client_port": "37686", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.408856, "db": 8, "client_address": "127.0.0.1", "client_port": "37686", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.408858, "db": 8, "client_address": "127.0.0.1", "client_port": "37686", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.408968, "db": 0, "client_address": "127.0.0.1", "client_port": "37702", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.408988, "db": 9, "client_address": "127.0.0.1", "client_port": "37702", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.408991, "db": 9, "client_address": "127.0.0.1", "client_port": "37702", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.408993, "db": 9, "client_address": "127.0.0.1", "client_port": "37702", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.409108, "db": 0, "client_address": "127.0.0.1", "client_port": "37714", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.409115, "db": 8, "client_address": "127.0.0.1", "client_port": "37714", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.409116, "db": 8, "client_address": "127.0.0.1", "client_port": "37714", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.409118, "db": 8, "client_address": "127.0.0.1", "client_port": "37714", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.409232, "db": 0, "client_address": "127.0.0.1", "client_port": "37720", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.409237, "db": 9, "client_address": "127.0.0.1", "client_port": "37720", "client_type": "tcp", "command": "SELECT 9"}
+{"time": 1794699918.409239, "db": 9, "client_address": "127.0.0.1", "client_port": "37720", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.409241, "db": 9, "client_address": "127.0.0.1", "client_port": "37720", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.414213, "db": 0, "client_address": "127.0.0.1", "client_port": "37736", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.414217, "db": 8, "client_address": "127.0.0.1", "client_port": "37736", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.414219, "db": 8, "client_address": "127.0.0.1", "client_port": "37736", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-rs"}
+{"time": 1794699918.41422, "db": 8, "client_address": "127.0.0.1", "client_port": "37736", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 0.32.7"}
+{"time": 1794699918.414333, "db": 0, "client_address": "127.0.0.1", "client_port": "37746", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.414366, "db": 8, "client_address": "127.0.0.1", "client_port": "37746", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.414392, "db": 8, "client_address": "127.0.0.1", "client_port": "37746", "client_type": "tcp", "command": "CLIENT ID"}
+{"time": 1794699918.414427, "db": 8, "client_address": "127.0.0.1", "client_port": "37746", "client_type": "tcp", "command": "SUBSCRIBE /8.celery.pidbox"}
+{"time": 1794699918.414503, "db": 0, "client_address": "127.0.0.1", "client_port": "37514", "client_type": "tcp", "command": "SET dvr:recover_dispatch_lock 1 NX EX 300"}
+{"time": 1794699918.414521, "db": 8, "client_address": "127.0.0.1", "client_port": "37686", "client_type": "tcp", "command": "EVALSHA 8a04a4e4fef0781f8996c82f83cf26a64326f9ee 1 celery"}
+{"time": 1794699918.414533, "db": 8, "client_address": "127.0.0.1", "client_port": "37714", "client_type": "tcp", "command": "EVALSHA 8a04a4e4fef0781f8996c82f83cf26a64326f9ee 1 dvr"}
+{"time": 1794699918.414597, "db": 8, "client_address": "127.0.0.1", "client_port": "37714", "client_type": "tcp", "command": "SCRIPT LOAD \\nlocal t=redis.call('TYPE',KEYS[1]).ok\\nif t=='none'then return{0,''}end\\nif t~='list'or redis.call('LLEN',KEYS[1])>10000 then return{-1,''}end\\nlocal raw=redis.call('LINDEX',KEYS[1],-1)\\nif not raw then return{0,''}end\\nif #raw>65536 then return{-1,''}end\\nreturn{1,raw}\\n"}
+{"time": 1794699918.414619, "db": 8, "client_address": "127.0.0.1", "client_port": "37686", "client_type": "tcp", "command": "SCRIPT LOAD \\nlocal t=redis.call('TYPE',KEYS[1]).ok\\nif t=='none'then return{0,''}end\\nif t~='list'or redis.call('LLEN',KEYS[1])>10000 then return{-1,''}end\\nlocal raw=redis.call('LINDEX',KEYS[1],-1)\\nif not raw then return{0,''}end\\nif #raw>65536 then return{-1,''}end\\nreturn{1,raw}\\n"}
+{"time": 1794699918.414638, "db": 8, "client_address": "127.0.0.1", "client_port": "37714", "client_type": "tcp", "command": "EVALSHA 8a04a4e4fef0781f8996c82f83cf26a64326f9ee 1 dvr"}
+{"time": 1794699918.414645, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE dvr"}
+{"time": 1794699918.414684, "db": 8, "client_address": "127.0.0.1", "client_port": "37686", "client_type": "tcp", "command": "EVALSHA 8a04a4e4fef0781f8996c82f83cf26a64326f9ee 1 celery"}
+{"time": 1794699918.414692, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery"}
+{"time": 1794699918.414699, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "EVALSHA fccf3707fcf917c0d98f08dd78a77efebbbf0ef7 2 celery _kombu.binding.celery {\"body\":\"W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.recover_recordings_on_startup\",\"id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@1e9fb06dd479\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"reply_to\":\"37efdb7c-f028-392e-9f1d-140fdda1ad6f\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"55408700-385f-4628-8d7b-29751a0eb6da\"}} 1000"}
+{"time": 1794699918.414785, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "SCRIPT LOAD \\nlocal q=redis.call('TYPE',KEYS[1]).ok;local b=redis.call('TYPE',KEYS[2]).ok\\nif(q~='none'and q~='list')or(b~='none'and b~='set')then return -3 end\\nif #ARGV[1]>65536 then return -1 end\\nif redis.call('LLEN',KEYS[1])>=tonumber(ARGV[2])then return -2 end\\nredis.call('SADD',KEYS[2],'celery'..string.char(6,22)..string.char(6,22)..'celery')\\nreturn redis.call('LPUSH',KEYS[1],ARGV[1])\\n"}
+{"time": 1794699918.414821, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "EVALSHA fccf3707fcf917c0d98f08dd78a77efebbbf0ef7 2 celery _kombu.binding.celery {\"body\":\"W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.recover_recordings_on_startup\",\"id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@1e9fb06dd479\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"reply_to\":\"37efdb7c-f028-392e-9f1d-140fdda1ad6f\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"55408700-385f-4628-8d7b-29751a0eb6da\"}} 1000"}
+{"time": 1794699918.414845, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery"}
+{"time": 1794699918.414846, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE _kombu.binding.celery"}
+{"time": 1794699918.414849, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LLEN celery"}
+{"time": 1794699918.414864, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "SADD _kombu.binding.celery celery\\x06\\x16\\x06\\x16celery"}
+{"time": 1794699918.414873, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LPUSH celery {\"body\":\"W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.recover_recordings_on_startup\",\"id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@1e9fb06dd479\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"reply_to\":\"37efdb7c-f028-392e-9f1d-140fdda1ad6f\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"55408700-385f-4628-8d7b-29751a0eb6da\"}}"}
+{"time": 1794699918.414923, "db": 0, "client_address": "127.0.0.1", "client_port": "37514", "client_type": "tcp", "command": "SET core:version_check_dispatch_lock 1 NX EX 300"}
+{"time": 1794699918.415101, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "EVALSHA fccf3707fcf917c0d98f08dd78a77efebbbf0ef7 2 celery _kombu.binding.celery {\"body\":\"W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"core.tasks.check_for_version_update\",\"id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@1e9fb06dd479\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\",\"reply_to\":\"93bd66fe-eb5b-3258-b27a-5c1894f02bef\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"839f04ec-4c03-49c4-892e-97633d483e29\"}} 1000"}
+{"time": 1794699918.415124, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery"}
+{"time": 1794699918.415126, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE _kombu.binding.celery"}
+{"time": 1794699918.415128, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LLEN celery"}
+{"time": 1794699918.415131, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "SADD _kombu.binding.celery celery\\x06\\x16\\x06\\x16celery"}
+{"time": 1794699918.415136, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LPUSH celery {\"body\":\"W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"core.tasks.check_for_version_update\",\"id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@1e9fb06dd479\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\",\"reply_to\":\"93bd66fe-eb5b-3258-b27a-5c1894f02bef\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"839f04ec-4c03-49c4-892e-97633d483e29\"}}"}
+{"time": 1794699918.436733, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "GET celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1"}
+{"time": 1794699918.436951, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "GET celery-tasks:celery-task-meta-aec3b2d3-3b95-4973-b0a5-14c5306e58c1"}
+{"time": 1794699918.463216, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "GET celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1"}
+{"time": 1794699918.463337, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "GET celery-tasks:celery-task-meta-aec3b2d3-3b95-4973-b0a5-14c5306e58c1"}
+{"time": 1794699918.489408, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "GET celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1"}
+{"time": 1794699918.489505, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "GET celery-tasks:celery-task-meta-aec3b2d3-3b95-4973-b0a5-14c5306e58c1"}
+{"time": 1794699918.515398, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "GET celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1"}
+{"time": 1794699918.515467, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "GET celery-tasks:celery-task-meta-aec3b2d3-3b95-4973-b0a5-14c5306e58c1"}
+{"time": 1794699918.51567, "db": 8, "client_address": "127.0.0.1", "client_port": "37686", "client_type": "tcp", "command": "EVALSHA 8a04a4e4fef0781f8996c82f83cf26a64326f9ee 1 celery"}
+{"time": 1794699918.515684, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery"}
+{"time": 1794699918.515688, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LLEN celery"}
+{"time": 1794699918.515692, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LINDEX celery -1"}
+{"time": 1794699918.51571, "db": 8, "client_address": "127.0.0.1", "client_port": "37714", "client_type": "tcp", "command": "EVALSHA 8a04a4e4fef0781f8996c82f83cf26a64326f9ee 1 dvr"}
+{"time": 1794699918.515713, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE dvr"}
+{"time": 1794699918.515791, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "EVALSHA 8a04a4e4fef0781f8996c82f83cf26a64326f9ee 1 celery"}
+{"time": 1794699918.515794, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery"}
+{"time": 1794699918.515796, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LLEN celery"}
+{"time": 1794699918.515797, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LINDEX celery -1"}
+{"time": 1794699918.515895, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.recover_recordings_on_startup\",\"id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@1e9fb06dd479\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"reply_to\":\"37efdb7c-f028-392e-9f1d-140fdda1ad6f\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"55408700-385f-4628-8d7b-29751a0eb6da\"}}"}
+{"time": 1794699918.516094, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "SCRIPT LOAD \\nif redis.call('TYPE',KEYS[1]).ok~='list'then return 0 end\\nif redis.call('LINDEX',KEYS[1],-1)~=ARGV[1]then return 0 end\\nredis.call('RPOP',KEYS[1]);return 1\\n"}
+{"time": 1794699918.516156, "db": 8, "client_address": "127.0.0.1", "client_port": "37490", "client_type": "tcp", "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"apps.channels.tasks.recover_recordings_on_startup\",\"id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@1e9fb06dd479\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\",\"reply_to\":\"37efdb7c-f028-392e-9f1d-140fdda1ad6f\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"55408700-385f-4628-8d7b-29751a0eb6da\"}}"}
+{"time": 1794699918.516196, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery"}
+{"time": 1794699918.516207, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LINDEX celery -1"}
+{"time": 1794699918.516215, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "RPOP celery"}
+{"time": 1794699918.51628, "db": 0, "client_address": "127.0.0.1", "client_port": "37514", "client_type": "tcp", "command": "SET dvr:recover_lock 1 EX 600 NX"}
+{"time": 1794699918.524201, "db": 0, "client_address": "127.0.0.1", "client_port": "37514", "client_type": "tcp", "command": "DEL dvr:recover_lock"}
+{"time": 1794699918.524289, "db": 9, "client_address": "127.0.0.1", "client_port": "37500", "client_type": "tcp", "command": "EVALSHA fce9b39b58ad3c271e70b21db9c428b48e04b169 1 celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1 {\"status\":\"SUCCESS\",\"result\":\"Recovery complete\",\"traceback\":null,\"children\":[],\"date_done\":\"2026-11-14T23:45:18.524241+00:00\",\"task_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\"}"}
+{"time": 1794699918.524472, "db": 9, "client_address": "127.0.0.1", "client_port": "37500", "client_type": "tcp", "command": "SCRIPT LOAD \\nlocal t=redis.call('TYPE',KEYS[1]).ok\\nif t~='none'and t~='string'then return -1 end\\nif #ARGV[1]>262144 then return -1 end\\nif t=='string'then\\n if redis.call('STRLEN',KEYS[1])>262144 then return -1 end\\n local ok,old=pcall(cjson.decode,redis.call('GET',KEYS[1]))\\n if not ok or type(old)~='table'then return -1 end\\n if old.status=='SUCCESS'then return 0 end\\nend\\nredis.call('SETEX',KEYS[1],3600,ARGV[1]);redis.call('PUBLISH',KEYS[1],ARGV[1]);return 1\\n"}
+{"time": 1794699918.524545, "db": 9, "client_address": "127.0.0.1", "client_port": "37500", "client_type": "tcp", "command": "EVALSHA fce9b39b58ad3c271e70b21db9c428b48e04b169 1 celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1 {\"status\":\"SUCCESS\",\"result\":\"Recovery complete\",\"traceback\":null,\"children\":[],\"date_done\":\"2026-11-14T23:45:18.524241+00:00\",\"task_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\"}"}
+{"time": 1794699918.52456, "db": 9, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1"}
+{"time": 1794699918.52457, "db": 9, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "SETEX celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1 3600 {\"status\":\"SUCCESS\",\"result\":\"Recovery complete\",\"traceback\":null,\"children\":[],\"date_done\":\"2026-11-14T23:45:18.524241+00:00\",\"task_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\"}"}
+{"time": 1794699918.524584, "db": 9, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "PUBLISH celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1 {\"status\":\"SUCCESS\",\"result\":\"Recovery complete\",\"traceback\":null,\"children\":[],\"date_done\":\"2026-11-14T23:45:18.524241+00:00\",\"task_id\":\"93c1ea54-507f-4cc0-935c-33bc0611bed1\"}"}
+{"time": 1794699918.524696, "db": 8, "client_address": "127.0.0.1", "client_port": "37686", "client_type": "tcp", "command": "EVALSHA 8a04a4e4fef0781f8996c82f83cf26a64326f9ee 1 celery"}
+{"time": 1794699918.524706, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery"}
+{"time": 1794699918.524711, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LLEN celery"}
+{"time": 1794699918.524715, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LINDEX celery -1"}
+{"time": 1794699918.524806, "db": 8, "client_address": "127.0.0.1", "client_port": "37246", "client_type": "tcp", "command": "EVALSHA 8a04a4e4fef0781f8996c82f83cf26a64326f9ee 1 celery"}
+{"time": 1794699918.524813, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery"}
+{"time": 1794699918.524815, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LLEN celery"}
+{"time": 1794699918.524817, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LINDEX celery -1"}
+{"time": 1794699918.524932, "db": 8, "client_address": "127.0.0.1", "client_port": "37246", "client_type": "tcp", "command": "EVALSHA 950f869063e0d6e833b71c5f6c178eb202333f31 1 celery {\"body\":\"W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=\",\"content-encoding\":\"utf-8\",\"content-type\":\"application/json\",\"headers\":{\"lang\":\"py\",\"task\":\"core.tasks.check_for_version_update\",\"id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\",\"shadow\":null,\"eta\":null,\"expires\":null,\"group\":null,\"group_index\":null,\"retries\":0,\"timelimit\":[null,null],\"root_id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\",\"parent_id\":null,\"argsrepr\":\"()\",\"kwargsrepr\":\"{}\",\"origin\":\"gen1@1e9fb06dd479\",\"ignore_result\":false,\"replaced_task_nesting\":0,\"stamped_headers\":null,\"stamps\":{}},\"properties\":{\"correlation_id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\",\"reply_to\":\"93bd66fe-eb5b-3258-b27a-5c1894f02bef\",\"delivery_mode\":2,\"delivery_info\":{\"exchange\":\"\",\"routing_key\":\"celery\"},\"priority\":0,\"body_encoding\":\"base64\",\"delivery_tag\":\"839f04ec-4c03-49c4-892e-97633d483e29\"}}"}
+{"time": 1794699918.524951, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery"}
+{"time": 1794699918.524954, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "LINDEX celery -1"}
+{"time": 1794699918.524958, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "RPOP celery"}
+{"time": 1794699918.534459, "db": 9, "client_address": "127.0.0.1", "client_port": "37254", "client_type": "tcp", "command": "EVALSHA fce9b39b58ad3c271e70b21db9c428b48e04b169 1 celery-tasks:celery-task-meta-aec3b2d3-3b95-4973-b0a5-14c5306e58c1 {\"status\":\"SUCCESS\",\"result\":null,\"traceback\":null,\"children\":[],\"date_done\":\"2026-11-14T23:45:18.534411+00:00\",\"task_id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\"}"}
+{"time": 1794699918.53448, "db": 9, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery-tasks:celery-task-meta-aec3b2d3-3b95-4973-b0a5-14c5306e58c1"}
+{"time": 1794699918.534491, "db": 9, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "SETEX celery-tasks:celery-task-meta-aec3b2d3-3b95-4973-b0a5-14c5306e58c1 3600 {\"status\":\"SUCCESS\",\"result\":null,\"traceback\":null,\"children\":[],\"date_done\":\"2026-11-14T23:45:18.534411+00:00\",\"task_id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\"}"}
+{"time": 1794699918.5345, "db": 9, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "PUBLISH celery-tasks:celery-task-meta-aec3b2d3-3b95-4973-b0a5-14c5306e58c1 {\"status\":\"SUCCESS\",\"result\":null,\"traceback\":null,\"children\":[],\"date_done\":\"2026-11-14T23:45:18.534411+00:00\",\"task_id\":\"aec3b2d3-3b95-4973-b0a5-14c5306e58c1\"}"}
+{"time": 1794699918.534573, "db": 8, "client_address": "127.0.0.1", "client_port": "37686", "client_type": "tcp", "command": "EVALSHA 8a04a4e4fef0781f8996c82f83cf26a64326f9ee 1 celery"}
+{"time": 1794699918.534579, "db": 8, "client_address": "lua", "client_port": "", "client_type": "lua", "command": "TYPE celery"}
+{"time": 1794699918.541913, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "GET celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1"}
+{"time": 1794699918.542038, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "TTL celery-tasks:celery-task-meta-93c1ea54-507f-4cc0-935c-33bc0611bed1"}
+{"time": 1794699918.542135, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "GET celery-tasks:celery-task-meta-aec3b2d3-3b95-4973-b0a5-14c5306e58c1"}
+{"time": 1794699918.542221, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "TTL celery-tasks:celery-task-meta-aec3b2d3-3b95-4973-b0a5-14c5306e58c1"}
+{"time": 1794699918.552131, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "SCAN 0"}
+{"time": 1794699918.552261, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "DUMP :1:coresettings:group:system_settings"}
+{"time": 1794699918.552361, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "TYPE :1:coresettings:group:system_settings"}
+{"time": 1794699918.552445, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "PTTL :1:coresettings:group:system_settings"}
+{"time": 1794699918.552518, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "DUMP core:version_check_dispatch_lock"}
+{"time": 1794699918.552582, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "TYPE core:version_check_dispatch_lock"}
+{"time": 1794699918.552643, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "PTTL core:version_check_dispatch_lock"}
+{"time": 1794699918.552843, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "DUMP dvr:recover_dispatch_lock"}
+{"time": 1794699918.552931, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "TYPE dvr:recover_dispatch_lock"}
+{"time": 1794699918.552997, "db": 0, "client_address": "127.0.0.1", "client_port": "37082", "client_type": "tcp", "command": "PTTL dvr:recover_dispatch_lock"}
+{"time": 1794699918.553055, "db": 9, "client_address": "127.0.0.1", "client_port": "37092", "client_type": "tcp", "command": "SCAN 0 MATCH celery-tasks:celery-task-meta-*"}
+{"time": 1794699918.553306, "db": 0, "client_address": "127.0.0.1", "client_port": "37762", "client_type": "tcp", "command": "AUTH (redacted)"}
+{"time": 1794699918.553365, "db": 0, "client_address": "127.0.0.1", "client_port": "37762", "client_type": "tcp", "command": "CLIENT SETINFO LIB-NAME redis-py"}
+{"time": 1794699918.553427, "db": 0, "client_address": "127.0.0.1", "client_port": "37762", "client_type": "tcp", "command": "CLIENT SETINFO LIB-VER 6.4.0"}
+{"time": 1794699918.553453, "db": 8, "client_address": "127.0.0.1", "client_port": "37762", "client_type": "tcp", "command": "SELECT 8"}
+{"time": 1794699918.553521, "db": 8, "client_address": "127.0.0.1", "client_port": "37762", "client_type": "tcp", "command": "LRANGE celery 0 -1"}
+{"time": 1794699918.553581, "db": 8, "client_address": "127.0.0.1", "client_port": "37762", "client_type": "tcp", "command": "LRANGE dvr 0 -1"}
+{"time": 1794699918.553667, "db": 8, "client_address": "127.0.0.1", "client_port": "37762", "client_type": "tcp", "command": "ECHO startup-terminal-515e176d1a96465eb9572c727fe46857"}

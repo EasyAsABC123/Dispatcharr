@@ -10,14 +10,15 @@ feature: `dispatcharr/settings.py:288` selects Django SQLite at
 PostgreSQL. Lines281–286 and329–347 also configure PostgreSQL TLS mode, CA and
 client certificate/key from `POSTGRES_SSL*` variables. These facts come from
 the pinned Git source. The initial audit was static; the subsequent
-[candidate5 Source/Native comparison](rust-batch5-ops-acceptance.md) records actual
+[candidate5 observations](rust-batch5-ops-acceptance.md) and
+[candidate7 twelve-case acceptance](rust-batch7-tls-acceptance.md) records actual
 driver and Main executions. No datastore performance gain is accepted.
 
 | Supported configuration | Current Rust implementation | Remaining acceptance |
 | --- | --- | --- |
 | PostgreSQL | SQLx PgPool, existing-schema workflows and fresh schema initialization; current Compose cohort uses PostgreSQL17 | Full required API/job/backup/restore/rollback matrix and version/error compatibility |
 | SQLite selected by DB_ENGINE | Missing: Store uses PgPool and Cargo enables only PostgreSQL. Main now rejects explicit SQLite selection before connection or DDL; this guard does not implement SQLite | Backend selection, schema/migrations, every required SQL/JSON/time/constraint behavior, existing dispatcharr.db, backup/restore and concurrent API/job workflows |
-| PostgreSQL TLS environment | Main now translates POSTGRES_SSL* settings and validates certificate paths. Candidate5 matches 8 of 11 measured PostgreSQL cases; verify-ca hostname/IPv6 and allow TLS fallback remain mismatched | Repair the three measured mismatches; verify the prepared fixes through actual Main, including measured allow plaintext preference. Complete remaining modes, certificate and error branches against pinned Source |
+| PostgreSQL TLS environment | Main now translates POSTGRES_SSL* settings and validates certificate paths. Candidate7 matches all 12 retained PostgreSQL cases, including verify-ca hostname/IPv6 and both allow branches | Retain the actual Main twelve-case acceptance; complete remaining modes, certificate and error branches, including unmeasured allow I/O/EOF and prefer fallback behavior, against pinned Source |
 
 The 1:1 requirement already determines that these supported configurations must
 be preserved; no new product-scope decision is needed. Passing PostgreSQL-only

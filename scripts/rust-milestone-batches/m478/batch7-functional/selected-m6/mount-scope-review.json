@@ -1,0 +1,28 @@
+{
+  "raw_native_source_tree_mounted_field": false,
+  "raw_physical_probe_field": true,
+  "raw_native_mounts": [
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m6-selected-normal-batch7-actual-1/main-data",
+      "Destination": "/data",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m6-selected-normal-batch7-actual-1",
+      "Destination": "/evidence",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": "rprivate"
+    }
+  ],
+  "qualified_actual_scope": "No Original source bind at /app and /app/manage.py absent; packaged /app/media symlink/default paths work.",
+  "broader_no_Original_source_access_qualified": false,
+  "reason": "The actual broad output:/evidence bind exposes its retained Original child tree. No Source API/task handler execution was observed, but the tree was accessible through that bind.",
+  "historical_bytes_rewritten": false,
+  "next_driver4_hardening": "Native binds exactly main-data:/data plus empty-plugins:/evidence/empty-plugins:ro; real next-image inspect and negative source paths required.",
+  "full_M6": false
+}

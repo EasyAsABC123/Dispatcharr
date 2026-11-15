@@ -1,0 +1,241 @@
+{
+  "actual_controller_exit": 1,
+  "first_failure": {
+    "type": "CollectionFailure",
+    "message": "CommandExit1"
+  },
+  "cleanup_steps": [
+    {
+      "name": "stop_all_native_origin_before_audit",
+      "passed": true,
+      "value": {
+        "native": {
+          "Status": "exited",
+          "Running": false,
+          "Paused": false,
+          "Restarting": false,
+          "OOMKilled": false,
+          "Dead": false,
+          "Pid": 0,
+          "ExitCode": 0,
+          "Error": "",
+          "StartedAt": "2026-11-14T23:10:05.698482333Z",
+          "FinishedAt": "2026-11-14T23:10:14.523837392Z"
+        },
+        "origin": {
+          "Status": "exited",
+          "Running": false,
+          "Paused": false,
+          "Restarting": false,
+          "OOMKilled": false,
+          "Dead": false,
+          "Pid": 0,
+          "ExitCode": 0,
+          "Error": "",
+          "StartedAt": "2026-11-14T23:10:05.225472748Z",
+          "FinishedAt": "2026-11-14T23:10:15.11568121Z"
+        }
+      }
+    },
+    {
+      "name": "discover_partial_owned_baseline",
+      "passed": true,
+      "value": {
+        "exact_CID_observed": "90657eb100938f2e9701db30e525e6cc7be92e1bb73a904eb060b9737ac929d6"
+      }
+    },
+    {
+      "name": "default_after_full_audit",
+      "passed": true,
+      "value": {
+        "default_SQL_full6259_and11_equal": true,
+        "default_cache_DB7_keys_type_bytes_equal": true,
+        "PTTL_exact_equality_not_required": true,
+        "PTTL_refresh_or_persistence_change_refused": true,
+        "no_expiry_or_source_write_causality_assumed": true
+      }
+    },
+    {
+      "name": "owned_backend_absence_Unix",
+      "passed": true,
+      "value": true
+    },
+    {
+      "name": "complete_owned_SQL_server_log",
+      "passed": true,
+      "value": true
+    },
+    {
+      "name": "normal_management_PGRedis_stop",
+      "passed": true,
+      "value": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-11-14T23:09:58.487449501Z",
+        "FinishedAt": "2026-11-14T23:10:16.512606946Z"
+      }
+    },
+    {
+      "name": "owned_compose_down",
+      "passed": true,
+      "value": ""
+    },
+    {
+      "name": "fresh_exact_project_and_CID_absence",
+      "passed": true,
+      "value": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "name": "physical_CLI_container_settlement",
+      "passed": true,
+      "value": {
+        "CLI_identities": 49,
+        "container_identities": 3
+      }
+    },
+    {
+      "name": "final_frozen_input_recheck",
+      "passed": true,
+      "value": true
+    }
+  ],
+  "all_normal_cleanup_passed": true,
+  "actual_default_isolation": {
+    "default_SQL_full6259_and11_equal": true,
+    "default_cache_DB7_keys_type_bytes_equal": true,
+    "PTTL_exact_equality_not_required": true,
+    "PTTL_refresh_or_persistence_change_refused": true,
+    "no_expiry_or_source_write_causality_assumed": true
+  },
+  "actual_empty_plugins_mode": "0o755",
+  "startup_capture_complete": true,
+  "startup_root_frames_observed": 2,
+  "startup_root_statuses": {
+    "ce93ed29-8846-495b-b05f-1e363892a03f": "SUCCESS",
+    "7902c6e2-45e8-48e9-88b1-24bfc695b18f": "SUCCESS"
+  },
+  "startup_SQL_cache_bytes_published": false,
+  "raw_startup_capture_sha256": "bfaaf807ff39c1fe8cfae820735a94294dba94e1aaf48a89dc98ff9dca124e5d",
+  "raw_business_capture_present": true,
+  "poststop_business_snapshot_present": false,
+  "Source_API_or_task_replay": false,
+  "full_M6_accepted": false,
+  "performance_claims": false,
+  "actual_business_cases": [
+    {
+      "name": "tvg-initial",
+      "passed": true,
+      "native_API_producer": false,
+      "expected_backend_status": "SUCCESS",
+      "observed_backend_status": "SUCCESS"
+    },
+    {
+      "name": "tvg-missing",
+      "passed": true,
+      "native_API_producer": false,
+      "expected_backend_status": "SUCCESS",
+      "observed_backend_status": "SUCCESS"
+    },
+    {
+      "name": "tvg-dummy",
+      "passed": true,
+      "native_API_producer": false,
+      "expected_backend_status": "SUCCESS",
+      "observed_backend_status": "SUCCESS"
+    },
+    {
+      "name": "tvg-unmapped",
+      "passed": true,
+      "native_API_producer": false,
+      "expected_backend_status": "SUCCESS",
+      "observed_backend_status": "SUCCESS"
+    },
+    {
+      "name": "version200-no-update",
+      "passed": true,
+      "native_API_producer": false,
+      "expected_backend_status": "SUCCESS",
+      "observed_backend_status": "SUCCESS"
+    },
+    {
+      "name": "version200-update",
+      "passed": true,
+      "native_API_producer": false,
+      "expected_backend_status": "SUCCESS",
+      "observed_backend_status": "SUCCESS"
+    },
+    {
+      "name": "version200-repeat",
+      "passed": true,
+      "native_API_producer": false,
+      "expected_backend_status": "SUCCESS",
+      "observed_backend_status": "SUCCESS"
+    },
+    {
+      "name": "version200-malformed",
+      "passed": true,
+      "native_API_producer": false,
+      "expected_backend_status": "SUCCESS",
+      "observed_backend_status": "SUCCESS"
+    },
+    {
+      "name": "tvg-insert-error",
+      "passed": true,
+      "native_API_producer": false,
+      "expected_backend_status": "FAILURE",
+      "observed_backend_status": "FAILURE"
+    },
+    {
+      "name": "tvg-repeat",
+      "passed": true,
+      "native_API_producer": false,
+      "expected_backend_status": "SUCCESS",
+      "observed_backend_status": "SUCCESS"
+    },
+    {
+      "name": "Native-API-configured-parent",
+      "passed": true,
+      "native_API_producer": true,
+      "expected_backend_status": null,
+      "observed_backend_status": null
+    },
+    {
+      "name": "Native-API-no-rules-parent",
+      "passed": true,
+      "native_API_producer": true,
+      "expected_backend_status": null,
+      "observed_backend_status": null
+    }
+  ],
+  "actual_business_cases_true": 12,
+  "actual_business_cases_total": 12,
+  "monitor_close": {
+    "thread_settled": true,
+    "actual_rows": 6737,
+    "persisted_rows": 6737,
+    "terminal_reader_error": null,
+    "close_after_cases": true,
+    "terminal_barrier_observed": false,
+    "terminal_marker": "m6-monitor-terminal-4ec3f925d35e48088ecde9ded2a35367",
+    "scope": "All completed business commands precede fsynced terminal ECHO; background worker polls after barrier are outside this journal boundary"
+  },
+  "raw_business_capture_sha256": "568323db77a49d1752fd086cbcec2a511c33662d190351a61fa9f4ae5ca213ed",
+  "raw_business_journal_sha256": "fa4de105d504c4b735799513bf8b5ca2d4bb57b04b905016ff9a39532d86c445",
+  "actual_prestop_backend_count": 20,
+  "actual_prestop_backend_status_counts": {
+    "SUCCESS": 19,
+    "FAILURE": 1
+  },
+  "business_FIFO_and_whole_cohort_qualified": false
+}
