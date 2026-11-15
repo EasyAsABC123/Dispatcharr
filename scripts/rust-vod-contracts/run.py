@@ -351,7 +351,10 @@ def main():
                 owned_history[item['Id']]={'Id':item['Id'],'pid':item['State']['Pid'],'generation':host_generation(item['State']['Pid']),'actual_exit':item['State']['ExitCode'],'state':item['State']['Status'],'service':item['Config'].get('Labels',{}).get('com.docker.compose.service')}
         (output/'owned-container-history.json').write_text(json.dumps(list(owned_history.values()),indent=2)+'\n')
     def container(service):
-        return command(compose+['ps','-q',service]).strip()
+        # Completed one-shot data-init remains owned and must be waited/inspected.
+        ids=command(compose+['ps','-a','-q',service]).split()
+        if len(ids)!=1:raise RuntimeError('Exactly one owned service container required: '+service)
+        return ids[0]
     def address(service, port):
         return 'http://'+command(compose+['port',service,str(port)]).strip()
     try:

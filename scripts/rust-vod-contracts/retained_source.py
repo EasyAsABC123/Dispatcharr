@@ -1,5 +1,5 @@
 """Retained seven-case authority and absolute HTTP budget, no apps on import."""
-import hashlib,json,socket,time,urllib.error,urllib.request
+import hashlib,json,os,socket,time,urllib.error,urllib.request
 from pathlib import Path
 SOURCE='1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 IMAGE='sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'
@@ -50,7 +50,9 @@ def install_absolute_probe(module,deadline):
    chunks=[];total=0;wire_socket=transport_socket(response)
    while True:
     seconds=remaining()
-    if wire_socket is not None:wire_socket.settimeout(seconds)
+    # HTTPResponse can close its raw socket after satisfying Content-Length
+    # while buffered data/EOF remains readable. Only live sockets need a timeout.
+    if wire_socket is not None and wire_socket.fileno()>=0:wire_socket.settimeout(seconds)
     chunk=response.read1(min(65536,8*1024*1024+1-total))
     if not chunk:break
     total+=len(chunk)
@@ -59,7 +61,25 @@ def install_absolute_probe(module,deadline):
    return response.status,dict(response.headers),b''.join(chunks)
  module.fetch=fetch
 
-def validate_candidate_bundle(build_path,proof_path,inputs_path):
+# These five committed test authorities are coupled SDK inputs, intentionally
+# excluded by build.py's Rust/frontend/LICENSE/ATTRIBUTION archive scope. They
+# never become runtime/image inputs merely because their local bytes match.
+REPO_COUPLED_AUTHORITIES=frozenset('scripts/rust-timeshift-contracts/'+name for name in (
+ 'python-busy-control-vectors.json','python-busy-seek-goldens.json',
+ 'python-helper-goldens.json','python-range-goldens.json','python-session-goldens.json'))
+def repo_authority(key,expected,root):
+ if key not in REPO_COUPLED_AUTHORITIES:raise ValueError('Unrecognized non-archive coupled candidate input: '+key)
+ path=root
+ for part in Path(key).parts:
+  path=path/part
+  if path.is_symlink():raise ValueError('Coupled authority path contains a symlink')
+ if not path.is_file()or not path.resolve(strict=True).is_relative_to(root):raise ValueError('Coupled authority must be a regular file inside repo root')
+ if path.stat().st_size>8*1024*1024:raise ValueError('Coupled authority exceeds bounded input')
+ raw=path.read_bytes()
+ if len(raw)>8*1024*1024 or hashlib.sha256(raw).hexdigest()!=expected:raise ValueError('Repo coupled authority bytes differ: '+key)
+ return{'path':str(path.resolve()),'sha256':expected,'scope':'repo-only test authority; NOT an archived runtime/image input'}
+
+def validate_candidate_bundle(build_path,proof_path,inputs_path,repo_root=None):
  def document(path):
   path=Path(path)
   if path.is_symlink()or not path.is_file():raise ValueError('Candidate binding must be a regular existing file')
@@ -71,5 +91,12 @@ def validate_candidate_bundle(build_path,proof_path,inputs_path):
  actual=build['source_sha256'];runtime={key:value for key,value in actual.items()if key.startswith('rust/')}
  selected={key:value for key,value in inputs.items()if key.startswith('rust/')}
  if not runtime or runtime!=selected:raise ValueError('Candidate full Rust input map differs')
- if any(key not in actual or actual[key]!=value for key,value in inputs.items()):raise ValueError('Coupled candidate inputs differ')
- return{'build_sha256':build_sha,'physical_package_sha256':proof_sha,'source_inputs_sha256':inputs_sha,'image_id':build['image_id'],'git_revision':build['git_revision'],'source_tree_sha256':build['source_tree_sha256'],'Rust_inputs':len(runtime),'working_tree_runtime_adopted':False}
+ root=Path(repo_root if repo_root is not None else os.environ.get('DISPATCHARR_CONTRACT_REPO',str(Path(__file__).resolve().parents[2]))).resolve(strict=True)
+ if not root.is_dir():raise ValueError('Coupled authority repo root must exist')
+ archived={};external={}
+ for key,value in inputs.items():
+  if key in actual:
+   if actual[key]!=value:raise ValueError('Archived coupled candidate input differs: '+key)
+   if not key.startswith('rust/'):archived[key]=value
+  else:external[key]=repo_authority(key,value,root)
+ return{'build_sha256':build_sha,'physical_package_sha256':proof_sha,'source_inputs_sha256':inputs_sha,'image_id':build['image_id'],'git_revision':build['git_revision'],'source_tree_sha256':build['source_tree_sha256'],'Rust_inputs':len(runtime),'archived_non_Rust_coupled_inputs':archived,'repo_only_coupled_authorities':external,'repo_only_coupled_root':str(root),'working_tree_runtime_adopted':False}

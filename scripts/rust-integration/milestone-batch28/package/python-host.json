@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "image_id": "sha256:a9e65076b783523bfa64ab66b6b59637899aad73a3dd84833a142d7d3921d782",
+  "git_revision": "3ca0ef4417f3187dabca98afc0b29f7ea0a1bdc8",
+  "Main_application_acceptance": false,
+  "enabled_plugin_acceptance": false,
+  "performance_verified": false,
+  "manifest_summary": {
+    "source_application_assets_copied": true,
+    "actual_execution_audit_required": true,
+    "source_backend_started": false,
+    "application_started": false,
+    "manifest_sha256": "81cdbb07d486d8f6b1e45d983302b280a2e7801b27c58be2fc61d386cbab903b",
+    "manifest_bytes": 14879287,
+    "files": 32192,
+    "ELF": 425
+  },
+  "actual_audit": {
+    "actual_UID": 65532,
+    "hashes_checked": 32500,
+    "distributions": 127,
+    "ELF": 425,
+    "Original_retained_files": 328,
+    "dependency_module_origins": {
+      "django": "/opt/dispatcharr-python/lib/python3.13/dist-packages/django/__init__.py",
+      "psycopg": "/opt/dispatcharr-python/lib/python3.13/dist-packages/psycopg/__init__.py",
+      "celery": "/opt/dispatcharr-python/lib/python3.13/dist-packages/celery/__init__.py",
+      "kombu": "/opt/dispatcharr-python/lib/python3.13/dist-packages/kombu/__init__.py",
+      "redis": "/opt/dispatcharr-python/lib/python3.13/dist-packages/redis/__init__.py",
+      "django_redis": "/opt/dispatcharr-python/lib/python3.13/dist-packages/django_redis/__init__.py",
+      "channels": "/opt/dispatcharr-python/lib/python3.13/dist-packages/channels/__init__.py",
+      "channels_redis": "/opt/dispatcharr-python/lib/python3.13/dist-packages/channels_redis/__init__.py",
+      "rest_framework": "/opt/dispatcharr-python/lib/python3.13/dist-packages/rest_framework/__init__.py",
+      "regex": "/opt/dispatcharr-python/lib/python3.13/dist-packages/regex/__init__.py"
+    },
+    "django_application_registry_ready": false,
+    "application_root_on_generic_path": false
+  },
+  "Original_source_manifest_exact_Git": true,
+  "scope": "Packaged bytes, dependency origins and notices only. Actual plugin bootstrap/callback/execution audit and backend lifecycle remain untested.",
+  "failure": null,
+  "exact_cleanup": true
+}
