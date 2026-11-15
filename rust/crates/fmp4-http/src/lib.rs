@@ -150,37 +150,41 @@ impl Fmp4Gateway {
         let behind = source.startup_behind;
         let output = async_stream::stream! {
             let client=client;let mut stopped=client.stopped();let started=time::Instant::now();
-            let init=loop{
+            let initialized=loop{
                 if *stopped.borrow() || started.elapsed()>=inner.config.initialization_timeout{break None;}
-                match inner.outputs.get_init(&channel,&format).await{Ok(Some(data))=>break Some(data),Ok(None)|Err(dispatcharr_output_store::Error::Capacity)=>{},Err(_)=>break None}
+                match inner.outputs.snapshot(&channel,&format).await {
+                    Ok(snapshot)=>if let Some(expected)=snapshot.owner.as_deref(){
+                        match inner.outputs.get_init_owned_retained(&channel,&format,expected,(inner.clone(),client.clone())).await {
+                            Ok((Some(init),_retained))=>{
+                                let expected=expected.to_owned();break Some((init,snapshot,expected));
+                            },
+                            Ok((None,_))|Err(dispatcharr_output_store::Error::Capacity)|Err(dispatcharr_output_store::Error::LostOwnership)=>{},
+                            Err(_)=>break None,
+                        }
+                    },
+                    Err(dispatcharr_output_store::Error::Capacity)=>{},
+                    Err(_)=>break None,
+                }
                 tokio::select!{_=stopped.changed()=>break None,_=time::sleep(inner.config.poll_interval)=>{}}
             };
-            if let Some(init)=init{
+            if let Some((init,snapshot,expected))=initialized{
+                // Snapshot, init read and every later fragment are one observed
+                // output generation. Rejoin requires a new response/init.
+                let mut index=start_cursor(snapshot.index,&snapshot.segments,behind,wall());
                 let slots=Arc::new(Semaphore::new(1));
                 let permit=slots.clone().acquire_owned().await.unwrap();
                 client.record_bytes(init.as_ref().len());
                 yield Ok::<Bytes,io::Error>(Bytes::from_owner(Frame{data:init,_client:client.clone(),_slot:permit}));
-                let snapshot=loop{
-                    match inner.outputs.snapshot(&channel,&format).await{
-                        Ok(snapshot)=>break Some(snapshot),
-                        Err(dispatcharr_output_store::Error::Capacity) if started.elapsed()<inner.config.initialization_timeout=>{
-                            tokio::select!{_=stopped.changed()=>break None,_=time::sleep(inner.config.poll_interval)=>{}}
-                        },
-                        Err(_)=>break None,
-                    }
-                };
-                let Some(snapshot)=snapshot else{return;};
-                let mut index=start_cursor(snapshot.index,&snapshot.segments,behind,wall());
                 let mut last_data=time::Instant::now();
                 'stream:loop{
                     if *stopped.borrow() || last_data.elapsed()>=inner.config.stream_timeout{break;}
+                    let snapshot=match inner.outputs.snapshot(&channel,&format).await{Ok(snapshot)=>snapshot,Err(dispatcharr_output_store::Error::Capacity)=>{tokio::select!{_=stopped.changed()=>break,_=time::sleep(inner.config.poll_interval)=>{}}continue;},Err(_)=>break};
+                    if snapshot.owner.as_deref()!=Some(expected.as_str()){break;}
+                    let Some((sequence,_))=snapshot.segments.into_iter().find(|(sequence,_)|*sequence>index)else{tokio::select!{_=stopped.changed()=>break 'stream,_=time::sleep(inner.config.poll_interval)=>{}}continue;};
                     let permit=tokio::select!{_=stopped.changed()=>break,result=slots.clone().acquire_owned()=>match result{Ok(permit)=>permit,Err(_)=>break}};
-                    let snapshot=match inner.outputs.snapshot(&channel,&format).await{Ok(snapshot)=>snapshot,Err(dispatcharr_output_store::Error::Capacity)=>{drop(permit);tokio::select!{_=stopped.changed()=>break,_=time::sleep(inner.config.poll_interval)=>{}}continue;},Err(_)=>break};
-                    if snapshot.owner.is_none(){break;}
-                    let Some((sequence,_))=snapshot.segments.into_iter().find(|(sequence,_)|*sequence>index)else{drop(permit);tokio::select!{_=stopped.changed()=>break 'stream,_=time::sleep(inner.config.poll_interval)=>{}}continue;};
-                    match inner.outputs.get(&channel,&format,sequence).await{
-                        Ok(Some(data))=>{index=sequence;last_data=time::Instant::now();client.record_bytes(data.as_ref().len());yield Ok(Bytes::from_owner(Frame{data,_client:client.clone(),_slot:permit}));},
-                        Ok(None)=>{index=sequence;},Err(dispatcharr_output_store::Error::Capacity)=>{drop(permit);tokio::select!{_=stopped.changed()=>break,_=time::sleep(inner.config.poll_interval)=>{}}},Err(_)=>break,
+                    match inner.outputs.get_owned_retained(&channel,&format,&expected,sequence,(inner.clone(),client.clone())).await{
+                        Ok((Some(data),_retained))=>{index=sequence;last_data=time::Instant::now();client.record_bytes(data.as_ref().len());yield Ok(Bytes::from_owner(Frame{data,_client:client.clone(),_slot:permit}));},
+                        Ok((None,_retained))=>{index=sequence;},Err(dispatcharr_output_store::Error::Capacity)=>{drop(permit);tokio::select!{_=stopped.changed()=>break,_=time::sleep(inner.config.poll_interval)=>{}}},Err(_)=>break,
                     }
                 }
             }

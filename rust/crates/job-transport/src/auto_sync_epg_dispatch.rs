@@ -33,12 +33,26 @@ impl Dispatched {
     }
 }
 pub(crate) struct Dispatcher {
+    sd: std::sync::OnceLock<crate::normal_sd_guide::Capability>,
     jobs: Jobs,
     identity: ProducerIdentitySource,
 }
 impl Dispatcher {
     pub(crate) fn new(jobs: Jobs, identity: ProducerIdentitySource) -> Self {
-        Self { jobs, identity }
+        Self {
+            jobs,
+            identity,
+            sd: std::sync::OnceLock::new(),
+        }
+    }
+    pub(crate) fn bind_sd(
+        &self,
+        capability: crate::normal_sd_guide::Capability,
+    ) -> Result<(), Error> {
+        if !capability.owns(&self.jobs) {
+            return Err(Error::UnsupportedTask);
+        }
+        self.sd.set(capability).map_err(|_| Error::Configuration)
     }
     pub(crate) async fn dispatch(
         &self,
@@ -55,7 +69,12 @@ impl Dispatcher {
         // Refuse before publishing ANY descendant; never queue a known blocked
         // SD head and acknowledge the parent as successful. SD with existing
         // ProgramData and dummy are actual Source skips, absent from this plan.
-        if plan.contains_sd().await.map_err(|_| Error::Backend)? {
+        if plan.contains_sd().await.map_err(|_| Error::Backend)?
+            && !self
+                .sd
+                .get()
+                .is_some_and(|capability| capability.owns(&self.jobs))
+        {
             plan.close().await.map_err(|_| Error::Backend)?;
             return Err(Error::UnsupportedTask);
         }
@@ -67,17 +86,26 @@ impl Dispatcher {
             }
             let mut receipts = Vec::with_capacity(page.len());
             for item in page {
-                let Task::ParseProgrammes(epg) = item.task else {
-                    return Err(Error::UnsupportedTask);
+                let (epg, sd_batch) = match item.task {
+                    Task::ParseProgrammes(id) | Task::ParseSdProgrammes(id) => (id, false),
+                    Task::FetchSdMappedGuide(id) => (id, true),
                 };
                 let identity = self.identity.current().map_err(|_| Error::Protocol)?;
                 let id = Uuid::new_v4();
-                let raw = encode_child(epg, id, parent, root, identity.reply_to, &identity.origin)?;
+                let raw = if sd_batch {
+                    encode_sd_batch(epg, id, parent, root, identity.reply_to, &identity.origin)?
+                } else {
+                    encode_child(epg, id, parent, root, identity.reply_to, &identity.origin)?
+                };
                 loop {
                     if stopped() {
                         return Err(Error::DrainTimeout);
                     }
-                    match self.jobs.publish_auto_sync_epg(&raw, owner.clone()).await {
+                    match if sd_batch {
+                        self.jobs.publish_sd_guide(&raw, owner.clone()).await
+                    } else {
+                        self.jobs.publish_auto_sync_epg(&raw, owner.clone()).await
+                    } {
                         Ok(receipt) if receipt.task_id == id => break,
                         Ok(_) => return Err(Error::Corrupt),
                         Err(Error::Capacity) => {
@@ -113,6 +141,25 @@ impl crate::full_metadata::ActualPublishedChildren for Dispatched {
     }
 }
 
+fn encode_sd_batch(
+    source: i64,
+    id: Uuid,
+    parent: Uuid,
+    root: Uuid,
+    reply: Uuid,
+    origin: &str,
+) -> Result<Vec<u8>, Error> {
+    let raw = encode_child(source, id, parent, root, reply, origin)?;
+    let mut frame: Value = serde_json::from_slice(&raw).map_err(|_| Error::Protocol)?;
+    frame["headers"]["task"] = json!("apps.epg.tasks.fetch_sd_mapped_guide_batch");
+    let raw = serde_json::to_vec(&frame).map_err(|_| Error::Protocol)?;
+    let parsed = crate::sd_guide_protocol::parse(&raw).map_err(|_| Error::Protocol)?;
+    if parsed.common.id != id || parsed.common.parent != Some(parent) || parsed.common.root != root
+    {
+        return Err(Error::Protocol);
+    }
+    Ok(raw)
+}
 fn encode_child(
     epg: i64,
     id: Uuid,

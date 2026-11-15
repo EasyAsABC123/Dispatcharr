@@ -171,6 +171,46 @@ impl TaskLocks {
     pub fn available_leases(&self) -> usize {
         self.inner.leases.available_permits()
     }
+    /// Source read-only is_task_lock_held for the SD single->mapped-batch
+    /// dependency. Reuses the SAME physical Redis manager and command budget;
+    /// no execution lease/token is fabricated or temporarily acquired.
+    pub async fn sd_mapped_guide_is_held(
+        &self,
+        source: i64,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, TaskLockDetailedError> {
+        if !(1..=i64::from(i32::MAX)).contains(&source) {
+            return Err(TaskLockError::Invalid.into());
+        }
+        let command = self
+            .inner
+            .commands
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| TaskLockError::Capacity)?;
+        let inner = self.inner.clone();
+        let (sender, receiver) = oneshot::channel();
+        tokio::spawn(async move {
+            let _retained = (caller, command, inner.clone());
+            let mut connection = inner.connection.clone();
+            let result = redis::cmd("EXISTS")
+                .arg(format!("task_lock_sd_mapped_guide_fetch_{source}"))
+                .query_async::<i64>(&mut connection)
+                .await;
+            let result = match result {
+                Ok(0) => Ok(false),
+                Ok(1) => Ok(true),
+                Ok(_) => Err(TaskLockError::RedisUnavailable.into()),
+                Err(error) => Err(TaskLockDetailedError::Redis(TaskLockRedisCause::capture(
+                    &error,
+                ))),
+            };
+            let _ = sender.send(result);
+        });
+        receiver
+            .await
+            .map_err(|_| TaskLockDetailedError::Operational(TaskLockError::RedisUnavailable))?
+    }
     pub async fn acquire(&self, task: &str, id: i64) -> Result<TaskLease, TaskLockError> {
         self.acquire_impl(task, id, None, false)
             .await

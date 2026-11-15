@@ -632,6 +632,10 @@ async fn execute(
         channel: current.channel_uuid,
         paths: paths.clone(),
         origin: inner.explicit_origin.clone(),
+        output_profile_id: crate::recording_output_profile::capture_id(
+            groups.dvr.get("output_profile_id"),
+        )
+        .map_err(Error::Unsupported)?,
         files: files.clone(),
         end: message.end(),
         shutdown: inner.shutdown.clone(),

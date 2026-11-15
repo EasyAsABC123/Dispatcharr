@@ -13,7 +13,7 @@ pub fn source_system_settings_defaults() -> Value {
 fn default_stream() -> Value {
     json!({"default_user_agent":null,"default_stream_profile":null,"m3u_hash_key":"","default_output_format":"mpegts","hdhr_output_profile_id":null})
 }
-fn default_epg() -> Value {
+pub(crate) fn default_epg() -> Value {
     json!({"epg_match_mode":"default","epg_match_ignore_prefixes":[],"epg_match_ignore_suffixes":[],"epg_match_ignore_custom":[],"epg_history_min_days":1,"epg_history_max_days":30,"epg_default_prev_days":0,"epg_default_days":0})
 }
 impl Store {

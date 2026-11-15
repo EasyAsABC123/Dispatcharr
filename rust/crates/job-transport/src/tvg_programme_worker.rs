@@ -1,6 +1,6 @@
-//! PRIVATE uncompiled whole-task composition for the M6 integrated candidate.
-//! Source actual whole-task extension and integrated matrix remain REQUIRED.
-//! No Main/registry registration, generic failure serializer or retry authority.
+//! Per-channel XML programme work; normal Source refresh-busy retry extension.
+//! Original Dispatcharr authors retain application and algorithm credit.
+//! Shared ETA delivery is opaque; legacy captured constructors stay unchanged.
 use crate::{transport::TvgJobs, tvg_programme_cache::Cache, tvg_programme_files::LocalFiles};
 use dispatcharr_coordination::{TaskLockDetailedError, TaskLockError, TaskLocks};
 use dispatcharr_ingest_epg::{cache_policy::CachedSwapPolicy, SwapPolicyContext};
@@ -99,6 +99,21 @@ impl Worker {
         expected: Option<Arc<[u8]>>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Run, Error> {
+        self.run_delivery(expected, None, caller).await
+    }
+    pub(crate) async fn run_reserved(
+        &self,
+        reservation: crate::xml_tvg_eta::Reservation,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Run, Error> {
+        self.run_delivery(None, Some(reservation), caller).await
+    }
+    async fn run_delivery(
+        &self,
+        expected: Option<Arc<[u8]>>,
+        reserved: Option<crate::xml_tvg_eta::Reservation>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Run, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -116,7 +131,7 @@ impl Worker {
             _slot: slot,
         });
         let inner = self.inner.clone();
-        tokio::spawn(async move { run(inner, owner, expected).await })
+        tokio::spawn(async move { run(inner, owner, expected, reserved).await })
             .await
             .map_err(|_| Error::Supervisor)?
     }
@@ -137,16 +152,24 @@ async fn run(
     inner: Arc<Inner>,
     owner: Arc<Owner>,
     expected: Option<Arc<[u8]>>,
+    reserved: Option<crate::xml_tvg_eta::Reservation>,
 ) -> Result<Run, Error> {
-    let candidate = match inner
-        .jobs
-        .peek_selected(expected.as_deref(), owner.clone())
-        .await
-    {
-        Ok(Some(v)) => v,
-        Ok(None) => return Ok(Run::Empty),
-        Err(crate::transport::Error::UnsupportedTask) => return Ok(Run::UnsupportedHead),
-        Err(e) => return Err(Error::Transport(e)),
+    let candidate = if let Some(reserved) = reserved {
+        inner
+            .jobs
+            .reserved_candidate(reserved)
+            .map_err(Error::Transport)?
+    } else {
+        match inner
+            .jobs
+            .peek_selected(expected.as_deref(), owner.clone())
+            .await
+        {
+            Ok(Some(v)) => v,
+            Ok(None) => return Ok(Run::Empty),
+            Err(crate::transport::Error::UnsupportedTask) => return Ok(Run::UnsupportedHead),
+            Err(e) => return Err(Error::Transport(e)),
+        }
     };
     let id = candidate.message.epg_data_id;
     let task = candidate.message.task_id;
@@ -167,11 +190,17 @@ async fn run(
                 .await
                 .map_err(Error::Cache)?
             {
-                // Source deferred publication is a required batch extension; do not eat
-                // that legitimate FIFO head until its actual child/result policy exists.
-                return Ok(Run::UnsupportedHead);
+                if !inner.jobs.supports_deferral() {
+                    return Ok(Run::UnsupportedHead);
+                }
+                let completed = inner
+                    .jobs
+                    .complete_deferred(candidate, owner.clone())
+                    .await
+                    .map_err(Error::Transport)?;
+                return Ok(Run::Completed(completed));
             }
-            if context.mapped {
+            if context.mapped || candidate.message.force {
                 let path = context
                     .extracted_file_path
                     .as_ref()

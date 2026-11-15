@@ -7,10 +7,18 @@ use crate::tvg_programme_protocol::{self, Envelope};
 pub struct TvgJobs {
     jobs: Jobs,
     normal: Arc<std::sync::atomic::AtomicBool>,
+    shared: Arc<std::sync::OnceLock<Shared>>,
+}
+struct Shared {
+    jobs: Jobs,
+    identity: dispatcharr_store::ProducerIdentitySource,
+    stopped: Arc<std::sync::atomic::AtomicBool>,
 }
 pub struct Candidate {
     pub(crate) message: Envelope,
     parent: Option<Uuid>,
+    normal_message: Option<crate::xml_tvg_protocol::Message>,
+    reserved: Option<crate::xml_tvg_eta::Reservation>,
     raw: Vec<u8>,
     origin: Arc<Inner>,
 }
@@ -32,6 +40,48 @@ impl TvgJobs {
         Ok(Self {
             jobs: Jobs::connect_series(broker, result, config).await?,
             normal: Arc::new(std::sync::atomic::AtomicBool::new(false)),
+            shared: Arc::new(std::sync::OnceLock::new()),
+        })
+    }
+    fn active_jobs(&self) -> &Jobs {
+        self.shared.get().map_or(&self.jobs, |s| &s.jobs)
+    }
+    pub(crate) fn bind_shared(
+        &self,
+        jobs: Jobs,
+        identity: dispatcharr_store::ProducerIdentitySource,
+        stopped: Arc<std::sync::atomic::AtomicBool>,
+    ) -> Result<(), Error> {
+        if !jobs.allows_defaults() {
+            return Err(Error::Configuration);
+        }
+        self.shared
+            .set(Shared {
+                jobs,
+                identity,
+                stopped,
+            })
+            .map_err(|_| Error::Configuration)
+    }
+    pub(crate) fn reserved_candidate(
+        &self,
+        reservation: crate::xml_tvg_eta::Reservation,
+    ) -> Result<Candidate, Error> {
+        let jobs = self.active_jobs();
+        jobs.owns_xml_tvg_reservation(&reservation)?;
+        let normal = reservation.message().clone();
+        Ok(Candidate {
+            message: Envelope {
+                task_id: normal.common.id,
+                epg_data_id: normal.target,
+                force: normal.force,
+                defer_retry: normal.defer,
+            },
+            parent: normal.common.parent,
+            normal_message: Some(normal),
+            raw: reservation.receipt.queued_bytes.clone(),
+            reserved: Some(reservation),
+            origin: jobs.inner.clone(),
         })
     }
     pub(crate) fn enable_normal_intake(&self) {
@@ -46,9 +96,9 @@ impl TvgJobs {
         expected: Option<&[u8]>,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Option<Candidate>, Error> {
-        let lease = self.jobs.lease(owner)?;
+        let lease = self.active_jobs().lease(owner)?;
         let (reply, _held) = self
-            .jobs
+            .active_jobs()
             .inner
             .broker
             .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &["celery".into()], &[], lease)
@@ -71,8 +121,17 @@ impl TvgJobs {
                 Ok(Some(Candidate {
                     message,
                     parent,
+                    normal_message: if self.shared.get().is_some() {
+                        Some(
+                            crate::xml_tvg_protocol::parse(&reply.1)
+                                .map_err(|_| Error::UnsupportedTask)?,
+                        )
+                    } else {
+                        None
+                    },
+                    reserved: None,
                     raw: reply.1,
-                    origin: self.jobs.inner.clone(),
+                    origin: self.active_jobs().inner.clone(),
                 }))
             }
             _ => Err(Error::Corrupt),
@@ -83,12 +142,20 @@ impl TvgJobs {
         candidate: Candidate,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Claimed, Error> {
-        if !Arc::ptr_eq(&candidate.origin, &self.jobs.inner) {
+        if !Arc::ptr_eq(&candidate.origin, &self.active_jobs().inner) {
             return Err(Error::UnsupportedTask);
         }
-        let lease = self.jobs.lease(owner)?;
+        if let Some(reserved) = candidate.reserved.as_ref() {
+            self.active_jobs().ack_xml_tvg_eta(reserved, owner).await?;
+            return Ok(Claimed {
+                message: candidate.message,
+                parent: candidate.parent,
+                origin: candidate.origin,
+            });
+        }
+        let lease = self.active_jobs().lease(owner)?;
         match self
-            .jobs
+            .active_jobs()
             .inner
             .broker
             .command_classified::<i64, _>(
@@ -110,13 +177,82 @@ impl TvgJobs {
             Err(error) => Err(map(error)),
         }
     }
+    pub(crate) fn supports_deferral(&self) -> bool {
+        self.shared.get().is_some()
+    }
+    pub(crate) async fn complete_deferred(
+        &self,
+        candidate: Candidate,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Uuid, Error> {
+        let shared = self.shared.get().ok_or(Error::UnsupportedTask)?;
+        let message = candidate
+            .normal_message
+            .clone()
+            .ok_or(Error::UnsupportedTask)?;
+        let retry = if crate::xml_tvg_protocol::deferral(message.defer)
+            == crate::xml_tvg_protocol::Deferral::Exhausted
+        {
+            None
+        } else {
+            let id = Uuid::new_v4();
+            let identity = shared
+                .identity
+                .current()
+                .map_err(|_| Error::Configuration)?;
+            let raw = crate::xml_tvg_protocol::retry_frame(
+                &message,
+                id,
+                identity.reply_to,
+                &identity.origin,
+                chrono::Utc::now(),
+            )
+            .map_err(|_| Error::Protocol)?;
+            Some((id, raw))
+        };
+        let claimed = self.claim(candidate, owner.clone()).await?;
+        let children = if let Some((id, raw)) = retry {
+            loop {
+                if shared.stopped.load(std::sync::atomic::Ordering::Acquire) {
+                    return Err(Error::Closed);
+                }
+                match shared.jobs.publish_xml_tvg(&raw, owner.clone()).await {
+                    Ok(actual) if actual.task_id == id => break,
+                    Err(Error::Capacity) => tokio::time::sleep(Duration::from_millis(100)).await,
+                    Err(error) => return Err(error),
+                    _ => return Err(Error::Corrupt),
+                }
+            }
+            vec![id]
+        } else {
+            Vec::new()
+        };
+        let value = if crate::xml_tvg_protocol::deferral(message.defer)
+            == crate::xml_tvg_protocol::Deferral::Exhausted
+        {
+            serde_json::json!("Deferred too many times: source refresh in progress")
+        } else {
+            serde_json::json!("Deferred")
+        };
+        shared
+            .jobs
+            .write_result(
+                claimed.message.task_id,
+                value,
+                claimed.parent,
+                children,
+                owner,
+            )
+            .await?;
+        Ok(message.common.id)
+    }
     pub async fn write_normal(
         &self,
         claimed: Claimed,
         value: Normal,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        if !Arc::ptr_eq(&claimed.origin, &self.jobs.inner) {
+        if !Arc::ptr_eq(&claimed.origin, &self.active_jobs().inner) {
             return Err(Error::UnsupportedTask);
         }
         let result = match value {
@@ -124,7 +260,7 @@ impl TvgJobs {
             Normal::MissingEpg => serde_json::json!("EPG not found"),
             Normal::Busy => serde_json::json!("Task already running"),
         };
-        self.jobs
+        self.active_jobs()
             .write_result(
                 claimed.message.task_id,
                 result,
@@ -140,7 +276,7 @@ impl TvgJobs {
         failure: crate::tvg_programme_terminal::InsertFailure,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        if !Arc::ptr_eq(&claimed.origin, &self.jobs.inner) {
+        if !Arc::ptr_eq(&claimed.origin, &self.active_jobs().inner) {
             return Err(Error::UnsupportedTask);
         }
         let date = chrono::Utc::now()
@@ -158,7 +294,7 @@ impl TvgJobs {
                 return Err(Error::UnsupportedTask);
             }
         }
-        self.jobs
+        self.active_jobs()
             .write_metadata(claimed.message.task_id, bytes, owner)
             .await
     }

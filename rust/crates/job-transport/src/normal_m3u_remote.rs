@@ -24,6 +24,7 @@ use std::{
 use tokio::sync::{mpsc, Semaphore};
 type Owner = Arc<dyn Send + Sync>;
 struct Inner {
+    sd: std::sync::OnceLock<crate::normal_sd_guide::Capability>,
     flows: crate::auto_sync_flow::ActiveFlows,
     jobs: Jobs,
     ports: M3uPorts,
@@ -66,6 +67,19 @@ enum Outcome {
     File(GroupsResultFile),
 }
 impl Worker {
+    pub(crate) fn bind_sd(
+        &self,
+        capability: crate::normal_sd_guide::Capability,
+    ) -> Result<(), crate::milestone_dispatch::Disposition> {
+        if !capability.owns(&self.inner.jobs) {
+            return Err(crate::milestone_dispatch::Disposition::UnsupportedDomain);
+        }
+        self.inner
+            .sd
+            .set(capability)
+            .map_err(|_| crate::milestone_dispatch::Disposition::UnsupportedDomain)
+    }
+
     #[allow(clippy::too_many_arguments)]
     pub(crate) fn new(
         jobs: Jobs,
@@ -81,6 +95,7 @@ impl Worker {
     ) -> Self {
         Self {
             inner: Arc::new(Inner {
+                sd: std::sync::OnceLock::new(),
                 flows: crate::auto_sync_flow::ActiveFlows::default(),
                 jobs,
                 ports,
@@ -225,16 +240,21 @@ impl Worker {
                 };
                 let flow = if message.kind == Kind::Single && inner.auto_jobs.is_some() {
                     let stop = inner.clone();
-                    Some(inner.flows.track(crate::auto_sync_flow::Flow::new(
-                        inner.jobs.clone(),
-                        inner.auth.producer_identity_source(),
-                        inner.cache.clone(),
-                        message.id,
-                        message.parent,
-                        message.root,
-                        owner.clone(),
-                        Arc::new(move || stop.closed.load(Ordering::Acquire)),
-                    )))
+                    Some(
+                        inner.flows.track(
+                            crate::auto_sync_flow::Flow::new(
+                                inner.jobs.clone(),
+                                inner.auth.producer_identity_source(),
+                                inner.cache.clone(),
+                                message.id,
+                                message.parent,
+                                message.root,
+                                owner.clone(),
+                                Arc::new(move || stop.closed.load(Ordering::Acquire)),
+                            )
+                            .with_sd(inner.sd.get().cloned()),
+                        ),
+                    )
                 } else {
                     None
                 };

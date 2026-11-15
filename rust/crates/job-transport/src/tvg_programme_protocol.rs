@@ -7,6 +7,8 @@ use uuid::Uuid;
 pub struct Envelope {
     pub task_id: Uuid,
     pub epg_data_id: i64,
+    pub force: bool,
+    pub defer_retry: i64,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct UnqualifiedProgrammeExecution;
@@ -55,38 +57,27 @@ pub fn parse_initial(raw: &[u8]) -> Result<Envelope, ProtocolError> {
     Ok(Envelope {
         task_id: id,
         epg_data_id: message.source_id,
+        force: false,
+        defer_retry: 0,
     })
 }
 /// Normal shell intake preserves real parent/root metadata while reusing the
 /// existing family's full envelope/body constraints. No producer receipt or
 /// completed-parent witness is required for a surviving authenticated head.
 pub(crate) fn parse_normal(raw: &[u8]) -> Result<(Envelope, Option<Uuid>), ProtocolError> {
-    if raw.len() > 65536 {
-        return Err(ProtocolError::Capacity);
+    let normal = crate::xml_tvg_protocol::parse(raw).map_err(|_| ProtocolError::InvalidArgument)?;
+    if normal.eta.is_some() {
+        return Err(ProtocolError::InvalidArgument);
     }
-    let invalid = || ProtocolError::InvalidArgument;
-    let mut value: Value = serde_json::from_slice(raw).map_err(|_| invalid())?;
-    let canonical = |value: &Value| -> Result<Uuid, ProtocolError> {
-        let text = value.as_str().ok_or_else(invalid)?;
-        let id = Uuid::parse_str(text).map_err(|_| invalid())?;
-        if id.is_nil() || id.to_string() != text || id.get_variant() != uuid::Variant::RFC4122 {
-            return Err(invalid());
-        }
-        Ok(id)
-    };
-    let id = canonical(&value["headers"]["id"])?;
-    let root = canonical(&value["headers"]["root_id"])?;
-    let parent = match &value["headers"]["parent_id"] {
-        Value::Null => None,
-        value => Some(canonical(value)?),
-    };
-    if parent.is_none() && root != id {
-        return Err(invalid());
-    }
-    value["headers"]["parent_id"] = Value::Null;
-    value["headers"]["root_id"] = json!(id);
-    let message = parse_initial(&serde_json::to_vec(&value).map_err(|_| invalid())?)?;
-    Ok((message, parent))
+    Ok((
+        Envelope {
+            task_id: normal.common.id,
+            epg_data_id: normal.target,
+            force: normal.force,
+            defer_retry: normal.defer,
+        },
+        normal.common.parent,
+    ))
 }
 impl Envelope {
     pub fn execution(&self) -> Result<(), UnqualifiedProgrammeExecution> {

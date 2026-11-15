@@ -291,10 +291,18 @@ impl SelectedJobs {
             recording_jobs.clone(),
             events.clone(),
         );
+        let sd_guide = jobs::normal_sd_guide::Prepared::new(
+            shared_jobs.clone(),
+            auth.clone(),
+            events.clone(),
+            locks.clone(),
+            revoked.clone(),
+        )
+        .map_err(|_| "Selected SD guide initialization failed")?;
         let scanner = jobs::normal_scanner::Prepared::connect_with_auto(
             shared_jobs.clone(),
             store.clone(),
-            auth,
+            auth.clone(),
             events.clone(),
             locks,
             &broker,
@@ -368,10 +376,16 @@ impl SelectedJobs {
             ),
             (
                 Family::TvgProgrammes,
-                existing
-                    .tvg
-                    .into_normal_handler()
-                    .map_err(|_| "Selected TVG lifecycle unavailable")?,
+                sd_guide.wrap_tvg(
+                    existing
+                        .tvg
+                        .into_normal_handler_with_deferred(
+                            shared_jobs.clone(),
+                            auth.producer_identity_source(),
+                            revoked.clone(),
+                        )
+                        .map_err(|_| "Selected TVG lifecycle unavailable")?,
+                ),
             ),
             (
                 Family::VersionCheck,
@@ -390,6 +404,7 @@ impl SelectedJobs {
         entries.extend(channel_tasks.entries());
         entries.push(plugin_refresh.entry());
         entries.extend(xc.entries());
+        entries.push(sd_guide.entry());
         entries.extend(defaults.entries());
         entries.extend(scanner.entries());
         let queue = jobs::normal_queue::Application::prepare(
@@ -400,6 +415,13 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected complete registry initialization failed")?;
+        scanner
+            .bind_sd(
+                sd_guide
+                    .capability(&queue)
+                    .map_err(|_| "Selected SD guide actual registry unavailable")?,
+            )
+            .map_err(|_| "Selected SD guide auto composition failed")?;
         let scheduler = jobs::normal_beat::Scheduler::prepare(
             store.pool().clone(),
             shared_jobs.clone(),

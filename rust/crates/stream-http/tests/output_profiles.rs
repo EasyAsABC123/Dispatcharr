@@ -292,3 +292,202 @@ async fn raw_owner_serves_two_replica_profile_viewers_with_one_process_one_provi
     let _ = origin.await;
     std::fs::remove_file(launches).unwrap();
 }
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis and actual child processes"]
+async fn proven_profile_ownership_loss_settles_old_process_preserves_held_frame_and_allows_rejoin()
+{
+    let redis = std::env::var("REDIS_TEST_URL").expect("isolated Redis required");
+    let channel = format!(
+        "profile-generation-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    );
+    let launches = std::env::temp_dir().join(format!("{channel}-launches"));
+    let count = Arc::new(AtomicUsize::new(0));
+    let hits = count.clone();
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let app=Router::new().route("/live",get(move||{let hits=hits.clone();async move{
+        hits.fetch_add(1,Ordering::SeqCst);
+        Body::from_stream(async_stream::stream!{loop{
+            let mut packet=[0u8;188];packet[..4].copy_from_slice(&[0x47,0,100,0x10]);
+            yield Ok::<_,Infallible>(Bytes::copy_from_slice(&packet));time::sleep(Duration::from_millis(2)).await;
+        }})
+    }}));
+    let origin = tokio::spawn(async move {
+        axum::serve(listener, app).await.unwrap();
+    });
+    let source_url = format!("http://{address}/live");
+    let (engine, clients, outputs) = engine(&redis).await;
+    let mut raw = engine
+        .play(source(&channel, &source_url))
+        .await
+        .unwrap()
+        .into_body();
+    drop(raw.frame().await.unwrap().unwrap());
+    let command = StreamCommand {
+        argv: vec![
+            "/bin/sh".into(),
+            "-c".into(),
+            "printf '%s\\n' $$ >> \"$1\"; exec cat".into(),
+            "profile-generation".into(),
+            launches.to_str().unwrap().into(),
+        ],
+    };
+    let mut old = engine
+        .play_output_profile(source(&channel, &source_url), 7, command.clone())
+        .await
+        .unwrap()
+        .into_body();
+    let held = time::timeout(Duration::from_secs(5), old.frame())
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap()
+        .into_data()
+        .unwrap();
+    let held_copy = held.to_vec();
+    let lane = outputs.profile(7).unwrap();
+    let previous = lane.snapshot(&channel).await.unwrap().owner.unwrap();
+    let mut conn = redis::Client::open(redis.clone())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let raw_key = format!("live:channel:{channel}:owner");
+    let raw_owner: String = redis::cmd("GET")
+        .arg(&raw_key)
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    // Fault injection only: the real old process remains alive across an actual
+    // Redis output-token handoff. The successor uses the actual raw owner;
+    // stale child writes must be rejected, not turned into a permanent fault.
+    let _: usize = redis::cmd("DEL")
+        .arg(format!("live:channel:{channel}:output:mpegts:p7:owner"))
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    let successor = lane
+        .claim_retained(&channel, &raw_owner, "controlled-successor", ())
+        .await
+        .unwrap()
+        .0
+        .unwrap();
+    successor.set_state_retained("active", ()).await.unwrap();
+    let successor_sequence = successor.put(b"successor-held-payload", 1.0).await.unwrap();
+    time::timeout(Duration::from_secs(5), async {
+        loop {
+            let state = engine.output_profile_diagnostics();
+            if state["profiles"].as_array().unwrap().is_empty() {
+                break;
+            }
+            time::sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .expect("known ownership loss must physically finish producer and leave no uncertain worker");
+    assert_eq!(held.as_ref(), held_copy.as_slice());
+    assert_eq!(
+        lane.snapshot(&channel).await.unwrap().owner.as_deref(),
+        Some("controlled-successor")
+    );
+    assert_eq!(
+        lane.get(&channel, successor_sequence)
+            .await
+            .unwrap()
+            .unwrap()
+            .as_ref(),
+        b"successor-held-payload"
+    );
+    assert!(
+        time::timeout(Duration::from_secs(3), old.frame())
+            .await
+            .unwrap()
+            .is_none(),
+        "an old cursor cannot read successor bytes"
+    );
+    drop(old);
+    assert_eq!(
+        clients
+            .output_profile_client_count(&channel, 7, ())
+            .await
+            .unwrap(),
+        1,
+        "handed old frame retains actual client/demand after body cancellation"
+    );
+    drop(held);
+    time::timeout(Duration::from_secs(3), async {
+        while clients
+            .output_profile_client_count(&channel, 7, ())
+            .await
+            .unwrap()
+            != 0
+        {
+            time::sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert!(successor.release_retained(()).await.unwrap().0);
+    let mut rejoined = engine
+        .play_output_profile(source(&channel, &source_url), 7, command)
+        .await
+        .unwrap()
+        .into_body();
+    let fresh = time::timeout(Duration::from_secs(5), rejoined.frame())
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap()
+        .into_data()
+        .unwrap();
+    assert!(!fresh.is_empty());
+    assert_ne!(
+        lane.snapshot(&channel).await.unwrap().owner.as_deref(),
+        Some(previous.as_str())
+    );
+    assert_eq!(
+        engine.output_profile_diagnostics()["actual_profile_producer_admissions"],
+        2
+    );
+    assert_eq!(
+        std::fs::read_to_string(&launches).unwrap().lines().count(),
+        2,
+        "one physical process per successive generation, not per viewer"
+    );
+    assert_eq!(
+        count.load(Ordering::SeqCst),
+        1,
+        "profile loss/rejoin must reuse the surviving raw upstream"
+    );
+    let provider: Option<u32> = redis::cmd("GET")
+        .arg("profile_connections:7")
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(provider, Some(1));
+    assert!(!raw
+        .frame()
+        .await
+        .unwrap()
+        .unwrap()
+        .into_data()
+        .unwrap()
+        .is_empty());
+    drop(fresh);
+    drop(rejoined);
+    drop(raw);
+    assert!(
+        engine.shutdown_wait(Duration::from_secs(10)).await,
+        "all child/media/client ownership drains after proven loss/rejoin"
+    );
+    clients.shutdown().await;
+    origin.abort();
+    let _ = origin.await;
+    std::fs::remove_file(launches).unwrap();
+}

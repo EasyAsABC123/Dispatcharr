@@ -536,3 +536,14 @@ pub mod compact_numbering;
 mod compact_unhide;
 
 mod source_input_profile;
+
+pub mod sd_guide;
+mod sd_guide_auth;
+mod sd_guide_fetch;
+mod sd_guide_http;
+mod sd_guide_post;
+mod sd_guide_posters;
+mod sd_guide_programme;
+mod sd_guide_state;
+
+mod sd_guide_progress;

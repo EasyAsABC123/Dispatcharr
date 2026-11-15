@@ -124,6 +124,15 @@ impl Flow {
             eprintln!("rust_auto_stage task={} stage={stage}", self.id);
         }
     }
+    pub(crate) fn with_sd(
+        self: Arc<Self>,
+        capability: Option<crate::normal_sd_guide::Capability>,
+    ) -> Arc<Self> {
+        if let Some(capability) = capability {
+            let _ = self.dispatcher.bind_sd(capability);
+        }
+        self
+    }
     pub(crate) fn services(
         self: &Arc<Self>,
         jobs: Arc<dyn RecordingJobs>,

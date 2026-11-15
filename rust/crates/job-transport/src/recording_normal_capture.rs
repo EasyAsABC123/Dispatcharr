@@ -25,6 +25,7 @@ pub(crate) struct Context {
     pub channel: uuid::Uuid,
     pub paths: NormalPaths,
     pub origin: String,
+    pub output_profile_id: Option<String>,
     pub files: Arc<recording_files::Working>,
     pub end: DateTime<Utc>,
     pub shutdown: Arc<AtomicBool>,
@@ -211,9 +212,11 @@ pub(crate) async fn capture(mut context: Context) -> Result<Outcome, Error> {
         let paths = context.paths.clone();
         let recording = context.recording;
         let channel = context.channel;
-        let origin =
-            recording_process::ObservedLocalOrigin::from_normal_internal_base(&context.origin)
-                .map_err(Error::Media)?;
+        let origin = recording_process::ObservedLocalOrigin::from_normal_internal_profile(
+            &context.origin,
+            context.output_profile_id.as_deref(),
+        )
+        .map_err(Error::Media)?;
         let attempt_wall = SystemTime::now();
         let attempt_start = tokio::time::Instant::now();
         let mut last_new = attempt_start;

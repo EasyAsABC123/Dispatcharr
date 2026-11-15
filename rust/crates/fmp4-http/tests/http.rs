@@ -30,6 +30,7 @@ struct Fixture {
     gateway: Fmp4Gateway,
     engine: StreamEngine,
     clients: ClientStore,
+    outputs: OutputStore,
     source: PlaybackSource,
     connections: Arc<AtomicUsize>,
     origin: tokio::task::JoinHandle<()>,
@@ -116,6 +117,7 @@ async fn setup() -> Fixture {
         gateway,
         engine,
         clients,
+        outputs,
         source,
         connections,
         origin,
@@ -129,6 +131,7 @@ async fn exercise(hold_frame: bool) {
         source,
         connections,
         origin,
+        outputs: _,
     } = setup().await;
     let channel = source.channel_id.clone();
     let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
@@ -262,6 +265,7 @@ async fn hundred_viewers_retry_bounded_read_admission_without_dropping_streams()
         source,
         connections,
         origin,
+        outputs: _,
     } = setup().await;
     let mut slow = gateway.play(source.clone()).await.unwrap().into_body();
     let initial = time::timeout(Duration::from_secs(20), slow.frame())
@@ -314,4 +318,88 @@ async fn hundred_viewers_retry_bounded_read_admission_without_dropping_streams()
     engine.shutdown();
     clients.shutdown().await;
     origin.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and FMP4_TEST_FIXTURE H264/AAC TS"]
+async fn response_init_pins_fragment_generation_and_handed_init_survives_successor_cleanup() {
+    let Fixture {
+        gateway,
+        engine,
+        clients,
+        outputs,
+        source,
+        connections,
+        origin,
+    } = setup().await;
+    let channel = source.channel_id.clone();
+    let mut body = gateway.play(source).await.unwrap().into_body();
+    let held = time::timeout(Duration::from_secs(20), body.frame())
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap()
+        .into_data()
+        .unwrap();
+    assert_eq!(&held[4..8], b"ftyp");
+    let original = held.to_vec();
+    let snapshot = outputs.snapshot(&channel, "fmp4").await.unwrap();
+    let previous = snapshot.owner.unwrap();
+    let mut connection = redis::Client::open(std::env::var("REDIS_TEST_URL").unwrap())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let _: usize = redis::cmd("DEL")
+        .arg(format!("live:channel:{channel}:output:fmp4:owner"))
+        .query_async(&mut connection)
+        .await
+        .unwrap();
+    let successor = outputs
+        .claim(&channel, "fmp4", "new-init-producer")
+        .await
+        .unwrap()
+        .unwrap();
+    successor
+        .put_init(b"different-ftyp-and-moov")
+        .await
+        .unwrap();
+    let next = successor
+        .put(b"never-mix-this-new-generation-moof", 1.0)
+        .await
+        .unwrap();
+    assert!(matches!(
+        outputs
+            .get_init_owned_retained(&channel, "fmp4", &previous, ())
+            .await,
+        Err(dispatcharr_output_store::Error::LostOwnership)
+    ));
+    assert!(
+        time::timeout(Duration::from_secs(3), body.frame())
+            .await
+            .unwrap()
+            .is_none(),
+        "old response must close rather than combine original init with successor fragments"
+    );
+    assert_eq!(held.as_ref(), original.as_slice());
+    assert_eq!(
+        outputs
+            .get(&channel, "fmp4", next)
+            .await
+            .unwrap()
+            .unwrap()
+            .as_ref(),
+        b"never-mix-this-new-generation-moof",
+        "old manager cleanup cannot delete successor generation"
+    );
+    drop(body);
+    drop(held);
+    assert!(successor.release().await.unwrap());
+    gateway.shutdown().await;
+    assert!(gateway.active_process_ids().is_empty());
+    assert_eq!(connections.load(Ordering::SeqCst), 1);
+    assert!(engine.shutdown_wait(Duration::from_secs(10)).await);
+    clients.shutdown().await;
+    origin.abort();
+    let _ = origin.await;
 }

@@ -265,6 +265,7 @@ pub mod normal_control;
 pub mod recording_dvr_normal;
 
 mod recording_normal_policy;
+mod recording_output_profile;
 
 mod recording_normal_task;
 
@@ -302,3 +303,10 @@ mod auto_sync_flow;
 mod auto_sync_protocol;
 pub mod full_metadata;
 mod normal_auto_sync;
+
+pub mod normal_sd_guide;
+mod sd_guide_eta;
+mod sd_guide_protocol;
+
+mod xml_tvg_eta;
+mod xml_tvg_protocol;

@@ -334,18 +334,17 @@ pub(crate) fn paths_for_execution(
     start: DateTime<Utc>,
     end: DateTime<Utc>,
 ) -> Result<NormalPaths, Error> {
+    // Normalize the actual cached getter now, before accepted media/row effects.
+    // Invalid Source ValueError/TypeError operands are None, not a refusal;
+    // nonfinite/unsupported numeric domains remain explicit.
+    crate::recording_output_profile::capture_id(groups.dvr.get("output_profile_id"))
+        .map_err(Error::Unsupported)?;
     if groups
         .dvr
-        .get("output_profile_id")
-        .is_some_and(|v| !v.is_null())
-        || groups
-            .dvr
-            .get("comskip_enabled")
-            .is_some_and(|v| v != &Value::Bool(false))
+        .get("comskip_enabled")
+        .is_some_and(|v| v != &Value::Bool(false))
     {
-        return Err(Error::Unsupported(
-            "normal output-profile/comskip adapters required",
-        ));
+        return Err(Error::Unsupported("normal comskip adapter required"));
     }
     if snapshot.channel_epg_data_id.is_some()
         && snapshot
@@ -666,6 +665,20 @@ mod normal_policy_controls {
             original_air(Some(&Value::String("2020-01-01suffix".into()))).unwrap(),
             "2020-01-01suffix"
         );
+    }
+    #[test]
+    fn normal_profile_selection_does_not_bypass_comskip_guard() {
+        let row = snapshot();
+        let mut actual = groups();
+        actual.dvr["output_profile_id"] = serde_json::json!(" +0007 ");
+        assert!(paths_for_execution(&row, &actual, row.identity.start, row.identity.end).is_ok());
+        actual.dvr["output_profile_id"] = serde_json::json!({"invalid":true});
+        assert!(paths_for_execution(&row, &actual, row.identity.start, row.identity.end).is_ok());
+        actual.dvr["comskip_enabled"] = serde_json::json!(true);
+        assert!(matches!(
+            paths_for_execution(&row, &actual, row.identity.start, row.identity.end),
+            Err(Error::Unsupported("normal comskip adapter required"))
+        ));
     }
     #[test]
     fn logger_limit_distinguishes_numeric_zero_from_truthy_zero_text() {

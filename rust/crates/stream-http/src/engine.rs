@@ -1586,6 +1586,41 @@ fn finish_session(inner: &Inner, key: &str, session: &Arc<Session>, failure: Pla
     session.startup.send_replace(Startup::Failed(failure));
 }
 
+fn input_process_diagnostics_enabled() -> bool {
+    std::env::var_os("RUST_INPUT_PROCESS_DIAGNOSTICS").is_some_and(|value| value == "1")
+}
+fn safe_input_spawn_error(error: &io::Error) -> serde_json::Value {
+    // Never format the error itself: its payload may contain command/URL data.
+    serde_json::json!({"stage":"spawn","error_kind":format!("{:?}",error.kind()),"errno":error.raw_os_error()})
+}
+fn safe_input_process_receipt(receipt: &profile_process::Receipt) -> serde_json::Value {
+    // This is one bounded summary per PHYSICAL child completion, never per
+    // packet/viewer. Counts are explicitly of the existing <=64KiB tail, not
+    // claims about dropped earlier stderr. No raw argv, URL or text escapes.
+    let lower = String::from_utf8_lossy(&receipt.stderr_tail).to_ascii_lowercase();
+    let signatures = [
+        "permission denied",
+        "unable to open the mrl",
+        "no access modules matched",
+        "no suitable access module",
+        "name or service not known",
+        "cannot resolve",
+        "connection refused",
+        "proxy",
+        "no plugins found",
+        "cannot open",
+    ];
+    let counts = signatures
+        .into_iter()
+        .map(|signature| (signature, lower.matches(signature).count()))
+        .filter(|(_, count)| *count > 0)
+        .map(|(signature, count)| (signature.to_owned(), serde_json::json!(count)))
+        .collect::<serde_json::Map<String, serde_json::Value>>();
+    serde_json::json!({"stage":"settled-child","pid":receipt.pid,"actual_exit":receipt.code,"signal":receipt.signal,
+        "stdout_bytes":receipt.stdout_bytes,"stderr_bytes":receipt.stderr_bytes,"retained_stderr_tail_bytes":receipt.stderr_tail.len(),
+        "stderr_tail_signature_counts":counts,"stdout_EOF":receipt.stdout_eof,"stderr_EOF":receipt.stderr_eof,
+        "read_failed":receipt.read_failed,"input_failed":receipt.input_failed,"forced_kill":receipt.forced_kill,"group_settled":receipt.group_settled})
+}
 fn epoch_seconds() -> f64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -1922,7 +1957,19 @@ async fn drive_candidate(
         }
         async fn finish(self) {
             if let Self::Process(process) = self {
-                let _ = process.finish().await;
+                let receipt = process.finish().await;
+                if input_process_diagnostics_enabled() {
+                    match receipt {
+                        Ok(receipt) => eprintln!(
+                            "dispatcharr-input-process {}",
+                            safe_input_process_receipt(&receipt)
+                        ),
+                        Err(_) => eprintln!(
+                            "dispatcharr-input-process {}",
+                            serde_json::json!({"stage":"supervisor","join_failed":true})
+                        ),
+                    }
+                }
             }
         }
     }
@@ -1938,7 +1985,15 @@ async fn drive_candidate(
                 }
                 CandidateBytes::Process(process)
             }
-            Err(_) => return,
+            Err(error) => {
+                if input_process_diagnostics_enabled() {
+                    eprintln!(
+                        "dispatcharr-input-process {}",
+                        safe_input_spawn_error(&error)
+                    );
+                }
+                return;
+            }
         }
     } else {
         let Ok(attempt) =
@@ -2218,5 +2273,48 @@ mod dynamic_health_settings_tests {
         assert!(engine
             .with_health_settings(Arc::new(Source(AtomicU64::new(3))))
             .is_err());
+    }
+}
+
+#[cfg(test)]
+mod input_diagnostic_privacy {
+    use super::*;
+    #[test]
+    fn bounded_child_receipt_and_spawn_errors_never_export_payload_text() {
+        let receipt=profile_process::Receipt {
+            pid:123,code:Some(1),signal:None,stdout_bytes:0,stderr_bytes:99999,
+            stderr_tail:b"PRIVATE_FIXTURE_TOKEN http://fixture.invalid/private?key=SECRET Permission denied PERMISSION DENIED proxy".to_vec(),
+            stdout_eof:true,stderr_eof:true,read_failed:false,input_failed:true,
+            stdin_bytes:0,stdin_eof:false,stdin_failed:false,forced_kill:false,group_settled:true,
+        };
+        let value = safe_input_process_receipt(&receipt);
+        let encoded = value.to_string();
+        assert_eq!(
+            value["stderr_tail_signature_counts"]["permission denied"],
+            2
+        );
+        assert_eq!(value["stderr_tail_signature_counts"]["proxy"], 1);
+        assert_eq!(value["stderr_bytes"], 99999);
+        assert!(
+            value["stdout_EOF"] == true
+                && value["stderr_EOF"] == true
+                && value["group_settled"] == true
+        );
+        for sentinel in [
+            "PRIVATE_FIXTURE_TOKEN",
+            "fixture.invalid",
+            "SECRET",
+            "http://",
+        ] {
+            assert!(!encoded.contains(sentinel));
+        }
+        let error = io::Error::new(
+            io::ErrorKind::PermissionDenied,
+            "PRIVATE_FIXTURE_TOKEN command /secret?key=SECRET",
+        );
+        let spawn = safe_input_spawn_error(&error).to_string();
+        assert!(spawn.contains("PermissionDenied"));
+        assert!(!spawn.contains("PRIVATE_FIXTURE_TOKEN"));
+        assert!(!spawn.contains("SECRET"));
     }
 }

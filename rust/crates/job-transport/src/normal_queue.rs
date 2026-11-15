@@ -24,7 +24,7 @@ pub(crate) const CELERY_CONCURRENCY: usize = 6;
 fn validate_family_admission(family: Family, maximum: usize, selected: bool) -> Result<(), Error> {
     let allowed = match family {
         Family::Recording => (1..=20).contains(&maximum),
-        Family::AutoChannels => maximum == CELERY_CONCURRENCY,
+        Family::AutoChannels | Family::SdGuide => maximum == CELERY_CONCURRENCY,
         _ => maximum == 1,
     };
     if !allowed || !selected {
@@ -233,6 +233,16 @@ impl Drain {
     }
 }
 impl Application {
+    pub(crate) fn contains_actual_handler(
+        &self,
+        family: Family,
+        expected: &Arc<dyn Handler>,
+    ) -> bool {
+        self.inner
+            .families
+            .get(&family)
+            .is_some_and(|prepared| Arc::ptr_eq(&prepared.inner, expected))
+    }
     pub async fn prepare(
         broker: &str,
         backend: &str,
@@ -1115,3 +1125,19 @@ mod tests {
 #[cfg(test)]
 #[path = "normal_queue_eta_tests.rs"]
 mod delayed_tests;
+
+#[cfg(test)]
+mod sd_registry_controls {
+    use super::*;
+    #[test]
+    fn actual_sd_descriptor_is_admitted_only_at_existing_global_six() {
+        let (maximum, selected) = crate::normal_sd_guide::descriptor();
+        assert_eq!(maximum, CELERY_CONCURRENCY);
+        assert!(validate_family_admission(Family::SdGuide, maximum, selected).is_ok());
+        for wrong in [0, 1, 2, 5, 7, 20, usize::MAX] {
+            assert!(validate_family_admission(Family::SdGuide, wrong, true).is_err());
+        }
+        assert!(validate_family_admission(Family::SdGuide, maximum, false).is_err());
+        assert!(validate_family_admission(Family::TvgProgrammes, maximum, true).is_err());
+    }
+}

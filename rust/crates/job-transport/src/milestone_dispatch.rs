@@ -23,6 +23,7 @@ pub enum Family {
     Refresh,
     ProgrammeIndex,
     TvgProgrammes,
+    SdGuide,
     Series,
     Recurring,
     Artwork,
@@ -231,6 +232,9 @@ pub fn classify(raw: &[u8]) -> Option<Family> {
         "apps.epg.tasks.refresh_epg_data" => Family::Refresh,
         "apps.epg.tasks.build_programme_index_task" => Family::ProgrammeIndex,
         "apps.epg.tasks.parse_programs_for_tvg_id" => Family::TvgProgrammes,
+        "apps.epg.tasks.fetch_sd_mapped_guide_batch" | "apps.epg.tasks.fetch_sd_guide_for_epg" => {
+            Family::SdGuide
+        }
         "apps.channels.tasks.evaluate_series_rules" => Family::Series,
         "apps.channels.tasks.maintain_recurring_recordings" => Family::Recurring,
         "apps.channels.tasks.prefetch_recording_artwork" => Family::Artwork,

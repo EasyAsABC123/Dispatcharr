@@ -295,11 +295,24 @@ pub(crate) async fn segment(
         .outputs
         .as_ref()
         .ok_or_else(|| failure(503, "Shared output unavailable"))?;
-    let data = retry(&inner, &token, || {
-        outputs.get(&info.channel_id, &format, seq)
+    let snapshot = retry(&inner, &token, || {
+        outputs.snapshot(&info.channel_id, &format)
     })
-    .await?
-    .ok_or_else(|| failure(404, "Segment expired"))?;
+    .await?;
+    let expected = snapshot
+        .owner
+        .ok_or_else(|| failure(404, "Segment expired"))?;
+    let (data, _retained) = retry(&inner, &token, || {
+        outputs.get_owned_retained(
+            &info.channel_id,
+            &format,
+            &expected,
+            seq,
+            (inner.clone(), session.clone(), request.clone()),
+        )
+    })
+    .await?;
+    let data = data.ok_or_else(|| failure(404, "Segment expired"))?;
     Ok(crate::routes::body(
         Body::from(Bytes::from_owner(RemoteMedia {
             data,

@@ -187,6 +187,15 @@ impl Prepared {
             registry,
         })
     }
+    pub fn bind_sd(
+        &self,
+        capability: crate::normal_sd_guide::Capability,
+    ) -> Result<(), Disposition> {
+        let auto = self.auto.as_ref().ok_or(Disposition::UnsupportedDomain)?;
+        auto.bind_sd(capability.clone())?;
+        self.xc.bind_sd(capability.clone())?;
+        self.remote.bind_sd(capability)
+    }
     pub fn registry(&self) -> Registry {
         self.registry.clone()
     }

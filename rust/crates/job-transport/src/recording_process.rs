@@ -195,11 +195,15 @@ pub enum Error {
 /// defaults and arbitrary providers remain separate domains.
 pub(crate) struct ObservedLocalOrigin {
     normal_base: Option<String>,
+    normal_output_profile: Option<String>,
 }
 impl ObservedLocalOrigin {
     pub(crate) fn from_explicit_setting(value: &str) -> Result<Self, Error> {
         if value.trim_end_matches('/') == "http://origin:8080" {
-            Ok(Self { normal_base: None })
+            Ok(Self {
+                normal_base: None,
+                normal_output_profile: None,
+            })
         } else {
             Err(Error::Unsupported)
         }
@@ -226,7 +230,23 @@ impl ObservedLocalOrigin {
         }
         Ok(Self {
             normal_base: Some(value.trim_end_matches('/').into()),
+            normal_output_profile: None,
         })
+    }
+    /// Same real Main listener/policy boundary, with Source's normalized DVR
+    /// query. This is neither an upstream URL nor an authentication bypass.
+    pub(crate) fn from_normal_internal_profile(
+        value: &str,
+        profile: Option<&str>,
+    ) -> Result<Self, Error> {
+        let mut origin = Self::from_normal_internal_base(value)?;
+        if let Some(profile) = profile {
+            if !crate::recording_output_profile::valid_canonical(profile) {
+                return Err(Error::Unsupported);
+            }
+            origin.normal_output_profile = Some(profile.to_owned());
+        }
+        Ok(origin)
     }
 }
 
@@ -540,13 +560,18 @@ fn capture_argv(
             .into_iter()
             .map(str::to_owned),
     );
-    args.push(format!(
+    let mut capture_url = format!(
         "{}/proxy/ts/stream/{channel}",
         origin
             .normal_base
             .as_deref()
             .unwrap_or("http://origin:8080")
-    ));
+    );
+    if let Some(profile) = origin.normal_output_profile.as_deref() {
+        capture_url.push_str("?output_profile=");
+        capture_url.push_str(profile);
+    }
+    args.push(capture_url);
     args.extend(
         [
             "-map",
@@ -1083,3 +1108,51 @@ mod tests {
 #[cfg(test)]
 #[path = "recording_process_owned_tests.rs"]
 mod owned_process_controls;
+
+#[cfg(test)]
+mod dvr_output_profile_url {
+    use super::*;
+    #[test]
+    fn actual_normal_recorder_argv_uses_main_profile_query_without_changing_auth_or_user_agent() {
+        let channel = Uuid::from_u128(1);
+        let paths = NormalPaths {
+            final_path: "/data/recordings/test.mkv".into(),
+            hls_dir: "/data/recordings/.dvr_1_hls".into(),
+            filename: "test.mkv".into(),
+            playlist: "/data/recordings/.dvr_1_hls/index.m3u8".into(),
+            segments: "/data/recordings/.dvr_1_hls/%06d.ts".into(),
+        };
+        for (profile, query) in [
+            (Some("7"), "?output_profile=7"),
+            (Some("-7"), "?output_profile=-7"),
+            (None, ""),
+        ] {
+            let origin =
+                ObservedLocalOrigin::from_normal_internal_profile("http://127.0.0.1:9192", profile)
+                    .unwrap();
+            let argv = capture_argv(channel, 1, &paths, &origin).unwrap();
+            assert_eq!(
+                argv[argv.iter().position(|v| v == "-i").unwrap() + 1],
+                format!("http://127.0.0.1:9192/proxy/ts/stream/{channel}{query}")
+            );
+            assert_eq!(
+                argv[argv.iter().position(|v| v == "-user_agent").unwrap() + 1],
+                "Dispatcharr-DVR/recording-1"
+            );
+            assert!(!argv
+                .iter()
+                .any(|v| v.contains("Authorization") || v == "-headers"));
+        }
+        assert!(ObservedLocalOrigin::from_normal_internal_profile(
+            "http://provider.invalid",
+            Some("7")
+        )
+        .is_err());
+        assert!(ObservedLocalOrigin::from_normal_internal_profile(
+            "http://127.0.0.1:9192",
+            Some("7&access=other")
+        )
+        .is_err());
+        assert!(ObservedLocalOrigin::from_explicit_setting("http://127.0.0.1:9192").is_err());
+    }
+}

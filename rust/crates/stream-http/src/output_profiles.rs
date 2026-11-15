@@ -457,8 +457,8 @@ impl StreamEngine {
                 if snapshot.owner.as_deref()!=Some(expected.as_str()){break;}
                 if let Some((oldest,_))=snapshot.segments.first(){sequence=sequence.max(*oldest);}
                 if sequence<=snapshot.index{
-                    match store.get(&channel,sequence).await{
-                        Ok(Some(data))=>{
+                    match store.get_owned_retained(&channel,&expected,sequence,(client.clone(),reader.clone(),demand.clone(),_profiles.clone())).await{
+                        Ok((Some(data),_retained))=>{
                             sequence=sequence.saturating_add(1);
                             keepalive.received();
                             if let Some(client)=client.as_ref(){client.record_bytes(data.as_ref().len());}
@@ -467,7 +467,8 @@ impl StreamEngine {
                             let frame=HeldFrame{data,_client:client.clone(),_profiles:_profiles.clone(),_reader:reader.clone(),_demand:demand.clone()};
                             yield Ok(MediaFrame{data:Bytes::from_owner(frame),discontinuity:false});
                         },
-                        Ok(None)=>sequence=sequence.saturating_add(1),
+                        Ok((None,_retained))=>sequence=sequence.saturating_add(1),
+                        Err(StoreError::LostOwnership)=>break,
                         Err(_)=>{yield Err(io::Error::other("Profile payload unavailable"));break;},
                     }
                 }else{
@@ -715,17 +716,21 @@ async fn run(
         }
         _ => None,
     };
-    if process.is_some()
-        && lease
-            .set_state_retained("active", retained.clone())
-            .await
-            .is_err()
-    {
-        let receipt = process.take().unwrap().finish().await;
-        if receipt.is_err() {
-            uncertain(&running).await;
+    if process.is_some() {
+        if let Err(error) = lease.set_state_retained("active", retained.clone()).await {
+            let receipt = process.take().unwrap().finish().await;
+            if !receipt.as_ref().is_ok_and(|receipt| {
+                receipt.group_settled && receipt.stdout_eof && receipt.stderr_eof
+            }) {
+                uncertain(&running).await;
+            }
+            // An actual Redis comparison proved the token no longer owns this
+            // lane. Its process is now physically settled; fenced release below
+            // may only remove our own generation. This is not an unknown effect.
+            if error != StoreError::LostOwnership {
+                uncertain(&running).await;
+            }
         }
-        uncertain(&running).await;
     }
     if let Some(mut process) = process {
         let mut stop = running.stop.subscribe();
@@ -733,6 +738,7 @@ async fn run(
         let mut renewed = Instant::now();
         let mut buffered = Vec::with_capacity(inner.config.chunk_bytes);
         let mut ambiguous = false;
+        let mut ownership_lost = false;
         loop {
             if *stop.borrow() {
                 break;
@@ -746,7 +752,9 @@ async fn run(
                         }
                     }
                     if renewed.elapsed()>=Duration::from_secs(60){
-                        if lease.renew_retained(retained.clone()).await.is_err(){ambiguous=true;break;}
+                        if let Err(error)=lease.renew_retained(retained.clone()).await{
+                            ambiguous=error!=StoreError::LostOwnership;break;
+                        }
                         renewed=Instant::now();
                     }
                 },
@@ -757,11 +765,14 @@ async fn run(
                         let take=input.len().min(inner.config.chunk_bytes-buffered.len());
                         buffered.extend_from_slice(&input[..take]);input=&input[take..];
                         if buffered.len()==inner.config.chunk_bytes{
-                            if lease.put_retained(&buffered,epoch_seconds(),retained.clone()).await.is_err(){ambiguous=true;break;}
+                            if let Err(error)=lease.put_retained(&buffered,epoch_seconds(),retained.clone()).await{
+                                ambiguous=error!=StoreError::LostOwnership;
+                                ownership_lost=true;break;
+                            }
                             buffered.clear();
                         }
                     }
-                    if ambiguous{break;}
+                    if ambiguous || ownership_lost {break;}
                 },
             }
         }

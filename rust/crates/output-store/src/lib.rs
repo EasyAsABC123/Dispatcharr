@@ -121,6 +121,19 @@ impl ProfileStore {
     pub async fn snapshot(&self, channel: &str) -> Result<Snapshot, Error> {
         self.store.snapshot(channel, &self.format).await
     }
+    /// Pin a profile cursor to its observed producer, including the actual
+    /// queued read's caller ownership/admission if observation is cancelled.
+    pub async fn get_owned_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        expected_owner: &str,
+        sequence: u64,
+        guard: G,
+    ) -> Result<(Option<SegmentBytes>, G), Error> {
+        self.store
+            .get_owned_retained(channel, &self.format, expected_owner, sequence, guard)
+            .await
+    }
     pub async fn get(&self, channel: &str, sequence: u64) -> Result<Option<SegmentBytes>, Error> {
         self.store.get(channel, &self.format, sequence).await
     }
@@ -355,7 +368,57 @@ impl OutputStore {
         let keys = keys(channel, format)?;
         self.read_key(format!("{}{sequence}", keys[4])).await
     }
+    /// Compare the observed producer and fetch its payload atomically. An
+    /// owner change between a cursor snapshot and GET cannot mix generations.
+    pub async fn get_owned_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        format: &str,
+        expected_owner: &str,
+        sequence: u64,
+        guard: G,
+    ) -> Result<(Option<SegmentBytes>, G), Error> {
+        if !valid_token(expected_owner) {
+            return Err(Error::InvalidKey);
+        }
+        let keys = keys(channel, format)?;
+        self.read_key_retained(
+            format!("{}{sequence}", keys[4]),
+            Some((keys[0].clone(), expected_owner.to_owned())),
+            guard,
+        )
+        .await
+    }
+    /// The init and media fragments of an fMP4 response must share one producer.
+    pub async fn get_init_owned_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        format: &str,
+        expected_owner: &str,
+        guard: G,
+    ) -> Result<(Option<SegmentBytes>, G), Error> {
+        if !valid_token(expected_owner) {
+            return Err(Error::InvalidKey);
+        }
+        let keys = keys(channel, format)?;
+        self.read_key_retained(
+            keys[5].clone(),
+            Some((keys[0].clone(), expected_owner.to_owned())),
+            guard,
+        )
+        .await
+    }
     async fn read_key(&self, key: String) -> Result<Option<SegmentBytes>, Error> {
+        self.read_key_retained(key, None, ())
+            .await
+            .map(|(data, ())| data)
+    }
+    async fn read_key_retained<G: Send + 'static>(
+        &self,
+        key: String,
+        expected: Option<(String, String)>,
+        guard: G,
+    ) -> Result<(Option<SegmentBytes>, G), Error> {
         let reserved = self
             .inner
             .read_bytes
@@ -363,18 +426,30 @@ impl OutputStore {
             .try_acquire_many_owned(self.inner.config.max_segment_bytes as u32)
             .map_err(|_| Error::Capacity)?;
         let maximum = self.inner.config.max_segment_bytes.to_string();
-        let (data,mut reserved):(Option<Vec<u8>>,OwnedSemaphorePermit)=self.command(
-            "local n=redis.call('STRLEN',KEYS[1]);if n>tonumber(ARGV[1]) then return redis.error_reply('CORRUPT oversized output') end return redis.call('GET',KEYS[1])",
-            &[key],&[maximum.as_bytes()],reserved).await?;
+        let mut keys = vec![key];
+        let mut owner = String::new();
+        if let Some((owner_key, expected)) = expected {
+            keys.push(owner_key);
+            owner = expected;
+        }
+        let ((matched,data),(mut reserved,guard)) = self.command::<(i64,Option<Vec<u8>>),_>(
+            "if ARGV[2]~='' and redis.call('GET',KEYS[2])~=ARGV[2] then return {0,false} end local n=redis.call('STRLEN',KEYS[1]);if n>tonumber(ARGV[1]) then return redis.error_reply('CORRUPT oversized output') end return {1,redis.call('GET',KEYS[1])}",
+            &keys,&[maximum.as_bytes(),owner.as_bytes()],(reserved,guard)).await?;
+        if matched != 1 {
+            return Err(Error::LostOwnership);
+        }
         let Some(data) = data else {
-            return Ok(None);
+            return Ok((None, guard));
         };
         let retained = reserved.split(data.len()).ok_or(Error::Corrupt)?;
         drop(reserved);
-        Ok(Some(SegmentBytes {
-            data,
-            _bytes: retained,
-        }))
+        Ok((
+            Some(SegmentBytes {
+                data,
+                _bytes: retained,
+            }),
+            guard,
+        ))
     }
 }
 impl OutputLease {

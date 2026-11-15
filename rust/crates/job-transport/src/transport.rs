@@ -1760,3 +1760,17 @@ mod auto_sync_transport;
 
 #[path = "auto_sync_epg_transport.rs"]
 mod auto_sync_epg_transport;
+
+#[path = "sd_guide_eta_transport.rs"]
+mod sd_guide_eta_transport;
+#[path = "sd_guide_transport.rs"]
+mod sd_guide_transport;
+#[path = "sd_guide_visibility.rs"]
+mod sd_guide_visibility;
+
+#[path = "xml_tvg_eta_transport.rs"]
+mod xml_tvg_eta_transport;
+#[path = "xml_tvg_publish.rs"]
+mod xml_tvg_publish;
+#[path = "xml_tvg_visibility.rs"]
+mod xml_tvg_visibility;

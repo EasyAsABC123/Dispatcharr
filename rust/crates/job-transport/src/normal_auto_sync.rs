@@ -21,6 +21,7 @@ use tokio::sync::Notify;
 pub(crate) const CONCURRENCY: usize = crate::normal_queue::CELERY_CONCURRENCY;
 type Owner = Arc<dyn Send + Sync>;
 struct Inner {
+    sd: std::sync::OnceLock<crate::normal_sd_guide::Capability>,
     flows: crate::auto_sync_flow::ActiveFlows,
     jobs: Jobs,
     auth: AuthService,
@@ -61,6 +62,19 @@ impl Drop for Claim {
     }
 }
 impl Prepared {
+    pub(crate) fn bind_sd(
+        &self,
+        capability: crate::normal_sd_guide::Capability,
+    ) -> Result<(), crate::milestone_dispatch::Disposition> {
+        if !capability.owns(&self.inner.jobs) {
+            return Err(crate::milestone_dispatch::Disposition::UnsupportedDomain);
+        }
+        self.inner
+            .sd
+            .set(capability)
+            .map_err(|_| crate::milestone_dispatch::Disposition::UnsupportedDomain)
+    }
+
     pub fn new(
         jobs: Jobs,
         store: Store,
@@ -74,6 +88,7 @@ impl Prepared {
         }
         Ok(Self {
             inner: Arc::new(Inner {
+                sd: std::sync::OnceLock::new(),
                 flows: crate::auto_sync_flow::ActiveFlows::default(),
                 jobs,
                 auth,
@@ -193,16 +208,19 @@ impl Prepared {
                     return Ok(D::Revoked(context.id));
                 }
                 let stopped = inner.clone();
-                let flow = inner.flows.track(Flow::new(
-                    inner.jobs.clone(),
-                    auth.producer_identity_source(),
-                    inner.directory.clone(),
-                    context.id,
-                    context.parent,
-                    context.root,
-                    owner.clone(),
-                    Arc::new(move || stopped.closed.load(Ordering::Acquire)),
-                ));
+                let flow = inner.flows.track(
+                    Flow::new(
+                        inner.jobs.clone(),
+                        auth.producer_identity_source(),
+                        inner.directory.clone(),
+                        context.id,
+                        context.parent,
+                        context.root,
+                        owner.clone(),
+                        Arc::new(move || stopped.closed.load(Ordering::Acquire)),
+                    )
+                    .with_sd(inner.sd.get().cloned()),
+                );
                 let body = dispatcharr_store::auto_sync::sync(
                     session.clone(),
                     auth,

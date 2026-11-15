@@ -387,3 +387,91 @@ async fn profile_writer_requires_actual_raw_owner_and_cannot_delete_successor_or
         .await
         .unwrap();
 }
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn profile_cursor_read_atomically_rejects_successor_sequence_while_handed_bytes_remain_owned()
+{
+    let store = OutputStore::connect(
+        &url(),
+        OutputConfig {
+            max_segment_bytes: 8,
+            max_read_bytes: 16,
+            max_channel_bytes: 32,
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let channel = channel();
+    let profile = store.profile(7).unwrap();
+    let mut redis = redis::Client::open(url())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let raw_key = format!("live:channel:{channel}:owner");
+    let _: () = redis::cmd("SET")
+        .arg(&raw_key)
+        .arg("raw-one")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    let old = profile
+        .claim_retained(&channel, "raw-one", "profile-one", ())
+        .await
+        .unwrap()
+        .0
+        .unwrap();
+    old.put(b"old-data", now()).await.unwrap();
+    let (handed, ()) = profile
+        .get_owned_retained(&channel, "profile-one", 1, ())
+        .await
+        .unwrap();
+    let handed = handed.unwrap();
+    let stale_snapshot = profile.snapshot(&channel).await.unwrap();
+    assert_eq!(stale_snapshot.owner.as_deref(), Some("profile-one"));
+    // The real predecessor releases after the cursor snapshot but before GET.
+    assert!(old.release_retained(()).await.unwrap().0);
+    let _: () = redis::cmd("SET")
+        .arg(&raw_key)
+        .arg("raw-two")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    let next = profile
+        .claim_retained(&channel, "raw-two", "profile-two", ())
+        .await
+        .unwrap()
+        .0
+        .unwrap();
+    assert_eq!(next.put(b"new-data", now()).await.unwrap(), 1);
+    assert!(matches!(
+        profile
+            .get_owned_retained(&channel, "profile-one", 1, ())
+            .await,
+        Err(Error::LostOwnership)
+    ));
+    assert_eq!(
+        handed.as_ref(),
+        b"old-data",
+        "already handed frame remains stable after old Redis keys retire"
+    );
+    let (fresh, ()) = profile
+        .get_owned_retained(&channel, "profile-two", 1, ())
+        .await
+        .unwrap();
+    assert_eq!(fresh.unwrap().as_ref(), b"new-data");
+    assert!(
+        !old.release_retained(()).await.unwrap().0,
+        "stale cleanup must not remove successor"
+    );
+    assert_eq!(next.put(b"more", now()).await.unwrap(), 2);
+    drop(handed);
+    assert!(next.release_retained(()).await.unwrap().0);
+    let _: usize = redis::cmd("DEL")
+        .arg(raw_key)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+}

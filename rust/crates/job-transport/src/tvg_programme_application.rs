@@ -17,6 +17,9 @@ use std::{
 };
 use tokio::sync::watch;
 
+#[path = "normal_tvg_deferred.rs"]
+mod deferred;
+
 pub struct Options {
     pub broker: String,
     pub backend: String,
@@ -89,6 +92,25 @@ impl Application {
     }
     /// Reserve this prepared application for the single normal queue shell;
     /// a cloned public handle cannot also start its legacy polling loop.
+    pub fn into_normal_handler_with_deferred(
+        self,
+        jobs: crate::transport::Jobs,
+        identity: dispatcharr_store::ProducerIdentitySource,
+        revoked: crate::normal_revocation::Revoked,
+    ) -> Result<Arc<dyn crate::milestone_dispatch::Handler>, &'static str> {
+        {
+            let mut lifecycle = self
+                .inner
+                .lifecycle
+                .lock()
+                .map_err(|_| "normal TVG lifecycle poisoned")?;
+            if lifecycle.started || lifecycle.closed {
+                return Err("family already started/closed");
+            }
+            lifecycle.started = true;
+        }
+        deferred::HandlerImpl::prepare(self, jobs, identity, revoked)
+    }
     pub fn into_normal_handler(
         self,
     ) -> Result<Arc<dyn crate::milestone_dispatch::Handler>, &'static str> {
