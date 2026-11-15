@@ -13,7 +13,9 @@ The newest source candidate is [Candidate24](rust-milestone-batch24.md) at
 `df815fbb3d312d191654bf4079f337ecae216430`: all four SDK gates pass with
 1,053 passing tests, zero failures and 767 ignored. It joins normal guide jobs,
 XMLTV busy deferral, recording profiles, generation fencing and the configured
-media-root alias. Docker and Main acceptance remain pending.
+media-root alias. Docker/package checks pass. Ten physical controls pass; the
+fMP4 generation control fails before first init bytes. Independent Main workflows
+are collecting results; whole Main and performance acceptance remain open.
 
 The preceding source candidate is [Candidate23](rust-milestone-batch23.md): all four
 SDK gates pass with1,034 tests, zero failures and764 ignored. It corrects follower
@@ -65,7 +67,9 @@ committed Git blobs. It adds plugin actions/managed ZIP installation, remote
 playlist/full-result handling and VLC/grouped-credential input work. Its Docker
 build and application acceptance remain pending.
 
-The latest built runtime is Candidate23 at
+The latest built runtime is Candidate24 at
+`df815fbb3d312d191654bf4079f337ecae216430`; package checks pass, one physical
+fMP4 control fails and Main acceptance is pending. Candidate23 at
 `7e0dd3dd51ae040467d9ea44465843d029e17775`; package and eight physical controls
 pass, while full Main acceptance remains open. Candidate22 at
 `0752ba808cf657c8c0371d75ffdc65de96ecd9e0` retains its failed replica control and
