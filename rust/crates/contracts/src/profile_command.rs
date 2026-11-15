@@ -153,6 +153,25 @@ impl StreamCommand {
         }
         Ok(Self { argv })
     }
+    /// Original OutputProfile.build_command: a literal executable followed by
+    /// shlex.split(parameters), with no StreamProfile placeholder replacement.
+    pub fn build_output(command: &str, parameters: &str) -> Result<Self, CommandError> {
+        let mut argv = vec![command.to_owned()];
+        let mut bytes = command.len();
+        if bytes > LIMIT {
+            return Err(CommandError::Capacity);
+        }
+        for argument in split(parameters)? {
+            bytes = bytes
+                .checked_add(argument.len())
+                .ok_or(CommandError::Capacity)?;
+            if bytes > LIMIT {
+                return Err(CommandError::Capacity);
+            }
+            argv.push(argument);
+        }
+        Ok(Self { argv })
+    }
     pub fn spawn_compatible(&self) -> bool {
         !self.argv.is_empty()
             && !self.argv[0].is_empty()
@@ -162,6 +181,33 @@ impl StreamCommand {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn output_command_preserves_literal_placeholders_and_shell_characters() {
+        let command = StreamCommand::build_output(
+            "/owned/ffmpeg tool", "-i pipe:0 -metadata 'title={streamUrl} {userAgent}' \"$(touch /unowned)\" -f mpegts pipe:1",
+        ).unwrap();
+        assert_eq!(
+            command.argv,
+            [
+                "/owned/ffmpeg tool",
+                "-i",
+                "pipe:0",
+                "-metadata",
+                "title={streamUrl} {userAgent}",
+                "$(touch /unowned)",
+                "-f",
+                "mpegts",
+                "pipe:1"
+            ]
+        );
+        assert_eq!(
+            StreamCommand::build_output("ffmpeg", "'unclosed"),
+            Err(CommandError::Quote)
+        );
+        assert!(!StreamCommand::build_output("", "-i pipe:0")
+            .unwrap()
+            .spawn_compatible());
+    }
     #[test]
     fn actual_original_stream_profile18_argument_observations() {
         let data: Value =

@@ -77,6 +77,7 @@ impl PlaybackResolver for Resolver {
 }
 fn source(channel: String, url: String) -> PlaybackSource {
     PlaybackSource {
+        output_profile: None,
         input_command: None,
         channel_id: channel,
         channel_name: "HLS fixture".into(),

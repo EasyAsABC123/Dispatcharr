@@ -210,6 +210,7 @@ async fn source_mode_retains_partial_packets_and_full_chunk_accumulation_across_
 
 fn source(url: String, channel: &str) -> PlaybackSource {
     PlaybackSource {
+        output_profile: None,
         input_command: None,
         channel_id: channel.into(),
         channel_name: "Fixture".into(),

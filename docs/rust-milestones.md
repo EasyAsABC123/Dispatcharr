@@ -9,7 +9,13 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate21](rust-milestone-batch21.md): all four
+The newest source candidate is [Candidate22](rust-milestone-batch22.md): all four
+SDK gates pass with1,034 tests, zero failures and764 ignored. It joins shared
+output-profile ownership across TS/HLS/fMP4 and corrects post-await stop admission.
+Docker, real Redis controls, combined application and performance acceptance
+remain required.
+
+The preceding source candidate is [Candidate21](rust-milestone-batch21.md): all four
 SDK gates pass with1,029 tests, zero failures and761 ignored. It resolves the
 supported media alias for metadata spools and joins normal compact/manual
 numbering and input-profile promotion. Docker/package checks pass; combined

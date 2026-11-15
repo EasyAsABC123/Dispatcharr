@@ -282,3 +282,108 @@ async fn cancelled_or_timed_out_reads_keep_admission_until_redis_response() {
     assert!(store.get(&channel, "hls", 1).await.unwrap().is_some());
     owner.release().await.unwrap();
 }
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn profile_writer_requires_actual_raw_owner_and_cannot_delete_successor_or_raw_history() {
+    let store = OutputStore::connect(&url(), OutputConfig::default())
+        .await
+        .unwrap();
+    let profile = store.profile(7).unwrap();
+    let channel = channel();
+    let raw_key = format!("live:channel:{channel}:owner");
+    let mut redis = redis::Client::open(url())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let _: () = redis::cmd("SET")
+        .arg(&raw_key)
+        .arg("raw-owner-one")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert!(profile
+        .claim_retained(&channel, "foreign-raw-owner", "profile-one", ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    let first = profile
+        .claim_retained(&channel, "raw-owner-one", "profile-one", ())
+        .await
+        .unwrap()
+        .0
+        .unwrap();
+    assert!(profile
+        .claim_retained(&channel, "raw-owner-one", "profile-two", ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    first.set_state_retained("active", ()).await.unwrap();
+    assert_eq!(
+        first
+            .put_retained(b"actual-transformed-payload", now(), ())
+            .await
+            .unwrap()
+            .0,
+        1
+    );
+    assert_eq!(
+        profile.get(&channel, 1).await.unwrap().unwrap().as_ref(),
+        b"actual-transformed-payload"
+    );
+    assert_eq!(
+        profile.state(&channel).await.unwrap().as_deref(),
+        Some("active")
+    );
+    let ttl: i64 = redis::cmd("PTTL")
+        .arg(format!("live:channel:{channel}:output:mpegts:p7:owner"))
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert!((3_500_000..=3_600_000).contains(&ttl));
+    let _: () = redis::cmd("SET")
+        .arg(&raw_key)
+        .arg("raw-owner-two")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert_eq!(
+        first.put_retained(b"stale", now(), ()).await.unwrap_err(),
+        Error::LostOwnership
+    );
+    assert_eq!(
+        first.renew_retained(()).await.unwrap_err(),
+        Error::LostOwnership
+    );
+    assert_eq!(
+        first.set_state_retained("active", ()).await.unwrap_err(),
+        Error::LostOwnership
+    );
+    assert!(first.release_retained(()).await.unwrap().0);
+    let second = profile
+        .claim_retained(&channel, "raw-owner-two", "profile-two", ())
+        .await
+        .unwrap()
+        .0
+        .unwrap();
+    assert!(!first.release_retained(()).await.unwrap().0);
+    assert_eq!(
+        profile.snapshot(&channel).await.unwrap().owner.as_deref(),
+        Some("profile-two")
+    );
+    let raw: String = redis::cmd("GET")
+        .arg(&raw_key)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert_eq!(raw, "raw-owner-two");
+    assert!(second.release_retained(()).await.unwrap().0);
+    let _: usize = redis::cmd("DEL")
+        .arg(raw_key)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+}

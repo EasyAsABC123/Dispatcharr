@@ -3,9 +3,10 @@
 //! child/group/pipe work, including cancellation of the observer future.
 use bytes::Bytes;
 use dispatcharr_contracts::StreamCommand;
+use futures_util::StreamExt;
 use std::{collections::VecDeque, io, process::Stdio, sync::Arc, time::Duration};
 use tokio::{
-    io::AsyncReadExt,
+    io::{AsyncReadExt, AsyncWriteExt},
     process::Command,
     sync::{mpsc, watch},
     task::JoinHandle,
@@ -27,6 +28,9 @@ pub(super) struct Receipt {
     pub stderr_eof: bool,
     pub read_failed: bool,
     pub input_failed: bool,
+    pub stdin_bytes: u64,
+    pub stdin_eof: bool,
+    pub stdin_failed: bool,
     pub forced_kill: bool,
     pub group_settled: bool,
 }
@@ -95,6 +99,28 @@ impl InputProcess {
         read_timeout: Duration,
         owner: Arc<dyn Send + Sync>,
     ) -> io::Result<Self> {
+        Self::start_inner(command, None, read_timeout, owner)
+    }
+
+    /// One producer-owned stdin transport for an output-profile process. The
+    /// supplied raw subscription remains owned by the supervisor through actual
+    /// writer settlement, including cancellation of the HTTP observer.
+    #[allow(dead_code)] // Owner-dispatch integration is a separate gated port.
+    pub fn start_transform(
+        command: &StreamCommand,
+        input: super::MediaStream,
+        read_timeout: Duration,
+        owner: Arc<dyn Send + Sync>,
+    ) -> io::Result<Self> {
+        Self::start_inner(command, Some(input), read_timeout, owner)
+    }
+
+    fn start_inner(
+        command: &StreamCommand,
+        input: Option<super::MediaStream>,
+        read_timeout: Duration,
+        owner: Arc<dyn Send + Sync>,
+    ) -> io::Result<Self> {
         if !command.spawn_compatible() {
             return Err(io::Error::new(
                 io::ErrorKind::InvalidInput,
@@ -106,11 +132,19 @@ impl InputProcess {
         if unsafe { libc::prctl(libc::PR_SET_CHILD_SUBREAPER, 1, 0, 0, 0) } != 0 {
             return Err(io::Error::last_os_error());
         }
-        let mut input_failure = VlcInputFailure::new(&command.argv[0]);
+        let mut input_failure = VlcInputFailure::new(if input.is_some() {
+            ""
+        } else {
+            &command.argv[0]
+        });
         let mut process = Command::new(&command.argv[0]);
         process
             .args(&command.argv[1..])
-            .stdin(Stdio::null())
+            .stdin(if input.is_some() {
+                Stdio::piped()
+            } else {
+                Stdio::null()
+            })
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .kill_on_drop(true);
@@ -131,6 +165,53 @@ impl InputProcess {
         let mut stderr = child.stderr.take().expect("requested stderr pipe");
         let (sender, receiver) = mpsc::channel(2);
         let (stop, mut stopped) = watch::channel(false);
+        let is_transform = input.is_some();
+        // Exactly one bounded raw frame is held while a pipe write is blocked.
+        // The write itself is cancellable; dropping it closes stdin before the
+        // original producer owner can be retired by the supervisor below.
+        let writer = input.map(|mut input| {
+            let mut stdin = child.stdin.take().expect("requested stdin pipe");
+            let mut writer_stop = stop.subscribe();
+            tokio::spawn(async move {
+                let mut bytes = 0u64;
+                let mut eof = false;
+                let mut failed = false;
+                'writer: loop {
+                    if *writer_stop.borrow() {
+                        break;
+                    }
+                    let frame = tokio::select! {
+                        biased;
+                        _ = writer_stop.changed() => break,
+                        frame = input.next() => match frame {
+                            None => { eof = true; break; },
+                            Some(Err(_)) => { failed = true; break; },
+                            Some(Ok(frame)) => frame,
+                        },
+                    };
+                    let mut remaining = frame.data.as_ref();
+                    while !remaining.is_empty() {
+                        tokio::select! {
+                            biased;
+                            _ = writer_stop.changed() => break 'writer,
+                            count = stdin.write(remaining) => match count {
+                                Ok(0) | Err(_) => { failed = true; break 'writer; },
+                                Ok(count) => {
+                                    bytes = bytes.saturating_add(count as u64);
+                                    remaining = &remaining[count..];
+                                },
+                            },
+                        }
+                    }
+                }
+                // No flush buffer exists for Tokio's child pipe. Dropping this
+                // real FD communicates EOF to the transcoder, not a fake ACK.
+                drop(stdin);
+                drop(input);
+                (bytes, eof, failed)
+            })
+        });
+        let supervisor_stop = stop.clone();
         let done = tokio::spawn(async move {
             use std::os::unix::process::ExitStatusExt;
             let _owner = owner;
@@ -145,6 +226,9 @@ impl InputProcess {
                 stderr_eof: false,
                 read_failed: false,
                 input_failed: false,
+                stdin_bytes: 0,
+                stdin_eof: false,
+                stdin_failed: false,
                 forced_kill: false,
                 group_settled: false,
             };
@@ -168,7 +252,13 @@ impl InputProcess {
                     pending = None;
                 }
                 if termination.is_none() && (discard_output || out_closed || exit.is_some()) {
-                    signal_group(pid, libc::SIGTERM);
+                    supervisor_stop.send_replace(true);
+                    // Source output manager first closes stdin, waits five
+                    // seconds, then kills. Retain the existing input-profile
+                    // TERM behavior; transformed input receives that EOF grace.
+                    if !is_transform {
+                        signal_group(pid, libc::SIGTERM);
+                    }
                     termination = Some(Instant::now());
                 }
                 if termination.is_some_and(|at| at.elapsed() >= Duration::from_secs(5))
@@ -221,10 +311,21 @@ impl InputProcess {
                         if exit.is_none() {
                             match child.try_wait() { Ok(Some(status))=>{receipt.code=status.code();receipt.signal=status.signal();exit=Some(status);}, Ok(None)=>{}, Err(_)=>{receipt.read_failed=true;discard_output=true;} }
                         }
-                        if !discard_output && !out_closed && last_output.elapsed() >= read_timeout && pending.is_none() {
+                        if !is_transform && !discard_output && !out_closed && last_output.elapsed() >= read_timeout && pending.is_none() {
                             receipt.read_failed=true;discard_output=true;
                         }
                     },
+                }
+            }
+            supervisor_stop.send_replace(true);
+            if let Some(writer) = writer {
+                match writer.await {
+                    Ok((bytes, eof, failed)) => {
+                        receipt.stdin_bytes = bytes;
+                        receipt.stdin_eof = eof;
+                        receipt.stdin_failed = failed;
+                    }
+                    Err(_) => receipt.stdin_failed = true,
                 }
             }
             receipt.stderr_tail = tail.into_iter().collect();
@@ -283,6 +384,70 @@ mod tests {
         StreamCommand {
             argv: vec!["/bin/sh".into(), "-c".into(), script.into()],
         }
+    }
+    #[tokio::test]
+    async fn transform_stdin_closes_and_owned_output_settles_without_a_second_upstream() {
+        let input: super::super::MediaStream = Box::pin(futures_util::stream::iter([
+            Ok(super::super::MediaFrame {
+                data: Bytes::from_static(b"raw-one"),
+                discontinuity: false,
+            }),
+            Ok(super::super::MediaFrame {
+                data: Bytes::from_static(b"raw-two"),
+                discontinuity: true,
+            }),
+        ]));
+        let mut process = InputProcess::start_transform(
+            &shell("cat; printf stderr-receipt >&2"),
+            input,
+            Duration::from_secs(10),
+            Arc::new(()),
+        )
+        .unwrap();
+        let mut output = Vec::new();
+        while let Some(frame) = process.next().await {
+            output.extend_from_slice(&frame.unwrap());
+        }
+        let receipt = process.finish().await.unwrap();
+        assert_eq!(output, b"raw-oneraw-two");
+        assert_eq!(receipt.stdin_bytes, 14);
+        assert!(receipt.stdin_eof && !receipt.stdin_failed);
+        assert_eq!(receipt.code, Some(0));
+        assert_eq!(receipt.stderr_tail, b"stderr-receipt");
+        assert!(receipt.group_settled && receipt.stdout_eof && receipt.stderr_eof);
+    }
+
+    #[tokio::test]
+    async fn transform_observer_loss_cancels_blocked_raw_reader_before_owner_retirement() {
+        struct Held(Arc<AtomicBool>);
+        impl Drop for Held {
+            fn drop(&mut self) {
+                self.0.store(true, Ordering::Release);
+            }
+        }
+        let retired = Arc::new(AtomicBool::new(false));
+        let held = Held(retired.clone());
+        let input: super::super::MediaStream = Box::pin(async_stream::stream! {
+            let _held = held;
+            yield Ok(super::super::MediaFrame { data: Bytes::from_static(b"raw"), discontinuity: false });
+            std::future::pending::<()>().await;
+        });
+        let mut process = InputProcess::start_transform(
+            &shell("cat"),
+            input,
+            Duration::from_secs(10),
+            Arc::new(()),
+        )
+        .unwrap();
+        assert_eq!(process.next().await.unwrap().unwrap().as_ref(), b"raw");
+        let receipt = time::timeout(Duration::from_secs(8), process.finish())
+            .await
+            .unwrap()
+            .unwrap();
+        assert!(retired.load(Ordering::Acquire));
+        assert!(receipt.group_settled && receipt.stdout_eof && receipt.stderr_eof);
+        assert_eq!(receipt.stdin_bytes, 3);
+        assert!(!receipt.forced_kill);
     }
     #[tokio::test]
     async fn actual_child_stdout_and_bounded_lossless_stderr_tail_settle() {

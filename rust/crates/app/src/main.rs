@@ -383,6 +383,15 @@ async fn run() -> Result<(), String> {
             .map_err(|_| "Dynamic proxy health must be bound before engine sharing")?,
         None => engine,
     };
+    let engine = match outputs.as_ref() {
+        Some(outputs) => engine
+            .with_output_profiles(outputs.clone(), Arc::new(()))
+            .map_err(|_| "Shared output profile owner dispatch unavailable")?,
+        None => engine,
+    };
+    if outputs.is_some() && !engine.output_profiles_ready(Duration::from_secs(5)).await {
+        return Err("Shared output profile event reader not ready".into());
+    }
     let live_statistics = statistics::start(&engine, clients.as_ref(), realtime_bus.as_ref())?;
     let auth = auth.with_channel_control(Arc::new(control::EngineControl(engine.clone())));
     let realtime = realtime::gateway(auth.clone(), realtime_bus.clone())?;

@@ -1,0 +1,52 @@
+{
+  "scope": "Shared owner-dispatched output-profile process and TS/HLS/fMP4 consumers",
+  "SDK15_all_four_gates_passed": true,
+  "inputs": 1302,
+  "Rust_tree_inputs": 1296,
+  "test_totals": [
+    1034,
+    0,
+    764
+  ],
+  "test_result_blocks": 176,
+  "changed_paths": [
+    "rust/Cargo.lock",
+    "rust/crates/app/src/main.rs",
+    "rust/crates/clients/src/lib.rs",
+    "rust/crates/clients/src/output_profile.rs",
+    "rust/crates/contracts/src/lib.rs",
+    "rust/crates/contracts/src/profile_command.rs",
+    "rust/crates/fmp4-http/src/lib.rs",
+    "rust/crates/fmp4-http/tests/http.rs",
+    "rust/crates/hls-http/src/gateway.rs",
+    "rust/crates/hls-http/tests/http.rs",
+    "rust/crates/hls-http/tests/shutdown.rs",
+    "rust/crates/output-store/Cargo.toml",
+    "rust/crates/output-store/src/lib.rs",
+    "rust/crates/output-store/src/profile_events.rs",
+    "rust/crates/output-store/tests/redis.rs",
+    "rust/crates/store/src/playback.rs",
+    "rust/crates/stream-http/Cargo.toml",
+    "rust/crates/stream-http/src/engine.rs",
+    "rust/crates/stream-http/src/output_profiles.rs",
+    "rust/crates/stream-http/src/profile_process.rs",
+    "rust/crates/stream-http/tests/http.rs",
+    "rust/crates/stream-http/tests/output_profiles.rs",
+    "rust/crates/stream-http/tests/upstream_native.rs"
+  ],
+  "all_canonical_preimages_verified_against_SDK13": true,
+  "SDK14": {
+    "fmt": 0,
+    "check": 0,
+    "strict": 101,
+    "workspace": 0,
+    "correction": "owned producer context plus equivalent lint fixes; actual post-await admission stop race corrected before activation"
+  },
+  "prepared_race_control": "actual Redis successful observation held across actual Engine.stop; captured subscription cannot reopen owner",
+  "physical_Redis_controls_run": false,
+  "Docker_built": false,
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "full_milestones_accepted": false,
+  "credit": "Original Dispatcharr and dependency authors retain full application, algorithm and licensing credit."
+}

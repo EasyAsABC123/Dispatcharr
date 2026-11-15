@@ -75,6 +75,12 @@ impl AsRef<[u8]> for Frame {
         self.data.as_ref()
     }
 }
+fn profile_format(source: &PlaybackSource) -> String {
+    source.output_profile.as_ref().map_or_else(
+        || "fmp4".to_owned(),
+        |profile| format!("fmp4:p{}", profile.id),
+    )
+}
 fn failure(status: u16, detail: &str) -> PlaybackError {
     PlaybackError::new(status, detail)
 }
@@ -120,7 +126,12 @@ impl Fmp4Gateway {
         let client = self
             .inner
             .clients
-            .register(&source.channel_id, viewer, "fmp4")
+            .register_profile(
+                &source.channel_id,
+                viewer,
+                "fmp4",
+                source.output_profile.as_ref().map(|profile| profile.id),
+            )
             .await
             .map_err(|error| match error {
                 dispatcharr_clients::Error::UserLimit => failure(
@@ -134,13 +145,14 @@ impl Fmp4Gateway {
             })?;
         self.ensure(source.clone()).await?;
         let inner = self.inner.clone();
+        let format = profile_format(&source);
         let channel = source.channel_id;
         let behind = source.startup_behind;
         let output = async_stream::stream! {
             let client=client;let mut stopped=client.stopped();let started=time::Instant::now();
             let init=loop{
                 if *stopped.borrow() || started.elapsed()>=inner.config.initialization_timeout{break None;}
-                match inner.outputs.get_init(&channel,"fmp4").await{Ok(Some(data))=>break Some(data),Ok(None)|Err(dispatcharr_output_store::Error::Capacity)=>{},Err(_)=>break None}
+                match inner.outputs.get_init(&channel,&format).await{Ok(Some(data))=>break Some(data),Ok(None)|Err(dispatcharr_output_store::Error::Capacity)=>{},Err(_)=>break None}
                 tokio::select!{_=stopped.changed()=>break None,_=time::sleep(inner.config.poll_interval)=>{}}
             };
             if let Some(init)=init{
@@ -149,7 +161,7 @@ impl Fmp4Gateway {
                 client.record_bytes(init.as_ref().len());
                 yield Ok::<Bytes,io::Error>(Bytes::from_owner(Frame{data:init,_client:client.clone(),_slot:permit}));
                 let snapshot=loop{
-                    match inner.outputs.snapshot(&channel,"fmp4").await{
+                    match inner.outputs.snapshot(&channel,&format).await{
                         Ok(snapshot)=>break Some(snapshot),
                         Err(dispatcharr_output_store::Error::Capacity) if started.elapsed()<inner.config.initialization_timeout=>{
                             tokio::select!{_=stopped.changed()=>break None,_=time::sleep(inner.config.poll_interval)=>{}}
@@ -163,10 +175,10 @@ impl Fmp4Gateway {
                 'stream:loop{
                     if *stopped.borrow() || last_data.elapsed()>=inner.config.stream_timeout{break;}
                     let permit=tokio::select!{_=stopped.changed()=>break,result=slots.clone().acquire_owned()=>match result{Ok(permit)=>permit,Err(_)=>break}};
-                    let snapshot=match inner.outputs.snapshot(&channel,"fmp4").await{Ok(snapshot)=>snapshot,Err(dispatcharr_output_store::Error::Capacity)=>{drop(permit);tokio::select!{_=stopped.changed()=>break,_=time::sleep(inner.config.poll_interval)=>{}}continue;},Err(_)=>break};
+                    let snapshot=match inner.outputs.snapshot(&channel,&format).await{Ok(snapshot)=>snapshot,Err(dispatcharr_output_store::Error::Capacity)=>{drop(permit);tokio::select!{_=stopped.changed()=>break,_=time::sleep(inner.config.poll_interval)=>{}}continue;},Err(_)=>break};
                     if snapshot.owner.is_none(){break;}
                     let Some((sequence,_))=snapshot.segments.into_iter().find(|(sequence,_)|*sequence>index)else{drop(permit);tokio::select!{_=stopped.changed()=>break 'stream,_=time::sleep(inner.config.poll_interval)=>{}}continue;};
-                    match inner.outputs.get(&channel,"fmp4",sequence).await{
+                    match inner.outputs.get(&channel,&format,sequence).await{
                         Ok(Some(data))=>{index=sequence;last_data=time::Instant::now();client.record_bytes(data.as_ref().len());yield Ok(Bytes::from_owner(Frame{data,_client:client.clone(),_slot:permit}));},
                         Ok(None)=>{index=sequence;},Err(dispatcharr_output_store::Error::Capacity)=>{drop(permit);tokio::select!{_=stopped.changed()=>break,_=time::sleep(inner.config.poll_interval)=>{}}},Err(_)=>break,
                     }
@@ -183,13 +195,9 @@ impl Fmp4Gateway {
         Ok(response)
     }
     async fn ensure(&self, source: PlaybackSource) -> Result<(), PlaybackError> {
-        if self
-            .inner
-            .managers
-            .lock()
-            .unwrap()
-            .contains_key(&source.channel_id)
-        {
+        let format = profile_format(&source);
+        let key = format!("{}:{format}", source.channel_id);
+        if self.inner.managers.lock().unwrap().contains_key(&key) {
             return Ok(());
         }
         let slot = self
@@ -206,17 +214,17 @@ impl Fmp4Gateway {
         });
         {
             let mut managers = self.inner.managers.lock().unwrap();
-            if managers.contains_key(&source.channel_id) {
+            if managers.contains_key(&key) {
                 return Ok(());
             }
-            managers.insert(source.channel_id.clone(), manager.clone());
+            managers.insert(key.clone(), manager.clone());
         }
         let inner = self.inner.clone();
         tokio::spawn(async move {
             let token = uuid::Uuid::new_v4().to_string();
             if let Ok(Some(lease)) = inner
                 .outputs
-                .claim(&source.channel_id, "fmp4", &token)
+                .claim(&source.channel_id, &format, &token)
                 .await
             {
                 let mut stop = manager.stop.subscribe();
@@ -237,7 +245,7 @@ impl Fmp4Gateway {
                         _=timer.tick()=>{
                             if lease.renew().await.is_err(){break;}
                             match inner.clients.channel_clients(&source.channel_id).await{
-                                Ok(clients)if clients.is_empty()=>{let start=empty_since.get_or_insert(time::Instant::now());if start.elapsed()>=source.shutdown_delay{break;}},
+                                Ok(clients)if !clients.iter().any(|client| client.get("output_format").and_then(|v|v.as_str())==Some("fmp4") && client.get("output_profile_id").and_then(|v|v.as_i64())==source.output_profile.as_ref().map(|profile|profile.id))=>{let start=empty_since.get_or_insert(time::Instant::now());if start.elapsed()>=source.shutdown_delay{break;}},
                                 Ok(_)=>empty_since=None,Err(_)=>break,
                             }
                         }
@@ -252,10 +260,10 @@ impl Fmp4Gateway {
             }
             let mut managers = inner.managers.lock().unwrap();
             if managers
-                .get(&source.channel_id)
+                .get(&key)
                 .is_some_and(|current| Arc::ptr_eq(current, &manager))
             {
-                managers.remove(&source.channel_id);
+                managers.remove(&key);
             }
             manager.done.send_replace(true);
         });

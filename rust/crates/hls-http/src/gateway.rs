@@ -85,6 +85,9 @@ pub(crate) struct Session {
 }
 pub(crate) struct Manager {
     pub channel: String,
+    key: String,
+    format: String,
+    profile: Option<i64>,
     fence: String,
     pub state: Mutex<ManagerState>,
     pub notify: Notify,
@@ -228,7 +231,12 @@ impl HlsGateway {
         let client = self
             .inner
             .clients
-            .register(&source.channel_id, viewer, "hls")
+            .register_profile(
+                &source.channel_id,
+                viewer,
+                "hls",
+                source.output_profile.as_ref().map(|profile| profile.id),
+            )
             .await
             .map_err(|error| match error {
                 dispatcharr_clients::Error::UserLimit => failure(429, "User stream limit reached"),
@@ -337,8 +345,14 @@ impl HlsGateway {
 }
 impl Inner {
     fn manager(&self, source: &PlaybackSource) -> Result<(Arc<Manager>, bool), PlaybackError> {
+        let profile = source.output_profile.as_ref().map(|profile| profile.id);
+        if profile.is_some() && self.outputs.is_none() {
+            return Err(failure(501, "Profile HLS requires shared output storage"));
+        }
+        let format = profile.map_or_else(|| "hls".to_owned(), |id| format!("hls:p{id}"));
+        let key = format!("{}:{format}", source.channel_id);
         let mut managers = lock(&self.managers);
-        if let Some(manager) = managers.get(&source.channel_id) {
+        if let Some(manager) = managers.get(&key) {
             if !lock(&manager.state).dead && !*manager.stop.borrow() {
                 return Ok((manager.clone(), false));
             }
@@ -353,6 +367,9 @@ impl Inner {
         let (done, _) = watch::channel(false);
         let manager = Arc::new(Manager {
             channel: source.channel_id.clone(),
+            key: key.clone(),
+            format,
+            profile,
             fence: token()?,
             notify: Notify::new(),
             stop,
@@ -373,7 +390,7 @@ impl Inner {
                 ts: 0.0,
             }),
         });
-        managers.insert(source.channel_id.clone(), manager.clone());
+        managers.insert(key, manager.clone());
         Ok((manager, true))
     }
     pub(crate) async fn expire(&self, session: &Arc<Session>) {
@@ -397,7 +414,11 @@ impl Inner {
         let _ = session.client.release().await;
         if last
             && self.outputs.is_some()
-            && matches!(self.has_demand(&session.manager.channel).await, Ok(false))
+            && matches!(
+                self.has_demand(&session.manager.channel, session.manager.profile)
+                    .await,
+                Ok(false)
+            )
         {
             session.manager.stop.send_replace(true);
             session.manager.notify.notify_waiters();
@@ -443,7 +464,7 @@ impl Inner {
             _manager: manager.admission.clone(),
         }))
     }
-    async fn has_demand(&self, channel: &str) -> Result<bool, PlaybackError> {
+    async fn has_demand(&self, channel: &str, profile: Option<i64>) -> Result<bool, PlaybackError> {
         let clients = self
             .clients
             .channel_clients(channel)
@@ -451,6 +472,10 @@ impl Inner {
             .map_err(|_| failure(503, "HLS demand unavailable"))?;
         Ok(clients.iter().any(|client| {
             client.get("output_format").and_then(|value| value.as_str()) == Some("hls")
+                && client
+                    .get("output_profile_id")
+                    .and_then(|value| value.as_i64())
+                    == profile
         }))
     }
     async fn follow_manager(
@@ -463,7 +488,7 @@ impl Inner {
         let mut idle = 0;
         loop {
             tokio::select! {_=cancelled.changed()=>return Ok(()),_=tokio::time::sleep(Duration::from_secs(10))=>{}}
-            if self.has_demand(&manager.channel).await? {
+            if self.has_demand(&manager.channel, manager.profile).await? {
                 idle = 0;
             } else {
                 idle += 1;
@@ -478,9 +503,9 @@ impl Inner {
         let result=async {
             if *cancelled.borrow() {return Ok(());}
             if let Some(outputs)=&self.outputs {
-                match outputs.claim(&manager.channel,"hls",&manager.fence).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {
+                match outputs.claim(&manager.channel,&manager.format,&manager.fence).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {
                     Some(lease)=>{
-                        let snapshot=outputs.snapshot(&manager.channel,"hls").await.map_err(|_|failure(503,"HLS state unavailable"))?;
+                        let snapshot=outputs.snapshot(&manager.channel,&manager.format).await.map_err(|_|failure(503,"HLS state unavailable"))?;
                         {let mut state=lock(&manager.state);state.seq=snapshot.index+1;
                             if let Some(descriptor)=snapshot.descriptor {let (window,disc_seq,_,ts)=crate::shared::descriptor(&descriptor,self.config.max_stored_segments)?;state.window=window.into();state.disc_seq=disc_seq;state.ts=ts;}
                         }
@@ -490,7 +515,7 @@ impl Inner {
                 }
             }
             let mut input=tokio::select! {result=self.engine.open_input(source)=>result?,_=cancelled.changed()=>return Ok(())};
-            if self.outputs.is_none()&&!self.clients.claim_output_owner(&manager.channel,"hls",&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS output is owned by another worker"));}
+            if self.outputs.is_none()&&!self.clients.claim_output_owner(&manager.channel,&manager.format,&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS output is owned by another worker"));}
             lock(&manager.state).ready=Some(Instant::now());manager.notify.notify_waiters();
             let lease=lock(&manager.output_lease).clone();if let Some(lease)=lease {lease.set_state("active").await.map_err(|_|failure(503,"HLS state unavailable"))?;}
             let mut segmenter=TSSegmenter::new(SegmenterConfig {target_duration:3.9,max_segment_duration:Some(6.45),max_segment_bytes:self.config.max_segment_bytes,..Default::default()}).map_err(|_|failure(500,"Segmenter unavailable"))?;
@@ -500,11 +525,11 @@ impl Inner {
                 _=cancelled.changed()=>break,
                 _=tick.tick()=>{
                     if renew.elapsed()>=Duration::from_secs(10) {
-                        if self.outputs.is_some() {if self.has_demand(&manager.channel).await? {idle_checks=0;}else {idle_checks+=1;if idle_checks>=2 {break;}}}
+                        if self.outputs.is_some() {if self.has_demand(&manager.channel, manager.profile).await? {idle_checks=0;}else {idle_checks+=1;if idle_checks>=2 {break;}}}
                         self.publish(&manager,None).await?;
                         let lease=lock(&manager.output_lease).clone();
                         if let Some(lease)=lease {lease.renew().await.map_err(|_|failure(503,"HLS ownership lost"))?;}
-                        else if !self.clients.renew_output_owner(&manager.channel,"hls",&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS ownership lost"));}
+                        else if !self.clients.renew_output_owner(&manager.channel,&manager.format,&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS ownership lost"));}
                         renew=Instant::now();
                     }
                 },
@@ -533,16 +558,16 @@ impl Inner {
         } else if self.outputs.is_none() {
             let _ = self
                 .clients
-                .release_output_owner(&manager.channel, "hls", &manager.fence)
+                .release_output_owner(&manager.channel, &manager.format, &manager.fence)
                 .await;
         }
         {
             let mut managers = lock(&self.managers);
             if managers
-                .get(&manager.channel)
+                .get(&manager.key)
                 .is_some_and(|current| Arc::ptr_eq(current, &manager))
             {
-                managers.remove(&manager.channel);
+                managers.remove(&manager.key);
             }
         }
         let sessions: Vec<_> = lock(&self.sessions)
@@ -585,7 +610,7 @@ impl Inner {
         let shared_scores = if let Some(outputs) = &self.outputs {
             Some(
                 outputs
-                    .snapshot(&manager.channel, "hls")
+                    .snapshot(&manager.channel, &manager.format)
                     .await
                     .map_err(|_| failure(503, "HLS state unavailable"))?
                     .segments
@@ -687,7 +712,7 @@ impl Inner {
             .clients
             .publish_output_playlist(
                 &manager.channel,
-                "hls",
+                &manager.format,
                 &manager.fence,
                 &descriptor,
                 Duration::from_secs(3600),

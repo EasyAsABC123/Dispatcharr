@@ -465,22 +465,51 @@ impl AuthService {
             Some(OutputFormat::Hls) => "hls".to_owned(),
             None => resolve_output_format(&request, user.as_ref(), &stream_settings),
         };
-        if let Some(profile) = resolve_output_profile_id(&request, user.as_ref()) {
-            let active: bool = sqlx::query_scalar(
-                "SELECT EXISTS(SELECT 1 FROM core_outputprofile WHERE id=$1 AND is_active)",
-            )
-            .bind(profile)
-            .fetch_one(self.store.pool())
-            .await
-            .map_err(StoreError::from)
-            .map_err(playback_error)?;
-            if active {
-                return Err(PlaybackError::new(
-                    501,
-                    "Output profile transcoding is not implemented",
-                ));
-            }
-        }
+        let output_profile = if let Some(profile) =
+            resolve_output_profile_id(&request, user.as_ref())
+        {
+            let row = sqlx::query("SELECT id::bigint AS id, CASE WHEN octet_length(command)<=262144 THEN command ELSE '' END AS command, CASE WHEN octet_length(parameters)<=262144 THEN parameters ELSE '' END AS parameters, octet_length(command)>262144 OR octet_length(parameters)>262144 AS oversized FROM core_outputprofile WHERE id=$1 AND is_active")
+                .bind(profile).fetch_optional(self.store.pool()).await.map_err(StoreError::from).map_err(playback_error)?;
+            row.map(|row| {
+                let oversized: bool = row
+                    .try_get("oversized")
+                    .map_err(StoreError::from)
+                    .map_err(playback_error)?;
+                if oversized {
+                    return Err(PlaybackError::new(
+                        501,
+                        "Output profile command exceeds supported bound",
+                    ));
+                }
+                let id: i64 = row
+                    .try_get("id")
+                    .map_err(StoreError::from)
+                    .map_err(playback_error)?;
+                let command: String = row
+                    .try_get("command")
+                    .map_err(StoreError::from)
+                    .map_err(playback_error)?;
+                let parameters: String = row
+                    .try_get("parameters")
+                    .map_err(StoreError::from)
+                    .map_err(playback_error)?;
+                let command =
+                    dispatcharr_contracts::StreamCommand::build_output(&command, &parameters)
+                        .map_err(|_| {
+                            PlaybackError::new(501, "Output profile command shape is unsupported")
+                        })?;
+                if !command.spawn_compatible() {
+                    return Err(PlaybackError::new(
+                        501,
+                        "Output profile command cannot be spawned",
+                    ));
+                }
+                Ok(dispatcharr_contracts::PlaybackOutputProfile { id, command })
+            })
+            .transpose()?
+        } else {
+            None
+        };
         let limits = self
             .store
             .setting("user_limit_settings")
@@ -519,6 +548,7 @@ impl AuthService {
             .next()
             .ok_or_else(|| PlaybackError::new(503, "No active stream available"))?;
         Ok(PlaybackSource {
+            output_profile,
             input_command: stream.input_command,
             channel_id: channel.id,
             channel_name: channel.name,

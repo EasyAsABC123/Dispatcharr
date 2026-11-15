@@ -1,6 +1,11 @@
 //! Bounded Redis output buffer ported from Dispatcharr's OutputStreamBuffer.
 //! All original application credit belongs to upstream Dispatcharr authors.
+mod profile_events;
 pub mod transport;
+pub use profile_events::{
+    OutputProfileOwner, OutputProfileRequest, ProfileEventObservation, ProfileEventState,
+    ProfileEvents,
+};
 use std::{sync::Arc, time::Duration};
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use transport::{RedisTransport, TransportConfig};
@@ -46,6 +51,7 @@ pub struct OutputStore {
     inner: Arc<Inner>,
 }
 struct Inner {
+    address: redis::ConnectionInfo,
     transport: RedisTransport,
     config: OutputConfig,
     read_bytes: Arc<Semaphore>,
@@ -56,6 +62,71 @@ pub struct OutputLease {
     channel: String,
     format: String,
     token: String,
+    owner_ttl: Duration,
+    input_owner: Option<String>,
+    chunk_ttl: Duration,
+}
+/// A channel's pre-delivery MPEG-TS transcode history, shared by raw TS,
+/// HLS and fMP4 consumers. It reuses this store's physical Redis transport and
+/// byte admission; it does not create another connection or provider lease.
+#[derive(Clone)]
+pub struct ProfileStore {
+    store: OutputStore,
+    format: String,
+    chunk_ttl: Duration,
+}
+impl OutputStore {
+    pub fn profile(&self, id: i64) -> Result<ProfileStore, Error> {
+        self.profile_with_chunk_ttl(id, self.inner.config.chunk_ttl)
+    }
+    /// Main supplies the same actual raw StreamBuffer TTL; HLS segment TTL
+    /// must not silently become pre-delivery profile history's retention.
+    pub fn profile_with_chunk_ttl(
+        &self,
+        id: i64,
+        chunk_ttl: Duration,
+    ) -> Result<ProfileStore, Error> {
+        if chunk_ttl.as_secs() == 0 || chunk_ttl > Duration::from_secs(3600) {
+            return Err(Error::Configuration);
+        }
+        if id <= 0 {
+            return Err(Error::InvalidKey);
+        }
+        Ok(ProfileStore {
+            store: self.clone(),
+            format: format!("mpegts:p{id}"),
+            chunk_ttl,
+        })
+    }
+}
+impl ProfileStore {
+    pub async fn claim_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        raw_owner: &str,
+        token: &str,
+        owner: G,
+    ) -> Result<(Option<OutputLease>, G), Error> {
+        self.store
+            .claim_inner(
+                channel,
+                &self.format,
+                token,
+                Some(raw_owner),
+                self.chunk_ttl,
+                owner,
+            )
+            .await
+    }
+    pub async fn snapshot(&self, channel: &str) -> Result<Snapshot, Error> {
+        self.store.snapshot(channel, &self.format).await
+    }
+    pub async fn get(&self, channel: &str, sequence: u64) -> Result<Option<SegmentBytes>, Error> {
+        self.store.get(channel, &self.format, sequence).await
+    }
+    pub async fn state(&self, channel: &str) -> Result<Option<String>, Error> {
+        self.store.state(channel, &self.format).await
+    }
 }
 #[derive(Debug)]
 pub struct Snapshot {
@@ -79,7 +150,8 @@ fn keys(channel: &str, format: &str) -> Result<[String; 7], Error> {
         || channel.contains(':')
         || !(matches!(format, "hls" | "fmp4")
             || format.split_once(":p").is_some_and(|(kind, id)| {
-                matches!(kind, "hls" | "fmp4") && id.parse::<u64>().is_ok_and(|id| id > 0)
+                matches!(kind, "hls" | "fmp4" | "mpegts")
+                    && id.parse::<u64>().is_ok_and(|id| id > 0)
             }))
     {
         return Err(Error::InvalidKey);
@@ -125,6 +197,10 @@ impl OutputStore {
         {
             return Err(Error::Configuration);
         }
+        let address = redis::Client::open(url)
+            .map_err(|_| Error::Configuration)?
+            .get_connection_info()
+            .clone();
         let transport = RedisTransport::connect(
             url,
             TransportConfig {
@@ -136,6 +212,7 @@ impl OutputStore {
         .await?;
         Ok(Self {
             inner: Arc::new(Inner {
+                address,
                 transport,
                 read_bytes: Arc::new(Semaphore::new(config.max_read_bytes)),
                 config,
@@ -170,18 +247,74 @@ impl OutputStore {
         format: &str,
         token: &str,
     ) -> Result<Option<OutputLease>, Error> {
+        self.claim_retained(channel, format, token, ())
+            .await
+            .map(|(lease, ())| lease)
+    }
+    /// The accepted producer owner outlives a cancelled claim observer until
+    /// the actual queued Redis reply/disconnect settles.
+    pub async fn claim_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        format: &str,
+        token: &str,
+        guard: G,
+    ) -> Result<(Option<OutputLease>, G), Error> {
+        self.claim_inner(
+            channel,
+            format,
+            token,
+            None,
+            self.inner.config.chunk_ttl,
+            guard,
+        )
+        .await
+    }
+    async fn claim_inner<G: Send + 'static>(
+        &self,
+        channel: &str,
+        format: &str,
+        token: &str,
+        raw_owner: Option<&str>,
+        chunk_ttl: Duration,
+        guard: G,
+    ) -> Result<(Option<OutputLease>, G), Error> {
+        if format.starts_with("mpegts:p") && raw_owner.is_none() {
+            return Err(Error::Configuration);
+        }
+        if raw_owner
+            .is_some_and(|owner| owner.is_empty() || owner.len() > 256 || owner.contains('\0'))
+        {
+            return Err(Error::InvalidKey);
+        }
         let keys = keys(channel, format)?;
         if !valid_token(token) {
             return Err(Error::InvalidKey);
         }
-        let ttl = self.inner.config.owner_ttl.as_millis().to_string();
-        let result:i64=self.invoke("local old=redis.call('GET',KEYS[1]); if old and old~=ARGV[1] then return 0 end redis.call('SET',KEYS[1],ARGV[1],'PX',ARGV[2]); return 1",&keys[..1],&[token.as_bytes(),ttl.as_bytes()]).await?;
-        Ok((result == 1).then(|| OutputLease {
-            store: self.clone(),
-            channel: channel.to_owned(),
-            format: format.to_owned(),
-            token: token.to_owned(),
-        }))
+        let owner_ttl = if format.starts_with("mpegts:p") {
+            Duration::from_secs(3600)
+        } else {
+            self.inner.config.owner_ttl
+        };
+        let ttl = owner_ttl.as_millis().to_string();
+        let mut claim_keys = vec![keys[0].clone()];
+        if raw_owner.is_some() {
+            claim_keys.push(format!("live:channel:{channel}:owner"));
+        }
+        let raw = raw_owner.unwrap_or("");
+        let (result, guard):(i64,G)=self.command("if ARGV[3]~='' and redis.call('GET',KEYS[2])~=ARGV[3] then return 0 end local old=redis.call('GET',KEYS[1]); if old and old~=ARGV[1] then return 0 end redis.call('SET',KEYS[1],ARGV[1],'PX',ARGV[2]); return 1",&claim_keys,&[token.as_bytes(),ttl.as_bytes(),raw.as_bytes()],guard).await?;
+        Ok((
+            (result == 1).then(|| OutputLease {
+                store: self.clone(),
+                channel: channel.to_owned(),
+                format: format.to_owned(),
+                token: token.to_owned(),
+                owner_ttl,
+                input_owner: raw_owner.map(str::to_owned),
+                chunk_ttl,
+            }),
+            guard,
+        ))
     }
     pub async fn snapshot(&self, channel: &str, format: &str) -> Result<Snapshot, Error> {
         let keys = keys(channel, format)?;
@@ -249,28 +382,51 @@ impl OutputLease {
         &self.token
     }
     pub async fn renew(&self) -> Result<(), Error> {
+        self.renew_retained(()).await
+    }
+    pub async fn renew_retained<G: Send + 'static>(&self, guard: G) -> Result<G, Error> {
         let keys = keys(&self.channel, &self.format)?;
-        let ttl = self.store.inner.config.owner_ttl.as_millis().to_string();
-        let result:i64=self.store.invoke("if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end redis.call('PEXPIRE',KEYS[1],ARGV[2]);return 1",&keys[..1],&[self.token.as_bytes(),ttl.as_bytes()]).await?;
+        let ttl = self.owner_ttl.as_millis().to_string();
+        let mut renew_keys = vec![keys[0].clone()];
+        if self.input_owner.is_some() {
+            renew_keys.push(format!("live:channel:{}:owner", self.channel));
+            renew_keys.push(keys[6].clone());
+        }
+        let raw = self.input_owner.as_deref().unwrap_or("");
+        let (result, guard):(i64,G)=self.store.command("if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end if ARGV[3]~='' and redis.call('GET',KEYS[2])~=ARGV[3] then return 0 end redis.call('PEXPIRE',KEYS[1],ARGV[2]);if ARGV[3]~='' then redis.call('PEXPIRE',KEYS[3],ARGV[2]) end return 1",&renew_keys,&[self.token.as_bytes(),ttl.as_bytes(),raw.as_bytes()],guard).await?;
         if result == 1 {
-            Ok(())
+            Ok(guard)
         } else {
             Err(Error::LostOwnership)
         }
     }
     pub async fn put(&self, data: &[u8], timestamp: f64) -> Result<u64, Error> {
+        self.put_retained(data, timestamp, ())
+            .await
+            .map(|(sequence, ())| sequence)
+    }
+    pub async fn put_retained<G: Send + 'static>(
+        &self,
+        data: &[u8],
+        timestamp: f64,
+        guard: G,
+    ) -> Result<(u64, G), Error> {
         let config = &self.store.inner.config;
         if data.is_empty() || data.len() > config.max_segment_bytes || !timestamp.is_finite() {
             return Err(Error::Capacity);
         }
-        let keys = keys(&self.channel, &self.format)?;
-        let ttl = config.chunk_ttl.as_millis().to_string();
+        let mut keys = keys(&self.channel, &self.format)?.to_vec();
+        if self.input_owner.is_some() {
+            keys.push(format!("live:channel:{}:owner", self.channel));
+        }
+        let raw = self.input_owner.as_deref().unwrap_or("");
+        let ttl = self.chunk_ttl.as_millis().to_string();
         let stamp = timestamp.to_string();
         let count = config.max_segments.to_string();
         let bytes = config.max_channel_bytes.to_string();
-        let result: i64 = self
+        let (result, guard): (i64, G) = self
             .store
-            .invoke(
+            .command(
                 PUT,
                 &keys,
                 &[
@@ -280,17 +436,22 @@ impl OutputLease {
                     ttl.as_bytes(),
                     count.as_bytes(),
                     bytes.as_bytes(),
+                    raw.as_bytes(),
                 ],
+                guard,
             )
             .await?;
         match result {
             0 => Err(Error::LostOwnership),
             -1 => Err(Error::Capacity),
-            value if value > 0 => Ok(value as u64),
+            value if value > 0 => Ok((value as u64, guard)),
             _ => Err(Error::Corrupt),
         }
     }
     pub async fn publish(&self, descriptor: &serde_json::Value) -> Result<(), Error> {
+        if self.input_owner.is_some() {
+            return Err(Error::Configuration);
+        }
         let text = descriptor.to_string();
         if text.len() > 65_536 {
             return Err(Error::Capacity);
@@ -304,6 +465,9 @@ impl OutputLease {
         }
     }
     pub async fn put_init(&self, data: &[u8]) -> Result<(), Error> {
+        if self.input_owner.is_some() {
+            return Err(Error::Configuration);
+        }
         if data.is_empty() || data.len() > self.store.inner.config.max_segment_bytes {
             return Err(Error::Capacity);
         }
@@ -316,25 +480,47 @@ impl OutputLease {
         }
     }
     pub async fn set_state(&self, state: &str) -> Result<(), Error> {
+        self.set_state_retained(state, ()).await
+    }
+    pub async fn set_state_retained<G: Send + 'static>(
+        &self,
+        state: &str,
+        guard: G,
+    ) -> Result<G, Error> {
         if state.is_empty() || state.len() > 128 {
             return Err(Error::Capacity);
         }
         let keys = keys(&self.channel, &self.format)?;
-        let result:i64=self.store.invoke("if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end redis.call('SET',KEYS[7],ARGV[2],'EX',3600);return 1",&keys,&[self.token.as_bytes(),state.as_bytes()]).await?;
+        let mut keys = keys.to_vec();
+        if self.input_owner.is_some() {
+            keys.push(format!("live:channel:{}:owner", self.channel));
+        }
+        let raw = self.input_owner.as_deref().unwrap_or("");
+        let (result, guard):(i64,G)=self.store.command("if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end if ARGV[3]~='' and redis.call('GET',KEYS[8])~=ARGV[3] then return 0 end redis.call('SET',KEYS[7],ARGV[2],'EX',3600);return 1",&keys,&[self.token.as_bytes(),state.as_bytes(),raw.as_bytes()],guard).await?;
         if result == 1 {
-            Ok(())
+            Ok(guard)
         } else {
             Err(Error::LostOwnership)
         }
     }
     pub async fn release(&self) -> Result<bool, Error> {
+        self.release_retained(())
+            .await
+            .map(|(released, ())| released)
+    }
+    pub async fn release_retained<G: Send + 'static>(&self, guard: G) -> Result<(bool, G), Error> {
         let keys = keys(&self.channel, &self.format)?;
         let maximum = self.store.inner.config.max_segments.to_string();
-        let result: i64 = self
+        let (result, guard): (i64, G) = self
             .store
-            .invoke(RELEASE, &keys, &[self.token.as_bytes(), maximum.as_bytes()])
+            .command(
+                RELEASE,
+                &keys,
+                &[self.token.as_bytes(), maximum.as_bytes()],
+                guard,
+            )
             .await?;
-        Ok(result == 1)
+        Ok((result == 1, guard))
     }
 }
 const SNAPSHOT: &str = r#"
@@ -347,6 +533,7 @@ return {redis.call('GET',KEYS[1]) or '',index,redis.call('GET',KEYS[3]) or '',en
 "#;
 const PUT: &str = r#"
 if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end
+if ARGV[7]~='' and redis.call('GET',KEYS[8])~=ARGV[7] then return 0 end
 if redis.call('STRLEN',KEYS[2])>32 then return redis.error_reply('CORRUPT index') end
 local index=tonumber(redis.call('GET',KEYS[2]) or '0');if not index or index<0 or index>=9007199254740000 or index~=math.floor(index) then return redis.error_reply('CORRUPT index') end
 if redis.call('ZCARD',KEYS[4])>tonumber(ARGV[5]) then return redis.error_reply('CORRUPT cardinality') end

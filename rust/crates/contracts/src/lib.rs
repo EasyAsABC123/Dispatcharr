@@ -170,8 +170,16 @@ pub struct PlaybackViewer {
     pub limit_policy: UserLimitPolicy,
 }
 
+/// An actual active pre-delivery OutputProfile resolved under the existing
+/// channel/auth policy. Raw upstream/profile selection remains independent.
+#[derive(Clone, Debug)]
+pub struct PlaybackOutputProfile {
+    pub id: i64,
+    pub command: StreamCommand,
+}
 #[derive(Clone, Debug)]
 pub struct PlaybackSource {
+    pub output_profile: Option<PlaybackOutputProfile>,
     pub input_command: Option<StreamCommand>,
     pub channel_id: String,
     pub channel_name: String,

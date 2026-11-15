@@ -86,6 +86,7 @@ async fn setup() -> Fixture {
     .unwrap();
     let channel = uuid::Uuid::new_v4().to_string();
     let source = PlaybackSource {
+        output_profile: None,
         input_command: None,
         channel_id: channel.clone(),
         channel_name: "Fixture".into(),

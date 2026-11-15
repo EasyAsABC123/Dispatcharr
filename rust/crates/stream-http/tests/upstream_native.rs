@@ -50,6 +50,7 @@ fn encode(data: &[u8], kind: &str) -> Vec<u8> {
 }
 fn source(url: String, channel: &str) -> PlaybackSource {
     PlaybackSource {
+        output_profile: None,
         input_command: None,
         channel_id: channel.into(),
         channel_name: "Upstream fixture".into(),

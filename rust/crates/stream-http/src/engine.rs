@@ -1,3 +1,5 @@
+#[path = "output_profiles.rs"]
+mod output_profiles;
 #[path = "profile_process.rs"]
 mod profile_process;
 #[path = "source_keepalive.rs"]
@@ -184,6 +186,7 @@ pub type MediaStream =
 pub(crate) struct Inner {
     config: EngineConfig,
     health_settings: Option<Arc<dyn HealthSettingsSource>>,
+    profiles: Option<Arc<output_profiles::Profiles>>,
     sessions: Mutex<HashMap<String, Arc<Session>>>,
     slots: Arc<Semaphore>,
     coordinator: Option<Coordinator>,
@@ -327,6 +330,7 @@ impl StreamEngine {
             inner: Arc::new(Inner {
                 config,
                 health_settings: None,
+                profiles: None,
                 sessions: Mutex::new(HashMap::new()),
                 slots,
                 coordinator,
@@ -353,7 +357,12 @@ impl StreamEngine {
     }
 
     /// Authorization/resolution must run before calling this method for each viewer.
-    pub async fn play(&self, source: PlaybackSource) -> Result<Response<Body>, PlaybackError> {
+    pub async fn play(&self, mut source: PlaybackSource) -> Result<Response<Body>, PlaybackError> {
+        if let Some(profile) = source.output_profile.take() {
+            return self
+                .play_output_profile(source, profile.id, profile.command)
+                .await;
+        }
         let stream = self.open_stream(source, true).await?;
         Response::builder()
             .header("Content-Type", "video/mp2t")
@@ -373,6 +382,11 @@ impl StreamEngine {
         mut source: PlaybackSource,
     ) -> Result<MediaStream, PlaybackError> {
         source.viewer = None;
+        if let Some(profile) = source.output_profile.take() {
+            return self
+                .open_output_profile(source, profile.id, profile.command)
+                .await;
+        }
         self.open_stream(source, false).await
     }
 
@@ -769,6 +783,9 @@ impl StreamEngine {
 
     pub fn shutdown(&self) {
         self.inner.slots.close();
+        if let Some(profiles) = &self.inner.profiles {
+            profiles.request_stop();
+        }
         let sessions = std::mem::take(&mut *self.inner.sessions.lock().unwrap());
         for session in sessions.into_values() {
             session.stop.send_replace(true);
@@ -784,6 +801,11 @@ impl StreamEngine {
                 tokio::pin!(notified);
                 notified.as_mut().enable();
                 if self.inner.workers.load(Ordering::Acquire) == 0
+                    && self
+                        .inner
+                        .profiles
+                        .as_ref()
+                        .is_none_or(|profiles| profiles.reader_settled())
                     && self
                         .inner
                         .coordinator
@@ -1519,6 +1541,12 @@ async fn run_upstream(
             task.abort();
             let _ = task.await;
         }
+    }
+    if let Some(profiles) = &inner.profiles {
+        // Drain actual profile children and fenced profile Redis cleanup before
+        // releasing the raw TS/provider owner they consume. Unknown cleanup
+        // stays visibly retained instead of advertising successful teardown.
+        profiles.stop_channel(&key).await;
     }
     if let Some(lease) = lease {
         if let Some(inputs) = &inner.inputs {

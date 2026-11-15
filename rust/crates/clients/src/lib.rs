@@ -4,6 +4,7 @@ mod admission;
 mod channel;
 mod era;
 mod hls;
+mod output_profile;
 mod scripts;
 mod statistics;
 mod statistics_catalog;
@@ -455,6 +456,21 @@ return 1
         viewer: &PlaybackViewer,
         output_format: &str,
     ) -> Result<ClientLease, Error> {
+        self.register_profile(channel, viewer, output_format, None)
+            .await
+    }
+    /// Original profile ID is part of the actual pre-setup client record, not
+    /// a phantom internal viewer or a later best-effort metadata rewrite.
+    pub async fn register_profile(
+        &self,
+        channel: &str,
+        viewer: &PlaybackViewer,
+        output_format: &str,
+        profile_id: Option<i64>,
+    ) -> Result<ClientLease, Error> {
+        if profile_id.is_some_and(|id| id <= 0) {
+            return Err(Error::InvalidClient);
+        }
         if self.inner.stopped.load(Ordering::Acquire) {
             return Err(Error::Stopped);
         }
@@ -480,7 +496,7 @@ return 1
             "ip_address":viewer.ip_address.to_string(),"connected_at":timestamp.to_string(),
             "last_active":timestamp.to_string(),"worker_id":self.inner.config.worker_id,
             "user_id":viewer.user_id.unwrap_or(0).to_string(),"username":viewer.username.as_deref().unwrap_or(""),
-            "output_format":output_format,"output_profile_id":"","rust_token":token,
+            "output_format":output_format,"output_profile_id":profile_id.map(|id|id.to_string()).unwrap_or_default(),"rust_token":token,
             "bytes_sent":"0","chunks_sent":"0","current_rate_KBps":"0","avg_rate_KBps":"0","stats_updated_at":timestamp.to_string()});
         if output_format == "hls" {
             for name in [
