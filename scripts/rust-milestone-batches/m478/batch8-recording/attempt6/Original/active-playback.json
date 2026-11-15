@@ -1,0 +1,295 @@
+{
+  "actual_cells": [
+    {
+      "cell": "hls-playlist",
+      "method": "GET",
+      "path": "/api/channels/recordings/1/hls/index.m3u8",
+      "credential_role": "admin",
+      "authorization_present": true,
+      "api_key_present": false,
+      "query_credentials_present": false,
+      "status": "passed",
+      "actual_status": 200,
+      "actual_bytes": 401,
+      "body_sha256": "5fc7502111b745971944c0bf4959e1c10b29c4ed8dafa3eaa8c3d30d522e4ba6",
+      "headers": {
+        "Content-Type": "application/x-mpegURL",
+        "Cache-Control": "no-cache",
+        "Vary": "Accept, origin",
+        "Allow": "GET, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "Content-Length": "401",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "actual_comment_blank_segment_rewrite_matches_observed_atomic_version": true,
+      "observed_playlist_sha256": [
+        "c027783600644e378cb267be51cdfadb0cf67b200ce5d3119641f42f3631ea44",
+        "c027783600644e378cb267be51cdfadb0cf67b200ce5d3119641f42f3631ea44"
+      ],
+      "absolute_segment_urls": true
+    },
+    {
+      "cell": "hls-query-token",
+      "method": "GET",
+      "path": "/api/channels/recordings/1/hls/index.m3u8",
+      "credential_role": null,
+      "authorization_present": false,
+      "api_key_present": false,
+      "query_credentials_present": true,
+      "status": "passed",
+      "actual_status": 200,
+      "actual_bytes": 1115,
+      "body_sha256": "f5b7df163cb4f9545dbc6da9dafcc527d0ab9d83cfd381ed05502ed3a7fe221c",
+      "headers": {
+        "Content-Type": "application/x-mpegURL",
+        "Cache-Control": "no-cache",
+        "Vary": "Accept, origin",
+        "Allow": "GET, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "Content-Length": "1115",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "actual_comment_blank_segment_rewrite_matches_observed_atomic_version": true,
+      "observed_playlist_sha256": [
+        "c027783600644e378cb267be51cdfadb0cf67b200ce5d3119641f42f3631ea44",
+        "c027783600644e378cb267be51cdfadb0cf67b200ce5d3119641f42f3631ea44"
+      ],
+      "actual_query_propagation": true
+    },
+    {
+      "cell": "hls-ts",
+      "method": "GET",
+      "path": "/api/channels/recordings/1/hls/seg_00000.ts",
+      "credential_role": "admin",
+      "authorization_present": true,
+      "api_key_present": false,
+      "query_credentials_present": false,
+      "status": "passed",
+      "actual_status": 200,
+      "actual_bytes": 617580,
+      "body_sha256": "751ef5c4cd6dd4f61dcc62d29a7af154df60ebbc1f3270e693d6ddccb23b4515",
+      "headers": {
+        "Content-Type": "video/mp2t",
+        "Content-Length": "617580",
+        "Content-Disposition": "inline; filename=\"seg_00000.ts\"",
+        "Vary": "Accept, origin",
+        "Allow": "GET, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      }
+    },
+    {
+      "cell": "hls-ts-range-ignored",
+      "method": "GET",
+      "path": "/api/channels/recordings/1/hls/seg_00000.ts",
+      "credential_role": "admin",
+      "authorization_present": true,
+      "api_key_present": false,
+      "query_credentials_present": false,
+      "status": "passed",
+      "actual_status": 200,
+      "actual_bytes": 617580,
+      "body_sha256": "751ef5c4cd6dd4f61dcc62d29a7af154df60ebbc1f3270e693d6ddccb23b4515",
+      "headers": {
+        "Content-Type": "video/mp2t",
+        "Content-Length": "617580",
+        "Content-Disposition": "inline; filename=\"seg_00000.ts\"",
+        "Vary": "Accept, origin",
+        "Allow": "GET, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      }
+    },
+    {
+      "cell": "actual-HLS-segment-decode",
+      "actual_command": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.14759271400180296,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/command-0425.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/normal-recording-whole-batch-1/fixtures5/Original-3b83f2a5/command-0425.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 473723,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 0,
+        "output_bytes_discarded": 0,
+        "argv_sha256": "312546aa1efe610ae12bfc17ab0816b88ad9f9f0a454dab0e6e28993afbe86de",
+        "secret_output_excluded": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "passed"
+    },
+    {
+      "cell": "hls-heartbeat",
+      "actual": [
+        "1",
+        20
+      ],
+      "status": "passed"
+    },
+    {
+      "cell": "file-to-hls",
+      "method": "GET",
+      "path": "/api/channels/recordings/1/file/",
+      "credential_role": "admin",
+      "authorization_present": true,
+      "api_key_present": false,
+      "query_credentials_present": false,
+      "status": "passed",
+      "actual_status": 302,
+      "actual_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8",
+        "Vary": "Accept, origin",
+        "Allow": "GET, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "Content-Length": "0",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "redirect_path": "/api/channels/recordings/1/hls/index.m3u8",
+      "redirect_query_present": false
+    },
+    {
+      "cell": "hls-missing",
+      "method": "GET",
+      "path": "/api/channels/recordings/1/hls/normal-never-created.ts",
+      "credential_role": "admin",
+      "authorization_present": true,
+      "api_key_present": false,
+      "query_credentials_present": false,
+      "status": "passed",
+      "actual_status": 404,
+      "actual_bytes": 56,
+      "body_sha256": "9af6fdc290174c1d0f5739ac8e25ed8e9a715acfa039e8b41b721f8492b73cfa",
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "Allow": "GET, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "Content-Length": "56",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      }
+    },
+    {
+      "cell": "hls-unsupported",
+      "method": "GET",
+      "path": "/api/channels/recordings/1/hls/normal-unsupported.txt",
+      "credential_role": "admin",
+      "authorization_present": true,
+      "api_key_present": false,
+      "query_credentials_present": false,
+      "status": "passed",
+      "actual_status": 404,
+      "actual_bytes": 38,
+      "body_sha256": "98f32c7a646eaf9b585a6ddbd475161a942701cbcd936a06d4047b9ab85b0f51",
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "Allow": "GET, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "Content-Length": "38",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      }
+    },
+    {
+      "cell": "hls-symlink-escape",
+      "method": "GET",
+      "path": "/api/channels/recordings/1/hls/normal-escape.ts",
+      "credential_role": "admin",
+      "authorization_present": true,
+      "api_key_present": false,
+      "query_credentials_present": false,
+      "status": "passed",
+      "actual_status": 403,
+      "actual_bytes": 21,
+      "body_sha256": "18e11a797e00b786f40daa25b22dd4cee77ad3efc4b71e0dea081993d7adca44",
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "Allow": "GET, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "Content-Length": "21",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      }
+    },
+    {
+      "cell": "hls-traversal",
+      "method": "GET",
+      "path": "/api/channels/recordings/1/hls/%2E%2E/normal-outside.ts",
+      "credential_role": "admin",
+      "authorization_present": true,
+      "api_key_present": false,
+      "query_credentials_present": false,
+      "status": "passed",
+      "actual_status": 403,
+      "actual_bytes": 21,
+      "body_sha256": "18e11a797e00b786f40daa25b22dd4cee77ad3efc4b71e0dea081993d7adca44",
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "Allow": "GET, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "Content-Length": "21",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      }
+    },
+    {
+      "cell": "no-playback-converter",
+      "before_actual_ffmpeg": [
+        [
+          3728,
+          "1867408",
+          "ffmpeg -y -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -user_agent Dispatcharr-DVR/recording-1 -fflags +genpts -err_detect ignore_err -i http://127.0.0.1:5656/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1 -map 0:v? -map 0:a? -c copy -avoid_negative_ts make_zero -f hls -hls_time 4 -hls_list_size 0 -hls_playlist_type event -hls_flags append_list+omit_endlist+independent_segments -start_number 0 -hls_segment_filename /data/recordings/TV_Shows/Offline benchmark channel 0/.dvr_1_hls/seg_%05d.ts /data/recordings/TV_Shows/Offline benchmark channel 0/.dvr_1_hls/index.m3u8 "
+        ],
+        [
+          3745,
+          "1867507",
+          "ffmpeg -y -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -user_agent Dispatcharr-DVR/recording-2 -fflags +genpts -err_detect ignore_err -i http://127.0.0.1:5656/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1 -map 0:v? -map 0:a? -c copy -avoid_negative_ts make_zero -f hls -hls_time 4 -hls_list_size 0 -hls_playlist_type event -hls_flags append_list+omit_endlist+independent_segments -start_number 0 -hls_segment_filename /data/recordings/TV_Shows/Offline benchmark channel 0/.dvr_2_hls/seg_%05d.ts /data/recordings/TV_Shows/Offline benchmark channel 0/.dvr_2_hls/index.m3u8 "
+        ]
+      ],
+      "after_actual_ffmpeg": [
+        [
+          3728,
+          "1867408",
+          "ffmpeg -y -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -user_agent Dispatcharr-DVR/recording-1 -fflags +genpts -err_detect ignore_err -i http://127.0.0.1:5656/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1 -map 0:v? -map 0:a? -c copy -avoid_negative_ts make_zero -f hls -hls_time 4 -hls_list_size 0 -hls_playlist_type event -hls_flags append_list+omit_endlist+independent_segments -start_number 0 -hls_segment_filename /data/recordings/TV_Shows/Offline benchmark channel 0/.dvr_1_hls/seg_%05d.ts /data/recordings/TV_Shows/Offline benchmark channel 0/.dvr_1_hls/index.m3u8 "
+        ],
+        [
+          3745,
+          "1867507",
+          "ffmpeg -y -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -user_agent Dispatcharr-DVR/recording-2 -fflags +genpts -err_detect ignore_err -i http://127.0.0.1:5656/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1 -map 0:v? -map 0:a? -c copy -avoid_negative_ts make_zero -f hls -hls_time 4 -hls_list_size 0 -hls_playlist_type event -hls_flags append_list+omit_endlist+independent_segments -start_number 0 -hls_segment_filename /data/recordings/TV_Shows/Offline benchmark channel 0/.dvr_2_hls/seg_%05d.ts /data/recordings/TV_Shows/Offline benchmark channel 0/.dvr_2_hls/index.m3u8 "
+        ]
+      ],
+      "status": "passed",
+      "scope": "actual complete FFmpeg process generation inventory before/after playback, supported by pinned no-spawn route implementation; transient process absence not inferred from snapshots alone"
+    }
+  ],
+  "required_unmeasured": [
+    "reversed/outside-range captured transport requires paired Source qualification",
+    "physical slow-reader shutdown"
+  ],
+  "executed_slice_passed": true,
+  "full_playback_passed": false
+}

@@ -1,0 +1,193 @@
+{
+  "paired_exceptional_ranges": {
+    "status": "blocked",
+    "reason": "both actual completed playback captures required"
+  },
+  "backends": [
+    {
+      "status": "failed",
+      "cases": [
+        {
+          "case": "authorization",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualRolesNotRetired', [('beat', 'RuntimeError'), ('dvr', 'RuntimeError'), ('celery', 'RuntimeError'), ('web', 'RuntimeError')])"
+        },
+        {
+          "case": "artwork",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualRolesNotRetired', [('beat', 'RuntimeError'), ('dvr', 'RuntimeError'), ('celery', 'RuntimeError'), ('web', 'RuntimeError')])"
+        },
+        {
+          "case": "grouped-m6",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualRolesNotRetired', [('beat', 'RuntimeError'), ('dvr', 'RuntimeError'), ('celery', 'RuntimeError'), ('web', 'RuntimeError')])"
+        },
+        {
+          "case": "overlap",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualRolesNotRetired', [('beat', 'RuntimeError'), ('dvr', 'RuntimeError'), ('celery', 'RuntimeError'), ('web', 'RuntimeError')])"
+        },
+        {
+          "case": "controls",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualRolesNotRetired', [('beat', 'RuntimeError'), ('dvr', 'RuntimeError'), ('celery', 'RuntimeError'), ('web', 'RuntimeError')])"
+        },
+        {
+          "case": "nonempty-restart",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualRolesNotRetired', [('beat', 'RuntimeError'), ('dvr', 'RuntimeError'), ('celery', 'RuntimeError'), ('web', 'RuntimeError')])"
+        },
+        {
+          "case": "streams-denial",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualRolesNotRetired', [('beat', 'RuntimeError'), ('dvr', 'RuntimeError'), ('celery', 'RuntimeError'), ('web', 'RuntimeError')])"
+        }
+      ],
+      "full_milestone_passed": false,
+      "performance_verified": false,
+      "no_Source_model18_replay": true,
+      "executed_slice_passed": false
+    },
+    {
+      "status": "failed",
+      "cases": [
+        {
+          "case": "authorization",
+          "status": "passed"
+        },
+        {
+          "case": "artwork",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualCommand', 1, None, 'command-0327')"
+        },
+        {
+          "case": "grouped-m6",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualCommand', 1, None, 'command-0790')"
+        },
+        {
+          "case": "overlap",
+          "status": "failed",
+          "reason": "AssertionError:{'actual_cells': [{'cell': 'file-full', 'method': 'GET', 'path': '/api/channels/recordings/1/file/', 'credential_role': 'admin', 'authorization_present': True, 'api_key_present': False, 'query_credentials_present': False, 'status': 'passed', 'actual_status': 200, 'actual_bytes': 13414238, 'body_sha256': 'ea9afea409944e6e72872fe16058de900180d215dbd2af1ae014dec050f70a5b', 'headers': {'content-type': 'video/x-matroska', 'content-length': '13414238', 'accept-ranges': 'bytes', 'content-disposition': 'inline; filename=\"20261115_013700.mkv\"', 'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'referrer-policy': 'same-origin', 'cross-origin-opener-policy': 'same-origin', 'vary': 'origin', 'connection': 'close', 'date': 'Sun, 15 Nov 2026 01:38:41 GMT'}, 'actual_owned_file_bytes': 13414238, 'actual_owned_file_sha256': 'ea9afea409944e6e72872fe16058de900180d215dbd2af1ae014dec050f70a5b'}, {'cell': 'file-head', 'method': 'HEAD', 'path': '/api/channels/recordings/1/file/', 'credential_role': 'admin', 'authoriza"
+        },
+        {
+          "case": "controls",
+          "status": "passed"
+        },
+        {
+          "case": "nonempty-restart",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualRolesNotRetired', [('dvr', 'RuntimeError'), ('celery', 'RuntimeError'), ('web', 'RuntimeError')])"
+        },
+        {
+          "case": "streams-denial",
+          "status": "failed",
+          "reason": "TimeoutError:streams-denied-capture-terminal"
+        },
+        {
+          "case": "held-drain",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualCommand', 1, None, 'command-0987')"
+        }
+      ],
+      "full_milestone_passed": false,
+      "performance_verified": false,
+      "no_Source_model18_replay": true,
+      "executed_slice_passed": false
+    }
+  ],
+  "cleanup": [
+    {
+      "project": "dispatcharr-normal-dvr-a1b5bebd0a",
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "eb517cbbcb7920a406228a8d279dccfd7323e4aebe95cf97c1bc9ccffb12abb6",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "c9a8d148a2fe302e9882645ce3e3b1d944dfcd53ebd826c0273026307cbd4363",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    },
+    {
+      "project": "dispatcharr-normal-dvr-adef5bb9ec",
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "71987f4c91478d4eec6bbea789d94432cf1e71755e94b2c2cb23bd8b1b993406",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "a36d3a852a75dff61cdb627e7c6280a5cf7201ac82c5e0a37e688a2c7e2b9e5a",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "3c609f6ea545ebb9f3c9aa537e41aa9f4f0443261943a3e6e62a81a46b3df069",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "682c69bd19767b192259bb4fb1b0e648da41b5eebf64743a513aed5476214479",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "ffdfbf3106239e130d04c468a621f69844330e8ce4e1d34dca8a8dbc715c372c",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "38fcfb7ef95950a3d5d6e87c7e3d3556a815519b2665f1c791febeb5993a1312",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "f1e51329ed9d5a428fa7b7ff4030b55f1393f4fe44ddfe5b5440cc4c5c00abc7",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "710d00839d24cdbe8916a70973a125774c0e98602430c363985ecb1df3d71aeb",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "c08e165d43c8c1eede87e07fc9a5b999ed52bca2e8e6a03bc0691d5b3b4c603c",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "acbb45bab73c2e6e8859d604ca349e9271a0c9e31b343e6c94b43dcb407a604d",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    }
+  ],
+  "executed_backend_slices_passed": false,
+  "scoped_workflow_passed": false,
+  "full_milestone_passed": false,
+  "performance_verified": false
+}

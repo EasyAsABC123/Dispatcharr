@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m3-normal-recording-http-1/cohort/run.py", line 62, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m3-normal-recording-http-1/cohort/run.py", line 52, in main
+    with module.open_fixture(binding,backend,context)as fixture:
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m3-normal-recording-http-1/cohort/fixture.py", line 614, in open_fixture
+    try:fixture.bootstrap();yield fixture
+        ~~~~~~~~~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m3-normal-recording-http-1/cohort/fixture.py", line 105, in bootstrap
+    self.command(self.compose+['up','-d','--no-build','baseline','origin'],240)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m3-normal-recording-http-1/cohort/fixture.py", line 42, in command
+    if receipt['failure']or not receipt['process_group_settled']or(receipt['actual_exit']and not allow):raise RuntimeError(('ActualCommand',receipt['actual_exit'],receipt['failure'],label))
+                                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: ('ActualCommand', 125, None, 'command-0002')

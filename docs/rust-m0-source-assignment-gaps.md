@@ -1,7 +1,7 @@
 # M0 executable Source assignment audit
 
-Original Dispatcharr and dependency authors retain all credit. This is an
-artifact-only contract mapping proposal until Root reviews its exact overlay.
+Original Dispatcharr and dependency authors retain all credit. This is a reviewed
+Source contract mapping, independently regenerated before publication.
 No Source application/request/task, Docker, Cargo or new3362-suite run occurred.
 The existing complete Source log was hash-checked read-only:3362 recorded test
 occurrences comprise3341 distinct labels and21 repeated-label occurrences.

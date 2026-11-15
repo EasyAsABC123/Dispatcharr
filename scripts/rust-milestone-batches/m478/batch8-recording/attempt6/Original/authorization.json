@@ -1,0 +1,106 @@
+{
+  "actual": [
+    {
+      "method": "GET",
+      "path": "/api/channels/recordings/",
+      "credential_role": null,
+      "status": 401,
+      "body": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "expected_status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/channels/recordings/",
+      "credential_role": "standard",
+      "status": 200,
+      "body": [],
+      "expected_status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/channels/recordings/",
+      "credential_role": "standard",
+      "status": 403,
+      "body": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "expected_status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/api/channels/recordings/",
+      "credential_role": "viewer",
+      "status": 403,
+      "body": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "expected_status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/api/channels/recordings/",
+      "credential_role": "inactive",
+      "status": 401,
+      "body": {
+        "detail": "User is inactive",
+        "code": "user_inactive"
+      },
+      "expected_status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/channels/recordings/",
+      "credential_role": "manager",
+      "status": 201,
+      "body": {
+        "id": 1,
+        "start_time": "2026-11-15T01:20:42.202850Z",
+        "end_time": "2026-11-15T01:21:42.202850Z",
+        "task_id": "dvr-recording-1",
+        "custom_properties": {},
+        "channel": 1
+      },
+      "expected_status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/channels/recordings/",
+      "credential_role": "manager",
+      "status": 400,
+      "body": {
+        "channel": [
+          "Invalid pk \"13\" - object does not exist."
+        ]
+      },
+      "expected_status": 400
+    },
+    {
+      "method": "POST",
+      "path": "/api/channels/recordings/",
+      "credential_role": "admin",
+      "status": 201,
+      "body": {
+        "id": 2,
+        "start_time": "2026-11-15T01:20:42.202850Z",
+        "end_time": "2026-11-15T01:21:42.202850Z",
+        "task_id": "dvr-recording-2",
+        "custom_properties": {},
+        "channel": 13
+      },
+      "expected_status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/channels/recordings/2/",
+      "credential_role": "manager",
+      "status": 404,
+      "body": {
+        "detail": "No Recording matches the given query."
+      },
+      "expected_status": 404
+    }
+  ],
+  "passed": true
+}

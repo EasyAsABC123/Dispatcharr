@@ -1,0 +1,280 @@
+{
+  "actual_rows": [
+    {
+      "id": 1,
+      "channel_id": 1,
+      "start_time": "2026-11-15 01:23:54+00:00",
+      "end_time": "2026-11-15 01:25:09+00:00",
+      "task_id": "dvr-recording-1",
+      "custom_properties": {
+        "status": "stopped",
+        "program": {
+          "title": "Offline benchmark channel 0"
+        },
+        "ended_at": "2026-11-15 01:24:03.536067",
+        "file_url": "/api/channels/recordings/1/file/",
+        "file_name": "20261115_012354.mkv",
+        "file_path": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261115_012354.mkv",
+        "started_at": "2026-11-15 01:23:54.036821",
+        "stopped_at": "2026-11-15 01:24:01.244230+00:00",
+        "bytes_written": 2940132,
+        "remux_success": true,
+        "output_file_url": "/api/channels/recordings/1/file/",
+        "fixture_case_label": "Normal controls"
+      }
+    },
+    {
+      "id": 2,
+      "channel_id": 1,
+      "start_time": "2026-11-15 01:23:55+00:00",
+      "end_time": "2026-11-15 01:26:10+00:00",
+      "task_id": "dvr-recording-2",
+      "custom_properties": {
+        "status": "completed",
+        "program": {
+          "title": "Offline benchmark channel 0"
+        },
+        "ended_at": "2026-11-15 01:26:11.056673",
+        "file_url": "/api/channels/recordings/2/file/",
+        "file_name": "20261115_012355.mkv",
+        "file_path": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261115_012355.mkv",
+        "started_at": "2026-11-15 01:23:55.025371",
+        "bytes_written": 20789228,
+        "remux_success": true,
+        "output_file_url": "/api/channels/recordings/2/file/",
+        "fixture_case_label": "Normal controls"
+      }
+    }
+  ],
+  "raw_client_metadata": [
+    "1",
+    1,
+    [
+      "stream_id",
+      "1",
+      "temp_init",
+      "1794705824.5610678",
+      "url",
+      "http://origin:8080/live/0.ts",
+      "init_time",
+      "1794705824.5699315",
+      "last_active",
+      "1794705973.661601",
+      "owner",
+      "eb517cbbcb79:4442",
+      "state",
+      "active",
+      "user_agent",
+      "TiviMate/5.1.6 (Android 12)",
+      "channel_name",
+      "Offline benchmark channel 0",
+      "stream_name",
+      "Offline benchmark stream 0",
+      "state_changed_at",
+      "1794705829.0821528",
+      "stream_profile",
+      "3",
+      "m3u_profile",
+      "1",
+      "connection_ready_time",
+      "1794705829.0820305",
+      "buffer_chunks",
+      "4",
+      "clients_at_activation",
+      "1",
+      "total_bytes",
+      "36347904"
+    ],
+    "eb517cbbcb79:4442"
+  ],
+  "actual_processes": [
+    {
+      "pid": 4438,
+      "starttime": "1879036",
+      "argv_text": "/dispatcharrpy/bin/python /normal-dvr-tools/role_owner.py serve /tmp/normal-dvr-roles/ace30dac53304927ae8fbd70fe15518e.json "
+    },
+    {
+      "pid": 4439,
+      "starttime": "1879038",
+      "argv_text": "uwsgi --ini /verification/uwsgi.ini "
+    },
+    {
+      "pid": 4442,
+      "starttime": "1879061",
+      "argv_text": "uwsgi --ini /verification/uwsgi.ini "
+    },
+    {
+      "pid": 4443,
+      "starttime": "1879061",
+      "argv_text": "uwsgi --ini /verification/uwsgi.ini "
+    },
+    {
+      "pid": 4483,
+      "starttime": "1879189",
+      "argv_text": "/dispatcharrpy/bin/python /normal-dvr-tools/role_owner.py serve /tmp/normal-dvr-roles/222373c6a77a4f20a14da981e7d6beb9.json "
+    },
+    {
+      "pid": 4484,
+      "starttime": "1879191",
+      "argv_text": "/dispatcharrpy/bin/python /dispatcharrpy/bin/celery -A dispatcharr worker --pool=prefork --concurrency=1 -Q celery --without-gossip --without-mingle --without-heartbeat --loglevel=WARNING --hostname=normal-default@owned "
+    },
+    {
+      "pid": 4493,
+      "starttime": "1879209",
+      "argv_text": "/dispatcharrpy/bin/python /normal-dvr-tools/role_owner.py serve /tmp/normal-dvr-roles/c61de4ae9624402db544f4f62c44f758.json "
+    },
+    {
+      "pid": 4494,
+      "starttime": "1879211",
+      "argv_text": "/dispatcharrpy/bin/python /dispatcharrpy/bin/celery -A dispatcharr worker --pool=threads --concurrency=20 -Q dvr --without-gossip --without-mingle --without-heartbeat --loglevel=WARNING --hostname=normal-dvr@owned "
+    },
+    {
+      "pid": 4503,
+      "starttime": "1879230",
+      "argv_text": "/dispatcharrpy/bin/python /normal-dvr-tools/role_owner.py serve /tmp/normal-dvr-roles/1ac021094750470280b4ef699b68c69a.json "
+    },
+    {
+      "pid": 4504,
+      "starttime": "1879233",
+      "argv_text": "/dispatcharrpy/bin/python /dispatcharrpy/bin/celery -A dispatcharr beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --max-interval 1 --pidfile /tmp/normal-dvr-beat.pid --schedule /tmp/normal-dvr-beat --loglevel=WARNING "
+    },
+    {
+      "pid": 4604,
+      "starttime": "1879379",
+      "argv_text": "/dispatcharrpy/bin/python /dispatcharrpy/bin/celery -A dispatcharr worker --pool=prefork --concurrency=1 -Q celery --without-gossip --without-mingle --without-heartbeat --loglevel=WARNING --hostname=normal-default@owned "
+    },
+    {
+      "pid": 5182,
+      "starttime": "1894230",
+      "argv_text": "/dispatcharrpy/bin/python -c import json,sys;sys.path.insert(0,'/normal-dvr-tools');from role_owner import processes;print(json.dumps(processes())) "
+    }
+  ],
+  "actual_origin": {
+    "active": 1,
+    "maximum_active": 1,
+    "connections": 3,
+    "bytes": 64781416,
+    "disconnections": 2,
+    "eof_connections": 0,
+    "fault_requests": 0,
+    "fixture_sha256": "fe0ba32eb0a98a65d765b67916d7c0f199c6519447756cc98105518787aed226",
+    "fixture_bytes": 450002064,
+    "bytes_per_second": 250000,
+    "duration_seconds": 1800,
+    "codec": "h264",
+    "video": "h264 320x180 25fps",
+    "audio": "aac 48kHz",
+    "paths": {
+      "/live/0.ts": {
+        "active": 1,
+        "connections": 3,
+        "bytes": 64781416
+      }
+    }
+  },
+  "files": [
+    {
+      "path": "recordings/TV_Shows/Offline benchmark channel 0/20261115_012354.mkv",
+      "bytes": 2805137
+    },
+    {
+      "path": "recordings/TV_Shows/Offline benchmark channel 0/20261115_012355.mkv",
+      "bytes": 19823364
+    }
+  ],
+  "actual_events": [
+    {
+      "id": 21,
+      "event_type": "recording_end",
+      "timestamp": "2026-11-15 01:26:11.058163+00:00",
+      "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "channel_name": "Offline benchmark channel 0",
+      "details": {
+        "status": "completed",
+        "outcome": "success",
+        "end_time": "2026-11-15T01:26:10+00:00",
+        "file_url": "/api/channels/recordings/2/file/",
+        "has_file": true,
+        "file_name": "20261115_012355.mkv",
+        "file_path": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261115_012355.mkv",
+        "file_size": 19823364,
+        "start_time": "2026-11-15T01:23:55+00:00",
+        "recording_id": 2,
+        "bytes_written": 20789228,
+        "remux_success": true,
+        "failure_reason": null,
+        "interrupted_reason": null
+      }
+    },
+    {
+      "id": 17,
+      "event_type": "recording_end",
+      "timestamp": "2026-11-15 01:24:06.742227+00:00",
+      "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "channel_name": "Offline benchmark channel 0",
+      "details": {
+        "status": "cancelled",
+        "outcome": "cancelled",
+        "end_time": "2026-11-15T01:25:11+00:00",
+        "file_url": null,
+        "has_file": false,
+        "file_name": null,
+        "file_path": null,
+        "file_size": null,
+        "start_time": "2026-11-15T01:23:56+00:00",
+        "cancelled_by": "rust-probe-admin",
+        "recording_id": 3,
+        "bytes_written": null,
+        "remux_success": false,
+        "failure_reason": null,
+        "cancelled_by_id": 1,
+        "interrupted_reason": null
+      }
+    },
+    {
+      "id": 15,
+      "event_type": "recording_end",
+      "timestamp": "2026-11-15 01:24:03.537462+00:00",
+      "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "channel_name": "Offline benchmark channel 0",
+      "details": {
+        "status": "stopped",
+        "outcome": "success",
+        "end_time": "2026-11-15T01:25:09+00:00",
+        "file_url": "/api/channels/recordings/1/file/",
+        "has_file": true,
+        "file_name": "20261115_012354.mkv",
+        "file_path": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261115_012354.mkv",
+        "file_size": 2805137,
+        "start_time": "2026-11-15T01:23:54+00:00",
+        "recording_id": 1,
+        "bytes_written": 2940132,
+        "remux_success": true,
+        "failure_reason": null,
+        "interrupted_reason": null
+      }
+    }
+  ],
+  "actual_upstream_connections": 1,
+  "actual_provider_slots": 1,
+  "actual_recording_ffmpeg_count": 0,
+  "all_owned_recording_children_retired": true,
+  "owned_hls_directories_absent": true,
+  "maximum_actual_segment_count": 35,
+  "cancelled_recording_end_count": 1,
+  "late_duplicate_cancelled_end_count": 0,
+  "other_viewers_preserved": true,
+  "actual_control_viewer": {
+    "bytes": 37612596,
+    "closed": false,
+    "failure": null,
+    "user_agent": "Dispatcharr-DVR/recording-10",
+    "scope": "actual prefix-control viewer; no matching Recording row or task authority fabricated",
+    "status": 200
+  },
+  "actual_internal_TS_probe": null,
+  "actual_internal_TS_HTTP_denied": false,
+  "invented_internal_credentials": null,
+  "loopback_policy_bypass": true,
+  "authentication_scope": "actual no-credential loopback probe plus attested recorder argv/source; no private key is supplied by fixture"
+}

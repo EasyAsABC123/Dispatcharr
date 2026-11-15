@@ -1,0 +1,49 @@
+{
+  "role": "dvr",
+  "socket": "/tmp/normal-dvr-roles/ba0e8d66b42644a783c5c0bb83fd53e9.sock",
+  "owner_pid": 328,
+  "owner_starttime": "1842795",
+  "pid": 329,
+  "starttime": "1842798",
+  "actual_pgid": 329,
+  "process_group_authority": "successful Popen(start_new_session=True)",
+  "actual_argv": [
+    "/dispatcharrpy/bin/celery",
+    "-A",
+    "dispatcharr",
+    "worker",
+    "--pool=threads",
+    "--concurrency=20",
+    "-Q",
+    "dvr",
+    "--without-gossip",
+    "--without-mingle",
+    "--without-heartbeat",
+    "--loglevel=WARNING",
+    "--hostname=normal-dvr@owned"
+  ],
+  "log_paths": {
+    "stdout": "/tmp/normal-dvr-roles/ba0e8d66b42644a783c5c0bb83fd53e9/stdout.log",
+    "stderr": "/tmp/normal-dvr-roles/ba0e8d66b42644a783c5c0bb83fd53e9/stderr.log"
+  },
+  "shutdown_started": true,
+  "signal_settled": true,
+  "actual_master_SIGTERM_sent": true,
+  "shutdown_settled": true,
+  "running": false,
+  "actual_exit": 0,
+  "actual_wait_completed": true,
+  "forced": false,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "failures": [],
+  "actual_reaped_adopted_children": [],
+  "owned_generations": [
+    {
+      "pid": 329,
+      "starttime": "1842798",
+      "absent": true
+    }
+  ],
+  "all_original_process_generations_absent": true
+}
