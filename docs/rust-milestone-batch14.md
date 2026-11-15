@@ -37,3 +37,13 @@ and new paired performance acceptance remain open. A backend mark is not proof
 of queue consumption. This candidate does not inherit older image performance
 or close a full milestone. Its Docker build and grouped application acceptance
 are separate gates.
+
+The [production Docker build](../scripts/rust-integration/milestone-batch14-build/inventory.json)
+is `sha256:0cf05e696038ee0c0b4356354c885ef5a6ba21afb68d116c298c11aa96ad083f`.
+All1,722 archived files match Git (1,225 Rust,495 React,two credit files).
+All114 original installed React/credit hashes and120 selected assets/notices
+remain unchanged. UID65532, `/app` and the production entrypoint pass;
+the ELF hash is `8791a21f3c5a965042f2671cc57bb8bc034de830008ef80c89e0cb469ece8d63`.
+Crypto27-file/GPG2.4.8 and PostgreSQL17.11/528 component and license hashes pass.
+All isolated probes retired. This packaging evidence adds no provider runtime
+or performance acceptance.
