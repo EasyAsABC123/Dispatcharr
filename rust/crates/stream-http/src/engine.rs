@@ -2,6 +2,8 @@
 mod output_profiles;
 #[path = "profile_process.rs"]
 mod profile_process;
+#[path = "redirect.rs"]
+mod redirect;
 #[path = "source_keepalive.rs"]
 mod source_keepalive;
 use axum::{body::Body, http::Response};
@@ -1423,6 +1425,35 @@ async fn run_upstream(
         match reservation {
             Err(error) => last_error = error,
             Ok(()) => {
+                // Only an actual Channel UUID resolved by Store carries its
+                // numeric Source Channel PK. Stream/profile-scoped previews
+                // never publish a channel's bare assignment aliases.
+                if uuid::Uuid::parse_str(&session.source.channel_id).is_ok() {
+                    if let (Some(lease), Some(numeric)) = (
+                        &lease,
+                        session
+                            .source
+                            .metadata
+                            .iter()
+                            .find(|(key, _)| key == "channel_id")
+                            .and_then(|(_, value)| value.parse::<i64>().ok()),
+                    ) {
+                        let assignment = match dispatcharr_coordination::LiveChannelAssignment::new(
+                            numeric,
+                            candidate.stream_id,
+                        ) {
+                            Ok(value) => value,
+                            Err(error) => {
+                                last_error = coordination_error(error);
+                                break 'session;
+                            }
+                        };
+                        if let Err(error) = lease.publish_source_assignment(assignment).await {
+                            last_error = coordination_error(error);
+                            break 'session;
+                        }
+                    }
+                }
                 session.upstream_admitted.store(true, Ordering::Release);
                 session.metadata_wake.notify_one();
                 *session.current.lock().unwrap() = candidate.clone();

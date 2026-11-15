@@ -244,7 +244,51 @@ pub trait ChannelControl: Send + Sync + 'static {
 /// Authorization is evaluated for every viewer, before an existing channel may
 /// be reused. Resolution does not itself start an upstream or claim a provider
 /// slot. Capacity-limited providers require an explicit atomic reservation layer.
+/// Direct Redirect-mode playback resolves before any running TS/preview worker.
+/// URL fields can contain provider credentials and deliberately omit Debug.
+/// Lazy SQL lookup used only after actual Redis alias observation. It must not
+/// turn the alias into a new reservation, nor require today's active list.
+pub trait RedirectAliasResolver: Send + Sync + 'static {
+    fn candidates(&self) -> BoxFuture<'_, Result<Vec<PlaybackCandidate>, PlaybackError>>;
+    fn resolve(
+        &self,
+        stream_id: i64,
+        profile_id: i64,
+    ) -> BoxFuture<'_, Result<Option<PlaybackCandidate>, PlaybackError>>;
+}
+pub struct RedirectAssignmentPlan {
+    pub numeric_channel_id: i64,
+    pub has_assigned_streams: bool,
+    pub resolver: std::sync::Arc<dyn RedirectAliasResolver>,
+}
+pub struct PlaybackRedirectPlan {
+    pub channel_id: String,
+    pub candidates: Vec<PlaybackCandidate>,
+    pub viewer: PlaybackViewer,
+    /// Source's explicit allowed_m3u_profile_ids branch checks capacity without
+    /// claiming a provider slot or writing a shared channel assignment.
+    pub capacity_only: bool,
+    pub assignment: Option<RedirectAssignmentPlan>,
+    pub validate_urls: bool,
+    pub selection_error: Option<String>,
+}
+pub enum PlaybackResolution {
+    Stream(Box<PlaybackSource>),
+    Redirect(Box<PlaybackRedirectPlan>),
+}
+
 pub trait PlaybackResolver: Send + Sync + 'static {
+    /// Existing adapters retain their ordinary streaming implementation.
+    fn resolve_response(
+        &self,
+        request: PlaybackRequest,
+    ) -> BoxFuture<'_, Result<PlaybackResolution, PlaybackError>> {
+        Box::pin(async move {
+            self.resolve(request)
+                .await
+                .map(|source| PlaybackResolution::Stream(Box::new(source)))
+        })
+    }
     fn resolve(
         &self,
         request: PlaybackRequest,

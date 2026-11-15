@@ -6,9 +6,9 @@ use serde_json::Value;
 use sqlx::{Connection, PgConnection, Row};
 use std::sync::{
     atomic::{AtomicU8, Ordering},
-    Arc,
+    Arc, Weak,
 };
-use tokio::sync::{mpsc, oneshot, Notify, OwnedSemaphorePermit};
+use tokio::sync::{mpsc, oneshot, Notify, OwnedMutexGuard, OwnedSemaphorePermit};
 
 type Owner = Arc<dyn Send + Sync>;
 fn unavailable() -> StoreError {
@@ -21,6 +21,8 @@ trait Operation: Send {
     ) -> BoxFuture<'a, Result<(), StoreError>>;
 }
 struct Query<F, T> {
+    // Actual existing writer remains exclusive through work AND Ready/ping.
+    _writer_guard: Option<OwnedMutexGuard<()>>,
     work: Option<F>,
     reply: Option<oneshot::Sender<T>>,
 }
@@ -55,6 +57,7 @@ struct State {
     phase: AtomicU8,
     done: Notify,
     writer: Arc<OwnedSemaphorePermit>,
+    writer_gate: Arc<tokio::sync::Mutex<()>>,
 }
 #[derive(Clone)]
 pub struct TaskSqlSession {
@@ -94,6 +97,7 @@ impl AuthService {
             phase: AtomicU8::new(0),
             done: Notify::new(),
             writer,
+            writer_gate: Arc::new(tokio::sync::Mutex::new(())),
         });
         let retained = state.clone();
         tokio::spawn(async move {
@@ -138,6 +142,18 @@ impl TaskSqlSession {
         T: Send + 'static,
         F: for<'c> FnOnce(&'c mut PgConnection) -> BoxFuture<'c, T> + Send + 'static,
     {
+        let guard = self.state.writer_gate.clone().lock_owned().await;
+        self.enqueue(work, Some(guard)).await
+    }
+    async fn enqueue<T, F>(
+        &self,
+        work: F,
+        guard: Option<OwnedMutexGuard<()>>,
+    ) -> Result<T, StoreError>
+    where
+        T: Send + 'static,
+        F: for<'c> FnOnce(&'c mut PgConnection) -> BoxFuture<'c, T> + Send + 'static,
+    {
         if self.state.phase.load(Ordering::Acquire) != 0 {
             return Err(unavailable());
         }
@@ -146,10 +162,33 @@ impl TaskSqlSession {
             .send(Command::Query(Box::new(Query {
                 work: Some(work),
                 reply: Some(reply),
+                _writer_guard: guard,
             })))
             .await
             .map_err(|_| unavailable())?;
         receiver.await.map_err(|_| unavailable())
+    }
+    /// Private pure transaction termination ONLY. A Source-requested rollback or
+    /// commit must release its own locks even while a causal child is borrowing
+    /// the admitted writer. No hidden transaction control/business SQL is added.
+    pub(crate) async fn python_transaction_control<T, F>(&self, work: F) -> Result<T, StoreError>
+    where
+        T: Send + 'static,
+        F: for<'c> FnOnce(&'c mut PgConnection) -> BoxFuture<'c, T> + Send + 'static,
+    {
+        self.enqueue(work, None).await
+    }
+    /// Native plugin runtime calls this ONLY for an actual settled publication
+    /// owned by this parent invocation, never a caller-supplied parent/task ID.
+    /// Exactly ONE child borrows the existing writer at a time. It acquires a
+    /// distinct physical connection from the SAME pool8; it never detaches or
+    /// borrows the parent's connection/transaction. Parent business SQL waits
+    /// for physical child closure. Explicit parent rollback/commit is separate.
+    pub(crate) fn publication_writer(&self) -> TaskSqlWriterWitness {
+        TaskSqlWriterWitness {
+            writer: Arc::downgrade(&self.state.writer),
+            gate: self.state.writer_gate.clone(),
+        }
     }
     pub async fn fence(&self) -> Result<(), StoreError> {
         self.run(|_connection| Box::pin(async {})).await
@@ -261,5 +300,41 @@ mod main_worker_admission_regression {
         invalid.request_writer_permit = Some(foreign);
         assert!(invalid.task_sql_writer().is_err());
         assert_eq!(auth.user_agent_workers.available_permits(), 4);
+    }
+}
+
+/// Privately captured from an ACTUAL admitted parent session only after native
+/// publication provenance. The queue map holds no strong writer/connection:
+/// delayed jobs cannot keep all four writers alive after their parent exits.
+#[derive(Clone)]
+pub(crate) struct TaskSqlWriterWitness {
+    writer: Weak<OwnedSemaphorePermit>,
+    gate: Arc<tokio::sync::Mutex<()>>,
+}
+impl TaskSqlWriterWitness {
+    pub(crate) async fn try_borrow(
+        &self,
+        auth: AuthService,
+        owner: Owner,
+    ) -> Result<Option<TaskSqlSession>, StoreError> {
+        let Some(writer) = self.writer.upgrade() else {
+            return Ok(None);
+        };
+        if !Arc::ptr_eq(writer.semaphore(), &auth.user_agent_workers) {
+            return Err(unavailable());
+        }
+        let gate = self.gate.clone().try_lock_owned().map_err(|_| {
+            StoreError::StatusBody(
+                503,
+                serde_json::json!({"detail":"Causal SQL writer is still active."}),
+            )
+        })?;
+        let auth = auth.with_request_writer_permit(writer)?;
+        // Losing the initializer observer never drops a physical connection or
+        // its writer loan early. An unobserved returned Session closes its actor.
+        tokio::spawn(async move { auth.borrow_task_sql_session(Arc::new((owner, gate))).await })
+            .await
+            .map_err(|_| unavailable())?
+            .map(Some)
     }
 }

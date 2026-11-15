@@ -546,4 +546,21 @@ mod sd_guide_posters;
 mod sd_guide_programme;
 mod sd_guide_state;
 
+mod redirect_playback;
 mod sd_guide_progress;
+
+// Lazy user-plugin compatibility ports; not activated by normal Main yet.
+pub mod plugin_execution_host;
+pub mod plugin_execution_ports;
+pub mod plugin_process_guard;
+pub mod plugin_publication_owners;
+pub mod plugin_python_cache;
+pub mod plugin_python_events;
+pub mod plugin_python_registry;
+pub mod plugin_python_sql;
+pub mod plugin_python_sql_registry;
+pub mod plugin_runtime;
+pub mod plugin_trace_claims;
+pub use plugin_execution_ports::{NativePluginJobs, NativePluginProcesses};
+pub use plugin_python_registry::{PluginTaskCapability, PluginTaskPolicy};
+pub use plugin_runtime::{PluginRuntime, PluginTaskAdmission};

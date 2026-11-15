@@ -310,3 +310,6 @@ mod sd_guide_protocol;
 
 mod xml_tvg_eta;
 mod xml_tvg_protocol;
+
+pub use transport::plugin_registered_transport::{PluginError, PluginPublished};
+pub use transport::plugin_result_transport::PluginResults;

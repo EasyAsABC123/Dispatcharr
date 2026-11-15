@@ -93,8 +93,14 @@ async fn stream(
             .insert("allow", "GET, OPTIONS".parse().unwrap());
         return response;
     }
-    let source = match app.resolver.resolve(request).await {
-        Ok(source) => source,
+    let source = match app.resolver.resolve_response(request).await {
+        Ok(dispatcharr_contracts::PlaybackResolution::Stream(source)) => *source,
+        Ok(dispatcharr_contracts::PlaybackResolution::Redirect(plan)) => {
+            return match app.engine.redirect(*plan).await {
+                Ok(response) => response,
+                Err(reason) => error(reason),
+            }
+        }
         Err(reason) => return error(reason),
     };
     let response = dispatch_source(app.engine, app.hls, app.fmp4, source).await;

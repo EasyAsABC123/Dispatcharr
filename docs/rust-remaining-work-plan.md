@@ -12,10 +12,24 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The current source candidate is [Candidate20](rust-milestone-batch20.md): all SDK
-gates pass with 1,025 tests, zero failures and 761 ignored tests. It corrects the
-actual Main AutoChannels registry rejection and connects regex drain before
-joining worker lanes. Docker and combined application/resource checks remain.
+The latest packaged source is [Candidate24](rust-milestone-batch24.md),
+`df815fbb3d312d191654bf4079f337ecae216430`. Its1,053 default tests and all four
+SDK gates pass;767 tests remain ignored. Docker/package checks and eleven actual
+physical output controls pass across identified attempts. Its Source-first Main
+batch exits1 with exact cleanup. Both backends pass SD8, auto5 and recording
+profiles4; Native also passes compact3/API6/output6. Remaining observer/scenario
+and regex-state failures are preserved with prepared corrections. No full
+milestone or new application performance gain is accepted.
+
+The next [Candidate25](rust-milestone-batch25.md) joins common Redirect
+reservations and ordinary proxy-to-Redirect alias sharing with guarded plugin
+runtime/SQL/result infrastructure. All four SDK gates pass:1,061 tests pass,
+zero fail and775 remain ignored. Docker and application acceptance are pending. Enabled plugin Main
+activation and remote XMLTV downloads remain separate active engineering work;
+a compiled runtime module does not accept either feature. Next application
+validation must execute the corrected affected workflows together. Earlier
+Source compact/API successes qualify their outputs, but their global numbering
+state must be reconstructed before comparing subsequent regex results.
 
 The preceding source candidate is [Candidate19](rust-milestone-batch19.md): all four
 SDK gates pass with 1,023 tests, zero failures and 758 ignored tests. Normal
@@ -42,14 +56,26 @@ retains ten passing Native contexts and separate six-file media qualification,
 alongside literal fixture failures and the proxy-routing gap corrected in16.
 All full M0–M9 milestones remain open.
 
-Current parallel work is concrete: ingestion owns XC/remote STD imports, large
-catalogue transport and auto-sync; operations owns disabled plugin workflows and
-the required lazy Python-plugin compatibility boundary; streaming owns remaining
-profile/failover/session behavior and the existing paired resource runner. The
-primary agent integrates, verifies and publishes source-bound batches. SQLite,
-full contract/role coverage, enabled plugin execution, wider transport/fault
-coverage, final soak and rollback remain required. Prepared or guarded behavior
-is not accepted parity.
+Current parallel ownership is concrete:
+
+- Streaming owns remaining M2/M3 sharing, Redirect/preview/rejoin/exceptional
+  transport and the dependent M7 media-output contracts.
+- Jobs owns M6 remote XMLTV/download/streaming import, guide retry characterization,
+  ingestion hooks and remaining producer/scheduler contracts; it also owns the
+  EPG portion of M7.
+- Operations owns M8 enabled plugins, registered jobs/actions, bounded SQL/result
+  compatibility, operations and physical lifecycle. M4 session/VOD finishing is
+  queued with this owner after the enabled-plugin engineering batch.
+- The primary agent owns M0/M5 inventory closure, candidate integration, whole
+  affected workflow batches, Docker packaging, shared resource scheduling,
+  performance and M9 final acceptance/publication.
+
+SQLite, complete contract/role coverage, enabled plugin execution, wider
+transport/fault coverage, final soak and rollback remain required. Physical
+containers, compatibility actors, media children and shared services belong in
+the declared performance boundary. Prepared or guarded behavior is not accepted
+parity. Existing Source observations are reused only with the actual state
+prerequisites required by subsequent assertions.
 
 The following candidate1/2 paragraphs retain their historical scopes.
 
@@ -89,10 +115,10 @@ Main acceptance nor measured performance gains.
 | M1: bounded streaming core | Primary agent, with streaming owner | Preserve exact-source technical core evidence, complete prerequisites and test relevant changes; do not repeat a benchmark merely to update prose. |
 | M2: live TS | Streaming agent (`milestone_stream`) | Qualify current Main shared viewing, XC credential rotation, authenticated capacity, upstream sharing, disconnect/rejoin, counters, timers and teardown with actual media and paired resources. |
 | M3: formats and profiles | Streaming agent (`milestone_stream`) | Complete HLS/fMP4, Redirect and output-profile lanes, VLC packaging/failover, cancellation and fanout matrix, actual decoding and paired measurements. |
-| M4: VOD/timeshift | Protocol/operations agent (`source_contract_finish`), after current plugin ownership gates | Complete ranges, seeks, catchup and session boundaries; retain unresolved counters/finalization/sharing differences and test packaged Main behavior. |
-| M5: control APIs | Core/streaming agent (`stream_http`) | Run the current combined Native special-settings cohorts against Source51, then late-reply/caller-loss/frame/shutdown gates; wire actual Main consumers and test React/account/channel workflows and API performance. |
+| M4: VOD/timeshift | Operations agent (`milestone_ops`), after current plugin ownership gates | Complete ranges, seeks, catchup and session boundaries; retain unresolved counters/finalization/sharing differences and test packaged Main behavior. |
+| M5: control APIs | Primary agent, with relevant component owners | Run the current combined Native special-settings cohorts against Source51, then late-reply/caller-loss/frame/shutdown gates; wire actual Main consumers and test React/account/channel workflows and API performance. |
 | M6: ingestion and jobs | Jobs agent (`milestone_jobs`) | Qualify current XC provider/filter/catchup paths; complete remote STD streaming imports, large Groups backend metadata, auto-sync and hooks, complete default producer/task/scheduler coverage, then worker-inclusive measurements. Earlier Source/Native results retain their own scope. |
-| M7: outputs and integrations | Protocol/operations agent (`source_contract_finish`), with streaming dependencies | Finish Xtream/HDHR/XMLTV/M3U/realtime/WebSocket contracts, missing/stale/refresh behavior and recovery; qualify combined packaged workflows and workload measurements. |
+| M7: outputs and integrations | Streaming and jobs agents, with primary integration | Finish Xtream/HDHR/XMLTV/M3U/realtime/WebSocket contracts, missing/stale/refresh behavior and recovery; qualify combined packaged workflows and workload measurements. |
 | M8: operations/plugins | Operations agent (`milestone_ops`) | Qualify current proxy/manifest and backup flows; complete disabled ZIP/discovery/settings/files, actual enabled Python-plugin host with ORM/tasks/events, sessions/CSRF and remaining admin/config/restore/rollback/physical lifecycle compatibility. A manifest refresh is not plugin execution parity. |
 | M9: final acceptance | Primary agent with all three agents | Assemble the final committed source, complete prerequisites and full workflow/package/SDK checks, then restart/soak/cutover/rollback and representative full-graph paired performance. |
 

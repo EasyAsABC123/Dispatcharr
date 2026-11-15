@@ -9,7 +9,7 @@ end
 if kind(KEYS[1])~='none' or (kind(KEYS[2])~='none' and kind(KEYS[2])~='set') then
   return {'CORRUPT'}
 end
-if redis.call('EXISTS',KEYS[4])==1 then return {'STOPPED'} end
+if ARGV[7]~='redirect-check' and redis.call('EXISTS',KEYS[4])==1 then return {'STOPPED'} end
 local data=cjson.decode(ARGV[1])
 -- Read the input era before any preemption or client mutation. Pending jobs
 -- executed after an owner bind observe the current owner directly.
@@ -115,6 +115,12 @@ end
 for _,client in ipairs(stop_targets) do
   redis.call('SET',client.stop,'limit','PX',60000)
   redis.call('HSET',client.key,'rust_preempted','1')
+end
+if ARGV[7]=='redirect-check' then
+ local metadata='live:channel:'..tostring(data.channel_id)..':metadata'
+ if kind(metadata)~='none' and kind(metadata)~='hash' then return {'CORRUPT'} end
+ if redis.call('EXISTS',KEYS[4])==1 or (kind(metadata)=='hash' and redis.call('HGET',metadata,'state')=='stopping') then return {'STOPPED'} end
+ return {'OK',tostring(#stop_targets),'0'}
 end
 for key,value in pairs(data) do redis.call('HSET',KEYS[1],key,tostring(value)) end
 redis.call('PEXPIRE',KEYS[1],ttl)

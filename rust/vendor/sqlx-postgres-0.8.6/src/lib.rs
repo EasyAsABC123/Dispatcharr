@@ -48,7 +48,7 @@ pub(crate) use sqlx_core::driver_prelude::*;
 pub use advisory_lock::{PgAdvisoryLock, PgAdvisoryLockGuard, PgAdvisoryLockKey};
 pub use arguments::{PgArgumentBuffer, PgArguments};
 pub use column::PgColumn;
-pub use connection::PgConnection;
+pub use connection::{PgConnection, PythonColumn, PythonQueryResult, PythonStatement};
 pub use copy::{PgCopyIn, PgPoolCopyExt};
 pub use database::Postgres;
 pub use error::{PgDatabaseError, PgErrorPosition};

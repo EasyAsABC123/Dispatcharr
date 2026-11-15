@@ -1,9 +1,20 @@
 //! Cancellation-safe bounded Redis transport shared by input/output stores.
 //! Original Dispatcharr application attribution remains in ATTRIBUTION.md.
+#[path = "bounded_subscription.rs"]
+mod bounded_subscription;
+#[path = "shared_subscription.rs"]
+mod shared_subscription;
 use crate::Error;
+pub use bounded_subscription::{
+    Error as SubscriptionError, Receipt as SubscriptionReceipt, Subscription as BoundedSubscription,
+};
 use redis::{
     aio::{ConnectionManager, ConnectionManagerConfig},
     Script,
+};
+pub use shared_subscription::{
+    Confirmation as SubscriptionConfirmation, LogicalSubscription, Message as SubscriptionMessage,
+    SharedSubscription,
 };
 use std::{sync::Arc, time::Duration};
 use tokio::sync::Semaphore;
@@ -59,6 +70,8 @@ impl OperationError {
     }
 }
 struct Inner {
+    shared_subscription: tokio::sync::Mutex<Option<SharedSubscription>>,
+    endpoint: redis::ConnectionInfo,
     connection: ConnectionManager,
     operations: Arc<Semaphore>,
     queued: Arc<Semaphore>,
@@ -105,6 +118,8 @@ impl RedisTransport {
             .map_err(OperationError::redis)?;
         Ok(Self {
             inner: Arc::new(Inner {
+                shared_subscription: tokio::sync::Mutex::new(None),
+                endpoint: client.get_connection_info().clone(),
                 connection,
                 operations: Arc::new(Semaphore::new(config.max_operations)),
                 queued: Arc::new(Semaphore::new(config.max_queued_operations)),
@@ -150,24 +165,7 @@ impl RedisTransport {
         args: &[&[u8]],
         guard: G,
     ) -> Result<(T, G), OperationError> {
-        let operation = match self.inner.operations.clone().try_acquire_owned() {
-            Ok(permit) => permit,
-            Err(_) => {
-                let _queued = self
-                    .inner
-                    .queued
-                    .clone()
-                    .try_acquire_owned()
-                    .map_err(|_| OperationError::Capacity)?;
-                tokio::time::timeout(
-                    self.inner.config.command_timeout,
-                    self.inner.operations.clone().acquire_owned(),
-                )
-                .await
-                .map_err(|_| OperationError::AdmissionTimeout)?
-                .map_err(|_| OperationError::Backend)?
-            }
-        };
+        let operation = self.acquire_operation().await?;
         let script = Script::new(source);
         let keys = keys.to_vec();
         let args: Vec<Vec<u8>> = args.iter().map(|value| value.to_vec()).collect();
@@ -192,5 +190,127 @@ impl RedisTransport {
         result
             .map(|value| (value, guard))
             .map_err(OperationError::redis)
+    }
+    async fn acquire_operation(&self) -> Result<tokio::sync::OwnedSemaphorePermit, OperationError> {
+        match self.inner.operations.clone().try_acquire_owned() {
+            Ok(permit) => Ok(permit),
+            Err(_) => {
+                let _queued = self
+                    .inner
+                    .queued
+                    .clone()
+                    .try_acquire_owned()
+                    .map_err(|_| OperationError::Capacity)?;
+                tokio::time::timeout(
+                    self.inner.config.command_timeout,
+                    self.inner.operations.clone().acquire_owned(),
+                )
+                .await
+                .map_err(|_| OperationError::AdmissionTimeout)?
+                .map_err(|_| OperationError::Backend)
+            }
+        }
+    }
+    /// Same manager and actual operation/caller lifetime; raw errors remain
+    /// private to dependency response parsing, never diagnostic tracing.
+    pub async fn dependency_pipeline<G: Send + 'static>(
+        &self,
+        pipeline: redis::Pipeline,
+        offset: usize,
+        count: usize,
+        guard: G,
+    ) -> Result<(Result<Vec<redis::Value>, redis::RedisError>, G), ClassifiedError> {
+        use redis::aio::ConnectionLike;
+        if count == 0 || count > 257 || offset > 257 {
+            return Err(ClassifiedError::Configuration);
+        }
+        let operation = self
+            .acquire_operation()
+            .await
+            .map_err(OperationError::classified)?;
+        let mut connection = self.inner.connection.clone();
+        let task = tokio::spawn(async move {
+            let result = connection
+                .req_packed_commands(&pipeline, offset, count)
+                .await;
+            (result, guard, operation)
+        });
+        let (result, guard, _operation) =
+            tokio::time::timeout(self.inner.config.command_timeout, task)
+                .await
+                .map_err(|_| ClassifiedError::Backend)?
+                .map_err(|_| ClassifiedError::Server)?;
+        Ok((result, guard))
+    }
+    /// Lazy SINGLE upstream for this same result transport. Initializer is
+    /// supervised so caller loss cannot leave a second orphan connection or an
+    /// unrecorded budget reservation. Logical reads consume no additional slot.
+    pub async fn dependency_subscriptions(
+        &self,
+        host: Arc<dyn Send + Sync>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<SharedSubscription, SubscriptionError> {
+        let transport = self.clone();
+        tokio::spawn(async move {
+            let _caller = caller.clone();
+            let mut cached = transport.inner.shared_subscription.lock().await;
+            if let Some(current) = cached.as_ref() {
+                if !current.closed() {
+                    return Ok(current.clone());
+                }
+                // Never overlap a replacement socket with an unsettled old one.
+                current
+                    .close(transport.inner.config.command_timeout)
+                    .await?;
+            }
+            if transport.inner.config.max_operations < 2 {
+                return Err(SubscriptionError::Capacity);
+            }
+            let physical = transport.open_dependency_subscription(host, caller).await?;
+            let hub = SharedSubscription::spawn(physical, transport.inner.config.command_timeout);
+            *cached = Some(hub.clone());
+            Ok(hub)
+        })
+        .await
+        .map_err(|_| SubscriptionError::Closed)?
+    }
+    pub async fn close_dependency_subscriptions(
+        &self,
+        timeout: Duration,
+    ) -> Result<Option<SubscriptionReceipt>, SubscriptionError> {
+        let cached = self.inner.shared_subscription.lock().await;
+        match cached.as_ref() {
+            Some(hub) => hub.close(timeout).await.map(Some),
+            None => Ok(None),
+        }
+    }
+    pub fn configured_endpoint(&self) -> &redis::ConnectionInfo {
+        &self.inner.endpoint
+    }
+    /// Exactly one SHARED upstream subscriber must be retained by the Jobs
+    /// hub; never one permanent connection/slot per Source host. Admission is
+    /// from this same existing transport so configured resource bounds hold.
+    pub async fn open_dependency_subscription(
+        &self,
+        host: Arc<dyn Send + Sync>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<BoundedSubscription, SubscriptionError> {
+        let transport = self.clone();
+        tokio::spawn(async move {
+            let operation = transport
+                .acquire_operation()
+                .await
+                .map_err(|_| SubscriptionError::Capacity)?;
+            BoundedSubscription::connect(
+                transport.inner.endpoint.clone(),
+                transport.inner.config.command_timeout,
+                operation,
+                host,
+                caller,
+            )
+            .await
+        })
+        .await
+        .map_err(|_| SubscriptionError::Closed)?
     }
 }

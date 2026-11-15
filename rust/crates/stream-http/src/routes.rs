@@ -162,8 +162,14 @@ async fn stream(
         Ok(request) => request,
         Err(failure) => return error(failure),
     };
-    let source = match app.resolver.resolve(request).await {
-        Ok(source) => source,
+    let source = match app.resolver.resolve_response(request).await {
+        Ok(dispatcharr_contracts::PlaybackResolution::Stream(source)) => *source,
+        Ok(dispatcharr_contracts::PlaybackResolution::Redirect(plan)) => {
+            return match app.engine.redirect(*plan).await {
+                Ok(response) => response,
+                Err(reason) => error(reason),
+            }
+        }
         Err(failure) => return error(failure),
     };
     if source.output_format != dispatcharr_contracts::OutputFormat::MpegTs {

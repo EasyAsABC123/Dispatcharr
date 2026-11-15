@@ -111,6 +111,7 @@ struct Inner {
     reap: Script,
     clear_provider: Script,
     reserve_provider: Script,
+    source_assignment: Script,
 }
 
 #[derive(Clone)]
@@ -270,6 +271,11 @@ impl Coordinator {
                 "{}{}",
                 scripts::REAP,
                 scripts::RESERVE_PROVIDER
+            )),
+            source_assignment: Script::new(&format!(
+                "{}{}",
+                scripts::REAP,
+                scripts::SOURCE_ASSIGNMENT
             )),
         });
         if let Some(interval) = inner.config.reap_interval {
@@ -633,6 +639,7 @@ enum LeaseMutation {
     Release,
     ClearProvider,
     ReserveProvider(ProviderReservation),
+    SourceAssignment(LiveChannelAssignment),
 }
 
 async fn lease_mutation(lease: &LeaseInner, operation: LeaseMutation) -> Result<i64, Error> {
@@ -660,6 +667,7 @@ async fn lease_mutation_observed(
             LeaseMutation::Release => &inner.release,
             LeaseMutation::ClearProvider => &inner.clear_provider,
             LeaseMutation::ReserveProvider(_) => &inner.reserve_provider,
+            LeaseMutation::SourceAssignment(_) => &inner.source_assignment,
         };
         let mut invocation = script.prepare_invoke();
         invocation.key(keys.owner).key(keys.ledger).key(keys.index);
@@ -675,6 +683,19 @@ async fn lease_mutation_observed(
                 )
                 .key(format!("profile_credential_release:{profile}"));
         }
+        if let LeaseMutation::SourceAssignment(assignment) = &operation {
+            invocation
+                .key(format!("channel_stream:{}", assignment.channel))
+                .key(format!("stream_profile:{}", assignment.stream))
+                .key(format!(
+                    "{}:redirect:channel:{}",
+                    inner.config.namespace, assignment.channel
+                ))
+                .key(format!(
+                    "{}:redirect:stream:{}",
+                    inner.config.namespace, assignment.stream
+                ));
+        }
         invocation.arg(token);
         match &operation {
             LeaseMutation::Heartbeat => {
@@ -687,6 +708,9 @@ async fn lease_mutation_observed(
                         .as_ref()
                         .map_or(0, |pool| pool.max_streams),
                 );
+            }
+            LeaseMutation::SourceAssignment(assignment) => {
+                invocation.arg(assignment.stream);
             }
             LeaseMutation::Release | LeaseMutation::ClearProvider => {}
         }
@@ -714,3 +738,11 @@ async fn heartbeat_inner(lease: &LeaseInner) -> Result<bool, Error> {
 async fn release_inner(lease: &LeaseInner) -> Result<bool, Error> {
     Ok(lease_mutation(lease, LeaseMutation::Release).await? == 1)
 }
+
+mod redirect;
+
+mod redirect_assignment;
+pub use redirect_assignment::{RedirectAssignment, RedirectClaim, RedirectGrant};
+
+mod live_assignment;
+pub use live_assignment::LiveChannelAssignment;

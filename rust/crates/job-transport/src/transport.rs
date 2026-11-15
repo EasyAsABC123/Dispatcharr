@@ -1774,3 +1774,8 @@ mod xml_tvg_eta_transport;
 mod xml_tvg_publish;
 #[path = "xml_tvg_visibility.rs"]
 mod xml_tvg_visibility;
+
+#[path = "plugin_registered_transport.rs"]
+pub mod plugin_registered_transport;
+#[path = "plugin_result_transport.rs"]
+pub mod plugin_result_transport;

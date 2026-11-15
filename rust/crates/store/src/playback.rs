@@ -30,6 +30,10 @@ pub struct ProviderStream {
 
 #[derive(Debug)]
 pub struct ResolvedChannel {
+    pub redirect: bool,
+    pub numeric_channel_id: i64,
+    pub has_assigned_streams: bool,
+    pub redirect_error: Option<String>,
     pub id: String,
     pub name: String,
     pub profile_id: i64,
@@ -116,15 +120,69 @@ fn xc_credential_pool(
 
 impl Store {
     pub async fn resolve_channel(&self, channel_id: &str) -> Result<ResolvedChannel, StoreError> {
+        self.resolve_channel_mode(channel_id, false, None)
+            .await?
+            .ok_or(StoreError::NotFound)
+    }
+    pub(crate) async fn resolve_channel_mode(
+        &self,
+        channel_id: &str,
+        allow_redirect: bool,
+        redirect_user: Option<&User>,
+    ) -> Result<Option<ResolvedChannel>, StoreError> {
+        self.resolve_channel_mode_inner(channel_id, allow_redirect, redirect_user, None, true)
+            .await
+    }
+    pub(crate) async fn resolve_redirect_alias_candidate(
+        &self,
+        channel_id: &str,
+        stream_id: i64,
+        profile_id: i64,
+    ) -> Result<Option<ProviderStream>, StoreError> {
+        let channel = self
+            .resolve_channel_mode_inner(
+                channel_id,
+                true,
+                None,
+                Some((stream_id, profile_id)),
+                false,
+            )
+            .await?;
+        Ok(channel.and_then(|mut channel| {
+            if channel.streams.len() == 1 {
+                Some(channel.streams.remove(0))
+            } else {
+                None
+            }
+        }))
+    }
+    pub(crate) async fn resolve_redirect_candidates(
+        &self,
+        channel_id: &str,
+    ) -> Result<Vec<ProviderStream>, StoreError> {
+        Ok(self
+            .resolve_channel_mode_inner(channel_id, true, None, None, false)
+            .await?
+            .map_or_else(Vec::new, |channel| channel.streams))
+    }
+    async fn resolve_channel_mode_inner(
+        &self,
+        channel_id: &str,
+        allow_redirect: bool,
+        redirect_user: Option<&User>,
+        borrowed: Option<(i64, i64)>,
+        defer_redirect: bool,
+    ) -> Result<Option<ResolvedChannel>, StoreError> {
         let uuid = uuid::Uuid::parse_str(channel_id).map_err(|_| StoreError::NotFound)?;
         let settings = self.setting("stream_settings").await?;
         let default_profile = settings
             .get("default_stream_profile")
             .and_then(|value| value.as_i64().or_else(|| value.as_str()?.parse().ok()));
-        let channel = sqlx::query("SELECT c.id::bigint AS id, COALESCE(o.name,c.name) AS name, COALESCE(o.logo_id,c.logo_id)::bigint AS logo_id, COALESCE(o.stream_profile_id,c.stream_profile_id,$2)::bigint AS profile_id FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE c.uuid=$1")
+        let channel = sqlx::query("SELECT c.id::bigint AS id, EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream linked WHERE linked.channel_id=c.id) AS has_streams, COALESCE(o.name,c.name) AS name, COALESCE(o.logo_id,c.logo_id)::bigint AS logo_id, COALESCE(o.stream_profile_id,c.stream_profile_id,$2)::bigint AS profile_id FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE c.uuid=$1")
             .bind(uuid).bind(default_profile).fetch_optional(self.pool()).await?.ok_or(StoreError::NotFound)?;
         let name: String = channel.try_get("name")?;
         let id: i64 = channel.try_get("id")?;
+        let has_streams: bool = channel.try_get("has_streams")?;
         let logo_id: Option<i64> = channel.try_get("logo_id")?;
         let profile_id: Option<i64> = channel.try_get("profile_id")?;
         let profile_id =
@@ -147,11 +205,36 @@ impl Store {
         }
         let profile_name: String = profile.try_get("name")?;
         let profile_locked: bool = profile.try_get("locked")?;
-        if profile_locked && profile_name == "Redirect" {
+        let redirect = profile_locked && profile_name == "Redirect";
+        if !allow_redirect && redirect {
             return Err(StoreError::Unsupported(
-                "Redirect stream profiles are not migrated",
+                "Redirect requires the direct response resolver",
             ));
         }
+        let allowed = if allow_redirect && redirect {
+            crate::redirect_playback::allowed(redirect_user)
+                .map_err(|e| StoreError::StatusBody(e.status, e.body))?
+        } else {
+            None
+        };
+        // Source reuses Redis assignments BEFORE enumerating active SQL
+        // candidates. A removed/deactivated assigned provider must still resolve
+        // by its actual observed alias, with today's credentials and UA.
+        if redirect && allowed.is_none() && borrowed.is_none() && defer_redirect {
+            return Ok(Some(ResolvedChannel {
+                redirect: true,
+                numeric_channel_id: id,
+                has_assigned_streams: has_streams,
+                redirect_error: (!has_streams).then(|| "No streams assigned to channel".to_owned()),
+                id: uuid.to_string(),
+                name,
+                profile_id,
+                streams: Vec::new(),
+                shutdown_delay: Duration::ZERO,
+                startup_behind: Duration::ZERO,
+            }));
+        }
+        let restricted = allowed.is_some();
         let profile_command: String = profile.try_get("command")?;
         let profile_parameters: String = profile.try_get("parameters")?;
         let default_ua = settings
@@ -184,16 +267,18 @@ impl Store {
              OR (a.account_type='XC' AND (COALESCE(octet_length(a.server_url),0)>65536
                  OR COALESCE(octet_length(a.username),0)>65536 OR COALESCE(octet_length(a.password),0)>65536
                  OR COALESCE(octet_length(s.stream_id::text),0)>4096))) AS oversized
-            FROM dispatcharr_channels_channelstream cs
-            JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id
-            JOIN m3u_m3uaccount a ON a.id=s.m3u_account_id
-            JOIN m3u_m3uaccountprofile p ON p.m3u_account_id=a.id
+            FROM dispatcharr_channels_stream s
+            JOIN m3u_m3uaccountprofile p ON (($4::bigint IS NULL AND p.m3u_account_id=s.m3u_account_id) OR ($4=s.id AND p.id=$5::bigint))
+            JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id
+            LEFT JOIN dispatcharr_channels_channelstream cs ON cs.stream_id=s.id AND cs.channel_id=$1 AND $4::bigint IS NULL
             LEFT JOIN core_useragent ua ON ua.id=a.user_agent_id
             LEFT JOIN core_useragent du ON du.id=$2::bigint
-            WHERE cs.channel_id=$1 AND a.is_active AND p.is_active
-            AND EXISTS(SELECT 1 FROM m3u_m3uaccountprofile d WHERE d.m3u_account_id=a.id AND d.is_default AND d.is_active)
+            WHERE ($4::bigint IS NOT NULL AND s.id=$4 AND p.id=$5::bigint)
+            OR ($4::bigint IS NULL AND cs.channel_id=$1 AND a.is_active AND p.is_active
+            AND ($3::bigint[] IS NULL OR p.id=ANY($3))
+            AND ($3::bigint[] IS NOT NULL OR EXISTS(SELECT 1 FROM m3u_m3uaccountprofile d WHERE d.m3u_account_id=a.id AND d.is_default AND d.is_active)))
             ORDER BY cs."order",cs.id,p.is_default DESC,p.id LIMIT 33"#)
-            .bind(id).bind(default_ua).fetch_all(self.pool()).await?;
+            .bind(id).bind(default_ua).bind(allowed).bind(borrowed.map(|v|v.0)).bind(borrowed.map(|v|v.1)).fetch_all(self.pool()).await?;
         if rows.len() > MAX_CANDIDATES {
             return Err(playback_capacity());
         }
@@ -242,54 +327,59 @@ impl Store {
                 .try_get::<Option<String>, _>("user_agent")?
                 .filter(|s| !s.is_empty())
                 .unwrap_or_else(|| "Dispatcharr/0.33.0".to_owned());
-            let input_kind = crate::source_input_profile::kind(&url);
-            let proxy = profile_locked && profile_name == "Proxy";
-            let automatic = proxy && input_kind != crate::source_input_profile::Kind::Ts;
-            if automatic && ffmpeg_template.is_none() {
-                ffmpeg_template = Some(self.source_ffmpeg_template().await?);
-            }
-            let (command_name, command_locked, command_executable, command_parameters) =
-                if automatic {
-                    let template = ffmpeg_template.as_ref().ok_or(StoreError::Unsupported(
-                        "Automatic FFmpeg profile unavailable",
-                    ))?;
-                    (
-                        template.name.as_str(),
-                        true,
-                        template.command.as_str(),
-                        template.parameters.as_str(),
-                    )
-                } else {
-                    (
-                        profile_name.as_str(),
-                        profile_locked,
-                        profile_command.as_str(),
-                        profile_parameters.as_str(),
-                    )
-                };
-            let mut command = dispatcharr_contracts::StreamCommand::build(
-                command_name,
-                command_locked,
-                command_executable,
-                command_parameters,
-                Some(&url),
-                Some(&user_agent),
-                &serde_json::json!(id),
-            )
-            .map_err(|_| {
-                StoreError::Unsupported(
-                    "Input profile command is outside the supported argument domain",
-                )
-            })?;
-            if input_kind == crate::source_input_profile::Kind::Udp {
-                crate::source_input_profile::udp_arguments(&mut command, &user_agent);
-            }
-            let input_command = if proxy && !automatic {
+            let input_command = if redirect {
                 None
             } else {
-                Some(command)
+                let input_kind = crate::source_input_profile::kind(&url);
+                let proxy = profile_locked && profile_name == "Proxy";
+                let automatic = proxy && input_kind != crate::source_input_profile::Kind::Ts;
+                if automatic && ffmpeg_template.is_none() {
+                    ffmpeg_template = Some(self.source_ffmpeg_template().await?);
+                }
+                let (command_name, command_locked, command_executable, command_parameters) =
+                    if automatic {
+                        let template = ffmpeg_template.as_ref().ok_or(StoreError::Unsupported(
+                            "Automatic FFmpeg profile unavailable",
+                        ))?;
+                        (
+                            template.name.as_str(),
+                            true,
+                            template.command.as_str(),
+                            template.parameters.as_str(),
+                        )
+                    } else {
+                        (
+                            profile_name.as_str(),
+                            profile_locked,
+                            profile_command.as_str(),
+                            profile_parameters.as_str(),
+                        )
+                    };
+                let mut command = dispatcharr_contracts::StreamCommand::build(
+                    command_name,
+                    command_locked,
+                    command_executable,
+                    command_parameters,
+                    Some(&url),
+                    Some(&user_agent),
+                    &serde_json::json!(id),
+                )
+                .map_err(|_| {
+                    StoreError::Unsupported(
+                        "Input profile command is outside the supported argument domain",
+                    )
+                })?;
+                if input_kind == crate::source_input_profile::Kind::Udp {
+                    crate::source_input_profile::udp_arguments(&mut command, &user_agent);
+                }
+                if proxy && !automatic {
+                    None
+                } else {
+                    Some(command)
+                }
             };
-            if input_command.is_none()
+            if !redirect
+                && input_command.is_none()
                 && !(url.to_ascii_lowercase().starts_with("http://")
                     || url.to_ascii_lowercase().starts_with("https://"))
             {
@@ -329,6 +419,9 @@ impl Store {
                 _ => None,
             };
             let mut metadata = vec![
+                // Source uses the numeric Channel PK in metadata/aliases while
+                // the worker/owner namespace remains the actual Channel UUID.
+                ("channel_id".to_owned(), id.to_string()),
                 (
                     "stream_name".to_owned(),
                     row.try_get::<String, _>("stream_name")?,
@@ -356,7 +449,7 @@ impl Store {
                 metadata,
             });
         }
-        if streams.is_empty() {
+        if streams.is_empty() && !redirect {
             return Err(if credential_unavailable {
                 StoreError::StatusBody(
                     503,
@@ -370,8 +463,30 @@ impl Store {
                 StoreError::Unsupported("No compatible active provider profiles assigned")
             });
         }
+        if redirect && unsupported {
+            return Err(StoreError::Unsupported(
+                "Redirect provider URL transform is outside the supported Source domain",
+            ));
+        }
         let proxy = self.setting("proxy_settings").await?;
-        Ok(ResolvedChannel {
+        Ok(Some(ResolvedChannel {
+            redirect,
+            numeric_channel_id: id,
+            has_assigned_streams: has_streams,
+            redirect_error: if redirect && streams.is_empty() {
+                Some(
+                    if !has_streams {
+                        "No streams assigned to channel"
+                    } else if restricted {
+                        "No compatible active profile found for any assigned stream"
+                    } else {
+                        "No available streams for this channel"
+                    }
+                    .to_owned(),
+                )
+            } else {
+                None
+            },
             id: uuid.to_string(),
             name,
             profile_id,
@@ -388,7 +503,7 @@ impl Store {
                     .and_then(|value| value.as_u64())
                     .unwrap_or(5),
             ),
-        })
+        }))
     }
 }
 
@@ -432,7 +547,7 @@ impl AuthService {
             .await
     }
 
-    async fn build_playback_source(
+    pub(crate) async fn build_playback_source(
         &self,
         request: PlaybackRequest,
         user: Option<User>,
@@ -454,6 +569,16 @@ impl AuthService {
             .resolve_channel(&request.channel_id)
             .await
             .map_err(playback_error)?;
+        self.playback_source_with_channel(request, user, forced, channel)
+            .await
+    }
+    pub(crate) async fn playback_source_with_channel(
+        &self,
+        request: PlaybackRequest,
+        user: Option<User>,
+        forced: Option<OutputFormat>,
+        channel: ResolvedChannel,
+    ) -> Result<PlaybackSource, PlaybackError> {
         let stream_settings = self
             .store
             .setting("stream_settings")
@@ -587,6 +712,12 @@ impl AuthService {
 }
 
 impl PlaybackResolver for AuthService {
+    fn resolve_response(
+        &self,
+        request: PlaybackRequest,
+    ) -> BoxFuture<'_, Result<dispatcharr_contracts::PlaybackResolution, PlaybackError>> {
+        Box::pin(self.resolve_direct_response(request))
+    }
     fn authenticate_optional(
         &self,
         request: PlaybackRequest,
@@ -695,7 +826,7 @@ impl PlaybackResolver for AuthService {
     }
 }
 
-fn playback_error(error: StoreError) -> PlaybackError {
+pub(crate) fn playback_error(error: StoreError) -> PlaybackError {
     match error {
         StoreError::Database(_) => PlaybackError::new(503, "Database unavailable"),
         StoreError::NotFound => PlaybackError {

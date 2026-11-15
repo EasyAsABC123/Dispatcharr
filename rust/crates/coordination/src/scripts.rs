@@ -22,6 +22,25 @@ local function clear_provider(ledger)
     local count = reserved and counter_value(profile) or 0
     local credential_count = reserved and credential ~= '' and counter_value(credential) or 0
     local remembered = reserved and credential ~= '' and redis.call('GET', release_key) or false
+    local alias_channel=redis.call('HGET',ledger,'alias_channel')
+    local alias_stream=redis.call('HGET',ledger,'alias_stream')
+    local channel_receipt=redis.call('HGET',ledger,'alias_channel_receipt')
+    local stream_receipt=redis.call('HGET',ledger,'alias_stream_receipt')
+    local alias_sid=redis.call('HGET',ledger,'alias_sid')
+    local alias_pid=redis.call('HGET',ledger,'alias_pid')
+    local alias_token=redis.call('HGET',ledger,'token')
+    local current_owner=redis.call('GET',redis.call('HGET',ledger,'owner'))
+    local channel_receipt_owned=channel_receipt and redis.call('HGET',channel_receipt,'token')==alias_token
+    local stream_receipt_owned=stream_receipt and redis.call('HGET',stream_receipt,'token')==alias_token
+    local channel_owned=alias_channel and channel_receipt_owned and current_owner==alias_token
+        and redis.call('GET',alias_channel)==alias_sid
+    local stream_owned=alias_stream and stream_receipt_owned and current_owner==alias_token
+        and redis.call('GET',alias_stream)==alias_pid
+    if channel_owned then redis.call('DEL',alias_channel) end
+    if stream_owned then redis.call('DEL',alias_stream) end
+    if channel_receipt_owned then redis.call('DEL',channel_receipt) end
+    if stream_receipt_owned then redis.call('DEL',stream_receipt) end
+    redis.call('HDEL',ledger,'alias_channel','alias_stream','alias_channel_receipt','alias_stream_receipt','alias_sid','alias_pid')
     if reserved then
         if count > 0 then redis.call('DECR', profile); count = count - 1 end
         if credential ~= '' then
@@ -131,5 +150,22 @@ if maximum > 0 then
 end
 redis.call('HSET', KEYS[2], 'profile', KEYS[4], 'credential', credential,
     'release_key', KEYS[6], 'reserved', maximum > 0 and '1' or '0')
+return 1
+"#;
+
+/// Publish aliases ONLY under the actual existing raw owner and its current
+/// provider reservation. Never increments a profile/credential counter.
+pub const SOURCE_ASSIGNMENT: &str = r#"
+if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'token')~=ARGV[1] then return -1 end
+local profile=redis.call('HGET',KEYS[2],'profile') or ''
+local pid=string.match(profile,'^profile_connections:(%d+)$')
+if not pid or tonumber(pid)<=0 then return -1 end
+for i=4,5 do local kind=redis.call('TYPE',KEYS[i]).ok;if kind~='none' and kind~='string' then return redis.error_reply('Invalid source alias type') end end
+for i=6,7 do local kind=redis.call('TYPE',KEYS[i]).ok;if kind~='none' and kind~='hash' then return redis.error_reply('Invalid source alias receipt') end end
+redis.call('SET',KEYS[4],ARGV[2]);redis.call('SET',KEYS[5],pid)
+redis.call('HSET',KEYS[6],'token',ARGV[1],'scope','live','ledger',KEYS[2],'stream',ARGV[2],'profile',pid)
+redis.call('HSET',KEYS[7],'token',ARGV[1],'scope','live','ledger',KEYS[2])
+redis.call('HSET',KEYS[2],'alias_channel',KEYS[4],'alias_stream',KEYS[5],
+ 'alias_channel_receipt',KEYS[6],'alias_stream_receipt',KEYS[7],'alias_sid',ARGV[2],'alias_pid',pid)
 return 1
 "#;

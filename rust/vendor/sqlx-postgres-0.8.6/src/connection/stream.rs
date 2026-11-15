@@ -38,6 +38,8 @@ pub struct PgStream {
     pub(crate) parameter_statuses: BTreeMap<String, String>,
 
     pub(crate) server_version_num: Option<u32>,
+    // Opt-in lazy Python bridge only; ordinary SQLx callers keep prior behavior.
+    pub(crate) compatibility_frame_limit: Option<usize>,
 }
 
 impl PgStream {
@@ -54,6 +56,7 @@ impl PgStream {
             notifications: None,
             parameter_statuses: BTreeMap::default(),
             server_version_num: None,
+            compatibility_frame_limit: None,
         })
     }
 
@@ -79,6 +82,7 @@ impl PgStream {
     pub(crate) async fn recv_unchecked(&mut self) -> Result<ReceivedMessage, Error> {
         // NOTE: to not break everything, this should be cancel-safe;
         // DO NOT modify `buf` unless a full message has been read
+        let limit = self.compatibility_frame_limit;
         self.inner
             .try_read(|buf| {
                 // all packets in postgres start with a 5-byte header
@@ -98,6 +102,11 @@ impl PgStream {
                         err_protocol!("message_len + 1 overflows usize: {message_len}")
                     })?;
 
+                if limit.is_some_and(|limit| expected_len > limit) {
+                    return Err(err_protocol!(
+                        "Python compatibility PostgreSQL frame capacity"
+                    ));
+                }
                 if buf.len() < expected_len {
                     return Ok(ControlFlow::Continue(expected_len));
                 }

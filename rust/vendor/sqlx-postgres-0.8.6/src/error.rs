@@ -15,6 +15,22 @@ pub struct PgDatabaseError(pub(crate) Notice);
 // https://www.postgresql.org/docs/current/protocol-error-fields.html
 
 impl PgDatabaseError {
+    /// Actual PostgreSQL ErrorResponse diagnostic bytes for a lazy psycopg
+    /// compatibility adapter. No invented traceback, query or error fields.
+    pub fn python_diagnostic_fields(&self) -> std::collections::BTreeMap<char, Vec<u8>> {
+        let mut result = std::collections::BTreeMap::new();
+        for key in b"SVCMDHPpqsWtc dnFLR"
+            .iter()
+            .copied()
+            .filter(|v| *v != b' ')
+        {
+            if let Some(value) = self.0.get_raw(key) {
+                result.insert(char::from(key), value.to_vec());
+            }
+        }
+        result
+    }
+
     #[inline]
     pub fn severity(&self) -> PgSeverity {
         self.0.severity()

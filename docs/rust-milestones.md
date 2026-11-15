@@ -9,7 +9,14 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate24](rust-milestone-batch24.md) at
+The newest source candidate is [Candidate25](rust-milestone-batch25.md): all four
+SDK gates pass with1,061 tests, zero failures and775 ignored. It joins common
+Redirect assignments and native proxy alias sharing with guarded plugin runtime,
+SQL/result/cache infrastructure and owned host deadlines. Docker, actual Redirect
+and corrected affected workflows, enabled-plugin activation and resource acceptance
+remain required.
+
+The preceding source candidate is [Candidate24](rust-milestone-batch24.md) at
 `df815fbb3d312d191654bf4079f337ecae216430`: all four SDK gates pass with
 1,053 passing tests, zero failures and 767 ignored. It joins normal guide jobs,
 XMLTV busy deferral, recording profiles, generation fencing and the configured

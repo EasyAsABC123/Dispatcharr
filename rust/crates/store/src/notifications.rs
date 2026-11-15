@@ -23,6 +23,7 @@ use tokio::{
 
 #[derive(Clone)]
 pub struct NotificationCache {
+    pub(crate) plugin_target: redis::ConnectionInfo,
     connection: ConnectionManager,
     permits: Arc<Semaphore>,
     queued: Arc<Semaphore>,
@@ -41,8 +42,29 @@ fn failed() -> StoreError {
     StoreError::StatusBody(500, json!({"detail":"Notification processing failed."}))
 }
 impl NotificationCache {
+    pub(crate) async fn plugin_pipeline(
+        &self,
+        pipeline: redis::Pipeline,
+        offset: usize,
+        count: usize,
+    ) -> Result<Result<Vec<redis::Value>, redis::RedisError>, StoreError> {
+        use redis::aio::ConnectionLike;
+        let permit = self.admit().await.map_err(|_| unavailable())?;
+        let mut connection = self.connection.clone();
+        let scope = self.retained_scope.clone();
+        let task = tokio::spawn(async move {
+            let result = connection
+                .req_packed_commands(&pipeline, offset, count)
+                .await;
+            (result, permit, scope)
+        });
+        let (result, _permit, _scope) = task.await.map_err(|_| unavailable())?;
+        Ok(result)
+    }
+
     pub async fn connect(url: &str) -> Result<Self, StoreError> {
         let client = redis::Client::open(url).map_err(|_| unavailable())?;
+        let plugin_target = client.get_connection_info().clone();
         let connection = timeout(
             Duration::from_secs(5),
             client.get_connection_manager_with_config(
@@ -55,6 +77,7 @@ impl NotificationCache {
         .map_err(|_| unavailable())?
         .map_err(|_| unavailable())?;
         Ok(Self {
+            plugin_target,
             connection,
             permits: Arc::new(Semaphore::new(16)),
             queued: Arc::new(Semaphore::new(256)),

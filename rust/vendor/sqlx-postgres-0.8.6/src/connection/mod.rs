@@ -26,8 +26,10 @@ pub use self::stream::PgStream;
 pub(crate) mod describe;
 mod establish;
 mod executor;
+mod python_compatibility;
 mod sasl;
 mod stream;
+pub use python_compatibility::{PythonColumn, PythonQueryResult, PythonStatement};
 mod tls;
 
 /// A connection to a PostgreSQL database.
