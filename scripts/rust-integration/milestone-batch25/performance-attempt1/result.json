@@ -1,0 +1,99 @@
+{
+  "frozen_sha256": "8468d8fc2d0b62a7dfeddd3905c3fb901ade40c2ff01e03c3497a254ccb5598b",
+  "preflight_only": false,
+  "gain_accepted": false,
+  "phases": [
+    {
+      "phase": 1,
+      "viewers": 1,
+      "trial": 1,
+      "backend": "baseline",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-01d03e8c687745a59af3e5f20bfd9cdd.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-viewing25-2/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-fullgraph-resource-candidate25-1/1-1-1-baseline",
+        "--backends",
+        "baseline",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:3a07c5ac8ccf415e4bd0b016bbdc7d364234d11617e518ad74dc1eae61319d22",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch25-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-01d03e8c687745a59af3e5f20bfd9cdd.scope",
+      "actual_exit": 1,
+      "project": "dispatcharr-shared-ts-a641e60feb27",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a641e60feb27"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a641e60feb27"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a641e60feb27"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "useful_media_complete": {},
+      "valid": false,
+      "raw_sha256": {
+        "shared-ts.json": "04a7d9fd92f70135d0043c9ace18f94be27ad96f9021b60e5e44266d78c73e62"
+      }
+    }
+  ],
+  "all_phases_valid": false,
+  "pairs": [],
+  "live_only_gain_accepted": false,
+  "active_DVR_gain_accepted": false,
+  "full_migration_accepted": false,
+  "changed_inputs": [],
+  "elapsed_seconds": 14.437546308996389
+}

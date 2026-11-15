@@ -19,6 +19,17 @@ def copy_file(source,target):
  if not source.is_file():raise RuntimeError('Missing regular pinned runtime file: '+str(source))
  target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,target,follow_symlinks=True)
 excluded_source_assets=[]
+excluded_dependency_assets=[]
+exclusion_input=Path('/tmp/python_host_exclusions')
+exclusion_manifest=json.loads((exclusion_input/'manifest.json').read_text())
+if exclusion_manifest.get('schema')!=1:raise RuntimeError('Unsupported dependency exclusion inventory')
+dependency_exclusions={item['path']:item for item in exclusion_manifest['excluded']}
+if len(dependency_exclusions)!=len(exclusion_manifest['excluded']):raise RuntimeError('Duplicate dependency exclusion')
+for item in dependency_exclusions.values():
+ evidence=exclusion_input/item['primary_source_file']
+ if not evidence.resolve().is_relative_to(exclusion_input.resolve())or sha(evidence)!=item['primary_source_sha256']:raise RuntimeError('Missing dependency exclusion primary evidence')
+copy_file(exclusion_input/'manifest.json',DOCS/'excluded-development-tools.json')
+for item in dependency_exclusions.values():copy_file(exclusion_input/item['primary_source_file'],DOCS/item['primary_source_file'])
 def source_http_module(path):
  if path.suffix!='.py':return False
  module=ast.parse(path.read_text(),filename=str(path))
@@ -35,6 +46,11 @@ def tree(source,target):
  for child in sorted(source.rglob('*')):
   if '__pycache__'in child.parts or child.suffix in('.pyc','.pyo')or 'tests'in child.relative_to(source).parts or 'test'in child.relative_to(source).parts:continue
   relative=child.relative_to(source)
+  if source==site and relative.as_posix()in dependency_exclusions:
+   item=dependency_exclusions[relative.as_posix()]
+   if not child.is_file()or metadata.version(item['distribution'])!=item['version']or child.stat().st_size!=item['bytes']or sha(child)!=item['sha256']:raise RuntimeError('Development tool exclusion preimage mismatch')
+   excluded_dependency_assets.append(item)
+   continue
   # Source HTTP/admin/management entrypoints are neither needed for the ORM
   # nor shipped as a hidden fallback backend. Unsupported plugin imports fail.
   if target==app or target.is_relative_to(app):
@@ -140,7 +156,8 @@ def owners(path):
    notice=Path('/usr/share/doc')/package/'copyright';dest=DOCS/'debian'/package/'copyright';copy_file(notice,dest);package_cache[package]={'source':str(notice),'retained':'/'+str(dest.relative_to(OUT)),'sha256':sha(notice)}
   result.append({'package':owner,**package_cache[package]})
  return result
-manifest={'source_library_original_archive_sha256':source_manifest['original_archive_sha256'],'source_library_archive_sha256':source_manifest['archive_sha256'],'excluded_source_assets':excluded_source_assets,'source_application_assets_copied':True,'original_http_admin_management_entrypoints_excluded':True,'actual_execution_audit_required':True,'source_backend_started':False,'source_image':IMAGE,'python':sys.version,'base_prefix':sys.base_prefix,'distributions':licenses,'ELF':[],'files':[],'application_started':False,'external_key_homes_or_runtime_data_copied':False,'distribution_fixture_key_audit_required':True}
+if len(excluded_dependency_assets)!=len(dependency_exclusions):raise RuntimeError('Unobserved development tool exclusion')
+manifest={'excluded_dependency_assets':excluded_dependency_assets,'source_library_original_archive_sha256':source_manifest['original_archive_sha256'],'source_library_archive_sha256':source_manifest['archive_sha256'],'excluded_source_assets':excluded_source_assets,'source_application_assets_copied':True,'original_http_admin_management_entrypoints_excluded':True,'actual_execution_audit_required':True,'source_backend_started':False,'source_image':IMAGE,'python':sys.version,'base_prefix':sys.base_prefix,'distributions':licenses,'ELF':[],'files':[],'application_started':False,'external_key_homes_or_runtime_data_copied':False,'distribution_fixture_key_audit_required':True}
 loader=None;lib=PREFIX/'elf';lib.mkdir(exist_ok=True)
 # Inspect only real retained ELF, preserving site-package-relative RPATH assets.
 # ldd is bounded and runs only against binaries from the pinned image.

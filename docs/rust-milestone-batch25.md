@@ -66,3 +66,12 @@ numbering reservations. Source24 recording-profile authority is reused at its
 original scope. Enabled-plugin physical proof and paired resource measurement
 remain required. Historical Candidate24 results do not accept this candidate. No full
 M0–M9 milestone or new application performance gain is accepted.
+
+The [first fixed viewing resource attempt](../scripts/rust-integration/milestone-batch25/performance-attempt1/review.json)
+exits1 before measurement. UID65532 cannot traverse the umask-masked independent
+reference-output directory, so no reference VLC process or viewing measurement
+starts. All owned project containers, networks and volumes are absent afterward;
+Origin and its proxy exit0 with joined handlers. The incomplete observer/Main
+cleanup diagnostics remain recorded. There are zero completed measurement phases
+and no accepted performance gain. The next attempt must repair directory access
+and distinguish resources that never started without inventing cleanup receipts.

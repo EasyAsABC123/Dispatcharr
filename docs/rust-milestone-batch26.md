@@ -58,3 +58,13 @@ files and retains exact-version upstream legal text for tokenizers0.23.3 and
 tqdm4.70.1. Offline review covers127/127 distributions and286 installed legal
 files; missing notices still fail the build. Actual image qualification remains
 pending. Neither failed build ran Main or measured performance.
+
+The third build from `62c80844` passed legal collection and failed after61.81
+seconds on unresolved libraries in PyTorch's `torch/bin/test_shim`. One pinned
+metadata-only inventory covered490 installed ELF files:489 resolve, and only
+this executable has missing libraries. Exact upstream CMake source identifies it
+as an optional `INSTALL_TEST` GoogleTest executable. The correction excludes that
+exact version/path/size/hash, retains its evidence in shipped notices, and still
+fails on unresolved libraries in retained files. The existing test-directory
+exclusions remain distinct from this inventory. Docker/runtime acceptance is
+still required; no application performance was measured.
