@@ -1,5 +1,5 @@
 //! Bounded plain normal plugin refresh; original authors retain full credit.
-//! Actual startup ETA is guarded until durable reservation/restore exists.
+//! ETA intake reserves durably; due execution uses the same bounded normal dispatcher.
 use crate::{
     milestone_dispatch::{Disposition as D, Family, Handler, Lifecycle},
     normal_revocation::Revoked,
@@ -20,6 +20,7 @@ use uuid::Uuid;
 #[derive(Clone, Debug)]
 pub(crate) struct Message {
     pub id: Uuid,
+    pub eta: Option<chrono::DateTime<chrono::Utc>>,
 }
 pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     if raw.is_empty() || raw.len() > crate::protocol::MAX_ENVELOPE {
@@ -37,9 +38,52 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     frame["headers"]["task"] = json!("apps.proxy.tasks.fetch_channel_stats");
     let common = crate::stats_protocol::parse(&serde_json::to_vec(&frame).map_err(|_| ())?)
         .map_err(|_| ())?;
-    Ok(Message { id: common.task_id })
+    Ok(Message {
+        id: common.task_id,
+        eta: None,
+    })
+}
+pub(crate) fn parse_eta(raw: &[u8]) -> Result<Message, ()> {
+    let mut frame = crate::clocked_recording_envelope::json_value(raw).map_err(|_| ())?;
+    let eta = chrono::DateTime::parse_from_rfc3339(frame["headers"]["eta"].as_str().ok_or(())?)
+        .map_err(|_| ())?
+        .with_timezone(&chrono::Utc);
+    frame["headers"]["eta"] = Value::Null;
+    let mut message = parse(&serde_json::to_vec(&frame).map_err(|_| ())?)?;
+    message.eta = Some(eta);
+    Ok(message)
+}
+#[path = "normal_plugin_eta.rs"]
+mod delayed;
+fn startup_frame(
+    id: Uuid,
+    reply: Uuid,
+    origin: &str,
+    now: chrono::DateTime<chrono::Utc>,
+) -> Result<Vec<u8>, D> {
+    let base = crate::protocol::encode(
+        &crate::protocol::Task::CreateBackup,
+        id,
+        reply,
+        Uuid::new_v4(),
+        origin,
+    )
+    .map_err(|_| D::Operational("Plugin startup base frame invalid".into()))?;
+    let mut frame: Value = serde_json::from_slice(&base).map_err(|_| D::UnsupportedDomain)?;
+    frame["headers"]["task"] = json!("apps.plugins.tasks.refresh_plugin_repos");
+    frame["headers"]["eta"] =
+        json!((now + chrono::Duration::seconds(10))
+            .to_rfc3339_opts(chrono::SecondsFormat::Micros, false));
+    let bytes = serde_json::to_vec(&frame).map_err(|_| D::UnsupportedDomain)?;
+    parse_eta(&bytes).map_err(|_| D::UnsupportedDomain)?;
+    Ok(bytes)
 }
 struct Inner {
+    visibility_cursor: std::sync::atomic::AtomicUsize,
+    producer: dispatcharr_store::ProducerIdentitySource,
+    startup_attempted: AtomicBool,
+    next_visibility: Mutex<Option<tokio::time::Instant>>,
+    pending: Mutex<std::collections::VecDeque<crate::plugin_eta::Reservation>>,
     jobs: Jobs,
     executor: PluginRepositoryRefresh,
     revoked: Revoked,
@@ -64,7 +108,12 @@ impl Prepared {
         }
         Ok(Self {
             inner: Arc::new(Inner {
+                visibility_cursor: std::sync::atomic::AtomicUsize::new(0),
+                next_visibility: Mutex::new(None),
+                pending: Mutex::new(std::collections::VecDeque::new()),
                 jobs,
+                producer: auth.producer_identity_source(),
+                startup_attempted: AtomicBool::new(false),
                 executor: PluginRepositoryRefresh::new(auth),
                 revoked,
                 closed: AtomicBool::new(false),
@@ -72,6 +121,47 @@ impl Prepared {
                 uncertain: Mutex::new(Vec::with_capacity(1)),
             }),
         })
+    }
+    /// One process startup attempt, matching Source's caught apply_async(countdown=10).
+    /// No distributed lock or retry is invented; Redis transport ambiguity is reported.
+    pub async fn publish_startup(&self, caller: Arc<dyn Send + Sync>) -> Result<Option<Uuid>, D> {
+        if std::env::var("DISPATCHARR_SKIP_PLUGIN_AUTODISCOVERY")
+            .ok()
+            .is_some_and(|v| matches!(v.to_ascii_lowercase().as_str(), "1" | "true" | "yes"))
+        {
+            return Ok(None);
+        }
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(D::Operational("Plugin startup closed".into()));
+        }
+        if self.inner.startup_attempted.swap(true, Ordering::AcqRel) {
+            return Ok(None);
+        }
+        let slot = self
+            .inner
+            .slots
+            .clone()
+            .acquire_owned()
+            .await
+            .map_err(|_| D::Operational("Plugin startup admission closed".into()))?;
+        let inner = self.inner.clone();
+        let owner: Arc<dyn Send + Sync> = Arc::new((caller, slot, inner.clone()));
+        tokio::spawn(async move {
+            let identity = inner
+                .producer
+                .current()
+                .map_err(|_| D::Operational("Plugin startup producer identity failed".into()))?;
+            let id = Uuid::new_v4();
+            let bytes = startup_frame(id, identity.reply_to, &identity.origin, chrono::Utc::now())?;
+            inner
+                .jobs
+                .publish_plugin_startup(&bytes, owner)
+                .await
+                .map_err(|_| D::Operational("Plugin startup publication unsettled".into()))?;
+            Ok(Some(id))
+        })
+        .await
+        .map_err(|_| D::Operational("Plugin startup publication join unsettled".into()))?
     }
     pub fn entry(&self) -> (Family, Arc<dyn Handler>) {
         (Family::PluginRefresh, Arc::new(self.clone()))
@@ -105,6 +195,9 @@ impl Prepared {
                 Err(crate::transport::Error::UnsupportedTask) => return Err(D::UnsupportedHead),
                 Err(_) => return Err(D::Operational("Plugin refresh peek failed".into())),
             };
+            if candidate.message.eta.is_some() {
+                return delayed::reserve(&inner, candidate.raw, owner).await;
+            }
             let admission = match inner.executor.try_admit(owner.caller.clone()) {
                 Ok(v) => Arc::new(v),
                 Err(_) => return Ok(D::Capacity),
@@ -183,6 +276,53 @@ fn retain(inner: &Inner, owner: Arc<Owner>) {
     }
 }
 impl Handler for Prepared {
+    fn maintenance(&self, caller: Arc<dyn Send + Sync>) -> BoxFuture<'_, Result<(), D>> {
+        Box::pin(async move {
+            if self.inner.closed.load(Ordering::Acquire) {
+                return Ok(());
+            }
+            {
+                let mut next = self
+                    .inner
+                    .next_visibility
+                    .lock()
+                    .unwrap_or_else(|e| e.into_inner());
+                if next.is_some_and(|at| at > tokio::time::Instant::now()) {
+                    return Ok(());
+                }
+                *next = Some(tokio::time::Instant::now() + Duration::from_secs(100));
+            }
+            let slot = match self.inner.slots.clone().try_acquire_owned() {
+                Ok(slot) => slot,
+                Err(_) => return Ok(()),
+            };
+            let caller: Arc<dyn Send + Sync> = Arc::new((caller, slot, self.inner.clone()));
+            let inner = self.inner.clone();
+            // Spawn owns the entire physical scan/mutex release even if supervisor cancels.
+            let offset = inner.visibility_cursor.load(Ordering::Acquire);
+            let next =
+                tokio::spawn(
+                    async move { inner.jobs.recover_plugin_visible(caller, offset).await },
+                )
+                .await
+                .map_err(|_| D::Operational("Plugin visibility join failed".into()))?
+                .map_err(|_| D::Operational("Plugin visibility recovery failed".into()))?;
+            self.inner.visibility_cursor.store(next, Ordering::Release);
+            Ok(())
+        })
+    }
+
+    fn due_head(&self) -> Option<Arc<[u8]>> {
+        delayed::due_head(&self.inner)
+    }
+    fn run_due(
+        &self,
+        expected: Arc<[u8]>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<D, D>> {
+        Box::pin(delayed::run_due(self.inner.clone(), expected, caller))
+    }
+
     fn supports_selected_head(&self) -> bool {
         true
     }
@@ -204,12 +344,20 @@ impl Lifecycle for Prepared {
     fn shutdown(&self, timeout: Duration) -> BoxFuture<'_, Result<(), D>> {
         Box::pin(async move {
             self.stop_admission();
-            let held = tokio::time::timeout(timeout, self.inner.slots.clone().acquire_owned())
+            let deadline = tokio::time::Instant::now() + timeout;
+            let held = tokio::time::timeout_at(deadline, self.inner.slots.clone().acquire_owned())
                 .await
                 .map_err(|_| D::Operational("Plugin refresh physical drain incomplete".into()))?
                 .map_err(|_| D::Operational("Plugin refresh permits closed".into()))?;
-            drop(held);
-            Ok(())
+            let inner = self.inner.clone();
+            let restore = tokio::spawn(async move {
+                let _held = held;
+                delayed::restore_all(&inner).await
+            });
+            tokio::time::timeout_at(deadline, restore)
+                .await
+                .map_err(|_| D::Operational("Plugin ETA warm restore deadline incomplete".into()))?
+                .map_err(|_| D::Operational("Plugin ETA warm restore join incomplete".into()))?
         })
     }
 }
@@ -217,12 +365,33 @@ impl Lifecycle for Prepared {
 mod tests {
     use super::*;
     #[test]
-    fn actual_source_startup_eta_refuses_without_durable_reservation_authority() {
+    fn natural_startup_has_real_identity_fresh_tag_and_exact_countdown() {
+        let now = chrono::DateTime::from_timestamp(1800000000, 123456000).unwrap();
+        let id = Uuid::new_v4();
+        let reply = Uuid::new_v4();
+        let bytes = startup_frame(id, reply, "gen17@owned-host", now).unwrap();
+        let parsed = parse_eta(&bytes).unwrap();
+        assert_eq!(parsed.id, id);
+        assert_eq!(parsed.eta, Some(now + chrono::Duration::seconds(10)));
+        let frame: Value = serde_json::from_slice(&bytes).unwrap();
+        assert_eq!(frame["headers"]["origin"], "gen17@owned-host");
+        assert_eq!(frame["properties"]["reply_to"], reply.to_string());
+        assert_eq!(frame["headers"]["root_id"], id.to_string());
+        assert!(frame["headers"]["parent_id"].is_null());
+        assert_eq!(frame["headers"]["ignore_result"], false);
+        assert_eq!(frame["headers"]["argsrepr"], "()");
+    }
+    #[test]
+    fn source_startup_eta_requires_typed_receipt_not_plain_pop() {
         let source: Value =
             serde_json::from_str(include_str!("../datasets/source-plugin-startup-wire.json"))
                 .unwrap();
         let frame = &source["receipt"]["frame"];
-        assert!(parse(&serde_json::to_vec(frame).unwrap()).is_err());
+        let bytes = serde_json::to_vec(frame).unwrap();
+        assert!(parse(&bytes).is_err());
+        let delayed = parse_eta(&bytes).unwrap();
+        assert_eq!(delayed.id.to_string(), frame["headers"]["id"]);
+        assert!(delayed.eta.is_some());
         // Derived plain-Beat root parser control, not an observed Source task run.
         let mut plain = frame.clone();
         plain["headers"]["eta"] = Value::Null;

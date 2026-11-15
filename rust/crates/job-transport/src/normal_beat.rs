@@ -1262,3 +1262,6 @@ mod tests {
 #[cfg(test)]
 #[path = "normal_beat_query_tests.rs"]
 mod query_tests;
+
+#[path = "plugin_startup_schedule.rs"]
+mod plugin_startup_schedule;

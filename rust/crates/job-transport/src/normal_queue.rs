@@ -61,6 +61,10 @@ struct OwnedFamily {
 #[derive(Clone)]
 struct FamilyAdapter(Arc<OwnedFamily>);
 impl Handler for FamilyAdapter {
+    fn maintenance(&self, owner: Arc<dyn Send + Sync>) -> BoxFuture<'_, Result<(), Disposition>> {
+        self.0.inner.maintenance(owner)
+    }
+
     fn head_advance_notifier(&self) -> Option<Arc<tokio::sync::Notify>> {
         self.0.inner.head_advance_notifier()
     }
@@ -69,6 +73,35 @@ impl Handler for FamilyAdapter {
     }
     fn supports_selected_head(&self) -> bool {
         self.0.inner.supports_selected_head()
+    }
+    fn due_head(&self) -> Option<Arc<[u8]>> {
+        self.0.inner.due_head()
+    }
+    fn run_due(
+        &self,
+        raw: Arc<[u8]>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
+        Box::pin(async move {
+            if self.0.closed.load(Ordering::Acquire) {
+                return Err(Disposition::Operational("normal due intake closed".into()));
+            }
+            let slot = self
+                .0
+                .slot
+                .clone()
+                .try_acquire_owned()
+                .map_err(|_| Disposition::Capacity)?;
+            if self.0.closed.load(Ordering::Acquire) {
+                return Err(Disposition::Operational("normal due intake closed".into()));
+            }
+            let owner: Arc<dyn Send + Sync> = Arc::new(FamilyOwner {
+                _slot: slot,
+                _caller: caller,
+                _family: self.0.clone(),
+            });
+            self.0.inner.run_due(raw, owner).await
+        })
     }
     fn run_selected(
         &self,
@@ -87,6 +120,9 @@ impl Handler for FamilyAdapter {
                 .map_err(|_| Disposition::Capacity)?;
             if self.0.closed.load(Ordering::Acquire) {
                 return Err(Disposition::Operational("normal DVR intake closed".into()));
+            }
+            if self.0.closed.load(Ordering::Acquire) {
+                return Err(Disposition::Operational("normal due intake closed".into()));
             }
             let owner: Arc<dyn Send + Sync> = Arc::new(FamilyOwner {
                 _slot: slot,
@@ -117,6 +153,9 @@ impl Handler for FamilyAdapter {
                 return Err(Disposition::Operational(
                     "normal family intake closed".into(),
                 ));
+            }
+            if self.0.closed.load(Ordering::Acquire) {
+                return Err(Disposition::Operational("normal due intake closed".into()));
             }
             let owner: Arc<dyn Send + Sync> = Arc::new(FamilyOwner {
                 _slot: slot,
@@ -610,6 +649,38 @@ async fn celery_lane(
         if fault.is_some() && tasks.is_empty() {
             break;
         }
+        if !*stop.borrow() && fault.is_none() {
+            for handler in handlers.values() {
+                if let Err(error) = handler.maintenance(caller.clone()).await {
+                    fault = Some(error.clone());
+                    lane.state.send_replace(State::Fault(error));
+                    break;
+                }
+            }
+        }
+        if !*stop.borrow() && fault.is_none() && tasks.len() < maximum {
+            for (family, handler) in &handlers {
+                if *family == Family::Recording {
+                    continue;
+                }
+                if tasks.len() >= maximum {
+                    break;
+                }
+                if handler.0.slot.available_permits() == 0 {
+                    continue;
+                }
+                if let Some(raw) = handler.due_head() {
+                    if pending.insert(raw.clone()) {
+                        let owned = handler.clone();
+                        let owner = caller.clone();
+                        tasks.spawn(async move {
+                            let result = owned.run_due(raw.clone(), owner).await;
+                            (raw, result)
+                        });
+                    }
+                }
+            }
+        }
         if !*stop.borrow() && fault.is_none() && tasks.len() < maximum && backoff.can_peek() {
             match head.peek(caller.clone()).await {
                 Ok(Some(raw)) => {
@@ -1001,3 +1072,7 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "normal_queue_eta_tests.rs"]
+mod delayed_tests;

@@ -3,10 +3,44 @@ use super::*;
 use crate::normal_plugin_repos::{parse, Message};
 pub(crate) struct PluginRefreshCandidate {
     pub message: Message,
-    raw: Vec<u8>,
+    pub(crate) raw: Vec<u8>,
     origin: Arc<Inner>,
 }
 impl Jobs {
+    pub(crate) async fn publish_plugin_startup(
+        &self,
+        bytes: &[u8],
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<(), Error> {
+        if !self.allows_defaults() {
+            return Err(Error::UnsupportedTask);
+        }
+        let message =
+            crate::normal_plugin_repos::parse_eta(bytes).map_err(|_| Error::UnsupportedTask)?;
+        let maximum = self.inner.config.max_queued_jobs.to_string();
+        let script = r#"local q=redis.call('TYPE',KEYS[1]).ok;local b=redis.call('TYPE',KEYS[2]).ok
+if(q~='none'and q~='list')or(b~='none'and b~='set')then return -3 end
+if #ARGV[1]>65536 then return -1 end
+if redis.call('LLEN',KEYS[1])>=tonumber(ARGV[2])then return -2 end
+redis.call('SADD',KEYS[2],ARGV[3]);return redis.call('LPUSH',KEYS[1],ARGV[1])"#;
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(
+                script,
+                &["celery".into(), "_kombu.binding.celery".into()],
+                &[bytes, maximum.as_bytes(), b"celery\x06\x16\x06\x16celery"],
+                self.lease(owner)?,
+            )
+            .await
+        {
+            Ok((n, _)) if n > 0 => Ok(()),
+            Ok((-2, _)) => Err(Error::Capacity),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(message.id)),
+            Err(e) => Err(map(e)),
+        }
+    }
     pub(crate) async fn peek_plugin_refresh(
         &self,
         expected: Option<&[u8]>,
@@ -38,7 +72,13 @@ impl Jobs {
             return Err(Error::Corrupt);
         }
         Ok(Some(PluginRefreshCandidate {
-            message: parse(&reply.1).map_err(|_| Error::UnsupportedTask)?,
+            message: parse(&reply.1)
+                .or_else(|_| {
+                    crate::plugin_eta::Receipt::prepare(&reply.1)
+                        .map(|r| r.message)
+                        .map_err(|_| ())
+                })
+                .map_err(|_| Error::UnsupportedTask)?,
             raw: reply.1,
             origin: self.inner.clone(),
         }))
@@ -48,7 +88,10 @@ impl Jobs {
         candidate: PluginRefreshCandidate,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Message, Error> {
-        if !self.allows_defaults() || !Arc::ptr_eq(&self.inner, &candidate.origin) {
+        if !self.allows_defaults()
+            || candidate.message.eta.is_some()
+            || !Arc::ptr_eq(&self.inner, &candidate.origin)
+        {
             return Err(Error::UnsupportedTask);
         }
         let id = candidate.message.id;

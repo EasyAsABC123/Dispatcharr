@@ -30,6 +30,7 @@ enum Startup {
     Fault(&'static str),
 }
 struct Inner {
+    plugin_refresh: jobs::normal_plugin_repos::Prepared,
     queue: jobs::normal_queue::Application,
     scanner: jobs::normal_scanner::Prepared,
     shared_jobs: jobs::transport::Jobs,
@@ -402,6 +403,16 @@ impl SelectedJobs {
             Duration::from_millis(100),
         )
         .map_err(|_| "Selected normal Beat initialization failed")?;
+        if !std::env::var("DISPATCHARR_SKIP_PLUGIN_AUTODISCOVERY")
+            .ok()
+            .is_some_and(|v| matches!(v.to_ascii_lowercase().as_str(), "1" | "true" | "yes"))
+            && scheduler
+                .initialize_plugin_schedule(Arc::new(()))
+                .await
+                .is_err()
+        {
+            eprintln!("Could not set up plugin repository refresh schedule");
+        }
         if beat_enabled {
             let setup = scheduler
                 .initialize(Arc::new(()))
@@ -413,6 +424,7 @@ impl SelectedJobs {
         }
         Ok(Self {
             inner: Arc::new(Inner {
+                plugin_refresh,
                 queue,
                 scanner,
                 shared_jobs,
@@ -538,6 +550,16 @@ impl SelectedJobs {
             .map_err(|_| "Recovery/version root publication did not settle")?;
         if self.inner.closed.load(Ordering::Acquire) {
             return Err("Selected startup closed");
+        }
+        // Source PluginsConfig catches startup publication failure and continues.
+        if self
+            .inner
+            .plugin_refresh
+            .publish_startup(owner.clone())
+            .await
+            .is_err()
+        {
+            eprintln!("Could not enqueue startup plugin repository refresh");
         }
         if self.inner.beat_enabled {
             self.inner

@@ -40,6 +40,7 @@ pub enum Disposition {
     Empty,
     NotDue,
     Capacity,
+    Reserved(uuid::Uuid),
     Restored(uuid::Uuid),
     HeadChanged,
     Completed(uuid::Uuid),
@@ -78,6 +79,24 @@ pub trait Lifecycle: Send + Sync {
     fn shutdown(&self, timeout: std::time::Duration) -> BoxFuture<'_, Result<(), Disposition>>;
 }
 pub trait Handler: Lifecycle + Send + Sync {
+    /// Bounded receipt recovery only; never executes application work.
+    fn maintenance(&self, _owner: Arc<dyn Send + Sync>) -> BoxFuture<'_, Result<(), Disposition>> {
+        Box::pin(async { Ok(()) })
+    }
+
+    /// Already durable local reservation, never a synthetic broker head. The
+    /// normal Celery supervisor executes it within its SAME global task budget.
+    fn due_head(&self) -> Option<Arc<[u8]>> {
+        None
+    }
+    fn run_due(
+        &self,
+        _raw: Arc<[u8]>,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
+        Box::pin(async { Err(Disposition::UnsupportedDomain) })
+    }
+
     /// Wake hint only; selectors still re-read the actual raw head.
     fn head_advance_notifier(&self) -> Option<Arc<tokio::sync::Notify>> {
         None

@@ -333,6 +333,30 @@ impl Jobs {
         *existing = Some(pool.clone());
         Ok(pool)
     }
+    pub(crate) fn plugin_eta_pool(
+        &self,
+        limits: crate::eta::Limits,
+    ) -> Result<Arc<crate::eta::Pool>, Error> {
+        if !self.allows_defaults() {
+            return Err(Error::UnsupportedTask);
+        }
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(Error::Closed);
+        }
+        let mut existing = self.inner.eta.lock().unwrap();
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(Error::Closed);
+        }
+        if let Some(pool) = existing.as_ref() {
+            if pool.limits != limits {
+                return Err(Error::Configuration);
+            };
+            return Ok(pool.clone());
+        }
+        let pool = Arc::new(crate::eta::Pool::new(limits)?);
+        *existing = Some(pool.clone());
+        Ok(pool)
+    }
     pub fn eta_available_slots(&self) -> Option<usize> {
         self.inner
             .eta
@@ -1718,3 +1742,9 @@ mod normal_control_backend;
 mod normal_plugin_refresh_transport;
 #[path = "xc_account_transport.rs"]
 mod xc_account_transport;
+
+#[path = "plugin_eta_transport.rs"]
+mod plugin_eta_transport;
+
+#[path = "plugin_visibility.rs"]
+mod plugin_visibility;
