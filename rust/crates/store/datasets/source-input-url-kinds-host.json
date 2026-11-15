@@ -1,0 +1,64 @@
+{
+  "status": "pure_pinned_function_on_host_stdlib_not_Docker_runtime_acceptance",
+  "host_python": "3.14.9 (main, Nov  7 2026, 10:30:28) [GCC 16.2.1 20260810]",
+  "source_path": "artifacts/rust/m4-m7-m8-wide-batch-run-2-source16/source/apps/proxy/live_proxy/utils.py",
+  "source_sha256": "c91348959533d6005d3186539aaf8ce7f7e8a3c7ac6ce5e4bfbfd9577e5cee91",
+  "records": [
+    {
+      "url": "UDP://127.0.0.1:9999",
+      "actual_extracted_function_result": "udp"
+    },
+    {
+      "url": "rtp://host/live",
+      "actual_extracted_function_result": "rtsp"
+    },
+    {
+      "url": "RTSP://host/live",
+      "actual_extracted_function_result": "rtsp"
+    },
+    {
+      "url": "http://host/a.M3U8",
+      "actual_extracted_function_result": "hls"
+    },
+    {
+      "url": "http://host/a.m3u8?q=1",
+      "actual_extracted_function_result": "hls"
+    },
+    {
+      "url": "http://host/x?hint=/playlist.m3u",
+      "actual_extracted_function_result": "hls"
+    },
+    {
+      "url": "http://host/a/master.m3u/../ts",
+      "actual_extracted_function_result": "hls"
+    },
+    {
+      "url": "http://host/x;manifest.m3u",
+      "actual_extracted_function_result": "ts"
+    },
+    {
+      "url": "srt://host/x;manifest.m3u",
+      "actual_extracted_function_result": "hls"
+    },
+    {
+      "url": "http://host/x?hint=master.m3u",
+      "actual_extracted_function_result": "ts"
+    },
+    {
+      "url": "http://manifest.m3u",
+      "actual_extracted_function_result": "ts"
+    },
+    {
+      "url": "http://host/manifest%2em3u",
+      "actual_extracted_function_result": "ts"
+    },
+    {
+      "url": "http://host/manifest.m3u?token=1",
+      "actual_extracted_function_result": "hls"
+    },
+    {
+      "url": "http://host/live.ts",
+      "actual_extracted_function_result": "ts"
+    }
+  ]
+}

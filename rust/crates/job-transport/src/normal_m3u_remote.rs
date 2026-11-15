@@ -253,12 +253,29 @@ impl Worker {
                 } else {
                     execute(&inner, &prepared, &message, owner.clone(), flow.clone()).await
                 };
+                if let Some(flow) = &flow {
+                    flow.observe(if body.is_ok() {
+                        "import_body_complete"
+                    } else {
+                        "import_body_error"
+                    });
+                }
                 let regex_closed = if let Some(flow) = &flow {
                     flow.retire(Duration::from_secs(5)).await.is_ok()
                 } else {
                     true
                 };
+                if let Some(flow) = &flow {
+                    flow.observe("sql_close_begin");
+                }
                 let closed = prepared.close().await;
+                if let Some(flow) = &flow {
+                    flow.observe(if closed.is_ok() {
+                        "sql_close_complete"
+                    } else {
+                        "sql_close_error"
+                    });
+                }
                 let released = if let Some(lease) = lease {
                     lease.release_owned_detailed().await.is_ok_and(|v| v)
                 } else {
@@ -311,7 +328,42 @@ impl Worker {
 fn fault(stage: &str) -> D {
     D::Operational(format!("Remote M3U {stage} unsettled"))
 }
-fn store_error(error: StoreError) -> D {
+fn store_error(error: StoreError, task: uuid::Uuid) -> D {
+    static ERROR_RECORDS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+    // One fixed-category record per failing operation; never print SQL messages,
+    // arbitrary Debug values, credentials, URLs or request/result payloads.
+    if std::env::var_os("RUST_AUTO_STAGE_DIAGNOSTICS").as_deref() == Some(std::ffi::OsStr::new("1"))
+        && ERROR_RECORDS.fetch_add(1, Ordering::Relaxed) < 256
+    {
+        let code = match &error {
+            StoreError::Database(e) => e
+                .as_database_error()
+                .and_then(|e| e.code())
+                .filter(|c| c.len() == 5 && c.bytes().all(|b| b.is_ascii_alphanumeric()))
+                .map(|c| c.into_owned()),
+            _ => None,
+        };
+        let variant = match &error {
+            StoreError::Database(_) => "Database",
+            StoreError::Unauthorized(_) => "Unauthorized",
+            StoreError::AuthenticationBody(_) => "AuthenticationBody",
+            StoreError::Forbidden => "Forbidden",
+            StoreError::PermissionDenied => "PermissionDenied",
+            StoreError::UiPermissionFault => "UiPermissionFault",
+            StoreError::UnhandledRestFault => "UnhandledRestFault",
+            StoreError::NotFound => "NotFound",
+            StoreError::Unsupported(_) => "Unsupported",
+            StoreError::RateLimited(_) => "RateLimited",
+            StoreError::Throttled { .. } => "Throttled",
+            StoreError::XcDenied { .. } => "XcDenied",
+            StoreError::InvalidInput(_) => "InvalidInput",
+            StoreError::StatusBody(..) => "StatusBody",
+        };
+        eprintln!(
+            "rust_auto_error task={task} variant={variant} sqlstate={}",
+            code.as_deref().unwrap_or("none")
+        );
+    }
     match error {
         StoreError::Unsupported(_) => D::UnsupportedDomain,
         _ => fault("SQL/event effects"),
@@ -351,7 +403,10 @@ async fn execute_body(
     let elapsed = Instant::now();
     let parsed = inner.cache.join(format!("{}.json", message.account));
     if message.kind == Kind::Single {
-        prepared.begin_single().await.map_err(store_error)?;
+        prepared
+            .begin_single()
+            .await
+            .map_err(|error| store_error(error, message.id))?;
     }
     let cached = if message.kind == Kind::Single {
         probe(parsed.clone(), owner.clone()).await?
@@ -392,7 +447,7 @@ async fn execute_body(
                 prepared
                     .caught_remote_error(&message_text, "downloading")
                     .await
-                    .map_err(store_error)?;
+                    .map_err(|error| store_error(error, message.id))?;
                 if let Some(lease) = group_lease {
                     if !lease.release_owned_detailed().await.is_ok_and(|v| v) {
                         return Err(fault("groups token release"));
@@ -418,7 +473,7 @@ async fn execute_body(
                 message.kind == Kind::Single || message.full,
             )
             .await
-            .map_err(store_error)?;
+            .map_err(|error| store_error(error, message.id))?;
         if let Some(lease) = group_lease {
             if !lease.release_owned_detailed().await.is_ok_and(|v| v) {
                 return Err(fault("groups token release"));
@@ -440,11 +495,21 @@ async fn execute_body(
     }
     if entries == 0 {
         return Ok(Outcome::Value(
-            prepared.empty_std().await.map_err(store_error)?.result,
+            prepared
+                .empty_std()
+                .await
+                .map_err(|error| store_error(error, message.id))?
+                .result,
         ));
     }
-    prepared.parsing_only().await.map_err(store_error)?;
-    let groups = prepared.std_groups().await.map_err(store_error)?;
+    prepared
+        .parsing_only()
+        .await
+        .map_err(|error| store_error(error, message.id))?;
+    let groups = prepared
+        .std_groups()
+        .await
+        .map_err(|error| store_error(error, message.id))?;
     let (sender, mut receiver) = mpsc::channel(1);
     let retained = owner.clone();
     let actor = tokio::task::spawn_blocking(move || produce_batches(parsed, sender, retained));
@@ -459,7 +524,7 @@ async fn execute_body(
                 // A SQL error must not drop the parser's JoinHandle and then
                 // retire its still-open cache. Closing the receiver interrupts
                 // its bounded blocking_send; join before releasing either FD.
-                import_error = Some(store_error(error));
+                import_error = Some(store_error(error, message.id));
                 receiver.close();
                 break;
             }
@@ -482,7 +547,7 @@ async fn execute_body(
     } else {
         prepared.finish_import(total, start, elapsed).await
     }
-    .map_err(store_error)?;
+    .map_err(|error| store_error(error, message.id))?;
     if completed.invalidate {
         inner
             .ports

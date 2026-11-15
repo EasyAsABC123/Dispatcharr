@@ -652,6 +652,21 @@ async fn update(
     body: Body,
     partial: bool,
 ) -> Result<Json<Value>, StoreError> {
+    let writer = auth.task_sql_writer()?;
+    let auth = auth.with_request_writer_permit(writer.clone())?;
+    let owner = auth.core_publication_owner(writer);
+    tokio::spawn(async move { update_owned(auth, raw, context, body, partial, owner).await })
+        .await
+        .map_err(|_| StoreError::UnhandledRestFault)?
+}
+async fn update_owned(
+    auth: AuthService,
+    raw: String,
+    context: ChannelRequest,
+    body: Body,
+    partial: bool,
+    owner: crate::compact_numbering::Owner,
+) -> Result<Json<Value>, StoreError> {
     let ChannelRequest {
         peer,
         headers,
@@ -663,7 +678,10 @@ async fn update(
     let id = raw
         .parse()
         .map_err(|_| StoreError::StatusBody(404, json!({"detail":"Not found."})))?;
-    let mut tx = auth.store.pool().begin().await?;
+    let mut connection = auth.store.pool().acquire().await?;
+    let work=async {
+    use sqlx::Connection;
+    let mut tx=connection.begin().await?;
     let old = object(&auth, &user, id, &params, &mut tx).await?;
     let body = body_object(body)?;
     let validated = validation(&auth, &body, partial).await?;
@@ -681,7 +699,7 @@ async fn update(
     if scalar_change {
         if data["auto_created"] == true && !data["auto_created_by_id"].is_null() {
             let compact:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r WHERE r.m3u_account_id=$1 AND (r.channel_group_id=$2 OR r.custom_properties->>'group_override'=$3) AND (jsonb_typeof(r.custom_properties) NOT IN ('object','null') OR COALESCE(r.custom_properties->'compact_numbering','null'::jsonb) NOT IN ('null'::jsonb,'false'::jsonb,'0'::jsonb,'\"\"'::jsonb,'[]'::jsonb,'{}'::jsonb)))").bind(data["auto_created_by_id"].as_i64()).bind(data["channel_group_id"].as_i64()).bind(data["channel_group_id"].as_i64().map(|value|value.to_string())).fetch_one(&mut *tx).await?;
-            if compact {
+            if compact && auth.compact_port().is_none() {
                 return Err(StoreError::Unsupported("Compact auto-channel numbering requires the original shared numbering lock and assignment implementation"));
             }
         }
@@ -692,6 +710,7 @@ async fn update(
             .collect::<Vec<_>>()
             .join(",");
         sqlx::query(&format!("UPDATE dispatcharr_channels_channel SET ({COLUMNS})=(SELECT {selected} FROM jsonb_populate_record(NULL::dispatcharr_channels_channel,$1) x) WHERE id=$2")).bind(Value::Object(data.clone())).bind(id).execute(&mut *tx).await?;
+        auth.compact_saved_on(&mut tx,id,&data,owner.clone()).await?;
         if data["auto_created"] != true {
             mark_group(&mut tx, &data["channel_group_id"]).await?;
         }
@@ -703,6 +722,19 @@ async fn update(
         streams(&mut tx, id, value).await?;
     }
     tx.commit().await?;
+    Ok::<_,StoreError>(data)
+    }.await;
+    use sqlx::Connection;
+    let ready = connection.ping().await;
+    let closed = connection.close().await;
+    ready?;
+    closed?;
+    let data = match work {
+        Err(StoreError::Database(sqlx::Error::Database(_))) => {
+            return Err(StoreError::UnhandledRestFault)
+        }
+        result => result?,
+    };
     Ok(Json(
         response(auth, user, params, base, id, &data, false).await?,
     ))

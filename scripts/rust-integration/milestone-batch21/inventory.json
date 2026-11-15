@@ -1,0 +1,40 @@
+{
+  "scope": "Supported metadata media alias, bounded diagnostics, normal compact/manual numbering and input-profile promotion",
+  "all_four_SDK_gates_passed": true,
+  "inputs": 1298,
+  "Rust_tree_inputs": 1292,
+  "test_totals": [
+    1029,
+    0,
+    761
+  ],
+  "test_result_blocks": 175,
+  "changed_paths": [
+    "rust/crates/app/src/selected_jobs.rs",
+    "rust/crates/job-transport/src/auto_sync_flow.rs",
+    "rust/crates/job-transport/src/full_metadata.rs",
+    "rust/crates/job-transport/src/normal_m3u_remote.rs",
+    "rust/crates/job-transport/src/normal_xc_accounts.rs",
+    "rust/crates/store/datasets/source-input-url-kinds-host.json",
+    "rust/crates/store/src/auth.rs",
+    "rust/crates/store/src/auto_sync.rs",
+    "rust/crates/store/src/auto_sync_compact.rs",
+    "rust/crates/store/src/auto_sync_config.rs",
+    "rust/crates/store/src/channel_writes.rs",
+    "rust/crates/store/src/compact_numbering.rs",
+    "rust/crates/store/src/compact_unhide.rs",
+    "rust/crates/store/src/lib.rs",
+    "rust/crates/store/src/playback.rs",
+    "rust/crates/store/src/source_input_profile.rs",
+    "rust/crates/store/src/xc_account_http.rs"
+  ],
+  "all_canonical_preimages_verified_against_SDK11": true,
+  "SDK12_actual_exit": 1,
+  "SDK12_error": "E0716 retained SQL row stream borrowed temporary format string",
+  "SDK13_correction": "SQL string remains local until same-connection row stream drained",
+  "Docker_built": false,
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "full_milestones_accepted": false,
+  "credit": "Original Dispatcharr and dependency authors retain full application, algorithm and licensing credit."
+}

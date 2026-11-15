@@ -65,6 +65,10 @@ impl Http {
         Router::new()
             .route("/api/m3u/refresh-account-info/{profile}/", any(handle))
             .route("/api/m3u/refresh/{account}/", any(refresh_handle))
+            .route(
+                "/api/m3u/accounts/{account}/repack-group/",
+                any(repack_handle),
+            )
             .with_state(self)
     }
     pub fn close_admission(&self) {
@@ -195,6 +199,119 @@ async fn refresh_handle(
         Ok(Err(error)) => error.into_response(),
         Err(_) => unavailable().into_response(),
     }
+}
+async fn repack_handle(
+    State(api): State<Http>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(raw): Path<String>,
+    request: Request,
+) -> Response {
+    if api.inner.closed.load(Ordering::Acquire) {
+        return unavailable().into_response();
+    }
+    let slot = match api.inner.slots.clone().try_acquire_owned() {
+        Ok(slot) => slot,
+        Err(_) => return unavailable().into_response(),
+    };
+    let method = request.method().clone();
+    let headers = request.headers().clone();
+    let query = request.uri().query().unwrap_or("").to_owned();
+    if to_bytes(request.into_body(), 65536).await.is_err() {
+        return (
+            axum::http::StatusCode::PAYLOAD_TOO_LARGE,
+            Json(json!({"detail":"Request body too large."})),
+        )
+            .into_response();
+    }
+    let result = tokio::spawn(async move {
+        let owner: Arc<dyn Send + Sync> = Arc::new((slot, api.inner.clone()));
+        let auth = api.inner.auth.clone().with_retained_scope(owner.clone());
+        auth.account_user(peer, headers, true).await?;
+        if method == Method::OPTIONS {
+            return Err(StoreError::Unsupported(
+                "Compact OPTIONS serializer metadata is not composed",
+            ));
+        }
+        if method != Method::POST {
+            return Ok((
+                405,
+                json!({"detail":format!("Method \"{method}\" not allowed.")}),
+            ));
+        }
+        let account = dispatcharr_ingest_core::source_integer_literal(&raw)
+            .and_then(|s| s.parse::<i64>().ok())
+            .filter(|id| (i64::from(i32::MIN)..=i64::from(i32::MAX)).contains(id))
+            .ok_or_else(|| StoreError::StatusBody(404, json!({"detail":"Not found."})))?;
+        let session = auth.borrow_task_sql_session(owner.clone()).await?;
+        let work = async {
+            let exists = session
+                .run(move |c| {
+                    Box::pin(async move {
+                        sqlx::query_scalar::<_, bool>(
+                            "SELECT EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE id=$1::bigint)",
+                        )
+                        .bind(account)
+                        .fetch_one(c)
+                        .await
+                    })
+                })
+                .await??;
+            if !exists {
+                return Ok((
+                    404,
+                    json!({"detail":"No M3UAccount matches the given query."}),
+                ));
+            }
+            let raw_group = url::form_urlencoded::parse(query.as_bytes())
+                .filter(|(key, _)| key == "channel_group_id")
+                .map(|(_, value)| value.into_owned())
+                .last();
+            let Some(raw_group) = raw_group.filter(|s| !s.is_empty()) else {
+                return Ok((400, json!({"detail":"channel_group_id is required"})));
+            };
+            if raw_group.len() > 8192 {
+                return Err(StoreError::Unsupported(
+                    "Compact query integer capacity exceeded",
+                ));
+            }
+            let Some(canonical) = dispatcharr_ingest_core::source_integer_literal(&raw_group)
+            else {
+                return Ok((400, json!({"detail":"channel_group_id must be an integer"})));
+            };
+            // Python accepts arbitrary integer spelling; beyond the actual
+            // schema's ID range it is a missing relation AFTER lock acquisition.
+            let group = canonical.parse::<i64>().ok();
+            let value = auth
+                .manual_compact_group(&session, account, group, Arc::new((owner, session.clone())))
+                .await?;
+            Ok::<_, StoreError>((200, value))
+        }
+        .await;
+        let closed = session.close().await;
+        closed?;
+        match work {
+            Err(StoreError::Database(sqlx::Error::Database(_))) => {
+                Err(StoreError::UnhandledRestFault)
+            }
+            result => result,
+        }
+    })
+    .await;
+    let mut response = match result {
+        Ok(Ok((status, value))) => (
+            axum::http::StatusCode::from_u16(status)
+                .unwrap_or(axum::http::StatusCode::INTERNAL_SERVER_ERROR),
+            Json(value),
+        )
+            .into_response(),
+        Ok(Err(error)) => error.into_response(),
+        Err(_) => unavailable().into_response(),
+    };
+    response.headers_mut().insert(
+        axum::http::header::ALLOW,
+        axum::http::HeaderValue::from_static("POST, OPTIONS"),
+    );
+    response
 }
 fn unavailable() -> StoreError {
     StoreError::StatusBody(

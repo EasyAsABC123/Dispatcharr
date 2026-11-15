@@ -24,6 +24,8 @@ type Owner = Arc<dyn Send + Sync>;
 /// Main must supply the real Jobs producer and final child-metadata owner. There
 /// is no empty/default implementation or caller-provided parent/child ID list.
 pub trait EpgDispatch: Send + Sync {
+    /// Bounded optional observer; normal effects and task semantics are unchanged.
+    fn observe(&self, _stage: &'static str) {}
     fn dispatch(&self, plan: Plan, owner: Owner)
         -> BoxFuture<'_, Result<(), RecordingEffectError>>;
 }
@@ -217,7 +219,6 @@ pub async fn preflight(session: &TaskSqlSession, account: i64) -> Result<(), Sto
         .await
         .map_err(|_| StoreError::Unsupported("Auto-sync group capability preflight unavailable"))?;
     let mut after = 0;
-    let mut supported = true;
     while let Some(group) = groups
         .next(after)
         .await
@@ -229,20 +230,13 @@ pub async fn preflight(session: &TaskSqlSession, account: i64) -> Result<(), Sto
             .get("compact_numbering")
             .is_some_and(crate::xc_live_provider::truthy)
         {
-            supported = false;
-            break;
+            crate::auto_sync_compact::preflight(&group)?;
         }
     }
     groups.close().await.map_err(|_| {
         StoreError::Unsupported("Auto-sync group capability preflight did not drain")
     })?;
-    if supported {
-        Ok(())
-    } else {
-        Err(StoreError::Unsupported(
-            "Auto-sync compact packing is not composed",
-        ))
-    }
+    Ok(())
 }
 /// Actual Source body. Called for BOTH inline successful Single imports and the
 /// standalone sync_auto_channels task, using their actual runtime producer scope.
@@ -312,13 +306,10 @@ async fn body(
     let mut group_after = 0;
     while let Some(group) = groups.next(group_after).await? {
         group_after = group.ordinal;
-        if group
+        let compact = group
             .properties
             .get("compact_numbering")
-            .is_some_and(crate::xc_live_provider::truthy)
-        {
-            return Err(unsupported().into());
-        }
+            .is_some_and(crate::xc_live_provider::truthy);
         let rules = Rules::new(&group.properties, regex.clone());
         let mode = match group.properties.get("channel_numbering_mode") {
             None => "fixed",
@@ -389,6 +380,7 @@ async fn body(
         )
         .await?;
         if first.is_empty() {
+            epg.observe("collector_prune_begin");
             report.deleted += prune(
                 &auth,
                 &session,
@@ -424,41 +416,44 @@ async fn body(
             Ok(None) | Err(ConfigError::Caught(_)) => None,
             Err(error) => return Err(error.into()),
         };
-        let mut after = 0;
-        let mut cursor = group.start;
-        loop {
-            let page = streams.next(after).await?;
-            if page.is_empty() {
-                break;
-            }
-            let mut changes = Vec::new();
-            for stream in page {
-                after = stream.ordinal;
-                if let Some((id, current)) = existing.for_stream(stream.id).await? {
-                    match numbers
-                        .pick(mode, stream.stream_chno, cursor, fallback, group.end)
-                        .await?
-                    {
-                        Some(number) => {
-                            numbers.reserve(number).await?;
-                            if current["channel_number"].as_f64() != Some(number) {
-                                changes.push((id, number))
+        if !compact {
+            let mut after = 0;
+            let mut cursor = group.start;
+            loop {
+                let page = streams.next(after).await?;
+                if page.is_empty() {
+                    break;
+                }
+                let mut changes = Vec::new();
+                for stream in page {
+                    after = stream.ordinal;
+                    if let Some((id, current)) = existing.for_stream(stream.id).await? {
+                        match numbers
+                            .pick(mode, stream.stream_chno, cursor, fallback, group.end)
+                            .await?
+                        {
+                            Some(number) => {
+                                numbers.reserve(number).await?;
+                                if current["channel_number"].as_f64() != Some(number) {
+                                    changes.push((id, number))
+                                }
+                                if mode == "fixed" {
+                                    cursor = advance(cursor)?
+                                }
                             }
-                            if mode == "fixed" {
-                                cursor = advance(cursor)?
-                            }
-                        }
-                        None => {
-                            if let Some(number) = current["channel_number"].as_f64() {
-                                numbers.reserve(number).await?
+                            None => {
+                                if let Some(number) = current["channel_number"].as_f64() {
+                                    numbers.reserve(number).await?
+                                }
                             }
                         }
                     }
                 }
+                existing.stage_numbers(changes).await?;
             }
-            existing.stage_numbers(changes).await?;
+            existing.flush_numbers().await?;
         }
-        existing.flush_numbers().await?;
+
         if mode == "fixed" {
             if let Some(end) = group.end {
                 let mut selection = auth
@@ -635,6 +630,7 @@ async fn body(
                 .await?;
         }
         dispatch(&epg, touched, owner.clone()).await?;
+        epg.observe("existing_flush_begin");
         report.updated += existing.flush().await.map_err(model_error)?;
         let mut touched = Touched::begin(session.clone()).await?;
         let mut after = 0;
@@ -649,7 +645,10 @@ async fn body(
                 .await?;
         }
         dispatch(&epg, touched, owner.clone()).await?;
+        epg.observe("profiles_reconcile_begin");
         profiles.reconcile(&existing).await.map_err(model_error)?;
+        epg.observe("profiles_reconcile_complete");
+        epg.observe("collector_prune_begin");
         report.deleted += prune(
             &auth,
             &session,
@@ -660,12 +659,25 @@ async fn body(
             false,
         )
         .await?;
+        epg.observe("collector_prune_complete");
+        if compact {
+            let packed = crate::auto_sync_compact::repack(&session, account, &group)
+                .await
+                .map_err(model_error)?;
+            if packed.failed > 0 {
+                report.failed += packed.failed;
+                if report.failures.len() < 1000 {
+                    report.failures.push(json!({"stream_name":null,"stream_id":null,"group":group.name,"reason":"RANGE_EXHAUSTED","error":format!("Compact pack: {} visible channel(s) could not fit in range {}{}",packed.failed,integer_text(group.start),group.end.filter(|n|*n!=0.0).map(|n|format!("-{}",integer_text(n))).unwrap_or_else(||"+".into()))}));
+                }
+            }
+        }
         pending.close().await?;
         profiles.close().await?;
         resolver.close().await?;
         existing.close().await?;
         streams.close().await?;
     }
+    epg.observe("groups_complete");
     let cleanup = account_properties.get("orphan_channel_cleanup");
     if cleanup != Some(&json!("never")) {
         let orphans = Orphans::capture(

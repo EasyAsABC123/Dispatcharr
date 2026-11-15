@@ -59,6 +59,12 @@ impl Scratch {
         {
             return Err(Error::Configuration);
         }
+        // The supported packaged media root is /app/media -> /data. Resolve
+        // the configured parent ONCE before creating our private directory;
+        // subsequent payload and cleanup paths use that resolved root, so a
+        // later alias retarget cannot redirect writes or inode-guarded unlink.
+        // No-follow creation and all private directory/file checks remain.
+        let directory = std::fs::canonicalize(directory).map_err(|_| Error::Backend)?;
         for ancestor in directory.ancestors() {
             let m = std::fs::symlink_metadata(ancestor).map_err(|_| Error::Backend)?;
             if !m.is_dir() || m.file_type().is_symlink() {
@@ -720,6 +726,49 @@ mod tests {
             assert_eq!(snapshot.inspect(&mut |_|Ok(())),Err(Error::Protocol));
         }
         assert_eq!(std::fs::read_dir(&dir).unwrap().count(), 0);
+        std::fs::remove_dir(dir).unwrap();
+    }
+    #[test]
+    fn configured_media_alias_resolves_once_and_cleanup_cannot_follow_retarget() {
+        use std::os::unix::fs::symlink;
+        let dir = directory();
+        let data = dir.join("data");
+        let cache = data.join("cached_m3u");
+        let other = dir.join("other");
+        let alias = dir.join("media");
+        std::fs::create_dir(&data).unwrap();
+        std::fs::create_dir(&cache).unwrap();
+        std::fs::create_dir(&other).unwrap();
+        symlink(&data, &alias).unwrap();
+        let configured = alias.join("cached_m3u");
+        let scratch = Scratch::create(&configured, Arc::new(())).unwrap();
+        let actual = std::fs::canonicalize(&cache).unwrap();
+        assert!(scratch.path.starts_with(&actual));
+        assert_eq!(
+            std::fs::metadata(&scratch.directory).unwrap().mode() & 0o777,
+            0o700
+        );
+        assert_eq!(
+            scratch.file.get_ref().metadata().unwrap().mode() & 0o777,
+            0o600
+        );
+        let private_directory = scratch.directory.clone();
+        let payload = scratch.path.clone();
+        // An alias swap after actual admission cannot select another payload
+        // or cleanup destination. The replacement directory remains untouched.
+        std::fs::remove_file(&alias).unwrap();
+        symlink(&other, &alias).unwrap();
+        std::fs::write(other.join("sentinel"), b"preserve").unwrap();
+        drop(scratch);
+        assert!(!payload.exists());
+        assert!(!private_directory.exists());
+        assert_eq!(std::fs::read(other.join("sentinel")).unwrap(), b"preserve");
+        assert_eq!(std::fs::read_dir(&cache).unwrap().count(), 0);
+        std::fs::remove_file(alias).unwrap();
+        std::fs::remove_file(other.join("sentinel")).unwrap();
+        std::fs::remove_dir(other).unwrap();
+        std::fs::remove_dir(cache).unwrap();
+        std::fs::remove_dir(data).unwrap();
         std::fs::remove_dir(dir).unwrap();
     }
     #[test]

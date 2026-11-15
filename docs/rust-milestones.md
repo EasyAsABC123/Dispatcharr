@@ -9,11 +9,18 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate20](rust-milestone-batch20.md): all four
+The newest source candidate is [Candidate21](rust-milestone-batch21.md): all four
+SDK gates pass with1,029 tests, zero failures and761 ignored. It resolves the
+supported media alias for metadata spools and joins normal compact/manual
+numbering and input-profile promotion. Docker, combined application acceptance
+and performance remain required.
+
+The preceding source candidate is [Candidate20](rust-milestone-batch20.md): all four
 SDK gates pass with 1,025 tests, zero failures and 761 ignored tests. It corrects
 the actual Main AutoChannels registry ceiling mismatch and drives owned regex
 drain before lane joins. Its Docker build and package checks pass; combined
-application acceptance is collecting failures and independent results. Resource
+application acceptance fails with seven passing Native contexts, five failures
+and incomplete Source comparisons. Exact19-container cleanup passes. Resource
 acceptance remains required.
 
 The preceding source candidate is [Candidate19](rust-milestone-batch19.md): all four

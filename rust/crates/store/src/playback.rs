@@ -154,13 +154,15 @@ impl Store {
         }
         let profile_command: String = profile.try_get("command")?;
         let profile_parameters: String = profile.try_get("parameters")?;
-        let profile_ua: Option<i64> = profile.try_get("user_agent_id")?;
         let default_ua = settings
             .get("default_user_agent")
             .and_then(|value| value.as_i64().or_else(|| value.as_str()?.parse().ok()));
         // Project every potentially large text value through a byte bound in
         // this SELECT, including the selected UA. This replaces per-row UA reads.
-        // The chosen UA ID and empty/missing-UA fallback are unchanged.
+        // Source provider requests ignore StreamProfile.user_agent: account UA
+        // wins, then the configured Core default. Default-string cache I/O
+        // timing remains an existing separate migration gate; do not eagerly
+        // fill it for an alternate that Source has not actually selected.
         let rows = sqlx::query(r#"SELECT s.id::bigint AS stream_id,
             CASE WHEN octet_length(s.name)<=4096 THEN s.name END AS stream_name,
             CASE WHEN octet_length(s.url)<=65536 THEN s.url END AS url,
@@ -174,10 +176,11 @@ impl Store {
             p.max_streams,
             CASE WHEN octet_length(p.search_pattern)<=65536 THEN p.search_pattern END AS search_pattern,
             CASE WHEN octet_length(p.replace_pattern)<=65536 THEN p.replace_pattern END AS replace_pattern,
-            CASE WHEN octet_length(ua.user_agent)<=65536 THEN ua.user_agent END AS user_agent,
+            CASE WHEN octet_length(COALESCE(NULLIF(ua.user_agent,''),du.user_agent))<=65536
+              THEN COALESCE(NULLIF(ua.user_agent,''),du.user_agent) END AS user_agent,
             (COALESCE(octet_length(s.name),0)>4096 OR COALESCE(octet_length(s.url),0)>65536
              OR COALESCE(octet_length(p.name),0)>4096 OR COALESCE(octet_length(p.search_pattern),0)>65536
-             OR COALESCE(octet_length(p.replace_pattern),0)>65536 OR COALESCE(octet_length(ua.user_agent),0)>65536
+             OR COALESCE(octet_length(p.replace_pattern),0)>65536 OR COALESCE(octet_length(COALESCE(NULLIF(ua.user_agent,''),du.user_agent)),0)>65536
              OR (a.account_type='XC' AND (COALESCE(octet_length(a.server_url),0)>65536
                  OR COALESCE(octet_length(a.username),0)>65536 OR COALESCE(octet_length(a.password),0)>65536
                  OR COALESCE(octet_length(s.stream_id::text),0)>4096))) AS oversized
@@ -185,11 +188,12 @@ impl Store {
             JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id
             JOIN m3u_m3uaccount a ON a.id=s.m3u_account_id
             JOIN m3u_m3uaccountprofile p ON p.m3u_account_id=a.id
-            LEFT JOIN core_useragent ua ON ua.id=COALESCE($2::bigint,a.user_agent_id::bigint,$3::bigint)
+            LEFT JOIN core_useragent ua ON ua.id=a.user_agent_id
+            LEFT JOIN core_useragent du ON du.id=$2::bigint
             WHERE cs.channel_id=$1 AND a.is_active AND p.is_active
             AND EXISTS(SELECT 1 FROM m3u_m3uaccountprofile d WHERE d.m3u_account_id=a.id AND d.is_default AND d.is_active)
             ORDER BY cs."order",cs.id,p.is_default DESC,p.id LIMIT 33"#)
-            .bind(id).bind(profile_ua).bind(default_ua).fetch_all(self.pool()).await?;
+            .bind(id).bind(default_ua).fetch_all(self.pool()).await?;
         if rows.len() > MAX_CANDIDATES {
             return Err(playback_capacity());
         }
@@ -199,6 +203,7 @@ impl Store {
             }
         }
         let mut streams = Vec::new();
+        let mut ffmpeg_template: Option<crate::source_input_profile::Template> = None;
         let mut unsupported = false;
         let mut credential_unavailable = false;
         for row in rows {
@@ -230,20 +235,43 @@ impl Store {
                 }
                 Err(error) => return Err(error),
             };
-            if !(url.starts_with("http://") || url.starts_with("https://")) {
-                unsupported = true;
+            if url.is_empty() {
                 continue;
             }
             let user_agent = row
                 .try_get::<Option<String>, _>("user_agent")?
-                .filter(|value| !value.is_empty())
-                .unwrap_or_else(|| "Dispatcharr/0.33.0".into());
-            // Original StreamManager supplies Channel.id (numeric), not its UUID.
-            let command = dispatcharr_contracts::StreamCommand::build(
-                &profile_name,
-                profile_locked,
-                &profile_command,
-                &profile_parameters,
+                .filter(|s| !s.is_empty())
+                .unwrap_or_else(|| "Dispatcharr/0.33.0".to_owned());
+            let input_kind = crate::source_input_profile::kind(&url);
+            let proxy = profile_locked && profile_name == "Proxy";
+            let automatic = proxy && input_kind != crate::source_input_profile::Kind::Ts;
+            if automatic && ffmpeg_template.is_none() {
+                ffmpeg_template = Some(self.source_ffmpeg_template().await?);
+            }
+            let (command_name, command_locked, command_executable, command_parameters) =
+                if automatic {
+                    let template = ffmpeg_template.as_ref().ok_or(StoreError::Unsupported(
+                        "Automatic FFmpeg profile unavailable",
+                    ))?;
+                    (
+                        template.name.as_str(),
+                        true,
+                        template.command.as_str(),
+                        template.parameters.as_str(),
+                    )
+                } else {
+                    (
+                        profile_name.as_str(),
+                        profile_locked,
+                        profile_command.as_str(),
+                        profile_parameters.as_str(),
+                    )
+                };
+            let mut command = dispatcharr_contracts::StreamCommand::build(
+                command_name,
+                command_locked,
+                command_executable,
+                command_parameters,
                 Some(&url),
                 Some(&user_agent),
                 &serde_json::json!(id),
@@ -253,11 +281,21 @@ impl Store {
                     "Input profile command is outside the supported argument domain",
                 )
             })?;
-            let input_command = if command.argv.is_empty() {
+            if input_kind == crate::source_input_profile::Kind::Udp {
+                crate::source_input_profile::udp_arguments(&mut command, &user_agent);
+            }
+            let input_command = if proxy && !automatic {
                 None
             } else {
                 Some(command)
             };
+            if input_command.is_none()
+                && !(url.to_ascii_lowercase().starts_with("http://")
+                    || url.to_ascii_lowercase().starts_with("https://"))
+            {
+                unsupported = true;
+                continue;
+            }
             let maximum: i32 = row.try_get("max_streams")?;
             let server_group: Option<i64> = row.try_get("server_group_id")?;
             let credential_pool = match (server_group, maximum > 0) {

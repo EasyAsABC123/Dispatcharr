@@ -16,7 +16,10 @@ use dispatcharr_store::{
 use serde_json::Value;
 use std::{
     path::PathBuf,
-    sync::{Arc, Mutex as StdMutex, Weak},
+    sync::{
+        atomic::{AtomicUsize, Ordering},
+        Arc, Mutex as StdMutex, Weak,
+    },
     time::Duration,
 };
 use tokio::sync::Mutex;
@@ -68,6 +71,7 @@ pub(crate) struct Flow {
     retired: Mutex<Option<bool>>,
     stopped: Arc<dyn Fn() -> bool + Send + Sync>,
     owner: Owner,
+    diagnostics: AtomicUsize,
 }
 fn effect(error: Error) -> RecordingEffectError {
     match error {
@@ -104,7 +108,20 @@ impl Flow {
                 retired: Mutex::new(None),
                 stopped,
                 owner,
+                diagnostics: AtomicUsize::new(0),
             })
+        }
+    }
+    /// Opt-in fixed-category records, bounded to64 per actual accepted parent.
+    /// No provider/configuration/body strings are formatted.
+    pub(crate) fn observe(&self, stage: &'static str) {
+        if std::env::var_os("RUST_AUTO_STAGE_DIAGNOSTICS").as_deref()
+            != Some(std::ffi::OsStr::new("1"))
+        {
+            return;
+        }
+        if self.diagnostics.fetch_add(1, Ordering::Relaxed) < 64 {
+            eprintln!("rust_auto_stage task={} stage={stage}", self.id);
         }
     }
     pub(crate) fn services(
@@ -118,6 +135,7 @@ impl Flow {
         }
     }
     pub(crate) async fn retire(&self, budget: std::time::Duration) -> Result<(), Error> {
+        self.observe("regex_retire_begin");
         let mut retired = self.retired.lock().await;
         if let Some(clean) = *retired {
             return if clean {
@@ -131,6 +149,7 @@ impl Flow {
             .shutdown(budget)
             .await
             .map_err(|_| Error::DrainTimeout)?;
+        self.observe("regex_retire_complete");
         *retired = Some(true);
         Ok(())
     }
@@ -148,13 +167,21 @@ impl Flow {
             .await
     }
     async fn create_children(&self) -> Result<ChildrenSpool, Error> {
+        self.observe("children_spool_begin");
         let directory = self.directory.clone();
         let id = self.id;
         let root = self.root;
         let owner = self.owner.clone();
-        tokio::task::spawn_blocking(move || ChildrenSpool::create(&directory, id, root, owner))
-            .await
-            .map_err(|_| Error::Backend)?
+        let result =
+            tokio::task::spawn_blocking(move || ChildrenSpool::create(&directory, id, root, owner))
+                .await
+                .map_err(|_| Error::Backend)?;
+        self.observe(if result.is_ok() {
+            "children_spool_complete"
+        } else {
+            "children_spool_error"
+        });
+        result
     }
     /// All dispatch calls must finish before this terminal write. Actual child
     /// pages were consumed while their task SQL session still existed; the final
@@ -169,32 +196,48 @@ impl Flow {
         let id = self.id;
         let parent = self.parent;
         let owner = self.owner.clone();
+        self.observe("result_spool_begin");
         let file = tokio::task::spawn_blocking(move || {
             ResultSpool::success(&directory, id, parent, &result, children, owner)
         })
         .await
         .map_err(|_| Error::Backend)??;
-        self.jobs
+        self.observe("result_spool_complete");
+        self.observe("result_publish_begin");
+        let result = self
+            .jobs
             .write_full_metadata(file, self.owner.clone())
-            .await
+            .await;
+        self.observe(if result.is_ok() {
+            "result_publish_complete"
+        } else {
+            "result_publish_error"
+        });
+        result
     }
 }
 impl EpgDispatch for Flow {
+    fn observe(&self, stage: &'static str) {
+        Flow::observe(self, stage);
+    }
     fn dispatch(
         &self,
         plan: Plan,
         owner: Owner,
     ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
         Box::pin(async move {
+            self.observe("epg_dispatch_begin");
             let actual = self
                 .dispatcher
                 .dispatch(plan, self.id, self.root, owner, || self.stopped.as_ref()())
                 .await
                 .map_err(effect)?;
+            self.observe("epg_dispatch_complete");
             let mut slot = self.children.lock().await;
             if slot.is_none() {
                 *slot = Some(self.create_children().await.map_err(effect)?)
             }
+            self.observe("children_append_begin");
             let append = slot
                 .as_mut()
                 .ok_or(RecordingEffectError::Unsettled)?
@@ -202,7 +245,18 @@ impl EpgDispatch for Flow {
                 .await;
             // Join actual SQL cleanup even after a poisoned/failed append. Its
             // uncertainty dominates and can never become a clean task result.
+            self.observe(if append.is_ok() {
+                "children_append_complete"
+            } else {
+                "children_append_error"
+            });
+            self.observe("epg_plan_close_begin");
             let closed = actual.close().await;
+            self.observe(if closed.is_ok() {
+                "epg_plan_close_complete"
+            } else {
+                "epg_plan_close_error"
+            });
             closed.map_err(effect)?;
             append.map_err(effect)?;
             Ok(())

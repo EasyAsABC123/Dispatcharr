@@ -241,8 +241,10 @@ impl SelectedJobs {
             xc_delay,
         )
         .map_err(|_| "Selected XC account task configuration unsupported")?;
-        let xc_http =
-            dispatcharr_store::xc_account_http::Http::prepare(auth.clone(), Arc::new(xc.clone()));
+        let xc_port = Arc::new(xc.clone());
+        auth.bind_compact_coordinator(xc_port.clone())
+            .map_err(|_| "Selected compact coordinator binding failed")?;
+        let xc_http = dispatcharr_store::xc_account_http::Http::prepare(auth.clone(), xc_port);
         let recording_playback = dispatcharr_store::RecordingPlayback::prepare(
             auth.clone(),
             dispatcharr_output_http::source_output_origin,

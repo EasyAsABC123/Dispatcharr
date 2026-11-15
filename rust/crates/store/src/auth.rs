@@ -69,6 +69,8 @@ pub struct TokenPair {
 
 #[derive(Clone)]
 pub struct AuthService {
+    pub(crate) compact_coordinator:
+        Arc<std::sync::OnceLock<std::sync::Weak<dyn crate::compact_numbering::Coordinator>>>,
     pub(crate) store: Store,
     config: AuthConfig,
     attempts: Arc<Mutex<AttemptHistory>>,
@@ -104,6 +106,7 @@ impl AuthService {
             event_sink: None,
             retained_scope: None,
             core_task_broker: Arc::new(std::sync::OnceLock::new()),
+            compact_coordinator: Arc::new(std::sync::OnceLock::new()),
             normal_core_task_broker: false,
             images: crate::image_proxy::ImageRuntime::new(),
             ip_lookup: crate::ip_lookup::IpLookup::new(crate::IpLookupConfig::default()),

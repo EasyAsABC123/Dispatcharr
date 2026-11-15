@@ -518,6 +518,7 @@ pub use plugin_python_regex::RegexExecutor;
 // Actual normal auto-sync algorithm; dependency/SQL effects remain owned.
 #[doc(hidden)]
 pub mod auto_sync;
+mod auto_sync_compact;
 mod auto_sync_config;
 mod auto_sync_create;
 #[doc(hidden)]
@@ -531,3 +532,7 @@ mod auto_sync_profiles;
 mod auto_sync_regex;
 mod auto_sync_resolve;
 mod auto_sync_streams;
+pub mod compact_numbering;
+mod compact_unhide;
+
+mod source_input_profile;

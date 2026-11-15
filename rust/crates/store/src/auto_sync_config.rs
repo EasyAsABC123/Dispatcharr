@@ -31,7 +31,7 @@ pub(crate) struct Group {
     pub end: Option<f64>,
     pub properties: Map<String, Value>,
 }
-fn bounded_properties(raw: Option<String>) -> Result<Map<String, Value>, Error> {
+pub(crate) fn bounded_properties(raw: Option<String>) -> Result<Map<String, Value>, Error> {
     use crate::provider_json_admission::{admit, Error as AdmissionError, Limits};
     let Some(raw) = raw else {
         return Ok(Map::new());
