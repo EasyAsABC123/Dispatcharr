@@ -48,3 +48,13 @@ performance gain or full M0–M9 completion is claimed.
 The [SDK evidence](../scripts/rust-integration/milestone-batch12/inventory.json)
 binds every input to runtime `8faa6b9c444c8cdfec6cdfd3d1baa4d585ab2b2f` and preserves the failed
 first peer run plus the exact pinned Source timezone extraction.
+
+The [production Docker build](../scripts/rust-integration/milestone-batch12-build/inventory.json)
+is `sha256:b9e4b90ab971d1eaf0e36e3c6a9109a5f845950c29a6dd9d41ea4fe5b6170ebf`.
+All1711 archived inputs match Git:1214 Rust,495 React and two original credit
+files. All114 prior installed React/credit hashes and120 selected asset/notices
+match. UID65532, `/app` and the production entrypoint are configured; the ELF hash
+is `d99d81833c9b98f2cb81e9cfff14fdb02e8dafa8638f49e0011890d52519d9b4`.
+GPG2.4.8/27 selected files and all three PostgreSQL17.11 clients/528 PG component
+and license hashes pass physical probes. All probe containers are absent.
+These packaging results do not substitute for the affected Compose batch.
