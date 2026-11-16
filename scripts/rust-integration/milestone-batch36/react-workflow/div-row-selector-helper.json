@@ -1,0 +1,50 @@
+{
+  "state": "Private future helper correction only; no app/browser executed",
+  "target": "cohort/react_browser.js",
+  "preimage": "artifacts/rust/m6-react-workflow-driver-3/cohort/react_browser.js",
+  "preimage_sha256": "fb41bca3fe96d38708cadf7c1682ecfb64ec2ea421c774a044cdc098e797caf1",
+  "candidate": "artifacts/rust/m6-react-div-row-selector-1/react_browser.js",
+  "candidate_sha256": "5de9b9aecef682c833beb84bfbfe6f7f8d17753be56ce3c66432a2586970857a",
+  "Source_authority": [
+    {
+      "path": "frontend/src/components/tables/CustomTable/CustomTable.jsx",
+      "sha256": "64da43199ca0d8bf06ebf06d00e58751fbcb0f4888f8b12acae5a8b97d407860"
+    },
+    {
+      "path": "frontend/src/components/tables/CustomTable/CustomTableBody.jsx",
+      "sha256": "63ec4f57e7bc889873ea1f4cd1f03fdf94ae8f993fbb63aa6336dcaf23d95beb"
+    },
+    {
+      "path": "frontend/src/components/tables/ChannelsTable.jsx",
+      "sha256": "1c8476d9a1e510ce02bc5b2b04e487bcf160487e94816c1214942503d574e0f3"
+    },
+    {
+      "path": "frontend/src/components/tables/ChannelsTable/DraggableRow.jsx",
+      "sha256": "67d8b309dfa4715db9b993b26144934323a108668da2f3ffbd09d9b7199b26af"
+    }
+  ],
+  "correction": "Actual divTable channels-table .tr with direct name-cell exactmatch and unique row; edit/preview actions unchanged; rename and reload waits sameactualrowpredicate",
+  "actions_assertions_deadlines_preserved": true,
+  "production_UI_changed": false,
+  "raw_failed_pair": [
+    {
+      "path": "artifacts/rust/normal-graph-batch36-react-diagnostic-1/results/Original/react-browser/react-workflow.json",
+      "sha256": "62d5316b3ae70349efc27b050525c279ba51d611a7e543df0a8ddbee522a67d6",
+      "actual_exit": 1,
+      "failed_stage": "channel-edit",
+      "DOM_table_count": 0,
+      "login_and_settings_reached_before_failure": true,
+      "full_UI_pass": false
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-react-diagnostic-1/results/Native/react-browser/react-workflow.json",
+      "sha256": "fd77f92336794b89f4b8c5cec67eac3a5ecee87457c8d5d380a6a4d2b228b19e",
+      "actual_exit": 1,
+      "failed_stage": "channel-edit",
+      "DOM_table_count": 0,
+      "login_and_settings_reached_before_failure": true,
+      "full_UI_pass": false
+    }
+  ],
+  "new_UI_pass": false
+}

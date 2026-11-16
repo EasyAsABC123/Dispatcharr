@@ -1,0 +1,196 @@
+{
+  "scope": "Paired unchanged React browser workflow on exact Candidate36. Failed attempts retained; narrow UI acceptance only from actual final paired result+cleanup. No full migration or performance acceptance.",
+  "candidate_image_id": "sha256:dc9f08a7fb9a3a178dd7b8635543ff002dfd91998503e50f0404eee5ccfa286d",
+  "candidate_source": "350b4fdacc45ea7ec4136398d7e7bae4ba4b1f73",
+  "authorship": "Original Dispatcharr and dependency authors retain all application credit; no React UI changed",
+  "attempts": [
+    {
+      "attempt": "initial",
+      "raw_authority": "artifacts/rust/normal-graph-batch36-react-functional-1",
+      "state": "actual_finished_independent_cleanup_not_in_packet",
+      "backends": [
+        {
+          "backend": "Original",
+          "passed": false,
+          "actual_exit": 1,
+          "actual_seconds": 33.84716256399406,
+          "failure_stage": "browser-best-effort-restoration",
+          "failure_message": "Browser condition deadline",
+          "assertions": [],
+          "fixture_restored": true,
+          "raw_sha256": "5f427b7516ac2792cd5ff5adde2f9935edf865d3002bb3d599fe734c91718216"
+        },
+        {
+          "backend": "Native",
+          "passed": false,
+          "actual_exit": 1,
+          "actual_seconds": 33.33939257499878,
+          "failure_stage": "browser-best-effort-restoration",
+          "failure_message": "Browser condition deadline",
+          "assertions": [],
+          "fixture_restored": true,
+          "raw_sha256": "7491e4e6ed6876c61e1094f25c67120ea56bf62d6045dcbeab5271b23a3d8e1e"
+        }
+      ],
+      "actual_exit": 1,
+      "actual_seconds": 202.96039007700165,
+      "binding_sha256": "769207b1f3b9b176511b8926ddeca06c09722aa38a530291a31d949f4aa7794c",
+      "input_references": 2541
+    },
+    {
+      "attempt": "failure-diagnostic",
+      "raw_authority": "artifacts/rust/normal-graph-batch36-react-diagnostic-1",
+      "state": "actual_finished",
+      "backends": [
+        {
+          "backend": "Original",
+          "passed": false,
+          "actual_exit": 1,
+          "actual_seconds": 33.544119598998805,
+          "failure_stage": "channel-edit",
+          "failure_message": "Browser condition deadline",
+          "assertions": [],
+          "fixture_restored": true,
+          "raw_sha256": "62d5316b3ae70349efc27b050525c279ba51d611a7e543df0a8ddbee522a67d6"
+        },
+        {
+          "backend": "Native",
+          "passed": false,
+          "actual_exit": 1,
+          "actual_seconds": 33.270501731996774,
+          "failure_stage": "channel-edit",
+          "failure_message": "Browser condition deadline",
+          "assertions": [],
+          "fixture_restored": true,
+          "raw_sha256": "fd77f92336794b89f4b8c5cec67eac3a5ecee87457c8d5d380a6a4d2b228b19e"
+        }
+      ],
+      "actual_exit": 1,
+      "actual_seconds": 204.3216966119944,
+      "exact_two_projects_six_CIDs_absent": true,
+      "binding_sha256": "c04637bebab1e386b53c45bee0db6806c8e4a2fda2ff261e7d49d3f655a7a15f",
+      "input_references": 2690
+    },
+    {
+      "attempt": "div-row-selector",
+      "raw_authority": "artifacts/rust/normal-graph-batch36-react-selector-1",
+      "state": "actual_finished",
+      "backends": [
+        {
+          "backend": "Original",
+          "passed": false,
+          "actual_exit": 1,
+          "actual_seconds": 40.46070756299014,
+          "failure_stage": "visible-stats",
+          "failure_message": "Missing actual successful stats HTTP",
+          "assertions": [],
+          "fixture_restored": true,
+          "raw_sha256": "9326a8aa2ea16ffd1db168c316c91d462e20f34c05f9ea9b1d1e892aa86cfe41"
+        },
+        {
+          "backend": "Native",
+          "passed": false,
+          "actual_exit": 1,
+          "actual_seconds": 39.536367278997204,
+          "failure_stage": "visible-stats",
+          "failure_message": "Missing actual successful stats HTTP",
+          "assertions": [],
+          "fixture_restored": true,
+          "raw_sha256": "4679f740d81d1d28751aa082db6a98716cd6e74db9481479e3ba0031772244aa"
+        }
+      ],
+      "actual_exit": 1,
+      "actual_seconds": 226.77909047198773,
+      "exact_two_projects_six_CIDs_absent": true,
+      "binding_sha256": "684fb282a1708dd25e55e899e524e15e5194b37afeda5dc1e14e7bc3ff65d963",
+      "input_references": 2839
+    },
+    {
+      "attempt": "actual-stats-endpoint",
+      "raw_authority": "artifacts/rust/normal-graph-batch36-react-stats-endpoint-1",
+      "state": "actual_finished",
+      "backends": [
+        {
+          "backend": "Original",
+          "passed": true,
+          "actual_exit": 0,
+          "actual_seconds": 10.37428832500882,
+          "failure_stage": null,
+          "failure_message": null,
+          "assertions": [
+            "normal-login-and-redirect",
+            "settings-save-persists-after-reload",
+            "channel-edit-visible-after-reload",
+            "browser-decoded-video-advances",
+            "active-channel-visible-in-stats-and-refresh"
+          ],
+          "fixture_restored": true,
+          "raw_sha256": "dbeae7b6594b60f3c28d8925be52acdf7a8f85b426535dfd9e4c8b3ab22e45d4"
+        },
+        {
+          "backend": "Native",
+          "passed": true,
+          "actual_exit": 0,
+          "actual_seconds": 9.527060726002674,
+          "failure_stage": null,
+          "failure_message": null,
+          "assertions": [
+            "normal-login-and-redirect",
+            "settings-save-persists-after-reload",
+            "channel-edit-visible-after-reload",
+            "browser-decoded-video-advances",
+            "active-channel-visible-in-stats-and-refresh"
+          ],
+          "fixture_restored": true,
+          "raw_sha256": "f9b604c1c162f2f5f1fb5f33d9933d96bd3e6f85a79834b5f02d7018f0e609aa"
+        }
+      ],
+      "actual_exit": 0,
+      "actual_seconds": 164.29143384100462,
+      "exact_two_projects_six_CIDs_absent": true,
+      "binding_sha256": "29acb6da870be49d7a5d6e50dffa8776af41ebdbada150e57800a5deae475ea8",
+      "input_references": 2988
+    }
+  ],
+  "full_milestone_accepted": false,
+  "performance_verified": false,
+  "corrections": [
+    {
+      "stage": "channel-edit",
+      "cause": "Helper queried HTML tr; unchanged Source renders divTable rows with class tr. Corrected owned channels-table direct exactname-cell unique row only.",
+      "authority": [
+        {
+          "path": "frontend/src/components/tables/CustomTable/CustomTableBody.jsx",
+          "sha256": "63ec4f57e7bc889873ea1f4cd1f03fdf94ae8f993fbb63aa6336dcaf23d95beb"
+        },
+        {
+          "path": "frontend/src/components/tables/CustomTable/CustomTable.jsx",
+          "sha256": "64da43199ca0d8bf06ebf06d00e58751fbcb0f4888f8b12acae5a8b97d407860"
+        },
+        {
+          "path": "frontend/src/components/tables/ChannelsTable.jsx",
+          "sha256": "1c8476d9a1e510ce02bc5b2b04e487bcf160487e94816c1214942503d574e0f3"
+        }
+      ]
+    },
+    {
+      "stage": "visible-stats",
+      "cause": "Helper awaited /proxy/ts/status; actual Stats Refresh Now uses /proxy/stats/. Corrected fixed observer path, preserving postclick frame boundary/actions/deadlines.",
+      "authority": [
+        {
+          "path": "frontend/src/pages/Stats.jsx",
+          "sha256": "0c50457b568cae0f82599cac80fbb1687dffa69223bee0912b17bda13b2f1655"
+        },
+        {
+          "path": "frontend/src/utils/pages/StatsUtils.js",
+          "sha256": "8ff44e14830bc884ea1f357e3e2dc77e08d14c494351961c95c8fa3dbdf5d550"
+        },
+        {
+          "path": "frontend/src/api.js",
+          "sha256": "3f20f926a472fb20ac1cc2d72a8a23a651b79ea6907b84dabb2fe4c85f24a23b"
+        }
+      ]
+    }
+  ],
+  "paired_UI_workflow_accepted": true
+}

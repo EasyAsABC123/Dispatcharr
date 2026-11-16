@@ -1,0 +1,46 @@
+{
+  "state": "Private observer-only failure-stage and bounded DOM/path diagnostics; NO browser execution or app changes",
+  "target": "cohort/react_browser.js",
+  "preimage": "artifacts/rust/m6-react-workflow-driver-2/cohort/react_browser.js",
+  "preimage_sha256": "6d433863d87d06e4e048f42891838e6d151111359e537f7ce1fb8c9956efca83",
+  "candidate": "artifacts/rust/m6-react-failure-diagnostics-1/react_browser.js",
+  "candidate_sha256": "fb41bca3fe96d38708cadf7c1682ecfb64ec2ea421c774a044cdc098e797caf1",
+  "mode": "0444",
+  "changes": [
+    "Retain first failing phase across finally/best-effort restoration and hard deadline",
+    "On failure only <=1s CDP observation: DOM pathname exactfinite app whitelist or unknown marker; input presence/visibility/counts, fixed known visible labels, token-presence boolean only",
+    "Last12 HTTP path/status/stage: exact required[]/known app/auth/version/proxy path whitelist, static-asset category, otherwise unknown-path marker; no unknown segments/query retained"
+  ],
+  "functional_UI_actions_or_assertions_changed": false,
+  "UI_or_production_code_changed": false,
+  "original_deadlines_unchanged": true,
+  "extra_failure_observation_max_seconds": 1,
+  "prior_failed_Source_and_Native_retained": [
+    {
+      "path": "artifacts/rust/normal-graph-batch36-react-functional-1/results/Original/react-browser/react-workflow.json",
+      "sha256": "5f427b7516ac2792cd5ff5adde2f9935edf865d3002bb3d599fe734c91718216",
+      "actual_exit": 1,
+      "reported_stage": "browser-best-effort-restoration",
+      "scope": "Reported finally-stage masks actual failed phase; no assertion about which original selector failed"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-react-functional-1/results/Native/react-browser/react-workflow.json",
+      "sha256": "7491e4e6ed6876c61e1094f25c67120ea56bf62d6045dcbeab5271b23a3d8e1e",
+      "actual_exit": 1,
+      "reported_stage": "browser-best-effort-restoration",
+      "scope": "Reported finally-stage masks actual failed phase; no assertion about which original selector failed"
+    }
+  ],
+  "new_app_pass_claimed": false,
+  "diagnostic_visible_text_bound": "Only fixed known label matches from first64 visible label/button/heading/paragraph/link/alert nodes, each128-character inspected prefix; no arbitrary text retained",
+  "redaction_authority": {
+    "frontend_api_path": "frontend/src/api.js",
+    "sha256": "3f20f926a472fb20ac1cc2d72a8a23a651b79ea6907b84dabb2fe4c85f24a23b",
+    "known_login": "/api/accounts/token/",
+    "known_initialization": "/api/accounts/initialize-superuser/",
+    "known_version": "/api/core/version/",
+    "all_unknown_paths": "<unknown-path>",
+    "all_static_assets": "<static-asset>"
+  },
+  "previous_unexecuted_proposal_retained": "path-policy-previous"
+}

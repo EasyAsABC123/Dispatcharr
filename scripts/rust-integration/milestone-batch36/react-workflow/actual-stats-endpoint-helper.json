@@ -1,0 +1,46 @@
+{
+  "state": "Private Source-authoritative Stats endpoint observer correction; no app executed",
+  "target": "cohort/react_browser.js",
+  "preimage": "artifacts/rust/m6-react-workflow-driver-4/cohort/react_browser.js",
+  "preimage_sha256": "5de9b9aecef682c833beb84bfbfe6f7f8d17753be56ce3c66432a2586970857a",
+  "candidate": "artifacts/rust/m6-react-stats-endpoint-helper-1/react_browser.js",
+  "candidate_sha256": "7cb548df4ed201bb2a3b6aa589ddba1f1d026aef64252b894cda1ab6ed65490e",
+  "Source_authority": [
+    {
+      "path": "frontend/src/pages/Stats.jsx",
+      "sha256": "0c50457b568cae0f82599cac80fbb1687dffa69223bee0912b17bda13b2f1655"
+    },
+    {
+      "path": "frontend/src/utils/pages/StatsUtils.js",
+      "sha256": "8ff44e14830bc884ea1f357e3e2dc77e08d14c494351961c95c8fa3dbdf5d550"
+    },
+    {
+      "path": "frontend/src/api.js",
+      "sha256": "3f20f926a472fb20ac1cc2d72a8a23a651b79ea6907b84dabb2fe4c85f24a23b"
+    }
+  ],
+  "actual_Stats_call_chain": "Refresh Now onClick fetchAllStats \u2192 fetchAllConnectionStats \u2192 API.getAllConnectionStats \u2192 /proxy/stats/",
+  "correction": "Capture fixed actual Stats endpoint, add finite diagnostic allowlist, require actualpostclickHTTP200 on /proxy/stats/; beforeRefresh index and actions/deadlines/assertions preserved",
+  "production_UI_changed": false,
+  "raw_failed_pair": [
+    {
+      "path": "artifacts/rust/normal-graph-batch36-react-selector-1/results/Original/react-browser/react-workflow.json",
+      "sha256": "9326a8aa2ea16ffd1db168c316c91d462e20f34c05f9ea9b1d1e892aa86cfe41",
+      "actual_exit": 1,
+      "failure_stage": "visible-stats",
+      "failure_message": "Missing actual successful stats HTTP",
+      "prior_login_settings_rename_reload_decode_and_visible_owned_Stats_reached": true,
+      "full_UI_pass": false
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-react-selector-1/results/Native/react-browser/react-workflow.json",
+      "sha256": "4679f740d81d1d28751aa082db6a98716cd6e74db9481479e3ba0031772244aa",
+      "actual_exit": 1,
+      "failure_stage": "visible-stats",
+      "failure_message": "Missing actual successful stats HTTP",
+      "prior_login_settings_rename_reload_decode_and_visible_owned_Stats_reached": true,
+      "full_UI_pass": false
+    }
+  ],
+  "new_UI_pass": false
+}

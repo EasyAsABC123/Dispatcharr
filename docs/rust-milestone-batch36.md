@@ -54,3 +54,9 @@ or remux step that collapsed timestamps. Earlier Source12 and Native15 decoder3
 results already exhibit the same strict audio-DTS failure as Native39. All full
 decoder failures remain failed; no remux flags or no-stderr criteria change. No
 application, full decode rerun, performance gain or media acceptance is claimed.
+
+## Paired unchanged React workflow
+
+The [paired browser packet](../scripts/rust-integration/milestone-batch36/react-workflow/summary.json) records the completed Source and Native workflow on the exact Candidate36 image. The final cohort exited 0 in 164.291 seconds with pipe EOF and process-group settlement. Both Chromium runs passed login, a system-setting save/reload/restoration, channel rename/reload, actual decoded video advancement, and visible active-channel Stats with an actual successful Refresh Now request. Fixture settings, disposable rows, media clients and provider ownership restored; independent cleanup verified both projects and all six exact containers absent. This qualifies that browser workflow only; it establishes no full migration milestone or performance gain. The React UI remains unchanged, with all application credit retained by the original authors.
+
+Earlier failed attempts remain failed in the packet. Failure-stage diagnostics identified a helper querying HTML `tr` elements while the original UI renders DIV rows. Correcting the owned channel-row selector exposed a second helper assumption: Stats actually requests `/proxy/stats/`, while the observer awaited `/proxy/ts/status`. The final helper observes the actual Source endpoint and preserves the existing post-click response boundary, UI actions, assertions and deadlines. Initial cleanup receipts retain their raw per-container generation fields, including one unknown field; no historical failure is reclassified.

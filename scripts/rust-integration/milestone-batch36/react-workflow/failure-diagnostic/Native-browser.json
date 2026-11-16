@@ -1,0 +1,159 @@
+{
+  "passed": false,
+  "status": "EXECUTED",
+  "browser_sha256": "fb41bca3fe96d38708cadf7c1682ecfb64ec2ea421c774a044cdc098e797caf1",
+  "observations": [
+    {
+      "backend": "native",
+      "passed": false,
+      "cleanup": {
+        "restored": true,
+        "settings_rows_exact": true,
+        "owned_channel_stream_user_absent": true,
+        "actual_media_owner_clients_provider_returned": true
+      },
+      "process": {
+        "actual_exit": 1,
+        "failure": null,
+        "seconds": 33.270501731996774,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch36-react-diagnostic-1/results/Native/react-browser/private/browser-native.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch36-react-diagnostic-1/results/Native/react-browser/private/browser-native.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2697107,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [
+          {
+            "pid": 2697121,
+            "wait_status": 0
+          },
+          {
+            "pid": 2697122,
+            "wait_status": 0
+          },
+          {
+            "pid": 2697172,
+            "wait_status": 0
+          },
+          {
+            "pid": 2697203,
+            "wait_status": 0
+          },
+          {
+            "pid": 2697143,
+            "wait_status": 0
+          },
+          {
+            "pid": 2697146,
+            "wait_status": 0
+          }
+        ],
+        "output_bytes_written": 1455,
+        "output_bytes_discarded": 0
+      },
+      "actual_exit": 1,
+      "browser": {
+        "ready": true,
+        "browser": "Chrome/156.0.8078.79",
+        "protocol": "1.3",
+        "browser_pid": 2697114
+      },
+      "result": {
+        "passed": false,
+        "stage": "channel-edit",
+        "diagnostics": {
+          "failure_stage": "channel-edit",
+          "DOM": {
+            "pathname": "/channels",
+            "ready_state": "complete",
+            "username_input": false,
+            "username_visible": false,
+            "password_input": false,
+            "password_visible": false,
+            "form_count": 0,
+            "table_count": 0,
+            "dialog_count": 0,
+            "dialog_name_input": false,
+            "video_count": 0,
+            "has_access_token": true,
+            "visible_known_text": [
+              "Dispatcharr",
+              "Channels",
+              "Settings",
+              "Stats"
+            ]
+          },
+          "recent_responses": [
+            {
+              "path": "/api/channels/channels/ids/",
+              "status": 200,
+              "stage": "system-settings"
+            },
+            {
+              "path": "/api/m3u/server-groups/",
+              "status": 200,
+              "stage": "system-settings"
+            },
+            {
+              "path": "/api/accounts/users/",
+              "status": 200,
+              "stage": "system-settings"
+            },
+            {
+              "path": "<unknown-path>",
+              "status": 200,
+              "stage": "system-settings"
+            },
+            {
+              "path": "<unknown-path>",
+              "status": 200,
+              "stage": "system-settings"
+            },
+            {
+              "path": "/api/channels/logos/",
+              "status": 200,
+              "stage": "channel-edit"
+            },
+            {
+              "path": "/api/channels/channels/ids/",
+              "status": 200,
+              "stage": "channel-edit"
+            },
+            {
+              "path": "<unknown-path>",
+              "status": 200,
+              "stage": "channel-edit"
+            },
+            {
+              "path": "<unknown-path>",
+              "status": 200,
+              "stage": "channel-edit"
+            },
+            {
+              "path": "/api/channels/streams/filter-options/",
+              "status": 200,
+              "stage": "channel-edit"
+            },
+            {
+              "path": "<unknown-path>",
+              "status": 200,
+              "stage": "channel-edit"
+            },
+            {
+              "path": "/api/channels/logos/",
+              "status": 200,
+              "stage": "channel-edit"
+            }
+          ]
+        },
+        "error_type": "Error",
+        "failure_message": "Browser condition deadline",
+        "uncaught_exceptions": 0
+      },
+      "stderr_bytes": 0
+    }
+  ],
+  "performance_verified": false,
+  "full_milestone_accepted": false
+}

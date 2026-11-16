@@ -1,0 +1,211 @@
+{
+  "two_projects_and_exact_CIDs_absent": true,
+  "exact_CIDs_checked": 6,
+  "raw_generation_fields_preserved": true,
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-f351982982",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.0097781880031107,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-f351982982",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009342836012365296,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-f351982982",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.01002523499482777,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=6d0e0033bd179f12e868308a44331ec3d58ffbe39bd0c61bb5fa8d665aae8070",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009565931992256083,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=e2fb4e8eada9e9af6d9212b332ef2fc161c1088a47725977438b379b079138e7",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009627594001358375,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=767ccea725abfe7d9484c419f31f15179e6ba0e5243d945678cbc4735f51830d",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008947433991124853,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-e3f3dc315c",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009521050989860669,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-e3f3dc315c",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009341135009890422,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-e3f3dc315c",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009281603008275852,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=680027e073e408b75c0b6b3d1b2bc5827b23ffedf3654eaa77b9b86f417517a9",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008841921997372992,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=05b24ec0cded21f86ae1c9888865cc75b97fa03d12df453522c70bb8554f34f4",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009382276999531314,
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=12ac5306d634350d694d7dad93d1dbc79fd82efa1cf1c71b350a895656ac1408",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008514311994076706,
+      "wait_and_EOF_completed": true
+    }
+  ]
+}

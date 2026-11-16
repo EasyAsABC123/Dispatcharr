@@ -22,13 +22,15 @@ identifies the remaining recording-event and constructor-extension interfaces.
 All full M0–M9 milestones and new
 full-service performance acceptance remain open.
 
-The separate [operations batch](rust-operations-candidate36.md) and
-[unchanged React batch](rust-react-candidate36.md) completed with failed workflow
-checks and independently absent owned containers. Observed restore subcells and
-observer failures retain their actual scope. Operations41 passes all five Source
-normal-restore checks; Native M8/restore/cancellation remain blocked by the
-process observer, and Source event retirement remains unqualified. No new
-performance acceptance is inherited from these attempts.
+The [operations batches](rust-operations-candidate36.md) retain their failed
+workflow checks and independently absent owned containers. Operations41 passes
+all five Source normal-restore checks; Native M8/restore/cancellation and Source
+event retirement require the current follow-up batch. The [paired unchanged
+React workflow](rust-milestone-batch36.md#paired-unchanged-react-workflow) now passes
+all five browser assertions against Source and Rust, including decoded video
+and active-channel Stats refresh. [Earlier browser failures](rust-react-candidate36.md)
+remain literal. These scoped results establish no full milestone or performance
+acceptance.
 
 The preceding [Candidate35](rust-milestone-batch35.md), runtime
 `b0fc1ab1085ae765cbc978b349f08171066edfff`, passes all four SDK46 gates and
