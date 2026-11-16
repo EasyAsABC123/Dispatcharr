@@ -14,18 +14,21 @@ The newest source candidate is [Candidate36](rust-milestone-batch36.md), runtime
 1,115 tests, zero failures and 783 ignored. It allows unrelated Main startup
 with a populated plugin directory while refusing unsupported DVR effects before
 queue claim or producer mutation. Docker and all six package families pass;
-Main39 passes complete Guide and grouped recording/settings. M8 fails its
-process observer and restart fails strict decoder verification; queue/API
-boundary controls remain unrun. This does not implement DVR plugin execution, Source three-root
-startup parity or enabled-plugin restore. The [DVR compatibility analysis](rust-dvr-plugin-compatibility.md)
+Main39 passes complete Guide and grouped recording/settings. Operations42
+qualifies selected M8 actions, isolated strict DVR queue/API safeguards,
+current-schema restore and partial-admission cancellation. The earlier
+recording/recovery restart retains its strict audio-DTS failure observed in
+both Source and Native. General DVR plugin execution, Source three-root startup
+parity and enabled Native restore remain open. The [DVR compatibility analysis](rust-dvr-plugin-compatibility.md)
 identifies the remaining recording-event and constructor-extension interfaces.
 All full M0–M9 milestones and new
 full-service performance acceptance remain open.
 
 The [operations batches](rust-operations-candidate36.md) retain their failed
 workflow checks and independently absent owned containers. Operations41 passes
-all five Source normal-restore checks; Native M8/restore/cancellation and Source
-event retirement require the current follow-up batch. The [paired unchanged
+all five Source normal-restore checks. Operations42 passes its selected Source
+characterizations and Native M8 actions, isolated strict DVR safeguards,
+current-schema restore and partial-admission cancellation, with exact cleanup. The [paired unchanged
 React workflow](rust-milestone-batch36.md#paired-unchanged-react-workflow) now passes
 all five browser assertions against Source and Rust, including decoded video
 and active-channel Stats refresh. [Earlier browser failures](rust-react-candidate36.md)

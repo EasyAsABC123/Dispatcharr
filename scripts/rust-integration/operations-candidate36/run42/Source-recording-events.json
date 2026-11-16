@@ -1,0 +1,188 @@
+{
+  "source": {
+    "path": "artifacts/rust/normal-graph-batch42-operations-1/fixtures/Original-86eea2bf/recording-event-capture/source-event-report.json",
+    "sha256": "50afd1442b495042dc8536d4acfe5d5b823485ad83f28ac166d3db788309de41"
+  },
+  "status": "passed",
+  "cells": [
+    {
+      "name": "stopped",
+      "status": "passed"
+    },
+    {
+      "name": "completed",
+      "status": "passed"
+    }
+  ],
+  "actual_webhook_deliveries": 4,
+  "actual_audit_delivery_visible_to_ordinary_plugin_action": true,
+  "ordinary_final_retirement": "Bounded20s observation completed without forced cleanup",
+  "monkeypatch_characterized": false,
+  "Native_parity_claimed": false,
+  "full_milestone_passed": false,
+  "private_contract_authority": {
+    "path": "artifacts/rust/m8-recording-event-source42-contract-1/contract.json",
+    "sha256": "59aa9311b012594fb61ce588926c051e974d50eb34952388b583ad01baa5cc4e",
+    "raw_payloads_kept_private": true
+  },
+  "actual_payload_key_shapes": [
+    {
+      "ordinal": 1,
+      "event": "recording_start",
+      "payload_keys": [
+        "channel_id",
+        "channel_name",
+        "recording_id"
+      ],
+      "payload_sha256": "1a7257cefa97cd1ceb5e27ff81350c00f7461d63496202347e6ea81367c7e6be",
+      "actual_task_name": "apps.channels.tasks.run_recording",
+      "actual_children_count": 0,
+      "audit_visible_inside_action": {
+        "details": {
+          "recording_id": 1
+        },
+        "id": 5
+      },
+      "Connect_delivery_visible_inside_action": {
+        "id": 1,
+        "status": "success",
+        "subscription_id": 1
+      }
+    },
+    {
+      "ordinal": 2,
+      "event": "recording_end",
+      "payload_keys": [
+        "bytes_written",
+        "channel_id",
+        "channel_name",
+        "channel_url",
+        "end_time",
+        "file_name",
+        "file_path",
+        "file_size",
+        "file_url",
+        "has_file",
+        "outcome",
+        "profile_used",
+        "provider_name",
+        "recording_id",
+        "remux_success",
+        "start_time",
+        "status",
+        "stream_id",
+        "stream_name",
+        "stream_url"
+      ],
+      "payload_sha256": "03949ce7dcadd86a30e0e56ee66852138d74179ece5197c3797a37f13a87ad04",
+      "actual_task_name": "apps.channels.tasks.run_recording",
+      "actual_children_count": 0,
+      "audit_visible_inside_action": {
+        "details": {
+          "bytes_written": 2611508,
+          "end_time": "2026-11-16T08:18:26.442694+00:00",
+          "failure_reason": null,
+          "file_name": "20261116_081656.mkv",
+          "file_path": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261116_081656.mkv",
+          "file_size": 2492899,
+          "file_url": "/api/channels/recordings/1/file/",
+          "has_file": true,
+          "interrupted_reason": null,
+          "outcome": "success",
+          "recording_id": 1,
+          "remux_success": true,
+          "start_time": "2026-11-16T08:16:56.442694+00:00",
+          "status": "stopped"
+        },
+        "id": 10
+      },
+      "Connect_delivery_visible_inside_action": {
+        "id": 2,
+        "status": "success",
+        "subscription_id": 2
+      }
+    },
+    {
+      "ordinal": 3,
+      "event": "recording_start",
+      "payload_keys": [
+        "channel_id",
+        "channel_name",
+        "channel_url",
+        "profile_used",
+        "provider_name",
+        "recording_id",
+        "stream_id",
+        "stream_name",
+        "stream_url"
+      ],
+      "payload_sha256": "0eb95a3f7505f863db0a0de58b507fe642cb3dd1b5486bbf7be19c62c3f0c442",
+      "actual_task_name": "apps.channels.tasks.run_recording",
+      "actual_children_count": 0,
+      "audit_visible_inside_action": {
+        "details": {
+          "recording_id": 2
+        },
+        "id": 12
+      },
+      "Connect_delivery_visible_inside_action": {
+        "id": 3,
+        "status": "success",
+        "subscription_id": 1
+      }
+    },
+    {
+      "ordinal": 4,
+      "event": "recording_end",
+      "payload_keys": [
+        "bytes_written",
+        "channel_id",
+        "channel_name",
+        "channel_url",
+        "end_time",
+        "file_name",
+        "file_path",
+        "file_size",
+        "file_url",
+        "has_file",
+        "outcome",
+        "profile_used",
+        "provider_name",
+        "recording_id",
+        "remux_success",
+        "start_time",
+        "status",
+        "stream_id",
+        "stream_name",
+        "stream_url"
+      ],
+      "payload_sha256": "1377e6140a6a16cd9831653218b7fa0c8170131944e4638f9f629f5ff38963cc",
+      "actual_task_name": "apps.channels.tasks.run_recording",
+      "actual_children_count": 0,
+      "audit_visible_inside_action": {
+        "details": {
+          "bytes_written": 3560532,
+          "end_time": "2026-11-16T08:17:32.416825+00:00",
+          "failure_reason": null,
+          "file_name": "20261116_081714.mkv",
+          "file_path": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261116_081714.mkv",
+          "file_size": 3394322,
+          "file_url": "/api/channels/recordings/2/file/",
+          "has_file": true,
+          "interrupted_reason": null,
+          "outcome": "success",
+          "recording_id": 2,
+          "remux_success": true,
+          "start_time": "2026-11-16T08:17:14.416825+00:00",
+          "status": "completed"
+        },
+        "id": 14
+      },
+      "Connect_delivery_visible_inside_action": {
+        "id": 4,
+        "status": "success",
+        "subscription_id": 2
+      }
+    }
+  ]
+}

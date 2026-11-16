@@ -1,0 +1,70 @@
+{
+  "source": {
+    "path": "artifacts/rust/normal-graph-batch42-operations-1/fixtures/Native-498296d5/backup-restore-admission/report.json",
+    "sha256": "2b773e3f0c43e44069567479d8a3c59df53447cf0f591d9c4c28e94a305bdf7f"
+  },
+  "status": "passed",
+  "cells": [
+    {
+      "name": "stopped_partial_admission_never_claims_or_drops_and_reports_actual_settlement",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "channel": "Owned restore before",
+        "database": "normal_dvr_fd5332d3967c476f",
+        "marker": {
+          "phase": "before",
+          "unicode": "\u65e5\u672c\u8a9e \u00e5ngstr\u00f6m"
+        },
+        "pluginrepo_ctypes": 1,
+        "pluginrepo_permissions": [
+          "add_pluginrepo",
+          "change_pluginrepo",
+          "delete_pluginrepo",
+          "view_pluginrepo"
+        ]
+      },
+      "all_public_relation_OIDs_preserved": true,
+      "name": "database_unchanged_after_held_owner_release",
+      "status": "passed"
+    }
+  ],
+  "actual_HTTP_caller_receipts": {
+    "TERM_sent": true,
+    "all_threads_settled": true,
+    "results": [
+      {
+        "error_type": "RemoteDisconnected",
+        "label": "held-existing-owner"
+      },
+      {
+        "error_type": "RemoteDisconnected",
+        "label": "capacity-probe"
+      }
+    ]
+  },
+  "actual_signal_exit": {
+    "Dead": false,
+    "Error": "",
+    "ExitCode": 1,
+    "FinishedAt": "2026-11-16T08:23:50.901510771Z",
+    "OOMKilled": false,
+    "Paused": false,
+    "Pid": 0,
+    "Restarting": false,
+    "Running": false,
+    "StartedAt": "2026-11-16T08:22:44.344600952Z",
+    "Status": "exited"
+  },
+  "scope": "Native stopped preclaim pool admission only",
+  "full_restore_parity": false,
+  "unqualified": [
+    "Source parity is not applicable to Native pool admission",
+    "unknown physical-close fault injection",
+    "direct internal actor phase observation",
+    "partial admission settling before normal clean exit",
+    "restore cancellation after destructive phase",
+    "performance"
+  ]
+}

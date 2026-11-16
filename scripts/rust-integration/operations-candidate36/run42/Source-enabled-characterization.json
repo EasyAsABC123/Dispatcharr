@@ -1,0 +1,74 @@
+{
+  "source": {
+    "path": "artifacts/rust/normal-graph-batch42-operations-1/fixtures/Original-86eea2bf/enabled-restore-source/report.json",
+    "sha256": "ceb68fbaef034a0ba5c535dc9b95e6bf3f0e6010baea8738542e335f3cbebda4"
+  },
+  "state": "passed",
+  "consumer_scope": "explicit user-module import, prefork4; default plugin bootstrap parity not claimed",
+  "characterization_scope": "Actual restored enabled config with observed absent/dead weak receiver before and after ordinary restore; no constructor/child execution claimed",
+  "actual_post_migrate_receiver_liveness": {
+    "SQL": {
+      "autocommit": true,
+      "backend_start": "2026-11-16 08:16:26.065974+00",
+      "in_atomic_block": false,
+      "pid": 846
+    },
+    "after_restore_body": {
+      "Django_DEBUG": false,
+      "dispatch_uid": "apps.plugins.post_migrate_discover",
+      "matching_entries": [],
+      "private_cache_cleared": false,
+      "receiver_alive": false,
+      "receiver_function_retained": false,
+      "signal_dispatched_by_probe": false
+    },
+    "before_restore_body": {
+      "Django_DEBUG": false,
+      "dispatch_uid": "apps.plugins.post_migrate_discover",
+      "matching_entries": [
+        {
+          "alive": false,
+          "weak_reference": true
+        }
+      ],
+      "private_cache_cleared": false,
+      "receiver_alive": false,
+      "receiver_function_retained": false,
+      "signal_dispatched_by_probe": false
+    },
+    "current_task": {
+      "called_directly": false,
+      "children": [],
+      "id": "7c0a98d7-e7af-4ca2-90f8-ebc8db8a8b9d",
+      "is_eager": false,
+      "name": "apps.backups.tasks.restore_backup_task",
+      "parent_id": null,
+      "root_id": "7c0a98d7-e7af-4ca2-90f8-ebc8db8a8b9d"
+    },
+    "module_name": "owned_restore_probe.plugin",
+    "module_nonce": "b9b5cadbeac040cbbcd4b648d8e05f90",
+    "observed_task_id": "7c0a98d7-e7af-4ca2-90f8-ebc8db8a8b9d",
+    "restored_plugin_config": {
+      "enabled": true,
+      "ever_enabled": true
+    },
+    "worker_pid": 745
+  },
+  "actual_discovery_branch": {
+    "Source_default_use_cache": false,
+    "Source_force_reload_requested": false,
+    "branch": "no_restore_constructor_observed",
+    "private_cache_access_or_clearing": false,
+    "restore_constructors": [],
+    "restore_module_imports": []
+  },
+  "missing_observed_phases": [
+    "constructor_begin",
+    "constructor_child_published",
+    "physical_child",
+    "constructor_child_joined",
+    "constructor_end"
+  ],
+  "Native_enabled_restore_accepted": false,
+  "full_restore_parity": false
+}

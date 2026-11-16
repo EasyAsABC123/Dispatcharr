@@ -1,0 +1,127 @@
+{
+  "source": {
+    "path": "artifacts/rust/normal-graph-batch42-operations-1/fixtures/Native-498296d5/dvr-domain-boundaries/report.json",
+    "sha256": "47ad2cbe2c909670a38a932cfb542badc972b70cc99f16dfab412e602a51e652"
+  },
+  "status": "passed",
+  "scope": "Root-approved diagnostic negative fresh Main with autonomous Beat0; default M8 actions/ordinary restore keep Beat1",
+  "cells": [
+    {
+      "SQL_Beat_DVR_cache_broker_unchanged": true,
+      "actual_DVR_claim_ACK_commands": 0,
+      "actual_recording_recovery_offset_publications": 0,
+      "name": "POST /api/channels/recordings/",
+      "status": "passed",
+      "strict_Beat_equality_relaxed": false
+    },
+    {
+      "SQL_Beat_DVR_cache_broker_unchanged": true,
+      "actual_DVR_claim_ACK_commands": 0,
+      "actual_recording_recovery_offset_publications": 0,
+      "name": "PUT /api/channels/recordings/1/",
+      "status": "passed",
+      "strict_Beat_equality_relaxed": false
+    },
+    {
+      "SQL_Beat_DVR_cache_broker_unchanged": true,
+      "actual_DVR_claim_ACK_commands": 0,
+      "actual_recording_recovery_offset_publications": 0,
+      "name": "PATCH /api/channels/recordings/1/",
+      "status": "passed",
+      "strict_Beat_equality_relaxed": false
+    },
+    {
+      "SQL_Beat_DVR_cache_broker_unchanged": true,
+      "actual_DVR_claim_ACK_commands": 0,
+      "actual_recording_recovery_offset_publications": 0,
+      "name": "PATCH /api/core/settings/14/",
+      "status": "passed",
+      "strict_Beat_equality_relaxed": false
+    },
+    {
+      "name": "DELETE/stop available",
+      "status": "passed"
+    },
+    {
+      "actual_MONITOR_claim_ACK_commands": 0,
+      "actual_Source_producer": true,
+      "actual_stop": {
+        "actual_exit": 0,
+        "expected_exit": null,
+        "oom_killed": false
+      },
+      "backend_preserved": true,
+      "name": "normal-recording",
+      "no_ACK": true,
+      "raw_frame_removed_only_after_stop": true,
+      "raw_head_unchanged": true,
+      "status": "passed"
+    },
+    {
+      "actual_MONITOR_claim_ACK_commands": 0,
+      "actual_Source_producer": true,
+      "actual_stop": {
+        "actual_exit": 0,
+        "expected_exit": null,
+        "oom_killed": false
+      },
+      "backend_preserved": true,
+      "name": "revoked-recording",
+      "no_ACK": true,
+      "raw_frame_removed_only_after_stop": true,
+      "raw_head_unchanged": true,
+      "status": "passed"
+    },
+    {
+      "actual_MONITOR_claim_ACK_commands": 0,
+      "actual_Source_producer": true,
+      "actual_stop": {
+        "actual_exit": 0,
+        "expected_exit": null,
+        "oom_killed": false
+      },
+      "backend_preserved": true,
+      "name": "missing-row-recording",
+      "no_ACK": true,
+      "raw_frame_removed_only_after_stop": true,
+      "raw_head_unchanged": true,
+      "status": "passed"
+    },
+    {
+      "actual_MONITOR_claim_ACK_commands": 0,
+      "actual_Source_producer": true,
+      "actual_stop": {
+        "actual_exit": 0,
+        "expected_exit": null,
+        "oom_killed": false
+      },
+      "backend_preserved": true,
+      "name": "recovery",
+      "no_ACK": true,
+      "raw_frame_removed_only_after_stop": true,
+      "raw_head_unchanged": true,
+      "status": "passed"
+    },
+    {
+      "actual_MONITOR_claim_ACK_commands": 0,
+      "actual_Source_producer": true,
+      "actual_stop": {
+        "actual_exit": 0,
+        "expected_exit": null,
+        "oom_killed": false
+      },
+      "backend_preserved": true,
+      "name": "offsets",
+      "no_ACK": true,
+      "raw_frame_removed_only_after_stop": true,
+      "raw_head_unchanged": true,
+      "status": "passed"
+    }
+  ],
+  "strict_SQL_Beat_rows_DVRcache_broker_media_equality": true,
+  "actual_Source_apply_async_heads_preserved_without_ACK": true,
+  "revoked_fresh_absent_to_REVOKED_prior_backend_preserved": true,
+  "all_owned_head_removals_after_Main_stop_only": true,
+  "Source_three_root_recovery_parity": false,
+  "full_DVR_plugin_parity": false
+}
