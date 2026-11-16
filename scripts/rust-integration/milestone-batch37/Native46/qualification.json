@@ -1,0 +1,80 @@
+{
+  "M8": {
+    "actual_action_cases": 5,
+    "full_M8_passed": false,
+    "negative_scope": "Fresh Beat0 only; default action/restore Beat1 separate.",
+    "populated_domain_negative_controls": 10
+  },
+  "Source44_authority_replayed": false,
+  "Source44_qualification_changed": false,
+  "actual_exit": 1,
+  "attempted_contexts": 7,
+  "candidate_image_id": "sha256:83edf4700ef2be10b6812c8045d0d5fca94216861854067465dd36154f83bb88",
+  "cases": [
+    {
+      "case": "recording-plugin-characterization",
+      "status": "failed"
+    },
+    {
+      "case": "recording-connect-boundaries",
+      "status": "passed"
+    },
+    {
+      "case": "m8-actions",
+      "status": "passed"
+    },
+    {
+      "case": "normal-backup-restore",
+      "status": "passed"
+    },
+    {
+      "case": "normal-backup-restore-partial-admission",
+      "status": "passed"
+    },
+    {
+      "case": "grouped-m6",
+      "status": "passed"
+    },
+    {
+      "case": "nonempty-restart",
+      "status": "failed"
+    }
+  ],
+  "exact_cleanup_passed": true,
+  "failed_contexts": 2,
+  "failure_field": null,
+  "full_milestones_accepted": false,
+  "grouped_m6_cells": 5,
+  "independent_fixture_CIDs_absent": 16,
+  "independent_observer_CIDs_absent": 4,
+  "independent_original_host_PIDs_absent": 16,
+  "inert_Connect_boundaries": {
+    "cases": 5,
+    "scope": "Persisted EndConnect two-root/deferred startup, direct inert-active DELETE501; inert no-worker STOP200/pending STOP200 DELETE204; actual Source recovery frame beforeACK unchanged.",
+    "status": "passed"
+  },
+  "ordinary_restore_cells": 6,
+  "partial_admission_cells": 2,
+  "passed_contexts": 5,
+  "performance_verified": false,
+  "process_group_settled": true,
+  "raw_aggregate": {
+    "path": "artifacts/rust/normal-graph-batch46-recording-Connect-functional-1/results/report.json",
+    "sha256": "2bda120c0412c9eaab18921e8a58aced3c15c2feae09e214155fb4baeb10baba"
+  },
+  "raw_binding": {
+    "path": "artifacts/rust/normal-graph-batch46-recording-Connect-functional-1/binding.json",
+    "sha256": "42e0043526ec22b0bdb04c1d317244a2a03576fa3313f1eb4e40a4220c77f4fd"
+  },
+  "raw_matrix": {
+    "path": "artifacts/rust/normal-graph-batch46-recording-Connect-functional-1/results/Native/report.json",
+    "sha256": "b621aa0f70f299760316aed2704bb52b1b3fc8efa6c1aa9bb3a720d6036bc35f"
+  },
+  "scope": "Literal failed whole7 Native run, five independent named context passes only. Ordinary event observer overflow and strict restart decoder warning remain failed; no gain or whole milestone acceptance.",
+  "seconds": 709.1255061849952,
+  "selected_application_cells_passed": false,
+  "source_git": "da75542b6f46ea982dfefb75b5541757e78cd34a",
+  "state": "ACTUAL_NATIVE46_FAILED_WITH_FIVE_INDEPENDENT_CONTEXT_PASSES",
+  "stderr_EOF": true,
+  "stdout_EOF": true
+}

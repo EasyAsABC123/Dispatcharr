@@ -1,0 +1,87 @@
+{
+  "actual_claimed_task_id": "c48b236d-82cd-4fe0-ac82-d5b02ad0d26f",
+  "actual_observer_failure": {
+    "actual_exit": 1,
+    "byte_limit": 16777216,
+    "durable_file_serialized_JSON_bytes": 15739832,
+    "error": "ValueError:Monitor16MiB",
+    "forced": false,
+    "original_generation_absent": true,
+    "raw_final": {
+      "path": "artifacts/rust/normal-graph-batch46-recording-Connect-functional-1/fixtures/Native-1ec3af29/data/recording-plugin-characterization/dvr-domain-observer-684caee4/final.json",
+      "sha256": "8dc9608abec51ef53f3d7b60378a066ff4b07bc4ed3f260bd5e0a69bf2e051eb"
+    },
+    "retained_rows": 8423,
+    "retained_serialized_JSON_bytes": 15739832,
+    "row_limit": 20000,
+    "serialized_JSON_bytes_by_database": {
+      "0": 15583804,
+      "1": 150211,
+      "2": 5817
+    },
+    "stderr_EOF": true,
+    "stdout_EOF": true,
+    "terminal_barrier_observed": false,
+    "terminal_writer_closed": false,
+    "wire_RESP_bytes_claimed": false
+  },
+  "actual_running_DELETE_continued_media": true,
+  "actual_running_DELETE_status": 501,
+  "actual_running_STOP_status": 200,
+  "first_actual_events": [
+    {
+      "event": "recording_start",
+      "keys": [
+        "channel_id",
+        "channel_name",
+        "recording_id"
+      ],
+      "parsed_normalized_payload_sha256": "d86cac63042499d7f78e43f70da6a7c3bb989b7e4b1483339e1b657a0a342975",
+      "task_id": "c48b236d-82cd-4fe0-ac82-d5b02ad0d26f"
+    },
+    {
+      "event": "recording_end",
+      "keys": [
+        "bytes_written",
+        "channel_id",
+        "channel_name",
+        "channel_url",
+        "end_time",
+        "file_name",
+        "file_path",
+        "file_size",
+        "file_url",
+        "has_file",
+        "outcome",
+        "profile_used",
+        "provider_name",
+        "recording_id",
+        "remux_success",
+        "start_time",
+        "status",
+        "stream_id",
+        "stream_name",
+        "stream_url"
+      ],
+      "parsed_normalized_payload_sha256": "d2dd1960b576a007b985c2170d9e1a42d6091f71c881954ee1d9f07b2be695f8",
+      "task_id": "c48b236d-82cd-4fe0-ac82-d5b02ad0d26f"
+    }
+  ],
+  "first_backend_children": [],
+  "first_backend_status": "SUCCESS",
+  "first_failure": {
+    "finally_masking_cleanup_type": "RuntimeError ActualRoleNotRetired",
+    "raw_nested_traceback": {
+      "path": "artifacts/rust/normal-graph-batch46-recording-Connect-functional-1/fixtures/Native-1ec3af29/recording-connect-capture/private/failure.json",
+      "sha256": "dbd16f655e4da49aed5beac6b8db57e1354e00929f2297ac322495b54391290e"
+    },
+    "stage": "second ActualClaimedRecordingPublication",
+    "type": "TimeoutError"
+  },
+  "first_recording_decode_observed": true,
+  "production_guard_fault_claimed": false,
+  "scheduled_DB_marker": "dvr-recording-1",
+  "scope": "First stopped-recording observed subcells only; whole event workflow FAILED on second publication observation. No per-event physical Host/SQL receipt or complete event acceptance inferred.",
+  "second_event_workflow_not_qualified": true,
+  "whole_event_workflow_accepted": false
+}
