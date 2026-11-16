@@ -311,7 +311,14 @@ def command(argv, bound, directory, label, seconds):
                         if child == 0:
                             break
                         reaped.append({'pid': child, 'wait_status': status})
-                members = _group_members(pgid)
+                # Membership affects settlement only after exit/termination.
+                # A live, healthy leader keeps this lease; do not scan the
+                # entire host /proc at every ordinary pipe-poll interval.
+                # None means unobserved, never an empty/settled group receipt.
+                timeout_due = code is None and now - started >= seconds
+                members = (_group_members(pgid)
+                           if code is not None or reason is not None
+                           or termination_at is not None or timeout_due else None)
                 if code is None and now - started >= seconds and reason is None:
                     reason = 'timeout'
                 if code is not None and members and reason is None:

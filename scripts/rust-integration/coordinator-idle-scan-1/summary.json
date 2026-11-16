@@ -1,0 +1,48 @@
+{
+  "scope": "Coordinator observer tooling only; no Dispatcharr workload, Source comparison or application gain",
+  "passed_controls": 14,
+  "PID_namespace": "pid:[4026531836]",
+  "numeric_proc_entries": 645,
+  "idle_original_CPU_seconds": 1.168670775,
+  "idle_candidate_CPU_seconds": 0.04780847599999993,
+  "idle_original_wall_seconds": 5.055633968004258,
+  "idle_candidate_wall_seconds": 5.056987709976966,
+  "idle_CPU_ratio": 0.04090842093659776,
+  "idle_observer_CPU_reduction_percent": 95.90915790634023,
+  "base_source_sha256": "5b19406426de7dcec739ffdf6f8d7ab7caa90603ac836a19a413b15ecbab70af",
+  "candidate_source_sha256": "e3626511a8a1f607b911e465208c1bea9de65df044d4f1dca36701d65f4f68bc",
+  "change": "Avoid wholehost/proc scan whileleaderalive/healthy/beforedeadline; unobserved None sentinel. Fullpostexit/timeout/termination/final/finally scans unchanged.",
+  "lifecycle_cases": [
+    "idle",
+    "orphan",
+    "zombie",
+    "ignore-TERM-orphan",
+    "timeout",
+    "output-budget",
+    "escaped-inherited-pipe"
+  ],
+  "expected_negative_semantics": "Both escapedpipe calls still have actualexit0 but failure controllerleftinheritedpipesopen, bothEOFfalse andgroupsettledfalse; exactescapedPID/generation externalcleanuptrue. Other negativecontrols preserve their actualfailure labels/exits while physicallysettling.",
+  "full_existing_suite": {
+    "authority_kind": "Root-observed actual tool terminal receipt, not reconstructed raw redirect",
+    "reported_tool_session": 91663,
+    "reported_tool_chunk": "b32abd",
+    "argv": [
+      "python3",
+      "-B",
+      "scripts/rust-milestone-batches/test_coordinator.py"
+    ],
+    "actual_exit": 0,
+    "actual_test_count": 26,
+    "actual_seconds": 7.39,
+    "reported_result": "OK",
+    "coordinator_sha256": "e3626511a8a1f607b911e465208c1bea9de65df044d4f1dca36701d65f4f68bc",
+    "test_source_sha256": "7484b1e3891b375a12979db5f1c9d5da90a45b347f79da27860bd15a9b6dbca1",
+    "raw_stdout_redirect_file": null
+  },
+  "snapshot_reproduction": "check-controls.py is byte-identical to actualtested script; publicoverlay-map rebases original snapshot path only, both snapshot hashes checked. Originalfullsuite tests canonical target.",
+  "measurement_limits": "One unprofiled5s before/after pair, hostnamespace645entries, no runtime/application claim. Termination-phase scans remainexpensive bydesign.",
+  "application_started": false,
+  "application_performance_gain_accepted": false,
+  "milestone_accepted": false,
+  "authorship": "Original Dispatcharr and all tooling/dependency authors retain credit"
+}

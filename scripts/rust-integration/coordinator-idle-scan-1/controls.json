@@ -1,0 +1,353 @@
+{
+  "passed": true,
+  "state": "actual_controls_passed",
+  "pid_namespace": "pid:[4026531836]",
+  "namespace_anchor_pid": 3065392,
+  "actual_observer_pid": 3065394,
+  "proc_numeric_entries_at_start": 645,
+  "application_started": false,
+  "cases": [
+    {
+      "variant": "original",
+      "name": "idle",
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 5.053592434007442,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-idle/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-idle/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065395,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 0,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 1.168670775,
+      "wall_seconds": 5.055633968004258,
+      "passed": true
+    },
+    {
+      "variant": "candidate",
+      "name": "idle",
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 5.056865605991334,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-idle/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-idle/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065451,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 0,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 0.04780847599999993,
+      "wall_seconds": 5.056987709976966,
+      "passed": true
+    },
+    {
+      "variant": "original",
+      "name": "orphan",
+      "receipt": {
+        "actual_exit": 0,
+        "failure": "controller left process-group descendants",
+        "seconds": 0.13998381499550305,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-orphan/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-orphan/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065518,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [
+          {
+            "pid": 3065519,
+            "wait_status": 15
+          }
+        ],
+        "output_bytes_written": 8,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 0.08926948000000001,
+      "wall_seconds": 0.14009986800374463,
+      "passed": true
+    },
+    {
+      "variant": "original",
+      "name": "zombie",
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.2041285799932666,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-zombie/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-zombie/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065520,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [
+          {
+            "pid": 3065521,
+            "wait_status": 0
+          }
+        ],
+        "output_bytes_written": 8,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 0.10296106600000021,
+      "wall_seconds": 0.20422355202026665,
+      "passed": true
+    },
+    {
+      "variant": "original",
+      "name": "ignore-TERM-orphan",
+      "receipt": {
+        "actual_exit": 0,
+        "failure": "controller left process-group descendants",
+        "seconds": 5.152658479986712,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-ignore-TERM-orphan/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-ignore-TERM-orphan/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065522,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [
+          {
+            "pid": 3065523,
+            "wait_status": 9
+          }
+        ],
+        "output_bytes_written": 8,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 1.1686583570000002,
+      "wall_seconds": 5.15275371199823,
+      "passed": true
+    },
+    {
+      "variant": "original",
+      "name": "timeout",
+      "receipt": {
+        "actual_exit": -15,
+        "failure": "timeout",
+        "seconds": 0.4982846570201218,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-timeout/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-timeout/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065566,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 0,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 0.1456429720000001,
+      "wall_seconds": 0.4984189809765667,
+      "passed": true
+    },
+    {
+      "variant": "original",
+      "name": "output-budget",
+      "receipt": {
+        "actual_exit": -15,
+        "failure": "output budget exceeded",
+        "seconds": 0.0818044799962081,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-output-budget/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-output-budget/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065567,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 1024,
+        "output_bytes_discarded": 130048
+      },
+      "observer_CPU_seconds": 0.08143423799999994,
+      "wall_seconds": 0.08192270301515236,
+      "passed": true
+    },
+    {
+      "variant": "original",
+      "name": "escaped-inherited-pipe",
+      "receipt": {
+        "actual_exit": 0,
+        "failure": "controller left inherited pipes open",
+        "seconds": 10.335872416006168,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-escaped-inherited-pipe/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/original-escaped-inherited-pipe/command.stderr",
+        "stdout_EOF": false,
+        "stderr_EOF": false,
+        "process_group": 3065568,
+        "process_group_settled": false,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 31,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 2.3198897310000004,
+      "wall_seconds": 10.335962748009479,
+      "passed": true,
+      "exact_escaped_generation_absent_after_external_cleanup": true
+    },
+    {
+      "variant": "candidate",
+      "name": "orphan",
+      "receipt": {
+        "actual_exit": 0,
+        "failure": "controller left process-group descendants",
+        "seconds": 0.12433440200402401,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-orphan/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-orphan/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065705,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [
+          {
+            "pid": 3065706,
+            "wait_status": 15
+          }
+        ],
+        "output_bytes_written": 8,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 0.0570144689999994,
+      "wall_seconds": 0.12446204500156455,
+      "passed": true
+    },
+    {
+      "variant": "candidate",
+      "name": "zombie",
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.20174210600089282,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-zombie/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-zombie/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065707,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [
+          {
+            "pid": 3065708,
+            "wait_status": 0
+          }
+        ],
+        "output_bytes_written": 8,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 0.042274774000000015,
+      "wall_seconds": 0.20186003900016658,
+      "passed": true
+    },
+    {
+      "variant": "candidate",
+      "name": "ignore-TERM-orphan",
+      "receipt": {
+        "actual_exit": 0,
+        "failure": "controller left process-group descendants",
+        "seconds": 5.132658626011107,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-ignore-TERM-orphan/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-ignore-TERM-orphan/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065725,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [
+          {
+            "pid": 3065726,
+            "wait_status": 9
+          }
+        ],
+        "output_bytes_written": 8,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 1.1323488570000002,
+      "wall_seconds": 5.132779768988257,
+      "passed": true
+    },
+    {
+      "variant": "candidate",
+      "name": "timeout",
+      "receipt": {
+        "actual_exit": -15,
+        "failure": "timeout",
+        "seconds": 0.4552739560022019,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-timeout/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-timeout/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065796,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 0,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 0.052803523000000574,
+      "wall_seconds": 0.4553778389818035,
+      "passed": true
+    },
+    {
+      "variant": "candidate",
+      "name": "output-budget",
+      "receipt": {
+        "actual_exit": -15,
+        "failure": "output budget exceeded",
+        "seconds": 0.07701791601721197,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-output-budget/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-output-budget/command.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 3065797,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 1024,
+        "output_bytes_discarded": 130048
+      },
+      "observer_CPU_seconds": 0.06882943400000041,
+      "wall_seconds": 0.0771109180059284,
+      "passed": true
+    },
+    {
+      "variant": "candidate",
+      "name": "escaped-inherited-pipe",
+      "receipt": {
+        "actual_exit": 0,
+        "failure": "controller left inherited pipes open",
+        "seconds": 10.40293932199711,
+        "stdout": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-escaped-inherited-pipe/command.stdout",
+        "stderr": "artifacts/rust/m3-coordinator-idle-scan-candidate-1/actual-controls-1/candidate-escaped-inherited-pipe/command.stderr",
+        "stdout_EOF": false,
+        "stderr_EOF": false,
+        "process_group": 3065816,
+        "process_group_settled": false,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 31,
+        "output_bytes_discarded": 0
+      },
+      "observer_CPU_seconds": 2.370257608,
+      "wall_seconds": 10.403046154009644,
+      "passed": true,
+      "exact_escaped_generation_absent_after_external_cleanup": true
+    }
+  ],
+  "idle_CPU_ratio": 0.04090842093659776,
+  "application_performance_gain_claimed": false
+}

@@ -1,0 +1,52 @@
+{
+  "authority_sha256": "36704ec317989fa0598afd7fa8953dfa60133ce0ca07b84c63eebc060972d6c9",
+  "scope": "ACTUAL_IDLE_CHILD_COORDINATOR_PROFILE",
+  "source_sha256": "5b19406426de7dcec739ffdf6f8d7ab7caa90603ac836a19a413b15ecbab70af",
+  "observer_CPU_seconds": 1.74387831,
+  "wall_seconds": 5.105985199013958,
+  "command_receipt": {
+    "actual_exit": 0,
+    "failure": null,
+    "seconds": 5.1030355249822605,
+    "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m3-coordinator-idle-profile-2/idle-child.stdout",
+    "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m3-coordinator-idle-profile-2/idle-child.stderr",
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "process_group": 2928005,
+    "process_group_settled": true,
+    "remaining_group_members": [],
+    "reaped_descendants": [],
+    "output_bytes_written": 0,
+    "output_bytes_discarded": 0
+  },
+  "selected_profile_functions": [
+    {
+      "file": "/home/justin/github/Dispatcharr/scripts/rust-milestone-batches/coordinator.py",
+      "line": 243,
+      "function": "_group_members",
+      "primitive_calls": 71,
+      "calls": 71,
+      "own_seconds": 0.11860925900000001,
+      "cumulative_seconds": 1.7472903080000002
+    },
+    {
+      "file": "/usr/lib/python3.14/pathlib/__init__.py",
+      "line": 780,
+      "function": "read_text",
+      "primitive_calls": 45153,
+      "calls": 45153,
+      "own_seconds": 0.055903551,
+      "cumulative_seconds": 1.056887643
+    },
+    {
+      "file": "/usr/lib/python3.14/pathlib/__init__.py",
+      "line": 763,
+      "function": "open",
+      "primitive_calls": 45155,
+      "calls": 45155,
+      "own_seconds": 0.016427136000000002,
+      "cumulative_seconds": 0.662134136
+    }
+  ],
+  "limitation": "cProfile overhead prevents exact extrapolation to the earlier 60s application diagnostic; sandbox smallPIDnamespace control is not equivalent to this hostnamespace."
+}
