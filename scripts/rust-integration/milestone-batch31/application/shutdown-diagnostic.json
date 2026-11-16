@@ -1,0 +1,178 @@
+{
+  "raw_reference": {
+    "path": "artifacts/rust/m8-native31-stopped-guide-readonly-1/report.json",
+    "sha256": "7f41625a3f31cda4ec9cbc16a2be3799f654915d07ce564ff385c68e7e033061",
+    "bytes": 7381
+  },
+  "actual_exit": {
+    "actual_exit": 1,
+    "oom_killed": false,
+    "expected_exit": 0
+  },
+  "actual_plugin_shutdown_records": [
+    {
+      "stage": "initial_sql",
+      "host_kind": "runtime",
+      "host_index": 0,
+      "outcome": "observed",
+      "unsettled_sql": false,
+      "receipt": null,
+      "remaining_millis": 11996
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "actions",
+      "host_index": 0,
+      "outcome": "Ok",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11996
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 0,
+      "outcome": "Ok",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11996
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 1,
+      "outcome": "Ok",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11996
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 2,
+      "outcome": "Ok",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11996
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 3,
+      "outcome": "Ok",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11996
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 4,
+      "outcome": "Ok",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11996
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 5,
+      "outcome": "Ok",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11996
+    },
+    {
+      "stage": "final_sql",
+      "host_kind": "runtime",
+      "host_index": 0,
+      "outcome": "observed",
+      "unsettled_sql": false,
+      "receipt": null,
+      "remaining_millis": 11996
+    },
+    {
+      "stage": "initial_sql",
+      "host_kind": "runtime",
+      "host_index": 0,
+      "outcome": "observed",
+      "unsettled_sql": false,
+      "receipt": null,
+      "remaining_millis": 11846
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "actions",
+      "host_index": 0,
+      "outcome": "Closed",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11846
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 0,
+      "outcome": "Closed",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11846
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 1,
+      "outcome": "Closed",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11846
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 2,
+      "outcome": "Closed",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11846
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 3,
+      "outcome": "Closed",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11846
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 4,
+      "outcome": "Closed",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11846
+    },
+    {
+      "stage": "host_result",
+      "host_kind": "task",
+      "host_index": 5,
+      "outcome": "Closed",
+      "unsettled_sql": null,
+      "receipt": null,
+      "remaining_millis": 11846
+    },
+    {
+      "stage": "final_sql",
+      "host_kind": "runtime",
+      "host_index": 0,
+      "outcome": "observed",
+      "unsettled_sql": false,
+      "receipt": null,
+      "remaining_millis": 11846
+    }
+  ],
+  "source_diagnosis": "First runtime shutdown seven hosts Ok; second entry seven Closed with11846ms remaining and SQL unsettled false. Actual RegisteredPlugin Operational; subsequent XML HTTP failure after Main removed is dependent cascade. Correction has separate source/test gate.",
+  "live_health_observed": false
+}

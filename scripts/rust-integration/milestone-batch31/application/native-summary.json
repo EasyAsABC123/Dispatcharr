@@ -1,0 +1,170 @@
+{
+  "backend": "Native",
+  "actual_report_status": "running",
+  "contexts": [
+    {
+      "case": "schedules-direct",
+      "status": "running"
+    }
+  ],
+  "actual_report": {
+    "path": "artifacts/rust/normal-graph-batch31-functional-1/results/Native/report.json",
+    "sha256": "ac49977818b955b2db15113ee5c67789ea02c5dac9b6bd3abcb75d785a3b35f8",
+    "bytes": 219
+  },
+  "subcontexts": [
+    {
+      "name": "schedules-direct",
+      "status": "passed",
+      "cases": [
+        {
+          "name": "actual-API-auto3-to-owned-SD-guide",
+          "status": "passed"
+        },
+        {
+          "name": "actual-cache-MD5-nochange",
+          "status": "passed"
+        },
+        {
+          "name": "actual-poster-provider-precedence-persistence",
+          "status": "passed"
+        },
+        {
+          "name": "actual-delta-surgical-oldmetadata",
+          "status": "passed"
+        },
+        {
+          "name": "actual-provider-error-retry-oldmetadata",
+          "status": "passed"
+        },
+        {
+          "name": "actual-auth-lockout-credential-unlock",
+          "status": "passed"
+        },
+        {
+          "name": "actual-debug2055-token403-reauth",
+          "status": "passed"
+        },
+        {
+          "name": "actual-single-and-TVG-SD-delegation",
+          "status": "passed"
+        },
+        {
+          "name": "actual-durable90-retry",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Native-92ef50a5/schedules-direct/report.json",
+        "sha256": "5d60f392086ff81b7416e50724d9c158ff3a6d4b9d8af2db8106069d278c86f8",
+        "bytes": 2414
+      }
+    },
+    {
+      "name": "xml-tvg-deferral",
+      "status": "failed",
+      "cases": [
+        {
+          "name": "source-refresh-busy-durable-retry",
+          "status": "passed"
+        },
+        {
+          "name": "source-refresh-defer-limit480",
+          "status": "passed"
+        },
+        {
+          "name": "source-refresh-deferred-revoked",
+          "status": "passed"
+        },
+        {
+          "name": "source-refresh-warm-restored-restart",
+          "status": "failed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Native-92ef50a5/xml-tvg-deferral/report.json",
+        "sha256": "a83ba7c201bf3c6423ae69077b72c21bcd5980d87b7627c85f2bac8a7a22323e",
+        "bytes": 936
+      }
+    },
+    {
+      "name": "xmltv-download",
+      "status": "failed",
+      "cases": [
+        {
+          "name": "actual-API-plain-above4MiB-import-descendants",
+          "status": "failed"
+        },
+        {
+          "name": "actual-API-gzip-archive-preserving-promotion",
+          "status": "failed"
+        },
+        {
+          "name": "actual-API-HTTP-content-encoding-wire-decoded-sizes",
+          "status": "failed"
+        },
+        {
+          "name": "actual-API-redirect-cached-user-agent-invalidation",
+          "status": "failed"
+        },
+        {
+          "name": "actual-API-404-preserves-prior-cache-and-programmes",
+          "status": "failed"
+        },
+        {
+          "name": "actual-API-incomplete-preserves-prior-cache-and-programmes",
+          "status": "failed"
+        },
+        {
+          "name": "actual-missing-TVG-owned-download-then-parse",
+          "status": "failed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Native-92ef50a5/xmltv-download/report.json",
+        "sha256": "f7869ff1f0789413f2258d7ca11b3f1af9c8e2683f3b9d4f65d44df483e05e5f",
+        "bytes": 1431
+      }
+    }
+  ],
+  "final_execution_observed": true,
+  "disposition": "operator-interrupted after actual warm-stop Main exit1; raw leaf status running retained",
+  "remaining_contexts": [
+    {
+      "case": "vlc-live",
+      "status": "not_run"
+    },
+    {
+      "case": "auto-sync",
+      "status": "not_run"
+    },
+    {
+      "case": "redirect-common",
+      "status": "not_run"
+    },
+    {
+      "case": "process-transports",
+      "status": "not_run"
+    },
+    {
+      "case": "m8-actions",
+      "status": "not_run"
+    },
+    {
+      "case": "stream-file-crud",
+      "status": "not_run"
+    },
+    {
+      "case": "recording-output-profile",
+      "status": "not_run"
+    },
+    {
+      "case": "output-profile",
+      "status": "not_run"
+    },
+    {
+      "case": "custom-guide-held",
+      "status": "not_run"
+    }
+  ]
+}

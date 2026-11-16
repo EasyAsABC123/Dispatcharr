@@ -1,0 +1,319 @@
+{
+  "backend": "Original",
+  "actual_report_status": "failed",
+  "contexts": [
+    {
+      "case": "schedules-direct",
+      "status": "failed"
+    },
+    {
+      "case": "process-transports",
+      "status": "passed"
+    },
+    {
+      "case": "m8-actions",
+      "status": "failed"
+    }
+  ],
+  "actual_report": {
+    "path": "artifacts/rust/normal-graph-batch31-functional-1/results/Original/report.json",
+    "sha256": "4bfcc3975713b815d07fba475f670b28635dee04f6a011f16ecb899c5e54a476",
+    "bytes": 667
+  },
+  "subcontexts": [
+    {
+      "name": "schedules-direct",
+      "status": "passed",
+      "cases": [
+        {
+          "name": "actual-API-auto3-to-owned-SD-guide",
+          "status": "passed"
+        },
+        {
+          "name": "actual-cache-MD5-nochange",
+          "status": "passed"
+        },
+        {
+          "name": "actual-poster-provider-precedence-persistence",
+          "status": "passed"
+        },
+        {
+          "name": "actual-delta-surgical-oldmetadata",
+          "status": "passed"
+        },
+        {
+          "name": "actual-provider-error-retry-oldmetadata",
+          "status": "passed"
+        },
+        {
+          "name": "actual-auth-lockout-credential-unlock",
+          "status": "passed"
+        },
+        {
+          "name": "actual-debug2055-token403-reauth",
+          "status": "passed"
+        },
+        {
+          "name": "actual-single-and-TVG-SD-delegation",
+          "status": "passed"
+        },
+        {
+          "name": "actual-durable90-retry",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/schedules-direct/report.json",
+        "sha256": "f54ed910377da1da5497fdeba320ebb294c63df4a4fa44a788a4d12ea9b67f7a",
+        "bytes": 2414
+      }
+    },
+    {
+      "name": "xml-tvg-deferral",
+      "status": "passed",
+      "cases": [
+        {
+          "name": "source-refresh-busy-durable-retry",
+          "status": "passed"
+        },
+        {
+          "name": "source-refresh-defer-limit480",
+          "status": "passed"
+        },
+        {
+          "name": "source-refresh-deferred-revoked",
+          "status": "passed"
+        },
+        {
+          "name": "source-refresh-warm-restored-restart",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/xml-tvg-deferral/report.json",
+        "sha256": "ac1a75c3fca24c87f4ccef61be111f4b3810092dd5c0ca20c7f187bc4bd40c59",
+        "bytes": 1055
+      }
+    },
+    {
+      "name": "xmltv-download",
+      "status": "passed",
+      "cases": [
+        {
+          "name": "actual-API-plain-above4MiB-import-descendants",
+          "status": "passed"
+        },
+        {
+          "name": "actual-API-gzip-archive-preserving-promotion",
+          "status": "passed"
+        },
+        {
+          "name": "actual-API-HTTP-content-encoding-wire-decoded-sizes",
+          "status": "passed"
+        },
+        {
+          "name": "actual-API-redirect-cached-user-agent-invalidation",
+          "status": "passed"
+        },
+        {
+          "name": "actual-API-404-preserves-prior-cache-and-programmes",
+          "status": "passed"
+        },
+        {
+          "name": "actual-API-incomplete-preserves-prior-cache-and-programmes",
+          "status": "passed"
+        },
+        {
+          "name": "actual-missing-TVG-owned-download-then-parse",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/xmltv-download/report.json",
+        "sha256": "cc443eee4c41871dc00d3cd324d5dbbcf1fa067946f95a66f787c57a4238de28",
+        "bytes": 16710
+      }
+    },
+    {
+      "name": "xmltv-selected",
+      "status": "passed",
+      "cases": [
+        {
+          "name": "actual-forced-TVG6001-selected-above4MiB-perrow-skip",
+          "status": "passed"
+        },
+        {
+          "name": "actual-second5000-insert-page-refusal-preserves-old-guide",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/xmltv-selected/report.json",
+        "sha256": "46a4cbd29ff5789bd3c1bc32068bc3e4a7ac60b5b631ee192d3aa0d6359b44b3",
+        "bytes": 6938
+      }
+    },
+    {
+      "name": "epg-connect",
+      "status": "passed",
+      "cases": [
+        {
+          "name": "actual-epg_refresh-Connect-form-template-mutation-status-catches",
+          "status": "passed"
+        },
+        {
+          "name": "actual-epg_error-Connect-form-template-mutation-status-catches",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/epg-connect/report.json",
+        "sha256": "4681c75b3cc7fdff0fede062667bfe0a306e07004bf384551b554667ff28b0cd",
+        "bytes": 1449
+      }
+    },
+    {
+      "name": "xmltv-source-properties-output",
+      "status": "failed",
+      "cases": [
+        {
+          "name": "actual-generated-XMLTV-stored-XML-and-SD-properties",
+          "status": "failed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/xmltv-source-properties-output/report.json",
+        "sha256": "2aac689c823ec8dfb5e004656047e0242684d31c2853a8e6fdeece5ec0c570cf",
+        "bytes": 424
+      }
+    },
+    {
+      "name": "xml-local-hooks",
+      "status": "passed",
+      "cases": [
+        {
+          "name": "actual-local-XML-Connect-template-caught-continuation-and-terminal-trail",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/xml-local-hooks/report.json",
+        "sha256": "2c33e4ad3eec79c0523cfe827197592e2645c1663208617496584ce48d079c94",
+        "bytes": 769
+      }
+    },
+    {
+      "name": "stream-name-guide",
+      "status": "failed",
+      "cases": [
+        {
+          "name": "actual-stream-name-XMLTV",
+          "status": "failed"
+        },
+        {
+          "name": "actual-stream-name-grid",
+          "status": "passed"
+        },
+        {
+          "name": "actual-stream-name-XC",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/stream-name-guide/report.json",
+        "sha256": "af81dd9eb4808bd0cc355e079eb48297555e3d72734c1201df5e5ad8719f0b17",
+        "bytes": 1154
+      }
+    },
+    {
+      "name": "xml-remote-hooks",
+      "status": "passed",
+      "cases": [
+        {
+          "name": "actual-remote-XML-rejection-Connect-hooks-retired-before-SUCCESS",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/xml-remote-hooks/report.json",
+        "sha256": "b46477a1d40d658198186ac0cc68ddc8baf8fef95a48872df0a83208e7b63ecc",
+        "bytes": 761
+      }
+    },
+    {
+      "name": "custom-guide",
+      "status": "failed",
+      "cases": [
+        {
+          "name": "actual-named-groups-UTC-custom-XMLTV",
+          "status": "failed"
+        },
+        {
+          "name": "actual-named-groups-custom-grid",
+          "status": "passed"
+        },
+        {
+          "name": "actual-named-groups-custom-XC",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/custom-guide/report.json",
+        "sha256": "85eb077883b78f0744231a5c2f08ff92eb0c56e1cbb617e8e1457109cb70c8a3",
+        "bytes": 1089
+      }
+    },
+    {
+      "name": "dummy-fallback",
+      "status": "failed",
+      "cases": [
+        {
+          "name": "actual-dummy-fallback-XMLTV",
+          "status": "failed"
+        },
+        {
+          "name": "actual-dummy-fallback-grid",
+          "status": "passed"
+        },
+        {
+          "name": "actual-dummy-fallback-XC",
+          "status": "passed"
+        }
+      ],
+      "raw_reference": {
+        "path": "artifacts/rust/normal-graph-batch31-functional-1/fixtures/Original-69978954/dummy-fallback/report.json",
+        "sha256": "03c87e78995f8700eb06e7cbe3d8098f3a61d53bb98492e1feb6062508dd4827",
+        "bytes": 1011
+      }
+    }
+  ],
+  "final_execution_observed": true,
+  "UDP": {
+    "status": "passed",
+    "full_M3_passed": false,
+    "business_checks_passed": true,
+    "physical_retirement_passed": true,
+    "raw_prefix_strict_passed": false,
+    "actual": {
+      "clients": 2,
+      "provider": 1,
+      "owner_present": true,
+      "selected_URI_sha256": "f9bf9efb8dee5446cd80fa31942d9b9ff01c846c85182660684d3b5826c56f7e"
+    },
+    "raw_reference": {
+      "path": "artifacts/rust/normal-graph-batch31-functional-1/results/Original/process-transports.json",
+      "sha256": "2b8c0534fe13783f62b875a76bdc51c115bc84a1729128906c729a86f27d9eaa",
+      "bytes": 7543
+    },
+    "certified_decoders": [
+      {
+        "name": "owner",
+        "passed": true
+      },
+      {
+        "name": "follower",
+        "passed": true
+      }
+    ]
+  }
+}

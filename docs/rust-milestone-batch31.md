@@ -42,3 +42,37 @@ additional successful candidate was substituted.
 The corrected whole application workflow and performance remain unaccepted.
 This is not a fix claim for the earlier RegisteredPlugin shutdown failure and
 closes no full milestone.
+
+
+## Main31 interrupted application evidence
+
+The [actual application capture](../scripts/rust-integration/milestone-batch31/application/inventory.json)
+retains Source guide aggregate failure: its nine core SD cases pass, while four
+output/custom/dummy cells fail under fixture profile contamination. Source UDP
+Proxy sharing, certified media and physical retirement pass; its strict raw
+prefix check remains false. Source M8 ends in a key-prefix observer failure;
+that failure is not an enabled-plugin parity pass.
+
+Native attempts only the guide context. Its nine core SD cases pass, then the
+warm restart's stop observes Main exit1 (no OOM). Diagnostics record the first
+PluginRuntime shutdown returning Ok for all seven hosts, followed by a second
+entry returning Closed for all seven with11,846 milliseconds remaining and no
+unsettled SQL. RegisteredPlugin then reports Operational. Later XML remote HTTP
+failures follow removal of Main and are dependent fixture cascades, not
+independent download-parity results. The correction needs its own source and
+runtime validation.
+
+Root sent SIGINT to the exact controller generation after this known failure.
+Cancellation propagated into finally; this was operator-requested interruption,
+not natural controller completion. The actual child exits **-2** after953.539
+seconds; the wrapper exits1. Both pipes reach EOF and the process group settles.
+The Native leaf retains its literal `running` status when interrupted; the other
+**nine Native contexts are not run**.
+
+The raw aggregate report records `exact_cleanup_passed:false`, because its
+Native result/cleanup append was bypassed by cancellation. A separate
+[companion audit](../scripts/rust-integration/milestone-batch31/application/independent-cleanup.json)
+verifies both actual fixture cleanup receipts: five exact container IDs absent,
+all original process generations absent and host CLI groups settled, with no
+cleanup errors. The raw aggregate remains unchanged. No application, full
+milestone or performance acceptance follows.
