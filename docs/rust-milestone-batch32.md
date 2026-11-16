@@ -16,7 +16,8 @@ cleanup again. The first plugin shutdown succeeded, and the second encountered
 closed actors. Main now joins the actual published cleanup task when the server
 branch wins. Three regressions exercise simultaneous readiness, a pending owner,
 actual cleanup failure and the unsignaled fallback. Closed actors are not
-reinterpreted as successful shutdown. Actual Docker shutdown remains to verify.
+reinterpreted as successful shutdown. Main33 below verifies actual warm stop
+and deferred restart; broader shutdown scopes remain open.
 
 The normal restore path now connects the admin REST request, shared broker,
 registered backup worker, PostgreSQL archive tools and native current-schema
@@ -33,8 +34,9 @@ cancellation, plugin characterization and unchanged React workflows have prepare
 acceptance callbacks but have not run on this candidate. Candidate31's failed
 application run remains [separate evidence](rust-milestone-batch31.md).
 
-The immutable Docker build and six package checks below pass. The corrected
-Source guide/plugin contexts and all ten Native application contexts are running.
+The immutable Docker build and six package checks below pass. Main33 completes
+two Source and ten Native contexts; its three failed Native scopes need the next
+corrected candidate.
 Qualified Source transport, Redirect, file and earlier independent observations
 retain their original scope. Operations and browser batches follow on the same
 image, then paired performance with the unchanged measurement criteria.
@@ -81,5 +83,39 @@ helper0444 modes, and binds those modes before the next attempt. One owned
 no-network container actually runs as UID65532 and reads/hashes all137 inputs;
 it exits0 and its exact container ID is absent afterward. This is an
 infrastructure-readiness control, not an application pass. Main33 reuses the
-same Candidate32 image, SDK42 and six package proofs; its application results
-remain separate and pending.
+same Candidate32 image, SDK42 and six package proofs; its completed application
+results remain separate below.
+
+
+## Main33: two Source and ten Native contexts completed
+
+The [same-image Main33 batch](../scripts/rust-integration/milestone-batch32/application/inventory.json)
+actually exits1 after1,843.885 seconds, with EOF and a settled process group.
+Both fresh Source contexts pass: complete guides and M8 actions. All ten Native
+contexts execute: seven pass (VLC, auto-sync, Redirect, UDP transport, Stream
+multipart CRUD, recording output profiles and shared output profiles), while
+guides, M8 actions and held custom-guide shutdown fail. Both actual aggregate
+cleanup flags pass, with all15 exact container IDs absent, CLI groups settled
+and no errors. Fourteen per-container original generations are verified absent;
+one early-exit Native container has no captured per-container generation proof,
+which remains unavailable rather than inferred from the aggregate flag.
+
+The actual Native warm stop now exits0 and its complete deferred retry/restart
+case passes, qualifying the earlier Main cleanup correction. The guide group
+retains five remote-XML file-observer failures: the Source guest reads Native's
+logical `/app/media` path rather than its bound `/data` alias. Later physical
+files do not rewrite failed assertions. A distinct first-enabled Connect host
+call faults the queue: actual health503/readyfalse,22 queued items, four unacked
+frames and both expected result keys absent. Static analysis and the separate
+old-image CLI control identify the missing plugin-bootstrap main invocation.
+Its correction needs a new tested candidate. M8 similarly fails during startup.
+The controller continues independent contexts naturally; no SIGINT is sent.
+
+Normal custom XMLTV/grid/XC checks pass, but retirement observation times out:
+startup setup overwrites the declared regex diagnostics flag. The held case
+records an HTTPError before observed search CPU; its status code was not
+captured. Its fixture admits only STREAMS, omitting the owned M3U_EPG CIDR.
+Private helpers now preserve diagnostics, admit that exact CIDR and record early
+HTTP failures. No actual403, held shutdown pass, Source held-counterpart parity
+or regex runtime fix is claimed. The affected Native guide/M8/held cohort keeps
+its next-image gate. No full milestone or new performance gain is accepted.

@@ -1,0 +1,47 @@
+{
+  "actual_aggregate_exact_cleanup_passed": true,
+  "aggregate_reference": {
+    "path": "artifacts/rust/normal-graph-batch33-functional-1/results/report.json",
+    "sha256": "be029b9b210c5514a7d80e1c0892874b7de9e90e6271cc3af4c7df36d092e3da",
+    "bytes": 7187
+  },
+  "projects": [
+    {
+      "backend": "Native",
+      "exact_CIDs": 13,
+      "per_CID_original_generation_proven_absent": 12,
+      "per_CID_original_generation_unavailable": [
+        "61a270ba6ed2b31de908f97967f0e74c43a6be1fe3e1b15d67053251e546aac5"
+      ],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true,
+      "errors": [],
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch33-functional-1/fixtures/Native-ef2e5f37/independent-cleanup.json",
+        "sha256": "be414e0983b9704fef9076d8acd30d7691813d656522770e3c77d8141e896b26",
+        "bytes": 2584
+      }
+    },
+    {
+      "backend": "Original",
+      "exact_CIDs": 2,
+      "per_CID_original_generation_proven_absent": 2,
+      "per_CID_original_generation_unavailable": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true,
+      "errors": [],
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch33-functional-1/fixtures/Original-3998bdb7/independent-cleanup.json",
+        "sha256": "ffc973145b61e690fc9d1ea15cc845a4e53a8e911b18cfc38815139e7dcfe254",
+        "bytes": 648
+      }
+    }
+  ],
+  "exact_CIDs": 15,
+  "each_exact_CID_missing": true,
+  "per_CID_original_generation_proven_absent": 14,
+  "per_CID_original_generation_unavailable": 1,
+  "scope": "Both actual aggregategenerationflags true; one early-exit NativeCID has no per-CID generation receipt, retained as unavailable ratherthan inventedproof."
+}

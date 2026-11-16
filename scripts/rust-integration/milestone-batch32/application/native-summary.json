@@ -1,0 +1,58 @@
+{
+  "backend": "Native",
+  "actual_status": "failed",
+  "attempted_contexts": 10,
+  "passed_contexts": 7,
+  "failed_contexts": 3,
+  "contexts": [
+    {
+      "case": "schedules-direct",
+      "status": "failed",
+      "reason": "AssertionError:{'0': 'passed', '1': 'passed', '2': 'failed', '3': 'passed', '4': 'passed', '5': 'failed', '6': 'failed', '7': 'failed', '8': 'failed', '9': 'passed', '10': 'failed'}"
+    },
+    {
+      "case": "vlc-live",
+      "status": "passed"
+    },
+    {
+      "case": "auto-sync",
+      "status": "passed"
+    },
+    {
+      "case": "redirect-common",
+      "status": "passed"
+    },
+    {
+      "case": "process-transports",
+      "status": "passed"
+    },
+    {
+      "case": "m8-actions",
+      "status": "failed",
+      "reason": "NativeStartupFailure:ActualNativeStartupExit:1"
+    },
+    {
+      "case": "stream-file-crud",
+      "status": "passed"
+    },
+    {
+      "case": "recording-output-profile",
+      "status": "passed"
+    },
+    {
+      "case": "output-profile",
+      "status": "passed"
+    },
+    {
+      "case": "custom-guide-held",
+      "status": "failed",
+      "reason": "AssertionError:{'status': 'failed', 'normal0claim': False, 'Source_shutdown_counterpart': 'unmeasured', 'performance_verified': False, 'error_type': 'TimeoutError'}"
+    }
+  ],
+  "reference": {
+    "path": "artifacts/rust/normal-graph-batch33-functional-1/results/Native/report.json",
+    "sha256": "4d5efb0caaa6eddb7b16f8bd877b6a00211f60002a66bbdba89683136e3db9f2",
+    "bytes": 1337
+  },
+  "full_milestone_accepted": false
+}
