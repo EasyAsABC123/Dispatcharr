@@ -67,6 +67,15 @@ fn host_error(_: HostError) -> StoreError {
     unavailable()
 }
 impl PluginRuntime {
+    pub(crate) fn shares_recording_auth(&self, auth: &AuthService) -> bool {
+        std::ptr::eq(
+            self.inner.auth.store.pool().options(),
+            auth.store.pool().options(),
+        ) && Arc::ptr_eq(
+            &self.inner.auth.user_agent_workers,
+            &auth.user_agent_workers,
+        )
+    }
     // Explicit existing Auth/events/Jobs/lifetime plus actual runtime paths and
     // bounded provenance; construction starts no interpreter or extra service.
     #[allow(clippy::too_many_arguments)]
@@ -832,7 +841,10 @@ impl HookInner {
 }
 impl PluginHookSession {
     pub async fn begin_event(&self, event: String, payload: Value) -> Result<(), StoreError> {
-        if !matches!(event.as_str(), "epg_error" | "epg_refresh") {
+        if !matches!(
+            event.as_str(),
+            "epg_error" | "epg_refresh" | "recording_start" | "recording_end"
+        ) {
             return Err(unavailable());
         }
         let inner = self.inner.clone();

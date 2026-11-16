@@ -31,7 +31,7 @@ def append_native(value):
 
 def begin_event(value):
  if _active is None or _active['event']is not None:raise CompatibilityUnavailable('Native event context unavailable or already active')
- if value['event']not in('epg_error','epg_refresh'):raise CompatibilityUnavailable('Native event outside EPG hook slice')
+ if value['event']not in('epg_error','epg_refresh','recording_start','recording_end'):raise CompatibilityUnavailable('Native event outside admitted native hook slice')
  _active['event']=value['event'];_active['payload']=value['payload'];_active['params']=None;_active['plugin_dispatched']=False
  return None
 

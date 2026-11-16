@@ -1,0 +1,33 @@
+{
+  "state": "PRIVATE_UNCOMPILED_PEER_CORRECTION",
+  "base_attempt": "SDK48 frozen original 12-path runtime source unchanged",
+  "files": [
+    {
+      "target": "rust/crates/store/src/recording_sql_schema_peer.rs",
+      "candidate": "artifacts/rust/m6-recording-Connect-SDK49-peer-1/recording_sql_schema_peer.rs",
+      "candidate_sha256": "ea6d36f6e24853e3fb1073871ef27e5a9883bf48597f03f32301ab84a836eebf",
+      "base_sha256": "3b6ee1553088ef9569d05eba06de29a011b5e1e885b751fa4b9a674e0b66702b"
+    }
+  ],
+  "actual_implementation_changes": false,
+  "cause": "Statement5 now binds actual bool connect_bound; original positional peer declared no parameters. New event/enrichment modules omitted from original scanner.",
+  "inventory": {
+    "prior": 76,
+    "new": 86,
+    "existing_ordinals_preserved": true,
+    "new_ordinals": {
+      "76": "TEXT event",
+      "77": "TEXT event",
+      "78": "none live guard",
+      "79": "TEXT,TIMESTAMPTZ,UUID,TEXT,JSONB audit",
+      "80": "INT8 history offset",
+      "81": "INT8 cutoff",
+      "82": "UUID channel",
+      "83": "INT8 stream",
+      "84": "INT8 provider",
+      "85": "INT8 profile"
+    }
+  },
+  "no_SQL_body_copies": true,
+  "test_skipped_or_weakened": false
+}

@@ -9,7 +9,16 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate36](rust-milestone-batch36.md), runtime
+The newest source candidate is [Candidate37](rust-milestone-batch37.md): all
+four SDK49 gates pass with 1,117 tests, zero failures and 783 ignored. It adds
+Connect delivery and enrichment at actual claimed normal-recording start/end,
+using short event sessions on the existing Auth pool and template runtime.
+General DVR plugins, relevant HTTP cancellation and recovery hooks remain
+explicitly guarded. Docker/package/application acceptance is pending; earlier
+image results retain their own scopes. All full milestones and matched-work
+performance acceptance remain open.
+
+The preceding source candidate is [Candidate36](rust-milestone-batch36.md), runtime
 `350b4fdacc45ea7ec4136398d7e7bae4ba4b1f73`: all four SDK47 gates pass with
 1,115 tests, zero failures and 783 ignored. It allows unrelated Main startup
 with a populated plugin directory while refusing unsupported DVR effects before

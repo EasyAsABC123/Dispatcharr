@@ -1,0 +1,25 @@
+{
+  "actual_check_exits": {
+    "fmt": 0,
+    "check": 0,
+    "strict": 0,
+    "workspace": 101
+  },
+  "test": "recording_sql_schema_peer::compiled_statement_inventory_and_actual_bound_types",
+  "assertion": "statement 5 actual source ordinal/type authority",
+  "left": 0,
+  "right": 1,
+  "completed_result_blocks": 88,
+  "partial_test_totals": [
+    830,
+    1,
+    402
+  ],
+  "complete_workspace_pass": false,
+  "input_manifest": {
+    "path": "artifacts/rust/normal-graph-batch17-sdk-1/attempt48/inputs.json",
+    "sha256": "0951a6083c147f8d5eade0e8d338677b77cb12bb1709e3230ffb40503819abed"
+  },
+  "cause": "Production read_normal_inner gained actual bool bind connect_bound; old schema peer still specified no parameters. New production SQL modules were absent from its scanner.",
+  "correction": "Test-only actual-source scanner/types update; production12 runtime paths unchanged from SDK48 to SDK49; no SQL body copy, exclusion or test skip."
+}

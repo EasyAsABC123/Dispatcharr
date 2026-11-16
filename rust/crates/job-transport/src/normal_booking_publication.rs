@@ -357,6 +357,18 @@ impl NormalRecordingPublisher {
         if !self.uses_pool(store.pool()) {
             return Err(Error::Unsupported("booking audit pool identity"));
         }
+        // Active Connect cancellation has no actual HTTP hook context yet.
+        // Refuse before cache fills, audit/status writes, revokes or deletion;
+        // no-Connect cleanup remains available even with a populated plugin dir.
+        Arc::new(dispatcharr_store::recording_capture::CaptureStore::normal(
+            store.pool().clone(),
+        ))
+        .require_unbound_event_domain(
+            dispatcharr_store::recording_capture::NormalEvent::Ended,
+            caller.clone(),
+        )
+        .await
+        .map_err(|error| Error::Audit(Box::new(error)))?;
         let cache = cache.to_owned();
         tokio::spawn(async move {
             let settings = crate::recording_settings::Settings::new(store.clone(), cache);

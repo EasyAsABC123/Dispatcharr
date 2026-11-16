@@ -99,6 +99,7 @@ pub(crate) struct Task {
     pub message: Message,
     proof: Proof,
     candidate: Option<Candidate>,
+    claimed: bool,
 }
 impl Task {
     pub(crate) async fn claim(
@@ -116,7 +117,38 @@ impl Task {
                 Candidate::Named(c) => jobs.claim_named_recording_dvr(c, guard).await,
             }
         })
-        .await
+        .await?;
+        self.claimed = true;
+        Ok(())
+    }
+    /// Only actual successful CAS can construct this opaque event witness.
+    pub(crate) fn event_context(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<ClaimedRecordingEvent, Error> {
+        if !self.claimed {
+            return Err(Error::Unsupported(
+                "Recording hook context before actual claim",
+            ));
+        }
+        let raw = match &self.message {
+            Message::Clocked(message) => message.raw_frame(),
+            Message::Named(message) => message.raw_frame(),
+        };
+        let context = dispatcharr_store::PluginHookTaskContext::from_native_claim(raw)
+            .map_err(|_| Error::Unsupported("Claimed recording hook frame unsupported"))?;
+        if context.task_id() != self.message.raw_key()
+            || context.task_name() != "apps.channels.tasks.run_recording"
+        {
+            return Err(Error::Unsupported(
+                "Claimed recording hook identity mismatch",
+            ));
+        }
+        let trail = Arc::new(RecordingTrail {
+            id: context.task_id().into(),
+            _owner: owner,
+        });
+        Ok(ClaimedRecordingEvent { context, trail })
     }
     pub(crate) fn complete(
         &self,
@@ -183,6 +215,7 @@ pub(crate) async fn peek(
             message,
             proof: Proof::Named(proof),
             candidate: Some(Candidate::Named(candidate)),
+            claimed: false,
         }))
     } else {
         let read = jobs.clone();
@@ -202,6 +235,48 @@ pub(crate) async fn peek(
             message,
             proof: Proof::Clocked(proof),
             candidate: Some(Candidate::Clocked(candidate)),
+            claimed: false,
         }))
+    }
+}
+
+/// Native run_recording has no Celery child publisher: media processes and
+/// permanent-URL SQL patches are not child tasks. This witness is minted only
+/// after the real queue CAS above; never from caller JSON or an HTTP context.
+/// Its restricted Connect-only use forbids scripts and every configured plugin.
+pub(crate) struct ClaimedRecordingEvent {
+    context: dispatcharr_store::PluginHookTaskContext,
+    trail: Arc<RecordingTrail>,
+}
+impl ClaimedRecordingEvent {
+    pub(crate) fn context(&self) -> dispatcharr_store::PluginHookTaskContext {
+        self.context.clone()
+    }
+    pub(crate) fn trail(&self) -> Arc<dyn dispatcharr_store::NativeTaskTrail> {
+        self.trail.clone()
+    }
+}
+struct RecordingTrail {
+    id: String,
+    _owner: Arc<dyn Send + Sync>,
+}
+impl dispatcharr_store::NativeTaskTrail for RecordingTrail {
+    fn claimed_task_id(&self) -> &str {
+        &self.id
+    }
+    fn settled_after(
+        &self,
+        cursor: u64,
+    ) -> Result<dispatcharr_store::NativeTaskTrailDelta, dispatcharr_store::StoreError> {
+        if cursor != 0 {
+            return Err(dispatcharr_store::StoreError::Unsupported(
+                "Recording task has no native child publication cursor",
+            ));
+        }
+        Ok(dispatcharr_store::NativeTaskTrailDelta {
+            next_cursor: 0,
+            entries: Vec::new(),
+            state: dispatcharr_store::NativeTaskTrailState::Closed,
+        })
     }
 }

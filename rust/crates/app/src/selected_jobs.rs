@@ -210,6 +210,8 @@ impl SelectedJobs {
             1024,
         )
         .map_err(|_| "Plugin lazy runtime preparation failed")?;
+        dvr.bind_recording_connect(auth.clone(), plugin_runtime.clone())
+            .map_err(|_| "Selected recording Connect runtime binding failed")?;
         let plugin_tasks = jobs::normal_registered_plugins::Prepared::prepare(
             shared_jobs.clone(),
             plugin_runtime.clone(),

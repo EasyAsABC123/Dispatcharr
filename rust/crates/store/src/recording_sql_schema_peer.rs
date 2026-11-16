@@ -19,6 +19,14 @@ fn actual_statements() -> Vec<(String, String)> {
             "ingest-epg/cache_policy.rs",
             include_str!("../../ingest-epg/src/cache_policy.rs"),
         ),
+        (
+            "recording_connect_events.rs",
+            include_str!("recording_connect_events.rs"),
+        ),
+        (
+            "recording_event_enrichment.rs",
+            include_str!("recording_event_enrichment.rs"),
+        ),
     ] {
         for item in quoted.find_iter(source) {
             let Ok(text) = serde_json::from_str::<String>(item.as_str()) else {
@@ -47,21 +55,24 @@ fn actual_statements() -> Vec<(String, String)> {
 // These are parameter type authority, never a separate copy of a SQL body.
 fn parameter_types(index: usize) -> Vec<PgTypeInfo> {
     let int = <i64 as Type<sqlx::Postgres>>::type_info();
+    let boolean = <bool as Type<sqlx::Postgres>>::type_info();
     let text = <String as Type<sqlx::Postgres>>::type_info();
     let value = <Value as Type<sqlx::Postgres>>::type_info();
     let time = <DateTime<Utc> as Type<sqlx::Postgres>>::type_info();
     let uuid = <Uuid as Type<sqlx::Postgres>>::type_info();
     match index {
-        0 | 1 | 5 | 19 | 22 | 23 | 24 | 28 | 29 | 30 | 32 | 34 | 35 | 36 | 38 | 39 | 40 | 44
-        | 45 | 46 | 48 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 60 | 61 | 62 | 64 | 66 | 67 | 68
-        | 70 | 74 => vec![],
+        0 | 1 | 19 | 22 | 23 | 24 | 28 | 29 | 30 | 32 | 34 | 35 | 36 | 38 | 39 | 40 | 44 | 45
+        | 46 | 48 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 60 | 61 | 62 | 64 | 66 | 67 | 68 | 70
+        | 74 | 78 => vec![],
         2 | 6 | 9 | 10 | 12 | 13 | 14 | 17 | 18 | 25 | 26 | 31 | 33 | 41 | 42 | 47 | 49 | 57
-        | 58 | 63 | 65 => vec![int],
-        3 | 21 | 37 | 72 | 75 => vec![text],
+        | 58 | 63 | 65 | 80 | 81 | 83 | 84 | 85 => vec![int],
+        3 | 21 | 37 | 72 | 75 | 76 | 77 => vec![text],
+        5 => vec![boolean],
+        82 => vec![uuid],
         4 | 8 | 73 => vec![int.clone(), int],
         7 => vec![text, time.clone(), time],
         11 | 15 => vec![int, value.clone(), value],
-        16 | 20 => vec![text.clone(), time, uuid, text, value],
+        16 | 20 | 79 => vec![text.clone(), time, uuid, text, value],
         27 | 43 | 59 => vec![int.clone(), text, int],
         69 | 71 => vec![time],
         _ => panic!("unreviewed production statement index"),
@@ -71,7 +82,7 @@ fn parameter_types(index: usize) -> Vec<PgTypeInfo> {
 #[test]
 fn compiled_statement_inventory_and_actual_bound_types() {
     let statements = actual_statements();
-    assert_eq!(statements.len(), 76);
+    assert_eq!(statements.len(), 86);
     assert_eq!(statements[0].1, statements[19].1);
     assert!(statements[0]
         .1
@@ -92,7 +103,10 @@ fn compiled_statement_inventory_and_actual_bound_types() {
             "statement {index}: actual source ordinal/type authority"
         );
     }
+    assert_eq!(parameter_types(5)[0].name(), "BOOL");
     assert_eq!(parameter_types(16)[2].name(), "UUID");
+    assert_eq!(parameter_types(79)[2].name(), "UUID");
+    assert_eq!(parameter_types(82)[0].name(), "UUID");
     assert_eq!(parameter_types(11)[1].name(), "JSONB");
 }
 
@@ -122,7 +136,7 @@ async fn actual_compiled_dvr_schema_prepare_only() {
         .expect("actual read-only setting");
     assert_eq!(readonly, "on");
     let statements = actual_statements();
-    assert_eq!(statements.len(), 76);
+    assert_eq!(statements.len(), 86);
     let mut rows = Vec::new();
     for (index, (source, sql)) in statements.into_iter().enumerate() {
         let types = parameter_types(index);

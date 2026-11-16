@@ -105,8 +105,14 @@ pub enum RecoveryMediaError {
 /// It keeps the actual owner until file/process/SQL/Channels/control settlement.
 pub trait RecoveryMedia: Send + Sync {
     /// Admission capability only; never a successful recovery/task outcome.
-    fn ensure_domain_supported(&self) -> BoxFuture<'_, Result<(), RecoveryMediaError>> {
-        Box::pin(async { Ok(()) })
+    fn ensure_domain_supported(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), RecoveryMediaError>> {
+        Box::pin(async move {
+            let _owner = owner;
+            Ok(())
+        })
     }
     fn finalize_expired(
         &self,
@@ -342,7 +348,7 @@ impl Service {
     }
     pub(crate) async fn execute(&self, invocation: &Invocation) -> Result<Report, Error> {
         self.media
-            .ensure_domain_supported()
+            .ensure_domain_supported(invocation._owner.clone())
             .await
             .map_err(|error| Error::Media("domain_before_effects", error))?;
         let owner = invocation._owner.clone();
@@ -684,7 +690,13 @@ impl Worker {
             ),
         ] {
             if index == 0 {
-                match self.inner.service.media.ensure_domain_supported().await {
+                match self
+                    .inner
+                    .service
+                    .media
+                    .ensure_domain_supported(owner.clone())
+                    .await
+                {
                     Ok(()) => self
                         .inner
                         .startup_recovery_deferred
@@ -762,7 +774,7 @@ impl Worker {
             inner
                 .service
                 .media
-                .ensure_domain_supported()
+                .ensure_domain_supported(owner.clone())
                 .await
                 .map_err(|error| match error {
                     RecoveryMediaError::Unsupported => Disposition::UnsupportedDomain,

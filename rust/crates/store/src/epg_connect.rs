@@ -104,7 +104,11 @@ pub async fn dispatch(
     templates: Arc<dyn Templates>,
     owner: Owner,
 ) -> Result<Report, Error> {
-    if !matches!(event.as_str(), "epg_refresh" | "epg_error") || !payload.is_object() {
+    if !matches!(
+        event.as_str(),
+        "epg_refresh" | "epg_error" | "recording_start" | "recording_end"
+    ) || !payload.is_object()
+    {
         return Err(Error::Unsupported("Connect EPG event/payload unsupported"));
     }
     if serde_json::to_vec(&payload)

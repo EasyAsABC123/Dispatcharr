@@ -1,0 +1,94 @@
+{
+  "scope": "Four actual Source42 stopped/completed event shapes only; no Native event acceptance",
+  "private_contract_sha256": "59aa9311b012594fb61ce588926c051e974d50eb34952388b583ad01baa5cc4e",
+  "private_payloads_published": false,
+  "events": [
+    {
+      "event": "recording_start",
+      "payload_keys": [
+        "channel_id",
+        "channel_name",
+        "recording_id"
+      ],
+      "payload_sha256": "1a7257cefa97cd1ceb5e27ff81350c00f7461d63496202347e6ea81367c7e6be",
+      "observed_children": 0,
+      "audit_and_Connect_delivery_visible_inside_action": true
+    },
+    {
+      "event": "recording_end",
+      "payload_keys": [
+        "bytes_written",
+        "channel_id",
+        "channel_name",
+        "channel_url",
+        "end_time",
+        "file_name",
+        "file_path",
+        "file_size",
+        "file_url",
+        "has_file",
+        "outcome",
+        "profile_used",
+        "provider_name",
+        "recording_id",
+        "remux_success",
+        "start_time",
+        "status",
+        "stream_id",
+        "stream_name",
+        "stream_url"
+      ],
+      "payload_sha256": "03949ce7dcadd86a30e0e56ee66852138d74179ece5197c3797a37f13a87ad04",
+      "observed_children": 0,
+      "audit_and_Connect_delivery_visible_inside_action": true
+    },
+    {
+      "event": "recording_start",
+      "payload_keys": [
+        "channel_id",
+        "channel_name",
+        "channel_url",
+        "profile_used",
+        "provider_name",
+        "recording_id",
+        "stream_id",
+        "stream_name",
+        "stream_url"
+      ],
+      "payload_sha256": "0eb95a3f7505f863db0a0de58b507fe642cb3dd1b5486bbf7be19c62c3f0c442",
+      "observed_children": 0,
+      "audit_and_Connect_delivery_visible_inside_action": true
+    },
+    {
+      "event": "recording_end",
+      "payload_keys": [
+        "bytes_written",
+        "channel_id",
+        "channel_name",
+        "channel_url",
+        "end_time",
+        "file_name",
+        "file_path",
+        "file_size",
+        "file_url",
+        "has_file",
+        "outcome",
+        "profile_used",
+        "provider_name",
+        "recording_id",
+        "remux_success",
+        "start_time",
+        "status",
+        "stream_id",
+        "stream_name",
+        "stream_url"
+      ],
+      "payload_sha256": "1377e6140a6a16cd9831653218b7fa0c8170131944e4638f9f629f5ff38963cc",
+      "observed_children": 0,
+      "audit_and_Connect_delivery_visible_inside_action": true
+    }
+  ],
+  "temporal_observation": "First cold start has channel_id/channel_name/recording_id only; later warm start includes stream/provider/profile fields. Sample actual event phase.",
+  "recovery_HTTP_cancel_script_and_arbitrary_plugin_claimed": false,
+  "credit": "Original Dispatcharr and dependency authors retain full application/library/algorithm credit."
+}

@@ -6,6 +6,10 @@ use serde_json::Value;
 use sqlx::{pool::PoolConnection, Connection, PgConnection, PgPool, Postgres, Row};
 use std::sync::Arc;
 use uuid::Uuid;
+#[path = "recording_connect_events.rs"]
+mod connect;
+#[path = "recording_event_enrichment.rs"]
+mod enrichment;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Stage {
@@ -28,6 +32,8 @@ pub enum Error {
         settlement: Option<sqlx::Error>,
     },
     Supervisor,
+    Scoped(Box<crate::StoreError>),
+    Connect(Box<crate::epg_connect::Error>),
 }
 /// A prime-write rejection may be consumed only after this module awaited
 /// the existing same-connection Ready/ping AND explicit physical close.
@@ -125,6 +131,7 @@ pub struct CaptureStore {
     pool: PgPool,
     identity: Arc<()>,
     owned_logo_path: String,
+    recording_connect: std::sync::OnceLock<connect::Ports>,
 }
 
 /// Data-only Source whitelist; does not certify media work or permit a task ACK.
@@ -181,6 +188,7 @@ impl CaptureStore {
             pool,
             identity: Arc::new(()),
             owned_logo_path: String::new(),
+            recording_connect: std::sync::OnceLock::new(),
         }
     }
     pub fn source3_local(pool: PgPool) -> Self {
@@ -188,6 +196,7 @@ impl CaptureStore {
             pool,
             identity: Arc::new(()),
             owned_logo_path: "/app/media/rust-owned-clocked/logo.png".into(),
+            recording_connect: std::sync::OnceLock::new(),
         }
     }
     pub async fn snapshot(
@@ -348,8 +357,13 @@ impl CaptureStore {
                 source,
                 settlement: None,
             })?;
-            let result =
-                Self::read_normal_inner(&mut connection, recording_id, argument_channel).await;
+            let result = Self::read_normal_inner(
+                &mut connection,
+                recording_id,
+                argument_channel,
+                self.recording_connect_bound(),
+            )
+            .await;
             settle(connection, result).await
         })
         .await
@@ -359,6 +373,7 @@ impl CaptureStore {
         connection: &mut PgConnection,
         recording_id: i64,
         argument_channel: i64,
+        connect_bound: bool,
     ) -> Result<Option<NormalCaptureSnapshot>, Error> {
         let row=sqlx::query("SELECT r.id::bigint AS recording,r.channel_id::bigint AS channel,r.start_time,r.end_time,CASE WHEN octet_length(r.task_id)<=255 THEN r.task_id ELSE NULL END AS task_id,CASE WHEN r.custom_properties IS NULL THEN '{}'::jsonb WHEN octet_length(r.custom_properties::text)<=8192 THEN r.custom_properties ELSE NULL END AS properties,c.uuid AS channel_uuid,CASE WHEN octet_length(c.name)<=255 THEN c.name ELSE NULL END AS channel_name,c.epg_data_id::bigint AS epg_data_id,c.stream_profile_id::bigint AS stream_profile_id,EXISTS(SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.channel_id=c.id) AS has_override,c.id IS NOT NULL AS argument_channel_exists FROM dispatcharr_channels_recording r LEFT JOIN dispatcharr_channels_channel c ON c.id=$2 WHERE r.id=$1 LIMIT 1")
             .bind(recording_id).bind(argument_channel).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Recording,source,settlement:None})?;
@@ -400,8 +415,8 @@ impl CaptureStore {
                 "missing argument Channel requires actual Source task-failure port",
             ));
         }
-        let hooks:(bool,bool,bool,bool)=sqlx::query_as("SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_connect_integration),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_deliverylog),NOT EXISTS(SELECT 1 FROM plugins_pluginconfig)").fetch_one(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Context,source,settlement:None})?;
-        if !(hooks.0 && hooks.1 && hooks.2 && hooks.3) {
+        let supported:bool=sqlx::query_scalar("SELECT NOT EXISTS(SELECT 1 FROM plugins_pluginconfig) AND CASE WHEN $1 THEN NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('recording_start','recording_end') AND i.type='script') ELSE NOT EXISTS(SELECT 1 FROM dispatcharr_connect_integration) AND NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription) AND NOT EXISTS(SELECT 1 FROM dispatcharr_connect_deliverylog) END").bind(connect_bound).fetch_one(&mut*connection).await.map_err(|source|Error::Sql{stage:Stage::Context,source,settlement:None})?;
+        if !supported {
             return Err(Error::Unsupported(
                 "normal system-event integration ports required",
             ));
@@ -952,7 +967,9 @@ impl CaptureStore {
         let result=tokio::spawn(async move {
             let _owner=owner;let mut connection=self.pool.acquire().await.map_err(|source|Error::Sql{stage:Stage::Acquire,source,settlement:None})?;
             let result=async {
-                let kind=match kind{NormalEvent::Started=>"recording_start",NormalEvent::Ended=>"recording_end"};
+                // Legacy/cancellation/recovery callers have no claimed hook context.
+                Self::read_unbound_event_domain(&mut connection,kind).await?;
+                let kind=kind.as_str();
                 let id:i64=sqlx::query_scalar("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$2,$3,$4,$5)RETURNING id::bigint").bind(kind).bind(Utc::now()).bind(channel).bind(channel_name).bind(details).fetch_one(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::Audit,source,settlement:None})?;
                 // An nth row exists iff count>max. This avoids Source's full
                 // COUNT scan while preserving its exact cutoff/id predicate.
@@ -1044,9 +1061,18 @@ impl CaptureStore {
     }
 }
 
+#[derive(Clone, Copy)]
 pub enum NormalEvent {
     Started,
     Ended,
+}
+impl NormalEvent {
+    pub(crate) fn as_str(self) -> &'static str {
+        match self {
+            Self::Started => "recording_start",
+            Self::Ended => "recording_end",
+        }
+    }
 }
 
 fn normal_object(value: &Value) -> Result<Value, Error> {

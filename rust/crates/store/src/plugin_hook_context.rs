@@ -44,7 +44,8 @@ impl PluginHookTaskContext {
         let name = frame["headers"]["task"].as_str().ok_or_else(unsupported)?;
         if !matches!(
             name,
-            "apps.epg.tasks.refresh_all_epg_data"
+            "apps.channels.tasks.run_recording"
+                | "apps.epg.tasks.refresh_all_epg_data"
                 | "apps.epg.tasks.refresh_epg_data"
                 | "apps.epg.tasks.parse_programs_for_tvg_id"
                 | "apps.epg.tasks.fetch_sd_mapped_guide_batch"

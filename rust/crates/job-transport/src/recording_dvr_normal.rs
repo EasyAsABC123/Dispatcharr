@@ -260,6 +260,16 @@ impl NormalDvr {
     pub fn require_recording_domain(&self) -> Result<(), Error> {
         self.inner.plugin_domain.require_supported()
     }
+    pub fn bind_recording_connect(
+        &self,
+        auth: dispatcharr_store::AuthService,
+        runtime: dispatcharr_store::PluginRuntime,
+    ) -> Result<(), Error> {
+        self.inner
+            .store
+            .bind_recording_connect(auth, runtime)
+            .map_err(Error::Store)
+    }
     pub fn plugin_domain_capability(&self) -> &'static str {
         self.inner.plugin_domain.last_observed_capability()
     }
@@ -321,6 +331,46 @@ fn due(message: &recording_normal_task::Message) -> Result<(), Error> {
     } else {
         Err(Error::NotDue)
     }
+}
+#[allow(clippy::too_many_arguments)]
+async fn emit_recording_event(
+    inner: &Arc<Inner>,
+    task: &recording_normal_task::Task,
+    kind: NormalEvent,
+    channel: uuid::Uuid,
+    name: String,
+    details: Value,
+    maximum: i64,
+    owner: Arc<Owner>,
+) -> Result<(), Error> {
+    // Recheck the actual pinned empty directory at each event boundary too.
+    inner.plugin_domain.require_supported()?;
+    if inner.store.recording_connect_bound() {
+        let witness = task.event_context(owner.clone())?;
+        inner
+            .store
+            .clone()
+            .insert_claimed_runtime_event(
+                kind,
+                channel,
+                name,
+                details,
+                maximum,
+                witness.context(),
+                witness.trail(),
+                owner,
+            )
+            .await
+            .map_err(Error::Store)?;
+    } else {
+        inner
+            .store
+            .clone()
+            .insert_runtime_event(kind, channel, name, details, maximum, owner)
+            .await
+            .map_err(Error::Store)?;
+    }
+    Ok(())
 }
 async fn execute(
     inner: Arc<Inner>,
@@ -550,19 +600,17 @@ async fn execute(
     .await
     .map_err(Error::Events)?;
     let max_events = recording_normal_policy::max_events(&groups).map_err(policy_error)?;
-    inner
-        .store
-        .clone()
-        .insert_runtime_event(
-            NormalEvent::Started,
-            current.channel_uuid,
-            current.channel_name.clone(),
-            json!({"recording_id":message.recording_id()}),
-            max_events,
-            owner.clone(),
-        )
-        .await
-        .map_err(Error::Store)?;
+    emit_recording_event(
+        &inner,
+        &task,
+        NormalEvent::Started,
+        current.channel_uuid,
+        current.channel_name.clone(),
+        json!({"recording_id":message.recording_id()}),
+        max_events,
+        owner.clone(),
+    )
+    .await?;
     if inner
         .settings
         .normal_effect(true, owner.clone())
@@ -900,19 +948,17 @@ async fn execute(
         .map_err(Error::Store)?
         .is_some()
     {
-        inner
-            .store
-            .clone()
-            .insert_runtime_event(
-                NormalEvent::Ended,
-                current.channel_uuid,
-                current.channel_name.clone(),
-                details,
-                max_events,
-                owner.clone(),
-            )
-            .await
-            .map_err(Error::Store)?;
+        emit_recording_event(
+            &inner,
+            &task,
+            NormalEvent::Ended,
+            current.channel_uuid,
+            current.channel_name.clone(),
+            details,
+            max_events,
+            owner.clone(),
+        )
+        .await?;
         recording_events::send(
             inner.events.clone(),
             recording_events::ended(&current.channel_name),
@@ -1051,6 +1097,12 @@ impl NormalDvr {
                 ) => Ok(D::Capacity),
                 Err(Error::NotDue) => Ok(D::NotDue),
                 Err(Error::Transport(crate::transport::Error::ClaimRace)) => Ok(D::HeadChanged),
+                Err(Error::Store(dispatcharr_store::recording_capture::Error::Connect(_))) => Err(
+                    D::Operational("Recording Connect scope remains unsettled".into()),
+                ),
+                Err(Error::Store(dispatcharr_store::recording_capture::Error::Scoped(_))) => Err(
+                    D::Operational("Recording hook/SQL scope remains unsettled".into()),
+                ),
                 Err(error) => Err(D::Operational(format!("{error:?}"))),
             }
         }
@@ -1063,6 +1115,7 @@ impl NormalDvr {
 impl crate::normal_recording_recovery::RecoveryMedia for NormalDvr {
     fn ensure_domain_supported(
         &self,
+        owner: Arc<dyn Send + Sync>,
     ) -> dispatcharr_contracts::BoxFuture<
         '_,
         Result<(), crate::normal_recording_recovery::RecoveryMediaError>,
@@ -1073,6 +1126,17 @@ impl crate::normal_recording_recovery::RecoveryMedia for NormalDvr {
                 .require_supported()
                 .map_err(|error| match error {
                     Error::Unsupported(_) => {
+                        crate::normal_recording_recovery::RecoveryMediaError::Unsupported
+                    }
+                    _ => crate::normal_recording_recovery::RecoveryMediaError::Unsettled,
+                })?;
+            self.inner
+                .store
+                .clone()
+                .require_unbound_event_domain(NormalEvent::Ended, owner)
+                .await
+                .map_err(|error| match error {
+                    dispatcharr_store::recording_capture::Error::Unsupported(_) => {
                         crate::normal_recording_recovery::RecoveryMediaError::Unsupported
                     }
                     _ => crate::normal_recording_recovery::RecoveryMediaError::Unsettled,
@@ -1094,6 +1158,15 @@ impl crate::normal_recording_recovery::RecoveryMedia for NormalDvr {
                 .require_supported()
                 .map_err(|error| match error {
                     Error::Unsupported(_) => R::Unsupported,
+                    _ => R::Unsettled,
+                })?;
+            self.inner
+                .store
+                .clone()
+                .require_unbound_event_domain(NormalEvent::Ended, caller.clone())
+                .await
+                .map_err(|error| match error {
+                    dispatcharr_store::recording_capture::Error::Unsupported(_) => R::Unsupported,
                     _ => R::Unsettled,
                 })?;
             if self.inner.closed.load(Ordering::Acquire) {
