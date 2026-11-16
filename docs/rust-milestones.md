@@ -14,7 +14,8 @@ four SDK49 gates pass with 1,117 tests, zero failures and 783 ignored. It adds
 Connect delivery and enrichment at actual claimed normal-recording start/end,
 using short event sessions on the existing Auth pool and template runtime.
 General DVR plugins, relevant HTTP cancellation and recovery hooks remain
-explicitly guarded. Docker/package/application acceptance is pending; earlier
+explicitly guarded. The exact Docker image and six package families pass;
+application acceptance is pending. Earlier
 image results retain their own scopes. All full milestones and matched-work
 performance acceptance remain open.
 
