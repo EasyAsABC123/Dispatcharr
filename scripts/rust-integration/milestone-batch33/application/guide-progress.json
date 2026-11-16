@@ -1,0 +1,64 @@
+{
+  "core_SD": {
+    "status": "passed",
+    "cases": 9,
+    "reference": {
+      "path": "artifacts/rust/normal-graph-batch34-functional-1/fixtures/Native-5f4fd4af/schedules-direct/report.json",
+      "sha256": "c15a16cda260b7a06fe362d44905ec6c46b2c7f772832ac0442085156082f051",
+      "bytes": 2414
+    }
+  },
+  "warm_stop": {
+    "actual_exit": 0,
+    "expected_exit": 0,
+    "oom_killed": false
+  },
+  "warm_stop_reference": {
+    "path": "artifacts/rust/normal-graph-batch34-functional-1/fixtures/Native-5f4fd4af/xml-tvg-deferral/private/warm-actual-stop.json",
+    "sha256": "cd2cc156411b801fb1348cfba42e00faad39dd4ae31b91e90ce84264234d35c3",
+    "bytes": 68
+  },
+  "whole_warm_restart_retry_status": "passed",
+  "whole_warm_reference": {
+    "path": "artifacts/rust/normal-graph-batch34-functional-1/fixtures/Native-5f4fd4af/xml-tvg-deferral/report.json",
+    "sha256": "ac1a75c3fca24c87f4ccef61be111f4b3810092dd5c0ca20c7f187bc4bd40c59",
+    "bytes": 1055
+  },
+  "XMLTV_download": {
+    "passed": 6,
+    "failed": 1,
+    "reference": {
+      "path": "artifacts/rust/normal-graph-batch34-functional-1/fixtures/Native-5f4fd4af/xmltv-download/report.json",
+      "sha256": "e71761bf0e48776e64627f72ae0c33f07d0cb23901951a9cc96abaf12712e5fd",
+      "bytes": 15105
+    },
+    "file_observer_alias_correction": "Actual plain/gzip/contentencoding/negativepreservation/TVG reads now pass; oldfailedassertions preserved."
+  },
+  "redirect_failure": {
+    "actual_Native_status_sequence": [
+      302
+    ],
+    "actual_Source33_status_sequence": [
+      302,
+      200
+    ],
+    "Native_reference": {
+      "path": "artifacts/rust/normal-graph-batch34-functional-1/fixtures/Native-5f4fd4af/xmltv-download/private/redirect-Origin.json",
+      "sha256": "d6919b816d91295d2a6caa3b533a7efedf966c9c3311bf5212c2d1beae930b3b",
+      "bytes": 158
+    },
+    "Source_reference": {
+      "path": "artifacts/rust/normal-graph-batch33-functional-1/fixtures/Original-3998bdb7/xmltv-download/private/redirect-Origin.json",
+      "sha256": "708f9a438b013a5b327464cdde7263413d68121bb29d5ae1c12bff1ce463b14e",
+      "bytes": 504
+    },
+    "Native_SQL_status": "error",
+    "Native_SQL_reference": {
+      "path": "artifacts/rust/normal-graph-batch34-functional-1/fixtures/Native-5f4fd4af/xmltv-download/private/redirect-SQL-file.json",
+      "sha256": "051d78dd141d6e2d28d6246ab9315a2a3c04304d1c381dc3e85d5c67c8994a00",
+      "bytes": 1222
+    },
+    "user_agent_updated": true,
+    "scope": "Nofollow request observed; cachedpriorfile exists but doesnotestablishsuccessfulredirect. Cause awaits pairedtransportcontrol, noobserverwaiver."
+  }
+}

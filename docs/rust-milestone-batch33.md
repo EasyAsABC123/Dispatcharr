@@ -37,7 +37,8 @@ held-guide prerequisites also need fixture corrections. These observations do
 not turn the failed contexts into passes or establish a regex runtime defect.
 
 Candidate33's Docker build, actual packaged launcher control and six package
-proof families below pass. The affected Native application rerun is running.
+proof families below pass. The affected Native rerun below completes with a held-control pass and
+guide/plugin startup failures.
 Nonempty help output does not establish Django bootstrap, Connect delivery,
 plugin execution or physical host shutdown. No full milestone or new performance
 gain is accepted.
@@ -69,3 +70,41 @@ image ID, with the raw tag discrepancy retained.
 
 The affected Native guide/M8/held application batch remains a separate gate.
 No full milestone or new performance gain is accepted.
+
+
+## Main34: held control passes; guide and plugin startup remain open
+
+The [affected Native-only batch](../scripts/rust-integration/milestone-batch33/application/inventory.json)
+actually exits1 after892.264 seconds, with both pipes reaching EOF and the
+process group settled. Source executes no new business contexts. All three
+Native contexts run: guides and M8 startup fail; the final held custom-guide
+physical control passes. Aggregate cleanup passes for one project and all six
+exact container IDs are absent. One per-container original generation receipt
+is unavailable; the raw aggregate generation flag remains true, with that
+individual limitation explicitly retained.
+
+All nine core SD cases and the complete warm retry/restart case pass. Correcting
+the Native file observer now qualifies six of seven remote XMLTV cells. The
+remaining redirect case records Native302 without a follow request, while the
+retained Source reference records302 then200. The updated User-Agent is correct;
+the Native source enters error state and retains its prior cached file. Existing
+file bytes do not establish successful redirect handling. Separate pinned Requests and old-client controls pass, including the actual
+multithread scheduling counterpart. They do not establish the failure cause or
+justify a pool change; actual packaged error diagnostics remain necessary.
+
+The actual production launcher still passes its281-byte usage check. First real
+Django/RPC execution remains unqualified: Connect times out with health503 and a
+typed guide-effects fault,15 queued items, no unacked frames and both expected
+result keys absent. At the bounded capture, all fourteen owned delivery counts
+and the Origin Connect-request count are zero, and only Main is observed in its
+process snapshot. This does not identify the failed bootstrap phase or establish
+ChildReady or an absolute spawn count. M8 separately fails during Native startup.
+Safe bounded diagnostics need another candidate; the entrypoint correction is
+not reclassified as reverted.
+
+With the declared diagnostics flag preserved and exact fixture M3U_EPG CIDR
+admitted, the held case observes a real regex worker advancing CPU within its
+same process generation, then verifies physical retirement. Main exits1 without
+OOM as required for an unknown cancelled search; no normal exit0 claim is made.
+The Source held-shutdown counterpart remains unmeasured. No full milestone or
+new performance gain is accepted.

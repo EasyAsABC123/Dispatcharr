@@ -1,0 +1,55 @@
+{
+  "actual_report": {
+    "Source_shutdown_counterpart": "unmeasured",
+    "actual_Main_stop": {
+      "actual_exit": 1,
+      "expected_exit": null,
+      "oom_killed": false
+    },
+    "actual_held_cpu": {
+      "after": {
+        "cpu_ticks": 74,
+        "generation": "11909835",
+        "namespace": "pid:[4026534767]",
+        "pgrp": 18,
+        "pid": 18
+      },
+      "before": {
+        "cpu_ticks": 7,
+        "generation": "11909835",
+        "namespace": "pid:[4026534767]",
+        "pgrp": 18,
+        "pid": 18
+      },
+      "interval_seconds": 0.6635223329940345
+    },
+    "actual_nonzero_Main": true,
+    "actual_worker_retired": true,
+    "context_exhausted_after_this_cell": true,
+    "normal0claim": false,
+    "performance_verified": false,
+    "request_result": {
+      "bytes": 142,
+      "error_type": null
+    },
+    "status": "passed",
+    "unknown_search_not_no_match": true
+  },
+  "reference": {
+    "path": "artifacts/rust/normal-graph-batch34-functional-1/fixtures/Native-5f4fd4af/custom-guide-held/report.json",
+    "sha256": "460a6fb8e55a476bcf5f7d610f03ef4a75aadc173527b5d5c92a14621ae548ca",
+    "bytes": 819
+  },
+  "held_HTTP_observation": {
+    "bytes": 142,
+    "error_type": null,
+    "sha256": "2a4efe88f701823f55007e3433030fe615c6e2565b1158f57f8899281dcd4f61",
+    "status": 200
+  },
+  "held_HTTP_reference": {
+    "path": "artifacts/rust/normal-graph-batch34-functional-1/fixtures/Native-5f4fd4af/custom-guide-held/private/held-response.json",
+    "sha256": "b05a3b457c9cae9f6280e45feb37104ee1d6ea75c50291f35f1db09fd2cba96f",
+    "bytes": 138
+  },
+  "scope": "ActualNativeheldworkerCPU andphysicalretirement control passes afterdeclaredfixtureCIDR/diagnosticenv corrections. Mainnonzero1 isintentionalunknownsearch policy; normal0 isnotclaimed. Sourceheldcounterpartunmeasured; no fullM7/performanceacceptance."
+}

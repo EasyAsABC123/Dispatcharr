@@ -1,0 +1,28 @@
+{
+  "actual_status": "failed",
+  "attempted": 3,
+  "passed": 1,
+  "failed": 2,
+  "contexts": [
+    {
+      "case": "schedules-direct",
+      "status": "failed",
+      "reason": "AssertionError:{'0': 'passed', '1': 'passed', '2': 'failed', '3': 'passed', '4': 'passed', '5': 'failed', '6': 'failed', '7': 'failed', '8': 'failed', '9': 'passed', '10': 'passed'}"
+    },
+    {
+      "case": "m8-actions",
+      "status": "failed",
+      "reason": "NativeStartupFailure:ActualNativeStartupExit:1"
+    },
+    {
+      "case": "custom-guide-held",
+      "status": "passed"
+    }
+  ],
+  "reference": {
+    "path": "artifacts/rust/normal-graph-batch34-functional-1/results/Native/report.json",
+    "sha256": "3cd8595717785652cae53fcac4980ca75378efb0d42f284e8ecea72948e65631",
+    "bytes": 657
+  },
+  "retained_earlier_scope": "Original Source33guide/M8 and named Native33Candidate32 business outcomes remain oldsource/image bound, not newimage execution or performance."
+}
