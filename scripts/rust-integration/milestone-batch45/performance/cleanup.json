@@ -1,0 +1,3249 @@
+{
+  "passed": true,
+  "phases": [
+    {
+      "phase": 1,
+      "project": "dispatcharr-shared-ts-8273c713b67f",
+      "exact_CIDs": [
+        "1c1bdce75802ed80d8b7636212c84b70dbe7e3de2f51b98d889809550e1e5d73",
+        "46d6e503d72850e62a5f7036da621dbc94efe40b395456d70a7eea4d6b965a23",
+        "4e637ba01f4846211fc77affa79e3141abe7c4ee9e3bfb9526e73f7080cafb24"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8273c713b67f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8273c713b67f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8273c713b67f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "1c1bdce75802ed80d8b7636212c84b70dbe7e3de2f51b98d889809550e1e5d73",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=1c1bdce75802ed80d8b7636212c84b70dbe7e3de2f51b98d889809550e1e5d73"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "46d6e503d72850e62a5f7036da621dbc94efe40b395456d70a7eea4d6b965a23",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=46d6e503d72850e62a5f7036da621dbc94efe40b395456d70a7eea4d6b965a23"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "4e637ba01f4846211fc77affa79e3141abe7c4ee9e3bfb9526e73f7080cafb24",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=4e637ba01f4846211fc77affa79e3141abe7c4ee9e3bfb9526e73f7080cafb24"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 99667,
+          "absent": true
+        },
+        {
+          "PID": 99794,
+          "absent": true
+        },
+        {
+          "PID": 99878,
+          "absent": true
+        },
+        {
+          "PID": 100147,
+          "absent": true
+        },
+        {
+          "PID": 100148,
+          "absent": true
+        },
+        {
+          "PID": 100149,
+          "absent": true
+        },
+        {
+          "PID": 100151,
+          "absent": true
+        },
+        {
+          "PID": 100152,
+          "absent": true
+        },
+        {
+          "PID": 100153,
+          "absent": true
+        },
+        {
+          "PID": 100182,
+          "absent": true
+        },
+        {
+          "PID": 100283,
+          "absent": true
+        },
+        {
+          "PID": 102454,
+          "absent": true
+        },
+        {
+          "PID": 102557,
+          "absent": true
+        },
+        {
+          "PID": 102558,
+          "absent": true
+        },
+        {
+          "PID": 102561,
+          "absent": true
+        },
+        {
+          "PID": 102863,
+          "absent": true
+        },
+        {
+          "PID": 103123,
+          "absent": true
+        },
+        {
+          "PID": 103323,
+          "absent": true
+        },
+        {
+          "PID": 103324,
+          "absent": true
+        },
+        {
+          "PID": 103325,
+          "absent": true
+        },
+        {
+          "PID": 103326,
+          "absent": true
+        },
+        {
+          "PID": 103327,
+          "absent": true
+        },
+        {
+          "PID": 103328,
+          "absent": true
+        },
+        {
+          "PID": 103329,
+          "absent": true
+        },
+        {
+          "PID": 103330,
+          "absent": true
+        },
+        {
+          "PID": 103331,
+          "absent": true
+        },
+        {
+          "PID": 103332,
+          "absent": true
+        },
+        {
+          "PID": 103333,
+          "absent": true
+        },
+        {
+          "PID": 103334,
+          "absent": true
+        },
+        {
+          "PID": 103335,
+          "absent": true
+        },
+        {
+          "PID": 103336,
+          "absent": true
+        },
+        {
+          "PID": 103337,
+          "absent": true
+        },
+        {
+          "PID": 103338,
+          "absent": true
+        },
+        {
+          "PID": 103339,
+          "absent": true
+        },
+        {
+          "PID": 103340,
+          "absent": true
+        },
+        {
+          "PID": 103341,
+          "absent": true
+        },
+        {
+          "PID": 103342,
+          "absent": true
+        },
+        {
+          "PID": 103343,
+          "absent": true
+        },
+        {
+          "PID": 103344,
+          "absent": true
+        },
+        {
+          "PID": 103345,
+          "absent": true
+        },
+        {
+          "PID": 103347,
+          "absent": true
+        },
+        {
+          "PID": 103348,
+          "absent": true
+        },
+        {
+          "PID": 103349,
+          "absent": true
+        },
+        {
+          "PID": 103350,
+          "absent": true
+        },
+        {
+          "PID": 103351,
+          "absent": true
+        },
+        {
+          "PID": 103352,
+          "absent": true
+        },
+        {
+          "PID": 103353,
+          "absent": true
+        },
+        {
+          "PID": 103354,
+          "absent": true
+        },
+        {
+          "PID": 103355,
+          "absent": true
+        },
+        {
+          "PID": 103356,
+          "absent": true
+        },
+        {
+          "PID": 103359,
+          "absent": true
+        },
+        {
+          "PID": 103363,
+          "absent": true
+        },
+        {
+          "PID": 103549,
+          "absent": true
+        },
+        {
+          "PID": 103690,
+          "absent": true
+        },
+        {
+          "PID": 103844,
+          "absent": true
+        },
+        {
+          "PID": 104020,
+          "absent": true
+        },
+        {
+          "PID": 105058,
+          "absent": true
+        },
+        {
+          "PID": 105088,
+          "absent": true
+        },
+        {
+          "PID": 105089,
+          "absent": true
+        },
+        {
+          "PID": 105316,
+          "absent": true
+        },
+        {
+          "PID": 105931,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 2,
+      "project": "dispatcharr-shared-ts-77debc18326e",
+      "exact_CIDs": [
+        "65ed9f8a7ff0a7bad81ccaa0f26226634fd971da25fa0a62787c20835562dd85",
+        "7bf68ffa89481baab7a821000ec98e1fa22fa2b875715a78479e628791bdb030",
+        "8589332ff007dd80de49a92b2111acc52029ef0367c720a403b0873e0a081029",
+        "980a4efbc7947d574a9c9581e0a3159ac56fd81211c481979eeba56b016b2ec3"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-77debc18326e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-77debc18326e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-77debc18326e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "65ed9f8a7ff0a7bad81ccaa0f26226634fd971da25fa0a62787c20835562dd85",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=65ed9f8a7ff0a7bad81ccaa0f26226634fd971da25fa0a62787c20835562dd85"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "7bf68ffa89481baab7a821000ec98e1fa22fa2b875715a78479e628791bdb030",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=7bf68ffa89481baab7a821000ec98e1fa22fa2b875715a78479e628791bdb030"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "8589332ff007dd80de49a92b2111acc52029ef0367c720a403b0873e0a081029",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=8589332ff007dd80de49a92b2111acc52029ef0367c720a403b0873e0a081029"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "980a4efbc7947d574a9c9581e0a3159ac56fd81211c481979eeba56b016b2ec3",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=980a4efbc7947d574a9c9581e0a3159ac56fd81211c481979eeba56b016b2ec3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 119942,
+          "absent": true
+        },
+        {
+          "PID": 120085,
+          "absent": true
+        },
+        {
+          "PID": 120213,
+          "absent": true
+        },
+        {
+          "PID": 120449,
+          "absent": true
+        },
+        {
+          "PID": 120450,
+          "absent": true
+        },
+        {
+          "PID": 120451,
+          "absent": true
+        },
+        {
+          "PID": 120453,
+          "absent": true
+        },
+        {
+          "PID": 120454,
+          "absent": true
+        },
+        {
+          "PID": 120455,
+          "absent": true
+        },
+        {
+          "PID": 120484,
+          "absent": true
+        },
+        {
+          "PID": 120528,
+          "absent": true
+        },
+        {
+          "PID": 123106,
+          "absent": true
+        },
+        {
+          "PID": 125018,
+          "absent": true
+        },
+        {
+          "PID": 125052,
+          "absent": true
+        },
+        {
+          "PID": 125054,
+          "absent": true
+        },
+        {
+          "PID": 125812,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 3,
+      "project": "dispatcharr-shared-ts-8eff9a348eeb",
+      "exact_CIDs": [
+        "1062119f1a1c90d20541267cbbc37dea4413f55d934307d12df0d51b7ba59a9f",
+        "1cc42227a6d40b23ea0fddd75c194182a3cbdb431f94e8c36f62e3c0412787b1",
+        "8fb7f490568b7ff42b386c69ebaf302ff835811f1a295eb4be969de2ebf310ed",
+        "a34d3fe51b4d18347cc51ace236e7827bf3801891c862d3fd73bea4c3e647a3d"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8eff9a348eeb"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8eff9a348eeb"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8eff9a348eeb"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "1062119f1a1c90d20541267cbbc37dea4413f55d934307d12df0d51b7ba59a9f",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=1062119f1a1c90d20541267cbbc37dea4413f55d934307d12df0d51b7ba59a9f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "1cc42227a6d40b23ea0fddd75c194182a3cbdb431f94e8c36f62e3c0412787b1",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=1cc42227a6d40b23ea0fddd75c194182a3cbdb431f94e8c36f62e3c0412787b1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "8fb7f490568b7ff42b386c69ebaf302ff835811f1a295eb4be969de2ebf310ed",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=8fb7f490568b7ff42b386c69ebaf302ff835811f1a295eb4be969de2ebf310ed"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "a34d3fe51b4d18347cc51ace236e7827bf3801891c862d3fd73bea4c3e647a3d",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=a34d3fe51b4d18347cc51ace236e7827bf3801891c862d3fd73bea4c3e647a3d"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 139276,
+          "absent": true
+        },
+        {
+          "PID": 139421,
+          "absent": true
+        },
+        {
+          "PID": 139503,
+          "absent": true
+        },
+        {
+          "PID": 139777,
+          "absent": true
+        },
+        {
+          "PID": 139778,
+          "absent": true
+        },
+        {
+          "PID": 139779,
+          "absent": true
+        },
+        {
+          "PID": 139781,
+          "absent": true
+        },
+        {
+          "PID": 139782,
+          "absent": true
+        },
+        {
+          "PID": 139783,
+          "absent": true
+        },
+        {
+          "PID": 139812,
+          "absent": true
+        },
+        {
+          "PID": 139904,
+          "absent": true
+        },
+        {
+          "PID": 142337,
+          "absent": true
+        },
+        {
+          "PID": 144185,
+          "absent": true
+        },
+        {
+          "PID": 144220,
+          "absent": true
+        },
+        {
+          "PID": 144222,
+          "absent": true
+        },
+        {
+          "PID": 144960,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 4,
+      "project": "dispatcharr-shared-ts-a85687c5f5d3",
+      "exact_CIDs": [
+        "02cd40c47a608783723146ed4927822056a6f7020ac2ccc422d3f81914928c26",
+        "32f51561007e7ccbeeb1ea706f41e0212c3443395b18b746e660cd457031ad2a",
+        "f21150f9f8aaca4166138d717f53a888359cabc9af724e657428d447b0690527"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a85687c5f5d3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a85687c5f5d3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a85687c5f5d3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "02cd40c47a608783723146ed4927822056a6f7020ac2ccc422d3f81914928c26",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=02cd40c47a608783723146ed4927822056a6f7020ac2ccc422d3f81914928c26"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "32f51561007e7ccbeeb1ea706f41e0212c3443395b18b746e660cd457031ad2a",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=32f51561007e7ccbeeb1ea706f41e0212c3443395b18b746e660cd457031ad2a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "f21150f9f8aaca4166138d717f53a888359cabc9af724e657428d447b0690527",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=f21150f9f8aaca4166138d717f53a888359cabc9af724e657428d447b0690527"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 158214,
+          "absent": true
+        },
+        {
+          "PID": 158360,
+          "absent": true
+        },
+        {
+          "PID": 158444,
+          "absent": true
+        },
+        {
+          "PID": 158731,
+          "absent": true
+        },
+        {
+          "PID": 158732,
+          "absent": true
+        },
+        {
+          "PID": 158733,
+          "absent": true
+        },
+        {
+          "PID": 158735,
+          "absent": true
+        },
+        {
+          "PID": 158736,
+          "absent": true
+        },
+        {
+          "PID": 158737,
+          "absent": true
+        },
+        {
+          "PID": 158766,
+          "absent": true
+        },
+        {
+          "PID": 158805,
+          "absent": true
+        },
+        {
+          "PID": 161269,
+          "absent": true
+        },
+        {
+          "PID": 161366,
+          "absent": true
+        },
+        {
+          "PID": 161367,
+          "absent": true
+        },
+        {
+          "PID": 161368,
+          "absent": true
+        },
+        {
+          "PID": 161623,
+          "absent": true
+        },
+        {
+          "PID": 161833,
+          "absent": true
+        },
+        {
+          "PID": 162088,
+          "absent": true
+        },
+        {
+          "PID": 162089,
+          "absent": true
+        },
+        {
+          "PID": 162090,
+          "absent": true
+        },
+        {
+          "PID": 162091,
+          "absent": true
+        },
+        {
+          "PID": 162092,
+          "absent": true
+        },
+        {
+          "PID": 162093,
+          "absent": true
+        },
+        {
+          "PID": 162094,
+          "absent": true
+        },
+        {
+          "PID": 162095,
+          "absent": true
+        },
+        {
+          "PID": 162096,
+          "absent": true
+        },
+        {
+          "PID": 162097,
+          "absent": true
+        },
+        {
+          "PID": 162098,
+          "absent": true
+        },
+        {
+          "PID": 162099,
+          "absent": true
+        },
+        {
+          "PID": 162100,
+          "absent": true
+        },
+        {
+          "PID": 162101,
+          "absent": true
+        },
+        {
+          "PID": 162102,
+          "absent": true
+        },
+        {
+          "PID": 162103,
+          "absent": true
+        },
+        {
+          "PID": 162104,
+          "absent": true
+        },
+        {
+          "PID": 162105,
+          "absent": true
+        },
+        {
+          "PID": 162106,
+          "absent": true
+        },
+        {
+          "PID": 162107,
+          "absent": true
+        },
+        {
+          "PID": 162108,
+          "absent": true
+        },
+        {
+          "PID": 162109,
+          "absent": true
+        },
+        {
+          "PID": 162110,
+          "absent": true
+        },
+        {
+          "PID": 162111,
+          "absent": true
+        },
+        {
+          "PID": 162112,
+          "absent": true
+        },
+        {
+          "PID": 162113,
+          "absent": true
+        },
+        {
+          "PID": 162114,
+          "absent": true
+        },
+        {
+          "PID": 162115,
+          "absent": true
+        },
+        {
+          "PID": 162116,
+          "absent": true
+        },
+        {
+          "PID": 162117,
+          "absent": true
+        },
+        {
+          "PID": 162118,
+          "absent": true
+        },
+        {
+          "PID": 162119,
+          "absent": true
+        },
+        {
+          "PID": 162121,
+          "absent": true
+        },
+        {
+          "PID": 162122,
+          "absent": true
+        },
+        {
+          "PID": 162123,
+          "absent": true
+        },
+        {
+          "PID": 162309,
+          "absent": true
+        },
+        {
+          "PID": 162443,
+          "absent": true
+        },
+        {
+          "PID": 162589,
+          "absent": true
+        },
+        {
+          "PID": 162841,
+          "absent": true
+        },
+        {
+          "PID": 163786,
+          "absent": true
+        },
+        {
+          "PID": 163878,
+          "absent": true
+        },
+        {
+          "PID": 163879,
+          "absent": true
+        },
+        {
+          "PID": 163917,
+          "absent": true
+        },
+        {
+          "PID": 164493,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 5,
+      "project": "dispatcharr-shared-ts-ae16ef55f233",
+      "exact_CIDs": [
+        "1d202cb4b93bd3b19fdd5b80de584451c384d6e68cdf4a211d340f3639eb3c7c",
+        "5385700aca66ce2efc97e1e6186f5a78d1c7d933d1e78417da97a9c696e9b721",
+        "67119abe63b0c0eb48a5c0a36c1cc5fcf177249af085b9f051546f353634571d"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-ae16ef55f233"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-ae16ef55f233"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-ae16ef55f233"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "1d202cb4b93bd3b19fdd5b80de584451c384d6e68cdf4a211d340f3639eb3c7c",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=1d202cb4b93bd3b19fdd5b80de584451c384d6e68cdf4a211d340f3639eb3c7c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "5385700aca66ce2efc97e1e6186f5a78d1c7d933d1e78417da97a9c696e9b721",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=5385700aca66ce2efc97e1e6186f5a78d1c7d933d1e78417da97a9c696e9b721"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "67119abe63b0c0eb48a5c0a36c1cc5fcf177249af085b9f051546f353634571d",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=67119abe63b0c0eb48a5c0a36c1cc5fcf177249af085b9f051546f353634571d"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 178551,
+          "absent": true
+        },
+        {
+          "PID": 178731,
+          "absent": true
+        },
+        {
+          "PID": 178816,
+          "absent": true
+        },
+        {
+          "PID": 179090,
+          "absent": true
+        },
+        {
+          "PID": 179091,
+          "absent": true
+        },
+        {
+          "PID": 179092,
+          "absent": true
+        },
+        {
+          "PID": 179094,
+          "absent": true
+        },
+        {
+          "PID": 179095,
+          "absent": true
+        },
+        {
+          "PID": 179096,
+          "absent": true
+        },
+        {
+          "PID": 179125,
+          "absent": true
+        },
+        {
+          "PID": 179215,
+          "absent": true
+        },
+        {
+          "PID": 181356,
+          "absent": true
+        },
+        {
+          "PID": 181464,
+          "absent": true
+        },
+        {
+          "PID": 181465,
+          "absent": true
+        },
+        {
+          "PID": 181466,
+          "absent": true
+        },
+        {
+          "PID": 181719,
+          "absent": true
+        },
+        {
+          "PID": 181930,
+          "absent": true
+        },
+        {
+          "PID": 182133,
+          "absent": true
+        },
+        {
+          "PID": 182134,
+          "absent": true
+        },
+        {
+          "PID": 182135,
+          "absent": true
+        },
+        {
+          "PID": 182136,
+          "absent": true
+        },
+        {
+          "PID": 182137,
+          "absent": true
+        },
+        {
+          "PID": 182138,
+          "absent": true
+        },
+        {
+          "PID": 182139,
+          "absent": true
+        },
+        {
+          "PID": 182140,
+          "absent": true
+        },
+        {
+          "PID": 182141,
+          "absent": true
+        },
+        {
+          "PID": 182142,
+          "absent": true
+        },
+        {
+          "PID": 182143,
+          "absent": true
+        },
+        {
+          "PID": 182144,
+          "absent": true
+        },
+        {
+          "PID": 182145,
+          "absent": true
+        },
+        {
+          "PID": 182146,
+          "absent": true
+        },
+        {
+          "PID": 182147,
+          "absent": true
+        },
+        {
+          "PID": 182148,
+          "absent": true
+        },
+        {
+          "PID": 182149,
+          "absent": true
+        },
+        {
+          "PID": 182150,
+          "absent": true
+        },
+        {
+          "PID": 182151,
+          "absent": true
+        },
+        {
+          "PID": 182152,
+          "absent": true
+        },
+        {
+          "PID": 182153,
+          "absent": true
+        },
+        {
+          "PID": 182154,
+          "absent": true
+        },
+        {
+          "PID": 182155,
+          "absent": true
+        },
+        {
+          "PID": 182156,
+          "absent": true
+        },
+        {
+          "PID": 182157,
+          "absent": true
+        },
+        {
+          "PID": 182158,
+          "absent": true
+        },
+        {
+          "PID": 182159,
+          "absent": true
+        },
+        {
+          "PID": 182160,
+          "absent": true
+        },
+        {
+          "PID": 182161,
+          "absent": true
+        },
+        {
+          "PID": 182163,
+          "absent": true
+        },
+        {
+          "PID": 182164,
+          "absent": true
+        },
+        {
+          "PID": 182165,
+          "absent": true
+        },
+        {
+          "PID": 182166,
+          "absent": true
+        },
+        {
+          "PID": 182167,
+          "absent": true
+        },
+        {
+          "PID": 182168,
+          "absent": true
+        },
+        {
+          "PID": 182356,
+          "absent": true
+        },
+        {
+          "PID": 182491,
+          "absent": true
+        },
+        {
+          "PID": 182629,
+          "absent": true
+        },
+        {
+          "PID": 182858,
+          "absent": true
+        },
+        {
+          "PID": 184007,
+          "absent": true
+        },
+        {
+          "PID": 184087,
+          "absent": true
+        },
+        {
+          "PID": 184088,
+          "absent": true
+        },
+        {
+          "PID": 184233,
+          "absent": true
+        },
+        {
+          "PID": 184844,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 6,
+      "project": "dispatcharr-shared-ts-4f15d1194816",
+      "exact_CIDs": [
+        "4453e414ef4e3c62e6dc992b86652b064810f1c3e71dc2cede700f39bc2b64b7",
+        "ddeed21b81bc8947db2992b0b1609346489c4ac39aae3dc446817da79fed130e",
+        "f04bb05d4f4a9a9e8f819b3aa51326492f1d2944238f9159f6d26b65e24943c7",
+        "fe302005b20d08180b0058dca08e3e61b9b7a34bc871ec57ce4ce8300d2306c3"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-4f15d1194816"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-4f15d1194816"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-4f15d1194816"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "4453e414ef4e3c62e6dc992b86652b064810f1c3e71dc2cede700f39bc2b64b7",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=4453e414ef4e3c62e6dc992b86652b064810f1c3e71dc2cede700f39bc2b64b7"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "ddeed21b81bc8947db2992b0b1609346489c4ac39aae3dc446817da79fed130e",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=ddeed21b81bc8947db2992b0b1609346489c4ac39aae3dc446817da79fed130e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "f04bb05d4f4a9a9e8f819b3aa51326492f1d2944238f9159f6d26b65e24943c7",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=f04bb05d4f4a9a9e8f819b3aa51326492f1d2944238f9159f6d26b65e24943c7"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "fe302005b20d08180b0058dca08e3e61b9b7a34bc871ec57ce4ce8300d2306c3",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=fe302005b20d08180b0058dca08e3e61b9b7a34bc871ec57ce4ce8300d2306c3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 199056,
+          "absent": true
+        },
+        {
+          "PID": 199197,
+          "absent": true
+        },
+        {
+          "PID": 199282,
+          "absent": true
+        },
+        {
+          "PID": 199570,
+          "absent": true
+        },
+        {
+          "PID": 199571,
+          "absent": true
+        },
+        {
+          "PID": 199572,
+          "absent": true
+        },
+        {
+          "PID": 199574,
+          "absent": true
+        },
+        {
+          "PID": 199575,
+          "absent": true
+        },
+        {
+          "PID": 199576,
+          "absent": true
+        },
+        {
+          "PID": 199605,
+          "absent": true
+        },
+        {
+          "PID": 199644,
+          "absent": true
+        },
+        {
+          "PID": 202322,
+          "absent": true
+        },
+        {
+          "PID": 204036,
+          "absent": true
+        },
+        {
+          "PID": 204071,
+          "absent": true
+        },
+        {
+          "PID": 204073,
+          "absent": true
+        },
+        {
+          "PID": 204843,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 7,
+      "project": "dispatcharr-shared-ts-0d1d1bd8844b",
+      "exact_CIDs": [
+        "5282b10300288acc8f597c1a5ab3d09aee516c336a709ea2e1768c9e6c936e46",
+        "769eb0f98593a3937c98694176b6ce62f3e94ea213a6d51a8a2e36a909e8323f",
+        "fe774860abd3a74c57acbbad08b1653d7df68ffea1fde8ba25e3ce2efee18d7a"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-0d1d1bd8844b"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-0d1d1bd8844b"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-0d1d1bd8844b"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "5282b10300288acc8f597c1a5ab3d09aee516c336a709ea2e1768c9e6c936e46",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=5282b10300288acc8f597c1a5ab3d09aee516c336a709ea2e1768c9e6c936e46"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "769eb0f98593a3937c98694176b6ce62f3e94ea213a6d51a8a2e36a909e8323f",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=769eb0f98593a3937c98694176b6ce62f3e94ea213a6d51a8a2e36a909e8323f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "fe774860abd3a74c57acbbad08b1653d7df68ffea1fde8ba25e3ce2efee18d7a",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=fe774860abd3a74c57acbbad08b1653d7df68ffea1fde8ba25e3ce2efee18d7a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 217890,
+          "absent": true
+        },
+        {
+          "PID": 218026,
+          "absent": true
+        },
+        {
+          "PID": 218111,
+          "absent": true
+        },
+        {
+          "PID": 218386,
+          "absent": true
+        },
+        {
+          "PID": 218387,
+          "absent": true
+        },
+        {
+          "PID": 218388,
+          "absent": true
+        },
+        {
+          "PID": 218390,
+          "absent": true
+        },
+        {
+          "PID": 218391,
+          "absent": true
+        },
+        {
+          "PID": 218392,
+          "absent": true
+        },
+        {
+          "PID": 218427,
+          "absent": true
+        },
+        {
+          "PID": 218466,
+          "absent": true
+        },
+        {
+          "PID": 220723,
+          "absent": true
+        },
+        {
+          "PID": 220833,
+          "absent": true
+        },
+        {
+          "PID": 220834,
+          "absent": true
+        },
+        {
+          "PID": 220857,
+          "absent": true
+        },
+        {
+          "PID": 221155,
+          "absent": true
+        },
+        {
+          "PID": 221379,
+          "absent": true
+        },
+        {
+          "PID": 221590,
+          "absent": true
+        },
+        {
+          "PID": 221591,
+          "absent": true
+        },
+        {
+          "PID": 221592,
+          "absent": true
+        },
+        {
+          "PID": 221593,
+          "absent": true
+        },
+        {
+          "PID": 221594,
+          "absent": true
+        },
+        {
+          "PID": 221595,
+          "absent": true
+        },
+        {
+          "PID": 221596,
+          "absent": true
+        },
+        {
+          "PID": 221597,
+          "absent": true
+        },
+        {
+          "PID": 221598,
+          "absent": true
+        },
+        {
+          "PID": 221599,
+          "absent": true
+        },
+        {
+          "PID": 221600,
+          "absent": true
+        },
+        {
+          "PID": 221601,
+          "absent": true
+        },
+        {
+          "PID": 221602,
+          "absent": true
+        },
+        {
+          "PID": 221603,
+          "absent": true
+        },
+        {
+          "PID": 221604,
+          "absent": true
+        },
+        {
+          "PID": 221605,
+          "absent": true
+        },
+        {
+          "PID": 221606,
+          "absent": true
+        },
+        {
+          "PID": 221607,
+          "absent": true
+        },
+        {
+          "PID": 221608,
+          "absent": true
+        },
+        {
+          "PID": 221609,
+          "absent": true
+        },
+        {
+          "PID": 221610,
+          "absent": true
+        },
+        {
+          "PID": 221611,
+          "absent": true
+        },
+        {
+          "PID": 221612,
+          "absent": true
+        },
+        {
+          "PID": 221614,
+          "absent": true
+        },
+        {
+          "PID": 221615,
+          "absent": true
+        },
+        {
+          "PID": 221616,
+          "absent": true
+        },
+        {
+          "PID": 221617,
+          "absent": true
+        },
+        {
+          "PID": 221618,
+          "absent": true
+        },
+        {
+          "PID": 221619,
+          "absent": true
+        },
+        {
+          "PID": 221620,
+          "absent": true
+        },
+        {
+          "PID": 221624,
+          "absent": true
+        },
+        {
+          "PID": 221627,
+          "absent": true
+        },
+        {
+          "PID": 221628,
+          "absent": true
+        },
+        {
+          "PID": 221629,
+          "absent": true
+        },
+        {
+          "PID": 221630,
+          "absent": true
+        },
+        {
+          "PID": 221843,
+          "absent": true
+        },
+        {
+          "PID": 221981,
+          "absent": true
+        },
+        {
+          "PID": 222118,
+          "absent": true
+        },
+        {
+          "PID": 222297,
+          "absent": true
+        },
+        {
+          "PID": 223511,
+          "absent": true
+        },
+        {
+          "PID": 223542,
+          "absent": true
+        },
+        {
+          "PID": 223543,
+          "absent": true
+        },
+        {
+          "PID": 223817,
+          "absent": true
+        },
+        {
+          "PID": 224438,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 8,
+      "project": "dispatcharr-shared-ts-8555167177a1",
+      "exact_CIDs": [
+        "6f1776128891ed1f212ed78c4b613c62e335c57bb49917b9bb003397108b332f",
+        "8c900aae641774ba7753b06d1c4852aea549736691c5ab27d82d20046f4c187e",
+        "9a1a5dbfc3ece152ba2e9a288742b30acc87ebb72beff171d06e27f2ea1c44c5",
+        "bb980956a71bd03c5652de8858d47d4e8f16e5820e0a4d974488933323b6648a"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8555167177a1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8555167177a1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8555167177a1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "6f1776128891ed1f212ed78c4b613c62e335c57bb49917b9bb003397108b332f",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=6f1776128891ed1f212ed78c4b613c62e335c57bb49917b9bb003397108b332f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "8c900aae641774ba7753b06d1c4852aea549736691c5ab27d82d20046f4c187e",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=8c900aae641774ba7753b06d1c4852aea549736691c5ab27d82d20046f4c187e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "9a1a5dbfc3ece152ba2e9a288742b30acc87ebb72beff171d06e27f2ea1c44c5",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=9a1a5dbfc3ece152ba2e9a288742b30acc87ebb72beff171d06e27f2ea1c44c5"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "bb980956a71bd03c5652de8858d47d4e8f16e5820e0a4d974488933323b6648a",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=bb980956a71bd03c5652de8858d47d4e8f16e5820e0a4d974488933323b6648a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 238891,
+          "absent": true
+        },
+        {
+          "PID": 239016,
+          "absent": true
+        },
+        {
+          "PID": 239143,
+          "absent": true
+        },
+        {
+          "PID": 239377,
+          "absent": true
+        },
+        {
+          "PID": 239378,
+          "absent": true
+        },
+        {
+          "PID": 239379,
+          "absent": true
+        },
+        {
+          "PID": 239381,
+          "absent": true
+        },
+        {
+          "PID": 239382,
+          "absent": true
+        },
+        {
+          "PID": 239383,
+          "absent": true
+        },
+        {
+          "PID": 239412,
+          "absent": true
+        },
+        {
+          "PID": 239492,
+          "absent": true
+        },
+        {
+          "PID": 241922,
+          "absent": true
+        },
+        {
+          "PID": 243738,
+          "absent": true
+        },
+        {
+          "PID": 243770,
+          "absent": true
+        },
+        {
+          "PID": 243772,
+          "absent": true
+        },
+        {
+          "PID": 244058,
+          "absent": true
+        },
+        {
+          "PID": 244523,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 9,
+      "project": "dispatcharr-shared-ts-5c7be0c85eee",
+      "exact_CIDs": [
+        "107aff3c7adccec71ffb6abd29dcae7458dc08540832a4bd39041538957bc53e",
+        "2551d3c4b24fc999469994690ed0e66d8218070eaa014e16f47689c01137e94f",
+        "5a1739d6ca324fc3a92a1283ad5c79add45a8e85d2a95bedbad5421fb3eb2949",
+        "68b2e6df642f81dcae1bca2a53eeb1138b05dee87a9d09cf7fc87e92d512e2e5"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-5c7be0c85eee"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-5c7be0c85eee"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-5c7be0c85eee"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "107aff3c7adccec71ffb6abd29dcae7458dc08540832a4bd39041538957bc53e",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=107aff3c7adccec71ffb6abd29dcae7458dc08540832a4bd39041538957bc53e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "2551d3c4b24fc999469994690ed0e66d8218070eaa014e16f47689c01137e94f",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=2551d3c4b24fc999469994690ed0e66d8218070eaa014e16f47689c01137e94f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "5a1739d6ca324fc3a92a1283ad5c79add45a8e85d2a95bedbad5421fb3eb2949",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=5a1739d6ca324fc3a92a1283ad5c79add45a8e85d2a95bedbad5421fb3eb2949"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "68b2e6df642f81dcae1bca2a53eeb1138b05dee87a9d09cf7fc87e92d512e2e5",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=68b2e6df642f81dcae1bca2a53eeb1138b05dee87a9d09cf7fc87e92d512e2e5"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 257904,
+          "absent": true
+        },
+        {
+          "PID": 258033,
+          "absent": true
+        },
+        {
+          "PID": 258121,
+          "absent": true
+        },
+        {
+          "PID": 258469,
+          "absent": true
+        },
+        {
+          "PID": 258470,
+          "absent": true
+        },
+        {
+          "PID": 258471,
+          "absent": true
+        },
+        {
+          "PID": 258473,
+          "absent": true
+        },
+        {
+          "PID": 258474,
+          "absent": true
+        },
+        {
+          "PID": 258475,
+          "absent": true
+        },
+        {
+          "PID": 258504,
+          "absent": true
+        },
+        {
+          "PID": 258543,
+          "absent": true
+        },
+        {
+          "PID": 260902,
+          "absent": true
+        },
+        {
+          "PID": 262935,
+          "absent": true
+        },
+        {
+          "PID": 262970,
+          "absent": true
+        },
+        {
+          "PID": 262972,
+          "absent": true
+        },
+        {
+          "PID": 263194,
+          "absent": true
+        },
+        {
+          "PID": 263658,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 10,
+      "project": "dispatcharr-shared-ts-b61be515719c",
+      "exact_CIDs": [
+        "357f980336f0636ba8cc84fbf765f921f32c4ed3a08c277e03b2910640001d8b",
+        "77309f12d57c20e60d0527d59319c88c27d0d793ec641f009c5bf1369aa85476",
+        "bbd55cfa27acaf22de9b138b17fbefa82e2ddb329b1e8db9dc7aa4439307059f"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b61be515719c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b61be515719c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-b61be515719c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "357f980336f0636ba8cc84fbf765f921f32c4ed3a08c277e03b2910640001d8b",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=357f980336f0636ba8cc84fbf765f921f32c4ed3a08c277e03b2910640001d8b"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "77309f12d57c20e60d0527d59319c88c27d0d793ec641f009c5bf1369aa85476",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=77309f12d57c20e60d0527d59319c88c27d0d793ec641f009c5bf1369aa85476"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "bbd55cfa27acaf22de9b138b17fbefa82e2ddb329b1e8db9dc7aa4439307059f",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=bbd55cfa27acaf22de9b138b17fbefa82e2ddb329b1e8db9dc7aa4439307059f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 277152,
+          "absent": true
+        },
+        {
+          "PID": 277282,
+          "absent": true
+        },
+        {
+          "PID": 277377,
+          "absent": true
+        },
+        {
+          "PID": 277674,
+          "absent": true
+        },
+        {
+          "PID": 277675,
+          "absent": true
+        },
+        {
+          "PID": 277676,
+          "absent": true
+        },
+        {
+          "PID": 277678,
+          "absent": true
+        },
+        {
+          "PID": 277679,
+          "absent": true
+        },
+        {
+          "PID": 277680,
+          "absent": true
+        },
+        {
+          "PID": 277709,
+          "absent": true
+        },
+        {
+          "PID": 277766,
+          "absent": true
+        },
+        {
+          "PID": 280405,
+          "absent": true
+        },
+        {
+          "PID": 280510,
+          "absent": true
+        },
+        {
+          "PID": 280511,
+          "absent": true
+        },
+        {
+          "PID": 280512,
+          "absent": true
+        },
+        {
+          "PID": 280758,
+          "absent": true
+        },
+        {
+          "PID": 280982,
+          "absent": true
+        },
+        {
+          "PID": 281187,
+          "absent": true
+        },
+        {
+          "PID": 281188,
+          "absent": true
+        },
+        {
+          "PID": 281189,
+          "absent": true
+        },
+        {
+          "PID": 281190,
+          "absent": true
+        },
+        {
+          "PID": 281191,
+          "absent": true
+        },
+        {
+          "PID": 281192,
+          "absent": true
+        },
+        {
+          "PID": 281193,
+          "absent": true
+        },
+        {
+          "PID": 281194,
+          "absent": true
+        },
+        {
+          "PID": 281195,
+          "absent": true
+        },
+        {
+          "PID": 281196,
+          "absent": true
+        },
+        {
+          "PID": 281197,
+          "absent": true
+        },
+        {
+          "PID": 281198,
+          "absent": true
+        },
+        {
+          "PID": 281199,
+          "absent": true
+        },
+        {
+          "PID": 281200,
+          "absent": true
+        },
+        {
+          "PID": 281201,
+          "absent": true
+        },
+        {
+          "PID": 281202,
+          "absent": true
+        },
+        {
+          "PID": 281203,
+          "absent": true
+        },
+        {
+          "PID": 281204,
+          "absent": true
+        },
+        {
+          "PID": 281205,
+          "absent": true
+        },
+        {
+          "PID": 281206,
+          "absent": true
+        },
+        {
+          "PID": 281207,
+          "absent": true
+        },
+        {
+          "PID": 281209,
+          "absent": true
+        },
+        {
+          "PID": 281210,
+          "absent": true
+        },
+        {
+          "PID": 281211,
+          "absent": true
+        },
+        {
+          "PID": 281212,
+          "absent": true
+        },
+        {
+          "PID": 281213,
+          "absent": true
+        },
+        {
+          "PID": 281214,
+          "absent": true
+        },
+        {
+          "PID": 281215,
+          "absent": true
+        },
+        {
+          "PID": 281217,
+          "absent": true
+        },
+        {
+          "PID": 281222,
+          "absent": true
+        },
+        {
+          "PID": 281223,
+          "absent": true
+        },
+        {
+          "PID": 281224,
+          "absent": true
+        },
+        {
+          "PID": 281225,
+          "absent": true
+        },
+        {
+          "PID": 281226,
+          "absent": true
+        },
+        {
+          "PID": 281227,
+          "absent": true
+        },
+        {
+          "PID": 281413,
+          "absent": true
+        },
+        {
+          "PID": 281548,
+          "absent": true
+        },
+        {
+          "PID": 281687,
+          "absent": true
+        },
+        {
+          "PID": 281896,
+          "absent": true
+        },
+        {
+          "PID": 282851,
+          "absent": true
+        },
+        {
+          "PID": 282887,
+          "absent": true
+        },
+        {
+          "PID": 282888,
+          "absent": true
+        },
+        {
+          "PID": 282925,
+          "absent": true
+        },
+        {
+          "PID": 283592,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 11,
+      "project": "dispatcharr-shared-ts-a835375f5d34",
+      "exact_CIDs": [
+        "288eb11fed53b522419e0537ec02782c614f7702357437d4ddf752458f266248",
+        "6ca8d6ec8adc47008219d9acb9c927d441e2fa8740a6cc3a7c4b202de7c18318",
+        "e459975411a84a1f37d62e03475ea8839a2375928ad3d52a6846a5442637dc5c"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a835375f5d34"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a835375f5d34"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a835375f5d34"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "288eb11fed53b522419e0537ec02782c614f7702357437d4ddf752458f266248",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=288eb11fed53b522419e0537ec02782c614f7702357437d4ddf752458f266248"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "6ca8d6ec8adc47008219d9acb9c927d441e2fa8740a6cc3a7c4b202de7c18318",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=6ca8d6ec8adc47008219d9acb9c927d441e2fa8740a6cc3a7c4b202de7c18318"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "e459975411a84a1f37d62e03475ea8839a2375928ad3d52a6846a5442637dc5c",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=e459975411a84a1f37d62e03475ea8839a2375928ad3d52a6846a5442637dc5c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 297828,
+          "absent": true
+        },
+        {
+          "PID": 297951,
+          "absent": true
+        },
+        {
+          "PID": 298036,
+          "absent": true
+        },
+        {
+          "PID": 298307,
+          "absent": true
+        },
+        {
+          "PID": 298308,
+          "absent": true
+        },
+        {
+          "PID": 298309,
+          "absent": true
+        },
+        {
+          "PID": 298311,
+          "absent": true
+        },
+        {
+          "PID": 298312,
+          "absent": true
+        },
+        {
+          "PID": 298313,
+          "absent": true
+        },
+        {
+          "PID": 298342,
+          "absent": true
+        },
+        {
+          "PID": 298422,
+          "absent": true
+        },
+        {
+          "PID": 300641,
+          "absent": true
+        },
+        {
+          "PID": 300745,
+          "absent": true
+        },
+        {
+          "PID": 300746,
+          "absent": true
+        },
+        {
+          "PID": 300747,
+          "absent": true
+        },
+        {
+          "PID": 300990,
+          "absent": true
+        },
+        {
+          "PID": 301202,
+          "absent": true
+        },
+        {
+          "PID": 301423,
+          "absent": true
+        },
+        {
+          "PID": 301424,
+          "absent": true
+        },
+        {
+          "PID": 301425,
+          "absent": true
+        },
+        {
+          "PID": 301426,
+          "absent": true
+        },
+        {
+          "PID": 301427,
+          "absent": true
+        },
+        {
+          "PID": 301428,
+          "absent": true
+        },
+        {
+          "PID": 301429,
+          "absent": true
+        },
+        {
+          "PID": 301430,
+          "absent": true
+        },
+        {
+          "PID": 301431,
+          "absent": true
+        },
+        {
+          "PID": 301432,
+          "absent": true
+        },
+        {
+          "PID": 301433,
+          "absent": true
+        },
+        {
+          "PID": 301434,
+          "absent": true
+        },
+        {
+          "PID": 301435,
+          "absent": true
+        },
+        {
+          "PID": 301436,
+          "absent": true
+        },
+        {
+          "PID": 301437,
+          "absent": true
+        },
+        {
+          "PID": 301438,
+          "absent": true
+        },
+        {
+          "PID": 301439,
+          "absent": true
+        },
+        {
+          "PID": 301440,
+          "absent": true
+        },
+        {
+          "PID": 301441,
+          "absent": true
+        },
+        {
+          "PID": 301442,
+          "absent": true
+        },
+        {
+          "PID": 301443,
+          "absent": true
+        },
+        {
+          "PID": 301444,
+          "absent": true
+        },
+        {
+          "PID": 301445,
+          "absent": true
+        },
+        {
+          "PID": 301446,
+          "absent": true
+        },
+        {
+          "PID": 301447,
+          "absent": true
+        },
+        {
+          "PID": 301448,
+          "absent": true
+        },
+        {
+          "PID": 301449,
+          "absent": true
+        },
+        {
+          "PID": 301450,
+          "absent": true
+        },
+        {
+          "PID": 301451,
+          "absent": true
+        },
+        {
+          "PID": 301453,
+          "absent": true
+        },
+        {
+          "PID": 301454,
+          "absent": true
+        },
+        {
+          "PID": 301455,
+          "absent": true
+        },
+        {
+          "PID": 301456,
+          "absent": true
+        },
+        {
+          "PID": 301457,
+          "absent": true
+        },
+        {
+          "PID": 301458,
+          "absent": true
+        },
+        {
+          "PID": 301642,
+          "absent": true
+        },
+        {
+          "PID": 301782,
+          "absent": true
+        },
+        {
+          "PID": 301922,
+          "absent": true
+        },
+        {
+          "PID": 302133,
+          "absent": true
+        },
+        {
+          "PID": 303182,
+          "absent": true
+        },
+        {
+          "PID": 303224,
+          "absent": true
+        },
+        {
+          "PID": 303225,
+          "absent": true
+        },
+        {
+          "PID": 303263,
+          "absent": true
+        },
+        {
+          "PID": 303928,
+          "absent": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "phase": 12,
+      "project": "dispatcharr-shared-ts-515e8f1c7b9e",
+      "exact_CIDs": [
+        "1915ee07fb93d271609e218162c8086a8c41cb27cb30dd1326cd46469f6f96b8",
+        "4c81800f1278f6ebb981524d5eefb2ab712121724a6f7031433e868a69ba7bac",
+        "b49b785e6bdb624f5ec3ecea4cddade278493cc51f69f136a0fdb18edaa7dd1b",
+        "d7654a1b766c07f1ad9859d60468366a8a22582cd349b5803cfd07f210ac29e1"
+      ],
+      "namespace_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-515e8f1c7b9e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-515e8f1c7b9e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-515e8f1c7b9e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "1915ee07fb93d271609e218162c8086a8c41cb27cb30dd1326cd46469f6f96b8",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=1915ee07fb93d271609e218162c8086a8c41cb27cb30dd1326cd46469f6f96b8"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "4c81800f1278f6ebb981524d5eefb2ab712121724a6f7031433e868a69ba7bac",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=4c81800f1278f6ebb981524d5eefb2ab712121724a6f7031433e868a69ba7bac"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "b49b785e6bdb624f5ec3ecea4cddade278493cc51f69f136a0fdb18edaa7dd1b",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=b49b785e6bdb624f5ec3ecea4cddade278493cc51f69f136a0fdb18edaa7dd1b"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "d7654a1b766c07f1ad9859d60468366a8a22582cd349b5803cfd07f210ac29e1",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=d7654a1b766c07f1ad9859d60468366a8a22582cd349b5803cfd07f210ac29e1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "original_positive_host_PIDs": [
+        {
+          "PID": 99666,
+          "absent": true
+        },
+        {
+          "PID": 318449,
+          "absent": true
+        },
+        {
+          "PID": 318578,
+          "absent": true
+        },
+        {
+          "PID": 318662,
+          "absent": true
+        },
+        {
+          "PID": 318945,
+          "absent": true
+        },
+        {
+          "PID": 318946,
+          "absent": true
+        },
+        {
+          "PID": 318947,
+          "absent": true
+        },
+        {
+          "PID": 318949,
+          "absent": true
+        },
+        {
+          "PID": 318950,
+          "absent": true
+        },
+        {
+          "PID": 318951,
+          "absent": true
+        },
+        {
+          "PID": 318987,
+          "absent": true
+        },
+        {
+          "PID": 319026,
+          "absent": true
+        },
+        {
+          "PID": 321536,
+          "absent": true
+        },
+        {
+          "PID": 323400,
+          "absent": true
+        },
+        {
+          "PID": 323430,
+          "absent": true
+        },
+        {
+          "PID": 323432,
+          "absent": true
+        },
+        {
+          "PID": 323659,
+          "absent": true
+        },
+        {
+          "PID": 324127,
+          "absent": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "distinct_projects": 12,
+  "distinct_exact_CIDs": 42,
+  "distinct_original_positive_host_PIDs": 466,
+  "scope": "Read-only current exact CID/project absence and captured original positive host PID absence. Includes initial process inventories, VLC, sampler and controller/group PIDs; shared orchestrator deduplicated in distinct count."
+}

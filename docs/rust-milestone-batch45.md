@@ -54,3 +54,46 @@ worker/scheduler VLC viewing reuse their retained Source observations.
 No positive nonempty-commercial/FFprobe, automatic Comskip, cut, broader metadata/
 Episodes/roles/plugins/protocol faults, full milestones or current matched-work
 application gains are accepted by source or build validation.
+
+## Current paired live-viewing measurements
+
+The [published measurements](../scripts/rust-integration/milestone-batch45/performance/README.md)
+cover three alternating Source/Native pairs each at one and two viewers:
+12 valid phases, 15-second warmup, fixed60-second window and five-second drain,
+locked VLC input, H264/AAC320x18025fps and loaded idle worker/scheduler graph.
+All participating backend/media/database/cache services and deterministic Origin
+are in the primary cgroup boundary. External observer scopes are separate;
+inside-container Redis sampling children and their processing remain charged to
+infrastructure. These are scoped workload costs, not isolated application CPU.
+
+| Viewers | CPU ratio, geometric mean | Peak working-set estimate ratio | Source → Native mean simultaneous working-set peak |
+| --- | ---: | ---: | ---: |
+| 1 | 0.89987 | 0.29145 | 899.32 → 262.11MiB |
+| 2 | 0.88124 | 0.29178 | 898.05 → 262.03MiB |
+
+Across all six pairs, observed geometric-mean CPU is10.95% lower and simultaneous
+peak working-set estimate70.84% lower. This memory estimate is cgroup current
+memory less inactive file pages, not RSS. Encoded useful throughput ratio is
+0.996206; first-byte p95 ratio0.953189. Absolute primary CPU averages are only
+about0.069–0.070 Source cores versus0.062 Native cores in this small fixture.
+
+**The resource gate fails:** one-viewer trial2 CPU ratio0.9053066339 exceeds the
+frozen0.90 ceiling. Five of six pairs pass. No pair is discarded/retried, no
+threshold changes, and the geometric mean cannot override that failure. Current
+application gains and milestone resource acceptance remain unaccepted despite
+the observed reductions. Required larger workloads and active jobs remain open.
+
+All12 actual phase exits are zero; equivalent decoded audio/video durations,
+content, topology, counters and cleanup pass with unchanged inputs. Independent
+review recomputes every metric from the published compressed raw group samples
+and confirms42 exact containers,12 project inventories and466 captured positive
+host PIDs absent. Recompute without Docker/apps:
+
+```bash
+python3 -B scripts/rust-integration/milestone-batch45/performance/recompute.py
+```
+
+The unmeasured protocol pilot retains an initial driver failure after its valid
+Source phase. A corrected driver runs only the missing Native phase and passes
+unchanged cross-phase useful-work checks; neither pilot phase enters these
+12 measured phases. Further CPU work must preserve this historical failed budget.

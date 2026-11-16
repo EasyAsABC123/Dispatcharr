@@ -16,7 +16,9 @@ normalized timestamp/cache interaction reused stale executables. No package or
 Native run was dispatched. [Candidate45](rust-milestone-batch45.md) corrects
 compile freshness, passes all SDK62 gates and six package families, and passes
 the four-context Native batch (repeat5, Series4, Comskip3, shared loaded VLC).
-Current paired resource qualification remains separate;
+The12-phase current live study is valid but misses its CPU target in one of
+six pairs (ratio0.9053 >0.90); observed memory reduction is about71%, while
+resource acceptance remains open;
 Candidate43 startup and fixture failures remain unchanged below.
 
 The [Candidate41 source](rust-milestone-batch41.md) passes all SDK58 gates

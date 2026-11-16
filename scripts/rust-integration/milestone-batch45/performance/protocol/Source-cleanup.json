@@ -1,0 +1,96 @@
+{
+  "passed": true,
+  "project": "dispatcharr-shared-ts-1ef179dd5d4d",
+  "actual_query_count": 6,
+  "captured_group_PIDs_absent": {
+    "observer": 51249,
+    "orchestrator": 51247,
+    "baseline": 51454,
+    "origin": 51374,
+    "publication-observer": 56665
+  },
+  "project_and_three_exact_CIDs_absent": true,
+  "Source_phase_valid_retained": true,
+  "Native_not_started": true,
+  "pilot_actual_exit": 1,
+  "reason": "coordinator duplicate stdout filename rejected secondphase before process launch",
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-1ef179dd5d4d"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-1ef179dd5d4d"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-1ef179dd5d4d"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=80e8f3b639b9c6ffe3db13b1e7713d35b555603f088271c4e3f37f40d52c53dc"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=0e92bf47118c6e623f92741dc52f30c9c52a9c919d7252e0d923dc5e07185bd5"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=d4d5cde7e72cbbd8ec6c49c19a7129ed6bbf24084bd63b2bbebe04dd2df17203"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}
