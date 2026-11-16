@@ -18,6 +18,8 @@ use tokio::{
     sync::{mpsc, oneshot, watch, Mutex},
 };
 const FRAME: usize = 8 * 1024 * 1024;
+#[path = "plugin_host_diagnostics.rs"]
+pub(crate) mod diagnostics;
 type Owner = Arc<dyn Send + Sync>;
 /// Actual invocation admission. Existing HTTP/Jobs callers supply their SAME
 /// retained session; background callbacks have none and must acquire from the
@@ -250,10 +252,30 @@ impl Running {
         owner: Owner,
         startup_scope: Invocation,
     ) -> Result<Self, Error> {
+        let result = Self::spawn_owned(config, ports, owner, startup_scope).await;
+        if let Err(error) = &result {
+            diagnostics::failure("spawn_result", "startup", error);
+        }
+        result
+    }
+    async fn spawn_owned(
+        config: &Config,
+        ports: Arc<dyn Ports>,
+        owner: Owner,
+        startup_scope: Invocation,
+    ) -> Result<Self, Error> {
         use std::os::unix::process::CommandExt;
         if !ports.ready_for_execution() {
+            diagnostics::failure("ports_ready", "startup", &Error::Unavailable);
             return Err(Error::Unavailable);
         }
+        diagnostics::stage(
+            "spawn_requested",
+            match config.role {
+                super::plugin_python_registry::HostRole::Actions => "actions",
+                super::plugin_python_registry::HostRole::Tasks => "tasks",
+            },
+        );
         let mut command = tokio::process::Command::new(&config.executable);
         command
             .arg("--mode")
@@ -279,9 +301,14 @@ impl Running {
             "sql,cache,jobs,events,process",
         );
         command.as_std_mut().process_group(0);
-        let mut child = command.spawn().map_err(|_| Error::Child)?;
+        let mut child = command.spawn().map_err(|_| {
+            diagnostics::failure("spawn_process", "startup", &Error::Child);
+            Error::Child
+        })?;
         let pid = child.id().ok_or(Error::Child)?;
-        let identity = identity(pid)?;
+        let identity = identity(pid).inspect_err(|error| {
+            diagnostics::failure("spawn_identity", "startup", error);
+        })?;
         let input = child.stdin.take().ok_or(Error::Child)?;
         let mut output = child.stdout.take().ok_or(Error::Child)?;
         // One uncancelled reader owns the physical stream. Selecting between
@@ -311,11 +338,21 @@ impl Running {
             let _scope = scope;
             let mut bytes = 0u64;
             let mut frame = [0; 8192];
+            let mut diagnostic = diagnostics::StderrScanner::new();
             loop {
                 match error.read(&mut frame).await {
-                    Ok(0) => return (true, bytes),
-                    Ok(count) => bytes = bytes.saturating_add(count as u64),
-                    Err(_) => return (false, bytes),
+                    Ok(0) => {
+                        diagnostic.finish();
+                        return (true, bytes);
+                    }
+                    Ok(count) => {
+                        bytes = bytes.saturating_add(count as u64);
+                        diagnostic.push(&frame[..count]);
+                    }
+                    Err(_) => {
+                        diagnostic.finish();
+                        return (false, bytes);
+                    }
                 }
             }
         });
@@ -331,7 +368,8 @@ impl Running {
             owner: owner.clone(),
             ports: ports.clone(),
         };
-        if ports.child_started(identity, owner.clone()).await.is_err() {
+        if let Err(error) = ports.child_started(identity, owner.clone()).await {
+            diagnostics::failure("child_started_port", "startup", &error);
             let _ = running.retire(true).await;
             return Err(Error::Child);
         }
@@ -357,6 +395,13 @@ impl Running {
             .await
             .map_err(|_| Error::Child)
             .and_then(|v| v);
+        match &ready {
+            Err(error) => diagnostics::failure("startup_ready_wait", "startup", error),
+            Ok(value) if value["kind"] != "ready" || value["actual_pid"] != pid => {
+                diagnostics::failure("startup_ready_frame", "startup", &Error::Protocol)
+            }
+            _ => diagnostics::stage("startup_ready", "validated"),
+        }
         match ready {
             Ok(value) if value["kind"] == "ready" && value["actual_pid"] == pid => Ok(running),
             _ => {
@@ -393,6 +438,16 @@ impl Running {
         let port = frame["port"].as_str().ok_or(Error::Protocol)?.to_owned();
         let method = frame["method"].as_str().ok_or(Error::Protocol)?.to_owned();
         let params = frame["params"].clone();
+        let diagnostic_stage = match port.as_str() {
+            "sql" => "callback_sql",
+            "cache" => "callback_cache",
+            "jobs" => "callback_jobs",
+            "jobs_backend" => "callback_jobs_backend",
+            "events" => "callback_events",
+            "process" => "callback_process",
+            _ => "callback_other",
+        };
+        let diagnostic_method = diagnostics::operation(&method);
         let ports = self.ports.clone();
         let input = self.input.as_ref().ok_or(Error::Closed)?.clone();
         let reentry: Arc<dyn Reentry> = Arc::new(NestedInvoker {
@@ -406,6 +461,7 @@ impl Running {
             // logical PubSub read cannot block receipt of unsubscribe/SQL frames.
             let retained_scope=scope.clone();
             let result=ports.callback_reentrant(port,method,params,scope,reentry).await;
+            if let Err(error)=&result { diagnostics::failure(diagnostic_stage,diagnostic_method,error); }
             let value=match result{Ok(value)=>json!({"kind":"callback_result","id":id,"result":value,"error":null}),Err(Error::Remote(error))=>json!({"kind":"callback_result","id":id,"result":null,"error":error}),Err(_)=>json!({"kind":"callback_result","id":id,"result":null,"error":"Native compatibility callback unavailable"})};
             let flushed=send(&mut*input.lock().await,&value).await;
             drop(retained_scope);flushed
@@ -468,7 +524,14 @@ impl Running {
             }
         }
     }
-    async fn retire(mut self, mut forced: bool) -> Result<Receipt, Error> {
+    async fn retire(self, forced: bool) -> Result<Receipt, Error> {
+        let result = self.retire_owned(forced).await;
+        if let Err(error) = &result {
+            diagnostics::failure("physical_retire_error", "shutdown", error);
+        }
+        result
+    }
+    async fn retire_owned(mut self, mut forced: bool) -> Result<Receipt, Error> {
         // Wake nested native callbacks before joining them; pipe/child ownership
         // still remains with this retirement supervisor through actual wait/EOF.
         self.nested
@@ -545,6 +608,7 @@ impl Running {
             descendants_absent: descendants,
             callbacks_settled: callbacks && callback_joined,
         };
+        diagnostics::retired(&receipt);
         Ok(receipt)
     }
 }
@@ -627,6 +691,9 @@ impl Host {
                             result=child.call(&request.method,request.args,request.scope.clone())=>result,
                             _=stop_deadline(&mut stopping)=>Err(Error::Drain),
                         };
+                        if let Err(error) = &result {
+                            diagnostics::failure("call_result", &request.method, error);
+                        }
                         let failed = result.is_err() && !matches!(&result, Err(Error::Remote(_)));
                         if failed {
                             // Preserve observer/caller ownership until actual child,
@@ -881,7 +948,8 @@ async fn drive_actions(
                     break;
                 }
             }
-            ActionEvent::Frame(Err(_)) => {
+            ActionEvent::Frame(Err(error)) => {
+                diagnostics::failure("actions_frame", "other", &error);
                 forced = true;
                 break;
             }
@@ -952,6 +1020,13 @@ async fn drive_actions(
                         } else {
                             Err(Error::Remote(frame["error"].clone()))
                         };
+                        if let Err(error) = &result {
+                            diagnostics::failure(
+                                "actions_call_result",
+                                &operation.request.method,
+                                error,
+                            );
+                        }
                         let _ = operation.request.reply.send(result);
                     }
                     _ => {

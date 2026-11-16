@@ -16,6 +16,8 @@ use std::{
 };
 #[path = "xmltv_download_files.rs"]
 mod files;
+#[path = "xmltv_download_http_diagnostics.rs"]
+mod http_diagnostics;
 type Owner = Arc<dyn Send + Sync>;
 const DEFAULT_AGENT: &str =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0";
@@ -501,12 +503,14 @@ impl Admission {
         {
             Ok(response) => response,
             Err(error) if error.is_builder() || error.is_redirect() => {
-                return Err(Error::Unsupported)
+                http_diagnostics::send_error(&error);
+                return Err(Error::Unsupported);
             }
             Err(error) => {
+                http_diagnostics::send_error(&error);
                 return self
                     .connection_failure(error.is_timeout() && !error.is_connect())
-                    .await
+                    .await;
             }
         };
         if attempt.cookie_budget_exceeded() {

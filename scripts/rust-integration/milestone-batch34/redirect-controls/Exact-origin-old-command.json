@@ -1,0 +1,73 @@
+{
+  "argv": [
+    "cargo",
+    "run",
+    "-p",
+    "dispatcharr-upstream-http",
+    "--offline",
+    "--locked",
+    "--example",
+    "owned_xmltv_redirect",
+    "--",
+    "http://127.0.0.1:46709/xmltv/redirect.xml",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Exact-origin-old-body.xml"
+  ],
+  "environment": {
+    "CARGO_TARGET_DIR": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target",
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0",
+    "HTTPS_PROXY": "http://127.0.0.1:46709",
+    "https_proxy": "http://127.0.0.1:46709",
+    "HTTP_PROXY": "http://127.0.0.1:46709",
+    "http_proxy": "http://127.0.0.1:46709",
+    "ALL_PROXY": "http://127.0.0.1:46709",
+    "all_proxy": "http://127.0.0.1:46709",
+    "NO_PROXY": "127.0.0.1,localhost",
+    "no_proxy": "127.0.0.1,localhost"
+  },
+  "origin_sha256": "23b890127b613f2d9081fc5211870b61742021b509fc2c04479b39d4ded67339",
+  "example_sha256": "9845ef660bb58f2c82c6efd293335681d11b7ad48fd92244ea6db37d9cdf5d46",
+  "receipt": {
+    "actual_exit": 0,
+    "failure": null,
+    "seconds": 0.6273524879943579,
+    "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Exact-origin-old.stdout",
+    "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Exact-origin-old.stderr",
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "process_group": 2169662,
+    "process_group_settled": true,
+    "remaining_group_members": [],
+    "reaped_descendants": [],
+    "output_bytes_written": 576,
+    "output_bytes_discarded": 0
+  },
+  "thread_retired": true,
+  "active": 0,
+  "trace": [
+    {
+      "kind": "owned_XMLTV_request",
+      "path": "/xmltv/redirect.xml",
+      "status": 302,
+      "user_agent": "Owned-XMLTV/2.0",
+      "wire_bytes": 0
+    },
+    {
+      "kind": "owned_XMLTV_request",
+      "path": "/xmltv/guide.xml",
+      "status": 200,
+      "user_agent": "Owned-XMLTV/2.0",
+      "wire_bytes": 6750261,
+      "decoded_fixture_bytes": 6750261,
+      "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+      "consumer_disconnected": false,
+      "compression": "none"
+    }
+  ],
+  "body": {
+    "bytes": 6750261,
+    "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+  }
+}

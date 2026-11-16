@@ -14,6 +14,20 @@ use serde_json::{json, Value};
 use sqlx::Row;
 use std::sync::Arc;
 type Owner = Arc<dyn Send + Sync>;
+fn diagnostic_error(stage: &'static str, error: &Error) {
+    let category = match error {
+        Error::Store(StoreError::Database(sqlx::Error::Database(_))) => "StoreSqlServer",
+        Error::Store(StoreError::Database(sqlx::Error::PoolTimedOut)) => "StoreSqlPoolTimedOut",
+        Error::Store(StoreError::Database(_)) => "StoreSqlOther",
+        Error::Store(StoreError::Unsupported(_)) => "StoreUnsupported",
+        Error::Store(_) => "StoreOther",
+        Error::Unsupported => "Unsupported",
+        Error::Capacity => "Capacity",
+        Error::Operational => "Operational",
+    };
+    crate::plugin_execution_host::diagnostics::stage(stage, category);
+}
+
 #[derive(Clone, Copy)]
 pub enum Request {
     Mapped { source: i64, force: bool },
@@ -193,7 +207,12 @@ impl Admission {
                     self.session.clone(),
                     task.owner.clone(),
                 )
-                .await?,
+                .await
+                .map_err(|error| {
+                    let classified = Error::from(error);
+                    diagnostic_error("sd_hook_begin", &classified);
+                    classified
+                })?,
         );
         *stored = Some(hooks.clone());
         Ok(Some(hooks))
@@ -301,7 +320,9 @@ impl Admission {
             Err(StoreError::Database(sqlx::Error::Database(_))) => return Ok(()),
             Err(error) => return Err(error.into()),
         }
-        if let Some(hooks) = self.event_hooks(&event_kind).await? {
+        if let Some(hooks) = self.event_hooks(&event_kind).await.inspect_err(|error| {
+            diagnostic_error("sd_audit_hook_setup", error);
+        })? {
             // A known Connect abort skips plugins but still permits the Source
             // outer audit trim. Unsupported/unknown physical outcomes fault.
             crate::epg_connect::dispatch_scoped_event(
@@ -312,7 +333,18 @@ impl Admission {
                 self.owner.clone(),
             )
             .await
-            .map_err(|_| Error::Operational)?;
+            .map_err(|error| {
+                let category = match error {
+                    crate::epg_connect::Error::Store(_) => "ConnectStore",
+                    crate::epg_connect::Error::Http(_) => "ConnectHttp",
+                    crate::epg_connect::Error::Body(_) => "ConnectBody",
+                    crate::epg_connect::Error::Unsupported(_) => "ConnectUnsupported",
+                    crate::epg_connect::Error::Supervisor => "ConnectSupervisor",
+                    crate::epg_connect::Error::Close { .. } => "ConnectClose",
+                };
+                crate::plugin_execution_host::diagnostics::stage("sd_connect_dispatch", category);
+                Error::Operational
+            })?;
         }
         // Source reads current cached settings AFTER actual event creation, not
         // once at admission before a potentially long provider operation.
@@ -329,6 +361,16 @@ impl Admission {
         }
     }
     pub async fn execute(
+        &mut self,
+        stopped: &(dyn Fn() -> bool + Send + Sync),
+    ) -> Result<Value, Error> {
+        let result = self.execute_inner(stopped).await;
+        if let Err(error) = &result {
+            diagnostic_error("sd_guide_effects", error);
+        }
+        result
+    }
+    async fn execute_inner(
         &mut self,
         stopped: &(dyn Fn() -> bool + Send + Sync),
     ) -> Result<Value, Error> {

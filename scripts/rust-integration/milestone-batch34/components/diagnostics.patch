@@ -1,0 +1,821 @@
+--- a/rust/crates/store/src/plugin_execution_host.rs
++++ b/rust/crates/store/src/plugin_execution_host.rs
+@@ -18,6 +18,8 @@
+     sync::{mpsc, oneshot, watch, Mutex},
+ };
+ const FRAME: usize = 8 * 1024 * 1024;
++#[path = "plugin_host_diagnostics.rs"]
++pub(crate) mod diagnostics;
+ type Owner = Arc<dyn Send + Sync>;
+ /// Actual invocation admission. Existing HTTP/Jobs callers supply their SAME
+ /// retained session; background callbacks have none and must acquire from the
+@@ -250,10 +252,30 @@
+         owner: Owner,
+         startup_scope: Invocation,
+     ) -> Result<Self, Error> {
++        let result = Self::spawn_owned(config, ports, owner, startup_scope).await;
++        if let Err(error) = &result {
++            diagnostics::failure("spawn_result", "startup", error);
++        }
++        result
++    }
++    async fn spawn_owned(
++        config: &Config,
++        ports: Arc<dyn Ports>,
++        owner: Owner,
++        startup_scope: Invocation,
++    ) -> Result<Self, Error> {
+         use std::os::unix::process::CommandExt;
+         if !ports.ready_for_execution() {
++            diagnostics::failure("ports_ready", "startup", &Error::Unavailable);
+             return Err(Error::Unavailable);
+         }
++        diagnostics::stage(
++            "spawn_requested",
++            match config.role {
++                super::plugin_python_registry::HostRole::Actions => "actions",
++                super::plugin_python_registry::HostRole::Tasks => "tasks",
++            },
++        );
+         let mut command = tokio::process::Command::new(&config.executable);
+         command
+             .arg("--mode")
+@@ -279,9 +301,14 @@
+             "sql,cache,jobs,events,process",
+         );
+         command.as_std_mut().process_group(0);
+-        let mut child = command.spawn().map_err(|_| Error::Child)?;
++        let mut child = command.spawn().map_err(|_| {
++            diagnostics::failure("spawn_process", "startup", &Error::Child);
++            Error::Child
++        })?;
+         let pid = child.id().ok_or(Error::Child)?;
+-        let identity = identity(pid)?;
++        let identity = identity(pid).inspect_err(|error| {
++            diagnostics::failure("spawn_identity", "startup", error);
++        })?;
+         let input = child.stdin.take().ok_or(Error::Child)?;
+         let mut output = child.stdout.take().ok_or(Error::Child)?;
+         // One uncancelled reader owns the physical stream. Selecting between
+@@ -311,11 +338,21 @@
+             let _scope = scope;
+             let mut bytes = 0u64;
+             let mut frame = [0; 8192];
++            let mut diagnostic = diagnostics::StderrScanner::new();
+             loop {
+                 match error.read(&mut frame).await {
+-                    Ok(0) => return (true, bytes),
+-                    Ok(count) => bytes = bytes.saturating_add(count as u64),
+-                    Err(_) => return (false, bytes),
++                    Ok(0) => {
++                        diagnostic.finish();
++                        return (true, bytes);
++                    }
++                    Ok(count) => {
++                        bytes = bytes.saturating_add(count as u64);
++                        diagnostic.push(&frame[..count]);
++                    }
++                    Err(_) => {
++                        diagnostic.finish();
++                        return (false, bytes);
++                    }
+                 }
+             }
+         });
+@@ -331,7 +368,8 @@
+             owner: owner.clone(),
+             ports: ports.clone(),
+         };
+-        if ports.child_started(identity, owner.clone()).await.is_err() {
++        if let Err(error) = ports.child_started(identity, owner.clone()).await {
++            diagnostics::failure("child_started_port", "startup", &error);
+             let _ = running.retire(true).await;
+             return Err(Error::Child);
+         }
+@@ -357,6 +395,13 @@
+             .await
+             .map_err(|_| Error::Child)
+             .and_then(|v| v);
++        match &ready {
++            Err(error) => diagnostics::failure("startup_ready_wait", "startup", error),
++            Ok(value) if value["kind"] != "ready" || value["actual_pid"] != pid => {
++                diagnostics::failure("startup_ready_frame", "startup", &Error::Protocol)
++            }
++            _ => diagnostics::stage("startup_ready", "validated"),
++        }
+         match ready {
+             Ok(value) if value["kind"] == "ready" && value["actual_pid"] == pid => Ok(running),
+             _ => {
+@@ -393,6 +438,16 @@
+         let port = frame["port"].as_str().ok_or(Error::Protocol)?.to_owned();
+         let method = frame["method"].as_str().ok_or(Error::Protocol)?.to_owned();
+         let params = frame["params"].clone();
++        let diagnostic_stage = match port.as_str() {
++            "sql" => "callback_sql",
++            "cache" => "callback_cache",
++            "jobs" => "callback_jobs",
++            "jobs_backend" => "callback_jobs_backend",
++            "events" => "callback_events",
++            "process" => "callback_process",
++            _ => "callback_other",
++        };
++        let diagnostic_method = diagnostics::operation(&method);
+         let ports = self.ports.clone();
+         let input = self.input.as_ref().ok_or(Error::Closed)?.clone();
+         let reentry: Arc<dyn Reentry> = Arc::new(NestedInvoker {
+@@ -406,6 +461,7 @@
+             // logical PubSub read cannot block receipt of unsubscribe/SQL frames.
+             let retained_scope=scope.clone();
+             let result=ports.callback_reentrant(port,method,params,scope,reentry).await;
++            if let Err(error)=&result { diagnostics::failure(diagnostic_stage,diagnostic_method,error); }
+             let value=match result{Ok(value)=>json!({"kind":"callback_result","id":id,"result":value,"error":null}),Err(Error::Remote(error))=>json!({"kind":"callback_result","id":id,"result":null,"error":error}),Err(_)=>json!({"kind":"callback_result","id":id,"result":null,"error":"Native compatibility callback unavailable"})};
+             let flushed=send(&mut*input.lock().await,&value).await;
+             drop(retained_scope);flushed
+@@ -468,7 +524,14 @@
+             }
+         }
+     }
+-    async fn retire(mut self, mut forced: bool) -> Result<Receipt, Error> {
++    async fn retire(self, forced: bool) -> Result<Receipt, Error> {
++        let result = self.retire_owned(forced).await;
++        if let Err(error) = &result {
++            diagnostics::failure("physical_retire_error", "shutdown", error);
++        }
++        result
++    }
++    async fn retire_owned(mut self, mut forced: bool) -> Result<Receipt, Error> {
+         // Wake nested native callbacks before joining them; pipe/child ownership
+         // still remains with this retirement supervisor through actual wait/EOF.
+         self.nested
+@@ -545,6 +608,7 @@
+             descendants_absent: descendants,
+             callbacks_settled: callbacks && callback_joined,
+         };
++        diagnostics::retired(&receipt);
+         Ok(receipt)
+     }
+ }
+@@ -627,6 +691,9 @@
+                             result=child.call(&request.method,request.args,request.scope.clone())=>result,
+                             _=stop_deadline(&mut stopping)=>Err(Error::Drain),
+                         };
++                        if let Err(error) = &result {
++                            diagnostics::failure("call_result", &request.method, error);
++                        }
+                         let failed = result.is_err() && !matches!(&result, Err(Error::Remote(_)));
+                         if failed {
+                             // Preserve observer/caller ownership until actual child,
+@@ -881,7 +948,8 @@
+                     break;
+                 }
+             }
+-            ActionEvent::Frame(Err(_)) => {
++            ActionEvent::Frame(Err(error)) => {
++                diagnostics::failure("actions_frame", "other", &error);
+                 forced = true;
+                 break;
+             }
+@@ -952,6 +1020,13 @@
+                         } else {
+                             Err(Error::Remote(frame["error"].clone()))
+                         };
++                        if let Err(error) = &result {
++                            diagnostics::failure(
++                                "actions_call_result",
++                                &operation.request.method,
++                                error,
++                            );
++                        }
+                         let _ = operation.request.reply.send(result);
+                     }
+                     _ => {
+--- a/rust/crates/store/src/plugin_host_diagnostics.rs
++++ b/rust/crates/store/src/plugin_host_diagnostics.rs
+@@ -0,0 +1,409 @@
++//! Opt-in bounded diagnostics for the actual owned plugin host only.
++//! No messages, arguments, payloads, SQL, caller IDs or private paths are logged.
++//! Original Dispatcharr/CPython/dependency authors retain full code credit.
++use super::{Error, Receipt};
++use serde_json::{json, Value};
++use std::sync::{
++    atomic::{AtomicUsize, Ordering},
++    OnceLock,
++};
++const SCAN_BYTES: usize = 64 * 1024;
++const LINE_BYTES: usize = 512;
++const MAX_LOCATIONS: usize = 6;
++const MAX_RECORD_BYTES: usize = 1024;
++const MAX_RECORDS: usize = 64;
++const MAX_PROCESS_BYTES: usize = MAX_RECORD_BYTES * MAX_RECORDS;
++pub(crate) fn enabled() -> bool {
++    static ENABLED: OnceLock<bool> = OnceLock::new();
++    *ENABLED.get_or_init(|| std::env::var("RUST_PLUGIN_HOST_DIAGNOSTICS").is_ok_and(|v| v == "1"))
++}
++fn emit(value: Value) {
++    static RECORDS: AtomicUsize = AtomicUsize::new(0);
++    static BYTES: AtomicUsize = AtomicUsize::new(0);
++    if !enabled() {
++        return;
++    }
++    let Ok(raw) = serde_json::to_string(&value) else {
++        return;
++    };
++    let line = format!("dispatcharr_host_diag {raw}");
++    let bytes = line.len() + 1;
++    if !reserve(&RECORDS, &BYTES, bytes) {
++        return;
++    }
++    use std::io::Write as _;
++    // Diagnostic sink failure cannot panic/cancel the physical owner.
++    let _ = writeln!(std::io::stderr().lock(), "{line}");
++}
++fn reserve(records: &AtomicUsize, bytes: &AtomicUsize, length: usize) -> bool {
++    if length > MAX_RECORD_BYTES
++        || records
++            .fetch_update(Ordering::AcqRel, Ordering::Acquire, |v| {
++                (v < MAX_RECORDS).then_some(v + 1)
++            })
++            .is_err()
++    {
++        return false;
++    }
++    bytes
++        .fetch_update(Ordering::AcqRel, Ordering::Acquire, |v| {
++            v.checked_add(length)
++                .filter(|next| *next <= MAX_PROCESS_BYTES)
++        })
++        .is_ok()
++}
++fn error_kind(error: &Error) -> &'static str {
++    match error {
++        Error::Closed => "Closed",
++        Error::Capacity => "Capacity",
++        Error::Protocol => "Protocol",
++        Error::Child => "Child",
++        Error::Callback => "Callback",
++        Error::Drain => "Drain",
++        Error::Unavailable => "Unavailable",
++        Error::Remote(_) => "Remote",
++    }
++}
++pub(crate) fn operation(value: &str) -> &'static str {
++    match value {
++        "startup" => "startup",
++        "discover" => "discover",
++        "begin_native_task" => "begin_native_task",
++        "append_native_trail" => "append_native_trail",
++        "dispatch_plugin_event" => "dispatch_plugin_event",
++        "begin_plugin_event" => "begin_plugin_event",
++        "render_connect_template" => "render_connect_template",
++        "end_plugin_event" => "end_plugin_event",
++        "finish_native_task" => "finish_native_task",
++        "abort_native_task" => "abort_native_task",
++        "shutdown" => "shutdown",
++        "run_action" => "run_action",
++        "execute_plugin_task" => "execute_plugin_task",
++        _ => "other",
++    }
++}
++fn python_class(value: &str) -> Option<&'static str> {
++    if value.len() > 128 {
++        return None;
++    }
++    match value.rsplit('.').next()? {
++        "ImportError" => Some("ImportError"),
++        "ModuleNotFoundError" => Some("ModuleNotFoundError"),
++        "RuntimeError" => Some("RuntimeError"),
++        "CompatibilityUnavailable" => Some("CompatibilityUnavailable"),
++        "ImproperlyConfigured" => Some("ImproperlyConfigured"),
++        "AppRegistryNotReady" => Some("AppRegistryNotReady"),
++        "OperationalError" => Some("OperationalError"),
++        "ProgrammingError" => Some("ProgrammingError"),
++        "DatabaseError" => Some("DatabaseError"),
++        "InterfaceError" => Some("InterfaceError"),
++        "PermissionError" => Some("PermissionError"),
++        "FileNotFoundError" => Some("FileNotFoundError"),
++        "OSError" => Some("OSError"),
++        "ValueError" => Some("ValueError"),
++        "TypeError" => Some("TypeError"),
++        "AttributeError" => Some("AttributeError"),
++        "KeyError" => Some("KeyError"),
++        "AssertionError" => Some("AssertionError"),
++        "SyntaxError" => Some("SyntaxError"),
++        "NameError" => Some("NameError"),
++        "ConnectionError" => Some("ConnectionError"),
++        "TimeoutError" => Some("TimeoutError"),
++        "SystemExit" => Some("SystemExit"),
++        "EOFError" => Some("EOFError"),
++        "BrokenPipeError" => Some("BrokenPipeError"),
++        _ => None,
++    }
++}
++fn framework_file(value: &str) -> Option<&'static str> {
++    // Return ONLY literal public aliases; no part of an input path is copied.
++    const FILES: &[&str] = &[
++        "dispatcharr_native/bootstrap.py",
++        "dispatcharr_native/settings.py",
++        "dispatcharr_native/builtin_tasks.py",
++        "dispatcharr_native/execution_guard.py",
++        "dispatcharr_native/wire.py",
++        "dispatcharr_native/transports.py",
++        "dispatcharr_native/db/base.py",
++        "dispatcharr_native/dbapi.py",
++        "django/__init__.py",
++        "django/apps/registry.py",
++        "django/apps/config.py",
++        "django/conf/__init__.py",
++        "django/db/utils.py",
++        "django/db/backends/base/base.py",
++        "django/db/backends/postgresql/base.py",
++        "django/utils/connection.py",
++        "django/core/management/__init__.py",
++        "celery/__init__.py",
++        "celery/app/base.py",
++        "celery/loaders/base.py",
++        "celery/fixups/django.py",
++        "kombu/connection.py",
++        "dispatcharr/settings.py",
++        "dispatcharr/celery.py",
++        "apps/plugins/apps.py",
++        "apps/plugins/loader.py",
++    ];
++    FILES.iter().copied().find(|name| {
++        value == *name
++            || value
++                .strip_suffix(*name)
++                .is_some_and(|prefix| prefix.ends_with('/'))
++    })
++}
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++struct Location {
++    file: &'static str,
++    line: u32,
++}
++fn location(value: &str) -> Option<Location> {
++    let (path, tail) = value.strip_prefix("  File \"")?.split_once("\", line ")?;
++    let line = tail.split(',').next()?.parse::<u32>().ok()?;
++    if line == 0 || line > 1_000_000 {
++        return None;
++    }
++    Some(Location {
++        file: framework_file(path)?,
++        line,
++    })
++}
++fn failure_projection(stage: &'static str, method: &str, error: &Error) -> Value {
++    let class = match error {
++        Error::Remote(value) => value
++            .get("actual_class")
++            .and_then(Value::as_str)
++            .and_then(python_class),
++        _ => None,
++    };
++    json!({"stage":stage,"operation":operation(method),"host_error":error_kind(error),"python_class":class})
++}
++pub(crate) fn failure(stage: &'static str, method: &str, error: &Error) {
++    if enabled() {
++        emit(failure_projection(stage, method, error));
++    }
++}
++pub(crate) fn stage(stage: &'static str, category: &'static str) {
++    if enabled() {
++        emit(json!({"stage":stage,"category":category}));
++    }
++}
++pub(crate) fn retired(receipt: &Receipt) {
++    if !enabled() {
++        return;
++    }
++    emit(
++        json!({"stage":"physical_retire","actual_exit":receipt.actual_exit,"wait_observed":receipt.wait_observed,"stdout_eof":receipt.stdout_eof,"stderr_eof":receipt.stderr_eof,"stderr_bytes":receipt.stderr_bytes,"forced":receipt.forced,"descendants_absent":receipt.descendants_absent,"callbacks_settled":receipt.callbacks_settled}),
++    );
++}
++/// Scan at most64KiB, retaining at most512 raw line bytes and six literal
++/// locations. All later bytes are STILL drained/counted by the existing reader.
++/// Observed stderr signatures are untrusted diagnostics, never claim authority.
++struct Scanner {
++    bytes: usize,
++    line: Vec<u8>,
++    oversized: bool,
++    clipped: bool,
++    locations: Vec<Location>,
++    first_class: Option<&'static str>,
++    last_class: Option<&'static str>,
++    guard_signature: Option<&'static str>,
++}
++impl Scanner {
++    fn new() -> Self {
++        Self {
++            bytes: 0,
++            line: Vec::with_capacity(LINE_BYTES),
++            oversized: false,
++            clipped: false,
++            locations: Vec::with_capacity(MAX_LOCATIONS),
++            first_class: None,
++            last_class: None,
++            guard_signature: None,
++        }
++    }
++    fn push(&mut self, raw: &[u8]) {
++        for &byte in raw {
++            if self.bytes == SCAN_BYTES {
++                self.clipped = true;
++                break;
++            }
++            self.bytes += 1;
++            if byte == b'\n' {
++                self.consume();
++            } else if self.line.len() < LINE_BYTES && !self.oversized {
++                self.line.push(byte);
++            } else {
++                self.oversized = true;
++            }
++        }
++    }
++    fn consume(&mut self) {
++        if !self.oversized {
++            if let Ok(value) = std::str::from_utf8(&self.line) {
++                let guard = match value {
++                    "Original backend task body guard: owned host retired before body" => {
++                        Some("backend_body_guard")
++                    }
++                    "Original HTTP/management entry guard: owned host retired before body" => {
++                        Some("http_management_guard")
++                    }
++                    "Original execution-origin audit capacity: owned host retired" => {
++                        Some("execution_audit_capacity")
++                    }
++                    _ => None,
++                };
++                if guard.is_some() {
++                    self.guard_signature = guard;
++                }
++                if let Some(found) = location(value) {
++                    if self.locations.last() != Some(&found) {
++                        if self.locations.len() == MAX_LOCATIONS {
++                            self.locations.remove(0);
++                        }
++                        self.locations.push(found);
++                    }
++                } else if let Some((name, _)) = value.split_once(':') {
++                    if let Some(class) = python_class(name) {
++                        self.first_class.get_or_insert(class);
++                        self.last_class = Some(class);
++                    }
++                }
++            }
++        }
++        self.line.clear();
++        self.oversized = false;
++    }
++    fn projection(&self) -> Value {
++        json!({"stage":"stderr_signature","known_guard_signature":self.guard_signature,"first_python_class":self.first_class,"last_python_class":self.last_class,"framework_locations":self.locations.iter().map(|v|json!({"file":v.file,"line":v.line})).collect::<Vec<_>>(),"scanned_bytes":self.bytes,"scan_clipped":self.clipped})
++    }
++}
++pub(crate) struct StderrScanner(Option<Scanner>);
++impl StderrScanner {
++    pub(crate) fn new() -> Self {
++        Self(enabled().then(Scanner::new))
++    }
++    pub(crate) fn push(&mut self, raw: &[u8]) {
++        if let Some(scanner) = &mut self.0 {
++            scanner.push(raw);
++        }
++    }
++    pub(crate) fn finish(mut self) {
++        if let Some(scanner) = &mut self.0 {
++            scanner.consume();
++            emit(scanner.projection());
++        }
++    }
++}
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn hostile_fragmented_traceback_projects_only_public_alias_line_and_exception_type() {
++        let raw=b"Traceback (most recent call last):\n  File \"/private/CANARY-PASSWORD/django/apps/registry.py\", line 138, in CANARY-SQL\n    SELECT CANARY-PASSWORD\n  File \"/private/CANARY-PASSWORD/user-secret.py\", line 7, in hidden\ndjango.core.exceptions.ImproperlyConfigured: CANARY-PASSWORD token=CANARY-TOKEN\n";
++        let mut scanner = Scanner::new();
++        for chunk in raw.chunks(3) {
++            scanner.push(chunk);
++        }
++        scanner.consume();
++        assert_eq!(
++            scanner.locations,
++            vec![Location {
++                file: "django/apps/registry.py",
++                line: 138
++            }]
++        );
++        assert_eq!(scanner.last_class, Some("ImproperlyConfigured"));
++        let safe = scanner.projection().to_string();
++        for secret in ["CANARY", "SELECT", "/private", "user-secret.py"] {
++            assert!(!safe.contains(secret));
++        }
++    }
++    #[test]
++    fn oversized_lines_and_scan_budget_cannot_smuggle_paths_or_retain_unbounded_stderr() {
++        let mut scanner = Scanner::new();
++        scanner.push(&vec![b'x'; LINE_BYTES + 1]);
++        scanner.push(b"\nValueError: private-message\n");
++        assert_eq!(scanner.last_class, Some("ValueError"));
++        scanner.push(&vec![b'x'; SCAN_BYTES]);
++        scanner.push(b"\nRuntimeError: later\n");
++        assert_eq!(scanner.bytes, SCAN_BYTES);
++        assert!(scanner.clipped);
++        assert!(scanner.line.len() <= LINE_BYTES);
++        assert_eq!(scanner.last_class, Some("ValueError"));
++        for value in [
++            "  File \"/tmp/private.py\", line 12, in x",
++            "  File \"/tmp/django/apps/registry.py\", line 0, in x",
++            "  File \"/tmp/django/apps/registry.py\", line secret, in x",
++        ] {
++            assert!(location(value).is_none());
++        }
++    }
++    #[test]
++    fn seven_concurrent_hosts_share_one_record_and_byte_budget() {
++        let records = AtomicUsize::new(0);
++        let bytes = AtomicUsize::new(0);
++        assert!(!reserve(&records, &bytes, MAX_RECORD_BYTES + 1));
++        assert_eq!(records.load(Ordering::Acquire), 0);
++        let totals = std::thread::scope(|scope| {
++            let mut hosts = Vec::new();
++            for _ in 0..7 {
++                hosts.push(scope.spawn(|| {
++                    let mut accepted = 0;
++                    let mut emitted = 0;
++                    for _ in 0..128 {
++                        if reserve(&records, &bytes, MAX_RECORD_BYTES) {
++                            accepted += 1;
++                            emitted += MAX_RECORD_BYTES;
++                        }
++                    }
++                    (accepted, emitted)
++                }));
++            }
++            hosts
++                .into_iter()
++                .map(|host| host.join().unwrap())
++                .fold((0, 0), |(a, b), (c, d)| (a + c, b + d))
++        });
++        assert_eq!(totals.0, MAX_RECORDS);
++        assert_eq!(totals.1, MAX_PROCESS_BYTES);
++        assert_eq!(records.load(Ordering::Acquire), MAX_RECORDS);
++        assert_eq!(bytes.load(Ordering::Acquire), MAX_PROCESS_BYTES);
++    }
++    #[test]
++    fn only_six_literal_locations_survive_a_long_traceback_window() {
++        let mut scanner = Scanner::new();
++        for line in 1..=20 {
++            scanner.push(
++                format!("  File \"/CANARY/django/apps/registry.py\", line {line}, in hidden\n")
++                    .as_bytes(),
++            );
++        }
++        assert_eq!(scanner.locations.len(), MAX_LOCATIONS);
++        assert_eq!(scanner.locations[0].line, 15);
++        assert_eq!(scanner.locations[5].line, 20);
++        assert!(!scanner.projection().to_string().contains("CANARY"));
++    }
++    #[test]
++    fn remote_error_messages_and_unknown_operations_are_not_diagnostic_fields() {
++        let value = failure_projection(
++            "call_result",
++            "CANARY-ARGS",
++            &Error::Remote(
++                json!({"actual_class":"django.core.exceptions.ImproperlyConfigured","message":"CANARY-SQL password=CANARY-SECRET","args":["CANARY-PAYLOAD"]}),
++            ),
++        );
++        assert_eq!(value["python_class"], "ImproperlyConfigured");
++        assert_eq!(value["host_error"], "Remote");
++        assert!(!value.to_string().contains("CANARY"));
++        let mut scanner = Scanner::new();
++        scanner.push(b"Original HTTP/management entry guard: owned host retired before body\n");
++        assert_eq!(scanner.guard_signature, Some("http_management_guard"));
++        assert_eq!(python_class("custom.CANARY-TOKEN"), None);
++        assert_eq!(operation("CANARY-ARGS"), "other");
++        assert_eq!(
++            python_class("django.core.exceptions.ImproperlyConfigured"),
++            Some("ImproperlyConfigured")
++        );
++    }
++}
+--- a/rust/crates/store/src/sd_guide.rs
++++ b/rust/crates/store/src/sd_guide.rs
+@@ -14,6 +14,20 @@
+ use sqlx::Row;
+ use std::sync::Arc;
+ type Owner = Arc<dyn Send + Sync>;
++fn diagnostic_error(stage: &'static str, error: &Error) {
++    let category = match error {
++        Error::Store(StoreError::Database(sqlx::Error::Database(_))) => "StoreSqlServer",
++        Error::Store(StoreError::Database(sqlx::Error::PoolTimedOut)) => "StoreSqlPoolTimedOut",
++        Error::Store(StoreError::Database(_)) => "StoreSqlOther",
++        Error::Store(StoreError::Unsupported(_)) => "StoreUnsupported",
++        Error::Store(_) => "StoreOther",
++        Error::Unsupported => "Unsupported",
++        Error::Capacity => "Capacity",
++        Error::Operational => "Operational",
++    };
++    crate::plugin_execution_host::diagnostics::stage(stage, category);
++}
++
+ #[derive(Clone, Copy)]
+ pub enum Request {
+     Mapped { source: i64, force: bool },
+@@ -193,7 +207,12 @@
+                     self.session.clone(),
+                     task.owner.clone(),
+                 )
+-                .await?,
++                .await
++                .map_err(|error| {
++                    let classified = Error::from(error);
++                    diagnostic_error("sd_hook_begin", &classified);
++                    classified
++                })?,
+         );
+         *stored = Some(hooks.clone());
+         Ok(Some(hooks))
+@@ -301,7 +320,9 @@
+             Err(StoreError::Database(sqlx::Error::Database(_))) => return Ok(()),
+             Err(error) => return Err(error.into()),
+         }
+-        if let Some(hooks) = self.event_hooks(&event_kind).await? {
++        if let Some(hooks) = self.event_hooks(&event_kind).await.inspect_err(|error| {
++            diagnostic_error("sd_audit_hook_setup", error);
++        })? {
+             // A known Connect abort skips plugins but still permits the Source
+             // outer audit trim. Unsupported/unknown physical outcomes fault.
+             crate::epg_connect::dispatch_scoped_event(
+@@ -312,7 +333,18 @@
+                 self.owner.clone(),
+             )
+             .await
+-            .map_err(|_| Error::Operational)?;
++            .map_err(|error| {
++                let category = match error {
++                    crate::epg_connect::Error::Store(_) => "ConnectStore",
++                    crate::epg_connect::Error::Http(_) => "ConnectHttp",
++                    crate::epg_connect::Error::Body(_) => "ConnectBody",
++                    crate::epg_connect::Error::Unsupported(_) => "ConnectUnsupported",
++                    crate::epg_connect::Error::Supervisor => "ConnectSupervisor",
++                    crate::epg_connect::Error::Close { .. } => "ConnectClose",
++                };
++                crate::plugin_execution_host::diagnostics::stage("sd_connect_dispatch", category);
++                Error::Operational
++            })?;
+         }
+         // Source reads current cached settings AFTER actual event creation, not
+         // once at admission before a potentially long provider operation.
+@@ -329,6 +361,16 @@
+         }
+     }
+     pub async fn execute(
++        &mut self,
++        stopped: &(dyn Fn() -> bool + Send + Sync),
++    ) -> Result<Value, Error> {
++        let result = self.execute_inner(stopped).await;
++        if let Err(error) = &result {
++            diagnostic_error("sd_guide_effects", error);
++        }
++        result
++    }
++    async fn execute_inner(
+         &mut self,
+         stopped: &(dyn Fn() -> bool + Send + Sync),
+     ) -> Result<Value, Error> {
+--- a/rust/crates/store/src/xmltv_download.rs
++++ b/rust/crates/store/src/xmltv_download.rs
+@@ -16,6 +16,8 @@
+ };
+ #[path = "xmltv_download_files.rs"]
+ mod files;
++#[path = "xmltv_download_http_diagnostics.rs"]
++mod http_diagnostics;
+ type Owner = Arc<dyn Send + Sync>;
+ const DEFAULT_AGENT: &str =
+     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0";
+@@ -501,12 +503,14 @@
+         {
+             Ok(response) => response,
+             Err(error) if error.is_builder() || error.is_redirect() => {
+-                return Err(Error::Unsupported)
++                http_diagnostics::send_error(&error);
++                return Err(Error::Unsupported);
+             }
+             Err(error) => {
++                http_diagnostics::send_error(&error);
+                 return self
+                     .connection_failure(error.is_timeout() && !error.is_connect())
+-                    .await
++                    .await;
+             }
+         };
+         if attempt.cookie_budget_exceeded() {
+--- a/rust/crates/store/src/xmltv_download_http_diagnostics.rs
++++ b/rust/crates/store/src/xmltv_download_http_diagnostics.rs
+@@ -0,0 +1,102 @@
++//! Opt-in bounded typed send-failure observations for the EPG caller only.
++//! Original Dispatcharr and Requests authors retain application credit.
++use std::{
++    error::Error as _,
++    fmt::{self, Write as _},
++    io::Write as _,
++    sync::atomic::{AtomicUsize, Ordering},
++};
++
++const MAX_RECORDS: usize = 8;
++const MAX_RECORD_BYTES: usize = 512;
++// At most eight attempted writes of 512 bytes: 4 KiB for the whole process.
++static RECORDS: AtomicUsize = AtomicUsize::new(0);
++
++struct Record {
++    bytes: [u8; MAX_RECORD_BYTES],
++    used: usize,
++}
++impl fmt::Write for Record {
++    fn write_str(&mut self, text: &str) -> fmt::Result {
++        let remaining = self.bytes.len().saturating_sub(self.used);
++        if text.len() > remaining {
++            return Err(fmt::Error);
++        }
++        self.bytes[self.used..self.used + text.len()].copy_from_slice(text.as_bytes());
++        self.used += text.len();
++        Ok(())
++    }
++}
++
++fn io_kind(kind: std::io::ErrorKind) -> &'static str {
++    use std::io::ErrorKind;
++    match kind {
++        ErrorKind::ConnectionRefused => "ConnectionRefused",
++        ErrorKind::ConnectionReset => "ConnectionReset",
++        ErrorKind::ConnectionAborted => "ConnectionAborted",
++        ErrorKind::NotConnected => "NotConnected",
++        ErrorKind::BrokenPipe => "BrokenPipe",
++        ErrorKind::TimedOut => "TimedOut",
++        ErrorKind::UnexpectedEof => "UnexpectedEof",
++        ErrorKind::InvalidData => "InvalidData",
++        ErrorKind::InvalidInput => "InvalidInput",
++        ErrorKind::WouldBlock => "WouldBlock",
++        ErrorKind::Interrupted => "Interrupted",
++        ErrorKind::Unsupported => "Unsupported",
++        ErrorKind::PermissionDenied => "PermissionDenied",
++        ErrorKind::NotFound => "NotFound",
++        _ => "Other",
++    }
++}
++
++pub(super) fn send_error(error: &reqwest::Error) {
++    if std::env::var_os("RUST_EPG_HTTP_DIAGNOSTICS").as_deref() != Some(std::ffi::OsStr::new("1")) {
++        return;
++    }
++    if RECORDS
++        .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |count| {
++            (count < MAX_RECORDS).then_some(count + 1)
++        })
++        .is_err()
++    {
++        return;
++    }
++    let mut source = error.source();
++    let mut depth = 0u8;
++    let mut kind = "none";
++    while let Some(current) = source {
++        if depth == 8 {
++            break;
++        }
++        depth += 1;
++        if kind == "none" {
++            if let Some(value) = current.downcast_ref::<std::io::Error>() {
++                kind = io_kind(value.kind());
++            }
++        }
++        source = current.source();
++    }
++    let mut record = Record {
++        bytes: [0; MAX_RECORD_BYTES],
++        used: 0,
++    };
++    // Only fixed literals, booleans, a u16 status and a whitelisted ErrorKind.
++    // Never format an error/source, URL, header, identifier or response body.
++    let status = error.status().map(|value| value.as_u16()).unwrap_or(0);
++    if writeln!(
++        record,
++        "epg_http_failure {{\"stage\":\"send\",\"builder\":{},\"redirect\":{},\"status_error\":{},\"status_code\":{},\"timeout\":{},\"connect\":{},\"request\":{},\"body\":{},\"decode\":{},\"io_kind\":\"{}\",\"source_depth\":{}}}",
++        error.is_builder(), error.is_redirect(), error.is_status(), status,
++        error.is_timeout(), error.is_connect(), error.is_request(),
++        error.is_body(), error.is_decode(), kind, depth,
++    )
++    .is_err()
++    {
++        return;
++    }
++    // Diagnostic output is deliberately best effort; failure handling below
++    // the caller remains authoritative even when stderr is closed/unwritable.
++    let _ = std::io::stderr()
++        .lock()
++        .write_all(&record.bytes[..record.used]);
++}
