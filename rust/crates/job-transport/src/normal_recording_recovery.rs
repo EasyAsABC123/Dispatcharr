@@ -104,6 +104,10 @@ pub enum RecoveryMediaError {
 /// Real normal media/store/event/control implementation, never a no-op peer.
 /// It keeps the actual owner until file/process/SQL/Channels/control settlement.
 pub trait RecoveryMedia: Send + Sync {
+    /// Admission capability only; never a successful recovery/task outcome.
+    fn ensure_domain_supported(&self) -> BoxFuture<'_, Result<(), RecoveryMediaError>> {
+        Box::pin(async { Ok(()) })
+    }
     fn finalize_expired(
         &self,
         context: ExpiredRecording,
@@ -337,6 +341,10 @@ impl Service {
         })
     }
     pub(crate) async fn execute(&self, invocation: &Invocation) -> Result<Report, Error> {
+        self.media
+            .ensure_domain_supported()
+            .await
+            .map_err(|error| Error::Media("domain_before_effects", error))?;
         let owner = invocation._owner.clone();
         let Some(cache) = &self.cache else {
             return Ok(Report {
@@ -595,6 +603,7 @@ struct WorkerInner {
     permits: Arc<tokio::sync::Semaphore>,
     closed: std::sync::atomic::AtomicBool,
     uncertain: std::sync::Mutex<Option<Arc<RecoveryOwner>>>,
+    startup_recovery_deferred: std::sync::atomic::AtomicBool,
 }
 struct RecoveryOwner {
     _caller: Arc<dyn Send + Sync>,
@@ -609,6 +618,7 @@ pub struct Worker {
 pub struct StartupPublications {
     pub recovery: Option<Uuid>,
     pub version: Option<Uuid>,
+    pub recovery_deferred_unsupported_domain: bool,
 }
 impl Worker {
     pub fn prepare(jobs: crate::transport::RecoveryJobs, service: Service) -> Self {
@@ -619,6 +629,7 @@ impl Worker {
                 permits: Arc::new(tokio::sync::Semaphore::new(1)),
                 closed: std::sync::atomic::AtomicBool::new(false),
                 uncertain: std::sync::Mutex::new(None),
+                startup_recovery_deferred: std::sync::atomic::AtomicBool::new(false),
             }),
         }
     }
@@ -650,6 +661,11 @@ impl Worker {
             .await
             .map_err(|_| Error::Supervisor)?
     }
+    pub fn startup_recovery_deferred(&self) -> bool {
+        self.inner
+            .startup_recovery_deferred
+            .load(std::sync::atomic::Ordering::Acquire)
+    }
     async fn publish_startup_owned(
         &self,
         owner: Arc<dyn Send + Sync>,
@@ -667,6 +683,22 @@ impl Worker {
                 "core.tasks.check_for_version_update",
             ),
         ] {
+            if index == 0 {
+                match self.inner.service.media.ensure_domain_supported().await {
+                    Ok(()) => self
+                        .inner
+                        .startup_recovery_deferred
+                        .store(false, std::sync::atomic::Ordering::Release),
+                    Err(RecoveryMediaError::Unsupported) => {
+                        self.inner
+                            .startup_recovery_deferred
+                            .store(true, std::sync::atomic::Ordering::Release);
+                        // No Redis startup lock, publication, ACK or fake result.
+                        continue;
+                    }
+                    Err(error) => return Err(Error::Media("startup_domain", error)),
+                }
+            }
             let allowed = match &self.inner.service.cache {
                 Some(cache) => {
                     let mut command = redis::cmd("SET");
@@ -702,6 +734,7 @@ impl Worker {
         Ok(StartupPublications {
             recovery: published[0],
             version: published[1],
+            recovery_deferred_unsupported_domain: self.startup_recovery_deferred(),
         })
     }
     async fn run(
@@ -726,6 +759,15 @@ impl Worker {
         });
         let inner = self.inner.clone();
         tokio::spawn(async move {
+            inner
+                .service
+                .media
+                .ensure_domain_supported()
+                .await
+                .map_err(|error| match error {
+                    RecoveryMediaError::Unsupported => Disposition::UnsupportedDomain,
+                    _ => Disposition::Operational("recovery domain unavailable".into()),
+                })?;
             let message = match inner.jobs.claim(expected.as_deref(), owner.clone()).await {
                 Ok(Some(message)) => message,
                 Ok(None) => return Ok(Disposition::Empty),

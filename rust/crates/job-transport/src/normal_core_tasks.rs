@@ -240,6 +240,14 @@ impl Worker {
                     dispatcharr_store::core_task_rehash::preflight(&inner.auth).await
                 }
                 Kind::Offsets => {
+                    inner
+                        .recordings
+                        .admit_scheduling(owner.clone())
+                        .await
+                        .map_err(|error| match error {
+                            dispatcharr_store::recording_http::RecordingEffectError::Unsupported => D::UnsupportedDomain,
+                            _ => D::Operational("Recording domain admission is unsettled".into()),
+                        })?;
                     dispatcharr_store::core_task_offsets::preflight(&inner.store).await
                 }
             }

@@ -1052,6 +1052,17 @@ async fn act(
     }
     let outcome=async {
     let row = validate(&auth, input, old, partial,special.is_some()).await?;
+    if dvr && auth.normal_core_task_broker {
+        // Main's early Auth clones share the actual selected RecordingJobs port.
+        // Refuse before row save/cache invalidation or offset task publication.
+        let jobs = auth.recording_collector_jobs()?
+            .ok_or(StoreError::Unsupported("Recording domain admission is unbound"))?;
+        jobs.admit_scheduling(lease.clone()).await.map_err(|error| match error {
+            crate::recording_http::RecordingEffectError::Unsupported =>
+                StoreError::Unsupported("Configured recording plugin domain is unsupported"),
+            _ => StoreError::StatusBody(503, json!({"detail":"Recording domain admission is unsettled."})),
+        })?;
+    }
     let creation = matches!(kind, Kind::Create);
     let mut row = row;
     let mut c = auth.store.pool().acquire().await?;

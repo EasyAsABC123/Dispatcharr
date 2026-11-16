@@ -104,6 +104,7 @@ struct Inner {
     events: Arc<dyn UpdateEventSink>,
     explicit_origin: String,
     plugin_directory: std::path::PathBuf,
+    plugin_domain: Arc<plugin_domain::PluginDomain>,
     media_uid: u32,
     publisher: NormalRecordingPublisher,
     revoked: Revoked,
@@ -143,31 +144,19 @@ where
     rx.await.map_err(|_| Error::Unsettled)?;
     result.map_err(Error::Transport)
 }
+#[path = "recording_dvr_plugin_domain.rs"]
+mod plugin_domain;
+
 impl NormalDvr {
     pub async fn connect(assembly: Assembly, owner: Arc<dyn Send + Sync>) -> Result<Self, Error> {
         tokio::spawn(async move {
             let _owner = owner.clone();
             // Actual Source configuration, not an observation-fixture path.
             // Nonempty plugin domains still require real hook execution ports.
-            let configured = &assembly.configured_plugin_directory;
-            if configured.is_empty() || configured.len() > 4096 {
-                return Err(Error::Unsupported("configured plugin path capacity"));
-            }
-            std::fs::create_dir_all(configured)
-                .map_err(|e| Error::Files(recording_files::Error::Io(e)))?;
-            let plugin_directory = std::fs::canonicalize(configured)
-                .map_err(|e| Error::Files(recording_files::Error::Io(e)))?;
-            let mut entries = std::fs::read_dir(&plugin_directory)
-                .map_err(|e| Error::Files(recording_files::Error::Io(e)))?;
-            match entries.next() {
-                None => {}
-                Some(Ok(_)) => {
-                    return Err(Error::Unsupported(
-                        "populated configured plugin hooks require adapter",
-                    ))
-                }
-                Some(Err(e)) => return Err(Error::Files(recording_files::Error::Io(e))),
-            }
+            let plugin_domain = Arc::new(plugin_domain::PluginDomain::prepare(
+                &assembly.configured_plugin_directory,
+            )?);
+            let plugin_directory = plugin_domain.path().to_owned();
 
             recording_process::ObservedLocalOrigin::from_normal_internal_base(
                 &assembly.explicit_internal_ts_base,
@@ -193,6 +182,7 @@ impl NormalDvr {
                     events: assembly.events,
                     explicit_origin: assembly.explicit_internal_ts_base,
                     plugin_directory,
+                    plugin_domain,
                     media_uid: assembly.media_uid,
                     publisher: assembly.publisher,
                     revoked: assembly.revoked,
@@ -267,6 +257,12 @@ impl NormalDvr {
         self.inner.closed.store(true, Ordering::Release);
         self.inner.shutdown.store(true, Ordering::Release);
     }
+    pub fn require_recording_domain(&self) -> Result<(), Error> {
+        self.inner.plugin_domain.require_supported()
+    }
+    pub fn plugin_domain_capability(&self) -> &'static str {
+        self.inner.plugin_domain.last_observed_capability()
+    }
     pub fn available_slots(&self) -> usize {
         self.inner.slot.available_permits()
     }
@@ -332,12 +328,27 @@ async fn execute(
     claimed: &AtomicBool,
     transcript: Arc<recording_process::Transcript>,
 ) -> Result<Run, Error> {
+    // Inspect only the authenticated broker bytes before the domain guard.
+    // Full normal-task adoption may read SQL/publication state and must follow it.
+    let expected = match owner.expected.clone() {
+        Some(raw) => Some(raw),
+        None => match inner
+            .publisher
+            .peek_existing(owner.clone())
+            .await
+            .map_err(Error::Publication)?
+        {
+            Some(raw) => Some(raw),
+            None => return Ok(Run::Empty),
+        },
+    };
+    inner.plugin_domain.require_supported()?;
     let mut task = match recording_normal_task::peek(
         inner.jobs.clone(),
         &inner.publisher,
         &inner.publications,
         &inner.named_publications,
-        owner.expected.clone(),
+        expected,
         owner.clone(),
     )
     .await
@@ -1050,6 +1061,24 @@ impl NormalDvr {
 /// Startup recovery uses the same retained filesystem/process/store ports. The
 /// context is sealed by actual recovery SQL; no recording identity is invented.
 impl crate::normal_recording_recovery::RecoveryMedia for NormalDvr {
+    fn ensure_domain_supported(
+        &self,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<(), crate::normal_recording_recovery::RecoveryMediaError>,
+    > {
+        Box::pin(async move {
+            self.inner
+                .plugin_domain
+                .require_supported()
+                .map_err(|error| match error {
+                    Error::Unsupported(_) => {
+                        crate::normal_recording_recovery::RecoveryMediaError::Unsupported
+                    }
+                    _ => crate::normal_recording_recovery::RecoveryMediaError::Unsettled,
+                })
+        })
+    }
     fn finalize_expired(
         &self,
         context: crate::normal_recording_recovery::ExpiredRecording,
@@ -1060,6 +1089,13 @@ impl crate::normal_recording_recovery::RecoveryMedia for NormalDvr {
     > {
         Box::pin(async move {
             use crate::normal_recording_recovery::RecoveryMediaError as R;
+            self.inner
+                .plugin_domain
+                .require_supported()
+                .map_err(|error| match error {
+                    Error::Unsupported(_) => R::Unsupported,
+                    _ => R::Unsettled,
+                })?;
             if self.inner.closed.load(Ordering::Acquire) {
                 return Err(R::Unsettled);
             }
@@ -1113,6 +1149,13 @@ impl crate::normal_recording_recovery::RecoveryMedia for NormalDvr {
         Box::pin(async move {
             use crate::normal_recording_recovery::RecoveryMediaError as R;
             tokio::spawn(async move {
+                inner
+                    .plugin_domain
+                    .require_supported()
+                    .map_err(|error| match error {
+                        Error::Unsupported(_) => R::Unsupported,
+                        _ => R::Unsettled,
+                    })?;
                 let Some(key) = context.old_task_key().filter(|s| !s.is_empty()) else {
                     return Ok(());
                 };
@@ -1143,6 +1186,7 @@ async fn finalize_expired(
     owner: Arc<Owner>,
     transcript: Arc<recording_process::Transcript>,
 ) -> Result<(), Error> {
+    inner.plugin_domain.require_supported()?;
     let recording = context.recording_id();
     let props = context.properties().clone();
     let uid = inner.media_uid;

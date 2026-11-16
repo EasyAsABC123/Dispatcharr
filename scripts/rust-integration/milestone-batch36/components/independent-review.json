@@ -1,0 +1,62 @@
+{
+  "state": "independent_static_review_of_private_nine_path_slice_NOT_runtime_acceptance",
+  "reviewed_map": {
+    "path": "artifacts/rust/m8-dvr-plugin-idle-domain-1/overlay-map.json",
+    "sha256": "60abdae6a574f807f97a07b5b10da8ad42e9ef1964b4f6061ae0f19c07e2dcce"
+  },
+  "payload_hashes_verified": 9,
+  "findings": [
+    {
+      "area": "directory FD/identity",
+      "assessment": "Populated domain can construct idle service; actual execution requires empty configured namespace. Retained directory fd+dev/inode+canonical configured target are checked before/after read_dir; replacement/symlink retarget/refusal errors do not mint capability.",
+      "limit": "Enumeration still uses path, not FD-relative getdents/openat; no atomic external rename or mutation-during-operation lease is claimed."
+    },
+    {
+      "area": "recording preclaim",
+      "assessment": "Raw expected head/broker-only peek precedes domain check; normal SQL/publication adoption, revoked/deleted no-op branches and queue CAS follow check. Unsupported maps to UnsupportedDomain before claim, with no backend result. Existing postclaim uncertainty retention remains.",
+      "limit": "Even revoked/noop heads conservatively remain queued under unsupported domain; this is not full Source DVR parity."
+    },
+    {
+      "area": "recovery",
+      "assessment": "Capability check precedes startup SETNX/root publication, actual worker CAS, service lock/SQL and physical media/revoke callbacks. Unsupported startup recovery is explicitly deferred with recovery=None and flag=true; version root remains real. No fake recovery SUCCESS written.",
+      "limit": "Expected startup graph is explicitly two published roots rather than Source three-root parity. No automatic recovery retry on later plugin removal is established. Mid-operation namespace mutation remains outside stable owned namespace scope."
+    },
+    {
+      "area": "HTTP producer atomic refusal",
+      "assessment": "Validated create/update admission before recording revoke/INSERT/UPDATE/Beat/broker. Bridge rechecks all three schedule publication methods; cleanup stop/delete paths retain prior behavior. CoreSettings dvr_publish now validates then upgrades existing weak RecordingJobs port and checks admission before save/invalidation/publication.",
+      "limit": "Arbitrary plugin raw SQL/ORM Recording writes are not a newly certified atomic producer boundary; full plugin/DVR model-signal parity remains open."
+    },
+    {
+      "area": "offset preclaim and effects",
+      "assessment": "Normal Core Offsets checks admit_scheduling before schema preflight/CAS, and execute repeats it before settings/SQL/revokes. Unsupported maps to UnsupportedDomain; other admission failures now Operational. CoreSettings unknown admission maps503; known unsupported maps explicit refusal.",
+      "limit": "Actual queued-frame/no-ACK and actual SQL/no-mutation controls are not executed."
+    },
+    {
+      "area": "ownership/cycles",
+      "assessment": "Core producer reuses existing Auth shared Weak<RecordingJobs> slot and helper; no second strong CoreState port or Auth\u2192Bridge\u2192Engine\u2192Core cycle introduced. Accepted call upgrades actual port and retains request owner through check.",
+      "limit": "Compile and actual warm-drain behavior remain unqualified."
+    },
+    {
+      "area": "diagnostic readiness",
+      "assessment": "Readiness exposes unsupported domain and deferred recovery flag with parity_complete=false.",
+      "limit": "Domain marker is last-observed emptiness; filesystem identity/read errors can leave a stale marker. It is not a current capability lease or whole-M8 readiness proof."
+    }
+  ],
+  "blocking_findings_resolved_during_review": [
+    "Core offset producer could save before refusal.",
+    "Existing offset frame could CAS before execution-only guard.",
+    "Proposed second strong CoreState port would risk known graph cycle; existing Weak port reused.",
+    "New unknown port/FS errors now retain Operational/503 distinction rather than unsupported."
+  ],
+  "required_actual_controls": [
+    "Populated owned domain permits unrelated M8 startup with exactly two actual startup roots and explicit deferred recovery/no recovery lock/root/result.",
+    "Real normal/revoked/deleted recording, recovery and offset frames preserve exact queue bytes/unacked state/no result and no SQL/media/event/provider/revoke deltas.",
+    "Valid authenticated POST/PUT/PATCH plus Core DVR-offset write refuse before corresponding SQL/Beat/cache/broker/revoke changes; preserve validation/auth ordering.",
+    "Empty namespace recording/recovery regressions and warm retirement, plugin addition/removal, directory replacement/symlink retarget."
+  ],
+  "acceptance": "No remaining blocking static gap identified for the explicitly limited stable-namespace idle/early-refusal slice, subject to Root review, compilation and mandatory actual controls. No broader DVR/M8/parity/performance approval.",
+  "runtime": false,
+  "compile": false,
+  "code_edited": false,
+  "credit": "Original Dispatcharr and dependency authors retain all credit/licenses"
+}

@@ -1,0 +1,68 @@
+{
+  "base_revision": "7d5b22b249d3c40b1bdb3c30f208ecd8c88daa5f",
+  "state": "PRIVATE_UNCOMPILED_REVIEW_REQUIRED",
+  "canonical_applied": false,
+  "files": [
+    {
+      "target": "rust/crates/store/src/core_settings_writes.rs",
+      "candidate": "artifacts/rust/m8-dvr-plugin-idle-domain-1/core_settings_writes.rs",
+      "candidate_sha256": "29181d324241211ac943e35d0d4bda3924a9ca04a1795ee8ceecf8f1a6b3509a",
+      "base_sha256": "a4047f3f1aff855c3384da5a2a74f21ad2a058cf40e29267312b249ceca0d50e"
+    },
+    {
+      "target": "rust/crates/store/src/core_task_offsets.rs",
+      "candidate": "artifacts/rust/m8-dvr-plugin-idle-domain-1/core_task_offsets.rs",
+      "candidate_sha256": "c9fff1d41319f6f839a61ca086002d4a5091e37749acce96d51b688746af958c",
+      "base_sha256": "4d6a5323eb1acfc7edceb8d81cb71950a342bf9bd789ccceb53be134300c1f15"
+    },
+    {
+      "target": "rust/crates/job-transport/src/normal_core_tasks.rs",
+      "candidate": "artifacts/rust/m8-dvr-plugin-idle-domain-1/normal_core_tasks.rs",
+      "candidate_sha256": "7836eb70c444b340aa6de0138b4d7031869ee6023430eee415e47280aebdf4e2",
+      "base_sha256": "1e59b02ae8f073c6818c32a1176352e8aca7113da0343e8970023af7b4d5d390"
+    },
+    {
+      "target": "rust/crates/job-transport/src/normal_recording_recovery.rs",
+      "candidate": "artifacts/rust/m8-dvr-plugin-idle-domain-1/normal_recording_recovery.rs",
+      "candidate_sha256": "ed3ffa2acae51c6a2a0877dd8d2db5cc04aef51c1cfbd64a5ed447def8743bf0",
+      "base_sha256": "bf326b31b27cefa3464a819051e2863e11a536dfd3ea91585a1ff7640e075058"
+    },
+    {
+      "target": "rust/crates/job-transport/src/recording_dvr_normal.rs",
+      "candidate": "artifacts/rust/m8-dvr-plugin-idle-domain-1/recording_dvr_normal.rs",
+      "candidate_sha256": "705e7e39d12904a71569af12b468b02fe00caf9662418eb74e987ff98d3c4e3f",
+      "base_sha256": "858d3e58a98780a3c4d36dcf9cef7248f0e81d8f14540ec4a7839a627b696675"
+    },
+    {
+      "target": "rust/crates/job-transport/src/recording_dvr_plugin_domain.rs",
+      "candidate": "artifacts/rust/m8-dvr-plugin-idle-domain-1/recording_dvr_plugin_domain.rs",
+      "candidate_sha256": "1abcf323cf8448c9d9bde480904bfb55b53da321b40404992b3f43538b88db50",
+      "base_sha256": null
+    },
+    {
+      "target": "rust/crates/store/src/recording_http.rs",
+      "candidate": "artifacts/rust/m8-dvr-plugin-idle-domain-1/recording_http.rs",
+      "candidate_sha256": "eea18033c311688fe5be8b61f0ab535bd9a83d580547c947ba15866e5de4b8fa",
+      "base_sha256": "09df00befda3f9d1b297b7c077b3c7d4fc39661bc60b422dec6f821fdc9ce9ca"
+    },
+    {
+      "target": "rust/crates/app/src/recording_http_bridge.rs",
+      "candidate": "artifacts/rust/m8-dvr-plugin-idle-domain-1/recording_http_bridge.rs",
+      "candidate_sha256": "a6f5067a93281155f9bdf6dbf3b0cb02e9923b9e826497532db1c764ed62fe47",
+      "base_sha256": "c4e0fdf17f649b121f119d9250ce0591103a1de0990bccde8ce622bf7acb13b1"
+    },
+    {
+      "target": "rust/crates/app/src/selected_jobs.rs",
+      "candidate": "artifacts/rust/m8-dvr-plugin-idle-domain-1/selected_jobs.rs",
+      "candidate_sha256": "e5ce8ea2c53fec557b591acd30e1bb6b2eea0e48d91ee8921169aa0fc279c1a1",
+      "base_sha256": "14d8e1a1d97bbe5d7a0a76906bd252fc82b3d0f92515df1cca487d25132d81fa"
+    }
+  ],
+  "scope": "Idle startup separation only; populated configured plugin hooks remain unsupported for recording/recovery/scheduling. No full Source DVR/plugin parity.",
+  "limitations": [
+    "No atomic guarantee against external concurrent directory renames; owned stable namespace required.",
+    "Readiness capability is last observed; recording admission always rechecks.",
+    "No runtime acceptance or performance evidence yet.",
+    "Arbitrary Python plugin monkeypatch/ORM effect support remains unqualified."
+  ]
+}

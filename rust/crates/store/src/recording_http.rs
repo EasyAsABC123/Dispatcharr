@@ -51,6 +51,14 @@ pub enum RecordingEffectError {
 /// Concrete job/media ports avoid a Store→job-transport dependency cycle.
 /// Implementations reread real rows/publish real commands; no frame mint here.
 pub trait RecordingJobs: Send + Sync {
+    /// Check actual scheduling capability before any recording mutation/revoke.
+    /// Legacy fixture ports retain their declared behavior; Main binds a real guard.
+    fn admit_scheduling(
+        &self,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
+        Box::pin(async { Ok(()) })
+    }
     fn supports_task_session(&self) -> bool {
         false
     }
@@ -644,6 +652,14 @@ async fn save(
             json!({"non_field_errors":["End time must be after start time."]}),
         ));
     }
+    // Authenticate, scope and validate first; refuse unsupported execution
+    // before revoking an old task or mutating recording/Beat/broker state.
+    owner
+        .state
+        .jobs
+        .admit_scheduling(owner.clone())
+        .await
+        .map_err(effect)?;
     let mut task = existing.as_ref().and_then(|r| r.task.clone());
     if let Some(old) = &existing {
         if (old.channel != channel || old.start != start || old.end != end)

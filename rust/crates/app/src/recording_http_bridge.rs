@@ -18,6 +18,7 @@ pub fn port(
     publisher: NormalRecordingPublisher,
     control: Arc<Control>,
     engine: StreamEngine,
+    dvr: Arc<dispatcharr_job_transport::recording_dvr_normal::NormalDvr>,
 ) -> Arc<dyn RecordingJobs> {
     Arc::new(Bridge {
         store,
@@ -25,6 +26,7 @@ pub fn port(
         publisher,
         control,
         engine,
+        dvr,
     })
 }
 struct Bridge {
@@ -33,8 +35,22 @@ struct Bridge {
     publisher: NormalRecordingPublisher,
     control: Arc<Control>,
     engine: StreamEngine,
+    dvr: Arc<dispatcharr_job_transport::recording_dvr_normal::NormalDvr>,
 }
 impl RecordingJobs for Bridge {
+    fn admit_scheduling(&self, owner: Arc<dyn Send + Sync>) -> BoxFuture<'_, Result<(), Effect>> {
+        Box::pin(async move {
+            let _owner = owner;
+            self.dvr
+                .require_recording_domain()
+                .map_err(|error| match error {
+                    dispatcharr_job_transport::recording_dvr_normal::Error::Unsupported(_) => {
+                        Effect::Unsupported
+                    }
+                    _ => Effect::Unsettled,
+                })
+        })
+    }
     fn supports_task_session(&self) -> bool {
         true
     }
@@ -47,6 +63,7 @@ impl RecordingJobs for Bridge {
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'a, Result<Vec<String>, Effect>> {
         Box::pin(async move {
+            self.admit_scheduling(owner.clone()).await?;
             let published = self
                 .publisher
                 .schedule_booking_child_on(
@@ -97,6 +114,7 @@ impl RecordingJobs for Bridge {
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<Vec<String>, Effect>> {
         Box::pin(async move {
+            self.admit_scheduling(owner.clone()).await?;
             let published = self
                 .publisher
                 .schedule_booking_child(recording, parent, owner)
@@ -116,6 +134,7 @@ impl RecordingJobs for Bridge {
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), Effect>> {
         Box::pin(async move {
+            self.admit_scheduling(owner.clone()).await?;
             self.publisher
                 .schedule_booking(recording, owner)
                 .await

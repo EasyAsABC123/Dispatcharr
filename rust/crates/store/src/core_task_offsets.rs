@@ -117,6 +117,8 @@ pub async fn execute(
     task: uuid::Uuid,
     owner: Arc<dyn Send + Sync>,
 ) -> Result<Report, StoreError> {
+    // Reject an unsupported recording domain before settings, SQL or revocation.
+    jobs.admit_scheduling(owner.clone()).await.map_err(effect)?;
     let now = Utc::now();
     let settings = match jobs.dvr_settings(owner.clone()).await {
         Ok(v) => v,

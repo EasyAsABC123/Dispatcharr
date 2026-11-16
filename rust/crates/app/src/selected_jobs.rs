@@ -284,6 +284,7 @@ impl SelectedJobs {
             publisher.clone(),
             control.clone(),
             engine.clone(),
+            dvr.clone(),
         );
         auth.bind_recording_jobs(recording_jobs.clone())
             .map_err(|_| "Selected recording HTTP Collector binding failed")?;
@@ -567,7 +568,7 @@ impl SelectedJobs {
                 ));
         (
             ready,
-            serde_json::json!({"scope":"experimental selected normal families plus startup recovery; not Source47 parity","ready":ready,"startup":format!("{startup:?}"),"startup_error":startup_error,"control":format!("{control:?}"),"celery":format!("{:?}",queue.celery),"dvr":format!("{:?}",queue.dvr),"clocked_scheduler":format!("{scheduler:?}"),"clocked_scheduler_enabled":self.inner.beat_enabled,"parity_complete":false}),
+            serde_json::json!({"scope":"experimental selected normal families plus startup recovery; not Source47 parity","ready":ready,"startup":format!("{startup:?}"),"startup_error":startup_error,"control":format!("{control:?}"),"celery":format!("{:?}",queue.celery),"dvr":format!("{:?}",queue.dvr),"clocked_scheduler":format!("{scheduler:?}"),"clocked_scheduler_enabled":self.inner.beat_enabled,"dvr_plugin_domain":self.inner.dvr.plugin_domain_capability(),"startup_recovery_deferred_unsupported_domain":self.inner.recovery.startup_recovery_deferred(),"parity_complete":false}),
         )
     }
     pub fn start_after_serving(&self) -> Result<(), String> {
