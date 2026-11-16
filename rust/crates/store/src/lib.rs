@@ -590,3 +590,12 @@ pub use plugin_hook_context::{
     PluginTemplateRender,
 };
 pub use plugin_runtime::PluginHookSession;
+
+pub mod channel_epg_matching;
+
+pub mod channel_epg_match_task;
+
+pub mod channel_epg_match_http;
+
+#[cfg(test)]
+mod channel_matching_sql_peer;

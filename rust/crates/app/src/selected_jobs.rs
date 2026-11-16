@@ -53,6 +53,7 @@ struct Inner {
     backups: dispatcharr_store::BackupFiles,
     backup_jobs: jobs::normal_backup::Application,
     channel_http: dispatcharr_store::channel_maintenance_http::ChannelMaintenanceHttp,
+    matching_http: dispatcharr_store::channel_epg_match_http::ChannelEpgMatchHttp,
 }
 #[derive(Clone)]
 pub struct SelectedJobs {
@@ -321,6 +322,21 @@ impl SelectedJobs {
                     auth.producer_identity_source(),
                 )),
             );
+        let matching_tasks = jobs::normal_channel_matching::Prepared::new(
+            shared_jobs.clone(),
+            auth.clone(),
+            events.clone(),
+            auth.producer_identity_source(),
+            revoked.clone(),
+        )
+        .map_err(|_| "Selected channel matching authority unavailable")?;
+        let matching_http = dispatcharr_store::channel_epg_match_http::ChannelEpgMatchHttp::prepare(
+            auth.clone(),
+            Arc::new(jobs::normal_channel_matching::Publisher::new(
+                shared_jobs.clone(),
+                auth.producer_identity_source(),
+            )),
+        );
         let recording_http = dispatcharr_store::recording_http::RecordingHttp::prepare(
             auth.clone(),
             recording_jobs.clone(),
@@ -451,6 +467,20 @@ impl SelectedJobs {
         ];
         entries.extend(core_tasks.entries());
         entries.extend(channel_tasks.entries());
+        entries.extend([
+            (
+                Family::ChannelMatchAll,
+                matching_tasks.handler(jobs::normal_channel_matching::Kind::All),
+            ),
+            (
+                Family::ChannelMatchSelected,
+                matching_tasks.handler(jobs::normal_channel_matching::Kind::Selected),
+            ),
+            (
+                Family::ChannelMatchSingle,
+                matching_tasks.handler(jobs::normal_channel_matching::Kind::Single),
+            ),
+        ]);
         entries.push(plugin_refresh.entry());
         entries.push(plugin_tasks.entry());
         entries.extend(xc.entries());
@@ -481,6 +511,13 @@ impl SelectedJobs {
                     .map_err(|_| "Selected SD guide actual registry unavailable")?,
             )
             .map_err(|_| "Selected SD guide auto composition failed")?;
+        matching_tasks
+            .bind_sd(
+                sd_guide
+                    .capability(&queue)
+                    .map_err(|_| "Selected matching SD registry unavailable")?,
+            )
+            .map_err(|_| "Selected matching SD composition failed")?;
         let scheduler = jobs::normal_beat::Scheduler::prepare(
             store.pool().clone(),
             shared_jobs.clone(),
@@ -532,6 +569,7 @@ impl SelectedJobs {
                 backups,
                 backup_jobs,
                 channel_http,
+                matching_http,
             }),
         })
     }
@@ -547,6 +585,7 @@ impl SelectedJobs {
             .clone()
             .router_with_playback(self.inner.recording_playback.clone())
             .merge(self.inner.channel_http.clone().router())
+            .merge(self.inner.matching_http.clone().router())
             .merge(self.inner.xc_http.clone().router())
     }
     pub fn readiness(&self) -> (bool, serde_json::Value) {
@@ -665,6 +704,7 @@ impl SelectedJobs {
         self.inner.publisher.stop_booking_backpressure();
         self.inner.backup_jobs.close_admission();
         self.inner.channel_http.close_admission();
+        self.inner.matching_http.close_admission();
         self.inner.recording_http.close_admission();
         self.inner.xc_http.close_admission();
         self.inner.recording_playback.close_admission();
@@ -691,6 +731,14 @@ impl SelectedJobs {
             .await
         {
             return selected_shutdown_failed("channel_http");
+        }
+        if !self
+            .inner
+            .matching_http
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            return selected_shutdown_failed("matching_http");
         }
         if !self
             .inner

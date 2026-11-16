@@ -1784,3 +1784,6 @@ pub mod plugin_result_transport;
 mod registered_plugin_eta_transport;
 #[path = "registered_plugin_visibility.rs"]
 mod registered_plugin_visibility;
+
+#[path = "channel_matching_transport.rs"]
+mod channel_matching_transport;

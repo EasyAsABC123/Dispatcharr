@@ -1,0 +1,1262 @@
+{
+  "source_authority": {
+    "path": "artifacts/rust/normal-graph-batch51-channel-matching-1/fixtures/Original-8e4c22f0/matching-characterization/private/Source-pure-vectors.json",
+    "sha256": "a9b3a9f4a2ab6b0c104164aba260b0fcd02917af22bef461b32356e9c545ad67",
+    "source_file_sha256": "6cdd588ecdf499a1a08dbb25cb19b280c06600dceb1709f4409bcd0b83987b05",
+    "Python": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+    "Unicode": "15.1.0",
+    "RapidFuzz": "3.14.6",
+    "actual_model_inference": false
+  },
+  "normalization": [
+    {
+      "ordinal": 0,
+      "input": "HD:ABC 7 (WXYZ) - Springfield",
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "abc 7 springfield wxyz"
+    },
+    {
+      "ordinal": 1,
+      "input": "HD:SD:Channel 5",
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "sdchannel 5"
+    },
+    {
+      "ordinal": 2,
+      "input": "HBO Plus East 4K",
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "hbo"
+    },
+    {
+      "ordinal": 3,
+      "input": "a\u0301\u200d_b",
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "a_b"
+    },
+    {
+      "ordinal": 4,
+      "input": "\u0130\u03a3 \u00b2_\u00c0\u001cX",
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "i\u03c2 \u00b2_\u00e0 x"
+    },
+    {
+      "ordinal": 5,
+      "input": "A [one\ntwo] B (ABCD)",
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "a one two b abcd"
+    },
+    {
+      "ordinal": 6,
+      "input": "TV 24/7 Film Movies NBC",
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "247 nbc"
+    },
+    {
+      "ordinal": 7,
+      "input": "a\u0345\u05b0_b",
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "a_b"
+    },
+    {
+      "ordinal": 8,
+      "input": "\u039f\u03a3 \u039f\u03a3\u0391 \u039f\u03a3\n\u03a3",
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "\u03bf\u03c2 \u03bf\u03c3\u03b1 \u03bf\u03c2 \u03c3"
+    },
+    {
+      "ordinal": 9,
+      "input": "A (AB\nCD) [EF\nGH] B",
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "a ab cd ef gh b"
+    },
+    {
+      "ordinal": 10,
+      "input": "HD:SD:Owned Plus East 4K",
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "HD:SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K",
+          " East 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "sdowned"
+    },
+    {
+      "ordinal": 11,
+      "input": "HD:SD:Owned Plus East 4K",
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:SD:",
+          "HD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " East 4K",
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "owned"
+    },
+    {
+      "ordinal": 12,
+      "input": "HD:Owned Plus East 4K",
+      "settings_snapshot": null,
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "hdowned plus 4k"
+    },
+    {
+      "ordinal": 13,
+      "input": "HD:Owned Plus East 4K",
+      "settings_snapshot": false,
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "hdowned plus 4k"
+    },
+    {
+      "ordinal": 14,
+      "input": "HD:Owned Plus East 4K",
+      "settings_snapshot": 0,
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "hdowned plus 4k"
+    },
+    {
+      "ordinal": 15,
+      "input": "HD:Owned Plus East 4K",
+      "settings_snapshot": 7,
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "hdowned plus 4k"
+    },
+    {
+      "ordinal": 16,
+      "input": "HD:Owned Plus East 4K",
+      "settings_snapshot": "HD:",
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "hdowned plus 4k"
+    },
+    {
+      "ordinal": 17,
+      "input": "HD:Owned Plus East 4K",
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "hdowned plus 4k"
+    },
+    {
+      "ordinal": 18,
+      "input": "HD:Owned Plus East 4K",
+      "settings_snapshot": [
+        "HD:"
+      ],
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "hdowned plus 4k"
+    },
+    {
+      "ordinal": 19,
+      "input": "HD:Owned Plus East 4K",
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": "HD:",
+        "epg_match_ignore_suffixes": null,
+        "epg_match_ignore_custom": {
+          "Plus": true
+        }
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "hdowned plus 4k"
+    },
+    {
+      "ordinal": 20,
+      "input": "HD:Owned Plus East 4K",
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          null,
+          false,
+          0,
+          7,
+          [],
+          {},
+          "",
+          "HD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          false,
+          [],
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          true,
+          null,
+          {},
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "owned"
+    },
+    {
+      "ordinal": 21,
+      "input": "HD:Owned Plus East 4K",
+      "settings_snapshot": {
+        "epg_match_mode": [],
+        "epg_match_ignore_prefixes": [
+          "HD:"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": "hdowned plus 4k"
+    },
+    {
+      "ordinal": 22,
+      "input": null,
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": ""
+    },
+    {
+      "ordinal": 23,
+      "input": null,
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": ""
+    },
+    {
+      "ordinal": 24,
+      "input": false,
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": ""
+    },
+    {
+      "ordinal": 25,
+      "input": false,
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": ""
+    },
+    {
+      "ordinal": 26,
+      "input": 0,
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": ""
+    },
+    {
+      "ordinal": 27,
+      "input": 0,
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": ""
+    },
+    {
+      "ordinal": 28,
+      "input": [],
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": ""
+    },
+    {
+      "ordinal": 29,
+      "input": [],
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": ""
+    },
+    {
+      "ordinal": 30,
+      "input": {},
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": ""
+    },
+    {
+      "ordinal": 31,
+      "input": {},
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "value",
+      "actual": ""
+    },
+    {
+      "ordinal": 32,
+      "input": 17,
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "error",
+      "error_class": "AttributeError"
+    },
+    {
+      "ordinal": 33,
+      "input": 17,
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "error",
+      "error_class": "AttributeError"
+    },
+    {
+      "ordinal": 34,
+      "input": [
+        "Owned"
+      ],
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "error",
+      "error_class": "AttributeError"
+    },
+    {
+      "ordinal": 35,
+      "input": [
+        "Owned"
+      ],
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "error",
+      "error_class": "AttributeError"
+    },
+    {
+      "ordinal": 36,
+      "input": {
+        "name": "Owned"
+      },
+      "settings_snapshot": {},
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "error",
+      "error_class": "AttributeError"
+    },
+    {
+      "ordinal": 37,
+      "input": {
+        "name": "Owned"
+      },
+      "settings_snapshot": {
+        "epg_match_mode": "advanced",
+        "epg_match_ignore_prefixes": [
+          "HD:",
+          "SD:"
+        ],
+        "epg_match_ignore_suffixes": [
+          " 4K"
+        ],
+        "epg_match_ignore_custom": [
+          "Plus"
+        ]
+      },
+      "snapshot_interface": "CoreSettings.get_epg_settings return value supplied directly; malformed top-level snapshots are pure failure probes, not claimed ordinary DB outputs",
+      "outcome": "error",
+      "error_class": "AttributeError"
+    }
+  ],
+  "ratios": [
+    {
+      "left": "ab",
+      "right": "ac",
+      "actual": 50.0
+    },
+    {
+      "left": "",
+      "right": "",
+      "actual": 100.0
+    },
+    {
+      "left": "\u00e9",
+      "right": "\u00e9",
+      "actual": 100.0
+    },
+    {
+      "left": "\u0130",
+      "right": "i\u0307",
+      "actual": 0.0
+    },
+    {
+      "left": "aaaaab",
+      "right": "baaaaa",
+      "actual": 83.33333333333334
+    }
+  ],
+  "regions": [
+    {
+      "region": null,
+      "actual": 100.0
+    },
+    {
+      "region": "us",
+      "actual": 115.0
+    },
+    {
+      "region": "gb",
+      "actual": 85.0
+    }
+  ],
+  "threshold_decisions": [
+    {
+      "bulk": false,
+      "fuzzy": 19,
+      "supplied_model_score": null,
+      "matched_id": null,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 19,
+      "supplied_model_score": 0.49,
+      "matched_id": null,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 19,
+      "supplied_model_score": 0.5,
+      "matched_id": null,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 19,
+      "supplied_model_score": 0.65,
+      "matched_id": null,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 19,
+      "supplied_model_score": 0.75,
+      "matched_id": null,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 20,
+      "supplied_model_score": null,
+      "matched_id": null,
+      "calls": [
+        "availability"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 20,
+      "supplied_model_score": 0.49,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 20,
+      "supplied_model_score": 0.5,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 20,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 20,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 39,
+      "supplied_model_score": null,
+      "matched_id": null,
+      "calls": [
+        "availability"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 39,
+      "supplied_model_score": 0.49,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 39,
+      "supplied_model_score": 0.5,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 39,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 39,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 40,
+      "supplied_model_score": null,
+      "matched_id": null,
+      "calls": [
+        "availability"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 40,
+      "supplied_model_score": 0.49,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 40,
+      "supplied_model_score": 0.5,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 40,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 40,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 74,
+      "supplied_model_score": null,
+      "matched_id": null,
+      "calls": [
+        "availability"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 74,
+      "supplied_model_score": 0.49,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 74,
+      "supplied_model_score": 0.5,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 74,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 74,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": false,
+      "fuzzy": 75,
+      "supplied_model_score": null,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 75,
+      "supplied_model_score": 0.49,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 75,
+      "supplied_model_score": 0.5,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 75,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 75,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 84,
+      "supplied_model_score": null,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 84,
+      "supplied_model_score": 0.49,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 84,
+      "supplied_model_score": 0.5,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 84,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 84,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 85,
+      "supplied_model_score": null,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 85,
+      "supplied_model_score": 0.49,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 85,
+      "supplied_model_score": 0.5,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 85,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": false,
+      "fuzzy": 85,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 49,
+      "supplied_model_score": null,
+      "matched_id": null,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 49,
+      "supplied_model_score": 0.49,
+      "matched_id": null,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 49,
+      "supplied_model_score": 0.5,
+      "matched_id": null,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 49,
+      "supplied_model_score": 0.65,
+      "matched_id": null,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 49,
+      "supplied_model_score": 0.75,
+      "matched_id": null,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 50,
+      "supplied_model_score": null,
+      "matched_id": null,
+      "calls": [
+        "availability"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 50,
+      "supplied_model_score": 0.49,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 50,
+      "supplied_model_score": 0.5,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 50,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 50,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 69,
+      "supplied_model_score": null,
+      "matched_id": null,
+      "calls": [
+        "availability"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 69,
+      "supplied_model_score": 0.49,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 69,
+      "supplied_model_score": 0.5,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 69,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 69,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 70,
+      "supplied_model_score": null,
+      "matched_id": null,
+      "calls": [
+        "availability"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 70,
+      "supplied_model_score": 0.49,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 70,
+      "supplied_model_score": 0.5,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 70,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 70,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 79,
+      "supplied_model_score": null,
+      "matched_id": null,
+      "calls": [
+        "availability"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 79,
+      "supplied_model_score": 0.49,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 79,
+      "supplied_model_score": 0.5,
+      "matched_id": null,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 79,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 79,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": [
+        "availability",
+        "actual-Source-decision-with-test-score"
+      ]
+    },
+    {
+      "bulk": true,
+      "fuzzy": 80,
+      "supplied_model_score": null,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 80,
+      "supplied_model_score": 0.49,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 80,
+      "supplied_model_score": 0.5,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 80,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 80,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 89,
+      "supplied_model_score": null,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 89,
+      "supplied_model_score": 0.49,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 89,
+      "supplied_model_score": 0.5,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 89,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 89,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 90,
+      "supplied_model_score": null,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 90,
+      "supplied_model_score": 0.49,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 90,
+      "supplied_model_score": 0.5,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 90,
+      "supplied_model_score": 0.65,
+      "matched_id": 1,
+      "calls": []
+    },
+    {
+      "bulk": true,
+      "fuzzy": 90,
+      "supplied_model_score": 0.75,
+      "matched_id": 1,
+      "calls": []
+    }
+  ],
+  "top20_actual_ids": [
+    30,
+    29,
+    28,
+    27,
+    26,
+    25,
+    24,
+    23,
+    22,
+    21,
+    20,
+    19,
+    18,
+    17,
+    16,
+    15,
+    14,
+    13,
+    12,
+    11
+  ],
+  "normalization_cache": {
+    "first": "owned",
+    "changed_snapshot_without_cleanup": "owned",
+    "after_declared_cache_reset": "hdowned"
+  }
+}

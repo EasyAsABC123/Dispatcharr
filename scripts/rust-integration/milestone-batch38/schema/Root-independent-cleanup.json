@@ -1,0 +1,124 @@
+{
+  "passed": true,
+  "exact_CID": "841fa4d07a7c8c2a4b608a43ce41ff3864bef83bbcf721ac6c36931155c6ec24",
+  "unique_positive_process_generations": 8,
+  "processes": [
+    {
+      "CID": "841fa4d07a7c8c2a4b608a43ce41ff3864bef83bbcf721ac6c36931155c6ec24",
+      "pid": 3426841,
+      "starttime": "14723902",
+      "after_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "CID": "841fa4d07a7c8c2a4b608a43ce41ff3864bef83bbcf721ac6c36931155c6ec24",
+      "pid": 3427232,
+      "starttime": "14723975",
+      "after_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "CID": "841fa4d07a7c8c2a4b608a43ce41ff3864bef83bbcf721ac6c36931155c6ec24",
+      "pid": 3427233,
+      "starttime": "14723976",
+      "after_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "CID": "841fa4d07a7c8c2a4b608a43ce41ff3864bef83bbcf721ac6c36931155c6ec24",
+      "pid": 3427234,
+      "starttime": "14723976",
+      "after_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "CID": "841fa4d07a7c8c2a4b608a43ce41ff3864bef83bbcf721ac6c36931155c6ec24",
+      "pid": 3427236,
+      "starttime": "14723976",
+      "after_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "CID": "841fa4d07a7c8c2a4b608a43ce41ff3864bef83bbcf721ac6c36931155c6ec24",
+      "pid": 3427237,
+      "starttime": "14723976",
+      "after_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "CID": "841fa4d07a7c8c2a4b608a43ce41ff3864bef83bbcf721ac6c36931155c6ec24",
+      "pid": 3427238,
+      "starttime": "14723976",
+      "after_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "CID": "841fa4d07a7c8c2a4b608a43ce41ff3864bef83bbcf721ac6c36931155c6ec24",
+      "pid": 3427292,
+      "starttime": "14723998",
+      "after_starttime": null,
+      "original_generation_absent": true
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=841fa4d07a7c8c2a4b608a43ce41ff3864bef83bbcf721ac6c36931155c6ec24",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-8b2851ed2f",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-8b2851ed2f",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-8b2851ed2f",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

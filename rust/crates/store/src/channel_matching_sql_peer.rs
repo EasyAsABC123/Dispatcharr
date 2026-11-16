@@ -1,0 +1,241 @@
+//! Exact compiled matching SQL against an owned migrated Source PostgreSQL schema.
+//! Original Dispatcharr/Django/SQLx authors retain model/algorithm/library credit.
+//! This peer prepares production statements; it never executes matching DML.
+use serde_json::{json, Value};
+use sqlx::{postgres::PgTypeInfo, Column, Connection, Executor, Statement, Type, TypeInfo};
+use std::{collections::BTreeSet, path::Path, str::FromStr};
+
+fn statements() -> Vec<(&'static str, String)> {
+    // Actual constants used by production queries, including the SAME dynamic
+    // serializer formatter. No query body or stand-in table is copied here.
+    crate::channel_epg_match_task::schema_statements()
+}
+fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
+    // Named descriptors audited against each actual .bind expression. These
+    // provide PostgreSQL the production Rust wire types, rather than asking it
+    // to infer convenient types from otherwise-unbound SQL placeholders.
+    match name {
+        "channels" => vec![
+            <bool as Type<sqlx::Postgres>>::type_info(),
+            <Vec<i64> as Type<sqlx::Postgres>>::type_info(),
+        ], // .bind(all:bool).bind(ids.unwrap_or_default():Vec<i64>)
+        "single_exact" => vec![<String as Type<sqlx::Postgres>>::type_info()],
+        "catalog" | "mark_custom" => vec![<Option<i64> as Type<sqlx::Postgres>>::type_info()],
+        "bulk_candidates" | "bulk_update" => vec![<Value as Type<sqlx::Postgres>>::type_info()],
+        "child_epgs" => vec![<Vec<i64> as Type<sqlx::Postgres>>::type_info()],
+        "single_update" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+        ],
+        "serialize" => vec![<i64 as Type<sqlx::Postgres>>::type_info()],
+        "settings" | "plugins" => vec![],
+        _ => panic!("unreviewed production matching statement: {name}"),
+    }
+}
+#[derive(Clone, Copy)]
+enum Output {
+    Int8,
+    Text,
+    Bool,
+    Jsonb,
+}
+fn outputs(name: &str) -> Vec<(&'static str, Output)> {
+    use Output::*;
+    match name {
+        "channels" => vec![
+            ("id", Int8),
+            ("name", Text),
+            ("tvg_id", Text),
+            ("tvc_guide_stationid", Text),
+            ("epg_data_id", Int8),
+            ("auto_created", Bool),
+            ("channel_group_id", Int8),
+        ],
+        "single_exact" => vec![("id", Int8)],
+        "catalog" => vec![
+            ("id", Int8),
+            ("name", Text),
+            ("tvg_id", Text),
+            ("epg_source_id", Int8),
+            ("priority", Int8),
+            ("source_type", Text),
+            ("has_programs", Bool),
+        ],
+        "settings" => vec![("key", Text), ("value", Jsonb), ("supported", Bool)],
+        "bulk_candidates" => vec![("id", Int8), ("epg", Int8)],
+        "child_epgs" => vec![
+            ("id", Int8),
+            ("name", Text),
+            ("tvg_id", Text),
+            ("epg_source_id", Int8),
+            ("source_type", Text),
+            ("has_programs", Bool),
+        ],
+        "serialize" => vec![
+            ("raw", Jsonb),
+            ("ov", Jsonb),
+            ("account_name", Text),
+            ("streams", Jsonb),
+        ],
+        "plugins" => vec![("exists", Bool)],
+        "bulk_update" | "single_update" | "mark_custom" => vec![],
+        _ => panic!("unreviewed matching row decoder: {name}"),
+    }
+}
+fn compatible(kind: Output, actual: &PgTypeInfo) -> bool {
+    match kind {
+        Output::Int8 => actual.name() == "INT8",
+        Output::Text => <String as Type<sqlx::Postgres>>::compatible(actual),
+        Output::Bool => actual.name() == "BOOL",
+        Output::Jsonb => actual.name() == "JSONB",
+    }
+}
+#[test]
+fn compiled_matching_statements_and_bind_ordinals_are_complete() {
+    let rows = statements();
+    assert_eq!(rows.len(), 11);
+    let names: BTreeSet<_> = rows.iter().map(|(name, _)| *name).collect();
+    assert_eq!(names.len(), rows.len());
+    assert_eq!(
+        names,
+        [
+            "channels",
+            "single_exact",
+            "catalog",
+            "settings",
+            "bulk_candidates",
+            "bulk_update",
+            "child_epgs",
+            "single_update",
+            "mark_custom",
+            "serialize",
+            "plugins"
+        ]
+        .into_iter()
+        .collect()
+    );
+    let ordinal = regex::Regex::new(r"\$(\d+)").expect("fixed ordinal scanner");
+    for (name, sql) in rows {
+        assert!(
+            sql.starts_with("SELECT ") || sql.starts_with("UPDATE ") || sql.starts_with("INSERT ")
+        );
+        let used: BTreeSet<_> = ordinal
+            .captures_iter(&sql)
+            .map(|m| m[1].parse::<usize>().unwrap())
+            .collect();
+        assert_eq!(
+            used,
+            (1..=parameter_types(name).len()).collect(),
+            "actual bind ordinals: {name}"
+        );
+        let _ = outputs(name); // Every production result has an explicit decoder audit.
+    }
+    assert_eq!(
+        parameter_types("channels")
+            .iter()
+            .map(TypeInfo::name)
+            .collect::<Vec<_>>(),
+        ["BOOL", "INT8[]"]
+    );
+    assert_eq!(parameter_types("catalog")[0].name(), "INT8");
+    assert_eq!(parameter_types("bulk_update")[0].name(), "JSONB");
+    let rows = statements();
+    let exact = &rows.iter().find(|(n, _)| *n == "single_exact").unwrap().1;
+    assert!(exact.contains("UPPER(e.tvg_id::text)=UPPER($1)"));
+    assert!(exact.contains("ORDER BY e.id ASC LIMIT 1"));
+    let serialize = &rows.iter().find(|(n, _)| *n == "serialize").unwrap().1;
+    assert_eq!(
+        serialize,
+        &format!("{} AND c.id=$1", crate::channels::SELECT)
+    );
+}
+
+#[tokio::test]
+#[ignore = "owned migrated Source PostgreSQL schema-only; separately admitted; no matching task/media"]
+async fn actual_compiled_matching_schema_prepare_only() {
+    let url = std::env::var("OWNED_MATCHING_SCHEMA_URL").expect("explicit owned Source schema URL");
+    let options = sqlx::postgres::PgConnectOptions::from_str(&url).expect("SQL options");
+    assert_eq!(options.get_host(), "localhost");
+    assert_eq!(options.get_port(), 5432);
+    assert_eq!(options.get_username(), "dispatch");
+    assert!(options
+        .get_database()
+        .is_some_and(|v| v.starts_with("rust_probe_backup_jobs_") && v.len() <= 64));
+    assert_eq!(
+        std::env::var("OWNED_MATCHING_SCHEMA_DISPOSABLE").as_deref(),
+        Ok("copied-schema-only-no-tasks")
+    );
+    // Disable caching so every positive AND deliberately wrong-type prepare
+    // crosses actual PostgreSQL Parse/Describe, not a cached prior type vector.
+    let mut connection =
+        sqlx::PgConnection::connect_with(&options.statement_cache_capacity(0).options([
+            ("default_transaction_read_only", "on"),
+            ("statement_timeout", "5000"),
+        ]))
+        .await
+        .expect("owned schema connection");
+    let readonly: String = sqlx::query_scalar("SHOW transaction_read_only")
+        .fetch_one(&mut connection)
+        .await
+        .expect("read-only setting");
+    assert_eq!(readonly, "on");
+    let mut rows = Vec::new();
+    for (name, sql) in statements() {
+        let types = parameter_types(name);
+        let result = (&mut connection).prepare_with(&sql, &types).await;
+        rows.push(match result {
+            Ok(statement)=>{
+                let server_parameters=match statement.parameters(){Some(sqlx::Either::Left(values))=>values.to_vec(),_=>Vec::new()};
+                let parameter_check=server_parameters==types;
+                let expected=outputs(name);let columns=statement.columns();
+                let column_check=expected.len()==columns.len()&&expected.iter().zip(columns).all(|((name,kind),actual)|*name==actual.name()&&compatible(*kind,actual.type_info()));
+                json!({"name":name,"sql":sql,"prepared":true,"row_decoder_compatible":column_check,"server_parameter_types_match":parameter_check,
+                    "server_parameter_types":server_parameters.iter().map(TypeInfo::name).collect::<Vec<_>>(),
+                    "provided_parameter_types":types.iter().map(TypeInfo::name).collect::<Vec<_>>(),
+                    "columns":columns.iter().map(|c|json!({"name":c.name(),"type":c.type_info().name()})).collect::<Vec<_>>()})
+            },
+            Err(error)=>json!({"name":name,"sql":sql,"prepared":false,"row_decoder_compatible":false,"error":format!("{error:?}")}),
+        });
+    }
+    let mut negatives = Vec::new();
+    for name in ["channels", "bulk_candidates"] {
+        let sql = statements()
+            .into_iter()
+            .find(|(n, _)| *n == name)
+            .unwrap()
+            .1;
+        let mut types = parameter_types(name);
+        types[0] = <i64 as Type<sqlx::Postgres>>::type_info();
+        let result = (&mut connection).prepare_with(&sql, &types).await;
+        negatives.push(json!({"name":name,"same_production_SQL":true,"deliberately_wrong_types":types.iter().map(TypeInfo::name).collect::<Vec<_>>(),"rejected":result.is_err(),"error":result.err().map(|e|format!("{e:?}"))}));
+    }
+    let ready = connection.ping().await;
+    let closed = connection.close().await;
+    let passed = rows.len() == 11
+        && rows.iter().all(|r| {
+            r["prepared"] == true
+                && r["row_decoder_compatible"] == true
+                && r["server_parameter_types_match"] == true
+        })
+        && negatives.iter().all(|r| r["rejected"] == true)
+        && ready.is_ok()
+        && closed.is_ok();
+    let report = json!({"passed":passed,"schema_only":true,"DML_executed":false,"task_or_media_executed":false,
+        "actual_readonly":readonly,"statement_cache_disabled":true,"statements":rows,"wrong_bind_type_controls":negatives,
+        "ready":format!("{ready:?}"),"closed":format!("{closed:?}"),"scope":"Compiled production SQL/constants and audited actual Rust bind types; prepares/row shapes only, not DML/data/event/task parity."});
+    let bytes = serde_json::to_vec_pretty(&report).expect("report");
+    assert!(bytes.len() <= 131072);
+    std::fs::write(
+        Path::new("/evidence/native-channel-matching-schema-private.json"),
+        &bytes,
+    )
+    .expect("persist before assertion");
+    println!(
+        "NATIVE_MATCHING_SCHEMA_JSON={}",
+        serde_json::to_string(&report).unwrap()
+    );
+    assert!(
+        passed,
+        "actual compiled matching SQL/schema/type prepare failed"
+    );
+}

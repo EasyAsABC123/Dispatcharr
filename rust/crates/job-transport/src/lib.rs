@@ -317,3 +317,5 @@ pub use transport::plugin_result_transport::PluginResults;
 pub mod normal_registered_plugins;
 mod registered_plugin_eta;
 mod registered_plugin_protocol;
+
+pub mod normal_channel_matching;
