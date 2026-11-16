@@ -9,12 +9,20 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate34](rust-milestone-batch34.md), runtime
+The newest source candidate is [Candidate35](rust-milestone-batch35.md), runtime
+`b0fc1ab1085ae765cbc978b349f08171066edfff`: all four SDK46 gates and all six
+Docker package families pass. A real installed-image control qualifies the empty
+Source API app namespace without HTTP code or Django setup. The guide-only
+Native application run is active against the fresh Source36 guide reference.
+DVR plugin-domain changes remain private under review. All full milestones and
+new full-service performance acceptance remain open.
+
+The preceding source candidate is [Candidate34](rust-milestone-batch34.md), runtime
 `8c872439590511258750b31d856432e553f8192f`: all four SDK45 gates pass with
 1,111 tests, zero failures and 783 ignored; its explicitly tagged Docker build
 and all six package families pass. It adds bounded, opt-in failure diagnostics,
-with no HTTP pool or bootstrap behavior fix. The Native startup/guide diagnostic
-batch is running. [SQLite compatibility](rust-sqlite-compatibility.md) remains an
+with no HTTP pool or bootstrap behavior fix. The Native startup/guide diagnostic batch completed with two failures; its
+actual diagnostics identify a missing namespace and an earlier DVR guard. [SQLite compatibility](rust-sqlite-compatibility.md) remains an
 explicit Source-characterization and implementation gap. All full milestones
 and new full-service performance acceptance remain open.
 

@@ -11,8 +11,7 @@ including 1,407 Rust-tree files, are recorded. Exactly two runtime paths
 differ from SDK45: the Python-host collector and compatibility manifest.
 The [installation receipt](../scripts/rust-integration/milestone-batch35/components/SDK46-installed.json)
 confirms both installed runtime paths match the tested snapshot. The new Docker
-image and package checks remain separate pending gates. The private DVR startup
-correction is excluded.
+[image and all six package families](../scripts/rust-integration/milestone-batch35/package/inventory.json) passed with actual waits and 55 exact package containers independently absent. The private DVR startup correction is excluded.
 
 [Actual Main35 diagnostics](../scripts/rust-integration/milestone-batch35/components/grounded-authority.json)
 report `ModuleNotFoundError` during `django.setup`, ending at
@@ -36,14 +35,14 @@ Main35's physical host receipt records forced retirement, observed wait, both
 EOFs, descendant absence and callback settlement. Its child exit is null; an
 exit 1 is not inferred. The separate M8 failure occurred before Host bootstrap
 during DVR startup and is neither explained nor repaired by this candidate.
-The next affected Native application slice is guides only.
+The affected guide-only Native application run is now active.
 
-The [planned installed namespace control](../scripts/rust-integration/milestone-batch35/namespace-control/README.md)
+The [installed namespace control](../scripts/rust-integration/milestone-batch35/namespace-control/README.md)
 is frozen at guest SHA256
 `587d8073cebc17b047f2ea8e9cfd6c438724a13fe34ac1d547afc57fa3f628e4`.
-It has **not run**. The existing package runner must execute it using the real
-new Candidate35 image, production Python wrapper and UID65532, with no mounted
-namespace substitute, and retain the actual exit and exact cleanup. Its
+It **passed** on the actual new Candidate35 image using the production Python
+wrapper and UID65532, without network or a mounted namespace substitute. The
+[six-family package record](../scripts/rust-integration/milestone-batch35/package/python-host.json) retains its actual output and cleanup. Its
 `AppConfig.create` check covers namespace/base-class metadata only: it does not
 call Django setup, registry population, model import or ready hooks. It cannot
 establish DjangoReady, RPC, SQL, delivery or lifecycle acceptance.
@@ -54,3 +53,5 @@ closing owned redirect response. Source application code is unchanged. That
 reference is retained without another Source replay; separate Source M8 evidence
 keeps its earlier scope. Neither reference transfers a pass to Candidate35's
 Native application. No full milestone or new performance gain is accepted.
+
+Candidate35 source `b0fc1ab1085ae765cbc978b349f08171066edfff` built with actual exit 0 in 195.071 seconds. Its immutable image is `sha256:852b248427d0f223991c7eefac52ed3087c8c15e73420dbafc72b1d50554720b`. The unchanged React/assets and Original credits, crypto, PostgreSQL, dependency regex, Python-host closure/production launcher/namespace metadata, and VLC package families each exited 0. The fresh Guide-only Main37 binding reuses the exact 138 Source36-qualified helpers; its separate UID65532 readability check passed and its owned container is absent. Application acceptance remains pending.

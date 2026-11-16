@@ -1,5 +1,5 @@
 {
-  "state": "SDK46 passed; two-path namespace packaging correction; new Docker/package/RPC application proof pending",
+  "state": "SDK46, exact namespace-only image and all six package families passed; Native Guide Main37 pending",
   "test_totals": [
     1111,
     0,
@@ -19,7 +19,7 @@
   "installed_apps_filtered": false,
   "DVR_private_fix_included": false,
   "namespace_guest_sha256": "587d8073cebc17b047f2ea8e9cfd6c438724a13fe34ac1d547afc57fa3f628e4",
-  "namespace_guest_actual_execution": "NOT RUN; requires new immutable Candidate35 package",
+  "namespace_guest_actual_execution": "PASSED actual installed UID65532/no-network empty namespace AppConfig metadata control; no setup/RPC acceptance",
   "AppConfig_control_scope": "Namespace/base AppConfig metadata only; no setup/populate/models/ready/RPC/SQL acceptance",
   "missing_module_name_directly_captured": false,
   "missing_namespace_evidence": "First installed app apps.api is sole local namespace missing from immutable package inventory, strongly correlating with actual ModuleNotFoundError/apps.config193; later bootstrap not proved",
@@ -44,10 +44,23 @@
     ]
   },
   "M8_startup_fixed": false,
-  "Docker_built": false,
+  "Docker_built": true,
   "application_acceptance": false,
   "full_milestones_accepted": false,
   "performance_verified": false,
   "credit": "Original Dispatcharr, Django, CPython, Requests, Celery and dependency authors retain full application/library/algorithm credit.",
-  "all_installed_hashes_exact_SDK46": true
+  "all_installed_hashes_exact_SDK46": true,
+  "image_id": "sha256:852b248427d0f223991c7eefac52ed3087c8c15e73420dbafc72b1d50554720b",
+  "git_revision": "b0fc1ab1085ae765cbc978b349f08171066edfff",
+  "build_actual_exit": 0,
+  "build_seconds": 195.07111124201037,
+  "all_six_package_actual_exits": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "independent_package_CIDs_absent": 55
 }
