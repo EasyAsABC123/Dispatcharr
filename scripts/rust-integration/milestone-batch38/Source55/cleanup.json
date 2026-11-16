@@ -1,0 +1,133 @@
+{
+  "Native_application_executed": false,
+  "all_owned_resources_absent": true,
+  "commands": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=43e608131e6f853dc96ce158ac9d9f0df168010bfb1cc88de884cff56e793e49",
+        "--format",
+        "{{.ID}}"
+      ],
+      "seconds": 0.010040724009741098,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=8d7248318da20de4935c91d4c9a73e61be16c7a8a57c11574f056af95d56bdef",
+        "--format",
+        "{{.ID}}"
+      ],
+      "seconds": 0.009389266022481024,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-b01bee5efc",
+        "--format",
+        "{{.ID}}"
+      ],
+      "seconds": 0.009161279012914747,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-b01bee5efc",
+        "--format",
+        "{{.ID}}"
+      ],
+      "seconds": 0.009268282999983057,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-b01bee5efc",
+        "--format",
+        "{{.Name}}"
+      ],
+      "seconds": 0.009135568019701168,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=87a84a0ec748aeafb157610082fc93d92e6538d649d06ceff730d9416e88e589",
+        "--format",
+        "{{.ID}}"
+      ],
+      "seconds": 0.008723475999431685,
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "exact_fixture_CIDs_absent": [
+    "43e608131e6f853dc96ce158ac9d9f0df168010bfb1cc88de884cff56e793e49",
+    "8d7248318da20de4935c91d4c9a73e61be16c7a8a57c11574f056af95d56bdef"
+  ],
+  "fresh_UID_exact_CID_absent": "87a84a0ec748aeafb157610082fc93d92e6538d649d06ceff730d9416e88e589",
+  "fresh_UID_host_PID_independently_captured": false,
+  "full_milestone_accepted": false,
+  "independent_project_inventories_empty": true,
+  "new_Source_characterization_contexts": 1,
+  "original_positive_host_PIDs": {
+    "43e608131e6f853dc96ce158ac9d9f0df168010bfb1cc88de884cff56e793e49": {
+      "inspection": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/command-0128.stdout",
+      "original_positive_host_PID_absent": true,
+      "pid": 3581520,
+      "sha256": "a60e224b70fa2257582de6b7b4ac844e40ca6df972615348debcc5f59dc1f109"
+    },
+    "8d7248318da20de4935c91d4c9a73e61be16c7a8a57c11574f056af95d56bdef": {
+      "inspection": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/command-0127.stdout",
+      "original_positive_host_PID_absent": true,
+      "pid": 3581606,
+      "sha256": "3cb235c8780bfd6b8d8cb6566af23473819edbf1055b4ce4591fc762f0d9d94a"
+    }
+  },
+  "passed": true,
+  "performance_verified": false,
+  "project": "dispatcharr-normal-dvr-b01bee5efc",
+  "raw_fixture_cleanup": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/independent-cleanup.json",
+  "raw_fixture_cleanup_sha256": "34694874dc2dfcd0dbb22314703b1b17557cb26702ce645299f3ba1d337c43ae",
+  "scope": "Independent read-only exact2SourcefixtureCIDs/project and2persisted originalpositivehostPIDs; separate no-app UID CID"
+}

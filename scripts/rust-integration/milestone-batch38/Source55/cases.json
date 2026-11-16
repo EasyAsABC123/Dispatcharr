@@ -1,0 +1,174 @@
+{
+  "Native_application_executed": false,
+  "Source_cases": 4,
+  "Source_contexts": 1,
+  "actual_direct_children": 5,
+  "actual_roots": 4,
+  "cases": [
+    {
+      "actual_HTTP_body": {
+        "message": "M3U refresh initiated.",
+        "success": true
+      },
+      "actual_HTTP_status": 202,
+      "actual_M3U_updates": 0,
+      "actual_child_backend_result_hashes": [],
+      "actual_child_backend_result_values": [],
+      "actual_child_backend_statuses": [],
+      "actual_direct_children": 0,
+      "actual_journal_terminal": {
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "actual_parent_backend_status": "SUCCESS",
+      "actual_parent_result": "Queued M3U refresh for 0 active account(s).",
+      "actual_root_parent_and_child_lineage_assertions_passed": true,
+      "actual_update_group_payload_count": 0,
+      "child_account_membership_count": 0,
+      "child_tasks": "apps.m3u.tasks.refresh_single_m3u_account",
+      "durable_DB1_journal_sha256": "d4fef3becebfb02abc04449808f9ccc5867e3729b35c80e8d8cd632218ecc63e",
+      "name": "natural-POST-zero-active",
+      "parent_children_trail_matches_actual_publication_order": true,
+      "raw_phase_authority": {
+        "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/natural-POST-zero-active-actual.json",
+        "sha256": "4541bdbbaaa7d9f961870a9f1df8b719e8ecb5c9a0aa7ac12718e7463114d467"
+      },
+      "status": "passed",
+      "updates_are_Channels_group_observations_not_browser_WS": true
+    },
+    {
+      "actual_HTTP_body": {
+        "message": "M3U refresh initiated.",
+        "success": true
+      },
+      "actual_HTTP_status": 202,
+      "actual_M3U_updates": 6,
+      "actual_child_backend_result_hashes": [
+        "944b79efa1f030fe3a06b1a7a70b3952bb7a0cf2b461cc716c7389a1e9359692",
+        "944b79efa1f030fe3a06b1a7a70b3952bb7a0cf2b461cc716c7389a1e9359692"
+      ],
+      "actual_child_backend_result_values": [
+        "Dispatched jobs complete.",
+        "Dispatched jobs complete."
+      ],
+      "actual_child_backend_statuses": [
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "actual_direct_children": 2,
+      "actual_journal_terminal": {
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "actual_parent_backend_status": "SUCCESS",
+      "actual_parent_result": "Queued M3U refresh for 2 active account(s).",
+      "actual_root_parent_and_child_lineage_assertions_passed": true,
+      "actual_update_group_payload_count": 6,
+      "child_account_membership_count": 2,
+      "child_tasks": "apps.m3u.tasks.refresh_single_m3u_account",
+      "durable_DB1_journal_sha256": "cfb0f7fe6d5de25b1f0df2addc3bdeef11b39999068cb7a77af5f2a28b075c4e",
+      "name": "natural-POST-local-STD-whole-children",
+      "parent_children_trail_matches_actual_publication_order": true,
+      "raw_phase_authority": {
+        "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/natural-POST-local-STD-whole-children-actual.json",
+        "sha256": "c5cbe7693b953bfaedc55e76c015b85be898e594c910e97d835cfc9e57801fc0"
+      },
+      "status": "passed",
+      "updates_are_Channels_group_observations_not_browser_WS": true
+    },
+    {
+      "actual_HTTP_body": {
+        "message": "M3U refresh initiated.",
+        "success": true
+      },
+      "actual_HTTP_status": 202,
+      "actual_M3U_updates": 1,
+      "actual_child_backend_result_hashes": [
+        "5066143c689ae5c6f14e65f00d3850947288e5cd7db0fa23ebb0e716cdafccf6"
+      ],
+      "actual_child_backend_result_values": [
+        "Failed to update m3u account - download failed or other error"
+      ],
+      "actual_child_backend_statuses": [
+        "SUCCESS"
+      ],
+      "actual_direct_children": 1,
+      "actual_journal_terminal": {
+        "complete_all_database_journal": true,
+        "database_filter": null,
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "actual_parent_backend_status": "SUCCESS",
+      "actual_parent_result": "Queued M3U refresh for 1 active account(s).",
+      "actual_root_parent_and_child_lineage_assertions_passed": true,
+      "actual_update_group_payload_count": 1,
+      "child_account_membership_count": 1,
+      "child_tasks": "apps.m3u.tasks.refresh_single_m3u_account",
+      "durable_DB1_journal_sha256": "28e3a4e8e27e9290d91dfcae0e2e99dfa4f58a86ba3c5d4691d869ff918fba85",
+      "name": "natural-POST-XC-caught-error-readonly-cache-miss",
+      "parent_children_trail_matches_actual_publication_order": true,
+      "raw_phase_authority": {
+        "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/natural-POST-XC-caught-error-readonly-cache-miss-actual.json",
+        "sha256": "bd75327bd595a0d31ecaa38238306dfb623541289958a792e39d6e09f20924be"
+      },
+      "status": "passed",
+      "updates_are_Channels_group_observations_not_browser_WS": true
+    },
+    {
+      "actual_HTTP_body": {
+        "message": "M3U refresh initiated.",
+        "success": true
+      },
+      "actual_HTTP_status": 202,
+      "actual_M3U_updates": 2,
+      "actual_child_backend_result_hashes": [
+        "5066143c689ae5c6f14e65f00d3850947288e5cd7db0fa23ebb0e716cdafccf6",
+        "5066143c689ae5c6f14e65f00d3850947288e5cd7db0fa23ebb0e716cdafccf6"
+      ],
+      "actual_child_backend_result_values": [
+        "Failed to update m3u account - download failed or other error",
+        "Failed to update m3u account - download failed or other error"
+      ],
+      "actual_child_backend_statuses": [
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "actual_direct_children": 2,
+      "actual_journal_terminal": {
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "actual_parent_backend_status": "SUCCESS",
+      "actual_parent_result": "Queued M3U refresh for 2 active account(s).",
+      "actual_root_parent_and_child_lineage_assertions_passed": true,
+      "actual_update_group_payload_count": 2,
+      "child_account_membership_count": 2,
+      "child_tasks": "apps.m3u.tasks.refresh_single_m3u_account",
+      "durable_DB1_journal_sha256": "f8968ef70598d52de2ece770be4321d3898902ad64f3b578cb41cedad1e1b4e6",
+      "name": "natural-POST-mixed-Source-authority-or-Native-preclaim-refusal",
+      "parent_children_trail_matches_actual_publication_order": true,
+      "raw_phase_authority": {
+        "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/natural-POST-mixed-Source-authority-or-Native-preclaim-refusal-actual.json",
+        "sha256": "4963fd66e5fea116e71a6bc5efc0e4ddd410feb49056c6e9acd3a1673c8ef9fa"
+      },
+      "status": "passed",
+      "updates_are_Channels_group_observations_not_browser_WS": true
+    }
+  ],
+  "no_Source_task_body_called_by_observer": true
+}

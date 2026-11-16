@@ -94,6 +94,13 @@ with exit 0 but emit H.264 missing-PPS/no-frame startup warnings, violating the
 strict zero-stderr criterion. Other promotion/failover business observations
 pass; those cannot override the decoder failure. The available evidence does
 not identify a Rust defect or establish that the warnings are harmless.
+The [retained startup comparison](../scripts/rust-integration/milestone-batch38/Main54/startup-header-comparison.json)
+subsequently finds the first 11 video PES identical between a pinned Original
+owner capture and the current Native owner. Their first complete SPS/PPS/IDR
+arrives 0.4 seconds after the first video PTS. The Native follower is byte-identical
+to its owner; the Original follower differs and was not additionally indexed.
+This explains shared observed startup-warning behavior without certifying
+interior/full-file media or retroactively passing either strict prefix check.
 Independent cleanup verifies nine fixture CIDs, nine recorded original positive
 host PIDs and empty project inventories. The full seven-context batch and full
 M2/M3/M5 acceptance remain open. A viewing-resource study must independently

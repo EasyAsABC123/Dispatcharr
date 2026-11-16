@@ -1,0 +1,406 @@
+{
+  "scope": "Observed startup prefix only. Original Source22 and Native54 strict decoder failures remain failed. No full-file/media/failover proof and no warning waiver.",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "Original_archive_git_pax_comment": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Source_startup_module_sha256": {
+    "apps/proxy/live_proxy/output/ts/generator.py": "ebb47c35ce4fa6ffc3baf1d9545089077da9ecafc9cc25f3dc8c326a0aa08904",
+    "apps/proxy/live_proxy/config_helper.py": "5f03c476d9e8a2cd3280ac444ece1577dde9c6412dae3598bb84bf501dce1283",
+    "apps/proxy/live_proxy/input/buffer.py": "4c055a0e4194493a55749b8941bdaf6a07cf2fcc0faf1baf6890630eba148fb0"
+  },
+  "helper_bindings": {
+    "Source22": {
+      "live_reader.py": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-18/cohort/live_reader.py",
+        "sha256": "093f1f255cde7a6d7c0375c30393625cea704ac97b0a79513671191ce72b1ee3"
+      },
+      "input_promotion_cases.py": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-18/cohort/input_promotion_cases.py",
+        "sha256": "62938c207f92b022424f30154022ae0f34b8dfe5822aca649d39f48c7049a38d"
+      },
+      "promotion_origin.py": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-18/cohort/promotion_origin.py",
+        "sha256": "1aabd560d1ebd508e72fc7761834f9f102eab4c3d37d7b2ba82fb65b1b7f2fc7"
+      }
+    },
+    "Native54": {
+      "input_promotion_cases.py": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-44-main-viewing-1/cohort/input_promotion_cases.py",
+        "sha256": "62938c207f92b022424f30154022ae0f34b8dfe5822aca649d39f48c7049a38d"
+      },
+      "live_reader.py": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-44-main-viewing-1/cohort/live_reader.py",
+        "sha256": "093f1f255cde7a6d7c0375c30393625cea704ac97b0a79513671191ce72b1ee3"
+      },
+      "promotion_origin.py": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-44-main-viewing-1/cohort/promotion_origin.py",
+        "sha256": "bd9563d92a7f3373914ac8b1acffa12d786d38266535486af3ea1d2cb2f24ce8"
+      }
+    }
+  },
+  "helper_domain_review": {
+    "input_promotion_cases_bytes_identical": true,
+    "live_reader_bytes_identical": true,
+    "Origin_difference": "Adds optional finite UDP mode, health/cleanup metadata. HLS remains default; HLS fixture6seconds and actual looping HLS producer argv are unchanged. Both actual reports show HLS segment requests. No fixture/root read of private producer directories was possible without escalation; not required for byte-level PES comparison.",
+    "Source_startup_selection": "Pinned Source generator chooses chunk index from time-behind or buffer head, not codec parameter sets; config default behind5seconds, so do not infer behind0 for this run. Rust playback has same behind5 default and buffer index/time selection; live-head unit test covers zero domain separately."
+  },
+  "domain": {
+    "Source22": {
+      "scope": "Source lockedProxy HLS URL\u2192actual FFmpeg, shared two viewers, real TS failover; no resource gains",
+      "profile": "Source locked Proxy; owned HLS primary plus TS alternate",
+      "first_media_path": "/primary/segment-000012.ts",
+      "account_agent": "dispatcharr-promotion-owned-account",
+      "reader_http": [
+        200,
+        200
+      ],
+      "useful_business_cells": [
+        {
+          "name": "actual-shared-promotion-and-account-agent",
+          "passed": true
+        },
+        {
+          "name": "actual-promotion-failover-retirement-and-useful-media",
+          "passed": true
+        }
+      ]
+    },
+    "Native54": {
+      "scope": "Source lockedProxy HLS URL\u2192actual FFmpeg, shared two viewers, real TS failover; no resource gains",
+      "profile": "Source locked Proxy; owned HLS primary plus TS alternate",
+      "first_media_path": "/primary/segment-000012.ts",
+      "account_agent": "dispatcharr-promotion-owned-account",
+      "reader_http": [
+        200,
+        200
+      ],
+      "useful_business_cells": [
+        {
+          "name": "actual-shared-promotion-and-account-agent",
+          "passed": true
+        },
+        {
+          "name": "actual-promotion-failover-retirement-and-useful-media",
+          "passed": true
+        }
+      ]
+    }
+  },
+  "comparison": {
+    "first_11_video_PES_offsets_PTS_NALs_elementary_hashes_identical": true,
+    "first_10_video_units_before_parameter_sets": 10,
+    "first_video_PTS90k": 903360,
+    "first_SPS_PPS_IDR_PTS90k": 939360,
+    "first_SPS_PPS_IDR_raw_offset": 24064,
+    "observed_pre_parameter_set_seconds": 0.4,
+    "actual_media_bytes_indexed": 3177388,
+    "indexer": "Existing complete_units.Index, no media subprocess or application",
+    "inference": "Both observed captures begin with the same ten non-IDR video units before their first SPS/PPS/IDR. This is consistent with the shared startup missing-PPS/no-frame warning family; it does not establish that every warning or later failover byte is harmless."
+  },
+  "captures": {
+    "Source22": {
+      "business_cells": [
+        {
+          "name": "actual-shared-promotion-and-account-agent",
+          "passed": true
+        },
+        {
+          "name": "actual-promotion-failover-retirement-and-useful-media",
+          "passed": true
+        }
+      ],
+      "raw_strict_decoders": [
+        {
+          "name": "owner-actual-AV-prefix-decode",
+          "strict_passed": false,
+          "raw_file_sha256": "850990d39e86c66559f0d450b2c0688f968e512dd0c1e79e80a4b3a82d2c4c28",
+          "receipt": "artifacts/rust/normal-graph-batch22-functional-1/fixtures/Original-034ed896/command-0149.json",
+          "actual_exit": 0,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "stderr_sha256": "b9a9207b6c00080f034f3784c563693bdcbdd69b50f1bafc3da897081c886134",
+          "stderr_bytes": 1220,
+          "stderr_classes": [
+            "H264MissingPPS",
+            "H264NoFrame"
+          ]
+        },
+        {
+          "name": "follower-actual-AV-prefix-decode",
+          "strict_passed": false,
+          "raw_file_sha256": "d504bb052b1ed7a6a43e9cb412ce5a746440afc44bc54e1a0a0d9a03d1b1852e",
+          "receipt": "artifacts/rust/normal-graph-batch22-functional-1/fixtures/Original-034ed896/command-0150.json",
+          "actual_exit": 0,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "stderr_sha256": "e758f612db929641aa5950b98b641315984656e37d49133f9670ca495657c73c",
+          "stderr_bytes": 366,
+          "stderr_classes": [
+            "H264MissingPPS",
+            "H264NoFrame"
+          ]
+        }
+      ],
+      "owner_raw_bytes": 1738812,
+      "observed_first_video_groups": [
+        {
+          "raw_offset": 752,
+          "PTS90k": 903360,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "ad26a9805111d4e00b99ac70a2469b66e67000868846a4fcbee42fcc2d170d44"
+        },
+        {
+          "raw_offset": 2820,
+          "PTS90k": 906960,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "64a8fa3990fdc02008e6592bb4fd9b01541c5782476cc5c47c3030e199cb6023"
+        },
+        {
+          "raw_offset": 4512,
+          "PTS90k": 910560,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "90de930e29dec18f479757c36b385038d92d148d6aa30202806330d747535652"
+        },
+        {
+          "raw_offset": 6580,
+          "PTS90k": 914160,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "71804c980265073c31586ed29dd2b9b44e609c39f4b6ff112b05be298bd7152e"
+        },
+        {
+          "raw_offset": 8648,
+          "PTS90k": 917760,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "253168be146cad848a94305a7f9267dacb300ac9801faa40b5ed5839c9fbabf1"
+        },
+        {
+          "raw_offset": 10904,
+          "PTS90k": 921360,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "ab16a871924b0d4bf7ba3b16129a3f79937166f1f7cd80f48aba696f1cbd6658"
+        },
+        {
+          "raw_offset": 15980,
+          "PTS90k": 924960,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "cee59a468be8fa6fb9441409b9f8e99b0aa3ae481a358f651365324ef1c4e4bb"
+        },
+        {
+          "raw_offset": 18236,
+          "PTS90k": 928560,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "d32cfd3da6c919a3246bd55d72f64dd4b225b07b6eb0cc2594e62bb610ece8df"
+        },
+        {
+          "raw_offset": 20116,
+          "PTS90k": 932160,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "7f24cee40e00e2d55d070a988b4b7f8e8b64ec9894d6de59d23153773bf3846c"
+        },
+        {
+          "raw_offset": 21996,
+          "PTS90k": 935760,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "a5f83aa9abf7d29577291515fc212a1ed5913a98143ee893a98eba2b58c5a12c"
+        },
+        {
+          "raw_offset": 24064,
+          "PTS90k": 939360,
+          "NAL_types": [
+            9,
+            7,
+            8,
+            5
+          ],
+          "elementary_sha256": "c12f4a05129ed0c49a8977b3928827a2f33639d671f9809d1e04e2f7f4b7a7a1"
+        }
+      ]
+    },
+    "Native54": {
+      "business_cells": [
+        {
+          "name": "actual-shared-promotion-and-account-agent",
+          "passed": true
+        },
+        {
+          "name": "actual-promotion-failover-retirement-and-useful-media",
+          "passed": true
+        }
+      ],
+      "raw_strict_decoders": [
+        {
+          "name": "owner-actual-AV-prefix-decode",
+          "strict_passed": false,
+          "raw_file_sha256": "0438a18d54b8950a3ddc3c548affb5063d28ca428b1cb6405e7f40c0a6d41fd5",
+          "receipt": "artifacts/rust/normal-graph-batch54-main-viewing-1/fixtures/Native-af6b3cf7/command-0242.json",
+          "actual_exit": 0,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "stderr_sha256": "7a99e218c61dfb4fd3129c9727e0c8865cb64fa4e908c9e22a0813d95b34e155",
+          "stderr_bytes": 1220,
+          "stderr_classes": [
+            "H264MissingPPS",
+            "H264NoFrame"
+          ]
+        },
+        {
+          "name": "follower-actual-AV-prefix-decode",
+          "strict_passed": false,
+          "raw_file_sha256": "0438a18d54b8950a3ddc3c548affb5063d28ca428b1cb6405e7f40c0a6d41fd5",
+          "receipt": "artifacts/rust/normal-graph-batch54-main-viewing-1/fixtures/Native-af6b3cf7/command-0243.json",
+          "actual_exit": 0,
+          "stdout_EOF": true,
+          "stderr_EOF": true,
+          "process_group_settled": true,
+          "stderr_sha256": "bdc23d676d922b389ea00d6f35a959d0d444bae3387346a2e6f7c3cbf5916da1",
+          "stderr_bytes": 1220,
+          "stderr_classes": [
+            "H264MissingPPS",
+            "H264NoFrame"
+          ]
+        }
+      ],
+      "owner_raw_bytes": 1438576,
+      "observed_first_video_groups": [
+        {
+          "raw_offset": 752,
+          "PTS90k": 903360,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "ad26a9805111d4e00b99ac70a2469b66e67000868846a4fcbee42fcc2d170d44"
+        },
+        {
+          "raw_offset": 2820,
+          "PTS90k": 906960,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "64a8fa3990fdc02008e6592bb4fd9b01541c5782476cc5c47c3030e199cb6023"
+        },
+        {
+          "raw_offset": 4512,
+          "PTS90k": 910560,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "90de930e29dec18f479757c36b385038d92d148d6aa30202806330d747535652"
+        },
+        {
+          "raw_offset": 6580,
+          "PTS90k": 914160,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "71804c980265073c31586ed29dd2b9b44e609c39f4b6ff112b05be298bd7152e"
+        },
+        {
+          "raw_offset": 8648,
+          "PTS90k": 917760,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "253168be146cad848a94305a7f9267dacb300ac9801faa40b5ed5839c9fbabf1"
+        },
+        {
+          "raw_offset": 10904,
+          "PTS90k": 921360,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "ab16a871924b0d4bf7ba3b16129a3f79937166f1f7cd80f48aba696f1cbd6658"
+        },
+        {
+          "raw_offset": 15980,
+          "PTS90k": 924960,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "cee59a468be8fa6fb9441409b9f8e99b0aa3ae481a358f651365324ef1c4e4bb"
+        },
+        {
+          "raw_offset": 18236,
+          "PTS90k": 928560,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "d32cfd3da6c919a3246bd55d72f64dd4b225b07b6eb0cc2594e62bb610ece8df"
+        },
+        {
+          "raw_offset": 20116,
+          "PTS90k": 932160,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "7f24cee40e00e2d55d070a988b4b7f8e8b64ec9894d6de59d23153773bf3846c"
+        },
+        {
+          "raw_offset": 21996,
+          "PTS90k": 935760,
+          "NAL_types": [
+            9,
+            1
+          ],
+          "elementary_sha256": "a5f83aa9abf7d29577291515fc212a1ed5913a98143ee893a98eba2b58c5a12c"
+        },
+        {
+          "raw_offset": 24064,
+          "PTS90k": 939360,
+          "NAL_types": [
+            9,
+            7,
+            8,
+            5
+          ],
+          "elementary_sha256": "c12f4a05129ed0c49a8977b3928827a2f33639d671f9809d1e04e2f7f4b7a7a1"
+        }
+      ]
+    }
+  },
+  "decision": "No Native-only startup repair is grounded by this prefix. Preserve both raw strict failures. Any complete-unit/window criterion must be separately declared and qualified; it cannot relabel these failed runs.",
+  "Native_full_M3_accepted": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr, FFmpeg and dependency authors retain full application/algorithm/codec/library credit."
+}
