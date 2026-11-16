@@ -19,7 +19,8 @@ those libraries and passes all four SDK59 gates. Its build passes, while actual
 Comskip invocation fails the package gate on embedded RPATH library selection.
 The [Candidate43 successor](rust-milestone-batch43.md) applies the observed loader
 fix and reusable Docker compilation layout; SDK60 passes all four gates, with
-Docker/package/Native checks pending.
+Docker build and all six package families passed; the combined Native checks
+are pending.
 
 The current packaged [Candidate40](rust-milestone-batch40.md) passes SDK56 with
 1,141 tests and all six package families. One combined application batch passes
