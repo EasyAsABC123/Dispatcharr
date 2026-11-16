@@ -1,0 +1,23 @@
+{
+  "scope": "Exact observed Source30 actual SD publication bytes; no generated task/envelope or receipt",
+  "Source_journal": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/data/schedules-direct/sd-publications.jsonl",
+  "Source_journal_sha256": "fce3a496d5618b1be6ad368d990ffb19b095fa7843b772f38ebfd6ef3a447b2e",
+  "vectors": [
+    {
+      "raw_frame": "{\"body\": \"W1szXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d\", \"content-encoding\": \"utf-8\", \"content-type\": \"application/json\", \"headers\": {\"lang\": \"py\", \"task\": \"apps.epg.tasks.fetch_sd_mapped_guide_batch\", \"id\": \"8bd19470-cfd1-4f79-9641-ffa3f3320713\", \"shadow\": null, \"eta\": null, \"expires\": null, \"group\": null, \"group_index\": null, \"retries\": 0, \"timelimit\": [3600, 3500], \"root_id\": \"6079cd49-8d7e-47ed-8827-3693a34c2704\", \"parent_id\": \"6079cd49-8d7e-47ed-8827-3693a34c2704\", \"argsrepr\": \"(3,)\", \"kwargsrepr\": \"{}\", \"origin\": \"gen521@2b6405e29a57\", \"ignore_result\": false, \"replaced_task_nesting\": 0, \"stamped_headers\": null, \"stamps\": {}}, \"properties\": {\"correlation_id\": \"8bd19470-cfd1-4f79-9641-ffa3f3320713\", \"reply_to\": \"9d3a6601-db51-3a3e-a42a-b4ee600e339a\", \"delivery_mode\": 2, \"delivery_info\": {\"exchange\": \"\", \"routing_key\": \"celery\"}, \"priority\": 0, \"body_encoding\": \"base64\", \"delivery_tag\": \"dbd8055a-47ac-4371-be22-bebbd7156cb2\"}}",
+      "wire_utf8_sha256": "a62a98cd2276792b5d553e8452f8f32c7497097e5c0c40e28cd0c166b998a147",
+      "source_journal_ordinal": 1,
+      "observed_epoch": 1794789099.607468,
+      "queue": "celery",
+      "task_name": "apps.epg.tasks.fetch_sd_mapped_guide_batch"
+    },
+    {
+      "raw_frame": "{\"body\": \"W1szXSwgeyJmb3JjZSI6IGZhbHNlLCAiX2RlZmVyX3JldHJ5IjogMH0sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d\", \"content-encoding\": \"utf-8\", \"content-type\": \"application/json\", \"headers\": {\"lang\": \"py\", \"task\": \"apps.epg.tasks.fetch_sd_guide_for_epg\", \"id\": \"b965853e-2299-4cab-b008-ecbfdde68d8c\", \"shadow\": null, \"eta\": null, \"expires\": null, \"group\": null, \"group_index\": null, \"retries\": 0, \"timelimit\": [3600, 3500], \"root_id\": \"b965853e-2299-4cab-b008-ecbfdde68d8c\", \"parent_id\": null, \"argsrepr\": \"[3]\", \"kwargsrepr\": \"{'force': False, '_defer_retry': 0}\", \"origin\": \"gen1720@2b6405e29a57\", \"ignore_result\": false, \"replaced_task_nesting\": 0, \"stamped_headers\": null, \"stamps\": {}}, \"properties\": {\"correlation_id\": \"b965853e-2299-4cab-b008-ecbfdde68d8c\", \"reply_to\": \"d9ed3ff1-1c38-3415-a09d-f8a79b5b152a\", \"delivery_mode\": 2, \"delivery_info\": {\"exchange\": \"\", \"routing_key\": \"celery\"}, \"priority\": 0, \"body_encoding\": \"base64\", \"delivery_tag\": \"8e6022cb-d8b4-4b05-bc38-abda31ed16e1\"}}",
+      "wire_utf8_sha256": "2297253d65faaf320f1fd72f03e1e54b6865cdf05790f1a4af80dcccd51ff708",
+      "source_journal_ordinal": 19,
+      "observed_epoch": 1794789140.103095,
+      "queue": "celery",
+      "task_name": "apps.epg.tasks.fetch_sd_guide_for_epg"
+    }
+  ]
+}

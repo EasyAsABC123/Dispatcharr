@@ -1,0 +1,105 @@
+{
+  "scope": "authorized current owned Native30 bounded read-only state; no producers/ACK/model/config/kill",
+  "seconds": 0.3317552619992057,
+  "candidate_name": "dispatcharr-normal-dvr-36cc2eefe9-native-7234a",
+  "task_ids": [
+    "173db886-d49b-4791-a2b4-452343330e33",
+    "334629cb-9337-46c9-a24b-f3c48c601da9",
+    "3bdef599-f29f-45c4-8677-058cedf26b12"
+  ],
+  "receipts": [
+    {
+      "actual_exit": 0,
+      "failure": null,
+      "seconds": 0.08118922999710776,
+      "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-native30-SD-stall-readonly-1/private/Main-logs.stdout",
+      "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-native30-SD-stall-readonly-1/private/Main-logs.stderr",
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group": 1053342,
+      "process_group_settled": true,
+      "remaining_group_members": [],
+      "reaped_descendants": [],
+      "output_bytes_written": 2650,
+      "output_bytes_discarded": 0
+    },
+    {
+      "actual_exit": 0,
+      "failure": null,
+      "seconds": 0.23161043599247932,
+      "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-native30-SD-stall-readonly-1/private/state.stdout",
+      "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-native30-SD-stall-readonly-1/private/state.stderr",
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group": 1053359,
+      "process_group_settled": true,
+      "remaining_group_members": [],
+      "reaped_descendants": [],
+      "output_bytes_written": 3396,
+      "output_bytes_discarded": 0
+    }
+  ],
+  "state": {
+    "health": {
+      "status": 503,
+      "body_sha256": "d8a4d083f5923fcf53ec2da5f26cdb718c39df0775c0d5a9302da49bff564425"
+    },
+    "health_body_private": true,
+    "PG_activity": [
+      {
+        "pid": 5770,
+        "state": "idle",
+        "wait_event_type": "Client",
+        "wait_event": "ClientRead",
+        "query_sha256": "58191a377f31781f76992999605254ab474f0f605d504ea7d0c851050f5988ba"
+      },
+      {
+        "pid": 5771,
+        "state": "active",
+        "wait_event_type": null,
+        "wait_event": null,
+        "query_sha256": "be5e57c70042691ec0517fea289bcd859bc78d137b6f91cd82519f6b214b5d58"
+      }
+    ],
+    "queues": {
+      "celery": 31,
+      "dvr": 0
+    },
+    "unacked": {
+      "hash": 0,
+      "index": 0
+    },
+    "head": {
+      "raw_sha256": "d65b6b7bb3356b0f98ccbc4eccbb85ac723c82b50da8f02578c0c5db8db66576",
+      "task": "core.tasks.scan_and_process_files",
+      "id": "832b25d9-01c8-47a1-8346-c4a8c647aa66"
+    },
+    "exact_backend": {
+      "173db886-d49b-4791-a2b4-452343330e33": {
+        "exists": false,
+        "raw_sha256": null,
+        "status": null
+      },
+      "334629cb-9337-46c9-a24b-f3c48c601da9": {
+        "exists": false,
+        "raw_sha256": null,
+        "status": null
+      },
+      "3bdef599-f29f-45c4-8677-058cedf26b12": {
+        "exists": false,
+        "raw_sha256": null,
+        "status": null
+      }
+    },
+    "selected_worker_safe_status": {
+      "ready": false,
+      "startup": "Started",
+      "startup_error": null,
+      "control": "Subscribed",
+      "celery": "Fault(Operational(\"SD guide hook context setup unsettled\"))",
+      "dvr": "Observed(Empty)",
+      "clocked_scheduler_enabled": true,
+      "scope": "Fixed diagnostic state labels only; raw health body retained privately"
+    }
+  }
+}

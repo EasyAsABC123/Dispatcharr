@@ -47,8 +47,8 @@ impl PluginHookTaskContext {
             "apps.epg.tasks.refresh_all_epg_data"
                 | "apps.epg.tasks.refresh_epg_data"
                 | "apps.epg.tasks.parse_programs_for_tvg_id"
-                | "apps.epg.sd_tasks.fetch_sd_mapped_guide_batch"
-                | "apps.epg.sd_tasks.fetch_sd_guide_for_epg"
+                | "apps.epg.tasks.fetch_sd_mapped_guide_batch"
+                | "apps.epg.tasks.fetch_sd_guide_for_epg"
         ) {
             return Err(unsupported());
         }
@@ -131,4 +131,76 @@ pub struct PluginTemplateOutcome {
     pub render: PluginTemplateRender,
     pub current_payload: Value,
     pub source_json_loads_succeeded: Option<bool>,
+}
+
+#[cfg(test)]
+mod actual_sd_publication_tests {
+    use super::*;
+
+    #[test]
+    fn source_observed_sd_frames_keep_identity_body_and_reject_unqualified_names() {
+        let dataset: Value = serde_json::from_str(include_str!(
+            "../datasets/source-sd-hook-context-publications.json"
+        ))
+        .unwrap();
+        let vectors = dataset["vectors"].as_array().unwrap();
+        assert_eq!(vectors.len(), 2);
+        for vector in vectors {
+            let raw = vector["raw_frame"].as_str().unwrap();
+            let frame: Value = serde_json::from_str(raw).unwrap();
+            let context = PluginHookTaskContext::from_native_claim(raw.as_bytes()).unwrap();
+            assert_eq!(context.task_id(), frame["headers"]["id"].as_str().unwrap());
+            assert_eq!(context.task_name(), vector["task_name"].as_str().unwrap());
+            assert_eq!(context.frame, frame);
+            let decoded = STANDARD.decode(frame["body"].as_str().unwrap()).unwrap();
+            let actual_body: Value = serde_json::from_slice(&decoded).unwrap();
+            assert_eq!(actual_body[0], serde_json::json!([3]));
+            assert_eq!(actual_body.as_array().unwrap().len(), 3);
+
+            let mut invalid = frame.clone();
+            invalid["headers"]["task"] = Value::String(
+                context
+                    .task_name()
+                    .replace("apps.epg.tasks.", "apps.epg.sd_tasks."),
+            );
+            assert!(PluginHookTaskContext::from_native_claim(
+                &serde_json::to_vec(&invalid).unwrap()
+            )
+            .is_err());
+            for (key, value) in [
+                ("content-type", "text/plain"),
+                ("content-encoding", "utf-16"),
+                ("body", "!not-base64!"),
+            ] {
+                let mut invalid = frame.clone();
+                invalid[key] = Value::String(value.into());
+                assert!(PluginHookTaskContext::from_native_claim(
+                    &serde_json::to_vec(&invalid).unwrap()
+                )
+                .is_err());
+            }
+            let mut invalid = frame.clone();
+            invalid["properties"]["body_encoding"] = Value::String("raw".into());
+            assert!(PluginHookTaskContext::from_native_claim(
+                &serde_json::to_vec(&invalid).unwrap()
+            )
+            .is_err());
+            let mut invalid = frame.clone();
+            invalid["body"] = Value::String(STANDARD.encode(b"{}"));
+            assert!(PluginHookTaskContext::from_native_claim(
+                &serde_json::to_vec(&invalid).unwrap()
+            )
+            .is_err());
+            for id in [String::new(), "x".repeat(256), "unsafe\nidentity".into()] {
+                let mut invalid = frame.clone();
+                invalid["headers"]["id"] = Value::String(id);
+                assert!(PluginHookTaskContext::from_native_claim(
+                    &serde_json::to_vec(&invalid).unwrap()
+                )
+                .is_err());
+            }
+        }
+        assert!(PluginHookTaskContext::from_native_claim(&[]).is_err());
+        assert!(PluginHookTaskContext::from_native_claim(&vec![b' '; 65537]).is_err());
+    }
 }

@@ -1,0 +1,28 @@
+{
+  "paths": [
+    {
+      "path": "rust/crates/store/src/plugin_hook_context.rs",
+      "preimage_path": "artifacts/rust/normal-graph-batch17-sdk-1/attempt40/source/rust/crates/store/src/plugin_hook_context.rs",
+      "preimage_sha256": "47972438af9166317459406cfdd7090070833e0d28ac2925ed3cf1a3fe1e18cc",
+      "overlay": "artifacts/rust/m6-SD-hook-actual-task-names-fix-1/overlay/rust/crates/store/src/plugin_hook_context.rs",
+      "sha256": "b5213876ceb1166b805fe7bc5a675a501aae8dd73428caf31238f6d9cc8405db"
+    },
+    {
+      "path": "rust/crates/store/datasets/source-sd-hook-context-publications.json",
+      "preimage_path": null,
+      "preimage_sha256": null,
+      "overlay": "artifacts/rust/m6-SD-hook-actual-task-names-fix-1/overlay/rust/crates/store/datasets/source-sd-hook-context-publications.json",
+      "sha256": "b3dca31116086e5b7f51cdd99b6747133b55aca9added9f5ecd79d15f09c7960"
+    }
+  ],
+  "base": "immutable SDK40",
+  "source_proof": {
+    "path": "artifacts/rust/m6-SD-hook-actual-task-names-fix-1/source-proof.json",
+    "sha256": "3973061105f2de47d65ba6652d6221a71958267bf3ecafd2b817ee2f837c112c"
+  },
+  "changes": "Replace unsupported fabricated apps.epg.sd_tasks names with two actual apps.epg.tasks names; no other parser condition changed",
+  "prepared_regression": "source_observed_sd_frames_keep_identity_body_and_reject_unqualified_names; parses both exact Source wireframes and rejects old namespace plus malformed encodings/body/id/size",
+  "validation": "rustfmt0 only; Cargo/runtime Rootonly",
+  "Main29_shutdown_fixed": false,
+  "application_acceptance": false
+}

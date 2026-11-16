@@ -1,0 +1,74 @@
+[
+  {
+    "name": "fmt",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "PID": 1220025,
+    "actual_exit": 0,
+    "wait_completed": true,
+    "seconds": 3.0059773921966553,
+    "source_unchanged": true,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "check",
+    "argv": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--offline",
+      "--locked"
+    ],
+    "PID": 1220110,
+    "actual_exit": 0,
+    "wait_completed": true,
+    "seconds": 18.28937315940857,
+    "source_unchanged": true,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "cff1fb0b18e5afa773b520803d96a736082baa4f44a109f88a66b625c02b4623"
+  },
+  {
+    "name": "strict",
+    "argv": [
+      "cargo",
+      "clippy",
+      "--workspace",
+      "--all-targets",
+      "--offline",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "PID": 1220542,
+    "actual_exit": 0,
+    "wait_completed": true,
+    "seconds": 44.95285654067993,
+    "source_unchanged": true,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "faab68a407ad5ca99fb88a7b49a312aedc59c1b83af9f409d0119855d80b1d5d"
+  },
+  {
+    "name": "workspace",
+    "argv": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--offline",
+      "--locked"
+    ],
+    "PID": 1223228,
+    "actual_exit": 0,
+    "wait_completed": true,
+    "seconds": 123.94155383110046,
+    "source_unchanged": true,
+    "stdout_sha256": "a7670df0cd2f51435241e55f5f6028aba99485955aa79c111b2b9a4850dc5865",
+    "stderr_sha256": "19b799b77195c01df24ea4d3a1cb39ea0da7f3f89f3244916a5946466454f672"
+  }
+]
