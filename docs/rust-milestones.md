@@ -327,6 +327,9 @@ The [fresh Core bounded-reader replay](rust-core-bounded-rest-component.md) qual
 
 ## Progress ledger
 
+The [acceleration plan](rust-migration-acceleration.md) describes how owners
+develop and validate the remaining work in parallel without changing these gates.
+
 Statuses: **planned**, **in progress**, **blocked**, **passed**. A blocked runtime
 check remains unverified; it is never converted into a pass by documentation.
 Update this ledger with report paths and tested commit IDs as evidence arrives.

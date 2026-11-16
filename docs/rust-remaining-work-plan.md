@@ -5,6 +5,11 @@ algorithm and licensing credit. React remains unchanged. This work allocation
 records open acceptance gates; it does not declare any complete M0–M9 milestone.
 The authoritative ledger is [rust-milestones.md](rust-milestones.md).
 
+The [November 16 acceleration plan](rust-migration-acceleration.md) specifies
+parallel ownership, the integration queue, validation order and the next
+production-workflow batches. Use it with the milestone-wide policy below;
+historical candidate paragraphs are evidence, not the current dispatch queue.
+
 **Current execution policy:** [milestone-wide validation](rust-milestone-testing.md)
 supersedes the per-case execution/admission queues below. Owners combine the
 remaining work into complete milestone batches, reuse existing runners and
@@ -17,7 +22,9 @@ Current implementation and executable coverage are reconciled in the
 [47-declaration producer review](rust-source-task-coverage.md). Candidate37
 registers 29 literal application task names plus backend cleanup and dynamic
 plugins. Its [Native46 whole run](rust-milestone-batch37.md) retains five passing
-contexts and two failures; Native47 is pending at this checkpoint. The generated
+contexts and two failures; Native47 retains five passes and two failures, while
+Native48 qualifies the affected recording-event slice. See the same candidate
+record for exact scopes. The generated
 contract register still needs exact case bindings. Those implementation and
 workflow observations do not close full milestones or matched-work performance.
 The candidate paragraphs below are historical checkpoints, not current missing-

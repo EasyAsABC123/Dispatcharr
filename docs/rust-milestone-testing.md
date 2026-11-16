@@ -39,7 +39,9 @@ completed operations. Reuse qualified Source observations; capture missing
 Source behavior as grouped prerequisites, without replaying references merely to
 improve a controller status.
 
-The latest combined candidate has929 inputs and passes all four workspace
+The following is a historical batch3 checkpoint; consult the
+[milestone ledger](rust-milestones.md#current-integrated-work) for current identity.
+That combined candidate has929 inputs and passes all four workspace
 checks, with888 default tests passed and751 external-fixture tests ignored across172
 result blocks. Its [packaged Main cohort](rust-m6-packaged-main-batch3.md) passes170
 assertions, including the natural TVG task, descendants and failure continuation.

@@ -6,9 +6,14 @@ algorithm credit. The [milestone ledger](rust-milestones.md) defines the formal
 M0–M9 gates; the items below identify the next acceptance work, rather than a
 percentage estimate from source-file or test counts.
 
-## Current evidence
+## Historical evidence
 
-The selected packaged application is [image57](rust-image57-validation.md).
+For the current candidate and open gates, use the
+[milestone ledger](rust-milestones.md#current-integrated-work) and
+[acceleration plan](rust-migration-acceleration.md). The checkpoints below retain
+their original source/image scope.
+
+The historical selected packaged application is [image57](rust-image57-validation.md).
 Its 28 packaged groups, SDK checks and three scoped Main checks qualify. An
 additional catalogue comparison has qualified responses but retains its original
 controller failure. Later library changes are not executions of this image.
