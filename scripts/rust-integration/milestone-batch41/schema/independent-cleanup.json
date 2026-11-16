@@ -1,0 +1,128 @@
+{
+  "passed": true,
+  "exact_CID": "e310e346b69b7726f436da926cfe915ee7c8b3e0aef4c4e9fbe71c477a12995a",
+  "project": "dispatcharr-matching-schema-e824e2d1d2",
+  "commands": [
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=e310e346b69b7726f436da926cfe915ee7c8b3e0aef4c4e9fbe71c477a12995a",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-e824e2d1d2",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-e824e2d1d2",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-e824e2d1d2",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "original_generations": [
+    {
+      "pid": 3980982,
+      "original_starttime": "16630408",
+      "observed_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 3980982,
+      "original_starttime": "16630408",
+      "observed_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 3981344,
+      "original_starttime": "16630475",
+      "observed_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 3981357,
+      "original_starttime": "16630476",
+      "observed_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 3981360,
+      "original_starttime": "16630476",
+      "observed_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 3981362,
+      "original_starttime": "16630477",
+      "observed_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 3981363,
+      "original_starttime": "16630477",
+      "observed_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 3981364,
+      "original_starttime": "16630477",
+      "observed_starttime": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 3981450,
+      "original_starttime": "16630499",
+      "observed_starttime": null,
+      "original_generation_absent": true
+    }
+  ],
+  "unique_positive_PIDs": 8,
+  "all_empty_and_original_generations_absent": true,
+  "actual_launcher_exit": 0,
+  "launcher_wait_consumed": true,
+  "launcher_tool_session": 18523
+}

@@ -1,0 +1,13 @@
+#15 DONE 0.5s
+
+#14 [media  4/22] COPY rust/runtime/collect_comskip.py rust/runtime/comskip-source.ini rust/runtime/comskip-LICENSE rust/runtime/comskip-NOTICE rust/runtime/comskip-Original-DispatcharrBase /tmp/
+#14 DONE 0.5s
+
+#16 [media  5/22] RUN /dispatcharrpy/bin/python /tmp/collect_comskip.py
+#16 0.579 Traceback (most recent call last):
+#16 0.581   File "/tmp/collect_comskip.py", line 22, in <module>
+#16 0.581     if target.exists():assert digest(target)==actual,'Conflicting exact pinned media dependency'
+#16 0.581                               ^^^^^^^^^^^^^^^^^^^^^^
+#16 0.581 AssertionError: Conflicting exact pinned media dependency
+#16 ERROR: process "/bin/sh -c /dispatcharrpy/bin/python /tmp/collect_comskip.py" did not complete successfully: exit code: 1
+

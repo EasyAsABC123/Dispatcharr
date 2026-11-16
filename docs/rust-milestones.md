@@ -9,6 +9,15 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [Candidate41 source](rust-milestone-batch41.md) passes all SDK58 gates
+with 1,145 tests and the physical 19-statement/six-negative SQL check. It adds
+bounded VOD updates and manual commercial detection. Its first Docker build
+fails on a Comskip/shared-media library hash collision; a separately isolated
+runtime bundle is the next correction. No Candidate41 image or Native result
+is qualified. The [Candidate42 successor](rust-milestone-batch42.md) isolates
+those libraries and passes all four SDK59 gates; its Docker and Native checks
+are pending.
+
 The current packaged [Candidate40](rust-milestone-batch40.md) passes SDK56 with
 1,141 tests and all six package families. One combined application batch passes
 all eleven cases: aggregate refresh four, real Native station HTTP four and

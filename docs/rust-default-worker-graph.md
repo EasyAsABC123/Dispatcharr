@@ -3,9 +3,9 @@
 Original Dispatcharr/Celery/django-celery-beat and dependency authors retain all
 application, algorithm and protocol credit.
 
-Candidate39 source `bd7984bb207dcbc4c00fe1a69ad432fe5cd6b1f4` assembles the
+Candidate41 source `c0031d640d61cd21ff9b2a12fbc74cc0ab6aadf1` assembles the
 current graph in [SelectedJobs](../rust/crates/app/src/selected_jobs.rs).
-The literal task mapping now covers 34 of the 47 static application declarations,
+The literal task mapping now covers 36 of the 47 static application declarations,
 plus framework backend cleanup and dynamic plugin registration. The
 [Source-task reconciliation](rust-source-task-coverage.md) separates those
 registrations from actual natural producers, executable evidence and remaining
@@ -13,11 +13,13 @@ unmapped workflows. Neither a family count nor compilation closes M6.
 
 | Family group | Current Main composition | Actual acceptance and remaining scope |
 | --- | --- | --- |
-| Station discovery and all-account M3U refresh | Existing SD family/ETA consumer and shared M3U/XC aggregate handler/HTTP producer | [Native57](rust-milestone-batch39.md) passes four station worker/ETA cases. Native56's successful parent leaves local children blocked by a scanner-only receipt guard; successor fix and full aggregate qualification remain open. Native SD HTTP producers remain unqualified. |
+| Station discovery and all-account M3U refresh | Existing SD family/ETA consumer and shared M3U/XC aggregate handler/HTTP producer | [Candidate40](rust-milestone-batch40.md) passes all four aggregate and four real station HTTP/ETA cases. Native56 remains a historical failed attempt. Other source CRUD/provider/schedule and concurrency domains remain open. |
+| VOD catalogue ingestion | Natural refresh-vod HTTP producer and shared XC/normal worker; real inline Movie/category processing | [Candidate40](rust-milestone-batch40.md) passes fresh basic Movie/empty-Series cases. Candidate41 adds repeat/update implementation; actual Native comparison, metadata and nonempty Series remain open. |
+| Manual commercial detection | Real admin recording Comskip HTTP producer, shared normal worker and owned pinned media processes | [Source manual reference](rust-comskip-manual-source1.md) passes three actual cells, including exit-one/no-commercials processing. Candidate41 compiles; Native comparison is pending. Nonempty mark/FFprobe, automatic DVR publication and cut remain unqualified. |
 | Channel matching (all, selected, single) | Shared Main queue, matching HTTP producers, existing Auth/cache/events/SD child capability | [Native52](rust-channel-matching-native.md) passes all 14 Source51-derived cases in the no-download/absent-model/empty-plugin domain. Model inference, broader roles and concurrency remain open. |
 | Refresh, index, TVG, SD guide, Series, artwork, version | Real handlers and SD/ingestion plugin binding | Later guide workflows execute actual Connect and downloads; their recorded Source/image scopes remain separate. Candidate37-wide acceptance is not inferred. |
 | Recording and startup recovery | Normal DVR, real HTTP controls, claimed-task Connect binding and recovery capability guard | Native46 first STOP200 retains the claimed task through End/SUCCESS and decoding; the full event context fails observer capacity. Connect recovery/direct DELETE refusal controls pass. Nonempty restart retains strict decoder failure. |
-| Scanner, M3U groups/single, auto-sync and XC account info/profiles | Real scanner/M3U/XC handlers and shared provenance | Native46 grouped scanner passes; older XC/auto-sync evidence retains its own domain and image. Remote/all-account/VOD workflows still need exact producer mapping. |
+| Scanner, M3U groups/single, auto-sync and XC account info/profiles | Real scanner/M3U/XC handlers and shared provenance | Native46 grouped scanner passes; older XC/auto-sync evidence retains its own domain and image. Candidate40 qualifies the bounded aggregate and fresh VOD workflows above; broader remote/account domains remain open. |
 | Recurring, expiration, cleanup, proxy stats | Real default services and live statistics source | Native46 grouped M6 passes all five cells (including scanner); broader settings, calendar and fault branches remain separate. |
 | Core rehash/offsets and channel bulk/name/logo/TVG tasks | Real Core and Channel handlers, not absent registrations | Older production batches contain scoped successes and failures; current implementation mapping is not fresh acceptance of every effect/domain. Populated plugin/offset guards remain explicit. |
 | Backup create/restore/scheduled and plugins | Shared normal backup ports, restore binding, plugin runtime and registered jobs | Native46 actions/strict negatives and ordinary restore/partial admission pass; general enabled-plugin/history restore and full M8 remain open. |
@@ -28,7 +30,7 @@ exits 1 with five passing and two failed contexts, settled pipes/process group a
 exact cleanup. Source44's fresh event-observer qualification remains Source-only.
 Native47 also retains five passing and two failed contexts; Native48 qualifies
 its affected recording-event slice. Their exact image scopes do not transfer
-to Candidate38. Preserve failed whole runs even when independent cells pass.
+to newer candidates. Preserve failed whole runs even when independent cells pass.
 
 `RUST_EXPERIMENTAL_SELECTED_JOBS` and `RUST_EXPERIMENTAL_SELECTED_BEAT` default
 off; Beat requires selected jobs and exactly one configured Beat instance. Main
