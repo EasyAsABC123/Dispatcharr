@@ -474,28 +474,122 @@ impl PluginRuntime {
     pub async fn shutdown(&self, budget: Duration) -> Result<(), StoreError> {
         self.stop_admission();
         let deadline = tokio::time::Instant::now() + budget;
-        let mut failure = self
-            .inner
-            .unsettled_sql
-            .load(Ordering::Acquire)
-            .then(unavailable);
-        for host in
-            std::iter::once(&self.inner.actions).chain(self.inner.tasks.iter().map(|a| &a.host))
+        let initial_unsettled_sql = self.inner.unsettled_sql.load(Ordering::Acquire);
+        runtime_shutdown_diagnostic(
+            "initial_sql",
+            "runtime",
+            0,
+            "observed",
+            Some(initial_unsettled_sql),
+            None,
+            budget,
+        );
+        let mut failure = initial_unsettled_sql.then(unavailable);
+        for (index, host) in std::iter::once(&self.inner.actions)
+            .chain(self.inner.tasks.iter().map(|a| &a.host))
+            .enumerate()
         {
-            if host
-                .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
-                .await
-                .is_err()
-            {
+            let remaining = deadline.saturating_duration_since(tokio::time::Instant::now());
+            let result = host.shutdown(remaining).await;
+            if runtime_shutdown_diagnostics_enabled() {
+                let receipt = host.last_receipt().await;
+                runtime_shutdown_diagnostic(
+                    "host_result",
+                    if index == 0 { "actions" } else { "task" },
+                    index.saturating_sub(1),
+                    match &result {
+                        Ok(_) => "Ok",
+                        Err(error) => shutdown_host_error_kind(error),
+                    },
+                    None,
+                    receipt.as_ref(),
+                    deadline.saturating_duration_since(tokio::time::Instant::now()),
+                );
+            }
+            if result.is_err() {
                 failure = Some(unavailable());
             }
         }
-        if self.inner.unsettled_sql.load(Ordering::Acquire) {
+        let final_unsettled_sql = self.inner.unsettled_sql.load(Ordering::Acquire);
+        runtime_shutdown_diagnostic(
+            "final_sql",
+            "runtime",
+            0,
+            "observed",
+            Some(final_unsettled_sql),
+            None,
+            deadline.saturating_duration_since(tokio::time::Instant::now()),
+        );
+        if final_unsettled_sql {
             failure = Some(unavailable());
         }
         failure.map_or(Ok(()), Err)
     }
 }
+// Diagnostic only: SAME selected shutdown flag, fixed vocabulary, max32 records
+// per process. Never print HostError payloads, SQL, IDs, paths or credentials.
+fn runtime_shutdown_diagnostics_enabled() -> bool {
+    static ENABLED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *ENABLED
+        .get_or_init(|| std::env::var("RUST_SELECTED_SHUTDOWN_DIAGNOSTICS").is_ok_and(|v| v == "1"))
+}
+fn shutdown_host_error_kind(value: &HostError) -> &'static str {
+    match value {
+        HostError::Closed => "Closed",
+        HostError::Capacity => "Capacity",
+        HostError::Protocol => "Protocol",
+        HostError::Child => "Child",
+        HostError::Callback => "Callback",
+        HostError::Drain => "Drain",
+        HostError::Unavailable => "Unavailable",
+        HostError::Remote(_) => "Remote",
+    }
+}
+fn runtime_shutdown_diagnostic(
+    stage: &'static str,
+    host_kind: &'static str,
+    host_index: usize,
+    outcome: &'static str,
+    unsettled_sql: Option<bool>,
+    receipt: Option<&super::plugin_execution_host::Receipt>,
+    remaining: Duration,
+) {
+    use std::sync::atomic::AtomicUsize;
+    static RECORDS: AtomicUsize = AtomicUsize::new(0);
+    if !runtime_shutdown_diagnostics_enabled()
+        || RECORDS
+            .fetch_update(Ordering::AcqRel, Ordering::Acquire, |n| {
+                (n < 32).then_some(n + 1)
+            })
+            .is_err()
+    {
+        return;
+    }
+    let flags = receipt.map(|r| {
+        json!({
+            "actual_exit": r.actual_exit,
+            "wait_observed": r.wait_observed,
+            "stdout_eof": r.stdout_eof,
+            "stderr_eof": r.stderr_eof,
+            "forced": r.forced,
+            "descendants_absent": r.descendants_absent,
+            "callbacks_settled": r.callbacks_settled,
+        })
+    });
+    eprintln!(
+        "plugin_shutdown {}",
+        json!({
+            "stage": stage,
+            "host_kind": host_kind,
+            "host_index": host_index,
+            "outcome": outcome,
+            "unsettled_sql": unsettled_sql,
+            "receipt": flags,
+            "remaining_millis": remaining.as_millis().min(u128::from(u64::MAX)) as u64,
+        })
+    );
+}
+
 impl PluginTaskAdmission {
     pub fn capability(&self) -> PluginTaskCapability {
         self.capability.clone()

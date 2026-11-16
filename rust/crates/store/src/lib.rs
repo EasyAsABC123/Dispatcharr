@@ -93,6 +93,7 @@ mod passwords;
 mod playback;
 mod provider_mutations;
 mod provider_reads;
+mod stream_files;
 mod stream_validation;
 mod stream_writes;
 mod streams;

@@ -1,0 +1,56 @@
+{
+  "scope": "Independent adversarial static review of frozen M5 file CRUD; no runtime/Cargo or payload edits",
+  "reviewed_overlay_map": "artifacts/rust/m5-stream-file-crud-1/overlay-map.json",
+  "findings": [
+    {
+      "severity": "critical lifecycle correctness",
+      "path": "artifacts/rust/m5-stream-file-crud-1/overlay/rust/crates/store/src/stream_writes.rs",
+      "line": 526,
+      "trigger": "Multipart PATCH/PUT missing/filtered object or invalid lookup filter after successful lookup.begin",
+      "evidence": "raw(...).await? propagates before lookup.rollback().await. sqlx-core Transaction::drop260\u2013273 only queues start_rollback; PgTransactionManager::start_rollback73\u201380 queues SimpleQuery, not awaited Ready. owned() returns known error and may release last Work/admission before queued rollback settles.",
+      "effect": "Runtime active may reach0 and shutdown returntrue while actual lookup rollback is outstanding. Existing callback missing-object ordering does not test physical rollback settlement.",
+      "minimal_fix": "Capture raw lookup result without ?, await lookup.rollback() on both success/error, THEN propagate original result. Keep rollback failure as StoreError::Database so owned marks readiness fault and retains guard on unknown transport.",
+      "source_behavior_unchanged": "Lookup still precedes multipart parsing; no extra SQL/pool or API behavior required."
+    }
+  ],
+  "bounded_clear_review": [
+    "Auth4 task_sql_writer reuses original existing request grant; clones retain same permit through spawned request work/body/file/SQL. No new client/pool.",
+    "Caller cancellation detaches outer tokio task; Work is retained inside actual blocking save. No caller-owned JoinHandle abort in current paths.",
+    "Blocking file descriptors created with from_raw_fd immediately after openat; file and directory are lexical RAII owners. Awaited JoinError observes blocking closure completion; std-owned descriptors unwind before result. Subsequent create/update SQL errors explicitly await rollback except the prelookup finding. No unsupported claim that panic itself leaves a live file task was established.",
+    "Unknown non-database-server SQL failures and outer future panics fault/close runtime and deliberately retain Work; bounded shutdown returnsfalse, not synthetic retirement.",
+    "Runtime holds State/Notify/root only; Work holds Runtime and existingpermit. Auth retains Runtime but Runtime does not retain Auth/Bridge, so no new singleton reference cycle found.",
+    "Storage preserves orphan files on later DB failure/replacement/clear/delete and uses exclusive create/no-overwrite, default644, documented collision/all-suffix length semantics. Known unsupported file grammar/storage error domains remain scoped; no new requirements added."
+  ],
+  "not_executed": [
+    "slow-body/caller-loss physical controls",
+    "panic/JoinError physical FD observer",
+    "SQL transport-loss/rollback Ready physical control",
+    "Source/Native actual multipart application workflow"
+  ],
+  "sources": [
+    {
+      "path": "artifacts/rust/m5-stream-file-crud-1/overlay/rust/crates/store/src/stream_files.rs",
+      "sha256": "a1a11b712ccbb02b50cacccec26dde2dda5673ccfa1eaca3140fc3eb946c8784"
+    },
+    {
+      "path": "artifacts/rust/m5-stream-file-crud-1/overlay/rust/crates/store/src/stream_writes.rs",
+      "sha256": "2de41ed44b23970021e9cf70c99e84a9982c3dc97de87fe867c0d9d09841fbfb"
+    },
+    {
+      "path": "artifacts/rust/m5-stream-file-crud-1/overlay/rust/crates/store/src/auth.rs",
+      "sha256": "3d1fe49389888a7794801296ea7506a1d8f4f7b4bb7923769776273774049ac2"
+    },
+    {
+      "path": "artifacts/rust/m5-stream-file-crud-1/overlay/rust/crates/app/src/main.rs",
+      "sha256": "8e4256aa476b34d442305e93902e795028d5ae21aaf94ced1294752a08e1a055"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch17-sdk-1/source/rust/vendor/sqlx-core-0.8.6/src/transaction.rs",
+      "sha256": "b0c303f7e0c75abf3afb7a76758bfa1632b9a1268ffec3173435cb1fa4d04a7e"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch17-sdk-1/source/rust/vendor/sqlx-postgres-0.8.6/src/transaction.rs",
+      "sha256": "3173deb653f48080aa3d4575e8e7e1b9cee4e6b73236efee8942879a9ed12520"
+    }
+  ]
+}

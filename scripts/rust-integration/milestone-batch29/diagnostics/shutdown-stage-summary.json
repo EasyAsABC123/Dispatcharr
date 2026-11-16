@@ -1,0 +1,37 @@
+{
+  "run": 2,
+  "fixed_labels": [
+    {
+      "stage": "queue_pollers",
+      "family": "None",
+      "outcome": "settled"
+    },
+    {
+      "stage": "queue_admissions",
+      "family": "None",
+      "outcome": "settled"
+    },
+    {
+      "stage": "queue_heads",
+      "family": "None",
+      "outcome": "settled"
+    },
+    {
+      "stage": "queue_family",
+      "family": "Some(RegisteredPlugin)",
+      "outcome": "Operational"
+    },
+    {
+      "stage": "queue",
+      "family": "None",
+      "outcome": "unsettled"
+    }
+  ],
+  "raw_private_reference": {
+    "path": "artifacts/rust/m3-native-vlc-diagnostic29-2/fixtures/Native-ede510df/private/command-0091.stderr",
+    "sha256": "ae1a46affa9a7d7091e87aac755bd1f51d51d4a5bd9c15b9c5c8d7041d0adae8"
+  },
+  "raw_log_copied": false,
+  "interpretation": "Stage boundary observed; does not prove underlying RegisteredPlugin operational cause or a repair. Main1 reproduced after successful media.",
+  "runtime_fix_claim": false
+}

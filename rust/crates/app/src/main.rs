@@ -48,10 +48,17 @@ fn database_url() -> Result<String, String> {
 
 #[derive(Clone)]
 struct HealthState {
+    stream_files: AuthService,
     store: Store,
     selected: Option<selected_jobs::SelectedJobs>,
 }
 async fn health(State(state): State<HealthState>) -> (StatusCode, Json<serde_json::Value>) {
+    if !state.stream_files.stream_files_ready() {
+        return (
+            StatusCode::SERVICE_UNAVAILABLE,
+            Json(serde_json::json!({"status":"stream_files_unsettled"})),
+        );
+    }
     let store = state.store;
     // Readiness verifies the migrated schema as well as database connectivity.
     match store.setting("proxy_settings").await {
@@ -1007,6 +1014,7 @@ async fn run() -> Result<(), String> {
     let mut app = Router::new()
         .route("/health/ready", get(health))
         .with_state(HealthState {
+            stream_files: auth.clone(),
             store,
             selected: selected_jobs.clone(),
         })
@@ -1136,6 +1144,7 @@ async fn run() -> Result<(), String> {
     }
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
     let services = ShutdownServices {
+        stream_files: auth.clone(),
         plugin_actions,
         core_settings,
         selected_jobs,
@@ -1172,6 +1181,7 @@ async fn run() -> Result<(), String> {
     )
     .with_graceful_shutdown(async move {
         shutdown_signal().await;
+        signal_services.stream_files.stop_stream_file_admission();
         signal_services.plugin_actions.stop_admission();
         if let Some(selected) = &signal_services.selected_jobs {
             selected.stop_producers();
@@ -1187,7 +1197,7 @@ async fn run() -> Result<(), String> {
     tokio::select! {
         result=&mut server=>{
             let cleanup=tokio::time::timeout(shutdown_timeout,shutdown_components(services)).await;
-            if selected_jobs_enabled {match cleanup{Ok(result)=>result?,Err(_)=>return Err("Selected shutdown deadline expired; process termination may close outstanding resources".into())}}
+            if selected_jobs_enabled || auth.stream_files_were_used() {match cleanup{Ok(result)=>result?,Err(_)=>return Err("Selected shutdown deadline expired; process termination may close outstanding resources".into())}}
             result.map_err(|_|"HTTP server failed".to_string())
         },
         cleanup=&mut shutdown_notice=>{
@@ -1199,10 +1209,10 @@ async fn run() -> Result<(), String> {
             }).await;
             match drained{
                 Ok((result,cleaned))=>{
-                    if selected_jobs_enabled {cleaned.map_err(|_|"Selected shutdown supervisor failed; process termination may close outstanding resources".to_string())??;}
+                    if selected_jobs_enabled || auth.stream_files_were_used() {cleaned.map_err(|_|"Selected shutdown supervisor failed; process termination may close outstanding resources".to_string())??;}
                     result.map_err(|_|"HTTP server failed".to_string())
                 },
-                Err(_)=>{cleanup.abort();if selected_jobs_enabled {Err("Selected shutdown deadline expired; cleanup was cancelled and process termination may close outstanding resources".into())}else{eprintln!("Shutdown deadline reached; closing remaining HTTP connections");Ok(())}},
+                Err(_)=>{cleanup.abort();if selected_jobs_enabled || auth.stream_files_were_used() {Err("Selected shutdown deadline expired; cleanup was cancelled and process termination may close outstanding resources".into())}else{eprintln!("Shutdown deadline reached; closing remaining HTTP connections");Ok(())}},
             }
         }
     }
@@ -1227,6 +1237,7 @@ async fn shutdown_signal() {
 }
 #[derive(Clone)]
 struct ShutdownServices {
+    stream_files: AuthService,
     plugin_actions: dispatcharr_store::PluginActions,
     core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
     selected_jobs: Option<selected_jobs::SelectedJobs>,
@@ -1259,6 +1270,7 @@ struct ShutdownServices {
 }
 async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     let ShutdownServices {
+        stream_files,
         plugin_actions,
         core_settings,
         selected_jobs,
@@ -1288,6 +1300,9 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         live_statistics,
         combined_statistics,
     } = services;
+    let stream_files_drained = stream_files
+        .shutdown_stream_files(Duration::from_secs(8))
+        .await;
     plugin_actions
         .shutdown(Duration::from_secs(8))
         .await
@@ -1509,6 +1524,9 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         return Err(
             "Service drain incomplete; process termination may close outstanding resources".into(),
         );
+    }
+    if !stream_files_drained {
+        return Err("Stream upload storage/SQL remains physically unsettled".into());
     }
     Ok(())
 }

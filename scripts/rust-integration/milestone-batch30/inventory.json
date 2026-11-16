@@ -1,0 +1,110 @@
+{
+  "scope": "Source-bound guarded M5 multipart Stream file CRUD and diagnostic-only PluginRuntime shutdown labels",
+  "final_epoch": "SDK40",
+  "source_base": "SDK39 / Candidate29",
+  "inputs": 1407,
+  "Rust_tree_inputs": 1401,
+  "all_four_SDK_gates_passed": true,
+  "test_totals": [
+    1098,
+    0,
+    783
+  ],
+  "test_result_blocks": 180,
+  "changed_paths": [
+    "rust/crates/app/src/main.rs",
+    "rust/crates/store/src/auth.rs",
+    "rust/crates/store/src/lib.rs",
+    "rust/crates/store/src/plugin_runtime.rs",
+    "rust/crates/store/src/stream_files.rs",
+    "rust/crates/store/src/stream_writes.rs"
+  ],
+  "new_paths": [
+    "rust/crates/store/src/stream_files.rs"
+  ],
+  "preimages_all_verified": true,
+  "protected15_untouched": true,
+  "Original_authors_credit_preserved": true,
+  "React_changes": false,
+  "Source_task_bodies_delegated": false,
+  "corrected_lookup_rollback": "Await rollback on lookup success AND failure before propagating lookup result; unknown rollback transport faults remain Database/quarantined",
+  "prepared_paired_multipart_cells": 16,
+  "paired_Source_Native_HTTP_callbacks_executed": false,
+  "paired_Source_Native_HTTP_callbacks_accepted": false,
+  "Docker_built": false,
+  "package_proof_passed": false,
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "full_milestones_accepted": false,
+  "runtime_fix_claimed_for_Main29_RegisteredPlugin_failure": false,
+  "runtime_diagnostic_scope": "Opt-in bounded fixed labels for actual runtime host role/index/error variant/deadline and unsettled flags; diagnostic only",
+  "known_guards": [
+    "Qualified ASCII filename subset only; Unicode/entity/control/over255 and alternate multipart charset/encoding guarded",
+    "5MiB file /8MiB request /1000parts /64KiB scalar capacities are explicit unsupported-domain limits",
+    "Slow-body, caller loss, disk exhaustion/permissions and concurrent namespace/storage races not physically qualified",
+    "Unknown SQL/server retirement and restart quarantine not certified by logical guard retention",
+    "Returned file URL deployment behavior awaits paired characterization; no invented binary route",
+    "Full M5/migration/performance remain open"
+  ],
+  "component_sources": [
+    {
+      "original_path": "artifacts/rust/m5-stream-file-crud-1/overlay-map.json",
+      "sha256": "a2a84112c95ac61d5f9b6713c6d0abdee05974fb388c79f852d91c4ac72200e6",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/m5-implementation-map.json"
+    },
+    {
+      "original_path": "artifacts/rust/m5-stream-file-crud-1/source-authority.json",
+      "sha256": "62b2413b2cd842e9de621e84202e296814448bc9a2d455ee42394c166b151b2d",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/m5-source-authority.json"
+    },
+    {
+      "original_path": "artifacts/rust/m5-stream-file-crud-adversarial-review-1/review.json",
+      "sha256": "1502915b1ccd0b2c6cbd4ee1fd8f47a18cd5cbbc81c05f7561b89d68f9886001",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/m5-peer-review.json"
+    },
+    {
+      "original_path": "artifacts/rust/m5-stream-file-lookup-rollback-fix-1/overlay-map.json",
+      "sha256": "6d4585cfb162d9a5e7811b4ac9801712dc2a8f735d59fea176281e5d2b1cf360",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/lookup-rollback-map.json"
+    },
+    {
+      "original_path": "artifacts/rust/SDK40-join/lookup-rollback-assembly.json",
+      "sha256": "5bf19cb86f2a0b6bc3e1c124d1150755108c249489a78dd12e99c694cf6f5a53",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/lookup-rollback-assembly.json"
+    },
+    {
+      "original_path": "artifacts/rust/SDK40-join/join.json",
+      "sha256": "1200b250f568775d059861a8403c6d2414b6baa625f18aedfcfcbbaa39f830b2",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/sdk40-join.json"
+    },
+    {
+      "original_path": "artifacts/rust/m8-runtime-shutdown-diagnostics-2/overlay-map.json",
+      "sha256": "7c3f1a649e02413f0ccf595bd3b4756b66305eba314b2b7ce39eb4e45532e40a",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/runtime-diagnostics-map.json"
+    },
+    {
+      "original_path": "artifacts/rust/SDK40-join/runtime-diagnostic2-assembly.json",
+      "sha256": "b187ca83cd268899563186f3ac5eb323419a5b1eef554c335b024005bb441022",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/runtime-diagnostics-assembly.json"
+    },
+    {
+      "original_path": "artifacts/rust/m6-recording-following-driver-26/stream-file-assembly.json",
+      "sha256": "93b6c4dfffe54ba388a44adf8b2617210186917281bcf5ca5c980147657039fe",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/driver26-stream-file-map.json"
+    },
+    {
+      "original_path": "artifacts/rust/m6-recording-following-driver-26/stream-file-selection-plan.json",
+      "sha256": "f398cf477721697fa7367aab5e190fb871afdac95eaeeaffc7d785d83b7062ef",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/driver26-selection-plan.json"
+    },
+    {
+      "original_path": "artifacts/rust/m5-driver26-Source-retention-1/index.json",
+      "sha256": "cdec37b7ddd3b353d8769387afa07cd385bb6aa7b1c1672a7ffc43698f251cb4",
+      "published_path": "scripts/rust-integration/milestone-batch30/components/Source-retention-plan.json"
+    },
+    {
+      "original_path": "artifacts/rust/m5-stream-file-crud-1/README.md",
+      "sha256": "870efb36206e258f68ff1b32b7498f70b736cb242033e46f8611315f991013bf"
+    }
+  ]
+}

@@ -8,7 +8,10 @@ use crate::{
     streams, AuthService, StoreError, User,
 };
 use axum::{
-    extract::{rejection::JsonRejection, ConnectInfo, OriginalUri, Path, Query, State},
+    extract::{
+        rejection::JsonRejection, ConnectInfo, FromRequest, OriginalUri, Path, Query, Request,
+        State,
+    },
     http::{HeaderMap, StatusCode, Uri},
     response::{IntoResponse, Response},
     Json,
@@ -244,7 +247,7 @@ async fn response(
     result["stream_stats"] = data["stream_stats"].clone();
     Ok(result)
 }
-pub(crate) async fn create(
+async fn create_json(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
@@ -255,11 +258,30 @@ pub(crate) async fn create(
     multipart(&headers)?;
     let base = base_url(&headers, &uri)?;
     let values = validate(&auth, body_object(body)?, false).await?;
+    create_values(&auth, &user, &base, values, None).await
+}
+async fn create_values(
+    auth: &AuthService,
+    user: &User,
+    base: &url::Url,
+    values: Map<String, Value>,
+    upload: Option<(
+        crate::stream_files::Upload,
+        std::sync::Arc<crate::stream_files::Work>,
+    )>,
+) -> Result<Response, StoreError> {
     let mut data=json!({"name":"Default Stream","url":null,"m3u_account_id":null,"logo_url":null,"tvg_id":null,"local_file":null,"current_viewers":0,"updated_at":now(),"channel_group_id":null,"stream_profile_id":null,"is_custom":false,"stream_hash":null,"last_seen":now(),"is_stale":false,"is_adult":false,"custom_properties":{},"stream_id":null,"stream_chno":null,"stream_stats":null,"stream_stats_updated_at":null,"is_catchup":false,"catchup_days":0,"is_radio":false}).as_object().expect("stream model defaults").clone();
     data.extend(values);
     let mut tx = auth.store.pool().begin().await?;
+    let observed:Result<i64,StoreError>=async {
     custom_account(&mut tx, &mut data).await?;
     unique_hash(&mut tx, &data, None).await?;
+    if let Some((file, owner)) = upload {
+        data.insert(
+            "local_file".into(),
+            json!(crate::stream_files::store(file, owner).await?),
+        );
+    }
     let selected = COLUMNS
         .split(',')
         .map(|field| format!("x.{field}"))
@@ -279,10 +301,21 @@ pub(crate) async fn create(
             .execute(&mut *tx)
             .await?;
     }
-    tx.commit().await?;
+    Ok(id)
+    }.await;
+    let id = match observed {
+        Ok(id) => {
+            tx.commit().await?;
+            id
+        }
+        Err(error) => {
+            tx.rollback().await?;
+            return Err(error);
+        }
+    };
     Ok((
         StatusCode::CREATED,
-        Json(response(&auth, &user, id, &base, &data).await?),
+        Json(response(auth, user, id, base, &data).await?),
     )
         .into_response())
 }
@@ -291,84 +324,77 @@ struct Context {
     headers: HeaderMap,
     uri: Uri,
     params: HashMap<String, String>,
+    user: Option<User>,
+    old: Option<Value>,
 }
 async fn update(
     auth: AuthService,
     raw_id: String,
     context: Context,
     body: Body,
+    upload: Option<(
+        crate::stream_files::Upload,
+        std::sync::Arc<crate::stream_files::Work>,
+    )>,
+    file_error: Map<String, Value>,
 ) -> Result<Json<Value>, StoreError> {
     let Context {
         peer,
         headers,
         uri,
         params,
+        user,
+        old,
     } = context;
-    let user = auth.account_user(peer, headers.clone(), true).await?;
-    multipart(&headers)?;
+    let user = match user {
+        Some(user) => user,
+        None => auth.account_user(peer, headers.clone(), true).await?,
+    };
+    if !crate::stream_files::multipart(&headers) {
+        multipart(&headers)?;
+    }
     let base = base_url(&headers, &uri)?;
     let id = id(raw_id)?;
     let mut tx = auth.store.pool().begin().await?;
-    let old = raw(&mut tx, id, &params).await?;
+    let observed:Result<Map<String,Value>,StoreError>=async {
+    let old = match old {
+        Some(old) => old,
+        None => raw(&mut tx, id, &params).await?,
+    };
     let protected = !old["m3u_account_id"].is_null() && old["is_custom"] != true;
-    let values = validate(&auth, body_object(body)?, protected).await?;
+    let validation = validate(&auth, body_object(body)?, protected).await;
+    let values = crate::stream_files::combine(validation, file_error)?;
     let mut data = old.as_object().expect("stream row").clone();
     data.extend(values);
+    if crate::stream_files::multipart(&headers)&&data["local_file"].is_null(){data.insert("local_file".into(),json!(""));}
     data.insert("updated_at".into(), now());
     custom_account(&mut tx, &mut data).await?;
     unique_hash(&mut tx, &data, Some(id)).await?;
+    if let Some((file, owner)) = upload {
+        data.insert(
+            "local_file".into(),
+            json!(crate::stream_files::store(file, owner).await?),
+        );
+    }
     let selected = COLUMNS
         .split(',')
         .map(|field| format!("x.{field}"))
         .collect::<Vec<_>>()
         .join(",");
     sqlx::query(&format!("UPDATE dispatcharr_channels_stream SET ({COLUMNS})=(SELECT {selected} FROM jsonb_populate_record(NULL::dispatcharr_channels_stream,$1) x) WHERE id=$2")).bind(Value::Object(data.clone())).bind(id).execute(&mut *tx).await?;
-    tx.commit().await?;
+    Ok(data)
+    }.await;
+    let data = match observed {
+        Ok(data) => {
+            tx.commit().await?;
+            data
+        }
+        Err(error) => {
+            tx.rollback().await?;
+            return Err(error);
+        }
+    };
     Ok(Json(response(&auth, &user, id, &base, &data).await?))
-}
-pub(crate) async fn patch(
-    State(auth): State<AuthService>,
-    Path(raw): Path<String>,
-    ConnectInfo(peer): ConnectInfo<SocketAddr>,
-    headers: HeaderMap,
-    OriginalUri(uri): OriginalUri,
-    Query(params): Query<HashMap<String, String>>,
-    body: Body,
-) -> Result<Json<Value>, StoreError> {
-    update(
-        auth,
-        raw,
-        Context {
-            peer,
-            headers,
-            uri,
-            params,
-        },
-        body,
-    )
-    .await
-}
-pub(crate) async fn put(
-    State(auth): State<AuthService>,
-    Path(raw): Path<String>,
-    ConnectInfo(peer): ConnectInfo<SocketAddr>,
-    headers: HeaderMap,
-    OriginalUri(uri): OriginalUri,
-    Query(params): Query<HashMap<String, String>>,
-    body: Body,
-) -> Result<Json<Value>, StoreError> {
-    update(
-        auth,
-        raw,
-        Context {
-            peer,
-            headers,
-            uri,
-            params,
-        },
-        body,
-    )
-    .await
 }
 pub(crate) async fn remove(
     tx: &mut Transaction<'_, Postgres>,
@@ -435,4 +461,138 @@ pub(crate) async fn bulk_delete(
     remove(&mut tx, &ids).await?;
     tx.commit().await?;
     Ok(StatusCode::NO_CONTENT)
+}
+
+/// Parse/store under the SAME original four-writer admission. JSON routes retain
+/// their existing validated body/SQL behavior; multipart owns its detached work.
+pub(crate) async fn create(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    OriginalUri(uri): OriginalUri,
+    request: Request,
+) -> Result<Response, StoreError> {
+    let headers = request.headers().clone();
+    if !crate::stream_files::multipart(&headers) {
+        let body = Json::<Value>::from_request(request, &()).await;
+        return create_json(
+            State(auth),
+            ConnectInfo(peer),
+            headers,
+            OriginalUri(uri),
+            body,
+        )
+        .await;
+    }
+    crate::stream_files::owned(auth, move |auth, owner| async move {
+        let user = auth.account_user(peer, headers.clone(), true).await?;
+        let base = base_url(&headers, &uri)?;
+        let input = crate::stream_files::parse(request, false).await?;
+        let mut values =
+            crate::stream_files::combine(validate(&auth, input.fields, false).await, input.error)?;
+        // Actual Django FileDescriptor/pre_save yields FieldFile(None), whose
+        // get_prep_value is empty string. API representation remains null.
+        if values.get("local_file").is_none_or(Value::is_null) {
+            values.insert("local_file".into(), json!(""));
+        }
+        create_values(
+            &auth,
+            &user,
+            &base,
+            values,
+            input.file.map(|file| (file, owner)),
+        )
+        .await
+    })
+    .await
+}
+async fn update_request(
+    auth: AuthService,
+    raw: String,
+    mut context: Context,
+    request: Request,
+    partial: bool,
+) -> Result<Json<Value>, StoreError> {
+    if !crate::stream_files::multipart(&context.headers) {
+        let body = Json::<Value>::from_request(request, &()).await;
+        return update(auth, raw, context, body, None, Map::new()).await;
+    }
+    crate::stream_files::owned(auth, move |auth, owner| async move {
+        let user = auth
+            .account_user(context.peer, context.headers.clone(), true)
+            .await?;
+        // Source update resolves its filtered object BEFORE request.data parsing.
+        let ident = id(raw.clone())?;
+        let mut lookup = auth.store.pool().begin().await?;
+        let old = self::raw(&mut lookup, ident, &context.params).await;
+        // Keep the original work/writer owner until rollback reaches Ready,
+        // including missing/filtered objects and lookup errors. A rollback
+        // transport failure remains Database and takes the owned fault path.
+        lookup.rollback().await?;
+        let old = old?;
+        context.user = Some(user);
+        context.old = Some(old);
+        let input = crate::stream_files::parse(request, partial).await?;
+        // File errors combine with ordinary serializer validation before any save.
+        let values = Value::Object(input.fields);
+        update(
+            auth,
+            raw,
+            context,
+            Ok(Json(values)),
+            input.file.map(|file| (file, owner)),
+            input.error,
+        )
+        .await
+    })
+    .await
+}
+pub(crate) async fn patch(
+    State(auth): State<AuthService>,
+    Path(raw): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+    Query(params): Query<HashMap<String, String>>,
+    request: Request,
+) -> Result<Json<Value>, StoreError> {
+    update_request(
+        auth,
+        raw,
+        Context {
+            peer,
+            headers,
+            uri,
+            params,
+            user: None,
+            old: None,
+        },
+        request,
+        true,
+    )
+    .await
+}
+pub(crate) async fn put(
+    State(auth): State<AuthService>,
+    Path(raw): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+    Query(params): Query<HashMap<String, String>>,
+    request: Request,
+) -> Result<Json<Value>, StoreError> {
+    update_request(
+        auth,
+        raw,
+        Context {
+            peer,
+            headers,
+            uri,
+            params,
+            user: None,
+            old: None,
+        },
+        request,
+        false,
+    )
+    .await
 }

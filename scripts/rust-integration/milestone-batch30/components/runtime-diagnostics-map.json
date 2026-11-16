@@ -1,0 +1,39 @@
+{
+  "state": "frozen_diagnostic_only_uncompiled",
+  "rows": [
+    {
+      "path": "rust/crates/store/src/plugin_runtime.rs",
+      "preimage_path": "rust/crates/store/src/plugin_runtime.rs",
+      "preimage_sha256": "9a3aa0faa7329f68b96a506b80e42c06c27a4f73a98fb572bf1cc77584b707eb",
+      "overlay_path": "artifacts/rust/m8-runtime-shutdown-diagnostics-2/overlay/rust/crates/store/src/plugin_runtime.rs",
+      "sha256": "d73e0d63a765ecad905075a8bc1604acd35a20e795f374e75060a17430d8a95e"
+    }
+  ],
+  "enable": "RUST_SELECTED_SHUTDOWN_DIAGNOSTICS=1 before Main startup",
+  "bounds": {
+    "Runtime_records_per_process": 32,
+    "existing_selected_stage_records_per_process": 64,
+    "host_indices": "actions0; tasks0..5"
+  },
+  "captured": [
+    "initial/final unsettled_sql flags",
+    "fixed host role/index",
+    "fixed actual HostError VARIANT only",
+    "remaining deadline milliseconds",
+    "actual last physical receipt exit/wait/EOF/forced/group/callback flags, ornull"
+  ],
+  "unchanged": [
+    "shutdown order/deadlines/error outcomes",
+    "HostError Closed remainsfailure",
+    "no no-spawn success or new receipt mint",
+    "actual plugin_execution_host used, regex-only Host is distinct",
+    "all ownership and quarantine semantics"
+  ],
+  "runtime_evidence": "Candidate29 no-profile diagnostic reproduces Main1 with media/idle pass; queue boundaries settled and RegisteredPlugin Operational; exact underlying HostError/SQL flag unobserved",
+  "validation": {
+    "static_diff_review": true,
+    "Cargo": false,
+    "runtime": false,
+    "formatter": "Root SDK format required"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "run": 1,
+  "status": "failed",
+  "purpose": "ONE Native VLC diagnostic; no acceptance or gain",
+  "ordering": "10s one-viewer attribution before follower joins; late-join media fails, then outer context teardown",
+  "execution": {
+    "actual_exit": 1,
+    "seconds": 88.74192041899369,
+    "failure": null,
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "process_group_settled": true,
+    "remaining_group_members": []
+  },
+  "media": {
+    "status": "failed",
+    "clients": 2,
+    "upstream_connections": 1,
+    "provider_slots": 1,
+    "input_processes": 1,
+    "decoders": [
+      {
+        "viewer": "owner",
+        "actual_exit": 0,
+        "video_frames": 74,
+        "video_and_audio": true,
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true,
+        "file_sha256": "eb452faa16b815ae0ab6305932124248844101aa843e9403369bcb08b4dc1668"
+      },
+      {
+        "viewer": "follower",
+        "actual_exit": 0,
+        "video_frames": 61,
+        "video_and_audio": true,
+        "stderr_bytes": 1708,
+        "stderr_sha256": "be45e21fdf8e6c245f2aaf975bc824b84e30e0bff66451a7d2fe0c6fdd027897",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true,
+        "file_sha256": "ea05d68699cc8beba9aef23067baf07b8bb22e3ea8293a23c562edec73dd40c7"
+      }
+    ],
+    "actual_idle_retirement_reached_and_passed": false,
+    "required_media_gate_passed": false
+  },
+  "Main": {
+    "actual_exit": 0,
+    "expected_exit": 0,
+    "oom_killed": false,
+    "scope": "outer teardown after failed late-join media; not the original successful-media stop point"
+  },
+  "cleanup": {
+    "passed": true,
+    "exact_CIDs": 3,
+    "all_original_host_generations_absent": true,
+    "all_project_inventories_empty": true,
+    "all_CLI_groups_settled": true,
+    "errors": []
+  },
+  "retained_Source_scope": {
+    "reference": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch28-functional-1/results/Original/vlc-live.json",
+    "sha256": "42a0c98bfdc7a6326497cf2138fa96d67650934178c9dbe2dba0cc5625c93681",
+    "scope": "Main28 qualified Source VLC only; no new Source web/Celery/DVR execution"
+  },
+  "Source_management_setup": "Existing pinned Source bootstrap/schema/ORM setup still executes; not a Source VLC business replay",
+  "raw_references": [
+    {
+      "path": "artifacts/rust/m3-native-vlc-diagnostic29-1/binding.json",
+      "sha256": "1a25dea4d1be42d6623c78c8a060918b02253b35d56f601c7f81e025406ebe89"
+    },
+    {
+      "path": "artifacts/rust/m3-native-vlc-diagnostic29-1/dispatch/command.json",
+      "sha256": "df53e54ca1147dc3ffd74d3e7fd87d4fc3c30798dc95b0a11fcc7bae8b8102fd"
+    },
+    {
+      "path": "artifacts/rust/m3-native-vlc-diagnostic29-1/dispatch/execution.json",
+      "sha256": "0a0847f85d8dcbd80c9e303934c0d0331b1efc9265e3fdfa9512db8b85cde522"
+    },
+    {
+      "path": "artifacts/rust/m3-native-vlc-diagnostic29-1/results/report.json",
+      "sha256": "e7df703eecb76b1711a6022e9eae9758797a338f9fdd22019f893cba1b1f9634"
+    },
+    {
+      "path": "artifacts/rust/m3-native-vlc-diagnostic29-1/fixtures/Native-151553ac/vlc-profile-capture/report.json",
+      "sha256": "3e82abed668af084e88bc30382d47fcfbf7c7fc285c9821329848440140fa74d"
+    },
+    {
+      "path": "artifacts/rust/m3-native-vlc-diagnostic29-1/fixtures/Native-151553ac/dispatcharr-normal-dvr-d30d9c82b6-native-fca2d-exit.json",
+      "sha256": "1b920cb08762a62b79cc9cac0c25f18350a0ee13d220ab1815d30923ef2684f3"
+    },
+    {
+      "path": "artifacts/rust/m3-native-vlc-diagnostic29-1/fixtures/Native-151553ac/independent-cleanup.json",
+      "sha256": "20b9664451f7eb616addb8b0a6e7739f233e08e4cc27964ea015bd20b7efed67"
+    }
+  ],
+  "application_acceptance": false,
+  "runtime_fix_demonstrated": false,
+  "performance_verified": false,
+  "gain_accepted": false,
+  "full_M3_passed": false
+}

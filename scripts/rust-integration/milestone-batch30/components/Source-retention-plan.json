@@ -1,0 +1,22 @@
+{
+  "state": "frozen offline postprocessor; no app/Cargo execution",
+  "paths": [
+    {
+      "path": "artifacts/rust/m5-driver26-Source-retention-1/select.py",
+      "sha256": "df901264cb6e944c1510aa19e440e1d702ae86325b39a126082f3536b807f2f1"
+    },
+    {
+      "path": "artifacts/rust/m5-driver26-Source-retention-1/selection-review.json",
+      "sha256": "a3604e4652bf7e1b84c2dd67ea2eb5f8692fd97055ce4394bef100f54af2ba9b"
+    }
+  ],
+  "Driver26_unchanged": true,
+  "usage": [
+    "python3 artifacts/rust/m5-driver26-Source-retention-1/select.py --binding <fresh-Driver26-binding.json> --output <new-final-binding.json>"
+  ],
+  "Fixture_support": "retained_source_case currently has no Source28 VLC/auto kind; intentionally omit these two from actual execution_contexts and carry retained_Source28_contexts separately. Do not populate unsupported retained_source_contexts kinds or label them freshly executed.",
+  "fresh_Source": 5,
+  "fresh_Native": 10,
+  "retained_Source": 2,
+  "all_milestones_complete": false
+}

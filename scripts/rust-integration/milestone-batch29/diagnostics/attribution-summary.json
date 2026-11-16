@@ -1,0 +1,492 @@
+{
+  "scope": "Native29 one-viewer existing functional fixture attribution; no paired benchmark/Source comparison",
+  "status": "captured",
+  "raw_reference": {
+    "path": "artifacts/rust/m3-native-vlc-diagnostic29-1/fixtures/Native-151553ac/native-live-attribution/report.json",
+    "sha256": "2546abeaa353d8bac2b8d47956bb873a15c673baa875781432dbf4621632bd6e"
+  },
+  "candidate_image": "sha256:eb51e46ad42548b1266ec1c2add5b2ced138f2658c79a4a8009b336623068113",
+  "samples": 6,
+  "actual_process_snapshot_elapsed_seconds": 10.000021509011276,
+  "all_live_checks": {
+    "all_observed_viewers_alive_one_provider_upstream": true,
+    "actual_reader_nonnull_byte_advance": true,
+    "actual_service_init_generations_unchanged": true,
+    "PG_stats_reset_unchanged": true
+  },
+  "initial_queue_lengths": {
+    "celery": 0,
+    "dvr": 0,
+    "unacked": 0,
+    "unacked_index": 0
+  },
+  "service_cgroup_CPU": {
+    "candidate": {
+      "CPU_seconds": 0.093565,
+      "throttled_seconds": 0.0,
+      "includes_observer_work": false
+    },
+    "baseline": {
+      "CPU_seconds": 1.255114,
+      "throttled_seconds": 0.0,
+      "includes_observer_work": true
+    },
+    "origin": {
+      "CPU_seconds": 0.029557,
+      "throttled_seconds": 0.0,
+      "includes_observer_work": false
+    }
+  },
+  "retained_process_CPU": [
+    {
+      "service": "candidate",
+      "pid": 745959,
+      "comm": "dispatcharr-rs",
+      "identity": "same_generation",
+      "CPU_ticks": 3,
+      "CPU_seconds": 0.03,
+      "all_thread_generations_stable": false,
+      "process_sched_runtime_nanoseconds_only_if_all_threads_retained": null,
+      "threads_context_only_not_added_to_process_CPU": [
+        {
+          "tid": 745959,
+          "comm": "dispatcharr-rs",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 0
+        },
+        {
+          "tid": 745973,
+          "comm": "tokio-rt-worker",
+          "CPU_ticks": 2,
+          "sched_runtime_nanoseconds_delta": 17634223
+        },
+        {
+          "tid": 745974,
+          "comm": "tokio-rt-worker",
+          "CPU_ticks": 2,
+          "sched_runtime_nanoseconds_delta": 18493266
+        },
+        {
+          "tid": 745976,
+          "comm": "tokio-rt-worker",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 298593
+        }
+      ]
+    },
+    {
+      "service": "candidate",
+      "pid": 749349,
+      "comm": "ld-linux-x86-64",
+      "identity": "same_generation",
+      "CPU_ticks": 6,
+      "CPU_seconds": 0.06,
+      "all_thread_generations_stable": true,
+      "process_sched_runtime_nanoseconds_only_if_all_threads_retained": 57097426,
+      "threads_context_only_not_added_to_process_CPU": [
+        {
+          "tid": 749349,
+          "comm": "ld-linux-x86-64",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 0
+        },
+        {
+          "tid": 749351,
+          "comm": "ld-linux-x86-64",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 0
+        },
+        {
+          "tid": 749352,
+          "comm": "ld-linux-x86-64",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 14298707
+        },
+        {
+          "tid": 749359,
+          "comm": "ld-linux-x86-64",
+          "CPU_ticks": 2,
+          "sched_runtime_nanoseconds_delta": 26414203
+        },
+        {
+          "tid": 749360,
+          "comm": "ld-linux-x86-64",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 6443260
+        },
+        {
+          "tid": 749361,
+          "comm": "ld-linux-x86-64",
+          "CPU_ticks": 1,
+          "sched_runtime_nanoseconds_delta": 9941256
+        }
+      ]
+    },
+    {
+      "service": "baseline",
+      "pid": 743488,
+      "comm": "redis-server",
+      "identity": "same_generation",
+      "CPU_ticks": 3,
+      "CPU_seconds": 0.03,
+      "all_thread_generations_stable": true,
+      "process_sched_runtime_nanoseconds_only_if_all_threads_retained": 31906078,
+      "threads_context_only_not_added_to_process_CPU": [
+        {
+          "tid": 743488,
+          "comm": "redis-server",
+          "CPU_ticks": 3,
+          "sched_runtime_nanoseconds_delta": 31836818
+        },
+        {
+          "tid": 743490,
+          "comm": "bio_close_file",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 0
+        },
+        {
+          "tid": 743491,
+          "comm": "bio_aof",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 0
+        },
+        {
+          "tid": 743492,
+          "comm": "bio_lazy_free",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 0
+        },
+        {
+          "tid": 743493,
+          "comm": "jemalloc_bg_thd",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 45480
+        },
+        {
+          "tid": 743494,
+          "comm": "jemalloc_bg_thd",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 23780
+        }
+      ]
+    },
+    {
+      "service": "origin",
+      "pid": 743066,
+      "comm": "python",
+      "identity": "same_generation",
+      "CPU_ticks": 3,
+      "CPU_seconds": 0.03,
+      "all_thread_generations_stable": true,
+      "process_sched_runtime_nanoseconds_only_if_all_threads_retained": 27889038,
+      "threads_context_only_not_added_to_process_CPU": [
+        {
+          "tid": 743066,
+          "comm": "python",
+          "CPU_ticks": 0,
+          "sched_runtime_nanoseconds_delta": 792483
+        },
+        {
+          "tid": 749358,
+          "comm": "python",
+          "CPU_ticks": 3,
+          "sched_runtime_nanoseconds_delta": 27096555
+        }
+      ]
+    }
+  ],
+  "CPU_measurement_limits": [
+    "process stat uses100Hz ticks; process and thread counters are not added together",
+    "Main initial thread set changed; exact whole-thread schedstat sum intentionally absent",
+    "persistent PostgreSQL processes show <one tick each; does not count short-lived connections/probes",
+    "baseline cgroup1255ms includes repeated management Python/PG probes; cannot attribute remainder to production PG/Redis",
+    "observer work charged, not subtracted; old Candidate25 one-viewer paired ratios are not recomputed from this new graph"
+  ],
+  "Redis_nonzero_command_deltas": {
+    "cmdstat_strlen": {
+      "calls": 466,
+      "usec": 121,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 46.59989976822304
+    },
+    "cmdstat_pexpire": {
+      "calls": 40,
+      "usec": 43,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 3.999991396413995
+    },
+    "cmdstat_time": {
+      "calls": 20,
+      "usec": 14,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 1.9999956982069975
+    },
+    "cmdstat_zscore": {
+      "calls": 6,
+      "usec": 2,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 0.5999987094620992
+    },
+    "cmdstat_evalsha": {
+      "calls": 677,
+      "usec": 10793,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 67.69985438430686
+    },
+    "cmdstat_zadd": {
+      "calls": 14,
+      "usec": 42,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 1.3999969887448982
+    },
+    "cmdstat_zrangebyscore": {
+      "calls": 12,
+      "usec": 30,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 1.1999974189241984
+    },
+    "cmdstat_zcard": {
+      "calls": 19,
+      "usec": 6,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 1.8999959132966477
+    },
+    "cmdstat_hello": {
+      "calls": 10,
+      "usec": 33,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 0.9999978491034988
+    },
+    "cmdstat_pttl": {
+      "calls": 6,
+      "usec": 1,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 0.5999987094620992
+    },
+    "cmdstat_hget": {
+      "calls": 44,
+      "usec": 56,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 4.399990536055395
+    },
+    "cmdstat_del": {
+      "calls": 14,
+      "usec": 21,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 1.3999969887448982
+    },
+    "cmdstat_exists": {
+      "calls": 40,
+      "usec": 21,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 3.999991396413995
+    },
+    "cmdstat_get": {
+      "calls": 451,
+      "usec": 111,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 45.09990299456779
+    },
+    "cmdstat_auth": {
+      "calls": 25,
+      "usec": 78,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 2.499994622758747
+    },
+    "cmdstat_set": {
+      "calls": 445,
+      "usec": 658,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 44.49990428510569
+    },
+    "cmdstat_scard": {
+      "calls": 5,
+      "usec": 7,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 0.4999989245517494
+    },
+    "cmdstat_eval": {
+      "calls": 10,
+      "usec": 134,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 0.9999978491034988
+    },
+    "cmdstat_hexists": {
+      "calls": 6,
+      "usec": 8,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 0.5999987094620992
+    },
+    "cmdstat_info": {
+      "calls": 15,
+      "usec": 488,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 1.4999967736552482
+    },
+    "cmdstat_llen": {
+      "calls": 10,
+      "usec": 7,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 0.9999978491034988
+    },
+    "cmdstat_hset": {
+      "calls": 202,
+      "usec": 146,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 20.199956551890676
+    },
+    "cmdstat_select": {
+      "calls": 5,
+      "usec": 2,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 0.4999989245517494
+    },
+    "cmdstat_hlen": {
+      "calls": 7,
+      "usec": 2,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 0.6999984943724491
+    },
+    "cmdstat_type": {
+      "calls": 657,
+      "usec": 366,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 65.69985868609987
+    },
+    "cmdstat_zrange": {
+      "calls": 6,
+      "usec": 26,
+      "rejected_calls": 0,
+      "failed_calls": 0,
+      "calls_per_second_approx": 0.5999987094620992
+    }
+  },
+  "Redis_process_INFO_CPU_seconds": 0.032011000000000005,
+  "Redis_stats_deltas": {
+    "total_commands_processed": 3212,
+    "total_net_input_bytes": 1693750,
+    "total_net_output_bytes": 43292,
+    "expired_keys": 0,
+    "evicted_keys": 0
+  },
+  "Redis_interpretation": [
+    "677 EVALSHA /~10s; only10793us reported aggregate script execution, not client/Main CPU",
+    "TYPE657; LINDEX0; validates absent-key peek fastpath but INFO has no per-script SHA/key attribution",
+    "20/sec queue-peek estimate cannot be assigned all677 script calls; per-ingress append/Source last_data fencing and live session/client/visibility work coexist",
+    "No failed/rejected commands or script loads during observed delta; no LPUSH/PUBLISH/RPOP business work",
+    "Nested Lua command usec overlaps script usec; never add them as independent CPU",
+    "INFO15, EVAL10, LLEN10, AUTH25, HELLO10, SELECT5 include observation/management activity; totals not pure application counts"
+  ],
+  "PG": {
+    "database_counter_deltas": {
+      "xact_commit": 12,
+      "xact_rollback": 5,
+      "blks_read": 0,
+      "blks_hit": 3577,
+      "tup_returned": 2285,
+      "tup_fetched": 2277,
+      "tup_inserted": 0,
+      "tup_updated": 0,
+      "tup_deleted": 0
+    },
+    "activity": [
+      {
+        "sample": 0,
+        "other_connections": [
+          {
+            "backend_type": "client backend",
+            "state": "idle",
+            "wait_event_type": "Client",
+            "wait_event": "ClientRead",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "sample": 1,
+        "other_connections": [
+          {
+            "backend_type": "client backend",
+            "state": "idle",
+            "wait_event_type": "Client",
+            "wait_event": "ClientRead",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "sample": 2,
+        "other_connections": [
+          {
+            "backend_type": "client backend",
+            "state": "idle",
+            "wait_event_type": "Client",
+            "wait_event": "ClientRead",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "sample": 3,
+        "other_connections": []
+      },
+      {
+        "sample": 4,
+        "other_connections": []
+      },
+      {
+        "sample": 5,
+        "other_connections": []
+      }
+    ],
+    "observations": "Six own new psycopg management connections, two read-only stats queries each, close without commit; exclude self from activity. Rollback5 delta is consistent with own prior probes, not proof of application rollback work. No raw SQL text captured.",
+    "connection_scope_limit": "No sessions/total_connections_received counters captured, so actual production connection-open count cannot be derived. Do not invent it from commits, auths or sampled idle clients."
+  },
+  "observer_wall_seconds_each": [
+    0.6938903679983923,
+    0.6945194369909586,
+    0.700590435997583,
+    0.7044695450022118,
+    0.7070359870122047,
+    0.6850777619984001
+  ],
+  "concrete_next_profile_targets": [
+    "Main retained Tokio threads sum~36.4ms schedstat; media-child~57.1ms over10s. Empty-lane Main work is not established as dominant.",
+    "Inspect allocation/dispatch or syscall stacks only if Root wants deeper Main attribution; do not lengthen100ms polling from these command totals.",
+    "Avoid using this high-probe-density baseline cgroup value as PG application CPU; keep future benchmark counters in separate sampler process as already prepared."
+  ],
+  "performance_acceptance": false,
+  "application_acceptance": false,
+  "gain_accepted": false,
+  "full_M3_passed": false,
+  "diagnostic_ordering_limit": "Captured before the late follower joined. Later follower strict media failed; this one-viewer profiling observation does not qualify whole VLC context or Source parity.",
+  "review_reference": {
+    "path": "artifacts/rust/m3-native29-live-attribution-review-1/summary.json",
+    "sha256": "4624ed440a0df8819b210c3fcabdcf4552f6ca469d0a732d6d11dd621301bfaf"
+  }
+}

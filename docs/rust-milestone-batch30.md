@@ -1,0 +1,15 @@
+# Scoped multipart Stream file CRUD and shutdown diagnostics
+
+Original Dispatcharr, Django, Django REST Framework, CPython and dependency authors retain full application, algorithm and licensing credit. React and existing attribution are preserved.
+
+The guarded M5 slice adds normal multipart create, PUT and PATCH to the existing Stream routes. It preserves the pinned Source serializer/storage ordering: filtered object lookup precedes update-body parsing, file storage precedes database persistence, collisions use exclusive creation and all suffixes, and replacement, clearing, model deletion or later SQL failure retain orphan files. Supported files remain visible through the ordinary FileField representation. Existing JSON paths use the shared validation and SQL implementation.
+
+The operation retains the original Auth4 writer and actual request/storage/SQL work through supervised execution and shutdown. The [independent static review](../scripts/rust-integration/milestone-batch30/components/m5-peer-review.json) found an early lookup error could return before physical rollback completion. The installed correction captures the lookup result, awaits rollback on both success and failure, then propagates the lookup error. A rollback transport failure remains a Database fault and retains the owned quarantine path. Logical owner retention does not establish PostgreSQL server retirement or pool bounds on unknown outcomes.
+
+[SDK40](../scripts/rust-integration/milestone-batch30/checks.json) passes formatting, workspace check, strict Clippy and full workspace tests: **1,098 passed, zero failed, 783 ignored**, across 180 result blocks. The [inventory](../scripts/rust-integration/milestone-batch30/inventory.json) binds 1,407 inputs including 1,401 Rust-tree files, with six installed paths relative to SDK39. Exact preimages and installed hashes are retained. Main/Store module merges preserve the custom-guide and existing plugin exports; the protected 15 working paths remain untouched.
+
+The paired callback prepares 16 ordinary HTTP/storage cases in the existing Source and Native fixture, including filename collisions, suffixes, replacement/clear/delete orphan behavior, standard-user visibility, a 3MB upload and real owned SQL rejection after storage. Raw responses are private before parsing and assertions. These callbacks are **prepared, not run or accepted**. Qualified Main28 Source VLC and auto-sync observations are retained separately; they are not new candidate acceptance and are not replayed solely to obtain a green controller.
+
+The additional opt-in PluginRuntime labels expose fixed host roles, indices, error variants, deadlines and unsettled flags. This diagnostic change does **not** fix or explain Main29's RegisteredPlugin shutdown failure.
+
+Unicode and unusual filename/encoding domains, oversized requests, storage faults/races, held uploads, cancellation, unknown SQL outcomes and restart remain guarded or unqualified as recorded in the inventory. No Docker/package proof, Main application acceptance, full milestone completion or performance gain is claimed by this batch.

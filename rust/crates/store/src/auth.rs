@@ -88,6 +88,7 @@ pub struct AuthService {
     pub(crate) core_task_broker: Arc<std::sync::OnceLock<Arc<dyn crate::CoreTaskBroker>>>,
     pub(crate) normal_core_task_broker: bool,
     pub(crate) images: crate::image_proxy::ImageRuntime,
+    pub(crate) stream_files: crate::stream_files::Runtime,
     pub(crate) ip_lookup: crate::ip_lookup::IpLookup,
 }
 
@@ -112,6 +113,7 @@ impl AuthService {
             compact_coordinator: Arc::new(std::sync::OnceLock::new()),
             normal_core_task_broker: false,
             images: crate::image_proxy::ImageRuntime::new(),
+            stream_files: crate::stream_files::Runtime::new(),
             ip_lookup: crate::ip_lookup::IpLookup::new(crate::IpLookupConfig::default()),
         }
     }

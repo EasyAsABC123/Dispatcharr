@@ -1,0 +1,78 @@
+{
+  "state": "FROZEN coherent implementation + existing Fixture wiring; rustfmt/AST only, no Cargo/application execution",
+  "base_commit": "3ca0ef4417f3187dabca98afc0b29f7ea0a1bdc8",
+  "paths": [
+    {
+      "path": "rust/crates/app/src/main.rs",
+      "overlay": "artifacts/rust/m5-stream-file-crud-1/overlay/rust/crates/app/src/main.rs",
+      "preimage_path": "artifacts/rust/m5-stream-file-crud-1/preimages/rust/crates/app/src/main.rs",
+      "preimage_sha256": "cc916b15c0bdc8dca5b2fb5d68345a16aa1da8e3a63ec058af77b8d16cc30edc",
+      "sha256": "8e4256aa476b34d442305e93902e795028d5ae21aaf94ced1294752a08e1a055"
+    },
+    {
+      "path": "rust/crates/store/src/auth.rs",
+      "overlay": "artifacts/rust/m5-stream-file-crud-1/overlay/rust/crates/store/src/auth.rs",
+      "preimage_path": "artifacts/rust/m5-stream-file-crud-1/preimages/rust/crates/store/src/auth.rs",
+      "preimage_sha256": "a98ee254252e0fc453bfe70932ac5ebbdbb22db4ac7205bf738d05545db65f7a",
+      "sha256": "3d1fe49389888a7794801296ea7506a1d8f4f7b4bb7923769776273774049ac2"
+    },
+    {
+      "path": "rust/crates/store/src/lib.rs",
+      "overlay": "artifacts/rust/m5-stream-file-crud-1/overlay/rust/crates/store/src/lib.rs",
+      "preimage_path": "artifacts/rust/m5-stream-file-crud-1/preimages/rust/crates/store/src/lib.rs",
+      "preimage_sha256": "d5debbdf9f5dc52d7d2e35f8dfd7e10a8689c692e76c08e600cce60bd54f9117",
+      "sha256": "3324c0620573e3de3ee6656f4eab8d6dcd79fd04e7f6183d3c979821cf40ea1b"
+    },
+    {
+      "path": "rust/crates/store/src/stream_files.rs",
+      "overlay": "artifacts/rust/m5-stream-file-crud-1/overlay/rust/crates/store/src/stream_files.rs",
+      "preimage_path": null,
+      "preimage_sha256": null,
+      "sha256": "a1a11b712ccbb02b50cacccec26dde2dda5673ccfa1eaca3140fc3eb946c8784"
+    },
+    {
+      "path": "rust/crates/store/src/stream_writes.rs",
+      "overlay": "artifacts/rust/m5-stream-file-crud-1/overlay/rust/crates/store/src/stream_writes.rs",
+      "preimage_path": "artifacts/rust/m5-stream-file-crud-1/preimages/rust/crates/store/src/stream_writes.rs",
+      "preimage_sha256": "89535874772e46e126953503ff8e369845aa21a44f27b45931d97d1d9b8a952c",
+      "sha256": "2de41ed44b23970021e9cf70c99e84a9982c3dc97de87fe867c0d9d09841fbfb"
+    }
+  ],
+  "cohort": [
+    {
+      "path": "artifacts/rust/m5-stream-file-crud-1/cohort/fixture.py",
+      "target_relative": "cohort/fixture.py",
+      "preimage_path": "artifacts/rust/m6-recording-following-driver-23/cohort/fixture.py",
+      "preimage_sha256": "ce9e608f28a7444968eb3aa87ce7139c8a8fbf655dd47c362692981fbbab78bf",
+      "sha256": "875ce1a2e8c61aabc638f7565b3b9c08acf47bd35b70e1d2878a8042aea5c91b"
+    },
+    {
+      "path": "artifacts/rust/m5-stream-file-crud-1/cohort/stream_file_cases.py",
+      "target_relative": "cohort/stream_file_cases.py",
+      "preimage_path": null,
+      "preimage_sha256": null,
+      "sha256": "3d2deb68a03607cbbe89b2066c7ab52ed7389336bb61919c3d2aac534dad46f0"
+    },
+    {
+      "path": "artifacts/rust/m5-stream-file-crud-1/cohort/workflow.py",
+      "target_relative": "cohort/workflow.py",
+      "preimage_path": "artifacts/rust/m6-recording-following-driver-23/cohort/workflow.py",
+      "preimage_sha256": "5732a6a690a4a24acde47af0eeac10db00a8332d2968adf3a0ad0c7fa95ee38b",
+      "sha256": "464c51a592db5a006053bcd4c1d3dd5d527a68bf061b7eb7e24adfcf4bca7987"
+    }
+  ],
+  "join_instruction": "Three-way merge exact captured preimages/diffs onto Root SDK39. Never refresh metadata against newer source while installing stale full payload. Preserve all future guide/Host/export additions.",
+  "source_authority": {
+    "path": "artifacts/rust/m5-stream-file-crud-1/source-authority.json",
+    "sha256": "62b2413b2cd842e9de621e84202e296814448bc9a2d455ee42394c166b151b2d"
+  },
+  "whole_workflow": "Source-first then Native stream-file-crud context using same existing Fixture, no added service/worker/pool; wire prepare before app, run after startup, explicit execution_contexts selection and normal existing context cleanup",
+  "prepared_Rust_tests": 3,
+  "business_acceptance_executed": false,
+  "full_M5_passed": false,
+  "performance_verified": false,
+  "documentation": {
+    "path": "artifacts/rust/m5-stream-file-crud-1/README.md",
+    "sha256": "870efb36206e258f68ff1b32b7498f70b736cb242033e46f8611315f991013bf"
+  }
+}

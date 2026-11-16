@@ -1,0 +1,16 @@
+{
+  "state": "frozen static-only correction; no Cargo/apps",
+  "base_overlay_map": "artifacts/rust/m5-stream-file-crud-1/overlay-map.json",
+  "base_overlay_map_sha256": "a2a84112c95ac61d5f9b6713c6d0abdee05974fb388c79f852d91c4ac72200e6",
+  "paths": [
+    {
+      "path": "rust/crates/store/src/stream_writes.rs",
+      "overlay": "artifacts/rust/m5-stream-file-lookup-rollback-fix-1/overlay/rust/crates/store/src/stream_writes.rs",
+      "preimage_path": "artifacts/rust/m5-stream-file-lookup-rollback-fix-1/preimages/rust/crates/store/src/stream_writes.rs",
+      "preimage_sha256": "2de41ed44b23970021e9cf70c99e84a9982c3dc97de87fe867c0d9d09841fbfb",
+      "sha256": "745500d85ab6db8629f2b6e1358c847dd3c8f3b192c6d068867044022186a6cd"
+    }
+  ],
+  "semantics": "Retain lookup result, await rollback unconditionally, then propagate lookup result. Rollback failure takes precedence as StoreError::Database for owned quarantine; no early work/writer release on lookup error.",
+  "runtime_executed": false
+}
