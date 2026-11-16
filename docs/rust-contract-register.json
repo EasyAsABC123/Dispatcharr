@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "52e1219dcb84e93af8bf688ed5308bf8ecf4f2313bd2fa648ba69de3093a4c0d",
+    "scripts/rust-contracts/executable-source-inputs.json": "e9ce6f45bc1ad175310c7bd078b30021ce754977151b37f7720898013f5f3fd9",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -25,11 +25,12 @@
     "scripts/rust-contracts/notification-credential-bindings.json": "59a07abade4db937b78b3532ab162227564f7dd9f63fb2d0ee72853a58fb6c34",
     "scripts/rust-contracts/vod-access/bindings.json": "f7ba2553d5f2f138a022d3c2bdb336e6e25034a1cc849aaa41208d033bde6a2a",
     "scripts/rust-contracts/logo-source/bindings.json": "1e582a4f42601dafad57ddd9f6f6324ddb2ecded4dc2d2a793e9f50f1ad8ecd6",
-    "scripts/rust-contracts/channel-matching-source51-bindings.json": "69d62de9764d29ad55abb8acf1208b17d0106ee11bacb4d2236957d79de449e9"
+    "scripts/rust-contracts/channel-matching-source51-bindings.json": "69d62de9764d29ad55abb8acf1208b17d0106ee11bacb4d2236957d79de449e9",
+    "scripts/rust-contracts/station-aggregate-source53-55-bindings.json": "8aaae6d28def7057ae4735af1d6cfc9a0549cc376b80eaf2404ce3ed2286a54f"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 136,
+    "operations": 139,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -110,6 +111,11 @@
         "path": "scripts/rust-contracts/channel-matching-source51-bindings.json",
         "sha256": "69d62de9764d29ad55abb8acf1208b17d0106ee11bacb4d2236957d79de449e9",
         "kind": "captured_original_Source51_matching_admin_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/station-aggregate-source53-55-bindings.json",
+        "sha256": "8aaae6d28def7057ae4735af1d6cfc9a0549cc376b80eaf2404ce3ed2286a54f",
+        "kind": "captured_original_Source53_stations_Source55_aggregate_admin_HTTP"
       }
     ],
     "fully_verified_added": 0
@@ -50050,15 +50056,266 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Source53-station-discovery",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "entrypoint": "Existing owned Compose Fixture/Workflow through natural Source HTTP; no Source task-body invocation",
+            "bootstrap_reuse": "One owned Source context; ordered cases with prior work actually settled",
+            "role": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "execution_authority": {
+              "path": "scripts/rust-integration/channel-stations-source53/execution.json",
+              "sha256": "d3e4be0c56504356787fe6397f620edbb895172f82bdece8ec682cd0dda5f0e9"
+            },
+            "cleanup_authority": {
+              "path": "scripts/rust-integration/channel-stations-source53/independent-cleanup.json",
+              "sha256": "af0f70b6e5a4cd528505f8ba27dbe5c24a40a968e9d2864a10916da3740843c3"
+            },
+            "Source_replayed_for_mapping": false
+          },
+          "assertions": [
+            "Natural admin source-create HTTP201 schedules real stations task with ETA; natural lineup-add HTTP200 publishes immediate work.",
+            "Actual task frames, SUCCESS/null results, station SQL/identity/logo and updates-group progress retained; partial503 continues and provider4102 ends idle.",
+            "Original model signals, authentication, Source task bodies and Schedules Direct URL remain unchanged; actual pinned Requests TLS/cleanup retained."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_Source53_admin_POST_observations",
+            "Source_cases_passed": 3,
+            "Native_application_qualified": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "full_milestone_accepted": false,
+            "performance_verified": false,
+            "new_Source_cases_this_task": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-e8763dfe777286fc6b57:POST",
+            "pattern_exact": "api/epg/^sources/$",
+            "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+            "method": "POST",
+            "source_action": "create",
+            "owning_milestone": "M5",
+            "fixture_id": "Source53-station-discovery",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "cases": [
+              {
+                "source_dataset": "Source53",
+                "source_index": 0,
+                "name": "natural-create-or-explicit-native-worker",
+                "record_authority": {
+                  "path": "scripts/rust-integration/channel-stations-source53/report.json",
+                  "sha256": "7bd689b89a8126d51b3dc065b5ba0ae9466ff602038ce1d8bb168035fbcabfe4"
+                },
+                "record_json_pointer": "/cases/0",
+                "record_sha256": "e1fe695d55616dd69148dfbf5fd7dfbe81fd229dd116e569fa56d32d66c4533c",
+                "method": "POST",
+                "role": "admin",
+                "actual_path": "/api/epg/sources/",
+                "actual_HTTP_status": 201,
+                "actual_response_body_keys": [
+                  "created_at",
+                  "cron_expression",
+                  "custom_properties",
+                  "epg_data_count",
+                  "file_path",
+                  "has_channels",
+                  "id",
+                  "is_active",
+                  "last_message",
+                  "name",
+                  "priority",
+                  "refresh_interval",
+                  "source_type",
+                  "status",
+                  "updated_at",
+                  "url",
+                  "username"
+                ],
+                "actual_response_body_sha256": "9b6ea74d5ebb639f80dde03432944dc99493028330aa5592e49a15b02549902e",
+                "private_raw_HTTP_reference": {
+                  "path": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/sd-station-discovery/private/creation-API.json",
+                  "sha256": "6fc4d6aad169eddfcad06c27dc01b55d28e189423f8d39c9439a4751a508d259"
+                },
+                "actual_task_frame": {
+                  "path": "scripts/rust-integration/channel-stations-source53/creation-actual-frame.json",
+                  "sha256": "aa7a1915a32c1ceff70d2d0f7b5caba05c3f3456d268b2357ebe7fa3b6515a54"
+                },
+                "actual_backend": {
+                  "path": "scripts/rust-integration/channel-stations-source53/creation-backend.json",
+                  "sha256": "6576808085d269c5ec383e20dcd66386d7a83598cb0f4cb306ca98648b21d041"
+                },
+                "actual_root_task": "apps.epg.tasks.fetch_schedules_direct_stations",
+                "backend_status": "SUCCESS",
+                "backend_result": null,
+                "actual_ETA_present": true,
+                "result": "retained_Source_case_passed_Native_unmeasured"
+              },
+              {
+                "source_dataset": "Source53",
+                "source_index": 2,
+                "name": "partial-detail-error-continues",
+                "record_authority": {
+                  "path": "scripts/rust-integration/channel-stations-source53/report.json",
+                  "sha256": "7bd689b89a8126d51b3dc065b5ba0ae9466ff602038ce1d8bb168035fbcabfe4"
+                },
+                "record_json_pointer": "/cases/2",
+                "record_sha256": "32c905302ad2992e4bcd0d8c69b42d974edfd534eb9f3c50ddc303505c5a5be3",
+                "method": "POST",
+                "role": "admin",
+                "actual_path": "/api/epg/sources/",
+                "actual_HTTP_status": 201,
+                "actual_response_body_keys": [
+                  "created_at",
+                  "cron_expression",
+                  "custom_properties",
+                  "epg_data_count",
+                  "file_path",
+                  "has_channels",
+                  "id",
+                  "is_active",
+                  "last_message",
+                  "name",
+                  "priority",
+                  "refresh_interval",
+                  "source_type",
+                  "status",
+                  "updated_at",
+                  "url",
+                  "username"
+                ],
+                "actual_response_body_sha256": "1cb064bb34ebaf124c044466df68a724e946dc4b760ef8ef2b39b894a155a6a6",
+                "private_raw_HTTP_reference": {
+                  "path": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/sd-station-discovery/private/partial-API.json",
+                  "sha256": "3b31ae88bd7efefb51c792581dcab387b0db177f5afa64ac8442e6f82aca80b9"
+                },
+                "actual_task_frame": {
+                  "path": "scripts/rust-integration/channel-stations-source53/partial-actual-frame.json",
+                  "sha256": "c25fe0abcf635bc422d2b61485b61f56767896ef7d350d0b1b6cd35d39efea47"
+                },
+                "actual_backend": {
+                  "path": "scripts/rust-integration/channel-stations-source53/partial-backend.json",
+                  "sha256": "b2e878b7c3d6aeab73c5de6e6daa90b6d63412c723d862050e1651b2ca39eb1d"
+                },
+                "actual_root_task": "apps.epg.tasks.fetch_schedules_direct_stations",
+                "backend_status": "SUCCESS",
+                "backend_result": null,
+                "actual_ETA_present": true,
+                "result": "retained_Source_case_passed_Native_unmeasured"
+              },
+              {
+                "source_dataset": "Source53",
+                "source_index": 3,
+                "name": "no-lineups4102-idle-terminal-success",
+                "record_authority": {
+                  "path": "scripts/rust-integration/channel-stations-source53/report.json",
+                  "sha256": "7bd689b89a8126d51b3dc065b5ba0ae9466ff602038ce1d8bb168035fbcabfe4"
+                },
+                "record_json_pointer": "/cases/3",
+                "record_sha256": "664993fcc834c1e015d5ed82fc49ae39357b823ec0575590fc78053a774d634d",
+                "method": "POST",
+                "role": "admin",
+                "actual_path": "/api/epg/sources/",
+                "actual_HTTP_status": 201,
+                "actual_response_body_keys": [
+                  "created_at",
+                  "cron_expression",
+                  "custom_properties",
+                  "epg_data_count",
+                  "file_path",
+                  "has_channels",
+                  "id",
+                  "is_active",
+                  "last_message",
+                  "name",
+                  "priority",
+                  "refresh_interval",
+                  "source_type",
+                  "status",
+                  "updated_at",
+                  "url",
+                  "username"
+                ],
+                "actual_response_body_sha256": "efba8586c784d07fd04c22e9440b08fae2ebc6d3ac6576b8b3388570121e245a",
+                "private_raw_HTTP_reference": {
+                  "path": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/sd-station-discovery/private/empty4102-API.json",
+                  "sha256": "695973a4b628d10a9d826842e56ac0e102ef0084c4f69de2fe817f3f5eb42f52"
+                },
+                "actual_task_frame": {
+                  "path": "scripts/rust-integration/channel-stations-source53/empty4102-actual-frame.json",
+                  "sha256": "90c1897cfb99360aa2e9cb31a7a9d08b442f8e1a64f4e6d3d4e1e7ad0e957963"
+                },
+                "actual_backend": {
+                  "path": "scripts/rust-integration/channel-stations-source53/empty4102-backend.json",
+                  "sha256": "51069a28257f0aed600bf97dcb976d31234dd4eb54e155abcf59acdd1f910753"
+                },
+                "actual_root_task": "apps.epg.tasks.fetch_schedules_direct_stations",
+                "backend_status": "SUCCESS",
+                "backend_result": null,
+                "actual_ETA_present": true,
+                "result": "retained_Source_case_passed_Native_unmeasured"
+              }
+            ],
+            "assertions": [
+              "Natural admin source-create HTTP201 schedules real stations task with ETA; natural lineup-add HTTP200 publishes immediate work.",
+              "Actual task frames, SUCCESS/null results, station SQL/identity/logo and updates-group progress retained; partial503 continues and provider4102 ends idle.",
+              "Original model signals, authentication, Source task bodies and Schedules Direct URL remain unchanged; actual pinned Requests TLS/cleanup retained."
+            ],
+            "result": {
+              "state": "retained_Original_Source53_admin_POST_observations",
+              "Source_cases_passed": 3,
+              "Native_application_qualified": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "full_milestone_accepted": false,
+              "performance_verified": false,
+              "new_Source_cases_this_task": 0
+            },
+            "fully_verified": false,
+            "remaining": [
+              "Nonadmin/anonymous/expired-token and complete role matrix",
+              "OPTIONS/schema/method and format-suffix variants",
+              "Native producer/application qualification is separate",
+              "Unmeasured provider/error/concurrency and recovery domains"
+            ]
+          }
         }
       ]
     },
@@ -50569,15 +50826,149 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Source53-station-discovery",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "entrypoint": "Existing owned Compose Fixture/Workflow through natural Source HTTP; no Source task-body invocation",
+            "bootstrap_reuse": "One owned Source context; ordered cases with prior work actually settled",
+            "role": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "execution_authority": {
+              "path": "scripts/rust-integration/channel-stations-source53/execution.json",
+              "sha256": "d3e4be0c56504356787fe6397f620edbb895172f82bdece8ec682cd0dda5f0e9"
+            },
+            "cleanup_authority": {
+              "path": "scripts/rust-integration/channel-stations-source53/independent-cleanup.json",
+              "sha256": "af0f70b6e5a4cd528505f8ba27dbe5c24a40a968e9d2864a10916da3740843c3"
+            },
+            "Source_replayed_for_mapping": false
+          },
+          "assertions": [
+            "Natural admin source-create HTTP201 schedules real stations task with ETA; natural lineup-add HTTP200 publishes immediate work.",
+            "Actual task frames, SUCCESS/null results, station SQL/identity/logo and updates-group progress retained; partial503 continues and provider4102 ends idle.",
+            "Original model signals, authentication, Source task bodies and Schedules Direct URL remain unchanged; actual pinned Requests TLS/cleanup retained."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_Source53_admin_POST_observations",
+            "Source_cases_passed": 1,
+            "Native_application_qualified": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "full_milestone_accepted": false,
+            "performance_verified": false,
+            "new_Source_cases_this_task": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-7e6941c073eccaa2b6dd:POST",
+            "pattern_exact": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/$",
+            "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+            "method": "POST",
+            "source_action": "sd_lineups",
+            "owning_milestone": "M5",
+            "fixture_id": "Source53-station-discovery",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "cases": [
+              {
+                "source_dataset": "Source53",
+                "source_index": 1,
+                "name": "natural-lineup-add-or-explicit-native-worker",
+                "record_authority": {
+                  "path": "scripts/rust-integration/channel-stations-source53/report.json",
+                  "sha256": "7bd689b89a8126d51b3dc065b5ba0ae9466ff602038ce1d8bb168035fbcabfe4"
+                },
+                "record_json_pointer": "/cases/1",
+                "record_sha256": "68dc0d4560d70e5d4150616b7ba3f2c9b996f36e108897d01d9befba5bfc734a",
+                "method": "POST",
+                "role": "admin",
+                "actual_path": "/api/epg/sources/3/sd-lineups/",
+                "actual_HTTP_status": 200,
+                "actual_response_body_keys": [
+                  "changesRemaining",
+                  "changes_remaining",
+                  "code",
+                  "response"
+                ],
+                "actual_response_body_sha256": "0dcf5b892ff5ce1672684b29120572953a8c167917c529f2973ad4f40a2f5e8f",
+                "private_raw_HTTP_reference": {
+                  "path": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/sd-station-discovery/private/lineup-add-API.json",
+                  "sha256": "7345360b20311eb870f0c76b4592a243d4c118ea31f0154d7f944797dc4412dc"
+                },
+                "actual_task_frame": {
+                  "path": "scripts/rust-integration/channel-stations-source53/lineup-add-actual-frame.json",
+                  "sha256": "96272be76e37259c723f64c614dcdb69184a75bde908f5ade9a4a4157fe91b22"
+                },
+                "actual_backend": {
+                  "path": "scripts/rust-integration/channel-stations-source53/lineup-add-backend.json",
+                  "sha256": "faeb0199d5560bc2f4232d50d8ec4c5dca0a051e9c0252d6cbc030f929239f47"
+                },
+                "actual_root_task": "apps.epg.tasks.fetch_schedules_direct_stations",
+                "backend_status": "SUCCESS",
+                "backend_result": null,
+                "actual_ETA_present": false,
+                "result": "retained_Source_case_passed_Native_unmeasured"
+              }
+            ],
+            "assertions": [
+              "Natural admin source-create HTTP201 schedules real stations task with ETA; natural lineup-add HTTP200 publishes immediate work.",
+              "Actual task frames, SUCCESS/null results, station SQL/identity/logo and updates-group progress retained; partial503 continues and provider4102 ends idle.",
+              "Original model signals, authentication, Source task bodies and Schedules Direct URL remain unchanged; actual pinned Requests TLS/cleanup retained."
+            ],
+            "result": {
+              "state": "retained_Original_Source53_admin_POST_observations",
+              "Source_cases_passed": 1,
+              "Native_application_qualified": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "full_milestone_accepted": false,
+              "performance_verified": false,
+              "new_Source_cases_this_task": 0
+            },
+            "fully_verified": false,
+            "remaining": [
+              "Nonadmin/anonymous/expired-token and complete role matrix",
+              "OPTIONS/schema/method and format-suffix variants",
+              "Native producer/application qualification is separate",
+              "Unmeasured provider/error/concurrency and recovery domains"
+            ]
+          }
         }
       ]
     },
@@ -54020,15 +54411,234 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Source55-M3U-aggregate",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "entrypoint": "Existing owned Compose Fixture/Workflow through natural Source HTTP; no Source task-body invocation",
+            "bootstrap_reuse": "One owned Source context; ordered cases with prior work actually settled",
+            "role": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "execution_authority": {
+              "path": "scripts/rust-integration/milestone-batch38/Source55/execution.json",
+              "sha256": "7897c5fe7d4c23a6005d576b3461150d8c4b579392ed106d5ab060ffc96b2b81"
+            },
+            "cleanup_authority": {
+              "path": "scripts/rust-integration/milestone-batch38/Source55/cleanup.json",
+              "sha256": "275a0bfa08e50f904094d3b4705632bd55d8898a1e15a0d7613226167e0639ab"
+            },
+            "Source_replayed_for_mapping": false
+          },
+          "assertions": [
+            "Natural admin POST HTTP202 exact response; no returned task ID, no method-discovery or operation-ID upgrade.",
+            "Actual aggregate root/child/backend identity, complete active account membership/order/trail and inactive exclusion retained across zero/localSTD/XC/defaultCustom cases.",
+            "Caught XC/defaultCustom errors are SUCCESS failure strings, with actual SQL/error audit/updates; no ingestion success inferred from backend SUCCESS.",
+            "Durable journal terminal barrier and actual execution/independent cleanup retained; no new Source replay."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_Source55_admin_POST_observations_method_discovery_unresolved",
+            "Source_cases_passed": 4,
+            "observed_HTTP_method": "POST",
+            "operation_method_discovery_resolved": false,
+            "Native_application_qualified": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "full_milestone_accepted": false,
+            "performance_verified": false,
+            "new_Source_cases_this_task": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-c991f2de07ac41a62a0a:METHOD_UNRESOLVED",
+            "pattern_exact": "api/m3u/refresh/",
+            "source_handler": "apps.m3u.api_views.RefreshM3UAPIView",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M5",
+            "fixture_id": "Source55-M3U-aggregate",
+            "observed_methods": [
+              "POST"
+            ],
+            "operation_method_discovery_resolved": false,
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "cases": [
+              {
+                "source_dataset": "Source55",
+                "source_index": 0,
+                "name": "natural-POST-zero-active",
+                "record_authority": {
+                  "path": "scripts/rust-integration/milestone-batch38/Source55/cases.json",
+                  "sha256": "7f7021b15ffa28cc2eceb831f8cef61d36edf86297be2a827ec2f0ddda8fbb8b"
+                },
+                "record_json_pointer": "/cases/0",
+                "record_sha256": "ff577a63a245f0b5416604b9822dd94a192f0c22c42ee2a61ad0131958b23a8b",
+                "method": "POST",
+                "role": "admin",
+                "actual_path": "/api/m3u/refresh/",
+                "actual_HTTP_status": 202,
+                "actual_response_body_keys": [
+                  "message",
+                  "success"
+                ],
+                "actual_response_body_sha256": "66d7990bcb136aac69388c0a76d5cc891f80498a44136fdca2eed342d74a4da6",
+                "private_raw_HTTP_reference": {
+                  "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/zero-API.json",
+                  "sha256": "db8c06db806228168215dea727259e893e5a5e75ff6339ba9494baf93365b78a"
+                },
+                "actual_root_task": "apps.m3u.tasks.refresh_m3u_accounts",
+                "backend_status": "SUCCESS",
+                "backend_result": "Queued M3U refresh for 0 active account(s).",
+                "actual_direct_children": 0,
+                "result": "retained_Source_case_passed_Native_unmeasured"
+              },
+              {
+                "source_dataset": "Source55",
+                "source_index": 1,
+                "name": "natural-POST-local-STD-whole-children",
+                "record_authority": {
+                  "path": "scripts/rust-integration/milestone-batch38/Source55/cases.json",
+                  "sha256": "7f7021b15ffa28cc2eceb831f8cef61d36edf86297be2a827ec2f0ddda8fbb8b"
+                },
+                "record_json_pointer": "/cases/1",
+                "record_sha256": "3f67fb58754055021b995d9e0d682a41523a653c98af2a6dee09843a07994b01",
+                "method": "POST",
+                "role": "admin",
+                "actual_path": "/api/m3u/refresh/",
+                "actual_HTTP_status": 202,
+                "actual_response_body_keys": [
+                  "message",
+                  "success"
+                ],
+                "actual_response_body_sha256": "66d7990bcb136aac69388c0a76d5cc891f80498a44136fdca2eed342d74a4da6",
+                "private_raw_HTTP_reference": {
+                  "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/local-API.json",
+                  "sha256": "db8c06db806228168215dea727259e893e5a5e75ff6339ba9494baf93365b78a"
+                },
+                "actual_root_task": "apps.m3u.tasks.refresh_m3u_accounts",
+                "backend_status": "SUCCESS",
+                "backend_result": "Queued M3U refresh for 2 active account(s).",
+                "actual_direct_children": 2,
+                "result": "retained_Source_case_passed_Native_unmeasured"
+              },
+              {
+                "source_dataset": "Source55",
+                "source_index": 2,
+                "name": "natural-POST-XC-caught-error-readonly-cache-miss",
+                "record_authority": {
+                  "path": "scripts/rust-integration/milestone-batch38/Source55/cases.json",
+                  "sha256": "7f7021b15ffa28cc2eceb831f8cef61d36edf86297be2a827ec2f0ddda8fbb8b"
+                },
+                "record_json_pointer": "/cases/2",
+                "record_sha256": "1aefdbc89e67d6f74114dd9c29ebc57190d43e557c984af220cdc30605bb4a65",
+                "method": "POST",
+                "role": "admin",
+                "actual_path": "/api/m3u/refresh/",
+                "actual_HTTP_status": 202,
+                "actual_response_body_keys": [
+                  "message",
+                  "success"
+                ],
+                "actual_response_body_sha256": "66d7990bcb136aac69388c0a76d5cc891f80498a44136fdca2eed342d74a4da6",
+                "private_raw_HTTP_reference": {
+                  "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/XC-API.json",
+                  "sha256": "db8c06db806228168215dea727259e893e5a5e75ff6339ba9494baf93365b78a"
+                },
+                "actual_root_task": "apps.m3u.tasks.refresh_m3u_accounts",
+                "backend_status": "SUCCESS",
+                "backend_result": "Queued M3U refresh for 1 active account(s).",
+                "actual_direct_children": 1,
+                "result": "retained_Source_case_passed_Native_unmeasured"
+              },
+              {
+                "source_dataset": "Source55",
+                "source_index": 3,
+                "name": "natural-POST-mixed-Source-authority-or-Native-preclaim-refusal",
+                "record_authority": {
+                  "path": "scripts/rust-integration/milestone-batch38/Source55/cases.json",
+                  "sha256": "7f7021b15ffa28cc2eceb831f8cef61d36edf86297be2a827ec2f0ddda8fbb8b"
+                },
+                "record_json_pointer": "/cases/3",
+                "record_sha256": "40960eb628557383bce6893e5ebbde73536ba6e30cda567a7a9dd20e6984f921",
+                "method": "POST",
+                "role": "admin",
+                "actual_path": "/api/m3u/refresh/",
+                "actual_HTTP_status": 202,
+                "actual_response_body_keys": [
+                  "message",
+                  "success"
+                ],
+                "actual_response_body_sha256": "66d7990bcb136aac69388c0a76d5cc891f80498a44136fdca2eed342d74a4da6",
+                "private_raw_HTTP_reference": {
+                  "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/mixed-API.json",
+                  "sha256": "db8c06db806228168215dea727259e893e5a5e75ff6339ba9494baf93365b78a"
+                },
+                "actual_root_task": "apps.m3u.tasks.refresh_m3u_accounts",
+                "backend_status": "SUCCESS",
+                "backend_result": "Queued M3U refresh for 2 active account(s).",
+                "actual_direct_children": 2,
+                "result": "retained_Source_case_passed_Native_unmeasured"
+              }
+            ],
+            "assertions": [
+              "Natural admin POST HTTP202 exact response; no returned task ID, no method-discovery or operation-ID upgrade.",
+              "Actual aggregate root/child/backend identity, complete active account membership/order/trail and inactive exclusion retained across zero/localSTD/XC/defaultCustom cases.",
+              "Caught XC/defaultCustom errors are SUCCESS failure strings, with actual SQL/error audit/updates; no ingestion success inferred from backend SUCCESS.",
+              "Durable journal terminal barrier and actual execution/independent cleanup retained; no new Source replay."
+            ],
+            "result": {
+              "state": "retained_Original_Source55_admin_POST_observations_method_discovery_unresolved",
+              "Source_cases_passed": 4,
+              "observed_HTTP_method": "POST",
+              "operation_method_discovery_resolved": false,
+              "Native_application_qualified": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "full_milestone_accepted": false,
+              "performance_verified": false,
+              "new_Source_cases_this_task": 0
+            },
+            "fully_verified": false,
+            "remaining": [
+              "Original method/action-discovery placeholder remains unresolved",
+              "Nonadmin/anonymous/expired-token and complete role matrix",
+              "OPTIONS/schema/method variants, malformed/concurrent inputs",
+              "Native application qualification is separate",
+              "Wider provider/filter/regex/plugin and recovery domains"
+            ]
+          }
         }
       ]
     },

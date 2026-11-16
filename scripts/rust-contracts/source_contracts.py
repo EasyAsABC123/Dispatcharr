@@ -133,6 +133,74 @@ def validate_matching_source51(root, value):
     assert seen == set(range(14))
 
 
+def validate_station_aggregate_source53_55(root, value):
+    """Retain eight captured admin cases without resolving unknown methods."""
+    assert value['binding_kind'] == 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP'
+    assert value['operation_count'] == 3 and value['unique_Source_cases'] == 8
+    assert value['Source_only'] is True and value['Native_coverage_increased'] is False
+    assert value['fully_verified_operations'] == 0
+    for reference in value['authorities']:
+        checked(root, reference)
+    station = json.loads((root / 'scripts/rust-integration/channel-stations-source53/metadata.json').read_text())
+    assert station['combined_selected_workflow_passed'] and station['Native_HTTP_producers_qualified'] is False
+    assert station['Source_HTTP_create_status'] == 201 and station['Source_HTTP_lineup_add_status'] == 200
+    aggregate = json.loads((root / 'scripts/rust-integration/milestone-batch38/Source55/qualification.json').read_text())
+    assert aggregate['actual_exit'] == 0 and aggregate['actual_cleanup_passed']
+    assert aggregate['actual_Source_phases_passed'] == 4 and aggregate['Native_application_qualified'] is False
+    expected = {
+        'route-e8763dfe777286fc6b57:POST': ('Source53', [0, 2, 3], 'create'),
+        'route-7e6941c073eccaa2b6dd:POST': ('Source53', [1], 'sd_lineups'),
+        'route-c991f2de07ac41a62a0a:METHOD_UNRESOLVED': ('Source55', [0, 1, 2, 3], None),
+    }
+    assert {c['contract_id'] for c in value['contracts']} == set(expected)
+    seen = set()
+    for contract in value['contracts']:
+        dataset, indices, action = expected[contract['contract_id']]
+        assert contract['source_action'] == action and contract['observed_methods'] == ['POST']
+        assert contract['method'] == (None if dataset == 'Source55' else 'POST')
+        assert contract['observed_roles'] == ['admin'] and contract['fully_verified'] is False
+        fixture = value['fixtures'][contract['fixture_id']]
+        assert fixture['baseline_revision'] == '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
+        assert contract['source_role_specs'] == fixture['role']
+        execution = checked(root, fixture['execution_authority'])
+        assert execution['actual_exit'] == 0 and execution['stdout_EOF'] and execution['stderr_EOF'] and execution['process_group_settled']
+        assert checked(root, fixture['cleanup_authority'])['all_owned_resources_absent']
+        result = contract['result']
+        assert result['Source_cases_passed'] == len(indices) and result['new_Source_cases_this_task'] == 0
+        assert result['Native_application_qualified'] is False and result['complete_role_matrix'] is False
+        assert result['fully_verified'] is False and result['performance_verified'] is False
+        assert [case['source_index'] for case in contract['cases']] == indices
+        for case in contract['cases']:
+            index = case['source_index']; key = (dataset, index)
+            assert key not in seen; seen.add(key)
+            actual = checked(root, case['record_authority'])['cases'][index]
+            assert case['source_dataset'] == dataset and case['record_json_pointer'] == f'/cases/{index}'
+            assert case['record_sha256'] == digest(actual) and case['name'] == actual['name'] and actual['status'] == 'passed'
+            assert case['method'] == 'POST' and case['role'] == 'admin'
+            assert case['result'] == 'retained_Source_case_passed_Native_unmeasured'
+            assert len(case['actual_response_body_sha256']) == 64
+            if dataset == 'Source53':
+                frame = checked(root, case['actual_task_frame']); backend = checked(root, case['actual_backend'])
+                headers = frame['headers']
+                assert headers['task'] == case['actual_root_task'] == 'apps.epg.tasks.fetch_schedules_direct_stations'
+                assert headers['id'] == headers['root_id'] == backend['task_id'] and headers['parent_id'] is None
+                assert backend['status'] == case['backend_status'] == 'SUCCESS' and backend['result'] is case['backend_result'] is None
+                assert headers['timelimit'] == [None, None] and backend['children'] == []
+                assert case['actual_HTTP_status'] == (200 if index == 1 else 201)
+                assert case['actual_ETA_present'] == (headers['eta'] is not None) == (index != 1)
+            else:
+                assert contract['operation_method_discovery_resolved'] is False and result['operation_method_discovery_resolved'] is False
+                assert case['actual_path'] == '/api/m3u/refresh/' and case['actual_HTTP_status'] == actual['actual_HTTP_status'] == 202
+                assert case['actual_response_body_sha256'] == digest(actual['actual_HTTP_body'])
+                assert case['actual_root_task'] == 'apps.m3u.tasks.refresh_m3u_accounts'
+                assert case['backend_status'] == actual['actual_parent_backend_status'] == 'SUCCESS'
+                assert case['backend_result'] == actual['actual_parent_result']
+                assert case['actual_direct_children'] == actual['actual_direct_children'] == [0, 2, 1, 2][index]
+                assert actual['actual_root_parent_and_child_lineage_assertions_passed'] and actual['parent_children_trail_matches_actual_publication_order']
+                assert all(state == 'SUCCESS' for state in actual['actual_child_backend_statuses'])
+    assert seen == {('Source53', i) for i in range(4)} | {('Source55', i) for i in range(4)}
+
+
 def apply(root, rows, bindings):
     root = Path(root)
     manifest_path = root / 'scripts/rust-contracts/executable-source-inputs.json'
@@ -192,6 +260,8 @@ def apply(root, rows, bindings):
             logo_source_contracts.validate(root, value, bindings)
         elif reference['kind'] == 'captured_original_Source51_matching_admin_HTTP':
             validate_matching_source51(root, value)
+        elif reference['kind'] == 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP':
+            validate_station_aggregate_source53_55(root, value)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
         for contract in value['contracts']:
@@ -215,7 +285,7 @@ def apply(root, rows, bindings):
             if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture', 'retained_original_notification_Source20_real_credentials_framework']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
-            if reference['kind'] == 'captured_original_Source51_matching_admin_HTTP':
+            if reference['kind'] in ['captured_original_Source51_matching_admin_HTTP', 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP']:
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'

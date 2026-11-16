@@ -126,3 +126,6 @@ already-public fixture/capture dependencies are included in the SDK COPY closure
 The prior100/68 counts retain their historical cohort scopes.
 
 The [Source48 mutation cohort](notification-mutation-assignments.md) adds three partial detail-method definitions: PUT six cases, PATCH 34 and DELETE eight. They share one retained 48-request Original framework capture and 1,449 checks; counts are not multiplied per method. Source2 exits 0; the earlier preflight failure remains separate. All 795 unselected operation dictionaries and previous 117 assignments remain exact. Credentials/TCP, Native, full roles and full endpoints remain outside this assignment.
+
+
+The [Source53/55 station and aggregate input](station-aggregate-source53-55-bindings.json) adds three partial admin-POST assignments from eight retained natural HTTP cases. Source creation and lineup addition use their existing POST operation IDs. Aggregate refresh preserves the original method-unresolved ID/null method and records POST only as a captured observation. All prior definitions remain intact; no Source replay, Native coverage, role completeness, full milestone or performance acceptance is added.

@@ -102,6 +102,11 @@ class SourceContracts(unittest.TestCase):
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
+        additional = json.loads((ROOT / 'scripts/rust-contracts/station-aggregate-source53-55-bindings.json').read_text())
+        for name in ['scripts/rust-contracts/station-aggregate-source53-55-bindings.json', *[r['path'] for r in additional['authorities']]]:
+            p = self.root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, p)
         self.value = json.loads((self.root / 'scripts/rust-contracts/executable-source-bindings.json').read_text())
         self.bindings = json.loads((self.root / 'scripts/rust-contracts/case-bindings.json').read_text())
         self.register = json.loads((self.root / 'docs/rust-contract-register.json').read_text())
@@ -116,14 +121,34 @@ class SourceContracts(unittest.TestCase):
         with self.assertRaises((AssertionError, KeyError, StopIteration)):
             source_contracts.validate_captured(self.root, value, self.bindings)
 
-    def test_exact13_partial_assignments(self):
+    def test_exact_partial_assignments(self):
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 136)
+        self.assertEqual(result['operations'], 139)
         assigned = [o for r in rows for o in r['operations'] if 'executable_Source_contract' in o]
-        self.assertEqual(len(assigned), 136)
-        self.assertEqual(sum(o['method'] is None for o in assigned), 53)
+        self.assertEqual(len(assigned), 139)
+        self.assertEqual(sum(o['method'] is None for o in assigned), 54)
         self.assertEqual(sum(o['result']['new_Source_cases_this_task'] for o in assigned), 78)
         self.assertTrue(all(not o['fully_verified'] for r in rows for o in r['operations']))
+
+    def test_captured_aggregate_does_not_resolve_operation_method(self):
+        value = json.loads((self.root / 'scripts/rust-contracts/station-aggregate-source53-55-bindings.json').read_text())
+        next(c for c in value['contracts'] if c['method'] is None)['method'] = 'POST'
+        with self.assertRaises(AssertionError):
+            source_contracts.validate_station_aggregate_source53_55(self.root, value)
+
+    def test_station_aggregate_cannot_invent_native_coverage(self):
+        value = json.loads((self.root / 'scripts/rust-contracts/station-aggregate-source53-55-bindings.json').read_text())
+        value['Native_coverage_increased'] = True
+        with self.assertRaises(AssertionError):
+            source_contracts.validate_station_aggregate_source53_55(self.root, value)
+
+    def test_station_aggregate_requires_actual_record_and_backend(self):
+        path = self.root / 'scripts/rust-contracts/station-aggregate-source53-55-bindings.json'
+        for field, replacement in [('record_sha256', '0' * 64), ('backend_status', 'FAILURE')]:
+            value = json.loads(path.read_text())
+            value['contracts'][0]['cases'][0][field] = replacement
+            with self.assertRaises(AssertionError):
+                source_contracts.validate_station_aggregate_source53_55(self.root, value)
 
     def test_identity_methods_roles_and_unrelated_rows_preserved(self):
         before = copy.deepcopy(self.register['runtime_routes'])
