@@ -1,0 +1,142 @@
+{
+  "passed": true,
+  "all_owned_resources_absent": true,
+  "project": "dispatcharr-normal-dvr-eb74f46aa3",
+  "inventories": {
+    "container": [],
+    "network": [],
+    "volume": []
+  },
+  "exact_CID_absence": [
+    {
+      "Id": "4cfed8326237f79c9c90c59822aa8d0b2f43b9097a2f45388a724ef14712e6a0",
+      "actual_missing_object": true,
+      "fixture_generation_absent": true
+    },
+    {
+      "Id": "8cfef3da81ea21acd57a56258abc00814d8ca6e51534ad85f87062e7c40fa068",
+      "actual_missing_object": true,
+      "fixture_generation_absent": true
+    }
+  ],
+  "exact_CID_count": 2,
+  "independently_observed_positive_host_PIDs": [
+    {
+      "Id": "4cfed8326237f79c9c90c59822aa8d0b2f43b9097a2f45388a724ef14712e6a0",
+      "pid": 3494549,
+      "inspection": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/command-0008.stdout",
+      "inspection_sha256": "319fac902a2bf0eda4cf3e5011c21264daf4738007b8dcacd1bc1d90d975045d",
+      "actual_positive_host_PID_absent": true
+    },
+    {
+      "Id": "8cfef3da81ea21acd57a56258abc00814d8ca6e51534ad85f87062e7c40fa068",
+      "pid": 3494422,
+      "inspection": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/command-0009.stdout",
+      "inspection_sha256": "950aa37269cb83cd8bfd9c48cebb63aa46aad03b754c655ccc4802dca6b11207",
+      "actual_positive_host_PID_absent": true
+    }
+  ],
+  "original_positive_host_PIDs_absent": true,
+  "fixture_process_generation_receipts": "Both literal true in unchanged fixture cleanup; independent Docker absence does not recreate prior PID evidence.",
+  "raw_fixture_cleanup": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/independent-cleanup.json",
+  "raw_fixture_cleanup_sha256": "7f1c61431324f30c3c3592bc2357959a4bfcc81dbc2be978d8893d5bddcbf651",
+  "commands": [
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-eb74f46aa3",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.010692473995732144,
+      "actual_wait_completed": true,
+      "stdout_EOF": true,
+      "stderr_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-eb74f46aa3",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009662635013228282,
+      "actual_wait_completed": true,
+      "stdout_EOF": true,
+      "stderr_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-eb74f46aa3",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009570103022269905,
+      "actual_wait_completed": true,
+      "stdout_EOF": true,
+      "stderr_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=4cfed8326237f79c9c90c59822aa8d0b2f43b9097a2f45388a724ef14712e6a0",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009474168997257948,
+      "actual_wait_completed": true,
+      "stdout_EOF": true,
+      "stderr_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=8cfef3da81ea21acd57a56258abc00814d8ca6e51534ad85f87062e7c40fa068",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009195481979986653,
+      "actual_wait_completed": true,
+      "stdout_EOF": true,
+      "stderr_EOF": true
+    }
+  ],
+  "application_started": false
+}

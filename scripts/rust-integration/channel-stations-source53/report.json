@@ -1,0 +1,42 @@
+{
+  "Native_HTTP_producers_qualified": false,
+  "Source_natural_HTTP_qualified": true,
+  "cases": [
+    {
+      "actual": {
+        "Native_HTTP_qualified": false,
+        "countdown": 3,
+        "source": 3,
+        "station_count": 2,
+        "task_id": "6b697703-1d4b-4ff4-a6d2-883f372f0f49"
+      },
+      "name": "natural-create-or-explicit-native-worker",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "Native_HTTP_qualified": false,
+        "stable_station_rows": true,
+        "task_id": "2c3b14b3-7150-4eba-854c-c70540aaf757"
+      },
+      "name": "natural-lineup-add-or-explicit-native-worker",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "source": 4
+      },
+      "name": "partial-detail-error-continues",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "source": 5
+      },
+      "name": "no-lineups4102-idle-terminal-success",
+      "status": "passed"
+    }
+  ],
+  "scope": "Source natural source-create/lineup-add; Native explicitly Source-produced frame worker-only",
+  "status": "passed"
+}
