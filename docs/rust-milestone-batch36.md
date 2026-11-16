@@ -1,6 +1,6 @@
 # Rust milestone batch 36: bounded DVR capability admission
 
-SDK47 passes all four toolchain gates and installs nine exact frozen Rust paths. The change permits unrelated Main work to start with a populated plugin directory while refusing unsupported DVR work before queue claim or producer effects. This is a limited stable, owned namespace capability boundary; Candidate36 Docker and application acceptance remain pending.
+SDK47 passes all four toolchain gates and installs nine exact frozen Rust paths. The change permits unrelated Main work to start with a populated plugin directory while refusing unsupported DVR work before queue claim or producer effects. This is a limited stable, owned namespace capability boundary; Candidate36 Docker and all six package families pass; application acceptance remains pending.
 
 Original Dispatcharr, plugin and dependency authors retain full application, library and algorithm credit. This migration claims none of their original work.
 
@@ -22,7 +22,7 @@ SDK46 namespace packaging evidence remains in [batch 35](rust-milestone-batch35.
 
 ## Required next acceptance batch
 
-- Build Candidate36 and run its complete installed-package controls against the exact new image.
+- Run application controls on the exact built Candidate36 image; complete installed-package checks passed.
 - Run actual owned Main populated-domain startup with two observed roots, explicit recovery deferral and no recovery lock/root/result; retain Source three-root distinction.
 - Exercise real normal, revoked and missing-row recording heads, recovery heads and offset heads. Observe exact queued bytes, no claim/ACK, preserved prior backend values and absence of SQL/media/event/provider/revoke effects through physical shutdown.
 - Exercise valid authenticated recording POST/PUT/PATCH and Core DVR-offset writes, proving refusal before SQL, Beat, cache, broker or revoke effects. Retain auth/validation ordering and stop/DELETE cleanup behavior.
@@ -30,3 +30,9 @@ SDK46 namespace packaging evidence remains in [batch 35](rust-milestone-batch35.
 - Resolve the existing Guide audit-baseline failure, then qualify the complete application milestones and matched CPU/memory/stream workloads. No performance gains are established by this packet.
 
 The [packet index](../scripts/rust-integration/milestone-batch36/index.json) hashes the public evidence. Root owns review, commit and publication.
+
+## Installed Docker package result
+
+Source `350b4fdacc45ea7ec4136398d7e7bae4ba4b1f73` built with actual exit 0 in 135.333 seconds. Its immutable image is `sha256:dc9f08a7fb9a3a178dd7b8635543ff002dfd91998503e50f0404eee5ccfa286d`. All six [package families](../scripts/rust-integration/milestone-batch36/package/inventory.json) exited 0: Git/SDK source and unchanged React/credits, crypto, PostgreSQL, dependency regex, Python compatibility runtime and VLC. The Python control also runs the production command-line launcher and verifies the installed empty Source API namespace. These controls do not execute a DVR plugin or close an application milestone.
+
+[Independent cleanup](../scripts/rust-integration/milestone-batch36/package/cleanup.json) confirms all 55 exact package containers absent using 104 actual empty-inventory commands, each with exit 0 and completed wait/pipe EOF. The complete affected Native M8, Guide, grouped recording/settings and recording/recovery restart batch remains pending; earlier failed Guide results remain unchanged.
