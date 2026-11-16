@@ -11,7 +11,8 @@ alone does not establish application parity or an application performance gain.
 
 [Candidate46](rust-milestone-batch46.md) reuses compiled queue observation scripts
 and passes all four SDK63 gates (1,148 tests) plus three explicit physical Redis
-tests. Packaging, application and fresh paired performance validation remain pending; Candidate45's failed
+tests. Its source builds with actual changed-crate recompilation and passes all six
+package families; application and fresh paired performance validation remain pending; Candidate45's failed
 CPU pair remains part of its published evidence. Full M0–M9 acceptance stays open.
 
 [Candidate44](rust-milestone-batch44.md) joins the recording catchall correction

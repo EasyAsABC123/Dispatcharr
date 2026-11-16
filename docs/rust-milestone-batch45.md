@@ -97,3 +97,15 @@ The unmeasured protocol pilot retains an initial driver failure after its valid
 Source phase. A corrected driver runs only the missing Native phase and passes
 unchanged cross-phase useful-work checks; neither pilot phase enters these
 12 measured phases. Further CPU work must preserve this historical failed budget.
+
+## Current Main provider-info integration failures
+
+The [five-case provider-info attempt](../scripts/rust-integration/milestone-batch45/provider-info/README.md)
+is not accepted. Attempt1 fails bootstrap-account setup before Main. Corrected
+attempt2 reaches Main but its first missing-flags refresh returns stale HTTP200
+with no SQL/sequence changes after four unknown-CA TLS handshakes. Source Requests
+trusts the same owned CA with verification enabled. Main's environment and mount
+are correct; its manual session factory omits the Requests CA override. Full
+captures precede assertions; private credential-bearing rows remain hash-bound,
+while public flags, sequences, TLS observations and Root cleanup document the
+failure. A new-image retry must preserve the expected Source effects.

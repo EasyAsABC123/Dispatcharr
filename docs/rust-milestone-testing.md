@@ -91,3 +91,38 @@ also retain observer failures from an unnecessary chmod and a mode0700 parent.
 Use the real Fixture's directory mode and operations, not additional permission
 steps. Disable Python bytecode before importing frozen helpers so validation does
 not create unreadable mode0700 cache directories in the bound source closure.
+
+## Keep fixture failures distinct from application failures
+
+[SDK63 physical validation](../scripts/rust-integration/milestone-batch46/physical/qualification.json)
+needed the existing disposable-fixture marker and an actually published Redis
+port. An internal-only Compose network retained requested PortBindings but
+published no host port; the next attempt reached only the tests' fixture guard.
+Record both failures as executed attempts without transport coverage. Check the
+actual resolved port and required guard environment before invoking the existing
+compiled physical-test binary. The final three-test batch supplies transport
+coverage; an ordinary workspace pass leaves those tests ignored.
+
+Current-Main provider-info characterization also shows why seed setup must
+preserve the integration bootstrap. Its existing accounts have live profile,
+stream and schedule foreign keys. Allocate separate owned oracle accounts and
+translate Source IDs consistently in seed, response, related rows and sequence
+baselines; verify bootstrap rows before and after. Preserve failed setup receipts.
+A subsequent HTTP200 response can still be stale fallback: examine actual TLS/
+HTTP provider attempts and complete SQL observations before interpreting a missing
+sequence increment as a database bug. Do not weaken expected provider effects to
+accept an unsuccessful refresh.
+
+A clean Git archive export must also preserve traversable helper directory modes.
+Python's tarfile `data` filter can leave extracted directory modes to the current
+umask; under077 the UID65532 probe cannot traverse0700 helper directories even
+when every file checksum and mode is correct. Normalize only owned export helper
+directories to0755, verify unchanged file bytes, and use a fresh prepared attempt.
+Do not relax the production UID, capabilities or source-file integrity checks.
+
+When reducing a frozen helper closure, inspect imports inside generated guest
+Python strings as well as ordinary host imports. Catalogue receiver setup uses
+`matching_guest` through `fixture.sql`; that dependency is invisible to a host-only
+module-import audit. Preserve the actual omitted-module failure and add the exact
+frozen guest helper with its recursive imports and mount path. Then execute the
+complete affected public cohort; static byte equality with a subset is insufficient.

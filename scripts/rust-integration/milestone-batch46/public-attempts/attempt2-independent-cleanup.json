@@ -1,0 +1,190 @@
+{
+  "passed": true,
+  "actual_controller_exit": 1,
+  "controller_seconds": 150.62415422001504,
+  "controller_EOF_and_group_settled": true,
+  "project": "dispatcharr-normal-dvr-1fe6e12aa5",
+  "exact_CIDs": [
+    "13d2c619b6b988a3b0ed834b15e7fb1c4b1305aa9038c1ff78f7d8017880bef1",
+    "20d0fb46954fe8c8ffb37fb12e830b910527271306a33839735a2f84d3c8759b",
+    "2cde8943f3e0ac091ad1e0a65c79f2fe0d51d541b7372532702c543fa666d63b",
+    "2d94393710af0eeaf85850ece0960e535a25f8bcc81feb7ad663ed375befd66f",
+    "6142c7e5eeae19b896fafc468c1f4f3d0f685a7f163649bf194c0f69206ccf08",
+    "7fe9324d4f45ed308e7b3d335b5928244a99cf95f3c01dbce3ac56fe6e670a46",
+    "99ab076cf8bec8869d85158701354e657ffe8f98d94adf33e4a7c6a46aee04be"
+  ],
+  "original_recorded_positive_container_host_PIDs": {
+    "13d2c619b6b988a3b0ed834b15e7fb1c4b1305aa9038c1ff78f7d8017880bef1": 405187,
+    "7fe9324d4f45ed308e7b3d335b5928244a99cf95f3c01dbce3ac56fe6e670a46": 405101,
+    "2d94393710af0eeaf85850ece0960e535a25f8bcc81feb7ad663ed375befd66f": 407919,
+    "2cde8943f3e0ac091ad1e0a65c79f2fe0d51d541b7372532702c543fa666d63b": 413042,
+    "99ab076cf8bec8869d85158701354e657ffe8f98d94adf33e4a7c6a46aee04be": 418601,
+    "6142c7e5eeae19b896fafc468c1f4f3d0f685a7f163649bf194c0f69206ccf08": 424279
+  },
+  "controller_and_launcher_positive_PIDs": [
+    404723,
+    404848
+  ],
+  "all_recorded_PIDs_absent": true,
+  "commands": [
+    {
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-1fe6e12aa5"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-1fe6e12aa5"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-1fe6e12aa5"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "13d2c619b6b988a3b0ed834b15e7fb1c4b1305aa9038c1ff78f7d8017880bef1",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=13d2c619b6b988a3b0ed834b15e7fb1c4b1305aa9038c1ff78f7d8017880bef1"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "20d0fb46954fe8c8ffb37fb12e830b910527271306a33839735a2f84d3c8759b",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=20d0fb46954fe8c8ffb37fb12e830b910527271306a33839735a2f84d3c8759b"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "2cde8943f3e0ac091ad1e0a65c79f2fe0d51d541b7372532702c543fa666d63b",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=2cde8943f3e0ac091ad1e0a65c79f2fe0d51d541b7372532702c543fa666d63b"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "2d94393710af0eeaf85850ece0960e535a25f8bcc81feb7ad663ed375befd66f",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=2d94393710af0eeaf85850ece0960e535a25f8bcc81feb7ad663ed375befd66f"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "6142c7e5eeae19b896fafc468c1f4f3d0f685a7f163649bf194c0f69206ccf08",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=6142c7e5eeae19b896fafc468c1f4f3d0f685a7f163649bf194c0f69206ccf08"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "7fe9324d4f45ed308e7b3d335b5928244a99cf95f3c01dbce3ac56fe6e670a46",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=7fe9324d4f45ed308e7b3d335b5928244a99cf95f3c01dbce3ac56fe6e670a46"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "99ab076cf8bec8869d85158701354e657ffe8f98d94adf33e4a7c6a46aee04be",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=99ab076cf8bec8869d85158701354e657ffe8f98d94adf33e4a7c6a46aee04be"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "selected_results": [
+    {
+      "case": "vod-repeat",
+      "status": "failed"
+    },
+    {
+      "case": "vod-series",
+      "status": "failed"
+    },
+    {
+      "case": "comskip-manual",
+      "status": "failed"
+    },
+    {
+      "case": "vlc-live",
+      "status": "passed"
+    }
+  ],
+  "failure": "matching_guest omitted from public25 closure; VOD/Series/Comskip fail before business requests, independent VLC passes",
+  "full_public_qualification": false
+}

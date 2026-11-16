@@ -1,0 +1,99 @@
+{
+  "scope": "Fresh public-export Native selected functional cohort; all broader parity/performance gates remain unqualified.",
+  "historical_native20_contexts": {},
+  "backends": [
+    {
+      "status": "failed",
+      "cases": [
+        {
+          "case": "vod-repeat",
+          "status": "failed",
+          "reason": "AssertionError:{'status': 'failed', 'Source_only': False, 'fresh_first_ingest_is_causal_warmup': True, 'cases': [{'name': 'causal-fresh-ingest', 'status': 'failed'}], 'full_milestone_passed': False, 'performance_verified': False, 'failure_stage': 'causal_fresh_ingest'}"
+        },
+        {
+          "case": "vod-series",
+          "status": "failed",
+          "reason": "AssertionError:{'status': 'failed', 'Source_only': False, 'cases': [{'name': 'fresh-nonempty-Series-no-Movies', 'status': 'failed', 'failure_type': 'RuntimeError'}], 'full_milestone_passed': False, 'performance_verified': False, 'episodes_and_metadata_qualified': False}"
+        },
+        {
+          "case": "comskip-manual",
+          "status": "failed",
+          "reason": "AssertionError:{'status': 'failed', 'cases': [{'name': 'no-file', 'status': 'failed', 'failure_type': 'RuntimeError'}, {'name': 'real-manual-mark', 'status': 'failed', 'failure_type': 'RuntimeError'}, {'name': 'actual-repeat-already-processed', 'status': 'failed', 'failure_type': 'RuntimeError'}], 'manual_completed_imported_fixture_only': True, 'automatic_comskip_qualified': False, 'cut_mode_qualified': False, 'full_milestone_passed': False, 'performance_verified': False}"
+        },
+        {
+          "case": "vlc-live",
+          "status": "passed"
+        }
+      ],
+      "full_milestone_passed": false,
+      "performance_verified": false,
+      "no_Source_model18_replay": true,
+      "executed_slice_passed": false
+    }
+  ],
+  "expected_backend_order": [
+    "Native"
+  ],
+  "expected_cleanup_count": 1,
+  "cleanup": [
+    {
+      "project": "dispatcharr-normal-dvr-1fe6e12aa5",
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "13d2c619b6b988a3b0ed834b15e7fb1c4b1305aa9038c1ff78f7d8017880bef1",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "7fe9324d4f45ed308e7b3d335b5928244a99cf95f3c01dbce3ac56fe6e670a46",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "2d94393710af0eeaf85850ece0960e535a25f8bcc81feb7ad663ed375befd66f",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "2cde8943f3e0ac091ad1e0a65c79f2fe0d51d541b7372532702c543fa666d63b",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "99ab076cf8bec8869d85158701354e657ffe8f98d94adf33e4a7c6a46aee04be",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "6142c7e5eeae19b896fafc468c1f4f3d0f685a7f163649bf194c0f69206ccf08",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    }
+  ],
+  "selected_application_cells_passed": false,
+  "exact_cleanup_passed": true,
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "paired_exceptional_ranges": {
+    "status": "blocked",
+    "reason": "both actual completed playback captures required"
+  },
+  "retained_known_required_gaps": [
+    "Source exceptional-range transport",
+    "Source historical warm/crash periodic previousrow/delete/orphan transition",
+    "unqualified enabled-plugin/eager edges, custom guides and held-search Main cancellation",
+    "remote-owner wider profile/fault domains"
+  ],
+  "combined_selected_workflow_passed": false
+}

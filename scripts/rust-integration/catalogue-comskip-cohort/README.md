@@ -5,7 +5,7 @@ protocol and library credit. The media fixture was generated with FFmpeg's
 synthetic testsrc2 video and sine audio; it contains no user recording.
 
 This helper library uses the existing public launcher and global coordinator.
-It adds no server, scheduler or build cache. Its25 Python files are byte-exact
+It adds no server, scheduler or build cache. Its26 Python files are byte-exact
 selected runtime payloads from the frozen168-file migration cohort; unused
 workflow modules and historical assembly/capture JSON are omitted. Existing
 public Compose/bootstrap helpers are reused. The pinned Original Git archive
@@ -71,3 +71,19 @@ The default recording Connect launcher workflow remains separately scoped.
 
 `cohort/vod_series_cases.py` retains its frozen trailing blank line so its
 published checksum remains byte-exact. SDK raw logs likewise retain exact bytes.
+
+Public46 attempt2 retained actual exit1: guest receiver setup imported an omitted
+matching_guest module before catalogue/Comskip business requests; the independent
+VLC context passed. The26-file successor adds that exact frozen168 helper. Its
+module imports only the Python standard library; receiver_begin imports existing
+Source Redis/Channels/asgiref dependencies. Other matching/model functions remain
+unselected. A fresh complete public4 execution is required; no earlier failed
+attempt or private pass is relabeled.
+
+For a clean Git tar export under a restrictive umask, explicitly normalize owned
+export directories to0755 after safe extraction and verify committed file hashes.
+Python tarfile filter="data" deliberately leaves directory modes unset; inherited
+umask077 can otherwise create0700 directories unreadable by UID65532. Preserve
+all file bytes and executable bits. Public46 UID attempt1 failed before apps for
+this reason and remains recorded; a fast container positive PID was uncaptured,
+so only exactCID and captured controller retirement were independently proven.

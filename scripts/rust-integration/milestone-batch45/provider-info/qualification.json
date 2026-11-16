@@ -1,0 +1,25 @@
+{
+  "image_id": "sha256:09bebef535ebfa571db5950af063b706a613cb559cb7720dd54824384ffd788b",
+  "source_revision": "7c75cb07ba08544c903b9db953d00b2309e40f1b",
+  "attempt1": {
+    "actual_exit": 1,
+    "seconds": 50.183,
+    "Main_started": false,
+    "reason": "Setup incorrectly required no account above1; actual integration bootstrap owns accounts2/3/4 with foreign keys; separate owned oracle namespace fixes setup only",
+    "exact_cleanup_passed": true
+  },
+  "attempt2": {
+    "actual_exit": 1,
+    "seconds": 75.363,
+    "Main_started": true,
+    "first_case": "series_missing_flags",
+    "business_cases_completed": 0,
+    "reason": "TLS factory omitted Requests CA override; four unknown-CA handshakes before any provider HTTP, stale cached HTTP200 response, no expected SQL/sequence updates",
+    "exact_cleanup_passed": true
+  },
+  "Source_expected_records_changed": false,
+  "five_case_acceptance": false,
+  "TLS_fix": "private/uncompiled; actual new-image retry required",
+  "full_milestone_accepted": false,
+  "performance_verified": false
+}

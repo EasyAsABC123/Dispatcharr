@@ -10,7 +10,7 @@ class AdmissionControls(unittest.TestCase):
   repo=root/'repo';(repo/'scripts/rust-milestone-batches').mkdir(parents=True);coordinator=repo/'scripts/rust-milestone-batches/coordinator.py';coordinator.write_text('raise RuntimeError("must not execute")\n');out=root/'run';out.mkdir();build=root/'build.json';image='sha256:'+'a'*64
   tool.save(build,{'passed':True,'exit_code':0,'image_id':image,'git_revision':'b'*40,'source_tree_sha256':'c'*64})
   base={'candidate_build':str(build),'candidate_image_id':image,'candidate_git_revision':'b'*40,'candidate_source_tree_sha256':'c'*64,'fixture_output':str(out/'fixtures'),'inputs':[{'path':str(coordinator),'sha256':tool.sha(coordinator)},{'path':str(build),'sha256':tool.sha(build)}]}
-  plan=out/'plan.json';tool.save(plan,{'repo':str(repo),'output':str(out),'base_binding':base,'Docker_host':None});return repo,out,plan,coordinator
+  plan=out/'plan.json';tool.save(plan,{'repo':str(repo),'output':str(out),'base_binding':base,'Docker_host':None,'source_contexts':[tool.EVENT],'native_contexts':[tool.EVENT]});return repo,out,plan,coordinator
  def test_changed_closure_rejected_before_import_or_uid(self):
   with tempfile.TemporaryDirectory()as tmp:
    repo,out,plan,coordinator=self.plan(Path(tmp));coordinator.write_text('changed\n')
