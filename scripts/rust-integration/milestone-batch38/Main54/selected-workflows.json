@@ -1,0 +1,114 @@
+{
+  "React": {
+    "actual_browser_exit": 0,
+    "assertions": [
+      "normal-login-and-redirect",
+      "settings-save-persists-after-reload",
+      "channel-edit-visible-after-reload",
+      "browser-decoded-video-advances",
+      "active-channel-visible-in-stats-and-refresh"
+    ],
+    "fixture_restored": true,
+    "fresh_Source_replay": false,
+    "passed": true,
+    "retained_Source36": {
+      "aggregate": {
+        "path": "artifacts/rust/normal-graph-batch36-react-stats-endpoint-1/results/report.json",
+        "sha256": "693638e3e28ca98a744c71760ffb792b92a61f6cc737f0347b894c7683adad98"
+      },
+      "binding": {
+        "path": "artifacts/rust/normal-graph-batch36-react-stats-endpoint-1/binding.json",
+        "sha256": "29acb6da870be49d7a5d6e50dffa8776af41ebdbada150e57800a5deae475ea8"
+      },
+      "browser": {
+        "path": "artifacts/rust/normal-graph-batch36-react-stats-endpoint-1/results/Original/react-browser/react-workflow.json",
+        "sha256": "dbeae7b6594b60f3c28d8925be52acdf7a8f85b426535dfd9e4c8b3ab22e45d4"
+      },
+      "cleanup": {
+        "path": "artifacts/rust/react36-independent-cleanup-1/report.json",
+        "sha256": "ef5514ee7669c31e5c41966e21cbc70dd2d95d38065d93eab494461b6fa3a804"
+      },
+      "execution": {
+        "path": "artifacts/rust/normal-graph-batch36-react-stats-endpoint-1/dispatch/execution.json",
+        "sha256": "b68e27eeb3f004771b41a61d2e96995d0fb1393df1d69b76a8704e0044490c49"
+      }
+    },
+    "same_compiled_React112": true
+  },
+  "UDP_process_transport": {
+    "RTSP_RTP_qualified": false,
+    "business_checks_passed": true,
+    "certified_decoders_passed": [
+      true,
+      true
+    ],
+    "physical_retirement_passed": true,
+    "status": "passed"
+  },
+  "VLC": {
+    "actual_Main_normal_stop": {
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "oom_killed": false
+    },
+    "actual_authenticated_clients": 2,
+    "actual_new_upstream_connections": 1,
+    "decoders": [
+      {
+        "actual_exit": 0,
+        "file_sha256": "9cf620d15a7e509f381d8e0a0ae19f353ab5b7d1c2dd4ad4003c6a29b8712548",
+        "stderr_bytes": 0,
+        "video_and_audio": true,
+        "video_frames": 74,
+        "viewer": "owner"
+      },
+      {
+        "actual_exit": 0,
+        "file_sha256": "9cf620d15a7e509f381d8e0a0ae19f353ab5b7d1c2dd4ad4003c6a29b8712548",
+        "stderr_bytes": 0,
+        "video_and_audio": true,
+        "video_frames": 74,
+        "viewer": "follower"
+      }
+    ],
+    "input_processes": 1,
+    "physical_retirement_observed": true,
+    "provider_slots": 1,
+    "recording_ffmpeg_count": 0,
+    "status": "passed"
+  },
+  "output_profile": {
+    "cells": [
+      {
+        "name": "raw-plus-two-profile-TS-one-input",
+        "status": "passed"
+      },
+      {
+        "name": "same-profile-HLS-output-and-decoder",
+        "status": "passed"
+      },
+      {
+        "name": "same-profile-fMP4-output-and-decoder",
+        "status": "passed"
+      },
+      {
+        "name": "profile-one-decoder",
+        "status": "passed"
+      },
+      {
+        "name": "profile-two-decoder",
+        "status": "passed"
+      },
+      {
+        "name": "profile-retirement-preserves-ordinary-raw-viewer",
+        "status": "passed"
+      }
+    ],
+    "raw_report": {
+      "path": "artifacts/rust/normal-graph-batch54-main-viewing-1/fixtures/Native-af6b3cf7/output-profile-capture/report.json",
+      "sha256": "5c0fcf6faff8a2bbb61dc787b870eaa623e9748355f02d2bd0c801e63b626c83"
+    },
+    "status": "passed"
+  },
+  "scope": "Actual currentMain selectedJobsON PostgreSQL fixture; idleworkers loaded, not full graph traffic/role/datastore/performance acceptance"
+}

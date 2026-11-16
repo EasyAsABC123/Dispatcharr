@@ -14,7 +14,9 @@ The newest qualified packaged runtime is
 1,130 tests, the physical 11-statement schema check and all six package families
 pass, and Native52 passes the complete 14-case matching cohort with retained
 Source51 authority. The no-download/absent-model/empty-plugin scope is explicit;
-full M6, broader application regression and new performance acceptance remain open.
+Main54's seven-context regression passes six contexts, including shared VLC and
+unchanged React, and retains input promotion's strict decoder-startup failure.
+Full M6, broader application acceptance and new performance acceptance remain open.
 
 The preceding packaged candidate is [Candidate37](rust-milestone-batch37.md): all
 four SDK49 gates pass with 1,117 tests, zero failures and 783 ignored. It adds

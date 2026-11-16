@@ -78,7 +78,28 @@ These are functional and validation timings, not matched-work application
 performance measurements. In particular, the Source51 and Native52 elapsed
 values cannot establish a gain from the setup-call fusion.
 
-The supported characterization domain is DISABLE_ML_DOWNLOADS=true, an actually
+## Current Main regression
+
+The [Main54 seven-context batch](../scripts/rust-integration/milestone-batch38/Main54/qualification.json)
+ran on the same Candidate38 image with selected jobs enabled. Actual exit was
+1 after 308.868 seconds, with both pipe EOFs, settled process group and cleanup.
+Six contexts pass: authorization, shared VLC viewing, output profiles, process
+transports, unchanged React and stream denial. The React context passes all five
+visible assertions against retained Source authority. The VLC context observes
+two actual viewers sharing one input, upstream and provider slot, with strict
+three-second audio/video decodes and normal retirement.
+
+Input promotion remains failed: both identical owner/follower captures decode
+with exit 0 but emit H.264 missing-PPS/no-frame startup warnings, violating the
+strict zero-stderr criterion. Other promotion/failover business observations
+pass; those cannot override the decoder failure. The available evidence does
+not identify a Rust defect or establish that the warnings are harmless.
+Independent cleanup verifies nine fixture CIDs, nine recorded original positive
+host PIDs and empty project inventories. The full seven-context batch and full
+M2/M3/M5 acceptance remain open. A viewing-resource study must independently
+qualify its exact workload/configuration and cannot inherit this batch as a pass.
+
+The matching characterization domain is DISABLE_ML_DOWNLOADS=true, an actually
 absent MiniLM model cache and empty general-plugin configuration/directory.
 Actual model-enabled inference is not implemented or accepted by these results.
 The environment/cache witness comes from the application configuration and

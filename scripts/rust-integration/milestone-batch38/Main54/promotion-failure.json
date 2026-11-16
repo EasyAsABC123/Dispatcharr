@@ -1,0 +1,65 @@
+{
+  "Rust_production_fault_proven": false,
+  "Source_equivalent_current_prefix_characterized": false,
+  "actual_cells": [
+    {
+      "name": "actual-shared-promotion-and-account-agent",
+      "passed": true
+    },
+    {
+      "name": "actual-promotion-failover-retirement-and-useful-media",
+      "passed": true
+    },
+    {
+      "file_sha256": "0438a18d54b8950a3ddc3c548affb5063d28ca428b1cb6405e7f40c0a6d41fd5",
+      "name": "owner-actual-AV-prefix-decode",
+      "passed": false,
+      "stderr_sha256": "7a99e218c61dfb4fd3129c9727e0c8865cb64fa4e908c9e22a0813d95b34e155"
+    },
+    {
+      "file_sha256": "0438a18d54b8950a3ddc3c548affb5063d28ca428b1cb6405e7f40c0a6d41fd5",
+      "name": "follower-actual-AV-prefix-decode",
+      "passed": false,
+      "stderr_sha256": "bdc23d676d922b389ea00d6f35a959d0d444bae3387346a2e6f7c3cbf5916da1"
+    }
+  ],
+  "decoder_receipts": [
+    {
+      "actual_exit": 0,
+      "command_receipt": {
+        "path": "artifacts/rust/normal-graph-batch54-main-viewing-1/fixtures/Native-af6b3cf7/command-0242.json",
+        "sha256": "8c5eb048b0310800d7e4f5478602e379f3e62b799837d9d12f58086c5d327740"
+      },
+      "process_group_settled": true,
+      "raw_stderr_sha256": "7a99e218c61dfb4fd3129c9727e0c8865cb64fa4e908c9e22a0813d95b34e155",
+      "sanitized_unique_diagnostics": [
+        "[h264] non-existing PPS 0 referenced",
+        "Last message repeated 1 times",
+        "[h264] no frame!"
+      ],
+      "stderr_EOF": true,
+      "stdout_EOF": true
+    },
+    {
+      "actual_exit": 0,
+      "command_receipt": {
+        "path": "artifacts/rust/normal-graph-batch54-main-viewing-1/fixtures/Native-af6b3cf7/command-0243.json",
+        "sha256": "fa86aad5262452e6c23ce4dd9062269af52101eff30e4e5dd63361564b628db6"
+      },
+      "process_group_settled": true,
+      "raw_stderr_sha256": "bdc23d676d922b389ea00d6f35a959d0d444bae3387346a2e6f7c3cbf5916da1",
+      "sanitized_unique_diagnostics": [
+        "[h264] non-existing PPS 0 referenced",
+        "Last message repeated 1 times",
+        "[h264] no frame!"
+      ],
+      "stderr_EOF": true,
+      "stdout_EOF": true
+    }
+  ],
+  "failed_criterion_waived": false,
+  "resource_study_uses_this_failed_HLS_FFmpeg_domain": false,
+  "same_owner_follower_capture_sha256": true,
+  "status": "failed",
+  "strict_zero_stderr_assertion_unchanged": true
+}
