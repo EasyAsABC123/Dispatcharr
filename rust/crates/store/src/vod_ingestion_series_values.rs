@@ -1,4 +1,4 @@
-//! Private uncompiled plain-Series list values from Original apps/vod/tasks.py.
+//! Bounded Series list values from Original apps/vod/tasks.py.
 //! Original Dispatcharr authors retain all application and algorithm credit.
 use crate::StoreError;
 use serde_json::{json, Value};
@@ -8,6 +8,7 @@ fn unsupported() -> StoreError {
 }
 pub(super) struct Series {
     pub name: String,
+    pub year: Option<i32>,
     pub external: String,
     pub provider: Option<String>,
     pub properties: Option<Value>,
@@ -24,8 +25,53 @@ fn scalar(value: &Value) -> Result<String, StoreError> {
     }
     Ok(result)
 }
-/// No release dates/external IDs/language/logo/descriptive metadata are admitted.
-/// Source year comes from releaseDate/release_date, never a year in the name.
+/// Source extract_year uses the leading date component, never the title.
+/// Bound this provisional slice to ASCII strings and PostgreSQL integer years;
+/// Python-only Unicode digits/underscores and truthy nonstrings stay refused.
+fn date_year(value: Option<&Value>) -> Result<Option<i32>, StoreError> {
+    let Some(value) = value.filter(|v| crate::xc_live_provider::truthy(v)) else {
+        return Ok(None);
+    };
+    let text = value
+        .as_str()
+        .filter(|v| v.is_ascii() && v.len() <= 255)
+        .ok_or_else(unsupported)?;
+    if text.contains('_') {
+        return Err(unsupported());
+    }
+    let head = text
+        .split('-')
+        .next()
+        .unwrap_or_default()
+        .trim_matches(|c: char| matches!(c, ' ' | '\t' | '\n' | '\x0b' | '\x0c' | '\r'));
+    match head.parse::<i32>() {
+        Ok(year) => Ok(Some(year)),
+        Err(_)
+            if !head.trim_start_matches('+').is_empty()
+                && head
+                    .trim_start_matches('+')
+                    .bytes()
+                    .all(|v| v.is_ascii_digit()) =>
+        {
+            Err(unsupported())
+        }
+        Err(_) => Ok(None),
+    }
+}
+fn list_year(row: &serde_json::Map<String, Value>) -> Result<Option<i32>, StoreError> {
+    let mut year = date_year(row.get("releaseDate"))?;
+    if year.is_none_or(|v| v == 0)
+        && row
+            .get("release_date")
+            .is_some_and(crate::xc_live_provider::truthy)
+    {
+        year = date_year(row.get("release_date"))?;
+    }
+    Ok(year)
+}
+/// Provisional sparse untagged Series list slice. Existing catalogue admission
+/// remains unchanged and rejects advanced stored rows until Source acceptance.
+/// External IDs/language/logo/descriptive provider metadata stay refused.
 pub(super) fn series(
     value: Value,
     is_draining: &dyn Fn() -> bool,
@@ -44,10 +90,15 @@ pub(super) fn series(
             if serde_json::to_vec(value).map_err(|_| unsupported())?.len() > 16384 {
                 return Err(unsupported());
             }
+            // Sparse list shape only: Source can coerce false/zero/list plot
+            // or genre into stored text. Never silently preserve those values.
+            for key in ["plot", "genre"] {
+                if row.get(key).is_some_and(|v| v.as_str() != Some("")) {
+                    return Err(unsupported());
+                }
+            }
             for key in [
-                "plot",
                 "rating",
-                "genre",
                 "cover",
                 "tmdb",
                 "tmdb_id",
@@ -65,8 +116,6 @@ pub(super) fn series(
                 "director",
                 "country",
                 "language",
-                "releaseDate",
-                "release_date",
                 "youtube_trailer",
                 "age",
                 "seasons",
@@ -83,7 +132,9 @@ pub(super) fn series(
                 return Err(unsupported());
             }
             let name = name
-                .trim_matches(|c: char| c.is_ascii_whitespace() || matches!(c, '\x1c'..='\x1f'))
+                .trim_matches(|c: char| {
+                    c.is_ascii_whitespace() || matches!(c, '\x0b' | '\x1c'..='\x1f')
+                })
                 .to_owned();
             if name.is_empty() || name.len() > 255 {
                 return Err(unsupported());
@@ -97,9 +148,22 @@ pub(super) fn series(
                 .filter(|v| crate::xc_live_provider::truthy(v));
             let provider = raw_category.map(scalar).transpose()?;
             // Unlike Movie, Source list-sync retains category_id in Series CP.
-            let properties = raw_category.map(|value| json!({"category_id":value}));
+            let mut properties = serde_json::Map::new();
+            if let Some(value) = raw_category {
+                properties.insert("category_id".into(), value.clone());
+            }
+            // build_series_list_props retains releaseDate but not release_date.
+            if let Some(value) = row
+                .get("releaseDate")
+                .filter(|v| crate::xc_live_provider::truthy(v))
+            {
+                properties.insert("releaseDate".into(), value.clone());
+            }
+            let properties = (!properties.is_empty()).then_some(Value::Object(properties));
+            let year = list_year(row)?;
             Ok(Series {
                 name,
+                year,
                 external,
                 provider,
                 properties,
@@ -118,6 +182,104 @@ pub(super) fn basic(series: &Series, category: i64) -> Value {
 mod tests {
     use super::*;
     #[test]
+    fn sparse_dates_determine_identity_without_guessing_from_title() {
+        let rows = series(
+            json!([
+                {"series_id":1,"name":"Owned (2020)","category_id":"11","releaseDate":"2010-01-01"},
+                {"series_id":2,"name":"Owned (2020)","release_date":"2011-02-03"},
+                {"series_id":3,"name":"Owned (2020)"},
+                {"series_id":4,"name":"Owned","releaseDate":"bad","release_date":"2012"},
+                {"series_id":5,"name":"Owned","releaseDate":"0","release_date":"2013"}
+            ]),
+            &|| false,
+        )
+        .unwrap();
+        assert_eq!(
+            rows.iter().map(|s| s.year).collect::<Vec<_>>(),
+            vec![Some(2010), Some(2011), None, Some(2012), Some(2013)]
+        );
+        assert_eq!(
+            rows[0].properties,
+            Some(json!({"category_id":"11","releaseDate":"2010-01-01"}))
+        );
+        assert_eq!(
+            rows[1].properties, None,
+            "release_date affects identity, not Source list CP"
+        );
+        assert_eq!(
+            rows[3].properties,
+            Some(json!({"releaseDate":"bad"})),
+            "Source retains truthy raw releaseDate independently of parsed year"
+        );
+    }
+    #[test]
+    fn unqualified_date_shapes_are_refused_without_silent_identity_coercion() {
+        for value in [
+            json!(2010),
+            json!(["2010"]),
+            json!({"year":2010}),
+            json!("2_010"),
+            json!("２０１０"),
+            json!("2147483648"),
+        ] {
+            assert!(series(
+                json!([{"series_id":1,"name":"Owned","releaseDate":value}]),
+                &|| false
+            )
+            .is_err());
+        }
+    }
+
+    #[test]
+    fn sparse_plot_and_genre_refuse_source_coercions_outside_this_domain() {
+        for key in ["plot", "genre"] {
+            for value in [
+                Value::Null,
+                json!(false),
+                json!(0),
+                json!([]),
+                json!({}),
+                json!("metadata"),
+            ] {
+                let mut row = json!({"series_id":1,"name":"Owned"});
+                row[key] = value;
+                assert!(series(json!([row]), &|| false).is_err(), "{key}");
+            }
+            let mut row = json!({"series_id":1,"name":"Owned"});
+            row[key] = json!("");
+            assert!(series(json!([row]), &|| false).is_ok(), "{key}");
+        }
+    }
+    #[test]
+    fn date_integer_whitespace_differs_from_python_string_strip() {
+        for byte in [b' ', b'\t', b'\n', 0x0b, 0x0c, b'\r'] {
+            let space = char::from(byte);
+            assert_eq!(
+                date_year(Some(&json!(format!("{space}2010{space}-01-01")))).unwrap(),
+                Some(2010)
+            );
+        }
+        for byte in 0x1c..=0x1f {
+            let separator = char::from(byte);
+            for value in [format!("{separator}2010"), format!("2010{separator}")] {
+                assert_eq!(date_year(Some(&json!(value))).unwrap(), None);
+            }
+        }
+    }
+    #[test]
+    fn source_name_strip_includes_vertical_tab_without_changing_date_rules() {
+        let rows = series(
+            json!([{"series_id":1,"name":"\u{000b}Owned\u{000b}","releaseDate":"\u{001c}2010"}]),
+            &|| false,
+        )
+        .unwrap();
+        assert_eq!(rows[0].name, "Owned");
+        assert_eq!(
+            rows[0].year, None,
+            "Python int does not strip the extra str.strip separators"
+        );
+    }
+    #[test]
     fn source_series_keeps_category_metadata_and_separate_provider_occurrences() {
         let rows = series(
             json!([
@@ -134,10 +296,10 @@ mod tests {
         assert_ne!(rows[0].external, rows[1].external);
     }
     #[test]
-    fn unqualified_release_dates_and_shutdown_do_not_become_sparse_success() {
+    fn unqualified_metadata_and_shutdown_do_not_become_sparse_success() {
         let plain = json!([{"series_id":1,"name":"Owned"}]);
         assert!(series(plain.clone(), &|| true).is_err());
-        for key in ["releaseDate", "tmdb_id", "cover", "cast"] {
+        for key in ["tmdb_id", "cover", "cast"] {
             let mut row = plain.clone();
             row[0][key] = json!("unqualified");
             assert!(series(row, &|| false).is_err(), "{key}");

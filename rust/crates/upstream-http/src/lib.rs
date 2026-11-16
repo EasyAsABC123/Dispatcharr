@@ -65,6 +65,36 @@ impl CookieStore for AttemptCookies {
     }
 }
 
+// Source Requests gives a nonempty REQUESTS_CA_BUNDLE precedence over CURL's
+// fallback. An invalid selected override is an error, never default-root trust.
+// Arguments keep tests independent of process-global environment mutation.
+fn requests_ca_roots(
+    requests: Option<std::ffi::OsString>,
+    curl: Option<std::ffi::OsString>,
+) -> io::Result<Option<Vec<reqwest::Certificate>>> {
+    use std::io::Read;
+    let path = requests
+        .filter(|value| !value.is_empty())
+        .or_else(|| curl.filter(|value| !value.is_empty()));
+    let Some(path) = path else { return Ok(None) };
+    let file = std::fs::File::open(path)?;
+    if !file.metadata()?.is_file() {
+        return Err(invalid(
+            "Requests CA directories are outside this bounded factory",
+        ));
+    }
+    let mut bytes = Vec::new();
+    file.take(4 * 1024 * 1024 + 1).read_to_end(&mut bytes)?;
+    if bytes.len() > 4 * 1024 * 1024 {
+        return Err(invalid("Requests CA bundle capacity"));
+    }
+    let certificates = reqwest::Certificate::from_pem_bundle(&bytes).map_err(io::Error::other)?;
+    if certificates.is_empty() || certificates.len() > 128 {
+        return Err(invalid("Requests CA certificate count"));
+    }
+    Ok(Some(certificates))
+}
+
 pub struct Attempt {
     client: Client,
     cookies: Arc<AttemptCookies>,
@@ -87,35 +117,33 @@ impl Attempt {
     pub fn new_manual_session(connect: Duration, read: Duration) -> Result<Self, reqwest::Error> {
         Self::configured(connect, read, false, false)
     }
+    /// Preserve the refresh caller's manual redirect/cookie policy while
+    /// honoring Source Requests' environment trust bundle.
+    pub fn new_manual_requests_session(connect: Duration, read: Duration) -> io::Result<Self> {
+        Self::manual_requests_with_paths(
+            connect,
+            read,
+            std::env::var_os("REQUESTS_CA_BUNDLE"),
+            std::env::var_os("CURL_CA_BUNDLE"),
+        )
+    }
+    fn manual_requests_with_paths(
+        connect: Duration,
+        read: Duration,
+        requests: Option<std::ffi::OsString>,
+        curl: Option<std::ffi::OsString>,
+    ) -> io::Result<Self> {
+        let roots = requests_ca_roots(requests, curl)?;
+        Self::configured_with_roots(connect, read, false, false, roots).map_err(io::Error::other)
+    }
     /// Source Requests environment trust override for ordinary independent
     /// provider calls. Reuse this factory and its physical client; do not bypass
     /// certificate verification to reach an owned acceptance Origin.
     pub fn new_requests(connect: Duration, read: Duration) -> io::Result<Self> {
-        use std::io::Read;
-        let path = std::env::var_os("REQUESTS_CA_BUNDLE")
-            .filter(|v| !v.is_empty())
-            .or_else(|| std::env::var_os("CURL_CA_BUNDLE").filter(|v| !v.is_empty()));
-        let roots = if let Some(path) = path {
-            let file = std::fs::File::open(path)?;
-            if !file.metadata()?.is_file() {
-                return Err(invalid(
-                    "Requests CA directories are outside this bounded factory",
-                ));
-            }
-            let mut bytes = Vec::new();
-            file.take(4 * 1024 * 1024 + 1).read_to_end(&mut bytes)?;
-            if bytes.len() > 4 * 1024 * 1024 {
-                return Err(invalid("Requests CA bundle capacity"));
-            }
-            let certificates =
-                reqwest::Certificate::from_pem_bundle(&bytes).map_err(io::Error::other)?;
-            if certificates.is_empty() || certificates.len() > 128 {
-                return Err(invalid("Requests CA certificate count"));
-            }
-            Some(certificates)
-        } else {
-            None
-        };
+        let roots = requests_ca_roots(
+            std::env::var_os("REQUESTS_CA_BUNDLE"),
+            std::env::var_os("CURL_CA_BUNDLE"),
+        )?;
         Self::configured_with_roots(connect, read, true, true, roots).map_err(io::Error::other)
     }
     fn configured(
@@ -736,5 +764,168 @@ mod measured_wire_control {
             actual_wire as u64
         );
         assert_ne!(actual_wire, decoded.len());
+    }
+}
+
+#[cfg(test)]
+mod requests_ca_override_control {
+    use super::*;
+    use std::{
+        ffi::OsString,
+        path::{Path, PathBuf},
+    };
+    const CA: &[u8] =
+        include_bytes!("../../../vendor/sqlx-core-0.8.6/src/net/tls/fixtures/trusted-ca.pem");
+    struct OwnedDirectory(PathBuf);
+    impl OwnedDirectory {
+        fn new() -> Self {
+            static NEXT: AtomicUsize = AtomicUsize::new(0);
+            let time = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos();
+            let path = std::env::temp_dir().join(format!(
+                "dispatcharr-ca-{}-{time}-{}",
+                std::process::id(),
+                NEXT.fetch_add(1, Ordering::Relaxed)
+            ));
+            std::fs::create_dir(&path).unwrap();
+            Self(path)
+        }
+        fn write(&self, name: &str, bytes: &[u8]) -> PathBuf {
+            let path = self.0.join(name);
+            std::fs::write(&path, bytes).unwrap();
+            path
+        }
+    }
+    impl Drop for OwnedDirectory {
+        fn drop(&mut self) {
+            let _ = std::fs::remove_dir_all(&self.0);
+        }
+    }
+    fn arg(path: &Path) -> Option<OsString> {
+        Some(path.as_os_str().to_owned())
+    }
+    #[test]
+    fn requests_bundle_precedence_and_empty_fallback_do_not_change_process_environment() {
+        let directory = OwnedDirectory::new();
+        let valid = directory.write("owned-public-ca.pem", CA);
+        let missing = directory.0.join("missing.pem");
+        assert!(requests_ca_roots(None, None).unwrap().is_none());
+        assert_eq!(
+            requests_ca_roots(arg(&valid), arg(&missing))
+                .unwrap()
+                .unwrap()
+                .len(),
+            1
+        );
+        assert_eq!(
+            requests_ca_roots(Some(OsString::new()), arg(&valid))
+                .unwrap()
+                .unwrap()
+                .len(),
+            1
+        );
+        assert_eq!(
+            requests_ca_roots(arg(&missing), arg(&valid))
+                .err()
+                .unwrap()
+                .kind(),
+            io::ErrorKind::NotFound
+        );
+    }
+    #[test]
+    fn manual_requests_factory_rejects_missing_invalid_and_oversized_selected_roots() {
+        let directory = OwnedDirectory::new();
+        let valid = directory.write("valid.pem", CA);
+        let invalid = directory.write("invalid.pem", b"not a certificate");
+        let large = directory.write("oversized.pem", &vec![b'x'; 4 * 1024 * 1024 + 1]);
+        for path in [
+            &directory.0.join("missing.pem"),
+            &invalid,
+            &large,
+            &directory.0,
+        ] {
+            assert!(Attempt::manual_requests_with_paths(
+                Duration::from_secs(2),
+                Duration::from_secs(2),
+                arg(path),
+                arg(&valid)
+            )
+            .is_err());
+        }
+        let too_many = directory.write("many.pem", &CA.repeat(129));
+        assert!(requests_ca_roots(arg(&too_many), None).is_err());
+    }
+    #[tokio::test]
+    async fn manual_requests_override_keeps_redirect_and_cookie_ownership_with_caller() {
+        use std::io::{Read, Write};
+        let directory = OwnedDirectory::new();
+        let valid = directory.write("owned-public-ca.pem", CA);
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        listener.set_nonblocking(true).unwrap();
+        let server = std::thread::spawn(move || {
+            let mut requests = Vec::new();
+            let deadline = std::time::Instant::now() + Duration::from_secs(10);
+            for index in 0..3 {
+                let mut socket = loop {
+                    match listener.accept() {
+                        Ok((socket, _)) => break socket,
+                        Err(error) if error.kind() == io::ErrorKind::WouldBlock => {
+                            assert!(
+                                std::time::Instant::now() < deadline,
+                                "owned request deadline"
+                            );
+                            std::thread::sleep(Duration::from_millis(5));
+                        }
+                        Err(error) => panic!("owned accept: {error}"),
+                    }
+                };
+                socket
+                    .set_read_timeout(Some(Duration::from_secs(3)))
+                    .unwrap();
+                let mut bytes = Vec::new();
+                while !bytes.ends_with(b"\r\n\r\n") {
+                    let mut byte = [0];
+                    socket.read_exact(&mut byte).unwrap();
+                    bytes.push(byte[0]);
+                    assert!(bytes.len() <= 8192);
+                }
+                requests.push(String::from_utf8(bytes).unwrap());
+                let reply = if index == 2 {
+                    format!("HTTP/1.1 302 Found\r\nLocation: http://{address}/must-not-follow\r\nContent-Length: 0\r\nConnection: close\r\n\r\n")
+                } else {
+                    "HTTP/1.1 200 OK\r\nSet-Cookie: owned=1; Path=/\r\nContent-Length: 0\r\nConnection: close\r\n\r\n".to_owned()
+                };
+                socket.write_all(reply.as_bytes()).unwrap();
+            }
+            requests
+        });
+        let attempt = Attempt::manual_requests_with_paths(
+            Duration::from_secs(3),
+            Duration::from_secs(3),
+            arg(&valid),
+            None,
+        )
+        .unwrap();
+        for (index, expected) in [200, 200, 302].into_iter().enumerate() {
+            let response = attempt
+                .request(
+                    &format!("http://{address}/{index}"),
+                    "owned-manual-agent",
+                    &[],
+                )
+                .unwrap()
+                .send()
+                .await
+                .unwrap();
+            assert_eq!(response.status().as_u16(), expected);
+        }
+        let requests = server.join().unwrap();
+        assert_eq!(requests.len(), 3);
+        assert!(requests
+            .iter()
+            .all(|request| !request.to_ascii_lowercase().contains("\r\ncookie:")));
     }
 }

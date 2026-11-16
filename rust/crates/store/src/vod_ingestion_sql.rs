@@ -45,10 +45,30 @@ pub(super) async fn supported_catalog(
     auth: &AuthService,
     owner: Owner,
 ) -> Result<bool, StoreError> {
-    let valid=scope(auth,owner,|c|Box::pin(async move{
+    let valid=scope(auth,owner.clone(),|c|Box::pin(async move{
         Ok(sqlx::query_scalar::<_,bool>("SELECT NOT EXISTS(SELECT 1 FROM vod_episode) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation) AND (SELECT count(*) FROM (SELECT 1 FROM vod_series LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3useriesrelation LIMIT 257)s)<=256 AND NOT EXISTS(SELECT 1 FROM vod_series WHERE year IS NOT NULL OR tmdb_id IS NOT NULL OR imdb_id IS NOT NULL OR language<>'' OR logo_id IS NOT NULL OR COALESCE(description,'')<>'' OR rating IS NOT NULL OR COALESCE(genre,'')<>'' OR (custom_properties IS NOT NULL AND CASE WHEN jsonb_typeof(custom_properties)='object' THEN (custom_properties-'category_id')<>'{}'::jsonb OR octet_length(custom_properties::text)>65536 OR (custom_properties?'category_id' AND CASE jsonb_typeof(custom_properties->'category_id') WHEN 'string' THEN length(custom_properties->>'category_id')>255 WHEN 'number' THEN (custom_properties->>'category_id')!~'^-?[0-9]+$' ELSE true END) ELSE true END)) AND NOT EXISTS(SELECT 1 FROM vod_series GROUP BY name,year HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND (SELECT count(*) FROM (SELECT 1 FROM vod_movie LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3umovierelation LIMIT 257)s)<=256 AND (SELECT count(*) FROM (SELECT 1 FROM vod_vodcategory LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3uvodcategoryrelation LIMIT 257)s)<=256 AND NOT EXISTS(SELECT 1 FROM vod_movie WHERE tmdb_id IS NOT NULL OR imdb_id IS NOT NULL OR language<>'' OR logo_id IS NOT NULL OR COALESCE(description,'')<>'' OR rating IS NOT NULL OR COALESCE(genre,'')<>'' OR duration_secs IS NOT NULL OR (custom_properties IS NOT NULL AND custom_properties<>'{}'::jsonb)) AND NOT EXISTS(SELECT 1 FROM vod_movie GROUP BY name,year HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3umovierelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation WHERE NOT enabled OR (custom_properties IS NOT NULL AND custom_properties<>'{}'::jsonb))").fetch_one(c).await?)
     })).await?;
-    Ok(valid)
+    if valid {
+        return Ok(true);
+    }
+    supported_sparse_advanced_catalog(auth, owner).await
+}
+/// Provisional next-domain branch; reconcile with actual Source advanced4
+/// before installation. Plain admission above remains the original predicate.
+/// Each Series has one provider relation, so crossaccount descendant ownership
+/// stays refused. Metadata is opaque, bounded, and preserved by sparse updates.
+async fn supported_sparse_advanced_catalog(
+    auth: &AuthService,
+    owner: Owner,
+) -> Result<bool, StoreError> {
+    scope(auth, owner, |c| {
+        Box::pin(async move {
+            Ok(sqlx::query_scalar::<_, bool>(ADVANCED_GUARD)
+                .fetch_one(c)
+                .await?)
+        })
+    })
+    .await
 }
 /// Preserve per-bulk-call commits rather than an encompassing root transaction.
 pub(super) async fn categories(
@@ -62,9 +82,18 @@ pub(super) async fn categories(
     let names: Vec<String> = rows.iter().map(|row| row.name.clone()).collect();
     let wanted = names.clone();
     let stamp = Utc::now();
-    scope(auth,owner.clone(),move|c|Box::pin(async move{
-        sqlx::query("INSERT INTO vod_vodcategory(name,category_type,created_at,updated_at) SELECT value,$2,$3,$3 FROM jsonb_array_elements_text($1) ON CONFLICT(name,category_type) DO NOTHING").bind(json!(names)).bind(kind).bind(stamp).execute(c).await?;Ok(())
-    })).await?;
+    scope(auth, owner.clone(), move |c| {
+        Box::pin(async move {
+            sqlx::query(ADVANCED_CATEGORY_INSERT)
+                .bind(json!(names))
+                .bind(kind)
+                .bind(stamp)
+                .execute(c)
+                .await?;
+            Ok(())
+        })
+    })
+    .await?;
     let mapping=scope(auth,owner.clone(),move|c|Box::pin(async move{
         let rows=sqlx::query("SELECT id::bigint,name FROM vod_vodcategory WHERE category_type=$2 AND name=ANY($1) ORDER BY name").bind(&wanted).bind(kind).fetch_all(c).await?;
         rows.into_iter().map(|row|Ok((row.try_get::<String,_>("name")?,row.try_get::<i64,_>("id")?))).collect::<Result<HashMap<_,_>,StoreError>>()
@@ -98,9 +127,9 @@ pub(super) async fn uncategorized(
 ) -> Result<i64, StoreError> {
     scope(auth,owner,move|c|Box::pin(async move{
         let stamp=Utc::now();
-        sqlx::query("INSERT INTO vod_vodcategory(name,category_type,created_at,updated_at) VALUES('Uncategorized',$1,$2,$2) ON CONFLICT(name,category_type) DO NOTHING").bind(kind).bind(stamp).execute(&mut*c).await?;
+        sqlx::query(ADVANCED_UNCATEGORIZED_INSERT).bind(kind).bind(stamp).execute(&mut*c).await?;
         let id:i64=sqlx::query_scalar("SELECT id::bigint FROM vod_vodcategory WHERE name='Uncategorized' AND category_type=$1").bind(kind).fetch_one(&mut*c).await?;
-        sqlx::query("INSERT INTO vod_m3uvodcategoryrelation(m3u_account_id,category_id,enabled,custom_properties,created_at,updated_at) VALUES($1::bigint,$2::bigint,$3,'{}'::jsonb,$4,$4) ON CONFLICT(m3u_account_id,category_id) DO NOTHING").bind(account).bind(id).bind(enabled).bind(stamp).execute(c).await?;Ok(id)
+        sqlx::query(ADVANCED_UNCATEGORIZED_RELATION_INSERT).bind(account).bind(id).bind(enabled).bind(stamp).execute(c).await?;Ok(id)
     })).await
 }
 pub(super) async fn enabled(
@@ -158,10 +187,114 @@ pub(super) async fn cleanup(
 ) -> Result<(), StoreError> {
     scope(auth,owner,move|c|Box::pin(async move{
         sqlx::query("DELETE FROM vod_m3umovierelation WHERE m3u_account_id::bigint=$1 AND last_seen<$2").bind(account).bind(scan).execute(&mut*c).await?;
-        sqlx::query("DELETE FROM vod_m3useriesrelation WHERE m3u_account_id::bigint=$1 AND last_seen<$2").bind(account).bind(scan).execute(&mut*c).await?;
+        delete_stale_series_relations(c,account,scan).await?;
         sqlx::query("DELETE FROM vod_movie m WHERE NOT EXISTS(SELECT 1 FROM vod_m3umovierelation r WHERE r.movie_id=m.id)").execute(&mut*c).await?;
-        sqlx::query("DELETE FROM vod_series s WHERE NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.series_id=s.id)").execute(c).await?;Ok(())
+        delete_orphaned_series(c).await?;Ok(())
     })).await
+}
+
+/// Django's Series-relation deletion collects its Episode relations in the
+/// same delete transaction. Deleting a stale provider must not delete Episode
+/// objects still owned by the same global Series through another account.
+async fn delete_stale_series_relations(
+    c: &mut PgConnection,
+    account: i64,
+    scan: DateTime<Utc>,
+) -> Result<(), StoreError> {
+    let mut tx = c.begin().await?;
+    let relations: Vec<i64> = sqlx::query_scalar(ADVANCED_STALE_SERIES)
+        .bind(account)
+        .bind(scan)
+        .fetch_all(&mut *tx)
+        .await?;
+    if relations.len() > 256 {
+        return Err(unsupported());
+    }
+    let children: Vec<i64> = sqlx::query_scalar(ADVANCED_STALE_CHILDREN)
+        .bind(&relations)
+        .fetch_all(&mut *tx)
+        .await?;
+    if children.len() > 4096 {
+        return Err(unsupported());
+    }
+    sqlx::query(ADVANCED_DELETE_EPISODE_RELATIONS)
+        .bind(&children)
+        .execute(&mut *tx)
+        .await?;
+    sqlx::query(ADVANCED_DELETE_SERIES_RELATIONS)
+        .bind(&relations)
+        .execute(&mut *tx)
+        .await?;
+    tx.commit().await?;
+    Ok(())
+}
+/// Collect only globally orphaned Series, then their full Episode descendants,
+/// including Episodes with no stream relation. Preserve VODLogo rows. The
+/// parent row locks prevent a newly attached provider from being silently lost.
+/// Source catches orphan-delete IntegrityError; use one transaction for the
+/// collected deletion, and roll it back on a foreign-key conflict only.
+async fn delete_orphaned_series(c: &mut PgConnection) -> Result<(), StoreError> {
+    let mut tx = c.begin().await?;
+    let ids: Vec<i64> = sqlx::query_scalar(ADVANCED_ORPHAN_SERIES)
+        .fetch_all(&mut *tx)
+        .await?;
+    if ids.len() > 128 {
+        return Err(unsupported());
+    }
+    // SELECT FOR UPDATE may wait behind an older FK insertion. Recheck the
+    // orphan predicate in a fresh statement AFTER all parent locks are held,
+    // before deleting any descendant of a newly referenced Series.
+    let ids: Vec<i64> = sqlx::query_scalar(ADVANCED_ORPHAN_RECHECK)
+        .bind(&ids)
+        .fetch_all(&mut *tx)
+        .await?;
+    let episodes: Vec<i64> = sqlx::query_scalar(ADVANCED_ORPHAN_EPISODES)
+        .bind(&ids)
+        .fetch_all(&mut *tx)
+        .await?;
+    if episodes.len() > 1024 {
+        return Err(unsupported());
+    }
+    let children: Vec<i64> = sqlx::query_scalar(ADVANCED_ORPHAN_CHILDREN)
+        .bind(&episodes)
+        .fetch_all(&mut *tx)
+        .await?;
+    if children.len() > 4096 {
+        return Err(unsupported());
+    }
+    let deleted = async {
+        sqlx::query(ADVANCED_DELETE_EPISODE_RELATIONS)
+            .bind(&children)
+            .execute(&mut *tx)
+            .await?;
+        sqlx::query(ADVANCED_DELETE_EPISODES)
+            .bind(&episodes)
+            .execute(&mut *tx)
+            .await?;
+        sqlx::query(ADVANCED_DELETE_SERIES)
+            .bind(&ids)
+            .execute(&mut *tx)
+            .await?;
+        Ok::<_, sqlx::Error>(())
+    }
+    .await;
+    match deleted {
+        Ok(()) => {
+            tx.commit().await?;
+            Ok(())
+        }
+        Err(error) => {
+            let conflict = error
+                .as_database_error()
+                .is_some_and(|e| e.code().as_deref() == Some("23503"));
+            tx.rollback().await?;
+            if conflict {
+                Ok(())
+            } else {
+                Err(error.into())
+            }
+        }
+    }
 }
 
 pub(super) async fn verify_untagged(auth: &AuthService, owner: Owner) -> Result<(), StoreError> {
@@ -196,3 +329,73 @@ pub(super) async fn has_selected_categories(
 ) -> Result<bool, StoreError> {
     scope(auth,owner,move|c|Box::pin(async move{Ok(sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation r JOIN vod_vodcategory c ON c.id=r.category_id WHERE r.m3u_account_id=$1 AND c.category_type=$2 AND c.name<>'Uncategorized')").bind(account).bind(kind).fetch_one(c).await?)})).await
 }
+
+const ADVANCED_GUARD: &str = "SELECT (SELECT count(*) FROM (SELECT 1 FROM vod_episode LIMIT 1025)s)<=1024 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3uepisoderelation LIMIT 4097)s)<=4096 AND NOT EXISTS(SELECT 1 FROM vod_episode WHERE octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_series s WHERE (SELECT count(*) FROM vod_m3useriesrelation r WHERE r.series_id=s.id)<>1) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation e WHERE e.series_relation_id IS NULL OR NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r JOIN vod_episode p ON p.id=e.episode_id WHERE r.id=e.series_relation_id AND r.series_id=p.series_id AND r.m3u_account_id=e.m3u_account_id)) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND (SELECT count(*) FROM (SELECT 1 FROM vod_series LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3useriesrelation LIMIT 257)s)<=256 AND NOT EXISTS(SELECT 1 FROM vod_series WHERE tmdb_id IS NOT NULL OR imdb_id IS NOT NULL OR language<>'' OR name ~ '[^ -~]' OR octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_series GROUP BY name,year HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND (SELECT count(*) FROM (SELECT 1 FROM vod_movie LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3umovierelation LIMIT 257)s)<=256 AND (SELECT count(*) FROM (SELECT 1 FROM vod_vodcategory LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3uvodcategoryrelation LIMIT 257)s)<=256 AND NOT EXISTS(SELECT 1 FROM vod_movie WHERE tmdb_id IS NOT NULL OR imdb_id IS NOT NULL OR language<>'' OR logo_id IS NOT NULL OR COALESCE(description,'')<>'' OR rating IS NOT NULL OR COALESCE(genre,'')<>'' OR duration_secs IS NOT NULL OR (custom_properties IS NOT NULL AND custom_properties<>'{}'::jsonb)) AND NOT EXISTS(SELECT 1 FROM vod_movie GROUP BY name,year HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3umovierelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation WHERE NOT enabled OR (custom_properties IS NOT NULL AND custom_properties<>'{}'::jsonb))";
+const ADVANCED_STALE_SERIES: &str = "SELECT id::bigint FROM vod_m3useriesrelation WHERE m3u_account_id::bigint=$1 AND last_seen<$2 ORDER BY id LIMIT 257 FOR UPDATE";
+const ADVANCED_STALE_CHILDREN: &str = "SELECT id::bigint FROM vod_m3uepisoderelation WHERE series_relation_id::bigint=ANY($1) ORDER BY id LIMIT 4097 FOR UPDATE";
+const ADVANCED_DELETE_EPISODE_RELATIONS: &str =
+    "DELETE FROM vod_m3uepisoderelation WHERE id::bigint=ANY($1)";
+const ADVANCED_DELETE_SERIES_RELATIONS: &str =
+    "DELETE FROM vod_m3useriesrelation WHERE id::bigint=ANY($1)";
+const ADVANCED_ORPHAN_SERIES: &str = "SELECT s.id::bigint FROM vod_series s WHERE NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.series_id=s.id) ORDER BY s.id LIMIT 129 FOR UPDATE";
+const ADVANCED_ORPHAN_RECHECK: &str = "SELECT s.id::bigint FROM vod_series s WHERE s.id::bigint=ANY($1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.series_id=s.id) ORDER BY s.id";
+const ADVANCED_ORPHAN_EPISODES: &str = "SELECT id::bigint FROM vod_episode WHERE series_id::bigint=ANY($1) ORDER BY id LIMIT 1025 FOR UPDATE";
+const ADVANCED_ORPHAN_CHILDREN: &str = "SELECT id::bigint FROM vod_m3uepisoderelation WHERE episode_id::bigint=ANY($1) ORDER BY id LIMIT 4097 FOR UPDATE";
+const ADVANCED_DELETE_EPISODES: &str = "DELETE FROM vod_episode WHERE id::bigint=ANY($1)";
+const ADVANCED_DELETE_SERIES: &str = "DELETE FROM vod_series s WHERE s.id::bigint=ANY($1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.series_id=s.id)";
+
+#[cfg(test)]
+pub(super) fn schema_statements() -> Vec<(&'static str, String)> {
+    vec![
+        (
+            "advanced_uncategorized_relation_insert",
+            ADVANCED_UNCATEGORIZED_RELATION_INSERT.to_owned(),
+        ),
+        (
+            "advanced_uncategorized_insert",
+            ADVANCED_UNCATEGORIZED_INSERT.to_owned(),
+        ),
+        (
+            "advanced_category_insert",
+            ADVANCED_CATEGORY_INSERT.to_owned(),
+        ),
+        ("advanced_guard", ADVANCED_GUARD.to_owned()),
+        ("advanced_stale_series", ADVANCED_STALE_SERIES.to_owned()),
+        (
+            "advanced_stale_children",
+            ADVANCED_STALE_CHILDREN.to_owned(),
+        ),
+        (
+            "advanced_delete_episode_relations",
+            ADVANCED_DELETE_EPISODE_RELATIONS.to_owned(),
+        ),
+        (
+            "advanced_delete_series_relations",
+            ADVANCED_DELETE_SERIES_RELATIONS.to_owned(),
+        ),
+        ("advanced_orphan_series", ADVANCED_ORPHAN_SERIES.to_owned()),
+        (
+            "advanced_orphan_recheck",
+            ADVANCED_ORPHAN_RECHECK.to_owned(),
+        ),
+        (
+            "advanced_orphan_episodes",
+            ADVANCED_ORPHAN_EPISODES.to_owned(),
+        ),
+        (
+            "advanced_orphan_children",
+            ADVANCED_ORPHAN_CHILDREN.to_owned(),
+        ),
+        (
+            "advanced_delete_episodes",
+            ADVANCED_DELETE_EPISODES.to_owned(),
+        ),
+        ("advanced_delete_series", ADVANCED_DELETE_SERIES.to_owned()),
+    ]
+}
+
+const ADVANCED_CATEGORY_INSERT: &str = "INSERT INTO vod_vodcategory(name,category_type,created_at,updated_at) SELECT incoming.value,$2,$3,$3 FROM jsonb_array_elements_text($1) AS incoming(value) WHERE NOT EXISTS(SELECT 1 FROM vod_vodcategory c WHERE c.name=incoming.value AND c.category_type=$2) ON CONFLICT(name,category_type) DO NOTHING";
+
+const ADVANCED_UNCATEGORIZED_INSERT: &str = "INSERT INTO vod_vodcategory(name,category_type,created_at,updated_at) SELECT 'Uncategorized',$1,$2,$2 WHERE NOT EXISTS(SELECT 1 FROM vod_vodcategory c WHERE c.name='Uncategorized' AND c.category_type=$1) ON CONFLICT(name,category_type) DO NOTHING";
+
+const ADVANCED_UNCATEGORIZED_RELATION_INSERT: &str = "INSERT INTO vod_m3uvodcategoryrelation(m3u_account_id,category_id,enabled,custom_properties,created_at,updated_at) SELECT $1::bigint,$2::bigint,$3,'{}'::jsonb,$4,$4 WHERE NOT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation r WHERE r.m3u_account_id::bigint=$1 AND r.category_id::bigint=$2) ON CONFLICT(m3u_account_id,category_id) DO NOTHING";

@@ -31,6 +31,7 @@ fn statements() -> Vec<(&'static str, String)> {
         ("comskip_settings", crate::comskip_task::SETTINGS.to_owned()),
         ("comskip_exists", crate::comskip_http::EXISTS.to_owned()),
     ]);
+    rows.extend(crate::vod_ingestion::schema_statements());
     rows
 }
 fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
@@ -38,6 +39,42 @@ fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
     // provide PostgreSQL the production Rust wire types, rather than asking it
     // to infer convenient types from otherwise-unbound SQL placeholders.
     match name {
+        "advanced_category_insert" => vec![
+            <Value as Type<sqlx::Postgres>>::type_info(),
+            <String as Type<sqlx::Postgres>>::type_info(),
+            <chrono::DateTime<chrono::Utc> as Type<sqlx::Postgres>>::type_info(),
+        ],
+        "advanced_uncategorized_insert" => vec![
+            <String as Type<sqlx::Postgres>>::type_info(),
+            <chrono::DateTime<chrono::Utc> as Type<sqlx::Postgres>>::type_info(),
+        ],
+        "advanced_uncategorized_relation_insert" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <bool as Type<sqlx::Postgres>>::type_info(),
+            <chrono::DateTime<chrono::Utc> as Type<sqlx::Postgres>>::type_info(),
+        ],
+        "advanced_series_relation_insert" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <Value as Type<sqlx::Postgres>>::type_info(),
+            <chrono::DateTime<chrono::Utc> as Type<sqlx::Postgres>>::type_info(),
+        ],
+        "advanced_series_existing" | "advanced_guard" | "advanced_orphan_series" => vec![],
+        "advanced_series_insert" | "advanced_series_update" => {
+            vec![<Value as Type<sqlx::Postgres>>::type_info()]
+        }
+        "advanced_stale_series" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <chrono::DateTime<chrono::Utc> as Type<sqlx::Postgres>>::type_info(),
+        ],
+        "advanced_stale_children"
+        | "advanced_delete_episode_relations"
+        | "advanced_delete_series_relations"
+        | "advanced_orphan_recheck"
+        | "advanced_orphan_episodes"
+        | "advanced_orphan_children"
+        | "advanced_delete_episodes"
+        | "advanced_delete_series" => vec![<Vec<i64> as Type<sqlx::Postgres>>::type_info()],
         "station_existing" | "comskip_select" | "comskip_exists" => {
             vec![<i64 as Type<sqlx::Postgres>>::type_info()]
         }
@@ -64,6 +101,7 @@ fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
 }
 #[derive(Clone, Copy)]
 enum Output {
+    Int4,
     Int8,
     Text,
     Bool,
@@ -72,6 +110,25 @@ enum Output {
 fn outputs(name: &str) -> Vec<(&'static str, Output)> {
     use Output::*;
     match name {
+        "advanced_category_insert"
+        | "advanced_uncategorized_insert"
+        | "advanced_uncategorized_relation_insert"
+        | "advanced_series_relation_insert" => vec![],
+        "advanced_series_existing" | "advanced_series_insert" => {
+            vec![("id", Int8), ("name", Text), ("year", Int4)]
+        }
+        "advanced_guard" => vec![("?column?", Bool)],
+        "advanced_stale_series"
+        | "advanced_stale_children"
+        | "advanced_orphan_series"
+        | "advanced_orphan_recheck"
+        | "advanced_orphan_episodes"
+        | "advanced_orphan_children" => vec![("id", Int8)],
+        "advanced_series_update"
+        | "advanced_delete_episode_relations"
+        | "advanced_delete_series_relations"
+        | "advanced_delete_episodes"
+        | "advanced_delete_series" => vec![],
         "station_existing" => vec![("tvg_id", Text)],
         "aggregate_active" | "comskip_exists" => vec![("id", Int8)],
         "comskip_select" => vec![("properties", Jsonb), ("bounded", Bool)],
@@ -119,6 +176,7 @@ fn outputs(name: &str) -> Vec<(&'static str, Output)> {
 }
 fn compatible(kind: Output, actual: &PgTypeInfo) -> bool {
     match kind {
+        Output::Int4 => actual.name() == "INT4",
         Output::Int8 => actual.name() == "INT8",
         Output::Text => <String as Type<sqlx::Postgres>>::compatible(actual),
         Output::Bool => actual.name() == "BOOL",
@@ -128,7 +186,7 @@ fn compatible(kind: Output, actual: &PgTypeInfo) -> bool {
 #[test]
 fn compiled_matching_statements_and_bind_ordinals_are_complete() {
     let rows = statements();
-    assert_eq!(rows.len(), 19);
+    assert_eq!(rows.len(), 37);
     let names: BTreeSet<_> = rows.iter().map(|(name, _)| *name).collect();
     assert_eq!(names.len(), rows.len());
     assert_eq!(
@@ -152,7 +210,25 @@ fn compiled_matching_statements_and_bind_ordinals_are_complete() {
             "comskip_select",
             "comskip_update",
             "comskip_settings",
-            "comskip_exists"
+            "comskip_exists",
+            "advanced_category_insert",
+            "advanced_uncategorized_insert",
+            "advanced_uncategorized_relation_insert",
+            "advanced_series_relation_insert",
+            "advanced_series_existing",
+            "advanced_series_insert",
+            "advanced_series_update",
+            "advanced_guard",
+            "advanced_stale_series",
+            "advanced_stale_children",
+            "advanced_delete_episode_relations",
+            "advanced_delete_series_relations",
+            "advanced_orphan_series",
+            "advanced_orphan_recheck",
+            "advanced_orphan_episodes",
+            "advanced_orphan_children",
+            "advanced_delete_episodes",
+            "advanced_delete_series",
         ]
         .into_iter()
         .collect()
@@ -160,7 +236,10 @@ fn compiled_matching_statements_and_bind_ordinals_are_complete() {
     let ordinal = regex::Regex::new(r"\$(\d+)").expect("fixed ordinal scanner");
     for (name, sql) in rows {
         assert!(
-            sql.starts_with("SELECT ") || sql.starts_with("UPDATE ") || sql.starts_with("INSERT ")
+            sql.starts_with("SELECT ")
+                || sql.starts_with("UPDATE ")
+                || sql.starts_with("INSERT ")
+                || sql.starts_with("DELETE ")
         );
         let used: BTreeSet<_> = ordinal
             .captures_iter(&sql)
@@ -248,6 +327,10 @@ async fn actual_compiled_matching_schema_prepare_only() {
         ("station_existing", 0),
         ("comskip_select", 0),
         ("comskip_update", 1),
+        ("advanced_series_insert", 0),
+        ("advanced_stale_series", 0),
+        ("advanced_stale_series", 1),
+        ("advanced_orphan_episodes", 0),
     ] {
         let sql = statements()
             .into_iter()
@@ -255,27 +338,32 @@ async fn actual_compiled_matching_schema_prepare_only() {
             .unwrap()
             .1;
         let mut types = parameter_types(name);
-        types[index] = if matches!(name, "station_existing" | "comskip_select") {
+        types[index] = if name == "advanced_orphan_episodes" {
+            <Vec<bool> as Type<sqlx::Postgres>>::type_info()
+        } else if matches!(name, "station_existing" | "comskip_select")
+            || (name == "advanced_stale_series" && index == 0)
+        {
             <bool as Type<sqlx::Postgres>>::type_info()
         } else {
             <i64 as Type<sqlx::Postgres>>::type_info()
         };
         let result = (&mut connection).prepare_with(&sql, &types).await;
-        negatives.push(json!({"name":name,"same_production_SQL":true,"deliberately_wrong_types":types.iter().map(TypeInfo::name).collect::<Vec<_>>(),"rejected":result.is_err(),"error":result.err().map(|e|format!("{e:?}"))}));
+        negatives.push(json!({"name":name,"wrong_parameter_index":index,"same_production_SQL":true,"deliberately_wrong_types":types.iter().map(TypeInfo::name).collect::<Vec<_>>(),"rejected":result.is_err(),"error":result.err().map(|e|format!("{e:?}"))}));
     }
     let ready = connection.ping().await;
     let closed = connection.close().await;
-    let passed = rows.len() == 19
+    let passed = rows.len() == 37
         && rows.iter().all(|r| {
             r["prepared"] == true
                 && r["row_decoder_compatible"] == true
                 && r["server_parameter_types_match"] == true
         })
+        && negatives.len() == 10
         && negatives.iter().all(|r| r["rejected"] == true)
         && ready.is_ok()
         && closed.is_ok();
     let report = json!({"passed":passed,"schema_only":true,"DML_executed":false,"task_or_media_executed":false,
-        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1,"comskip":4},"statements":rows,"wrong_bind_type_controls":negatives,
+        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1,"comskip":4,"vod_advanced":18},"statements":rows,"wrong_bind_type_controls":negatives,
         "ready":format!("{ready:?}"),"closed":format!("{closed:?}"),"scope":"Compiled production SQL/constants and audited actual Rust bind types; prepares/row shapes only, not DML/data/event/task parity."});
     let bytes = serde_json::to_vec_pretty(&report).expect("report");
     assert!(bytes.len() <= 131072);

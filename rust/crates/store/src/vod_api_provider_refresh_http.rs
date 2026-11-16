@@ -744,7 +744,7 @@ pub(super) async fn fetch_admitted(
     let session = Session {
         work,
         attempt: Arc::new(
-            Attempt::new_manual_session(Duration::from_secs(60), Duration::from_secs(60))
+            Attempt::new_manual_requests_session(Duration::from_secs(60), Duration::from_secs(60))
                 .map_err(|_| Fault::Remote)?,
         ),
         agent: agent.to_owned(),
@@ -810,7 +810,7 @@ pub(super) async fn observed_test_json(
     let session = Session {
         work,
         attempt: Arc::new(
-            Attempt::new_manual_session(Duration::from_secs(5), Duration::from_secs(5))
+            Attempt::new_manual_requests_session(Duration::from_secs(5), Duration::from_secs(5))
                 .map_err(|_| Fault::Remote)?,
         ),
         agent: "fixture-agent".into(),

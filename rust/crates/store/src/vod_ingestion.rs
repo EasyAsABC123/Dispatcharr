@@ -300,3 +300,10 @@ pub async fn execute(
 pub async fn api_target(auth: &AuthService, id: i64, owner: Owner) -> Result<String, StoreError> {
     sql::api_target(auth, id, owner).await
 }
+
+#[cfg(test)]
+pub(crate) fn schema_statements() -> Vec<(&'static str, String)> {
+    let mut rows = series_sql::schema_statements();
+    rows.extend(sql::schema_statements());
+    rows
+}
