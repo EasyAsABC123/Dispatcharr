@@ -9,7 +9,16 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate31](rust-milestone-batch31.md), runtime
+The newest source candidate is [Candidate32](rust-milestone-batch32.md), runtime
+`143c8638540ec3105d774a82f947289c5a72367e`: all four SDK42 gates pass with
+1,106 tests, zero failures and 783 ignored. Its immutable Docker build and six
+package families pass. It connects the bounded current-schema restore path and
+fixes the Main signal/server race by joining the same physical cleanup owner.
+The corrected Source2/Native10 application batch is running; restore and browser
+callbacks remain unexecuted. Historical and enabled-plugin restores stay guarded.
+All full milestone criteria and new full-service performance acceptance remain open.
+
+The preceding source candidate is [Candidate31](rust-milestone-batch31.md), runtime
 `ca2e173c797b050dc42ef897501a8fcd5db0f552`: all four SDK41 gates pass with
 1,099 tests, zero failures and783 ignored. Its six package families pass on image
 `sha256:6cd3617f698006c85bdb7696f3f3b2e441b101aa885d6be9b96ab6635f7ef8bf`,
