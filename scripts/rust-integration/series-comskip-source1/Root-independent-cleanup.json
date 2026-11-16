@@ -1,0 +1,111 @@
+{
+  "passed": true,
+  "exact_fixture_CIDs": [
+    "72837795ea0a271c30e1b72e34565fad517286f58213eef0f58a9a96590bff0f",
+    "85d05267a57a0104e3cfac68c91d7305dbf07034709ef8699f5115c7145c2e1c"
+  ],
+  "project": "dispatcharr-normal-dvr-6af008c193",
+  "original_positive_host_PIDs": {
+    "72837795ea0a271c30e1b72e34565fad517286f58213eef0f58a9a96590bff0f": {
+      "original_positive_PID": 4123561,
+      "absent": true,
+      "inspection": "artifacts/rust/normal-graph-series-comskip-nonempty-source-1/fixtures/Original-5c0e6d37/command-0008.stdout",
+      "sha256": "0c4c8396b9f9b7dfc9e4241c8208e5c00deacf39615736cc41e2ad71cc1f0030"
+    },
+    "85d05267a57a0104e3cfac68c91d7305dbf07034709ef8699f5115c7145c2e1c": {
+      "original_positive_PID": 4123478,
+      "absent": true,
+      "inspection": "artifacts/rust/normal-graph-series-comskip-nonempty-source-1/fixtures/Original-5c0e6d37/command-0009.stdout",
+      "sha256": "3571e3b7343fbdfd7132f90195aa3663bf6a4f34c9d732799948bb20420e60e3"
+    }
+  },
+  "UID_CID_absent": "1d778abea5ef9840aa33908a1120bfae812aebbf378e36f4b0b0ce4d62820769",
+  "UID_host_generation_independently_captured": false,
+  "commands": [
+    {
+      "args": [
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=72837795ea0a271c30e1b72e34565fad517286f58213eef0f58a9a96590bff0f",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=85d05267a57a0104e3cfac68c91d7305dbf07034709ef8699f5115c7145c2e1c",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-6af008c193",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-6af008c193",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-6af008c193",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=1d778abea5ef9840aa33908a1120bfae812aebbf378e36f4b0b0ce4d62820769",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

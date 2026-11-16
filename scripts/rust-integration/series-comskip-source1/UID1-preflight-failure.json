@@ -1,0 +1,20 @@
+{
+  "actual_exit": 1,
+  "stage": "host filesystem preflight before Docker command",
+  "cause": "Owned offline import created unlisted __pycache__ directory with default mode0700; frozen payload hashes unchanged",
+  "app_started": false,
+  "Docker_started": false,
+  "correction": "Removed only owned derived Python bytecode caches; next attempt uses fresh UID2",
+  "removed_derived_caches": [
+    {
+      "path": "artifacts/rust/m6-series-comskip-source-driver-1/cohort/__pycache__",
+      "files": [
+        "comskip_nonempty_cases.cpython-314.pyc",
+        "workflow.cpython-314.pyc",
+        "budget.cpython-314.pyc",
+        "m3u_refresh_all_cases.cpython-314.pyc",
+        "dvr_domain_cases.cpython-314.pyc"
+      ]
+    }
+  ]
+}

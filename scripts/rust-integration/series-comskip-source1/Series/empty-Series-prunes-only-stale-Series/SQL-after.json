@@ -1,0 +1,120 @@
+{
+  "Movie": [],
+  "Series": [],
+  "Episode": [],
+  "VODCategory": [
+    {
+      "id": 2,
+      "name": "Uncategorized",
+      "category_type": "movie",
+      "created_at": "2026-11-16 19:06:52.264516+00:00",
+      "updated_at": "2026-11-16 19:06:52.264522+00:00"
+    },
+    {
+      "id": 3,
+      "name": "Uncategorized",
+      "category_type": "series",
+      "created_at": "2026-11-16 19:06:52.268501+00:00",
+      "updated_at": "2026-11-16 19:06:52.268506+00:00"
+    },
+    {
+      "id": 4,
+      "name": "Updated Series",
+      "category_type": "series",
+      "created_at": "2026-11-16 19:07:07.850818+00:00",
+      "updated_at": "2026-11-16 19:07:07.850826+00:00"
+    }
+  ],
+  "VODLogo": [],
+  "M3UMovieRelation": [],
+  "M3USeriesRelation": [],
+  "M3UEpisodeRelation": [],
+  "M3UVODCategoryRelation": [
+    {
+      "id": 2,
+      "m3u_account_id": 5,
+      "category_id": 2,
+      "enabled": true,
+      "custom_properties": {},
+      "created_at": "2026-11-16 19:06:52.265280+00:00",
+      "updated_at": "2026-11-16 19:06:52.265285+00:00"
+    },
+    {
+      "id": 3,
+      "m3u_account_id": 5,
+      "category_id": 3,
+      "enabled": true,
+      "custom_properties": {},
+      "created_at": "2026-11-16 19:06:52.269138+00:00",
+      "updated_at": "2026-11-16 19:06:52.269142+00:00"
+    },
+    {
+      "id": 5,
+      "m3u_account_id": 5,
+      "category_id": 4,
+      "enabled": true,
+      "custom_properties": {},
+      "created_at": "2026-11-16 19:07:07.851589+00:00",
+      "updated_at": "2026-11-16 19:07:07.851594+00:00"
+    }
+  ],
+  "SystemEvent": [
+    {
+      "id": 1,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-01 03:04:05+00:00",
+      "channel_id": null,
+      "channel_name": null,
+      "details": {
+        "ordinal": 1,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 2,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-02 03:04:05.123456+00:00",
+      "channel_id": null,
+      "channel_name": "rust-probe-event",
+      "details": {
+        "ordinal": 2,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 3,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-03 03:04:05+00:00",
+      "channel_id": "00000000-0000-0000-0000-000000000000",
+      "channel_name": "rust-probe-event",
+      "details": {
+        "ordinal": 3,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 4,
+      "event_type": "vod_stop",
+      "timestamp": "2020-01-04 03:04:05+00:00",
+      "channel_id": null,
+      "channel_name": "rust-probe-display-event",
+      "details": {
+        "owned_fixture": true
+      }
+    }
+  ],
+  "account": {
+    "id": 5,
+    "name": "Owned VOD ingest",
+    "status": "success",
+    "last_message": "Owned VOD account baseline",
+    "custom_properties": {
+      "enable_vod": true
+    },
+    "is_active": true,
+    "account_type": "XC"
+  }
+}

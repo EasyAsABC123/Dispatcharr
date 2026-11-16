@@ -602,10 +602,12 @@ impl SelectedJobs {
         self.inner
             .recording_http
             .clone()
-            .router_with_playback(self.inner.recording_playback.clone())
+            .router_with_playback_and_comskip(
+                self.inner.recording_playback.clone(),
+                self.inner.comskip_http.clone(),
+            )
             .merge(self.inner.channel_http.clone().router())
             .merge(self.inner.matching_http.clone().router())
-            .merge(self.inner.comskip_http.clone().router())
             .merge(self.inner.xc_http.clone().router())
     }
     pub fn readiness(&self) -> (bool, serde_json::Value) {

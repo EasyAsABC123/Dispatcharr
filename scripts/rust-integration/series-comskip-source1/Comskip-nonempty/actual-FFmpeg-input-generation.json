@@ -1,0 +1,66 @@
+{
+  "actual_exit": 0,
+  "bytes": 11983502,
+  "sha256": "e69c9bfbe7e3ca9f0c35bc7d2b139e94cd581bb96f4211a8c7e33de87935d87e",
+  "argv": [
+    "ffmpeg",
+    "-v",
+    "error",
+    "-f",
+    "lavfi",
+    "-i",
+    "testsrc2=size=320x180:rate=25",
+    "-f",
+    "lavfi",
+    "-i",
+    "sine=frequency=440:sample_rate=48000",
+    "-vf",
+    "drawbox=x=0:y=0:w=iw:h=ih:color=black:t=fill:enable='between(t,60,61)+between(t,76,77)'",
+    "-t",
+    "137",
+    "-c:v",
+    "libx264",
+    "-preset",
+    "ultrafast",
+    "-threads:v",
+    "1",
+    "-filter_threads",
+    "1",
+    "-c:a",
+    "aac",
+    "-y",
+    "/shared/comskip-nonempty-mark/manual.mkv"
+  ],
+  "stderr": "",
+  "actual_observer_FFprobe": {
+    "actual_exit": 0,
+    "argv": [
+      "ffprobe",
+      "-v",
+      "error",
+      "-show_entries",
+      "format=duration:stream=codec_type,codec_name",
+      "-of",
+      "json",
+      "/shared/comskip-nonempty-mark/manual.mkv"
+    ],
+    "actual": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ],
+      "format": {
+        "duration": "137.021000"
+      }
+    },
+    "stderr": ""
+  }
+}

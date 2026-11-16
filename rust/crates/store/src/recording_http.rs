@@ -282,6 +282,16 @@ impl RecordingHttp {
             )
             .with_state((self, playback))
     }
+    /// Keep management, playback and manual Comskip beneath the same outer
+    /// catchall. Matching a separate dynamic Comskip subtree panics in matchit.
+    pub fn router_with_playback_and_comskip(
+        self,
+        playback: crate::RecordingPlayback,
+        comskip: crate::comskip_http::ComskipHttp,
+    ) -> Router {
+        self.router_with_playback(playback)
+            .layer(axum::Extension(comskip))
+    }
     pub fn close_admission(&self) {
         self.state.closed.store(true, Ordering::Release);
         self.state.slots.close();
@@ -329,6 +339,24 @@ async fn handle(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Response {
+    // Select only the canonical action; the delegated service retains its own
+    // admission/Auth/SQL/publication and shutdown owner without buffering twice.
+    let comskip_id = request
+        .uri()
+        .path()
+        .strip_prefix("/api/channels/recordings/")
+        .and_then(|tail| tail.strip_suffix("/comskip/"))
+        .filter(|id| !id.is_empty() && !id.contains('/'))
+        .map(str::to_owned);
+    if let Some(id) = comskip_id {
+        if let Some(comskip) = request
+            .extensions()
+            .get::<crate::comskip_http::ComskipHttp>()
+            .cloned()
+        {
+            return comskip.dispatch(id, peer, request).await;
+        }
+    }
     if api.state.closed.load(Ordering::Acquire) {
         return StoreError::StatusBody(503, json!({"error":"Recording intake closed"}))
             .into_response();
@@ -1115,5 +1143,93 @@ mod recording_jobs_binding_tests {
             Err(StoreError::StatusBody(503, _))
         ));
         assert!(unbound_auth().recording_collector_jobs().unwrap().is_none());
+    }
+
+    struct NoRouteEffects;
+    impl UpdateEventSink for NoRouteEffects {
+        fn send<'a>(
+            &'a self,
+            _: &'a str,
+            _: Value,
+        ) -> BoxFuture<'a, Result<(), dispatcharr_contracts::UpdateEventError>> {
+            Box::pin(async { panic!("closed routing probe must not publish events") })
+        }
+    }
+    struct LazyComskipPublisher(AuthService);
+    impl crate::comskip_http::Publisher for LazyComskipPublisher {
+        fn auth_service(&self) -> AuthService {
+            self.0.clone()
+        }
+        fn admission(&self) -> Result<(), StoreError> {
+            panic!("closed routing probe must not admit publication")
+        }
+        fn publish(
+            &self,
+            _: i64,
+            _: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Uuid, StoreError>> {
+            Box::pin(async { panic!("closed routing probe must not publish tasks") })
+        }
+    }
+    #[tokio::test]
+    async fn actual_recording_catchall_composes_comskip_playback_and_management_without_sql() {
+        use tower::ServiceExt;
+        let auth = unbound_auth();
+        let api = RecordingHttp::prepare(
+            auth.clone(),
+            Arc::new(BackEdgeProbe {
+                _pre_engine_auth: auth.clone(),
+                dropped: Arc::new(AtomicUsize::new(0)),
+            }),
+            Arc::new(NoRouteEffects),
+        );
+        let playback =
+            crate::RecordingPlayback::prepare(auth.clone(), |_, _| "unused-closed-playback".into());
+        let comskip =
+            crate::comskip_http::ComskipHttp::prepare(Arc::new(LazyComskipPublisher(auth)));
+        api.close_admission();
+        playback.close_admission();
+        comskip.close_admission();
+        // This is the actual Main composition method; the former separate merge
+        // panicked before serving any route. Distinct closed-service responses
+        // prove each real handler remains reachable, with no database dependency.
+        let router = api.router_with_playback_and_comskip(playback, comskip);
+        for (method, path, status, expected) in [
+            (
+                Method::POST,
+                "/api/channels/recordings/17/comskip/",
+                StatusCode::NOT_IMPLEMENTED,
+                json!({"error":"Comskip intake closed"}),
+            ),
+            (
+                Method::GET,
+                "/api/channels/recordings/17/file/",
+                StatusCode::SERVICE_UNAVAILABLE,
+                json!({"detail":"Recording playback capacity unavailable."}),
+            ),
+            (
+                Method::GET,
+                "/api/channels/recordings/17/",
+                StatusCode::SERVICE_UNAVAILABLE,
+                json!({"error":"Recording intake closed"}),
+            ),
+        ] {
+            let mut request = Request::builder()
+                .method(method)
+                .uri(path)
+                .body(Body::empty())
+                .unwrap();
+            request
+                .extensions_mut()
+                .insert(ConnectInfo("127.0.0.1:1".parse::<SocketAddr>().unwrap()));
+            let response = router.clone().oneshot(request).await.unwrap();
+            assert_eq!(response.status(), status, "{path}");
+            let bytes = to_bytes(response.into_body(), 4096).await.unwrap();
+            assert_eq!(
+                serde_json::from_slice::<Value>(&bytes).unwrap(),
+                expected,
+                "{path}"
+            );
+        }
     }
 }

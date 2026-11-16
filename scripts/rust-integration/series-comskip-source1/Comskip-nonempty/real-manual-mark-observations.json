@@ -1,0 +1,143 @@
+{
+  "before": {
+    "id": 1,
+    "custom_properties": {
+      "status": "completed",
+      "program": {
+        "title": "Owned manual Comskip input"
+      },
+      "file_path": "/shared/comskip-nonempty-mark/manual.mkv",
+      "remux_success": true
+    }
+  },
+  "after": {
+    "id": 1,
+    "custom_properties": {
+      "status": "completed",
+      "comskip": {
+        "status": "completed",
+        "skipped": true,
+        "ini_path": "/shared/comskip-nonempty-mark/owned-comskip.ini"
+      },
+      "program": {
+        "title": "Owned manual Comskip input"
+      },
+      "file_path": "/shared/comskip-nonempty-mark/manual.mkv",
+      "remux_success": true
+    }
+  },
+  "media_before": {
+    "input_sha256": "e69c9bfbe7e3ca9f0c35bc7d2b139e94cd581bb96f4211a8c7e33de87935d87e",
+    "input_bytes": 11983502,
+    "EDL_exists": false,
+    "EDL_sha256": null,
+    "EDL_text": null,
+    "actual_diagnostic_sidecars": []
+  },
+  "media_after": {
+    "input_sha256": "e69c9bfbe7e3ca9f0c35bc7d2b139e94cd581bb96f4211a8c7e33de87935d87e",
+    "input_bytes": 11983502,
+    "EDL_exists": true,
+    "EDL_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "EDL_text": "",
+    "actual_diagnostic_sidecars": [
+      {
+        "name": "manual.edl",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prefix_text": "",
+        "prefix_truncated": false
+      },
+      {
+        "name": "manual.log",
+        "bytes": 3064,
+        "sha256": "6d429ba73458969584ded1e7c37cfdd2896c8099ef9c66910e379d7aef023c32",
+        "prefix_text": "################################################################\nGenerated using donator Comskip 0.83.001\nTime at start of run:\nMon Nov 16 19:07:48 2026\n################################################################\n\nDetection Methods to be used:\n\t1) Black Frame\n\n\nComSkip throttles back from -0001 to -0001.\nThe time is now 1907 so it's full speed ahead!\nFrame Rate set to 25.000 f/s\nFormat changed to [320 : 180]\nFrame: 1 Channels:  1\nThe last ar cblock wasn't closed.  Now closing.\n\nPrinting AC cblock list\n-----------------------------------------\nBlock: 0\tStart:      1\tEnd:   3425\taudio channels:  1\tLength: 0:02:16.92\nDistribution of Black Frame   cutting:   1 positive and   0 negative, ratio is 9.9900\nConfidence of Black Frame   cutting:   0 out of   0 are strict, too low\nDistribution of Scene Change  cutting:   0 positive and   0 negative, ratio is 9.9900\nConfidence of Scene Change  cutting:   0 out of   0 are strict, too low\nDistribution of Uniform Frame cutting:   0 positive and   0 negative, ratio is 9.9900\nConfidence of Uniform Frame cutting:   0 out of   0 are strict, too low\n\nFuzzy scoring of the blocks\n---------------------------\nBlock 0 has twice excess length.\nBlock 0 score:\tBefore - 1.00\tAfter - 0.00\nThreshold used - 1.0500\tAfter rounding - 1.0500\n\n\n\t---------------------\n\tInitial Commercial List\n\t---------------------\nNo change\n\nLogo fraction:              0.0000      Logo disabled\nMaximum volume found:         7603\nAverage volume:               5086\nSound threshold:               500\nSilence threshold:             100\nMinimum volume found:         1890\nAverage frames with silence:    98\nBlack threshold:                19\nMinimum brightness found:       16\nMinimum bright pixels found:     0\nMinimum dim level found:         0\nAverage brightness:            244\nUniformity level:              500\nAverage non uniformity:        178\nMaximum gap between logo's:     -1\nSuggested logo_threshold:   0.0000\nSuggested shrink_logo:\t    0.00\nMax commercial size found:      -1\nDominant aspect ratio:      0.0000\nScore threshold:            1.0500\nFramerate:                  25.000\nAverage framerate:          25.007\nTotal commercial length:    0:00:00.00\nCut codes:\n  F: scene\t c: change\n  A: aspect\t t: cutscene\n  E: exceeds\t l: logo\n  L: logo\t v: volume\n  B: bright\t s: scene_change\n  C: combined\t a: aspect_ratio\n  N: nonstrict\t u: uniform_frame\n  S: strict\t b: black_frame\n  \t\t r: resolution\n----------------------------------------------------\nBlock list after weighing\n----------------------------------------------------\n  #     sbf  bs  be     fs     fe        ts        te       len     sc   scr cmb   ar                   cut    bri logo   vol sil   corr stdev   cc\n  0:+     0   0   0      1   3425     0.00s   136.92s   136.92s   0.00  0.02   0 0.00  7      {  E         br  2440 0.00 5084- 980  0.000    24           \n\n3425 Frames Processed\n################################################################\nTime at end of run:\nMon Nov 16 19:07:49 2026\n################################################################\n",
+        "prefix_truncated": false
+      },
+      {
+        "name": "manual.txt",
+        "bytes": 78,
+        "sha256": "2df59712e54f87fc358a8a27fe57c7a94e646dd3936919f696660f246a28f573",
+        "prefix_text": "FILE PROCESSING COMPLETE   3424 FRAMES AT  2500\n-------------------\n3423\t3424\n",
+        "prefix_truncated": false
+      }
+    ]
+  },
+  "events": {
+    "actual_receiver": "specific.aggregate_f01bd37e73954a1d8ed1329fff11d99a!receiver",
+    "events": [
+      {
+        "type": "update",
+        "data": {
+          "success": true,
+          "type": "comskip_status",
+          "status": "started",
+          "recording_id": 1,
+          "title": "Owned manual Comskip input"
+        },
+        "__asgi_channel__": [
+          "specific.aggregate_f01bd37e73954a1d8ed1329fff11d99a!receiver"
+        ]
+      },
+      {
+        "type": "update",
+        "data": {
+          "success": true,
+          "type": "comskip_status",
+          "status": "skipped",
+          "recording_id": 1,
+          "reason": "no_commercials_detected"
+        },
+        "__asgi_channel__": [
+          "specific.aggregate_f01bd37e73954a1d8ed1329fff11d99a!receiver"
+        ]
+      }
+    ],
+    "raw_events_base64": [
+      "IKXfxHvLYCb/QAWrg6R0eXBlpnVwZGF0ZaRkYXRhhadzdWNjZXNzw6R0eXBlrmNvbXNraXBfc3RhdHVzpnN0YXR1c6dzdGFydGVkrHJlY29yZGluZ19pZAGldGl0bGW6T3duZWQgbWFudWFsIENvbXNraXAgaW5wdXSwX19hc2dpX2NoYW5uZWxfX5HZPHNwZWNpZmljLmFnZ3JlZ2F0ZV9mMDFiZDM3ZTczOTU0YTFkOGVkMTMyOWZmZjExZDk5YSFyZWNlaXZlcg==",
+      "xFG4CyGHAaQGZzQVg6R0eXBlpnVwZGF0ZaRkYXRhhadzdWNjZXNzw6R0eXBlrmNvbXNraXBfc3RhdHVzpnN0YXR1c6dza2lwcGVkrHJlY29yZGluZ19pZAGmcmVhc29ut25vX2NvbW1lcmNpYWxzX2RldGVjdGVksF9fYXNnaV9jaGFubmVsX1+R2TxzcGVjaWZpYy5hZ2dyZWdhdGVfZjAxYmQzN2U3Mzk1NGExZDhlZDEzMjlmZmYxMWQ5OWEhcmVjZWl2ZXI="
+    ]
+  },
+  "frame": {
+    "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+    "content-encoding": "utf-8",
+    "content-type": "application/json",
+    "headers": {
+      "lang": "py",
+      "task": "apps.channels.tasks.comskip_process_recording",
+      "id": "cf2ed7ca-c800-4c9c-8654-f111276c4d3c",
+      "shadow": null,
+      "eta": null,
+      "expires": null,
+      "group": null,
+      "group_index": null,
+      "retries": 0,
+      "timelimit": [
+        null,
+        null
+      ],
+      "root_id": "cf2ed7ca-c800-4c9c-8654-f111276c4d3c",
+      "parent_id": null,
+      "argsrepr": "(1,)",
+      "kwargsrepr": "{}",
+      "origin": "gen1494@72837795ea0a",
+      "ignore_result": false,
+      "replaced_task_nesting": 0,
+      "stamped_headers": null,
+      "stamps": {}
+    },
+    "properties": {
+      "correlation_id": "cf2ed7ca-c800-4c9c-8654-f111276c4d3c",
+      "reply_to": "65282658-ff4d-356a-94fc-4edc4a28f2e9",
+      "delivery_mode": 2,
+      "delivery_info": {
+        "exchange": "",
+        "routing_key": "celery"
+      },
+      "priority": 0,
+      "body_encoding": "base64",
+      "delivery_tag": "11cc9d3a-3b64-4dbd-a77f-ad782294270e"
+    }
+  }
+}

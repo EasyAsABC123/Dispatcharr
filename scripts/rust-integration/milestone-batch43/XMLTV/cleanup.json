@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "project": "xmltv-498096897a7c",
+  "exact_CID": "8c8bcb8ec1ae48ff00168d9a94c412ef0ad8056f83d4e00c93aaae3cd36ed9b3",
+  "exact_CID_absent": true,
+  "original_positive_host_PID": 4120945,
+  "original_starttime": "16879848",
+  "original_generation_absent": true,
+  "all_project_inventories_empty": true,
+  "commands": [
+    {
+      "name": "exact-CID",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=8c8bcb8ec1ae48ff00168d9a94c412ef0ad8056f83d4e00c93aaae3cd36ed9b3",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "project-containers",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=xmltv-498096897a7c",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "project-networks",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=xmltv-498096897a7c",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "project-volumes",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=xmltv-498096897a7c",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "scope": "Fresh independent readonly after actual XMLTV component runner terminal; no workload started"
+}

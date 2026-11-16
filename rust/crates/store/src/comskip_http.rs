@@ -57,6 +57,16 @@ impl ComskipHttp {
             .route("/api/channels/recordings/{id}/comskip/", any(handle))
             .with_state(self)
     }
+    /// Shared Recording catchall delegates to this identical owned handler.
+    /// Do not merge the isolated router beneath another recordings catchall.
+    pub(crate) async fn dispatch(
+        &self,
+        id: String,
+        peer: SocketAddr,
+        request: Request,
+    ) -> Response {
+        handle(State(self.clone()), Path(id), ConnectInfo(peer), request).await
+    }
     pub fn close_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);
     }

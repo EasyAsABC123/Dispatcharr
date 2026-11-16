@@ -5,6 +5,10 @@ use dispatcharr_contracts::UpdateEventSink;
 use serde_json::{json, Value};
 use std::sync::Arc;
 type Owner = Arc<dyn Send + Sync>;
+#[path = "vod_ingestion_series_sql.rs"]
+mod series_sql;
+#[path = "vod_ingestion_series_values.rs"]
+mod series_values;
 #[path = "vod_ingestion_sql.rs"]
 mod sql;
 #[path = "vod_ingestion_values.rs"]
@@ -175,7 +179,7 @@ pub async fn execute(
         if series_categories.is_empty()&&sql::has_selected_categories(&auth,owner.clone(),account.id,"series").await?{
           return Err(Step::Caught(format!("Provider returned no VOD categories for account {}; aborting VOD refresh to preserve existing category selections",account.name)));
         }
-        let _series_map = sql::categories(
+        let mut series_map = sql::categories(
             &auth,
             owner.clone(),
             account.id,
@@ -217,7 +221,7 @@ pub async fn execute(
             }
         }
         sql::movies(&auth, owner.clone(), account.id, imported, scan).await?;
-        let _uncategorized_series = sql::uncategorized(
+        let uncategorized_series = sql::uncategorized(
             &auth,
             owner.clone(),
             account.id,
@@ -226,10 +230,26 @@ pub async fn execute(
         )
         .await?;
         draining(cancellation.as_ref())?;
-        let series = action(&mut client, "get_series").await?;
-        if !series.as_array().is_some_and(Vec::is_empty) {
-            return Err(Step::Control(unsupported()));
+        series_map.insert("__uncategorized__".into(), uncategorized_series);
+        // Source refresh_series calls the decorated batch helper inline. It
+        // creates no Celery child and does not fetch episodes/details here.
+        let document = action(&mut client, "get_series").await?;
+        let retained = owner.clone();
+        let draining_cpu = cancellation.clone();
+        let rows = tokio::task::spawn_blocking(move || {
+            let _owner = retained;
+            series_values::series(document, &|| draining_cpu.is_draining())
+        }).await.map_err(|_| unsupported())??;
+        let mut imported = Vec::new();
+        for series in rows {
+            let category = series.provider.as_ref()
+                .and_then(|provider| series_map.get(provider)).copied()
+                .unwrap_or(uncategorized_series);
+            if enabled.get(&category).copied().unwrap_or(true) {
+                imported.push((series, category));
+            }
         }
+        series_sql::apply(&auth, owner.clone(), account.id, imported, scan).await?;
         // Source leaves its XtreamCodesClient context BEFORE reconcile/cleanup.
         drop(client);
         // None of the newly created identities is language tagged, so Source's

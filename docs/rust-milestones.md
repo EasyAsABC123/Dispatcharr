@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+[Candidate44](rust-milestone-batch44.md) joins the recording catchall correction
+and Source-characterized basic Series ingestion. SDK61 passes all four gates
+with 1,148 tests. Its Docker/package/four-context Native validation is pending;
+Candidate43 startup and fixture failures remain unchanged below.
+
 The [Candidate41 source](rust-milestone-batch41.md) passes all SDK58 gates
 with 1,145 tests and the physical 19-statement/six-negative SQL check. It adds
 bounded VOD updates and manual commercial detection. Its first Docker build
@@ -19,10 +24,13 @@ those libraries and passes all four SDK59 gates. Its build passes, while actual
 Comskip invocation fails the package gate on embedded RPATH library selection.
 The [Candidate43 successor](rust-milestone-batch43.md) applies the observed loader
 fix and reusable Docker compilation layout; SDK60 passes all four gates, with
-Docker build and all six package families passed; the combined Native checks
-are pending.
+Docker build and all six package families passed. The combined Native run
+fails on a recording-route overlap and rootless fixture-copy ownership; a
+successor correction and Source-characterized basic Series ingestion are in
+validation. The changed XMLTV Docker target passes 14 tests and 1,144 retained
+parser comparisons. Full milestone and current application resource gates stay open.
 
-The current packaged [Candidate40](rust-milestone-batch40.md) passes SDK56 with
+The retained [Candidate40](rust-milestone-batch40.md) passes SDK56 with
 1,141 tests and all six package families. One combined application batch passes
 all eleven cases: aggregate refresh four, real Native station HTTP four and
 fresh basic Movie ingestion three, retaining Source55/53/58 without replay.

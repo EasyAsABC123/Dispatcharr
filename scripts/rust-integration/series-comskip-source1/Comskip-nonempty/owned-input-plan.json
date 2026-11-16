@@ -1,0 +1,47 @@
+{
+  "status": "STATIC_PREPARED_UNRUN",
+  "base_Source_ini": {
+    "path": "docker/comskip.ini",
+    "sha256": "7614488f8addcd44850f524f5a7d104527aa6d80c25dbdf8d60219d4e658b896"
+  },
+  "owned_custom_ini": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-comskip-nonempty-source-helper-2/owned-comskip.ini",
+    "sha256": "caa641ba513a90c0161326e5b060b3ecf9fffbf883cc546deba16c4b3a535baf"
+  },
+  "input_plan": {
+    "actual_FFmpeg_testsrc2_AV": true,
+    "seconds": 137,
+    "black_boundary_seconds": [
+      [
+        60,
+        61
+      ],
+      [
+        76,
+        77
+      ]
+    ],
+    "show_regions_seconds": [
+      60,
+      60
+    ],
+    "candidate_ad_region_seconds": 15,
+    "resolution": "320x180",
+    "FPS": 25,
+    "threads_v": 1,
+    "prewritten_EDL": false,
+    "detection_outcome": "UNKNOWN until actualSource Comskip; expectednonempty is acceptancecondition, notinventedresult"
+  },
+  "helper_sha256": "0d5275bc6b2a5133892e4971ff6b8f715f969ba42cde47cafbfe57353b16fd4f",
+  "automatic_cut_or_Native_accepted": false,
+  "actual_apps_or_media_run": false,
+  "actual_diagnostic_before_acceptance": "Retain actual backend,SQL,media/EDL andorderedWS before asserting targeted ok result; actual no_commercials remains failed target, notlostcapture",
+  "FFprobe_scope": "Separate actual input AV/duration observer before task; task FFprobe is reached only by real unmodifiedSource nonempty processing branch",
+  "bounded_diagnostics": "Actual sidecar byte hashes plus16KiB textual prefixes per actual owned output; never prewrites EDL",
+  "parent_helper_sha256": "6624c07578adeef74ce9044779ae23a76aa7410069ea81af52a444a050d38628",
+  "peer_corrections": [
+    "Clamp EDL to actual independently observed input FFprobe duration matching original task",
+    "Assert actual EDL absent immediately before the real mark POST"
+  ],
+  "owned_override_comment": "output_default=1 deliberately enables diagnostic stats. The retained original comment describes its original0 default; this owned test override is explicit."
+}

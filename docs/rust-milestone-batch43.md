@@ -32,7 +32,24 @@ all exit zero. The existing archive probe verifies 139 Comskip libraries and
 272 total executable/library/configuration/notice files, then observes the
 original unsupported-version exit 2 and banner through the actual wrapper.
 Independent cleanup confirms all 55 owned container IDs are absent.
-The combined Native cohort remains pending. The cohort covers five VOD update phases with retained Source capture,
+The [combined Native cohort](../scripts/rust-integration/milestone-batch43/application/FAILED.json)
+exits 1 in 71.030 seconds. All three contexts were attempted; no business
+workflow qualified. Main panics on the new Comskip route conflicting with the
+existing recording catchall. Comskip fixture setup independently fails an
+out-of-range rootless input-copy UID. Four exact containers and project resources
+are independently absent, as are three captured positive host PIDs. One fast
+panicked Main had PID zero at its first inspection; that original generation
+was never captured, and the raw cleanup false remains unchanged.
+The successor routes Comskip through the existing recording dispatcher and
+uses a byte-identical host-owned transfer file.
+
+The changed [XMLTV Docker target](../scripts/rust-integration/milestone-batch43/XMLTV/qualification.json)
+passes in 54.259 seconds: 14 tests, zero failures, all 1,144 retained Source32
+parser comparisons and actual parity CLI exit zero. The application compilation
+step is an actual Docker cache hit. The target and same-container parity ELF
+are captured, with exact container/host-generation/project cleanup. This proves
+that changed build path; it does not qualify the failed Main workflow or an
+application CPU/memory gain. The failed cohort was intended to cover five VOD update phases with retained Source capture,
 three manual Comskip cases using the exact retained MKV, and shared VLC viewing.
 The qualified Source branch is actual exit-one/no-commercials; nonempty marks/
 FFprobe, automatic Comskip, cut, Series, broader metadata/roles/concurrency,

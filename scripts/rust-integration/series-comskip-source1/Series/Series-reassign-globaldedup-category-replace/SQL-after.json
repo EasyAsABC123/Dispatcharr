@@ -1,0 +1,229 @@
+{
+  "Movie": [],
+  "Series": [
+    {
+      "id": 1,
+      "uuid": "c072151e-f7e6-43ad-bea1-697776ab0224",
+      "name": "Owned Series (2020)",
+      "description": "",
+      "year": null,
+      "rating": null,
+      "genre": "",
+      "logo_id": null,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "language": "",
+      "custom_properties": {
+        "category_id": "15"
+      },
+      "created_at": "2026-11-16 19:06:52.274754+00:00",
+      "updated_at": "2026-11-16 19:06:52.274763+00:00"
+    },
+    {
+      "id": 3,
+      "uuid": "58e731f9-e622-4c58-985b-9ea1e0569efa",
+      "name": "Owned Replacement Series",
+      "description": "",
+      "year": null,
+      "rating": null,
+      "genre": "",
+      "logo_id": null,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "language": "",
+      "custom_properties": {
+        "category_id": "15"
+      },
+      "created_at": "2026-11-16 19:07:07.865651+00:00",
+      "updated_at": "2026-11-16 19:07:07.865657+00:00"
+    }
+  ],
+  "Episode": [],
+  "VODCategory": [
+    {
+      "id": 2,
+      "name": "Uncategorized",
+      "category_type": "movie",
+      "created_at": "2026-11-16 19:06:52.264516+00:00",
+      "updated_at": "2026-11-16 19:06:52.264522+00:00"
+    },
+    {
+      "id": 3,
+      "name": "Uncategorized",
+      "category_type": "series",
+      "created_at": "2026-11-16 19:06:52.268501+00:00",
+      "updated_at": "2026-11-16 19:06:52.268506+00:00"
+    },
+    {
+      "id": 4,
+      "name": "Updated Series",
+      "category_type": "series",
+      "created_at": "2026-11-16 19:07:07.850818+00:00",
+      "updated_at": "2026-11-16 19:07:07.850826+00:00"
+    }
+  ],
+  "VODLogo": [],
+  "M3UMovieRelation": [],
+  "M3USeriesRelation": [
+    {
+      "id": 1,
+      "m3u_account_id": 5,
+      "series_id": 1,
+      "category_id": 4,
+      "external_series_id": "9201",
+      "custom_properties": {
+        "basic_data": {
+          "num": 1,
+          "name": "Owned Series (2020)",
+          "series_id": 9201,
+          "category_id": "15",
+          "_category_id": 4,
+          "_provider_category_id": "15"
+        },
+        "owned_note": "preserve",
+        "detailed_fetched": true,
+        "episodes_fetched": true
+      },
+      "created_at": "2026-11-16 19:06:52.275728+00:00",
+      "updated_at": "2026-11-16 19:06:52.275735+00:00",
+      "last_episode_refresh": "2026-11-16 19:07:04.553020+00:00",
+      "last_seen": "2026-11-16 19:07:07.836242+00:00"
+    },
+    {
+      "id": 2,
+      "m3u_account_id": 5,
+      "series_id": 3,
+      "category_id": 4,
+      "external_series_id": "9202",
+      "custom_properties": {
+        "basic_data": {
+          "num": 2,
+          "name": "Owned Replacement Series",
+          "series_id": 9202,
+          "category_id": "15",
+          "_category_id": 4,
+          "_provider_category_id": "15"
+        },
+        "owned_note": "preserve",
+        "detailed_fetched": false,
+        "episodes_fetched": false
+      },
+      "created_at": "2026-11-16 19:06:52.275732+00:00",
+      "updated_at": "2026-11-16 19:06:52.275737+00:00",
+      "last_episode_refresh": "2026-11-16 19:07:04.553027+00:00",
+      "last_seen": "2026-11-16 19:07:07.836242+00:00"
+    },
+    {
+      "id": 3,
+      "m3u_account_id": 5,
+      "series_id": 1,
+      "category_id": 4,
+      "external_series_id": "9203",
+      "custom_properties": {
+        "basic_data": {
+          "num": 3,
+          "name": "Owned Series (2020)",
+          "series_id": 9203,
+          "category_id": "15",
+          "_category_id": 4,
+          "_provider_category_id": "15"
+        },
+        "detailed_fetched": false,
+        "episodes_fetched": false
+      },
+      "created_at": "2026-11-16 19:07:07.867471+00:00",
+      "updated_at": "2026-11-16 19:07:07.867476+00:00",
+      "last_episode_refresh": null,
+      "last_seen": "2026-11-16 19:07:07.836242+00:00"
+    }
+  ],
+  "M3UEpisodeRelation": [],
+  "M3UVODCategoryRelation": [
+    {
+      "id": 2,
+      "m3u_account_id": 5,
+      "category_id": 2,
+      "enabled": true,
+      "custom_properties": {},
+      "created_at": "2026-11-16 19:06:52.265280+00:00",
+      "updated_at": "2026-11-16 19:06:52.265285+00:00"
+    },
+    {
+      "id": 3,
+      "m3u_account_id": 5,
+      "category_id": 3,
+      "enabled": true,
+      "custom_properties": {},
+      "created_at": "2026-11-16 19:06:52.269138+00:00",
+      "updated_at": "2026-11-16 19:06:52.269142+00:00"
+    },
+    {
+      "id": 5,
+      "m3u_account_id": 5,
+      "category_id": 4,
+      "enabled": true,
+      "custom_properties": {},
+      "created_at": "2026-11-16 19:07:07.851589+00:00",
+      "updated_at": "2026-11-16 19:07:07.851594+00:00"
+    }
+  ],
+  "SystemEvent": [
+    {
+      "id": 1,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-01 03:04:05+00:00",
+      "channel_id": null,
+      "channel_name": null,
+      "details": {
+        "ordinal": 1,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 2,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-02 03:04:05.123456+00:00",
+      "channel_id": null,
+      "channel_name": "rust-probe-event",
+      "details": {
+        "ordinal": 2,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 3,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-03 03:04:05+00:00",
+      "channel_id": "00000000-0000-0000-0000-000000000000",
+      "channel_name": "rust-probe-event",
+      "details": {
+        "ordinal": 3,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 4,
+      "event_type": "vod_stop",
+      "timestamp": "2020-01-04 03:04:05+00:00",
+      "channel_id": null,
+      "channel_name": "rust-probe-display-event",
+      "details": {
+        "owned_fixture": true
+      }
+    }
+  ],
+  "account": {
+    "id": 5,
+    "name": "Owned VOD ingest",
+    "status": "success",
+    "last_message": "Owned VOD account baseline",
+    "custom_properties": {
+      "enable_vod": true
+    },
+    "is_active": true,
+    "account_type": "XC"
+  }
+}
