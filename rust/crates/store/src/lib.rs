@@ -553,6 +553,8 @@ mod sd_guide_post;
 mod sd_guide_posters;
 mod sd_guide_programme;
 mod sd_guide_state;
+pub mod sd_source_http;
+mod sd_source_writes;
 mod sd_station_discovery;
 
 mod redirect_playback;
@@ -602,3 +604,5 @@ pub mod channel_epg_match_http;
 mod channel_matching_sql_peer;
 
 pub mod m3u_refresh_all;
+
+pub mod vod_ingestion;

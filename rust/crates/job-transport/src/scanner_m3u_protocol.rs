@@ -32,6 +32,7 @@ pub struct Scope {
     parent: Uuid,
     accounts: Vec<i64>,
     exact: Option<(Uuid, [u8; 32])>,
+    require_parent_receipt: bool,
 }
 impl Scope {
     /// Trusted scanner-assembly authority, never an untrusted HTTP request.
@@ -51,6 +52,7 @@ impl Scope {
             parent,
             accounts,
             exact: None,
+            require_parent_receipt: true,
         })
     }
     pub(crate) fn from_registry(parent: Uuid, account: i64, child: Uuid, digest: [u8; 32]) -> Self {
@@ -58,7 +60,19 @@ impl Scope {
             parent,
             accounts: vec![account],
             exact: Some((child, digest)),
+            require_parent_receipt: true,
         }
+    }
+    /// Minted only after the actual authenticated broker head was compared and
+    /// parsed by ScannerParentRegistry::broker_m3u_scope. Normal Source children
+    /// survive parent loss and need no scanner-specific Null result receipt.
+    pub(crate) fn from_broker(parent: Uuid, account: i64, child: Uuid, digest: [u8; 32]) -> Self {
+        let mut scope = Self::from_registry(parent, account, child, digest);
+        scope.require_parent_receipt = false;
+        scope
+    }
+    pub(crate) fn requires_parent_receipt(&self) -> bool {
+        self.require_parent_receipt
     }
     pub(crate) fn accepts_raw(&self, m: &Message, raw: &[u8]) -> bool {
         use sha2::Digest;

@@ -235,7 +235,7 @@ impl ScannerParentRegistry {
             Ok(message) => message,
             Err(_) => return Ok(None),
         };
-        Ok(Some(crate::scanner_m3u_protocol::Scope::from_registry(
+        Ok(Some(crate::scanner_m3u_protocol::Scope::from_broker(
             message.parent,
             message.account,
             message.id,

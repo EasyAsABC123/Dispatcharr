@@ -1790,3 +1790,6 @@ mod channel_matching_transport;
 
 #[path = "m3u_refresh_all_transport.rs"]
 mod m3u_refresh_all_transport;
+
+#[path = "vod_ingestion_transport.rs"]
+mod vod_ingestion_transport;

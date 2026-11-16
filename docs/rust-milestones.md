@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The next [Candidate40 source](rust-milestone-batch40.md) passes SDK56 with 1,141
+tests. It joins the aggregate broker-child correction, real station HTTP
+producers and fresh basic Movie ingestion. One affected eleven-case Native
+batch and clean-commit Docker verifier execution remain pending.
+
 The newest packaged [Candidate39](rust-milestone-batch39.md) passes SDK53 with
 1,135 tests, the physical 15-statement schema check and all six package families.
 Native57 passes all four station worker/ETA cases. Native56 preserves its actual

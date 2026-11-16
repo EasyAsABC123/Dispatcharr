@@ -115,17 +115,19 @@ impl M3uPorts {
         if !scope.accepts_raw(&message, &head.1) {
             return Err(Error::UnsupportedTask);
         }
-        let lease = self.jobs.lease(owner)?;
-        let key = vec![format!("celery-tasks:celery-task-meta-{}", scope.parent())];
-        let (parent, _receipt) = self
-            .jobs
-            .inner
-            .result
-            .command_classified::<(i64, Vec<u8>), _>(PARENT, &key, &[], lease)
-            .await
-            .map_err(map)?;
-        if parent.0 != 1 || !receipt(&parent.1, scope, message.id) {
-            return Err(Error::UnsupportedTask);
+        if scope.requires_parent_receipt() {
+            let lease = self.jobs.lease(owner)?;
+            let key = vec![format!("celery-tasks:celery-task-meta-{}", scope.parent())];
+            let (parent, _receipt) = self
+                .jobs
+                .inner
+                .result
+                .command_classified::<(i64, Vec<u8>), _>(PARENT, &key, &[], lease)
+                .await
+                .map_err(map)?;
+            if parent.0 != 1 || !receipt(&parent.1, scope, message.id) {
+                return Err(Error::UnsupportedTask);
+            }
         }
         Ok(Some(Candidate {
             message,
@@ -306,5 +308,44 @@ mod image8_fifo_regression {
             ),
             "actual scanner backend must list this exact child"
         );
+    }
+    #[test]
+    fn actual_source55_aggregate_children_use_exact_broker_authority_not_scanner_receipt() {
+        use sha2::{Digest, Sha256};
+        let data: Value = serde_json::from_str(include_str!(
+            "../datasets/source55-m3u-aggregate-children.json"
+        ))
+        .unwrap();
+        assert_eq!(
+            data["parent_backend"]["result"],
+            "Queued M3U refresh for 2 active account(s)."
+        );
+        for frame in data["frames"].as_array().unwrap() {
+            let raw = serde_json::to_vec(frame).unwrap();
+            let message = scanner_m3u_protocol::parse(&raw).unwrap();
+            let digest = Sha256::digest(&raw).into();
+            let legacy = Scope::from_registry(message.parent, message.account, message.id, digest);
+            assert!(legacy.requires_parent_receipt());
+            assert!(Scope::new(message.parent, vec![message.account])
+                .unwrap()
+                .requires_parent_receipt());
+            assert!(!receipt(
+                &serde_json::to_vec(&data["parent_backend"]).unwrap(),
+                &legacy,
+                message.id
+            ));
+            let observed = Scope::from_broker(message.parent, message.account, message.id, digest);
+            assert!(!observed.requires_parent_receipt());
+            assert!(observed.accepts_raw(&message, &raw));
+            let mut changed = raw.clone();
+            changed.push(b' ');
+            assert!(!observed.accepts_raw(&message, &changed));
+            let mut other_account = message.clone();
+            other_account.account += 1;
+            assert!(!observed.accepts_raw(&other_account, &raw));
+            let mut other_parent = message.clone();
+            other_parent.parent = Uuid::new_v4();
+            assert!(!observed.accepts_raw(&other_parent, &raw));
+        }
     }
 }

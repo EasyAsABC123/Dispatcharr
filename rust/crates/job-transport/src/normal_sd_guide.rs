@@ -736,3 +736,37 @@ impl Lifecycle for Prepared {
         })
     }
 }
+
+/// Construct the API from the actual prepared consumer, preserving its Auth /
+/// pool, shared Jobs, configured producer identity and drain admission.
+impl Prepared {
+    pub fn source_http(&self) -> dispatcharr_store::sd_source_http::SdSourceHttp {
+        dispatcharr_store::sd_source_http::SdSourceHttp::prepare(Arc::new(self.clone()))
+    }
+}
+impl dispatcharr_store::sd_source_http::Publisher for Prepared {
+    fn auth_service(&self) -> AuthService {
+        self.inner.auth.clone()
+    }
+    fn admission(&self) -> Result<(), dispatcharr_store::StoreError> {
+        if self.inner.closed.load(Ordering::Acquire) || !self.inner.jobs.allows_defaults() {
+            return Err(dispatcharr_store::StoreError::Unsupported(
+                "Prepared station consumer intake unavailable",
+            ));
+        }
+        Ok(())
+    }
+    fn publish(
+        &self,
+        source: i64,
+        trigger: dispatcharr_store::sd_source_http::Trigger,
+        owner: Owner,
+    ) -> BoxFuture<'_, Result<uuid::Uuid, dispatcharr_store::StoreError>> {
+        Box::pin(async move {
+            let countdown = matches!(trigger, dispatcharr_store::sd_source_http::Trigger::Created);
+            self.publish_stations(source, countdown, owner)
+                .await
+                .map_err(|_| dispatcharr_store::StoreError::UnhandledRestFault)
+        })
+    }
+}

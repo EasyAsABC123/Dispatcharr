@@ -54,10 +54,16 @@ pub(super) struct AuthResult {
     pub token: Option<String>,
     pub message: String,
     pub soft: bool,
+    pub code: Option<i64>,
+    pub lockout: bool,
+    pub debug_rejected: bool,
 }
 impl AuthResult {
-    fn failure(message: String, code: Option<i64>, _lockout: bool) -> Self {
+    fn failure(message: String, code: Option<i64>, lockout: bool) -> Self {
         Self {
+            code,
+            lockout,
+            debug_rejected: code == Some(2055),
             token: None,
             message,
             soft: code.is_some_and(|n| matches!(n, 3000 | 3001)),
@@ -65,6 +71,9 @@ impl AuthResult {
     }
     fn success(token: String, _expires: Option<f64>) -> Self {
         Self {
+            code: None,
+            lockout: false,
+            debug_rejected: false,
             token: Some(token),
             message: String::new(),
             soft: false,
@@ -189,7 +198,7 @@ impl Source {
             .get("sd_extra_debugging")
             .is_some_and(crate::xc_live_provider::truthy)
     }
-    async fn save_properties(&self) -> Result<(), Error> {
+    pub(super) async fn save_properties(&self) -> Result<(), Error> {
         let id = self.id;
         let cp = Value::Object(self.properties.clone());
         self.session
@@ -260,6 +269,9 @@ impl Source {
         Ok(true)
     }
     pub async fn obtain(&mut self) -> Result<AuthResult, Error> {
+        self.obtain_with_timeout(Duration::from_secs(30)).await
+    }
+    pub async fn obtain_with_timeout(&mut self, timeout: Duration) -> Result<AuthResult, Error> {
         if self.username.is_empty() || self.password.is_empty() {
             return Ok(AuthResult::failure(
                 "Username and password are required.".into(),
@@ -310,7 +322,7 @@ impl Source {
             None,
             self.debug(),
             Some(&payload),
-            Duration::from_secs(30),
+            timeout,
             self.owner.clone(),
         )
         .await?;
@@ -321,7 +333,7 @@ impl Source {
                 None,
                 self.debug(),
                 Some(&payload),
-                Duration::from_secs(30),
+                timeout,
                 self.owner.clone(),
             )
             .await?;
@@ -418,6 +430,36 @@ impl Source {
         payload: Option<&Value>,
         timeout: Duration,
     ) -> Result<Reply, Error> {
+        self.authorized_inner(
+            method,
+            path,
+            token,
+            payload,
+            timeout,
+            Duration::from_secs(30),
+        )
+        .await
+    }
+    pub async fn authorized_api(
+        &mut self,
+        method: reqwest::Method,
+        path: &str,
+        token: &mut String,
+        payload: Option<&Value>,
+        timeout: Duration,
+    ) -> Result<Reply, Error> {
+        self.authorized_inner(method, path, token, payload, timeout, timeout)
+            .await
+    }
+    async fn authorized_inner(
+        &mut self,
+        method: reqwest::Method,
+        path: &str,
+        token: &mut String,
+        payload: Option<&Value>,
+        timeout: Duration,
+        auth_timeout: Duration,
+    ) -> Result<Reply, Error> {
         let mut reply = http::request(
             method.clone(),
             path,
@@ -444,7 +486,7 @@ impl Source {
             return Ok(reply);
         }
         self.clear_token().await;
-        let fresh = self.obtain().await?;
+        let fresh = self.obtain_with_timeout(auth_timeout).await?;
         let Some(fresh) = fresh.token else {
             return Ok(reply);
         };

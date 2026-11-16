@@ -162,6 +162,26 @@ impl Client {
         if !matches!(action, "get_live_categories" | "get_live_streams") {
             return Err(unsupported());
         }
+        self.authenticated_action(action).await
+    }
+    /// Natural VOD list ingestion reuses this SAME authenticated Requests
+    /// session/limits; it does not grant arbitrary provider action execution.
+    pub(crate) async fn vod_action(
+        &mut self,
+        action: &str,
+    ) -> Result<Result<Value, String>, StoreError> {
+        if !matches!(
+            action,
+            "get_vod_categories" | "get_series_categories" | "get_vod_streams" | "get_series"
+        ) {
+            return Err(unsupported());
+        }
+        self.authenticated_action(action).await
+    }
+    async fn authenticated_action(
+        &mut self,
+        action: &str,
+    ) -> Result<Result<Value, String>, StoreError> {
         if !self.authenticated {
             match self.request(None).await? {
                 Err(e) => return Ok(Err(e)),

@@ -480,7 +480,14 @@ pub(crate) fn router(auth: AuthService) -> Router {
                 .put(crate::provider_mutations::put_server_group)
                 .delete(crate::provider_mutations::delete_server_group),
         )
-        .route("/api/epg/sources/", get(epg_sources).post(mutation))
+        .route(
+            "/api/epg/sources/",
+            get(epg_sources).post(crate::sd_source_http::create),
+        )
+        .route(
+            "/api/epg/sources/{id}/sd-lineups/",
+            axum::routing::any(crate::sd_source_http::lineup),
+        )
         .route(
             "/api/epg/sources/{id}/",
             get(epg_source)

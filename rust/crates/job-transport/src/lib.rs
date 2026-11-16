@@ -321,3 +321,5 @@ mod registered_plugin_protocol;
 pub mod normal_channel_matching;
 
 mod m3u_refresh_all_protocol;
+
+mod vod_ingestion_protocol;

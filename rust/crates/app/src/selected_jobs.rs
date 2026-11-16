@@ -54,6 +54,7 @@ struct Inner {
     backup_jobs: jobs::normal_backup::Application,
     channel_http: dispatcharr_store::channel_maintenance_http::ChannelMaintenanceHttp,
     matching_http: dispatcharr_store::channel_epg_match_http::ChannelEpgMatchHttp,
+    sd_source_http: dispatcharr_store::sd_source_http::SdSourceHttp,
 }
 #[derive(Clone)]
 pub struct SelectedJobs {
@@ -362,6 +363,7 @@ impl SelectedJobs {
         sd_guide
             .bind_hook_runtime(plugin_runtime.clone())
             .map_err(|_| "Selected SD hook runtime binding failed")?;
+        let sd_source_http = sd_guide.source_http();
         let scanner = jobs::normal_scanner::Prepared::connect_with_auto(
             shared_jobs.clone(),
             store.clone(),
@@ -570,6 +572,7 @@ impl SelectedJobs {
                 backup_jobs,
                 channel_http,
                 matching_http,
+                sd_source_http,
             }),
         })
     }
@@ -578,6 +581,9 @@ impl SelectedJobs {
     }
     pub fn backup_files(&self) -> dispatcharr_store::BackupFiles {
         self.inner.backups.clone()
+    }
+    pub fn sd_source_http(&self) -> dispatcharr_store::sd_source_http::SdSourceHttp {
+        self.inner.sd_source_http.clone()
     }
     pub fn recordings_router(&self) -> axum::Router {
         self.inner
@@ -705,6 +711,7 @@ impl SelectedJobs {
         self.inner.backup_jobs.close_admission();
         self.inner.channel_http.close_admission();
         self.inner.matching_http.close_admission();
+        self.inner.sd_source_http.close_admission();
         self.inner.recording_http.close_admission();
         self.inner.xc_http.close_admission();
         self.inner.recording_playback.close_admission();
@@ -739,6 +746,14 @@ impl SelectedJobs {
             .await
         {
             return selected_shutdown_failed("matching_http");
+        }
+        if !self
+            .inner
+            .sd_source_http
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            return selected_shutdown_failed("sd_source_http");
         }
         if !self
             .inner

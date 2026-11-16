@@ -41,3 +41,28 @@ COPY scripts/rust-job-contracts/scanner-logo/file-branches/verified-file-branche
 COPY scripts/rust-job-contracts/scanner-logo/file-branches/run_pair.py ./scripts/rust-job-contracts/scanner-logo/file-branches/run_pair.py
 COPY scripts/rust-job-contracts/scanner-logo/file-branches/source_pair.py ./scripts/rust-job-contracts/scanner-logo/file-branches/source_pair.py
 COPY scripts/rust-job-contracts/scanner-logo/file-branches/periodic_worker_observer.py ./scripts/rust-job-contracts/scanner-logo/file-branches/periodic_worker_observer.py
+
+# Public Source51/53/55 inputs read by portable register/source-contract tests.
+COPY scripts/rust-integration/channel-matching-source51/Source51/qualification.json ./scripts/rust-integration/channel-matching-source51/Source51/qualification.json
+COPY scripts/rust-integration/channel-matching-source51/Source51/cases.json ./scripts/rust-integration/channel-matching-source51/Source51/cases.json
+COPY scripts/rust-integration/channel-matching-source51/Source51/availability.json ./scripts/rust-integration/channel-matching-source51/Source51/availability.json
+COPY scripts/rust-integration/channel-matching-source51/Source51/cleanup.json ./scripts/rust-integration/channel-matching-source51/Source51/cleanup.json
+COPY scripts/rust-integration/channel-matching-source51/Source51/execution.json ./scripts/rust-integration/channel-matching-source51/Source51/execution.json
+COPY scripts/rust-integration/channel-stations-source53/metadata.json ./scripts/rust-integration/channel-stations-source53/metadata.json
+COPY scripts/rust-integration/channel-stations-source53/execution.json ./scripts/rust-integration/channel-stations-source53/execution.json
+COPY scripts/rust-integration/channel-stations-source53/report.json ./scripts/rust-integration/channel-stations-source53/report.json
+COPY scripts/rust-integration/channel-stations-source53/independent-cleanup.json ./scripts/rust-integration/channel-stations-source53/independent-cleanup.json
+COPY scripts/rust-integration/channel-stations-source53/transport-trust.json ./scripts/rust-integration/channel-stations-source53/transport-trust.json
+COPY scripts/rust-integration/milestone-batch38/Source55/qualification.json ./scripts/rust-integration/milestone-batch38/Source55/qualification.json
+COPY scripts/rust-integration/milestone-batch38/Source55/cases.json ./scripts/rust-integration/milestone-batch38/Source55/cases.json
+COPY scripts/rust-integration/milestone-batch38/Source55/execution.json ./scripts/rust-integration/milestone-batch38/Source55/execution.json
+COPY scripts/rust-integration/milestone-batch38/Source55/cleanup.json ./scripts/rust-integration/milestone-batch38/Source55/cleanup.json
+COPY scripts/rust-integration/milestone-batch38/Source55/default-custom-contract.json ./scripts/rust-integration/milestone-batch38/Source55/default-custom-contract.json
+COPY scripts/rust-integration/channel-stations-source53/creation-actual-frame.json ./scripts/rust-integration/channel-stations-source53/creation-actual-frame.json
+COPY scripts/rust-integration/channel-stations-source53/creation-backend.json ./scripts/rust-integration/channel-stations-source53/creation-backend.json
+COPY scripts/rust-integration/channel-stations-source53/lineup-add-actual-frame.json ./scripts/rust-integration/channel-stations-source53/lineup-add-actual-frame.json
+COPY scripts/rust-integration/channel-stations-source53/lineup-add-backend.json ./scripts/rust-integration/channel-stations-source53/lineup-add-backend.json
+COPY scripts/rust-integration/channel-stations-source53/partial-actual-frame.json ./scripts/rust-integration/channel-stations-source53/partial-actual-frame.json
+COPY scripts/rust-integration/channel-stations-source53/partial-backend.json ./scripts/rust-integration/channel-stations-source53/partial-backend.json
+COPY scripts/rust-integration/channel-stations-source53/empty4102-actual-frame.json ./scripts/rust-integration/channel-stations-source53/empty4102-actual-frame.json
+COPY scripts/rust-integration/channel-stations-source53/empty4102-backend.json ./scripts/rust-integration/channel-stations-source53/empty4102-backend.json

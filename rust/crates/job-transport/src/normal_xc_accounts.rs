@@ -165,6 +165,60 @@ impl Prepared {
     }
 }
 impl dispatcharr_store::xc_account_http::Publisher for Prepared {
+    fn publish_vod(
+        &self,
+        account: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<Value, StoreError>> {
+        Box::pin(async move {
+            if self.inner.closed.load(Ordering::Acquire) {
+                return Err(StoreError::Unsupported("VOD producer closed"));
+            }
+            let name = dispatcharr_store::vod_ingestion::api_target(
+                &self.inner.auth,
+                account,
+                owner.clone(),
+            )
+            .await?;
+            dispatcharr_store::vod_ingestion::preflight(&self.inner.auth, account, owner.clone())
+                .await
+                .map_err(|error| match error {
+                    dispatcharr_store::vod_ingestion::AdmissionError::Unsupported => {
+                        StoreError::Unsupported("Initial VOD ingestion domain unavailable")
+                    }
+                    dispatcharr_store::vod_ingestion::AdmissionError::Operational(error) => error,
+                })?;
+            let identity = self.inner.identity.current()?;
+            let raw = crate::vod_ingestion_protocol::encode(account, &identity)
+                .map_err(|_| StoreError::Unsupported("VOD root envelope unavailable"))?;
+            let message = crate::vod_ingestion_protocol::parse(&raw)
+                .map_err(|_| StoreError::Unsupported("VOD root envelope invalid"))?;
+            let retained: Arc<dyn Send + Sync> =
+                Arc::new((owner, self.inner.clone(), raw.clone(), message.id));
+            if self.inner.closed.load(Ordering::Acquire) {
+                return Err(StoreError::Unsupported("VOD producer draining"));
+            }
+            match self.inner.jobs.publish_vod(&raw, retained.clone()).await {
+                Ok(receipt) if receipt.task_id == message.id => {
+                    Ok(json!({"message":format!("VOD refresh initiated for account {name}")}))
+                }
+                other => {
+                    if !matches!(other, Err(crate::transport::Error::Capacity)) {
+                        self.inner
+                            .uncertain
+                            .lock()
+                            .unwrap_or_else(|e| e.into_inner())
+                            .push(retained);
+                    }
+                    Err(StoreError::StatusBody(
+                        503,
+                        json!({"error":"VOD publication unsettled"}),
+                    ))
+                }
+            }
+        })
+    }
+
     fn publish_all_refresh(
         &self,
         owner: Arc<dyn Send + Sync>,

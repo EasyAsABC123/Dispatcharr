@@ -207,6 +207,7 @@ impl Prepared {
             (Family::M3uGroups, m3u.clone()),
             (Family::M3uSingle, m3u),
             (Family::M3uAll, self.xc.all_handler(self.service.clone())),
+            (Family::VodIngestion, self.xc.vod_handler()),
         ];
         if let Some(auto) = &self.auto {
             entries.push(auto.entry())

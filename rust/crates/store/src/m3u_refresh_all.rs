@@ -140,11 +140,28 @@ impl From<StoreError> for AdmissionError {
 }
 
 pub async fn require_supported_domain(auth: &AuthService, owner: Owner) -> Result<(), StoreError> {
-    let _ = observe_plugins(owner.clone()).await?;
-    if no_python_plugins(auth, owner).await? {
-        return Err(unsupported(
+    match require_supported_domain_checked(auth, owner).await {
+        Ok(()) => Ok(()),
+        Err(AdmissionError::Operational(error)) => Err(error),
+        Err(_) => Err(unsupported(
             "Aggregate M3U Python plugin task replacements require adapter",
-        ));
+        )),
+    }
+}
+/// Worker admission must distinguish a completed unsupported namespace from
+/// an actual SQL/cache actor/physical-close failure before an exact broker CAS.
+pub async fn require_supported_domain_checked(
+    auth: &AuthService,
+    owner: Owner,
+) -> Result<(), AdmissionError> {
+    let _ = observe_plugins(owner.clone())
+        .await
+        .map_err(|error| match error {
+            StoreError::Unsupported(_) => AdmissionError::Unsupported,
+            other => AdmissionError::Operational(other),
+        })?;
+    if no_python_plugins(auth, owner).await? {
+        return Err(AdmissionError::Unsupported);
     }
     Ok(())
 }

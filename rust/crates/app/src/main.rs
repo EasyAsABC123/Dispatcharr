@@ -1048,6 +1048,8 @@ async fn run() -> Result<(), String> {
     }
     if let Some(selected) = &selected_jobs {
         app = app.merge(selected.recordings_router());
+        // Supply the actual prepared SD producer to existing provider routes.
+        app = app.layer(axum::Extension(selected.sd_source_http()));
     }
     if let Some(gateway) = &realtime {
         app = app.merge(gateway.router());
