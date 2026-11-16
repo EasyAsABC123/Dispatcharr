@@ -1,0 +1,37 @@
+{
+  "scope": "Mounted test-helper readability failure before application startup, not Rust behavior",
+  "guest_UID": 65532,
+  "host_Driver29_root_and_cohort_modes": "0700",
+  "host_guest_helper_modes": "0600",
+  "excerpts": [
+    {
+      "role": "sd-guide-origin",
+      "actual_exit": 2,
+      "exact_safe_stderr": "/dispatcharrpy/bin/python: can't open file '/normal-dvr-tools/sd_guide_origin.py': [Errno 13] Permission denied\n",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch32-functional-1/fixtures/Original-602aee7e/private/role-schedules-direct-sd-guide-origin-stderr-9120879d.raw",
+        "sha256": "e020b276abeb52f6d7ee74d71df4ecd446644bb55a5d0a911bb73211d427745c",
+        "bytes": 112
+      }
+    },
+    {
+      "role": "plugin-startup-observer",
+      "actual_exit": 2,
+      "exact_safe_stderr": "/dispatcharrpy/bin/python: can't open file '/normal-dvr-tools/startup_observer.py': [Errno 13] Permission denied\n",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch32-functional-1/fixtures/Original-602aee7e/private/role-m8-actions-plugin-startup-observer-stderr-25bbe219.raw",
+        "sha256": "bf149bcc2e8ceee9bcf14105ddf5abfb7a73dd83dd042d230f0f897b75853557",
+        "bytes": 113
+      }
+    }
+  ],
+  "private_diagnosis": {
+    "path": "artifacts/rust/milestone-batch32-helper-permission-diagnosis-1/final-diagnosis.json",
+    "sha256": "40640d54fc57fa944b6bde521c2610221404554b209d181cc3bde8d0f56b0d21",
+    "bytes": 4247
+  },
+  "frozen_Driver29_137_payload_hashes_still_exact": true,
+  "old_Driver29_mutated": false,
+  "correction": "Fresh Driver30 preserves all137 payload bytes, normalizes directory modes0755 and readable helperfiles0444 before binding; actual image unchanged.",
+  "application_acceptance": false
+}

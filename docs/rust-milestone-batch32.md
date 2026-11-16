@@ -58,3 +58,28 @@ These checks cover packaged bytes, dependency execution and the existing useful
 Source/candidate VLC media controls. They do not verify normal restore, enabled
 plugin execution, actual Main shutdown, complete application workflows or new
 performance gains. Those gates remain open on this image.
+
+
+## Main32 fixture infrastructure failure
+
+The [actual Main32 attempt](../scripts/rust-integration/milestone-batch32/infrastructure/inventory.json)
+exits1 after76.735 seconds, with both pipes reaching EOF and the process group
+settled. Source guide setup times out before its TLS fixture becomes ready;
+Source M8 then stops on an observer-startup infrastructure error. Both guest
+Python roles actually exit2 because the mounted helper files cannot be opened:
+Driver29 directories are0700 and helper files0600, inaccessible to UID65532.
+No Native context or warm-stop check executes. This supplies no restore or Main
+shutdown result for the Rust implementation.
+
+The raw aggregate cleanup flag remains false because no Native fixture ran.
+The actual Source fixture receipt separately verifies both owned container IDs
+absent, original process generations absent and host CLI groups settled, with
+no cleanup errors. Frozen Driver29 bytes and modes remain unchanged.
+
+Fresh Driver30 retains all137 helper payload bytes, declares directory0755 and
+helper0444 modes, and binds those modes before the next attempt. One owned
+no-network container actually runs as UID65532 and reads/hashes all137 inputs;
+it exits0 and its exact container ID is absent afterward. This is an
+infrastructure-readiness control, not an application pass. Main33 reuses the
+same Candidate32 image, SDK42 and six package proofs; its application results
+remain separate and pending.

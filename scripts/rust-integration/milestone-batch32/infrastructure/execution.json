@@ -1,0 +1,34 @@
+{
+  "actual_exit": 1,
+  "seconds": 76.73533932999999,
+  "failure": null,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "process_group_settled": true,
+  "remaining_group_members": [],
+  "reference": {
+    "path": "artifacts/rust/normal-graph-batch32-functional-1/dispatch/execution.json",
+    "sha256": "b84d274f62d0ab3c1b9047df76dd90bb7dcbac792a794028bbbec3422285a705",
+    "bytes": 544
+  },
+  "scope": "Actual controller infrastructure failure; no Native business or warm-stop attempt",
+  "Source_context_statuses": [
+    {
+      "case": "schedules-direct",
+      "status": "failed",
+      "reason": "TimeoutError:actual-owned-provider-TLS-origin-ready:None"
+    },
+    {
+      "case": "m8-actions",
+      "status": "failed_infrastructure",
+      "reason": "StartupInfrastructureFailure:('ActualStartupObserverExitedBeforeReady', {'scope': 'actual observer died before application startup', 'actual_exit': 2, 'actual_pid': 414, 'actual_generation': '11501951'})"
+    }
+  ],
+  "Source_reference": {
+    "path": "artifacts/rust/normal-graph-batch32-functional-1/results/Original/report.json",
+    "sha256": "c859500b61d72b4f63024d1474d542d022d0cdc563e35fcbe74ad6a20281463e",
+    "bytes": 840
+  },
+  "Native_contexts_attempted": 0,
+  "Native_warm_stop": "not_run"
+}
