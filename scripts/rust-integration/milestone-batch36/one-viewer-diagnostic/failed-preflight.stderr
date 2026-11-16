@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-2/overlay/run.py", line 124, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-2/overlay/run.py", line 52, in main
+    for p in [package_path,sdk_inputs_path,sdk_checks_path,*package_refs,a.diagnostic_authorization,a.exclusive_grant,*[ROOT/r['path']for r in READINESS_REFS]]:inputs[str(p.relative_to(ROOT))]=sha(p)
+                                                                                                                                                                           ~~~~~~~~~~~~~^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 490, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: 'artifacts/rust/m3-candidate36-one-viewer-diagnostic-2/Root-diagnostic-authorization.json' is not in the subpath of '/home/justin/github/Dispatcharr'

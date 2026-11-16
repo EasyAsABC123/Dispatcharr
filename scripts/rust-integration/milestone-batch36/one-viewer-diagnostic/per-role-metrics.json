@@ -1,0 +1,108 @@
+{
+  "measurement_seconds": 60.00349873499363,
+  "roles": [
+    {
+      "role": "observer",
+      "category": "observer",
+      "cpu_core_seconds": 7.65189,
+      "mean_cpu_cores": 0.1275240637849251,
+      "charged_memory_median_bytes": 211849216,
+      "charged_memory_max_bytes": 218701824,
+      "working_set_estimate_median_bytes": 139620352,
+      "working_set_estimate_max_bytes": 141393920
+    },
+    {
+      "role": "orchestrator",
+      "category": "observer",
+      "cpu_core_seconds": 13.914146,
+      "mean_cpu_cores": 0.231888911369186,
+      "charged_memory_median_bytes": 18141184,
+      "charged_memory_max_bytes": 19984384,
+      "working_set_estimate_median_bytes": 18124800,
+      "working_set_estimate_max_bytes": 19968000
+    },
+    {
+      "role": "baseline",
+      "category": "backend_and_infrastructure",
+      "cpu_core_seconds": 2.765976,
+      "mean_cpu_cores": 0.04609691198534898,
+      "charged_memory_median_bytes": 125218816,
+      "charged_memory_max_bytes": 129163264,
+      "working_set_estimate_median_bytes": 125071360,
+      "working_set_estimate_max_bytes": 129015808
+    },
+    {
+      "role": "candidate",
+      "category": "backend_and_infrastructure",
+      "cpu_core_seconds": 0.529461,
+      "mean_cpu_cores": 0.0088238354623015,
+      "charged_memory_median_bytes": 43528192,
+      "charged_memory_max_bytes": 46362624,
+      "working_set_estimate_median_bytes": 43524096,
+      "working_set_estimate_max_bytes": 46358528
+    },
+    {
+      "role": "origin",
+      "category": "origin",
+      "cpu_core_seconds": 0.441154,
+      "mean_cpu_cores": 0.007352137946961449,
+      "charged_memory_median_bytes": 222228480,
+      "charged_memory_max_bytes": 223444992,
+      "working_set_estimate_median_bytes": 100904960,
+      "working_set_estimate_max_bytes": 102121472
+    },
+    {
+      "role": "publication-observer",
+      "category": "observer",
+      "cpu_core_seconds": 0.0,
+      "mean_cpu_cores": 0.0,
+      "charged_memory_median_bytes": 6246400,
+      "charged_memory_max_bytes": 6254592,
+      "working_set_estimate_median_bytes": 6238208,
+      "working_set_estimate_max_bytes": 6246400
+    }
+  ],
+  "category_metrics": {
+    "backend_and_infrastructure": {
+      "cpu_core_seconds": 3.295437,
+      "cpu_mean_cores": 0.054920747447650485,
+      "charged_memory_median_bytes": 169050112,
+      "charged_memory_max_simultaneous_bytes": 173817856,
+      "working_set_estimate_median_bytes": 168898560,
+      "working_set_estimate_max_simultaneous_bytes": 173666304
+    },
+    "origin": {
+      "cpu_core_seconds": 0.441154,
+      "cpu_mean_cores": 0.007352137946961449,
+      "charged_memory_median_bytes": 222228480,
+      "charged_memory_max_simultaneous_bytes": 223444992,
+      "working_set_estimate_median_bytes": 100904960,
+      "working_set_estimate_max_simultaneous_bytes": 102121472
+    },
+    "observer": {
+      "cpu_core_seconds": 21.566036,
+      "cpu_mean_cores": 0.3594129751541111,
+      "charged_memory_median_bytes": 236163072,
+      "charged_memory_max_simultaneous_bytes": 244133888,
+      "working_set_estimate_median_bytes": 164020224,
+      "working_set_estimate_max_simultaneous_bytes": 166121472
+    },
+    "whole_fixture": {
+      "cpu_core_seconds": 25.302627,
+      "cpu_mean_cores": 0.42168586054872303,
+      "charged_memory_median_bytes": 627089408,
+      "charged_memory_max_simultaneous_bytes": 638697472,
+      "working_set_estimate_median_bytes": 433029120,
+      "working_set_estimate_max_simultaneous_bytes": 439238656
+    },
+    "primary": {
+      "cpu_core_seconds": 3.736591,
+      "cpu_mean_cores": 0.06227288539461193,
+      "charged_memory_median_bytes": 391278592,
+      "charged_memory_max_simultaneous_bytes": 396357632,
+      "working_set_estimate_median_bytes": 269803520,
+      "working_set_estimate_max_simultaneous_bytes": 274882560
+    }
+  },
+  "memory_definition": "Charged=memory.current including filecache. WSE=max(0,memory.current-inactive_file), estimate notRSS. Maxima are simultaneous sampled maxima, not lifetime memory.peak; candidate role includes both Main and VLC."
+}

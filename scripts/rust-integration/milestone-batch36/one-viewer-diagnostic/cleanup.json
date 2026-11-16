@@ -1,0 +1,114 @@
+{
+  "project": "dispatcharr-shared-ts-191a62aa226f",
+  "exact_CIDs": [
+    "6922859f269b65668f364be3566cbbd015cef5e1becb5fda220175797c805021",
+    "2391af2b803d4155874e810781b3dc8117b24edcf82ca2135c1653b9ea96c74a",
+    "6ae559b8118c822aab6f29365a9f8c1c6a11b612a86296595e9e5c25b3bab866",
+    "0db465f9b55dd825549d8a9c7e08cc5015e767855d63f89a86b05b1de5327864"
+  ],
+  "all_owned_resources_absent": true,
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-191a62aa226f",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-191a62aa226f",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-191a62aa226f",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=6922859f269b65668f364be3566cbbd015cef5e1becb5fda220175797c805021"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=2391af2b803d4155874e810781b3dc8117b24edcf82ca2135c1653b9ea96c74a"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=6ae559b8118c822aab6f29365a9f8c1c6a11b612a86296595e9e5c25b3bab866"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "wait_and_EOF_completed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=0db465f9b55dd825549d8a9c7e08cc5015e767855d63f89a86b05b1de5327864"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "wait_and_EOF_completed": true
+    }
+  ],
+  "gain_accepted": false
+}

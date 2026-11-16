@@ -1,0 +1,79 @@
+{
+  "scope": "One exactCandidate36 Native1viewer CPUattribution diagnostic, notSourcecomparison orperformancegain",
+  "candidate_image_id": "sha256:dc9f08a7fb9a3a178dd7b8635543ff002dfd91998503e50f0404eee5ccfa286d",
+  "actual_exit": 0,
+  "actual_seconds": 146.54743023699848,
+  "valid_phases": 1,
+  "samples": 61,
+  "fixed_measurement_seconds": 60.00349873499363,
+  "useful_media_passed": true,
+  "all_owned_cleanup_verified": true,
+  "sampler_nonforced_exit0_FDclosed": true,
+  "category_metrics": {
+    "backend_and_infrastructure": {
+      "cpu_core_seconds": 3.295437,
+      "cpu_mean_cores": 0.054920747447650485,
+      "charged_memory_median_bytes": 169050112,
+      "charged_memory_max_simultaneous_bytes": 173817856,
+      "working_set_estimate_median_bytes": 168898560,
+      "working_set_estimate_max_simultaneous_bytes": 173666304
+    },
+    "origin": {
+      "cpu_core_seconds": 0.441154,
+      "cpu_mean_cores": 0.007352137946961449,
+      "charged_memory_median_bytes": 222228480,
+      "charged_memory_max_simultaneous_bytes": 223444992,
+      "working_set_estimate_median_bytes": 100904960,
+      "working_set_estimate_max_simultaneous_bytes": 102121472
+    },
+    "observer": {
+      "cpu_core_seconds": 21.566036,
+      "cpu_mean_cores": 0.3594129751541111,
+      "charged_memory_median_bytes": 236163072,
+      "charged_memory_max_simultaneous_bytes": 244133888,
+      "working_set_estimate_median_bytes": 164020224,
+      "working_set_estimate_max_simultaneous_bytes": 166121472
+    },
+    "whole_fixture": {
+      "cpu_core_seconds": 25.302627,
+      "cpu_mean_cores": 0.42168586054872303,
+      "charged_memory_median_bytes": 627089408,
+      "charged_memory_max_simultaneous_bytes": 638697472,
+      "working_set_estimate_median_bytes": 433029120,
+      "working_set_estimate_max_simultaneous_bytes": 439238656
+    },
+    "primary": {
+      "cpu_core_seconds": 3.736591,
+      "cpu_mean_cores": 0.06227288539461193,
+      "charged_memory_median_bytes": 391278592,
+      "charged_memory_max_simultaneous_bytes": 396357632,
+      "working_set_estimate_median_bytes": 269803520,
+      "working_set_estimate_max_simultaneous_bytes": 274882560
+    }
+  },
+  "main_and_VLC_attribution": "Native cgroup0.529461CPU-s; stableMain own ticks0.19s and actualVLC0.34s. Largest MainTokio worker schedstat0.181372s; no function-levelcause inferred.",
+  "observer_cost": "Observer21.566036CPU-s: phase7.651890s plus outerorchestrator13.914146s, versus backend+infra3.295437s plusOrigin0.441154s. StableouterPython own ticks13.91s; phaseparentown0.30s and reapedchildrencontext7.18s. Shortlivedchildren cannot be allocated fromtwoendpoints.",
+  "infrastructure_caveat": "The role named baseline here is sharedPG/Redis/compatibility infrastructure for Native, not a Source application comparison. Its2.765976CPU-s cannot all be assigned toPostgreSQL/Redis; only~0.20s occurs in stablePG/Redis process ticks. Existing persecond management snapshots create shortlived infra executions.",
+  "unresolved_gates": [
+    "Original fullcampaign recording/Core/mediaquality gate unchanged",
+    "No matchedSource phase,24phase campaign orCPUratio/gain acceptance",
+    "Native/Main polling cannot be optimized causally from PID/thread endpoints alone"
+  ],
+  "preflight2": {
+    "actual_exit": 1,
+    "no_phase_directory_or_application_started": true,
+    "reason": "Metadata Path.relative_to failed because relativeCLIpaths were compared with absoluteROOT before phase creation. Attempt3 used absoluteCLIpaths; no codechange and failedpreflight retained."
+  },
+  "raw_resource_authority": {
+    "path": "artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/resource-samples.json",
+    "sha256": "bac45c681950f3a162ceee32d107bad21db58766d3e9c69ca7ed02b77cc3f861"
+  },
+  "runner_authority": {
+    "path": "artifacts/rust/m3-candidate36-one-viewer-diagnostic-2/closure.json",
+    "sha256": "2f2d1df0a4892e423f2f36dc5c58c3fd0f8172a0ac111a6cf91b857ca9c9b941"
+  },
+  "full_campaign_passed": false,
+  "gain_accepted": false,
+  "performance_verified": false,
+  "authorship": "Original Dispatcharr and dependency authors retain all application credit"
+}

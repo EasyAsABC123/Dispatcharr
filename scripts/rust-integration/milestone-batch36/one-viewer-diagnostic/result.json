@@ -1,0 +1,433 @@
+{
+  "frozen_sha256": "7821c023f91721dd8a1f25d6c88557a1ddeeb4a613c40d8ba52ffa8d5565ed6c",
+  "authorization_scope": "candidate36-native-one-viewer-cpu-attribution-v1",
+  "full_campaign_functional_review_passed": false,
+  "full_campaign_required_cells_all_passed": false,
+  "preflight_only": false,
+  "gain_accepted": false,
+  "phases": [
+    {
+      "phase": 1,
+      "viewers": 1,
+      "trial": 1,
+      "backend": "candidate",
+      "argv": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit",
+        "dispatcharr-resource-e13914195ab74244a9cd942567e82685.scope",
+        "--",
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-2/overlay/phase.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "--input-profile-vlc",
+        "--require-active-metadata",
+        "--viewers",
+        "1",
+        "--candidate-image",
+        "sha256:dc9f08a7fb9a3a178dd7b8635543ff002dfd91998503e50f0404eee5ccfa286d",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch36-build-1/build.json"
+      ],
+      "unit": "dispatcharr-resource-e13914195ab74244a9cd942567e82685.scope",
+      "controller_process": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 146.34674782300135,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/profile-controller.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/profile-controller.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2839021,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 0,
+        "output_bytes_discarded": 0
+      },
+      "actual_exit": 0,
+      "project": "dispatcharr-shared-ts-191a62aa226f",
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-191a62aa226f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-191a62aa226f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-191a62aa226f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=6922859f269b65668f364be3566cbbd015cef5e1becb5fda220175797c805021"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=2391af2b803d4155874e810781b3dc8117b24edcf82ca2135c1653b9ea96c74a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=6ae559b8118c822aab6f29365a9f8c1c6a11b612a86296595e9e5c25b3bab866"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=0db465f9b55dd825549d8a9c7e08cc5015e767855d63f89a86b05b1de5327864"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ],
+      "useful_media_complete": {
+        "protocol": "complete-unit fixed60s plus bounded5s drain",
+        "passed": true,
+        "old_v2_requalification": false,
+        "readers": [
+          {
+            "reader": "owner",
+            "raw_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/candidate-shared-demand/owner.ts",
+            "passed": true,
+            "full_raw_decode": {
+              "actual_exit": 0,
+              "failure": null,
+              "stdout_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/candidate-shared-demand/owner.ts.framehash",
+              "stdout_sha256": "75931a022e08342d155485d62bf8c34b94e2baf2043ddfae02c50dffbbe60cc7",
+              "stderr_bytes": 0,
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "command_receipt": {
+                "argv": [
+                  "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+                  "compose",
+                  "-p",
+                  "dispatcharr-shared-ts-191a62aa226f",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-playback.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-candidate.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-replicas.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/candidate-image.json",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/ports.yml",
+                  "exec",
+                  "-T",
+                  "baseline",
+                  "ffmpeg",
+                  "-hide_banner",
+                  "-loglevel",
+                  "error",
+                  "-threads",
+                  "1",
+                  "-filter_threads",
+                  "1",
+                  "-filter_complex_threads",
+                  "1",
+                  "-copyts",
+                  "-i",
+                  "/evidence/candidate-shared-demand/owner.ts",
+                  "-map",
+                  "0:v:0",
+                  "-map",
+                  "0:a:0",
+                  "-fps_mode:v",
+                  "passthrough",
+                  "-c:v",
+                  "rawvideo",
+                  "-threads:v",
+                  "1",
+                  "-threads:a",
+                  "1",
+                  "-pix_fmt",
+                  "yuv420p",
+                  "-c:a",
+                  "pcm_s16le",
+                  "-f",
+                  "framehash",
+                  "-hash",
+                  "sha256",
+                  "pipe:1"
+                ],
+                "actual_exit": 0,
+                "failure": null,
+                "seconds": 1.0268148870090954,
+                "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/command-00226.stdout",
+                "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/command-00226.stderr",
+                "stdout_bytes": 694391,
+                "stderr_bytes": 0
+              },
+              "media_sha256": "de2318a353846dee73a5f3cc45b6830da7f7f070ee3f7bb1f54cfa2271a89141"
+            },
+            "certificate": {
+              "raw_sha256": "de2318a353846dee73a5f3cc45b6830da7f7f070ee3f7bb1f54cfa2271a89141",
+              "raw_bytes": 13305136,
+              "derivative_sha256": "de2318a353846dee73a5f3cc45b6830da7f7f070ee3f7bb1f54cfa2271a89141",
+              "derivative_bytes": 13305136,
+              "drain_offset": 13305136,
+              "selected_window": [
+                3340757,
+                12537532
+              ],
+              "removed_ranges": [],
+              "PID_lower": {
+                "200": 564,
+                "100": 1128
+              },
+              "PID_upper": {
+                "200": 13305136,
+                "100": 13305136
+              },
+              "closure_proven": true
+            },
+            "certified_decode": {
+              "actual_exit": 0,
+              "failure": null,
+              "stdout_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/candidate-shared-demand/owner.certified.ts.framehash",
+              "stdout_sha256": "75931a022e08342d155485d62bf8c34b94e2baf2043ddfae02c50dffbbe60cc7",
+              "stderr_bytes": 0,
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "command_receipt": {
+                "argv": [
+                  "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+                  "compose",
+                  "-p",
+                  "dispatcharr-shared-ts-191a62aa226f",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-playback.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-candidate.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/docker/compose.rust-replicas.yml",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/candidate-image.json",
+                  "-f",
+                  "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/ports.yml",
+                  "exec",
+                  "-T",
+                  "baseline",
+                  "ffmpeg",
+                  "-hide_banner",
+                  "-loglevel",
+                  "error",
+                  "-threads",
+                  "1",
+                  "-filter_threads",
+                  "1",
+                  "-filter_complex_threads",
+                  "1",
+                  "-copyts",
+                  "-i",
+                  "/evidence/candidate-shared-demand/owner.certified.ts",
+                  "-map",
+                  "0:v:0",
+                  "-map",
+                  "0:a:0",
+                  "-fps_mode:v",
+                  "passthrough",
+                  "-c:v",
+                  "rawvideo",
+                  "-threads:v",
+                  "1",
+                  "-threads:a",
+                  "1",
+                  "-pix_fmt",
+                  "yuv420p",
+                  "-c:a",
+                  "pcm_s16le",
+                  "-f",
+                  "framehash",
+                  "-hash",
+                  "sha256",
+                  "pipe:1"
+                ],
+                "actual_exit": 0,
+                "failure": null,
+                "seconds": 1.0574299180007074,
+                "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/command-00227.stdout",
+                "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate36-one-viewer-diagnostic-actual-3/1-1-1-candidate/command-00227.stderr",
+                "stdout_bytes": 694391,
+                "stderr_bytes": 0
+              },
+              "media_sha256": "de2318a353846dee73a5f3cc45b6830da7f7f070ee3f7bb1f54cfa2271a89141"
+            },
+            "streams": {
+              "0": {
+                "complete_units": 1491,
+                "encoded_useful_bytes": 7493394,
+                "useful_duration_seconds": 59.64,
+                "first_pts90k": 1967519,
+                "last_pts90k": 7331519,
+                "independent_expected_encoded_bytes_60s": 7535162,
+                "useful_rate_fraction": 0.9944569207669324
+              },
+              "1": {
+                "complete_units": 2797,
+                "encoded_useful_bytes": 976727,
+                "useful_duration_seconds": 59.669333333333334,
+                "first_pts90k": 1965600,
+                "last_pts90k": 7333920,
+                "independent_expected_encoded_bytes_60s": 981982,
+                "useful_rate_fraction": 0.9946485780798426
+              }
+            },
+            "decode_context": {
+              "compared_complete_context_units": {
+                "video": 2155,
+                "audio": 4042
+              },
+              "outer_AAC_priming_difference": []
+            },
+            "window_bytes": 9196775,
+            "window_encoded_useful_bytes": 8470121,
+            "ledger_sha256": "f866e2c10a41ce9d21ee18ccdb56bdce4c18784d7e53628edb547d152e17dc30"
+          }
+        ],
+        "gain_acceptance": false,
+        "one_batch_PTS_seconds": 2.005333333332999,
+        "independent_max_PES_media_span_seconds": 0.040000000000020464,
+        "fixed_drain_derivation_seconds": 5
+      },
+      "valid": true,
+      "measurement_seconds": 60.00349873499363,
+      "media_byte_deltas": [
+        9211248
+      ],
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.295437,
+          "cpu_mean_cores": 0.054920747447650485,
+          "charged_memory_median_bytes": 169050112,
+          "charged_memory_max_simultaneous_bytes": 173817856,
+          "working_set_estimate_median_bytes": 168898560,
+          "working_set_estimate_max_simultaneous_bytes": 173666304
+        },
+        "origin": {
+          "cpu_core_seconds": 0.441154,
+          "cpu_mean_cores": 0.007352137946961449,
+          "charged_memory_median_bytes": 222228480,
+          "charged_memory_max_simultaneous_bytes": 223444992,
+          "working_set_estimate_median_bytes": 100904960,
+          "working_set_estimate_max_simultaneous_bytes": 102121472
+        },
+        "observer": {
+          "cpu_core_seconds": 21.566036,
+          "cpu_mean_cores": 0.3594129751541111,
+          "charged_memory_median_bytes": 236163072,
+          "charged_memory_max_simultaneous_bytes": 244133888,
+          "working_set_estimate_median_bytes": 164020224,
+          "working_set_estimate_max_simultaneous_bytes": 166121472
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 25.302627,
+          "cpu_mean_cores": 0.42168586054872303,
+          "charged_memory_median_bytes": 627089408,
+          "charged_memory_max_simultaneous_bytes": 638697472,
+          "working_set_estimate_median_bytes": 433029120,
+          "working_set_estimate_max_simultaneous_bytes": 439238656
+        },
+        "primary": {
+          "cpu_core_seconds": 3.736591,
+          "cpu_mean_cores": 0.06227288539461193,
+          "charged_memory_median_bytes": 391278592,
+          "charged_memory_max_simultaneous_bytes": 396357632,
+          "working_set_estimate_median_bytes": 269803520,
+          "working_set_estimate_max_simultaneous_bytes": 274882560
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "77dc8075f201013b424712c634f214cf3177e75cf2bde172b5268b1d2fb7894d",
+        "resource-samples.json": "bac45c681950f3a162ceee32d107bad21db58766d3e9c69ca7ed02b77cc3f861",
+        "useful-media-complete.json": "309308b31952130f932a64808f34b8717de30d7bd5463d55e43cd98eda54c980"
+      }
+    }
+  ],
+  "all_phases_valid": false,
+  "pairs": [],
+  "live_only_gain_accepted": false,
+  "active_DVR_gain_accepted": false,
+  "full_migration_accepted": false,
+  "changed_inputs": [],
+  "elapsed_seconds": 146.43111325398786
+}
