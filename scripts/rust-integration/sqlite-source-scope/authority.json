@@ -1,0 +1,89 @@
+{
+  "state": "static_source_scope_only_no_SQLite_application_execution",
+  "source_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "production_selection": {
+    "env": "DB_ENGINE",
+    "exact_value": "sqlite",
+    "engine": "django.db.backends.sqlite3",
+    "path": "/data/dispatcharr.db",
+    "other_case_or_value": "PostgreSQL settings branch"
+  },
+  "test_selection": {
+    "command": "python manage.py test",
+    "settings": "dispatcharr.settings_test",
+    "env": "TEST_USE_SQLITE",
+    "case_insensitive_truthy": [
+      "1",
+      "true",
+      "yes"
+    ],
+    "sqlite_path": ":memory:",
+    "otherwise": "PostgreSQL Django-managed test_<dbname>",
+    "DB_ENGINE_alone_overridden_by_test_settings": true
+  },
+  "source_backup": {
+    "create": "sqlite3 source.backup(destination) against actual configured file",
+    "archive_members": [
+      "database.sqlite3",
+      "metadata.json"
+    ],
+    "metadata": {
+      "format": "dispatcharr-backup",
+      "version": 2,
+      "database_type": "sqlite",
+      "database_file": "database.sqlite3"
+    },
+    "restore": [
+      "Compare metadata database type with actual engine before restoration.",
+      "Copy existing configured file to .db.bak when present.",
+      "shutil.copy2 extracted SQLite database over configured path.",
+      "Query sqlite_master to check readability.",
+      "Only sqlite3.DatabaseError triggers copying saved .bak back before raising.",
+      "Actual restore task subsequently runs Django migrate; caught errors return backend SUCCESS with status=failed result."
+    ],
+    "unqualified": [
+      "Active readers/writers and WAL/SHM visibility",
+      "File permissions/ownership and failure recovery",
+      "Same-process connection/cache visibility",
+      "Full application schema/migration compatibility"
+    ]
+  },
+  "deployment_static_facts": [
+    "Default Dockerfile entrypoint is /app/docker/entrypoint.sh.",
+    "Default entrypoint provisions or waits for PostgreSQL and launches migrate/web via su-login.",
+    "Its explicit environment propagation whitelist omits DB_ENGINE.",
+    "Captured Compose examples use PostgreSQL defaults."
+  ],
+  "inferences_not_runtime_results": [
+    "DB_ENGINE supplied to container may not reach actual login-shell application processes; effective default-entrypoint engine remains unmeasured.",
+    "Ungated PostgreSQL SQL in VOD0003 and Channels0038 likely blocks fresh SQLite migrations; exact first failure/applied prefix must be observed."
+  ],
+  "migration_static_facts": {
+    "application_migration_files": 145,
+    "explicit_nonpostgres_fallbacks": [
+      "epg0025",
+      "epg0027",
+      "epg0028",
+      "vod0005"
+    ],
+    "unguarded_postgres_operations": [
+      "vod0003 DO blocks using pg_constraint and regclass",
+      "channels0038 regex/int/jsonb expressions"
+    ]
+  },
+  "source_test_limit": "Relevant backup unit tests mock SQLite dump/restore/engine branches; they do not establish physical SQLite application acceptance.",
+  "native_scope": [
+    "Exact DB_ENGINE=sqlite is explicitly rejected before PG URL fallback.",
+    "Store is SQLx PgPool/PgRow with PG SQL/schema; sqlx enables postgres only.",
+    "Backup configuration requires PG URL and pg_dump/pg_restore/psql; creates PG members.",
+    "Normal restore uses PG database/server-generation and same Main PGpool fence; non-PG archive rejected.",
+    "SQLite requires coherent persistence/schema/history/file+WAL/connection/task+Beat and backup/restore lifecycles across real Main; adding archive member alone cannot meet it."
+  ],
+  "sqlite_scope_waived": false,
+  "engine_implementation_started": false,
+  "runtime_executed": false,
+  "performance_verified": false,
+  "full_milestone_passed": false,
+  "credits": "Original Dispatcharr authors and contributors retain full application and algorithm credit; Django, Python/SQLite, PostgreSQL, Celery/Kombu and dependency authors retain their credit and licenses."
+}

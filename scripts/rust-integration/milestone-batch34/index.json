@@ -1,9 +1,9 @@
 {
-  "scope": "SDK45 diagnostics-only source evidence; no image/application/performance acceptance",
+  "scope": "SDK45 diagnosticsonly source/build/sixpackages pass; Main35diagnostics pending, no newapplication/performanceacceptance",
   "files": [
     {
       "path": "docs/rust-milestone-batch34.md",
-      "sha256": "a59efc8270cccc7b40c48857ac9c85beb29fd9634b734d0d940d6af112890b24"
+      "sha256": "6ae9b0fb6b0f31e0e2898e5740893c341baa044e0635bae067d6acd973cb0afe"
     },
     {
       "path": "scripts/rust-integration/milestone-batch34/checks.json",
@@ -22,6 +22,10 @@
       "sha256": "57037c0add21a3ba15f39232e4ee07b8afb91783f3565063ef434bb6c600135c"
     },
     {
+      "path": "scripts/rust-integration/milestone-batch34/components/install-proof.json",
+      "sha256": "ed8b0688292d0400d352315961aac1d155e08d1dff8bb42d5881ec71dc8c9393"
+    },
+    {
       "path": "scripts/rust-integration/milestone-batch34/components/manual-inspect-fix.json",
       "sha256": "72c1aaeec5efdd3f99383e0c0674438e0460353e2563140ebbd7dc0a78225932"
     },
@@ -35,7 +39,7 @@
     },
     {
       "path": "scripts/rust-integration/milestone-batch34/inventory.json",
-      "sha256": "3e4147450f2af41eb032187708f09cdc45615cf2c374123430970ce2f1bb4dad"
+      "sha256": "f475869ef47db31ccd661ae34a9e6dc8e9d93e1d9d758ca18625e908217721bf"
     },
     {
       "path": "scripts/rust-integration/milestone-batch34/logs/check.stderr",
@@ -68,6 +72,50 @@
     {
       "path": "scripts/rust-integration/milestone-batch34/logs/workspace.stdout",
       "sha256": "07755c5cc0cac66416f287da374176b5e8eab48a252b9d45db430ebae658c403"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/archive-assets.json",
+      "sha256": "988c31474d142c970173d93839e0731e71eefb46f60f895fda76eec75ba125d2"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/build-execution.json",
+      "sha256": "dc209ebe90b64a51f167eaaf614777ace8adf23d7c58c4abe02f059355ebf037"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/build.json",
+      "sha256": "92f02e7d79d0276ec9b4348104f85b5c29730e943174b9e633d878b95882933a"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/cleanup.json",
+      "sha256": "f4748052ac1139add2b44d2f2e86503953e7777e6c60149ca4eac51b3aad47d9"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/crypto.json",
+      "sha256": "8f5da1017bb54c0bea9ac5e19cb56dd1752be5a30c08bbc399b096ded57290ad"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/executions.json",
+      "sha256": "a974e13dcad263e0397f5f45327d1662f7c9631a371c10a61954594ca776d866"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/inventory.json",
+      "sha256": "c8b138263e58ba1ad5e1901d87b8644140058c16b212eeb0a00a236e9a278d7c"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/postgres.json",
+      "sha256": "1abf6f1effae448c7794edf7ac5811a1c9846b8b2413be38ce3e1f4a44a822b2"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/python-host.json",
+      "sha256": "9583c333893d2522467f55c80c55273a7501769c6cd3dd4b51544038b9a6fc43"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/regex.json",
+      "sha256": "c39a2aaa4bebfaaa457461754eb3508018c1c3d4313ba64daac9c8ae8a1deda5"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch34/package/vlc.json",
+      "sha256": "4bad370518cec3a81f98c80cd61910c33d3c0706fe69248c616d90eb3e48f5f0"
     },
     {
       "path": "scripts/rust-integration/milestone-batch34/previous-SDK44/checks.json",
@@ -136,10 +184,6 @@
     {
       "path": "scripts/rust-integration/milestone-batch34/redirect-controls/multithread-old-results.json",
       "sha256": "51eb4538f9cfa28c5bc7c4a51ec6d365d029b19a357ef061b8694358eb3df2e7"
-    },
-    {
-      "path": "scripts/rust-integration/milestone-batch34/components/install-proof.json",
-      "sha256": "ed8b0688292d0400d352315961aac1d155e08d1dff8bb42d5881ec71dc8c9393"
     }
   ],
   "full_milestones_accepted": false,

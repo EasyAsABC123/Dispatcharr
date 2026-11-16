@@ -9,8 +9,8 @@ all-target Clippy and workspace tests: **1,111 passed, zero failed and
 783 ignored**, across 180 result blocks. The snapshot records
 1,413 inputs, including 1,407 Rust-tree files.
 Five files differ from SDK43 and are installed exactly from the tested snapshot.
-The explicitly tagged Candidate34 Docker build, package checks and application
-diagnostics remain separate pending gates.
+The explicitly tagged Candidate34 Docker build and six package checks now pass;
+application diagnostics remain a separate gate.
 
 This candidate adds observations for the unresolved Main34 host/bootstrap and
 EPG HTTP-send failures. With `RUST_PLUGIN_HOST_DIAGNOSTICS=1`, host diagnostics
@@ -58,3 +58,26 @@ while retaining the original false checker result. No raw failure is rewritten.
 remains candidate-bound: held physical control passes; guides and M8 fail.
 The302-only EPG failure and unresolved host phase require actual diagnostics from
 the new package. No complete milestone or new performance gain is accepted.
+
+
+## Candidate34 package checks
+
+The [actual package inventory](../scripts/rust-integration/milestone-batch34/package/inventory.json)
+binds committed revision `8c872439590511258750b31d856432e553f8192f` to image
+`sha256:b7e0b01a3c55721dd6dfbca94e7c4acb7f06be4cfb48c90dc0e51750a9db7c08`.
+The build explicitly verifies its `milestone34` tag before starting and actually
+exits0 after134.098 seconds. All six sequential package checks exit0, including
+the installed plugin launcher returning281 nonempty usage bytes with all four
+required options as UID65532. Independent inventories verify all54 exact owned
+package container IDs absent. All1,407 Rust inputs match SDK45; unchanged React,
+Original attribution and dependency notices remain preserved.
+
+A separate no-network UID65532 control reads and hashes all138 Driver32 helper
+inputs and verifies its exact container absent. The next Native-only diagnostic
+batch orders M8 before guides, enables only the declared bounded diagnostics,
+and uses backend-result failfast after actual typed permanent faults. Admitted
+failed tasks and unproduced blocked dependencies remain distinct. Earlier held
+physical and independent business outcomes retain their old-image scopes.
+These package and readability controls establish no new RPC/restore/application,
+full milestone or performance acceptance, and introduce no pool or HTTP behavior
+fix.

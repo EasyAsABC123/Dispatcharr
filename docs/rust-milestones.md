@@ -9,12 +9,21 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate33](rust-milestone-batch33.md), runtime
+The newest source candidate is [Candidate34](rust-milestone-batch34.md), runtime
+`8c872439590511258750b31d856432e553f8192f`: all four SDK45 gates pass with
+1,111 tests, zero failures and 783 ignored; its explicitly tagged Docker build
+and all six package families pass. It adds bounded, opt-in failure diagnostics,
+with no HTTP pool or bootstrap behavior fix. The Native startup/guide diagnostic
+batch is running. [SQLite compatibility](rust-sqlite-compatibility.md) remains an
+explicit Source-characterization and implementation gap. All full milestones
+and new full-service performance acceptance remain open.
+
+The preceding source candidate is [Candidate33](rust-milestone-batch33.md), runtime
 `32d5135dc084dd8656599cfedd800fc9473b55c9`: all four SDK43 gates and six
 Docker package families pass. Its actual plugin launcher now invokes the existing
-bootstrap main and emits valid command-line help. The affected three Native
-workflows are running, while prior independent observations retain their own
-image and scope. This is not yet enabled-plugin/RPC acceptance. All full M0–M9
+bootstrap main and emits valid command-line help. Its affected three Native workflows completed: the held control passes, while
+guide and M8 startup failures remain. Prior independent observations retain
+their own image and scope. This is not yet enabled-plugin/RPC acceptance. All full M0–M9
 criteria and new full-service performance acceptance remain open.
 
 The preceding source candidate is [Candidate32](rust-milestone-batch32.md), runtime

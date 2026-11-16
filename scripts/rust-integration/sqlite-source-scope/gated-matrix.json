@@ -1,0 +1,125 @@
+{
+  "state": "prepared_characterization_matrix_not_an_executed_harness",
+  "source_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "pinned_dependency_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "execution_policy": {
+    "exclusive_owned_compose_batch": true,
+    "same_source_and_dependency_hashes_required": true,
+    "owned_fresh_data_for_fixed_SQLite_path": "/data/dispatcharr.db",
+    "no_compilation_or_unrelated_fixture_load": true,
+    "retain_actual_command_exit_EOF_process_group_and_cleanup": true,
+    "public_metadata_only": "engine/path role, safe hashes, explicitly controlled rows; no credentials/tokens/raw process environments",
+    "no_Source_body_delegation_from_Native": true
+  },
+  "gates": [
+    {
+      "id": "deployment_selection",
+      "status": "not_run",
+      "entrypoint": "Actual unchanged default Source /app/docker/entrypoint.sh with DB_ENGINE=sqlite and owned data/dependencies",
+      "assertions": [
+        "Verify actual startup code bytes against pinned source refs.",
+        "Observe effective settings/environment in actual migration, web and worker login-shell launch path.",
+        "Capture PostgreSQL readiness and SQLite file/session activity and actual exits.",
+        "A PostgreSQL selection is a deployment observation, never SQLite acceptance."
+      ],
+      "configuration_controls": {
+        "production_DB_ENGINE": [
+          "unset",
+          "sqlite",
+          "SQLite",
+          "SQLITE"
+        ],
+        "test_TEST_USE_SQLITE": [
+          "unset",
+          "1",
+          "true",
+          "yes"
+        ],
+        "test_scope": "manage.py test uses settings_test and :memory: fallback independently; cannot stand in for production file path"
+      }
+    },
+    {
+      "id": "fresh_sqlite_migrate",
+      "status": "not_run",
+      "after": "deployment_selection observations captured",
+      "entrypoint": [
+        "python",
+        "manage.py",
+        "migrate",
+        "--noinput"
+      ],
+      "environment": {
+        "DB_ENGINE": "sqlite",
+        "DJANGO_SETTINGS_MODULE": "dispatcharr.settings"
+      },
+      "pre_redis_flag": "Record DISPATCHARR_SKIP_REDIS_CACHE=1 where the actual AIO pre-Redis launch uses it; do not silently change deployment configuration.",
+      "assertions": [
+        "Verify actual engine/path is SQLite /data/dispatcharr.db in the owned context.",
+        "Capture actual exit, safe stdout/stderr hashes, first failed migration and applied prefix.",
+        "Capture read-only SQLite header/schema/integrity observations.",
+        "Keep dependency/environment failures separate from SQL portability failures."
+      ],
+      "forbidden_substitutes": [
+        "--fake or skipped migrations",
+        "SQL patches or generated replacement app schema",
+        "migration module overrides",
+        "in-memory test fallback as production acceptance"
+      ]
+    },
+    {
+      "id": "usable_source_baseline",
+      "status": "not_run",
+      "requires": "Unmodified production-settings SQLite bootstrap succeeds, or legitimate existing owned SQLite application file with exact Original version/history and migration provenance.",
+      "on_failed_bootstrap": "Record literal failure; dependent application gates remain blocked/not_run. No legitimate current-schema SQLite application file is supplied by the captured source archive."
+    },
+    {
+      "id": "actual_rest_backup_restore",
+      "status": "not_run",
+      "requires": "usable_source_baseline",
+      "workflow": [
+        "Reuse actual Source web/default worker/Beat context for initialization/login and controlled channel/settings reads/writes.",
+        "Produce real context-local archive through REST create/status/download; verify complete SQLite member signature and metadata.",
+        "Mutate controlled credentials/settings/channel via ordinary APIs.",
+        "Restore through actual REST producer/worker; observe task migrate result and same-instance restored HTTP/SQL behavior.",
+        "Observe file/journal sidecars and actual process identities."
+      ],
+      "source_backend_calls_from_controller": "No direct service/task/migrate-body replay; public CLI/REST entry points only."
+    },
+    {
+      "id": "failures_and_physical_lifecycle",
+      "status": "not_run",
+      "requires": "actual_rest_backup_restore causal baseline",
+      "cells": [
+        "Corrupt ZIP",
+        "Wrong engine metadata",
+        "Missing SQLite member",
+        "Corrupt/unreadable SQLite database",
+        "Readable but incomplete database",
+        "Existing .db.bak and Source actual rollback behavior",
+        "File mode/permission failure",
+        "Real concurrent reader/writer",
+        "Held SQLite lock and shutdown/cancellation"
+      ],
+      "assertions": [
+        "Preserve actual failed result versus backend FAILURE distinction.",
+        "Observe literal database bytes/backup/journal/locks and real owner retirement.",
+        "Do not infer SQL/session closure from client loss or process exit alone."
+      ]
+    },
+    {
+      "id": "native_equivalence_and_performance",
+      "status": "blocked",
+      "requires": "Concrete Source authority plus coherent Native SQLite persistence/lifecycle implementation",
+      "assertions": [
+        "Run the same required application matrix on one built Native candidate.",
+        "Measure equivalent useful work under fixed budgets in a quiet window.",
+        "Include participating worker/media/database/cache processes."
+      ],
+      "accepted_by_this_packet": false
+    }
+  ],
+  "SQLite_requirement_waived": false,
+  "runtime_executed": false,
+  "performance_verified": false,
+  "credits": "Original Dispatcharr authors and contributors retain full application and algorithm credit; Django, Python/SQLite, PostgreSQL, Celery/Kombu and dependency authors retain their credit and licenses."
+}
