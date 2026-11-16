@@ -138,3 +138,7 @@ def run_action(value):
  try:rendered=JSONRenderer().render(body)
  except Exception as error:return{'source_rendering_failed':True,'actual_exception_class':type(error).__name__}
  return{'status':status,'body_base64':base64.b64encode(rendered).decode('ascii')}
+
+
+if __name__ == "__main__":
+ main()

@@ -1,0 +1,19 @@
+{
+  "problem": "The actual production launcher executes bootstrap.py as a script, but Candidate32 onlydefined main() and run_action(); it nevercalled main. FirstenabledConnect/taskhost couldnotemitready/RPC.",
+  "production_launcher_source": {
+    "path": "rust/runtime/collect_python_host.py",
+    "line": 203,
+    "sha256": "dcd5c176c825176ccd86d69a4caac6d3c45099969f31e8736818e079e5362a34"
+  },
+  "preimage_sha256": "ba4be33cf33c913fbd75df6595484192bc20c129444909f4d8ddd11dd87347f4",
+  "payload_sha256": "589f7d679ec79d497831dcc72b326de71c0dd4be4ba21165c345f0ab6f773623",
+  "correction": "Append guarded main invocation; imported module remains inert. No task parser, physical owner, transport or timing change.",
+  "actual_failure": "Main33 selected_workers.ready=false, celery Fault(Operational(\"SD guide guide effects unsettled\")); both Connect task result keys absent. Rawcapture contains onlynormalMainstartup line, so itdoesnotestablishan actualchildtraceback.",
+  "failure_reference": {
+    "path": "artifacts/rust/m6-native33-Connect-stall-readonly-1/report.json",
+    "sha256": "be3618f5f24262969b972c31efc0bc7fad6c22b3c0d53c537a898f450a611d2c"
+  },
+  "runtime_acceptance": false,
+  "new_image_packaged_launcher_control": "pending",
+  "Original_authorship_preserved": true
+}
