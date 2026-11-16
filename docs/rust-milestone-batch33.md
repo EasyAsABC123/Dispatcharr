@@ -36,8 +36,36 @@ are cleaned up. Five guide-file observations used the wrong filesystem namespace
 held-guide prerequisites also need fixture corrections. These observations do
 not turn the failed contexts into passes or establish a regex runtime defect.
 
-Candidate33's Docker build, actual packaged launcher control, six package proof
-families and full affected Native application rerun remain pending. In particular,
-nonempty help output does not establish Django bootstrap, Connect delivery,
+Candidate33's Docker build, actual packaged launcher control and six package
+proof families below pass. The affected Native application rerun is running.
+Nonempty help output does not establish Django bootstrap, Connect delivery,
 plugin execution or physical host shutdown. No full milestone or new performance
 gain is accepted.
+
+
+## Candidate33 package and launcher checks
+
+The [package inventory](../scripts/rust-integration/milestone-batch33/package/inventory.json)
+binds runtime `32d5135dc084dd8656599cfedd800fc9473b55c9` to image
+`sha256:985059bb98284d371a48fbf791dd49127c2ad20e1e9384db793a955133a2114f`.
+The build actually exits0 after191.943 seconds. All six sequential package
+checks exit0. The full Python-host check additionally invokes the installed
+`dispatcharr-plugin-python --help` as UID65532: it emits281 nonempty usage bytes
+including `--source`, `--plugins`, `--mode` and `--role`, unlike the retained old
+empty-output result. This checks the actual production wrapper, not just an
+import. It does not establish RPC handshake or plugin business execution.
+Independent read-only inventories verify all54 exact package container IDs
+absent after all six waits. React and Original/dependency credits are preserved.
+
+The local build runner accidentally retained the `milestone32` tag literal.
+The raw build manifest/log remain unchanged. An
+[explicit alias receipt](../scripts/rust-integration/milestone-batch33/package/tag-alias.json)
+verifies `dispatcharr-rust-candidate:milestone33` resolves to the exact new image
+and source labels. Overwriting the old tag made the old32 image ID unavailable
+locally; restoration failed, and the misleading32 tag was removed after checking
+the33 reference remained intact. Historical32 evidence is unchanged. No rebuild
+or source replay was performed. Reproduction uses the verified33 alias or exact
+image ID, with the raw tag discrepancy retained.
+
+The affected Native guide/M8/held application batch remains a separate gate.
+No full milestone or new performance gain is accepted.
