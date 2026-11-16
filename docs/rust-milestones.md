@@ -9,12 +9,30 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate28](rust-milestone-batch28.md): all four
-SDK gates pass with1,088 tests, zero failures and783 ignored. It joins local/
-remote XML event scopes, dummy/ordered-name guide output, native builtin task
-handoff and late-body guards, process transports, inactive input profiles,
-Channel/Recording Collector and account scalars. Docker, combined Main/physical
-acceptance and performance remain open.
+The newest source candidate is [Candidate31](rust-milestone-batch31.md), runtime
+`ca2e173c797b050dc42ef897501a8fcd5db0f552`: all four SDK41 gates pass with
+1,099 tests, zero failures and783 ignored. Its six package families pass on image
+`sha256:6cd3617f698006c85bdb7696f3f3b2e441b101aa885d6be9b96ab6635f7ef8bf`,
+with exact Git/SDK inputs, unchanged React, Original credits and owned cleanup.
+It corrects the actual Source guide task names rejected by Main30. The corrected
+Main31 Source-first Compose batch is pending; package checks do not establish
+application or performance acceptance.
+
+[Main30](rust-milestone-batch30.md) remains a failed application run: Source
+Redirect and16 multipart file cells pass, while guide fixture/observer, UDP timing
+and child-consumer failures remain literal. Native attempted only its first guide
+context; the other nine contexts are not run. Owned cleanup passes. The
+[Candidate29 diagnostics](rust-milestone-batch29.md) preserve separate failed and
+scoped successful observations, including the unresolved plugin shutdown scope.
+[Candidate28](rust-milestone-batch28.md) retains its selected M4 and other scoped
+qualification; none transfers full acceptance to Candidate31. All full M0–M9
+milestones and new full-service performance gains remain open.
+
+The earlier [Candidate28](rust-milestone-batch28.md) SDK passes1,088 tests,
+zero failures and783 ignored. It joins local/remote XML event scopes,
+dummy/ordered-name guide output, native builtin task handoff and late-body guards,
+process transports, inactive input profiles, Channel/Recording Collector and
+account scalars. Its observations retain their own candidate and workflow scope.
 
 The preceding source candidate is [Candidate27](rust-milestone-batch27.md): all four
 SDK gates pass with1,078 tests, zero failures and782 ignored. It adds the normal
@@ -220,7 +238,7 @@ The [inert plugin metadata service](rust-plugin-repositories-current-validation.
 
 The [Core retained-reader and error-body composition](rust-core-rest-owner-validation.md) passes 768 tests (738 ignored) on the plugin-inclusive 854-input library. Fresh HTTP/physical acceptance and Main assembly remain open.
 
-[Image58](rust-image58-build-validation.md) builds the newer 854-input library composition from exact committed source and preserves all 114 installed React/credit hashes. This is build-only evidence; selected functional and measured acceptance remains image57.
+[Image58](rust-image58-build-validation.md) builds the newer 854-input library composition from exact committed source and preserves all 114 installed React/credit hashes. This is historical build-only evidence; the historical selected functional and measured image57 acceptance retains its original scope.
 
 The [Source-derived HTML error correction](rust-source500-correction.md) passes the combined 854-input workspace (769 tests, 739 ignored). Its fresh two-request Native acceptance now passes exact HTML status/body/content-type and unchanged SQL/authentication-history checks; earlier historical results are unchanged.
 
@@ -249,9 +267,9 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (native schema/archive/operator slices; Original and Native backup normal16 qualified; physical/restore/admin/plugins gaps) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
 | M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | Planned | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 
-The current selected functional application checkpoint is [image57](rust-image57-validation.md), immutable `d77f25fa94ee128c79ade9176d8eb4a9d23bf498`:839 Rust inputs,495 unchanged React inputs and original credits. All28 package groups and three scoped Main gates pass. Its [portable checkpoint](../scripts/rust-integration/image57-checkpoint/README.md) passes Root's57 controls,487 exact private projections and app/support/SDK reconstruction. The additional26 Main catalogue responses qualify separately while their original controller exit1 remains literal; its failed backend observer is not relabeled by the separate successful stop-observer run. Full M0–M9 acceptance and default worker activation remain open.
+The historical selected functional application checkpoint is [image57](rust-image57-validation.md), immutable `d77f25fa94ee128c79ade9176d8eb4a9d23bf498`:839 Rust inputs,495 unchanged React inputs and original credits. All28 package groups and three scoped Main gates pass. Its [portable checkpoint](../scripts/rust-integration/image57-checkpoint/README.md) passes Root's57 controls,487 exact private projections and app/support/SDK reconstruction. The additional26 Main catalogue responses qualify separately while their original controller exit1 remains literal; its failed backend observer is not relabeled by the separate successful stop-observer run. Full M0–M9 acceptance and default worker activation remain open.
 
-[Image57 live performance](rust-image57-live-performance.md) is now the measured checkpoint: nine fixed alternating pairs, median CPU reductions at1/10/100 viewers of69.33/78.85/91.17%, and peak working-memory reductions52.08/46.30/49.63%. All666 readers,1,080 raw samples/1,062 in-window samples,1,998 media/decoder hashes and independent exact cleanup pass. Root also checks76 controller controls and85 public-suite methods. Worst paired throughput is1.55% below Source. The measurement covers the live HTTP backend plus common PostgreSQL/Redis/local origin; it does not cover the full application or later libraries. Image55 gains remain a separate historical experiment.
+[Image57 live performance](rust-image57-live-performance.md) is a historical measured checkpoint: nine fixed alternating pairs, median CPU reductions at1/10/100 viewers of69.33/78.85/91.17%, and peak working-memory reductions52.08/46.30/49.63%. All666 readers,1,080 raw samples/1,062 in-window samples,1,998 media/decoder hashes and independent exact cleanup pass. Root also checks76 controller controls and85 public-suite methods. Worst paired throughput is1.55% below Source. The measurement covers the live HTTP backend plus common PostgreSQL/Redis/local origin; it does not cover the full application or later libraries. Image55 gains remain a separate historical experiment.
 
 The [inert clocked-recording envelope parser](../scripts/rust-job-contracts/clocked-recording-envelope/README.md) adds two source inputs to the callback union:844 Rust/five coupled. Fresh whole-workspace formatting, compilation and strict all-target linting pass, with716 tests passed/734 ignored. Seven Source-wire tests and the unchanged legacy refusal regression also pass in the package qualification. The original application's [real future model→Beat→DVR recording reference](../scripts/rust-job-contracts/clocked-recording-source/README.md) now exits0 with17 checks, stable MKV and full decode; native media execution and its physical gates remain next. Plugin repository metadata has a new actual24-case Source reference with independent cleanup; Native/plugin execution/fullM8 remain open.
 
