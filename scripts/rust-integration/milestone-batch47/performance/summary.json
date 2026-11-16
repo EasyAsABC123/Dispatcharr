@@ -1,0 +1,1025 @@
+{
+  "credit": "Original Dispatcharr authors and contributors retain application and algorithm credit. FFmpeg/VLC and dependency authors retain their work credit.",
+  "scope": "Candidate47 normal graph loaded, idle Jobs/Beat/consumers, one or two viewers on one shared VLC-input MPEGTS stream; 3 alternating pairs per level; 15s warmup, fixed60s plus bounded5s drain. Primary sums all backend/infrastructure and Origin cgroups at each tick. External observer/orchestrator/publication scopes reported separately. Inside-container sampling redis-cli EVAL children and Redis query processing remain in primary without subtraction.",
+  "candidate_image_id": "sha256:2136bff6593153f895b2682a7d44dc4c7da3f3ab4b468cc66b103812d88c3db1",
+  "git_revision": "c21b9b10a2844264fe55e3dfaa5a121ef8d0b461",
+  "actual_phases": 12,
+  "all_phases_valid": true,
+  "independent_raw_arithmetic_matches_original": true,
+  "pairs": [
+    {
+      "viewers": 1,
+      "trial": 1,
+      "ratios": {
+        "CPU": 0.8943064824364929,
+        "memory": 0.2925745162977166,
+        "throughput": 0.9988729413829597,
+        "encoded_useful_throughput": 0.9988643534462274,
+        "first_byte_p95": 0.9528878038955656
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 1,
+      "trial": 2,
+      "ratios": {
+        "CPU": 0.896980035469923,
+        "memory": 0.29203022731534173,
+        "throughput": 0.9957275604877599,
+        "encoded_useful_throughput": 0.995841033539782,
+        "first_byte_p95": 0.9532422687715741
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 1,
+      "trial": 3,
+      "ratios": {
+        "CPU": 0.8890584751853706,
+        "memory": 0.29499984767574955,
+        "throughput": 0.9973002509353598,
+        "encoded_useful_throughput": 0.9975534658977604,
+        "first_byte_p95": 0.9525483616777461
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 2,
+      "trial": 1,
+      "ratios": {
+        "CPU": 0.9283876361367092,
+        "memory": 0.2917941718538095,
+        "throughput": 0.9933334433927017,
+        "encoded_useful_throughput": 0.9934413168499877,
+        "first_byte_p95": 0.9537170234514426
+      },
+      "passed": false,
+      "failed": [
+        "CPU"
+      ]
+    },
+    {
+      "viewers": 2,
+      "trial": 2,
+      "ratios": {
+        "CPU": 0.8771970941035993,
+        "memory": 0.292670068101311,
+        "throughput": 0.9945272436036681,
+        "encoded_useful_throughput": 0.9946411751948848,
+        "first_byte_p95": 0.9539855775263442
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 2,
+      "trial": 3,
+      "ratios": {
+        "CPU": 0.8811185681814389,
+        "memory": 0.2920827591004143,
+        "throughput": 0.9945272436036681,
+        "encoded_useful_throughput": 0.9946411751948848,
+        "first_byte_p95": 0.9536026263670307
+      },
+      "passed": true,
+      "failed": []
+    }
+  ],
+  "geometric_mean_ratios": {
+    "0": {
+      "CPU": 0.8943552512075736,
+      "memory": 0.2926899584801757,
+      "throughput": 0.9957130258238255,
+      "encoded_useful_throughput": 0.9958286878414162,
+      "first_byte_p95": 0.9533304819394807
+    },
+    "1": {
+      "CPU": 0.8934422664759322,
+      "memory": 0.2931986938812559,
+      "throughput": 0.9972994242510883,
+      "encoded_useful_throughput": 0.9974188493587773,
+      "first_byte_p95": 0.9528927693327003
+    },
+    "2": {
+      "CPU": 0.8952691688938688,
+      "memory": 0.29218210579690335,
+      "throughput": 0.9941291508713676,
+      "encoded_useful_throughput": 0.9942410614813293,
+      "first_byte_p95": 0.9537683956101503
+    }
+  },
+  "useful_duration_equivalence": {
+    "0": {
+      "spread_seconds": 0.4399999999999977,
+      "limit_seconds": 2.005333333332999
+    },
+    "1": {
+      "spread_seconds": 0.42665555555555557,
+      "limit_seconds": 2.005333333332999
+    }
+  },
+  "phase_metrics": [
+    {
+      "phase": 1,
+      "backend": "baseline",
+      "viewers": 1,
+      "trial": 1,
+      "project": "dispatcharr-shared-ts-db01c8040229",
+      "measurement_seconds": 60.002560841006925,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.681785,
+          "cpu_mean_cores": 0.06136046442677487,
+          "charged_memory_median_bytes": 834056192,
+          "charged_memory_max_simultaneous_bytes": 838832128,
+          "working_set_estimate_median_bytes": 833970176,
+          "working_set_estimate_max_simultaneous_bytes": 838737920
+        },
+        "origin": {
+          "cpu_core_seconds": 0.43293,
+          "cpu_mean_cores": 0.007215192050672063,
+          "charged_memory_median_bytes": 222441472,
+          "charged_memory_max_simultaneous_bytes": 223350784,
+          "working_set_estimate_median_bytes": 101158912,
+          "working_set_estimate_max_simultaneous_bytes": 102068224
+        },
+        "observer": {
+          "cpu_core_seconds": 7.700318,
+          "cpu_mean_cores": 0.1283331559865267,
+          "charged_memory_median_bytes": 239742976,
+          "charged_memory_max_simultaneous_bytes": 246951936,
+          "working_set_estimate_median_bytes": 175722496,
+          "working_set_estimate_max_simultaneous_bytes": 177647616
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.815033,
+          "cpu_mean_cores": 0.19690881246397363,
+          "charged_memory_median_bytes": 1296465920,
+          "charged_memory_max_simultaneous_bytes": 1307561984,
+          "working_set_estimate_median_bytes": 1110810624,
+          "working_set_estimate_max_simultaneous_bytes": 1116610560
+        },
+        "primary": {
+          "cpu_core_seconds": 4.114715,
+          "cpu_mean_cores": 0.06857565647744693,
+          "charged_memory_median_bytes": 1056759808,
+          "charged_memory_max_simultaneous_bytes": 1061474304,
+          "working_set_estimate_median_bytes": 935391232,
+          "working_set_estimate_max_simultaneous_bytes": 939950080
+        }
+      },
+      "first_byte_p95_ms": 7101.456918986514,
+      "raw_first_byte_p95_ms": 7101.456918986514,
+      "window_bytes": 9207152,
+      "window_encoded_useful_bytes": 8479751,
+      "useful_duration_seconds": {
+        "0": [
+          59.72
+        ],
+        "1": [
+          59.733333333333334
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "c8ab02bbba5c72961ec914db1097f9aa83226860370a0fb9b4bd3578ed67fc23",
+        "resource-samples.json": "1d42083eddf2c66af81c073679c8a7e7637efbe0c5dc3f0b17af707afd6928e2",
+        "useful-media-complete.json": "228142fc0ed1cb20868656cc1e9e08a9afdf39573ec6a0503aabbc12600b9755"
+      }
+    },
+    {
+      "phase": 2,
+      "backend": "candidate",
+      "viewers": 1,
+      "trial": 1,
+      "project": "dispatcharr-shared-ts-c4ea36e59053",
+      "measurement_seconds": 60.002539677981986,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.242044,
+          "cpu_mean_cores": 0.05403177961131656,
+          "charged_memory_median_bytes": 168214528,
+          "charged_memory_max_simultaneous_bytes": 173428736,
+          "working_set_estimate_median_bytes": 168153088,
+          "working_set_estimate_max_simultaneous_bytes": 173367296
+        },
+        "origin": {
+          "cpu_core_seconds": 0.437771,
+          "cpu_mean_cores": 0.0072958745138023,
+          "charged_memory_median_bytes": 222392320,
+          "charged_memory_max_simultaneous_bytes": 223330304,
+          "working_set_estimate_median_bytes": 101109760,
+          "working_set_estimate_max_simultaneous_bytes": 102047744
+        },
+        "observer": {
+          "cpu_core_seconds": 7.656814,
+          "cpu_mean_cores": 0.12760816527253893,
+          "charged_memory_median_bytes": 242139136,
+          "charged_memory_max_simultaneous_bytes": 249729024,
+          "working_set_estimate_median_bytes": 178585600,
+          "working_set_estimate_max_simultaneous_bytes": 180461568
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.336629,
+          "cpu_mean_cores": 0.1889358193976578,
+          "charged_memory_median_bytes": 632524800,
+          "charged_memory_max_simultaneous_bytes": 644915200,
+          "working_set_estimate_median_bytes": 446914560,
+          "working_set_estimate_max_simultaneous_bytes": 455331840
+        },
+        "primary": {
+          "cpu_core_seconds": 3.679815,
+          "cpu_mean_cores": 0.06132765412511886,
+          "charged_memory_median_bytes": 390533120,
+          "charged_memory_max_simultaneous_bytes": 396349440,
+          "working_set_estimate_median_bytes": 269189120,
+          "working_set_estimate_max_simultaneous_bytes": 275005440
+        }
+      },
+      "first_byte_p95_ms": 6766.891687992029,
+      "raw_first_byte_p95_ms": 6766.891687992029,
+      "window_bytes": 9196775,
+      "window_encoded_useful_bytes": 8470121,
+      "useful_duration_seconds": {
+        "0": [
+          59.64
+        ],
+        "1": [
+          59.669333333333334
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "856c1bb747afe48aef5717bac1f7916fa002eea1b9a194c0ec957cacc3714f18",
+        "resource-samples.json": "d22e827841a8e4504e28ff0bd70e178c4dddca290e9bb02c46850239098c5a14",
+        "useful-media-complete.json": "cd0d6924a9ca2fc731e1dbe6eecf657643ea7578b2ad379d750a099e54966e8b"
+      }
+    },
+    {
+      "phase": 3,
+      "backend": "candidate",
+      "viewers": 1,
+      "trial": 2,
+      "project": "dispatcharr-shared-ts-3688e9fa3091",
+      "measurement_seconds": 60.002656230994035,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.254888,
+          "cpu_mean_cores": 0.05424573184676291,
+          "charged_memory_median_bytes": 168550400,
+          "charged_memory_max_simultaneous_bytes": 173473792,
+          "working_set_estimate_median_bytes": 168488960,
+          "working_set_estimate_max_simultaneous_bytes": 173412352
+        },
+        "origin": {
+          "cpu_core_seconds": 0.433656,
+          "cpu_mean_cores": 0.0072272800445790505,
+          "charged_memory_median_bytes": 222150656,
+          "charged_memory_max_simultaneous_bytes": 223084544,
+          "working_set_estimate_median_bytes": 100868096,
+          "working_set_estimate_max_simultaneous_bytes": 101801984
+        },
+        "observer": {
+          "cpu_core_seconds": 7.628039,
+          "cpu_mean_cores": 0.12712835529537406,
+          "charged_memory_median_bytes": 243781632,
+          "charged_memory_max_simultaneous_bytes": 250281984,
+          "working_set_estimate_median_bytes": 179847168,
+          "working_set_estimate_max_simultaneous_bytes": 181698560
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.316583,
+          "cpu_mean_cores": 0.18860136718671602,
+          "charged_memory_median_bytes": 634638336,
+          "charged_memory_max_simultaneous_bytes": 645668864,
+          "working_set_estimate_median_bytes": 448720896,
+          "working_set_estimate_max_simultaneous_bytes": 456011776
+        },
+        "primary": {
+          "cpu_core_seconds": 3.688544,
+          "cpu_mean_cores": 0.06147301189134196,
+          "charged_memory_median_bytes": 390410240,
+          "charged_memory_max_simultaneous_bytes": 395657216,
+          "working_set_estimate_median_bytes": 269066240,
+          "working_set_estimate_max_simultaneous_bytes": 274313216
+        }
+      },
+      "first_byte_p95_ms": 6768.239700992126,
+      "raw_first_byte_p95_ms": 6768.239700992126,
+      "window_bytes": 9167815,
+      "window_encoded_useful_bytes": 8444484,
+      "useful_duration_seconds": {
+        "0": [
+          59.44
+        ],
+        "1": [
+          59.45601111111111
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "a6c37a79089a20cf4f7ec27a6737d58712e2dac32655e2825330c0e637ae1467",
+        "resource-samples.json": "6b6e9bfaef0576773c968e6bee053dbd727feccbe1499aca8efffd97f78466ac",
+        "useful-media-complete.json": "a42c5f2d94321258495d30045c7795fd924862563f69dc008d5c39ba9d6f6676"
+      }
+    },
+    {
+      "phase": 4,
+      "backend": "baseline",
+      "viewers": 1,
+      "trial": 2,
+      "project": "dispatcharr-shared-ts-61c472710ad0",
+      "measurement_seconds": 59.99888126400765,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.682602,
+          "cpu_mean_cores": 0.061377844426728216,
+          "charged_memory_median_bytes": 833011712,
+          "charged_memory_max_simultaneous_bytes": 838463488,
+          "working_set_estimate_median_bytes": 832925696,
+          "working_set_estimate_max_simultaneous_bytes": 838377472
+        },
+        "origin": {
+          "cpu_core_seconds": 0.42932,
+          "cpu_mean_cores": 0.007155466751303278,
+          "charged_memory_median_bytes": 222359552,
+          "charged_memory_max_simultaneous_bytes": 223514624,
+          "working_set_estimate_median_bytes": 101076992,
+          "working_set_estimate_max_simultaneous_bytes": 102232064
+        },
+        "observer": {
+          "cpu_core_seconds": 7.704925,
+          "cpu_mean_cores": 0.12841781109378883,
+          "charged_memory_median_bytes": 245850112,
+          "charged_memory_max_simultaneous_bytes": 252444672,
+          "working_set_estimate_median_bytes": 181661696,
+          "working_set_estimate_max_simultaneous_bytes": 183152640
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.816847,
+          "cpu_mean_cores": 0.1969511222718203,
+          "charged_memory_median_bytes": 1300586496,
+          "charged_memory_max_simultaneous_bytes": 1312501760,
+          "working_set_estimate_median_bytes": 1115373568,
+          "working_set_estimate_max_simultaneous_bytes": 1121505280
+        },
+        "primary": {
+          "cpu_core_seconds": 4.111922,
+          "cpu_mean_cores": 0.06853331117803149,
+          "charged_memory_median_bytes": 1055842304,
+          "charged_memory_max_simultaneous_bytes": 1060700160,
+          "working_set_estimate_median_bytes": 934473728,
+          "working_set_estimate_max_simultaneous_bytes": 939331584
+        }
+      },
+      "first_byte_p95_ms": 7100.230364012532,
+      "raw_first_byte_p95_ms": 7100.230364012532,
+      "window_bytes": 9207152,
+      "window_encoded_useful_bytes": 8479751,
+      "useful_duration_seconds": {
+        "0": [
+          59.72
+        ],
+        "1": [
+          59.733333333333334
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "59ed46e2ec69bc6fab9548dd559c16e3d8b36d7ffd397230c75506be636edd72",
+        "resource-samples.json": "5e144d967a0a94b794e7b3ef728f235228ed6fcbe027aee5a79b0464df23252b",
+        "useful-media-complete.json": "fc2934c1ad1ea9e5ec4f69218292689ba749fed99434e0abb7ec052bfae470ed"
+      }
+    },
+    {
+      "phase": 5,
+      "backend": "baseline",
+      "viewers": 1,
+      "trial": 3,
+      "project": "dispatcharr-shared-ts-c2ae205987a2",
+      "measurement_seconds": 60.003033313987544,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.71953,
+          "cpu_mean_cores": 0.06198903279666239,
+          "charged_memory_median_bytes": 834543616,
+          "charged_memory_max_simultaneous_bytes": 839204864,
+          "working_set_estimate_median_bytes": 834457600,
+          "working_set_estimate_max_simultaneous_bytes": 839118848
+        },
+        "origin": {
+          "cpu_core_seconds": 0.431152,
+          "cpu_mean_cores": 0.007185503401867059,
+          "charged_memory_median_bytes": 222347264,
+          "charged_memory_max_simultaneous_bytes": 223408128,
+          "working_set_estimate_median_bytes": 101064704,
+          "working_set_estimate_max_simultaneous_bytes": 102125568
+        },
+        "observer": {
+          "cpu_core_seconds": 7.764951,
+          "cpu_mean_cores": 0.12940930768228148,
+          "charged_memory_median_bytes": 245960704,
+          "charged_memory_max_simultaneous_bytes": 252538880,
+          "working_set_estimate_median_bytes": 181215232,
+          "working_set_estimate_max_simultaneous_bytes": 182697984
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.915633,
+          "cpu_mean_cores": 0.19858384388081093,
+          "charged_memory_median_bytes": 1302974464,
+          "charged_memory_max_simultaneous_bytes": 1315057664,
+          "working_set_estimate_median_bytes": 1116868608,
+          "working_set_estimate_max_simultaneous_bytes": 1123848192
+        },
+        "primary": {
+          "cpu_core_seconds": 4.150682,
+          "cpu_mean_cores": 0.06917453619852945,
+          "charged_memory_median_bytes": 1056681984,
+          "charged_memory_max_simultaneous_bytes": 1062518784,
+          "working_set_estimate_median_bytes": 935313408,
+          "working_set_estimate_max_simultaneous_bytes": 941150208
+        }
+      },
+      "first_byte_p95_ms": 7101.335337007185,
+      "raw_first_byte_p95_ms": 7101.335337007185,
+      "window_bytes": 9207152,
+      "window_encoded_useful_bytes": 8479751,
+      "useful_duration_seconds": {
+        "0": [
+          59.72
+        ],
+        "1": [
+          59.733333333333334
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "358af866cab5d4c9c8aa73fd45d472fe0dba3424413ec6d8425c6341c6a7d011",
+        "resource-samples.json": "ed72916564039038b8a8dff1c13aed608977c8a7d98ac0a0d1301219af2ce469",
+        "useful-media-complete.json": "f83a8943579349df527c92efeb6405765188bfa96d6c13f8039f9af4802dffe5"
+      }
+    },
+    {
+      "phase": 6,
+      "backend": "candidate",
+      "viewers": 1,
+      "trial": 3,
+      "project": "dispatcharr-shared-ts-e48aacfbc9db",
+      "measurement_seconds": 60.00257787000737,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.266973,
+          "cpu_mean_cores": 0.05444721070280907,
+          "charged_memory_median_bytes": 168321024,
+          "charged_memory_max_simultaneous_bytes": 174985216,
+          "working_set_estimate_median_bytes": 168259584,
+          "working_set_estimate_max_simultaneous_bytes": 174923776
+        },
+        "origin": {
+          "cpu_core_seconds": 0.423198,
+          "cpu_mean_cores": 0.007052996971510751,
+          "charged_memory_median_bytes": 222658560,
+          "charged_memory_max_simultaneous_bytes": 224419840,
+          "working_set_estimate_median_bytes": 101376000,
+          "working_set_estimate_max_simultaneous_bytes": 103137280
+        },
+        "observer": {
+          "cpu_core_seconds": 7.696654,
+          "cpu_mean_cores": 0.12827205552192142,
+          "charged_memory_median_bytes": 246140928,
+          "charged_memory_max_simultaneous_bytes": 254107648,
+          "working_set_estimate_median_bytes": 182628352,
+          "working_set_estimate_max_simultaneous_bytes": 184696832
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.386825,
+          "cpu_mean_cores": 0.18977226319624127,
+          "charged_memory_median_bytes": 636715008,
+          "charged_memory_max_simultaneous_bytes": 651202560,
+          "working_set_estimate_median_bytes": 451686400,
+          "working_set_estimate_max_simultaneous_bytes": 460980224
+        },
+        "primary": {
+          "cpu_core_seconds": 3.690171,
+          "cpu_mean_cores": 0.061500207674319816,
+          "charged_memory_median_bytes": 390770688,
+          "charged_memory_max_simultaneous_bytes": 398983168,
+          "working_set_estimate_median_bytes": 269426688,
+          "working_set_estimate_max_simultaneous_bytes": 277639168
+        }
+      },
+      "first_byte_p95_ms": 6764.36534099048,
+      "raw_first_byte_p95_ms": 6764.36534099048,
+      "window_bytes": 9182295,
+      "window_encoded_useful_bytes": 8459005,
+      "useful_duration_seconds": {
+        "0": [
+          59.56
+        ],
+        "1": [
+          59.56267777777778
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "5c0db65005cd54f48290f674c1c0c66588fdb05d16b290a7aba80e0bc5295e3a",
+        "resource-samples.json": "28d929136c5eec53ee0fcb1dd923380a3a0b742e5f553031f1cb71e1e4d6745c",
+        "useful-media-complete.json": "5da55bd5a9414dfc24d5e7f0d03f13c020afcf900c59e51bd493bcf05bae3df5"
+      }
+    },
+    {
+      "phase": 7,
+      "backend": "baseline",
+      "viewers": 2,
+      "trial": 1,
+      "project": "dispatcharr-shared-ts-eabea83e5f8d",
+      "measurement_seconds": 60.00263237699983,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.767905,
+          "cpu_mean_cores": 0.06279566163574368,
+          "charged_memory_median_bytes": 835067904,
+          "charged_memory_max_simultaneous_bytes": 840179712,
+          "working_set_estimate_median_bytes": 834981888,
+          "working_set_estimate_max_simultaneous_bytes": 840093696
+        },
+        "origin": {
+          "cpu_core_seconds": 0.408953,
+          "cpu_mean_cores": 0.006815584313543544,
+          "charged_memory_median_bytes": 222502912,
+          "charged_memory_max_simultaneous_bytes": 223813632,
+          "working_set_estimate_median_bytes": 101220352,
+          "working_set_estimate_max_simultaneous_bytes": 102531072
+        },
+        "observer": {
+          "cpu_core_seconds": 7.765653,
+          "cpu_mean_cores": 0.12942187188068646,
+          "charged_memory_median_bytes": 255537152,
+          "charged_memory_max_simultaneous_bytes": 266756096,
+          "working_set_estimate_median_bytes": 183291904,
+          "working_set_estimate_max_simultaneous_bytes": 184553472
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.942511,
+          "cpu_mean_cores": 0.19903311782997368,
+          "charged_memory_median_bytes": 1313337344,
+          "charged_memory_max_simultaneous_bytes": 1329360896,
+          "working_set_estimate_median_bytes": 1118638080,
+          "working_set_estimate_max_simultaneous_bytes": 1126174720
+        },
+        "primary": {
+          "cpu_core_seconds": 4.176858,
+          "cpu_mean_cores": 0.06961124594928723,
+          "charged_memory_median_bytes": 1057525760,
+          "charged_memory_max_simultaneous_bytes": 1063677952,
+          "working_set_estimate_median_bytes": 936157184,
+          "working_set_estimate_max_simultaneous_bytes": 942309376
+        }
+      },
+      "first_byte_p95_ms": 7094.849543005694,
+      "raw_first_byte_p95_ms": 7094.849543005694,
+      "window_bytes": 18414304,
+      "window_encoded_useful_bytes": 16959502,
+      "useful_duration_seconds": {
+        "0": [
+          59.72,
+          59.72
+        ],
+        "1": [
+          59.733333333333334,
+          59.733333333333334
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "e1fee167ca7e590287e8b28cdf4a38852644bbbf7d9f758a8c25f6af1455bb7c",
+        "resource-samples.json": "107b88f271395c1ebcbec0750f0a613bc81a419a5e5d127fe019189254012c30",
+        "useful-media-complete.json": "fed567af66df828147b2184e1160cc4c33991e8c27823589a70a94fb5482f3b6"
+      }
+    },
+    {
+      "phase": 8,
+      "backend": "candidate",
+      "viewers": 2,
+      "trial": 1,
+      "project": "dispatcharr-shared-ts-e2d42ecabfb1",
+      "measurement_seconds": 60.00253450497985,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.425022,
+          "cpu_mean_cores": 0.05708128878648857,
+          "charged_memory_median_bytes": 167583744,
+          "charged_memory_max_simultaneous_bytes": 173338624,
+          "working_set_estimate_median_bytes": 167522304,
+          "working_set_estimate_max_simultaneous_bytes": 173277184
+        },
+        "origin": {
+          "cpu_core_seconds": 0.452715,
+          "cpu_mean_cores": 0.007544931288901261,
+          "charged_memory_median_bytes": 222273536,
+          "charged_memory_max_simultaneous_bytes": 223645696,
+          "working_set_estimate_median_bytes": 100990976,
+          "working_set_estimate_max_simultaneous_bytes": 102363136
+        },
+        "observer": {
+          "cpu_core_seconds": 7.812637,
+          "cpu_mean_cores": 0.13020511657472733,
+          "charged_memory_median_bytes": 253325312,
+          "charged_memory_max_simultaneous_bytes": 265752576,
+          "working_set_estimate_median_bytes": 181338112,
+          "working_set_estimate_max_simultaneous_bytes": 183476224
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.690374,
+          "cpu_mean_cores": 0.19483133665011718,
+          "charged_memory_median_bytes": 644132864,
+          "charged_memory_max_simultaneous_bytes": 660398080,
+          "working_set_estimate_median_bytes": 449921024,
+          "working_set_estimate_max_simultaneous_bytes": 457453568
+        },
+        "primary": {
+          "cpu_core_seconds": 3.877737,
+          "cpu_mean_cores": 0.06462622007538985,
+          "charged_memory_median_bytes": 390074368,
+          "charged_memory_max_simultaneous_bytes": 396304384,
+          "working_set_estimate_median_bytes": 268730368,
+          "working_set_estimate_max_simultaneous_bytes": 274960384
+        }
+      },
+      "first_byte_p95_ms": 6766.478787991218,
+      "raw_first_byte_p95_ms": 6766.478787991218,
+      "window_bytes": 18291544,
+      "window_encoded_useful_bytes": 16848270,
+      "useful_duration_seconds": {
+        "0": [
+          59.28,
+          59.28
+        ],
+        "1": [
+          59.30667777777778,
+          59.30667777777778
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "30ba446e9bf78310d5ee8cefb9434a4d1debbecac8b65bae7a99992780cda67f",
+        "resource-samples.json": "419c9d180c472f746b4f368529d51244894c944fceb1be122eec4467d31f05cb",
+        "useful-media-complete.json": "5dd2a01ad6a56238b020bf849a2698d983b6a7640f5c106fc720787f9f2da53b"
+      }
+    },
+    {
+      "phase": 9,
+      "backend": "candidate",
+      "viewers": 2,
+      "trial": 2,
+      "project": "dispatcharr-shared-ts-2ba1f73072dc",
+      "measurement_seconds": 60.003379450994544,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.259533,
+          "cpu_mean_cores": 0.05432249033010046,
+          "charged_memory_median_bytes": 168185856,
+          "charged_memory_max_simultaneous_bytes": 174522368,
+          "working_set_estimate_median_bytes": 168124416,
+          "working_set_estimate_max_simultaneous_bytes": 174460928
+        },
+        "origin": {
+          "cpu_core_seconds": 0.424578,
+          "cpu_mean_cores": 0.007075901455629808,
+          "charged_memory_median_bytes": 222281728,
+          "charged_memory_max_simultaneous_bytes": 222998528,
+          "working_set_estimate_median_bytes": 100999168,
+          "working_set_estimate_max_simultaneous_bytes": 101715968
+        },
+        "observer": {
+          "cpu_core_seconds": 7.699991,
+          "cpu_mean_cores": 0.12832595547870218,
+          "charged_memory_median_bytes": 254828544,
+          "charged_memory_max_simultaneous_bytes": 265420800,
+          "working_set_estimate_median_bytes": 182235136,
+          "working_set_estimate_max_simultaneous_bytes": 184168448
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.384102,
+          "cpu_mean_cores": 0.18972434726443246,
+          "charged_memory_median_bytes": 645107712,
+          "charged_memory_max_simultaneous_bytes": 661409792,
+          "working_set_estimate_median_bytes": 451026944,
+          "working_set_estimate_max_simultaneous_bytes": 458076160
+        },
+        "primary": {
+          "cpu_core_seconds": 3.684111,
+          "cpu_mean_cores": 0.061398391785730276,
+          "charged_memory_median_bytes": 390561792,
+          "charged_memory_max_simultaneous_bytes": 396476416,
+          "working_set_estimate_median_bytes": 269217792,
+          "working_set_estimate_max_simultaneous_bytes": 275132416
+        }
+      },
+      "first_byte_p95_ms": 6768.959683016874,
+      "raw_first_byte_p95_ms": 6768.959683016874,
+      "window_bytes": 18313527,
+      "window_encoded_useful_bytes": 16868619,
+      "useful_duration_seconds": {
+        "0": [
+          59.28,
+          59.44
+        ],
+        "1": [
+          59.30667777777778,
+          59.45601111111111
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "04107d4c2f4d3b2f01831042aaa0ba7cc1c10f8c96992045aa610e940948c7d8",
+        "resource-samples.json": "3c11924b4d13e11c8b04a5cdd61dc089d470a32afa42dff041bd25bb5a60c663",
+        "useful-media-complete.json": "decc6677428df3bc93452b8cfa8d702f7279e35d53cdb42c65cef4124ffb0f3e"
+      }
+    },
+    {
+      "phase": 10,
+      "backend": "baseline",
+      "viewers": 2,
+      "trial": 2,
+      "project": "dispatcharr-shared-ts-501cfdd1ba0f",
+      "measurement_seconds": 60.001395647006575,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.765113,
+          "cpu_mean_cores": 0.06275042370931648,
+          "charged_memory_median_bytes": 833785856,
+          "charged_memory_max_simultaneous_bytes": 838569984,
+          "working_set_estimate_median_bytes": 833699840,
+          "working_set_estimate_max_simultaneous_bytes": 838483968
+        },
+        "origin": {
+          "cpu_core_seconds": 0.434615,
+          "cpu_mean_cores": 0.007243414845829217,
+          "charged_memory_median_bytes": 222416896,
+          "charged_memory_max_simultaneous_bytes": 223776768,
+          "working_set_estimate_median_bytes": 101134336,
+          "working_set_estimate_max_simultaneous_bytes": 102494208
+        },
+        "observer": {
+          "cpu_core_seconds": 7.779925,
+          "cpu_mean_cores": 0.12966240061764522,
+          "charged_memory_median_bytes": 255164416,
+          "charged_memory_max_simultaneous_bytes": 267235328,
+          "working_set_estimate_median_bytes": 182292480,
+          "working_set_estimate_max_simultaneous_bytes": 184426496
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.979653,
+          "cpu_mean_cores": 0.19965623917279093,
+          "charged_memory_median_bytes": 1310789632,
+          "charged_memory_max_simultaneous_bytes": 1327251456,
+          "working_set_estimate_median_bytes": 1117372416,
+          "working_set_estimate_max_simultaneous_bytes": 1123074048
+        },
+        "primary": {
+          "cpu_core_seconds": 4.199728,
+          "cpu_mean_cores": 0.0699938385551457,
+          "charged_memory_median_bytes": 1055961088,
+          "charged_memory_max_simultaneous_bytes": 1061445632,
+          "working_set_estimate_median_bytes": 934592512,
+          "working_set_estimate_max_simultaneous_bytes": 940077056
+        }
+      },
+      "first_byte_p95_ms": 7095.452848006971,
+      "raw_first_byte_p95_ms": 7095.452848006971,
+      "window_bytes": 18414304,
+      "window_encoded_useful_bytes": 16959502,
+      "useful_duration_seconds": {
+        "0": [
+          59.72,
+          59.72
+        ],
+        "1": [
+          59.733333333333334,
+          59.733333333333334
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "a56ebf206a361ba08519bb860ed0ea853c9079c4522abd967b8c576b04aa3b63",
+        "resource-samples.json": "cf9999f229ba16c8587cd2a415b068498885e99e34d4f1a4578039450e79ff12",
+        "useful-media-complete.json": "f86a8e1a5aa281b10f01de263ee3391f92009d19c0d8aca3eecbd41ad1e84eb5"
+      }
+    },
+    {
+      "phase": 11,
+      "backend": "baseline",
+      "viewers": 2,
+      "trial": 3,
+      "project": "dispatcharr-shared-ts-c529ee7eed88",
+      "measurement_seconds": 60.003384942014236,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.779436,
+          "cpu_mean_cores": 0.06298704654166347,
+          "charged_memory_median_bytes": 833957888,
+          "charged_memory_max_simultaneous_bytes": 840507392,
+          "working_set_estimate_median_bytes": 833871872,
+          "working_set_estimate_max_simultaneous_bytes": 840421376
+        },
+        "origin": {
+          "cpu_core_seconds": 0.423471,
+          "cpu_mean_cores": 0.007057451848912053,
+          "charged_memory_median_bytes": 222724096,
+          "charged_memory_max_simultaneous_bytes": 223715328,
+          "working_set_estimate_median_bytes": 101441536,
+          "working_set_estimate_max_simultaneous_bytes": 102432768
+        },
+        "observer": {
+          "cpu_core_seconds": 7.780756,
+          "cpu_mean_cores": 0.12967195113274238,
+          "charged_memory_median_bytes": 254300160,
+          "charged_memory_max_simultaneous_bytes": 266731520,
+          "working_set_estimate_median_bytes": 182284288,
+          "working_set_estimate_max_simultaneous_bytes": 184393728
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.983663,
+          "cpu_mean_cores": 0.1997164495233179,
+          "charged_memory_median_bytes": 1310826496,
+          "charged_memory_max_simultaneous_bytes": 1329758208,
+          "working_set_estimate_median_bytes": 1117437952,
+          "working_set_estimate_max_simultaneous_bytes": 1125625856
+        },
+        "primary": {
+          "cpu_core_seconds": 4.202907,
+          "cpu_mean_cores": 0.07004449839057553,
+          "charged_memory_median_bytes": 1056821248,
+          "charged_memory_max_simultaneous_bytes": 1063518208,
+          "working_set_estimate_median_bytes": 935452672,
+          "working_set_estimate_max_simultaneous_bytes": 942149632
+        }
+      },
+      "first_byte_p95_ms": 7095.07677401416,
+      "raw_first_byte_p95_ms": 7095.07677401416,
+      "window_bytes": 18414304,
+      "window_encoded_useful_bytes": 16959502,
+      "useful_duration_seconds": {
+        "0": [
+          59.72,
+          59.72
+        ],
+        "1": [
+          59.733333333333334,
+          59.733333333333334
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "df4076dd41930145e1f281ef06c37c32808899faef270dc2face721b2bdc557e",
+        "resource-samples.json": "52891e2b311a18bc436b0e8bccf17975a90523341199da5cf970117208b75106",
+        "useful-media-complete.json": "1b26ebe6216e201e50227b9a8fb66f044387d27a77abf825484cacebb4afc207"
+      }
+    },
+    {
+      "phase": 12,
+      "backend": "candidate",
+      "viewers": 2,
+      "trial": 3,
+      "project": "dispatcharr-shared-ts-90c0e4e234d6",
+      "measurement_seconds": 60.00140174399712,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.268427,
+          "cpu_mean_cores": 0.05447251072475139,
+          "charged_memory_median_bytes": 167342080,
+          "charged_memory_max_simultaneous_bytes": 173862912,
+          "working_set_estimate_median_bytes": 167280640,
+          "working_set_estimate_max_simultaneous_bytes": 173801472
+        },
+        "origin": {
+          "cpu_core_seconds": 0.43471,
+          "cpu_mean_cores": 0.007244997406139613,
+          "charged_memory_median_bytes": 222433280,
+          "charged_memory_max_simultaneous_bytes": 223539200,
+          "working_set_estimate_median_bytes": 101150720,
+          "working_set_estimate_max_simultaneous_bytes": 102256640
+        },
+        "observer": {
+          "cpu_core_seconds": 7.72788,
+          "cpu_mean_cores": 0.12879499103990752,
+          "charged_memory_median_bytes": 254521344,
+          "charged_memory_max_simultaneous_bytes": 265990144,
+          "working_set_estimate_median_bytes": 182665216,
+          "working_set_estimate_max_simultaneous_bytes": 184156160
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 11.431017,
+          "cpu_mean_cores": 0.19051249917079852,
+          "charged_memory_median_bytes": 644075520,
+          "charged_memory_max_simultaneous_bytes": 659984384,
+          "working_set_estimate_median_bytes": 450945024,
+          "working_set_estimate_max_simultaneous_bytes": 458731520
+        },
+        "primary": {
+          "cpu_core_seconds": 3.703137,
+          "cpu_mean_cores": 0.061717508130891004,
+          "charged_memory_median_bytes": 389451776,
+          "charged_memory_max_simultaneous_bytes": 396529664,
+          "working_set_estimate_median_bytes": 268107776,
+          "working_set_estimate_max_simultaneous_bytes": 275185664
+        }
+      },
+      "first_byte_p95_ms": 6765.8838459756225,
+      "raw_first_byte_p95_ms": 6765.8838459756225,
+      "window_bytes": 18313527,
+      "window_encoded_useful_bytes": 16868619,
+      "useful_duration_seconds": {
+        "0": [
+          59.28,
+          59.44
+        ],
+        "1": [
+          59.30667777777778,
+          59.45601111111111
+        ]
+      },
+      "one_batch_PTS_seconds": 2.005333333332999,
+      "raw_sha256": {
+        "shared-ts.json": "482ed4c2a3a3468092619d1c1346d898a3b3ae3ed0794d46b9fa0b72822307b3",
+        "resource-samples.json": "df4c0f9b7d52e0aeed3c4056461a76d2a7d7793b709023ba8720b484596d545d",
+        "useful-media-complete.json": "6ae4f31305a87a012eb5810a07508416f17f4d7d73e467b3c21608d644c4ee96"
+      }
+    }
+  ],
+  "scoped_budgets_passed": false,
+  "passed_pairs": 5,
+  "failed_pairs": 1,
+  "gain_accepted": false,
+  "full_milestone_accepted": false,
+  "active_DVR_tested": false,
+  "higher_viewer_levels_tested": false,
+  "working_set_definition": "Sum per-group max(0,memory.current-inactive_file) within each tick; maximum simultaneous tick, estimate, not RSS; charged memory also retained.",
+  "raw_references": {
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/result.json": "12c543ae2b0a2d2ded848ab8efc4a7e86a12e9242bfc5779745a5fcd29824735",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/1-1-1-baseline/shared-ts.json": "c8ab02bbba5c72961ec914db1097f9aa83226860370a0fb9b4bd3578ed67fc23",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/1-1-1-baseline/resource-samples.json": "1d42083eddf2c66af81c073679c8a7e7637efbe0c5dc3f0b17af707afd6928e2",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/1-1-1-baseline/useful-media-complete.json": "228142fc0ed1cb20868656cc1e9e08a9afdf39573ec6a0503aabbc12600b9755",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/2-1-1-candidate/shared-ts.json": "856c1bb747afe48aef5717bac1f7916fa002eea1b9a194c0ec957cacc3714f18",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/2-1-1-candidate/resource-samples.json": "d22e827841a8e4504e28ff0bd70e178c4dddca290e9bb02c46850239098c5a14",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/2-1-1-candidate/useful-media-complete.json": "cd0d6924a9ca2fc731e1dbe6eecf657643ea7578b2ad379d750a099e54966e8b",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/3-1-2-candidate/shared-ts.json": "a6c37a79089a20cf4f7ec27a6737d58712e2dac32655e2825330c0e637ae1467",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/3-1-2-candidate/resource-samples.json": "6b6e9bfaef0576773c968e6bee053dbd727feccbe1499aca8efffd97f78466ac",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/3-1-2-candidate/useful-media-complete.json": "a42c5f2d94321258495d30045c7795fd924862563f69dc008d5c39ba9d6f6676",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/4-1-2-baseline/shared-ts.json": "59ed46e2ec69bc6fab9548dd559c16e3d8b36d7ffd397230c75506be636edd72",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/4-1-2-baseline/resource-samples.json": "5e144d967a0a94b794e7b3ef728f235228ed6fcbe027aee5a79b0464df23252b",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/4-1-2-baseline/useful-media-complete.json": "fc2934c1ad1ea9e5ec4f69218292689ba749fed99434e0abb7ec052bfae470ed",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/5-1-3-baseline/shared-ts.json": "358af866cab5d4c9c8aa73fd45d472fe0dba3424413ec6d8425c6341c6a7d011",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/5-1-3-baseline/resource-samples.json": "ed72916564039038b8a8dff1c13aed608977c8a7d98ac0a0d1301219af2ce469",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/5-1-3-baseline/useful-media-complete.json": "f83a8943579349df527c92efeb6405765188bfa96d6c13f8039f9af4802dffe5",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/6-1-3-candidate/shared-ts.json": "5c0db65005cd54f48290f674c1c0c66588fdb05d16b290a7aba80e0bc5295e3a",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/6-1-3-candidate/resource-samples.json": "28d929136c5eec53ee0fcb1dd923380a3a0b742e5f553031f1cb71e1e4d6745c",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/6-1-3-candidate/useful-media-complete.json": "5da55bd5a9414dfc24d5e7f0d03f13c020afcf900c59e51bd493bcf05bae3df5",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/7-2-1-baseline/shared-ts.json": "e1fee167ca7e590287e8b28cdf4a38852644bbbf7d9f758a8c25f6af1455bb7c",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/7-2-1-baseline/resource-samples.json": "107b88f271395c1ebcbec0750f0a613bc81a419a5e5d127fe019189254012c30",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/7-2-1-baseline/useful-media-complete.json": "fed567af66df828147b2184e1160cc4c33991e8c27823589a70a94fb5482f3b6",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/8-2-1-candidate/shared-ts.json": "30ba446e9bf78310d5ee8cefb9434a4d1debbecac8b65bae7a99992780cda67f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/8-2-1-candidate/resource-samples.json": "419c9d180c472f746b4f368529d51244894c944fceb1be122eec4467d31f05cb",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/8-2-1-candidate/useful-media-complete.json": "5dd2a01ad6a56238b020bf849a2698d983b6a7640f5c106fc720787f9f2da53b",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/9-2-2-candidate/shared-ts.json": "04107d4c2f4d3b2f01831042aaa0ba7cc1c10f8c96992045aa610e940948c7d8",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/9-2-2-candidate/resource-samples.json": "3c11924b4d13e11c8b04a5cdd61dc089d470a32afa42dff041bd25bb5a60c663",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/9-2-2-candidate/useful-media-complete.json": "decc6677428df3bc93452b8cfa8d702f7279e35d53cdb42c65cef4124ffb0f3e",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/10-2-2-baseline/shared-ts.json": "a56ebf206a361ba08519bb860ed0ea853c9079c4522abd967b8c576b04aa3b63",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/10-2-2-baseline/resource-samples.json": "cf9999f229ba16c8587cd2a415b068498885e99e34d4f1a4578039450e79ff12",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/10-2-2-baseline/useful-media-complete.json": "f86a8e1a5aa281b10f01de263ee3391f92009d19c0d8aca3eecbd41ad1e84eb5",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/11-2-3-baseline/shared-ts.json": "df4076dd41930145e1f281ef06c37c32808899faef270dc2face721b2bdc557e",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/11-2-3-baseline/resource-samples.json": "52891e2b311a18bc436b0e8bccf17975a90523341199da5cf970117208b75106",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/11-2-3-baseline/useful-media-complete.json": "1b26ebe6216e201e50227b9a8fb66f044387d27a77abf825484cacebb4afc207",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/12-2-3-candidate/shared-ts.json": "482ed4c2a3a3468092619d1c1346d898a3b3ae3ed0794d46b9fa0b72822307b3",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/12-2-3-candidate/resource-samples.json": "df4c0f9b7d52e0aeed3c4056461a76d2a7d7793b709023ba8720b484596d545d",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/12-2-3-candidate/useful-media-complete.json": "6ae4f31305a87a012eb5810a07508416f17f4d7d73e467b3c21608d644c4ee96"
+  },
+  "cleanup_passed": true,
+  "cleanup_proof_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate47-idle-live-measured-1/Root-independent-cleanup.json",
+  "Source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Source_dependency_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "protocol_sha256": "d461f436f4044ca94e1ed8a31096bafc21eef5710c6747183071f664de04458c",
+  "phase_sha256": "a1e51f916cc9a3f8b2807f60262b17405ea0312d599a5a150f5f5294f67eadf6",
+  "original_measured_elapsed_seconds": 1836.6263814909908,
+  "original_measured_changed_inputs": [],
+  "instrumentation_boundary": {
+    "separate_external_scopes": [
+      "observer",
+      "orchestrator",
+      "publication-observer"
+    ],
+    "included_in_primary": "sampler.snapshot invokes two Docker Compose exec redis-cli EVAL children per second inside infrastructure; child CPU and Redis processing remain charged to infrastructure/primary",
+    "overhead_subtracted": false,
+    "isolated_application_CPU": false,
+    "observations_or_budgets_changed": false
+  },
+  "cleanup_proof_sha256": "4657028e6081bfd6ace3b3d9e641f8e3748637bc4bcb88d7ce35cbbba3827e4d",
+  "cleanup_exact_CIDs": 42,
+  "cleanup_projects": 12,
+  "cleanup_captured_positive_host_PIDs": 454
+}

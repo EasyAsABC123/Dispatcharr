@@ -48,8 +48,22 @@ passes all [six package families](../scripts/rust-integration/milestone-batch47/
 all55 exact package container IDs are independently absent. Installed Main ELF
 `fa1406741a2a348766a0ac595bc8f7a6dcda4afdcc30224e2cb5d90acd2af468`
 differs from Candidate46,45 and stale43/44; the operator hash is recorded too.
-The combined six-context Native application cohort and fresh full paired resource
-study remain pending. Source4 and unit checks alone do not
+The [combined six-context Native cohort](../scripts/rust-integration/milestone-batch47/application/qualification.json)
+passes with actual exit0 in346.941 seconds, both EOFs/process group settled,
+and eight exact fixture CIDs, eight captured positive host PIDs and owned project
+resources independently absent. One bootstrap covers Source0/Native6 with fresh
+DB/cache/media/Main boundaries. Movie repeat5, plain Series4, manual Comskip3,
+shared two-viewer VLC, provider-info5 and advanced Series4 all pass. Provider-info
+matches actual verified TLS, headers, SQL, body and all seven sequences; advanced
+refresh matches full rows/support objects/all11 sequences and raw phase bridges.
+
+The scoped User-Agent fixture prerequisite preserves NULL account agent FKs and
+all UserAgent rows, records Source's effective Dispatcharr0.33.0 fallback, forces
+the cold Native default path, then restores the exact prior Core row and four
+named cache states after Main/roles stop. All four actual prior cache keys were
+absent; broader cache equivalence is not claimed. Earlier failed evidence stays
+unchanged. This qualifies the private functional cohort; clean public29 execution
+and fresh paired resource acceptance remain pending. Source4 and unit checks alone do not
 qualify Native advanced refresh, full provider-info behavior, performance gains
 or any complete M0–M9 milestone. Candidate45's CPU-budget failure remains intact.
 
@@ -67,6 +81,47 @@ all seven sequences and HTTP200 body; its sole provider-wire mismatch is the
 User-Agent header. Shared bootstrap selects TiviMate while the retained standalone
 Source case selects Dispatcharr0.33.0. The first case is failed and the remaining
 four are not run. Source models confirm the NULL-account-agent default selection
-path. A context-only stream-setting/cache prerequisite correction is in review;
+path. A context-only stream-setting/cache prerequisite correction is used in the later passing retry;
 expected headers remain unchanged, and no Rust/image rebuild is implied.
-Whole six-context and resource acceptance remain pending a corrected complete run.
+The later whole-six retry passes; resource acceptance remains pending.
+
+## Paired viewing measurements
+
+The [complete fresh study](../scripts/rust-integration/milestone-batch47/performance/README.md)
+contains12 valid phases: three alternating pairs each at one and two viewers,
+15-second warmup, fixed60-second measurement and five-second drain. Both decoded
+audio/video equivalence checks pass and all inputs stay unchanged. All backend,
+media, database/cache and deterministic Origin groups remain charged; the sampling
+children inside infrastructure remain included. All42 exact containers,12 project
+inventories and454 captured positive host PIDs are independently absent.
+
+Across six pairs, observed geometric-mean CPU is10.56% lower and simultaneous
+peak working-set estimate70.73% lower. This is cgroup current memory less inactive
+file pages. Encoded useful throughput ratio is0.995829 and first-byte p95
+ratio0.953330. The loaded normal graph is idle apart from viewing; active jobs,
+larger viewer counts and full-service resource acceptance remain open.
+
+**The resource budget fails:** two-viewer trial1 CPU ratio0.9283876361 exceeds0.90.
+Five other pairs pass. No failed pair is discarded or selectively retried, and
+aggregate means cannot override the failure. Source45/Native45 and Candidate47
+measurements remain separate; no isolated benefit is assigned to script reuse.
+
+Independent arithmetic recomputes every phase and ratio from compressed raw
+cgroup samples. Run without Docker or applications:
+
+```sh
+python3 -B scripts/rust-integration/milestone-batch47/performance/recompute.py
+```
+
+The pilot retains its first startup failure: the new harness directory/file modes
+prevented UID65532 from reading its proxy script; no Native workload started.
+A mode-only correction preserves all17 payload hashes, passes an actual UID read
+probe, and the fresh Native pilot passes against the retained valid Source pilot.
+Actual configuration distinguishes Main grace45functional/default12resource,
+channel idle delay5/2 and Tokio2/1. These pilot phases are outside measured12.
+
+Endpoint process evidence cannot attribute the infrastructure CPU residual to
+individual short-lived processes. The sampler launches122 Redis CLI children per
+phase; they stay charged. A proposed persistent observer is a separate protocol
+revision requiring fresh Source/Native qualification and measurements. It changes
+no Rust result, historic failure, threshold or accounting boundary retroactively.

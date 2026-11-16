@@ -1,0 +1,11 @@
+Candidate47 private whole-six functional acceptance
+
+Original Dispatcharr and dependency authors retain all application, algorithm and protocol credit.
+
+The exact c21b9b10/SDK65 image `sha256:2136bff6593153f895b2682a7d44dc4c7da3f3ab4b468cc66b103812d88c3db1` completed one Native bootstrap with six independent DB/cache/media/Main contexts: Movie repeat5 plus causal warmup, basic Series4, retained Comskip3, two-viewer VLC, provider-info5 and advanced Series4. Controller exit0/346.941s, both EOFs, process-group settlement, fixture cleanup and Root's independent eight-CID/eight-original-generation/project cleanup passed.
+
+The provider-info leaf verifies current Main HTTP JSON, owned HTTPS trust, selected wire headers, SQL and all seven sequence states against retained Source205 cases. NULL account agent FKs remain; the fixture scopes the Source-equivalent default-agent fallback, records the Source effective preflight, invalidates caches before Main, and checks actual Native request headers. Teardown restores the exact named Core JSON and four cache states after Main/provider roles stop; UserAgent rows remain unchanged. Cache DUMP payloads and complete Core values remain private and hash-bound.
+
+Advanced Series preserves metadata/episodes across sparse refresh/repeat, prunes descendants, and handles yearless reassignment against the actual four-case Source capture. Its projection keeps all primary keys, category support and eleven sequence states, with explicit causal clock/UUID normalization and raw phase-chain checks. VLC shows two authenticated useful-AV viewers sharing one actual input process, one upstream connection and one provider slot, with current Jobs/Beat readiness. Comskip covers only the retained imported manual no-file/no-commercials/already-processed domain.
+
+`index.json` binds the compact reports/projections and raw provenance. Synthetic account login values are redacted from public provider SQL; complete raw captures remain private with SHA bindings. Earlier actual1/314.940s remains unchanged in `../application-attempt1`. This packet qualifies the private functional cohort. Fresh public-helper execution, measured performance gains, wider migration domains and full M0–M9 completion are separate requirements.

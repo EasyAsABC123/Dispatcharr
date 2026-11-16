@@ -29,8 +29,9 @@ def support_inputs(repo):
  return files
 
 def prepare_catalogue(args,repo,out,build,archive,source):
- tools=repo/'scripts/rust-integration/catalogue-comskip-cohort'
- manifest=load(tools/'payloads.json');assert manifest['selected_runtime_payloads']==26 and manifest['frozen_driver_total_payloads']==168
+ six=args.workflow=='catalogue-six'
+ tools=repo/('scripts/rust-integration/catalogue-extended-cohort'if six else'scripts/rust-integration/catalogue-comskip-cohort')
+ manifest=load(tools/'payloads.json');assert manifest['selected_runtime_payloads']==(29 if six else 26)and manifest['frozen_driver_total_payloads']==(171 if six else 168)
  for row in manifest['files']:assert sha(tools/row['path'])==row['sha256'],('FrozenPublicHelperChanged',row['path'])
  retained=load(tools/'retained-Source-refs.json');bound={};authority=[]
  for group,rows in retained.items():
@@ -48,10 +49,21 @@ def prepare_catalogue(args,repo,out,build,archive,source):
  assert load(bound['Comskip']['report']['path'])['status']=='passed'and load(bound['Comskip']['cleanup']['path'])['exact_owned_absence']
  e=load(bound['Series']['execution']['path']);assert e['actual_exit']==1 and e['stdout_EOF']and e['stderr_EOF']and e['process_group_settled']
  assert load(bound['Series']['report']['path'])['status']=='passed'and load(bound['Series']['qualification']['path'])['Source_Series_context_capture_qualified']is True and load(bound['Series']['Root_cleanup']['path'])['passed']
+ if six:
+  proof=load(bound['ProviderInfo5']['authority']['path']);assert proof['capture_passed']and proof['restored18']and proof['sequences_restored']and proof['excerpt_sha256']==bound['ProviderInfo5']['cases']['sha256']
+  assert len(proof['cases'])==5 and all(row['historical_native_HTTP_control_passed']for row in proof['cases'])
+  e=load(bound['Advanced']['execution']['path']);assert e['actual_exit']==0 and e['stdout_EOF']and e['stderr_EOF']and e['process_group_settled']
+  q=load(bound['Advanced']['qualification']['path']);assert q['Source_advanced_Series_context_capture_qualified']and q['actual_Source_cases_passed']==4 and q['actual_controller_exit']==0
+  assert load(bound['Advanced']['report']['path'])['status']=='passed'and load(bound['Advanced']['cleanup']['path'])['exact_owned_absence']and load(bound['Advanced']['Root_cleanup']['path'])['passed']
+  authority.append(repo/'scripts/rust-integration/provider-info-source5/redaction-provenance.json')
  public=[p for p in tools.rglob('*')if p.is_file()and'__pycache__'not in p.parts]
  inputs={str(p.resolve()):sha(p)for p in [HERE/'prepare.py',*public,*support_inputs(repo),*[repo/name for name in build['source_sha256']if name.startswith('rust/')],archive,args.build.resolve(),*authority]}
  binding={'status':'prepared_not_run','performance':False,'full_milestone_accepted':False,'candidate_image_id':build['image_id'],'candidate_git_revision':build['git_revision'],'candidate_source_tree_sha256':build['source_tree_sha256'],'candidate_build':str(args.build.resolve()),'docker':args.docker,'support_root':str(repo),'functional_pids_limit':1600,'functional_budget_scope':'Functional four-context cohort only; no performance-equivalence claim','fixture_output':str(out/'fixtures'),'Original_archive':str(archive),'Original_source_root':str(out/'Original-source'),'Original_source_sha256':source,'adapter_sha256':sha(tools/'fixture_adapter.py'),'instrumented_fixture_adapter':str(tools/'fixture_adapter.py'),'retained_Source_playback':str(out/'unmeasured-exceptional-playback.json'),'retained_source_contexts':{},'retained_native_contexts':{},'restore_callbacks':{},'retained_source_vod_ingestion':bound['Source58'],'retained_source_vod_repeat':bound['VODRepeat'],'retained_source_comskip':bound['Comskip'],'retained_source_vod_series':bound['Series'],'inputs':[{'path':p,'sha256':h}for p,h in sorted(inputs.items())]}
- plan={'state':'UNQUALIFIED_PUBLIC_EXPORT_PREPARED','workflow':'catalogue-series-comskip-vlc','repo':str(repo),'cohort_root':str(tools),'output':str(out),'base_binding':binding,'source_contexts':[],'native_contexts':['vod-repeat','vod-series','comskip-manual','vlc-live'],'Docker_host':args.docker_host,'source_seconds':1200,'native_seconds':1200,'cleanup_seconds':90,'qualification':'Exact26 frozen payload subset; public closure still requires actual clean-checkout validation. Retained Source captures are reused, including literal failed VOD controller/offline correction.','credit':'Original Dispatcharr and dependencies retain all application/model/task/protocol/algorithm credit.'}
+ if six:
+  binding['retained_source_provider_info']=bound['ProviderInfo5']
+  binding['retained_source_vod_series_advanced']=bound['Advanced']
+  binding['functional_budget_scope']='Functional six-context cohort only; no performance-equivalence claim'
+ plan={'state':'UNQUALIFIED_PUBLIC_EXPORT_PREPARED','workflow':args.workflow,'repo':str(repo),'cohort_root':str(tools),'output':str(out),'base_binding':binding,'source_contexts':[],'native_contexts':['vod-repeat','vod-series','comskip-manual','vlc-live']+(['vod-series-info','vod-series-advanced']if six else[]),'Docker_host':args.docker_host,'source_seconds':1200,'native_seconds':1800 if six else 1200,'cleanup_seconds':90,'qualification':('Exact29 frozen payload subset; correctedprivate6 +cleanpublic6 required. 'if six else'Exact26 frozen payload subset; ')+'public closure still requires actual clean-checkout validation. Retained Source captures are reused, including literal failed VOD controller/offline correction.','credit':'Original Dispatcharr and dependencies retain all application/model/task/protocol/algorithm credit.'}
  save(out/'plan.json',plan);print(json.dumps({'plan':str(out/'plan.json'),'state':plan['state'],'applications_started':0,'native_contexts':plan['native_contexts']}))
 
 def prepare(args):
@@ -72,7 +84,7 @@ def prepare(args):
   for item in reader:
    if item.isfile():
     path=Path(item.name);assert not path.is_absolute()and'..'not in path.parts;source[item.name]=hashlib.sha256(reader.extractfile(item).read()).hexdigest()
- if args.workflow=='catalogue-series-comskip-vlc':
+ if args.workflow in('catalogue-series-comskip-vlc','catalogue-six'):
   assert not args.all_native,'all-native applies only to the recording Connect workflow'
   prepare_catalogue(args,repo,out,build,archive,source);return
  public=[p for p in HERE.rglob('*')if p.is_file()and'__pycache__'not in p.parts]
@@ -169,7 +181,7 @@ def run(args):
 
 def main():
  parser=argparse.ArgumentParser(description=__doc__);sub=parser.add_subparsers(dest='command',required=True)
- p=sub.add_parser('prepare');p.add_argument('--repo',type=Path,default=HERE.parents[2]);p.add_argument('--output',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--source-archive',type=Path);p.add_argument('--docker',default='docker');p.add_argument('--docker-host');p.add_argument('--all-native',action='store_true',help='Run all seven affected Native contexts; strict restart remains a known open failure.');p.add_argument('--workflow',choices=['recording-connect','catalogue-series-comskip-vlc'],default='recording-connect',help='Select the existing public Connect pair or retained-Source Native catalogue/comskip/VLC cohort.')
+ p=sub.add_parser('prepare');p.add_argument('--repo',type=Path,default=HERE.parents[2]);p.add_argument('--output',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--source-archive',type=Path);p.add_argument('--docker',default='docker');p.add_argument('--docker-host');p.add_argument('--all-native',action='store_true',help='Run all seven affected Native contexts; strict restart remains a known open failure.');p.add_argument('--workflow',choices=['recording-connect','catalogue-series-comskip-vlc','catalogue-six'],default='recording-connect',help='Select the existing public Connect pair or retained-Source Native catalogue/comskip/VLC cohort.')
  p=sub.add_parser('run');p.add_argument('--plan',type=Path,required=True)
  args=parser.parse_args()
  if args.command=='prepare':prepare(args);return 0

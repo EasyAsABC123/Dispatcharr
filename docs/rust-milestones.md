@@ -13,8 +13,11 @@ alone does not establish application parity or an application performance gain.
 advanced-Series refresh and Requests CA trust for manual provider-info sessions,
 including exact category/relation sequence allocation. SDK65 passes all four
 gates with1,158 tests; physical37-statement/10-control schema checks pass. Its
-committed source builds and passes six package families; combined six-context
-application and fresh paired performance gates remain pending.
+committed source builds, passes six package families and the combined six-context
+Native cohort (including provider-info5 and advanced-Series4). Its fresh12-phase
+viewing study is valid but fails one CPU pair (0.9284 >0.90); observed CPU/working
+memory estimates fall about10.6%/70.7%. Clean public29 execution and resource
+acceptance remain pending.
 
 [Candidate46](rust-milestone-batch46.md) reuses compiled queue observation scripts
 and passes all four SDK63 gates (1,148 tests) plus three explicit physical Redis
