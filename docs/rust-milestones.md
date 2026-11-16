@@ -15,7 +15,9 @@ The newest source candidate is [Candidate36](rust-milestone-batch36.md), runtime
 with a populated plugin directory while refusing unsupported DVR effects before
 queue claim or producer mutation. Docker/package and actual boundary acceptance
 are pending. This does not implement DVR plugin execution, Source three-root
-startup parity or enabled-plugin restore. All full M0–M9 milestones and new
+startup parity or enabled-plugin restore. The [DVR compatibility analysis](rust-dvr-plugin-compatibility.md)
+identifies the remaining recording-event and constructor-extension interfaces.
+All full M0–M9 milestones and new
 full-service performance acceptance remain open.
 
 The preceding [Candidate35](rust-milestone-batch35.md), runtime
