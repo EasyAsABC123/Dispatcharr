@@ -90,6 +90,49 @@ def validate_captured(root, value, bindings):
     assert value['fully_verified_operations'] == 0 and value['Native_coverage_increased'] is False
 
 
+def validate_matching_source51(root, value):
+    """Map only the two captured admin POST operations, never Native parity."""
+    assert value['binding_kind'] == 'captured_original_Source51_matching_admin_HTTP'
+    assert value['operation_count'] == 2 and value['unique_Source_cases'] == 14
+    assert value['Source_only'] is True and value['Native_coverage_increased'] is False
+    assert value['fully_verified_operations'] == 0
+    for reference in value['authorities']:
+        checked(root, reference)
+    qualified = checked(root, value['qualification'])
+    cases = checked(root, value['case_projection'])['cases']
+    assert qualified['state'] == 'ACTUAL_SOURCE51_SELECTED_CHARACTERIZATION_PASSED'
+    assert qualified['actual_exit'] == 0 and qualified['actual_cleanup_passed']
+    assert qualified['stdout_EOF'] and qualified['stderr_EOF'] and qualified['process_group_settled']
+    assert qualified['actual_HTTP_statuses'] == {'202': 14} and len(cases) == 14
+    assert qualified['Native_application_qualified'] is False and qualified['performance_verified'] is False
+    assert qualified['Source_supported_config_domain'] == {'DISABLE_ML_DOWNLOADS': 'true', 'actual_MiniLM_cache_present': False, 'default_ML_availability_parity': False}
+    seen = set()
+    for contract in value['contracts']:
+        assert contract['fully_verified'] is False and contract['observed_roles'] == ['admin']
+        assert contract['method'] == 'POST' and contract['source_handler'] == 'apps.channels.api_views.ChannelViewSet'
+        fixture = value['fixtures'][contract['fixture_id']]
+        assert fixture['baseline_revision'] == '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
+        assert contract['source_role_specs'] == fixture['role']
+        assert contract['result']['Native_application_qualified'] is False and contract['result']['complete_role_matrix'] is False
+        assert contract['result']['Source_cases_passed'] == len(contract['cases']) and contract['result']['new_Source_cases_this_task'] == 0
+        for case in contract['cases']:
+            index = case['source_index'];assert index not in seen;seen.add(index)
+            actual = cases[index]
+            assert case['record_json_pointer'] == f'/cases/{index}' and case['record_sha256'] == digest(actual)
+            assert case['name'] == actual['name'] and case['method'] == 'POST' and case['role'] == 'admin'
+            assert case['actual_HTTP_status'] == actual['actual_HTTP_status'] == 202 and actual['status'] == 'passed'
+            assert case['actual_response_body_sha256'] == actual['actual_response_body_sha256']
+            assert case['actual_root_task'] == actual['root_task'] and case['backend_status'] == actual['backend_status']
+            assert actual['DB1_journal_terminal_durable'] and actual['actual_child_parent_and_root_match']
+            single = actual['root_task'] == 'apps.channels.tasks.match_single_channel_epg'
+            assert single == (contract['source_action'] == 'match_channel_epg')
+            assert contract['source_action'] in ['match_epg', 'match_channel_epg']
+            expected = 'FAILURE' if actual['name'] == 'selected-SQL-failure-and-following-continuation' else 'SUCCESS'
+            assert actual['backend_status'] == expected
+            assert case['result'] == 'retained_Source51_case_passed_Native_unmeasured'
+    assert seen == set(range(14))
+
+
 def apply(root, rows, bindings):
     root = Path(root)
     manifest_path = root / 'scripts/rust-contracts/executable-source-inputs.json'
@@ -147,6 +190,8 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'pinned_original_logo_path_tests':
             import logo_source_contracts
             logo_source_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'captured_original_Source51_matching_admin_HTTP':
+            validate_matching_source51(root, value)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
         for contract in value['contracts']:
@@ -169,6 +214,9 @@ def apply(root, rows, bindings):
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture', 'retained_original_notification_Source20_real_credentials_framework']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_capture_assignment'
+                operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
+            if reference['kind'] == 'captured_original_Source51_matching_admin_HTTP':
+                operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'
         loaded.append({'path': reference['path'], 'sha256': reference['sha256'], 'kind': reference['kind']})

@@ -72,6 +72,9 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(vod_access_contracts.dependencies())
         import logo_source_contracts
         refs.update(logo_source_contracts.dependencies())
+        matching = json.loads((REPO / 'scripts/rust-contracts/channel-matching-source51-bindings.json').read_text())
+        refs.add('scripts/rust-contracts/channel-matching-source51-bindings.json')
+        refs.update(r['path'] for r in matching['authorities'])
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)

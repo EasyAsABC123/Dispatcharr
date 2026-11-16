@@ -97,6 +97,11 @@ class SourceContracts(unittest.TestCase):
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
+        matching = json.loads((ROOT / 'scripts/rust-contracts/channel-matching-source51-bindings.json').read_text())
+        for name in ['scripts/rust-contracts/channel-matching-source51-bindings.json', *[r['path'] for r in matching['authorities']]]:
+            p = self.root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, p)
         self.value = json.loads((self.root / 'scripts/rust-contracts/executable-source-bindings.json').read_text())
         self.bindings = json.loads((self.root / 'scripts/rust-contracts/case-bindings.json').read_text())
         self.register = json.loads((self.root / 'docs/rust-contract-register.json').read_text())
@@ -113,9 +118,9 @@ class SourceContracts(unittest.TestCase):
 
     def test_exact13_partial_assignments(self):
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 134)
+        self.assertEqual(result['operations'], 136)
         assigned = [o for r in rows for o in r['operations'] if 'executable_Source_contract' in o]
-        self.assertEqual(len(assigned), 134)
+        self.assertEqual(len(assigned), 136)
         self.assertEqual(sum(o['method'] is None for o in assigned), 53)
         self.assertEqual(sum(o['result']['new_Source_cases_this_task'] for o in assigned), 78)
         self.assertTrue(all(not o['fully_verified'] for r in rows for o in r['operations']))

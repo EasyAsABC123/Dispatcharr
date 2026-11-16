@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "2f94e2c092973e60e987b1d3f275220eb60360d6f95068a7ab33c2efd809dcfb",
+    "scripts/rust-contracts/executable-source-inputs.json": "52e1219dcb84e93af8bf688ed5308bf8ecf4f2313bd2fa648ba69de3093a4c0d",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -24,11 +24,12 @@
     "scripts/rust-contracts/schema-cache/bindings.json": "4aad9d445c30bdec179be818b8cf362c92bfb47df9a1b1c564d5c8b137f5048e",
     "scripts/rust-contracts/notification-credential-bindings.json": "59a07abade4db937b78b3532ab162227564f7dd9f63fb2d0ee72853a58fb6c34",
     "scripts/rust-contracts/vod-access/bindings.json": "f7ba2553d5f2f138a022d3c2bdb336e6e25034a1cc849aaa41208d033bde6a2a",
-    "scripts/rust-contracts/logo-source/bindings.json": "1e582a4f42601dafad57ddd9f6f6324ddb2ecded4dc2d2a793e9f50f1ad8ecd6"
+    "scripts/rust-contracts/logo-source/bindings.json": "1e582a4f42601dafad57ddd9f6f6324ddb2ecded4dc2d2a793e9f50f1ad8ecd6",
+    "scripts/rust-contracts/channel-matching-source51-bindings.json": "69d62de9764d29ad55abb8acf1208b17d0106ee11bacb4d2236957d79de449e9"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 134,
+    "operations": 136,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -104,6 +105,11 @@
         "path": "scripts/rust-contracts/logo-source/bindings.json",
         "sha256": "1e582a4f42601dafad57ddd9f6f6324ddb2ecded4dc2d2a793e9f50f1ad8ecd6",
         "kind": "pinned_original_logo_path_tests"
+      },
+      {
+        "path": "scripts/rust-contracts/channel-matching-source51-bindings.json",
+        "sha256": "69d62de9764d29ad55abb8acf1208b17d0106ee11bacb4d2236957d79de449e9",
+        "kind": "captured_original_Source51_matching_admin_HTTP"
       }
     ],
     "fully_verified_added": 0
@@ -33748,15 +33754,206 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-Source51-channel-matching",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "entrypoint": "existing normal-graph Fixture/Workflow channel-matching context through actual HTTP; no Source task body called by helper",
+            "bootstrap_reuse": "One owned Compose context/database/Redis namespace;14 ordered seeded cases with prior children settled",
+            "Source_domain": {
+              "DISABLE_ML_DOWNLOADS": "true",
+              "actual_MiniLM_cache_present": false,
+              "actual_model_inference_qualified": false
+            },
+            "role": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "execution_authority": {
+              "path": "scripts/rust-integration/channel-matching-source51/Source51/execution.json",
+              "sha256": "799095effd305dbb0f2e436e7efcc28e3b288bb24fb20d22a724c1db9a01871d"
+            },
+            "cleanup_authority": {
+              "path": "scripts/rust-integration/channel-matching-source51/Source51/cleanup.json",
+              "sha256": "bf84729148064e378e0e92807967686485aceaf0b95a620cacf2278a65fbb79f"
+            },
+            "Source_replayed_for_mapping": false
+          },
+          "assertions": [
+            "Actual admin POST HTTP202, exact Source response keys/body hash and no returned task UUID; only these unformatted routes observed.",
+            "Natural Source matching root/backend identity, ordered SQL assignments and actual update-group progress/result messages captured.",
+            "Caught single SQL refusal is SUCCESS with failure dict; bulk selected refusal is FAILURE, and following work continues.",
+            "Changed-only bulk versus single model-save cache/manual-group effects and actual XML/SD child selection/root/parent/terminal results retained."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_Source51_admin_POST_observations",
+            "Source_cases_passed": 7,
+            "Native_application_qualified": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "full_milestone_accepted": false,
+            "performance_verified": false,
+            "new_Source_cases_this_task": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-bf112461d42cffd99a1f:POST",
+            "pattern_exact": "api/channels/^channels/match-epg/$",
+            "source_handler": "apps.channels.api_views.ChannelViewSet",
+            "method": "POST",
+            "source_action": "match_epg",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-Source51-channel-matching",
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "cases": [
+              {
+                "source_index": 0,
+                "name": "all-exact-gracenote-priority-inactive-unassigned",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/0",
+                "record_sha256": "a83b138fec94435c6897151ee0e1f5b71ee4e7e39ccdc9dd54bd5dce9bd89a97",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "99c09704ae95e51235f17e6e451046965ed54c5c8accbb35f77c3bf99e644a40",
+                "actual_root_task": "apps.channels.tasks.match_epg_channels",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 1,
+                "name": "selected-includes-assigned-changed-and-unchanged",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/1",
+                "record_sha256": "bbbccfab7ba16c51a3fa8c6181a502049ae27e63ec68092169f92f452425b58b",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "5b1b1b8ef1589f333292d890fa51b046cf72ea0f9518db83832c769044fd2484",
+                "actual_root_task": "apps.channels.tasks.match_selected_channels_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 2,
+                "name": "selected-no-existing-ids",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/2",
+                "record_sha256": "07abb85fb1b5ef14d9836b0ddb5bcfc4c656f541a0328e4b7cec28a03c4a5d21",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+                "actual_root_task": "apps.channels.tasks.match_selected_channels_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 6,
+                "name": "all-excludes-nameless-catalog",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/6",
+                "record_sha256": "05c114e80d182626ec4bbc6c712613aa3d903f811a3f013bc93ad1680354edc0",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "99c09704ae95e51235f17e6e451046965ed54c5c8accbb35f77c3bf99e644a40",
+                "actual_root_task": "apps.channels.tasks.match_epg_channels",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 9,
+                "name": "selected-SQL-failure-and-following-continuation",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/9",
+                "record_sha256": "30a0bbb06165c05d4e4202f9a74f193d77e7e73b08285b9d560c1a0169863d37",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+                "actual_root_task": "apps.channels.tasks.match_selected_channels_epg",
+                "backend_status": "FAILURE",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 11,
+                "name": "selected-region-priority-fuzzy",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/11",
+                "record_sha256": "54535317bb4b35fbebadd2058695425f17d460f6d180dadb93f74bd2af9fa2b9",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+                "actual_root_task": "apps.channels.tasks.match_selected_channels_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 12,
+                "name": "selected-mixed-SD-batch-XML-dummy",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/12",
+                "record_sha256": "21481bcbf47eda61f29da03ecbd0b914cb2ce18a0a2f1ee16f817cceca834f45",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "e8fafec6cb54093cfaa676c9cfc71dd8131f4f7e05e0655b52ecf28e944cf08f",
+                "actual_root_task": "apps.channels.tasks.match_selected_channels_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              }
+            ],
+            "assertions": [
+              "Actual admin POST HTTP202, exact Source response keys/body hash and no returned task UUID; only these unformatted routes observed.",
+              "Natural Source matching root/backend identity, ordered SQL assignments and actual update-group progress/result messages captured.",
+              "Caught single SQL refusal is SUCCESS with failure dict; bulk selected refusal is FAILURE, and following work continues.",
+              "Changed-only bulk versus single model-save cache/manual-group effects and actual XML/SD child selection/root/parent/terminal results retained."
+            ],
+            "result": {
+              "state": "retained_Original_Source51_admin_POST_observations",
+              "Source_cases_passed": 7,
+              "Native_application_qualified": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "full_milestone_accepted": false,
+              "performance_verified": false,
+              "new_Source_cases_this_task": 0
+            },
+            "fully_verified": false,
+            "remaining": [
+              "Nonadmin/anonymous/expired-token and full role matrix",
+              "OPTIONS/schema/method and format-suffix variants",
+              "Natural malformed-type/duplicate/concurrent-queryset branches",
+              "Native matching application not yet observed",
+              "Model-enabled inference/cache/download and general-plugin domains"
+            ]
+          }
         }
       ]
     },
@@ -36158,15 +36355,206 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-Source51-channel-matching",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "entrypoint": "existing normal-graph Fixture/Workflow channel-matching context through actual HTTP; no Source task body called by helper",
+            "bootstrap_reuse": "One owned Compose context/database/Redis namespace;14 ordered seeded cases with prior children settled",
+            "Source_domain": {
+              "DISABLE_ML_DOWNLOADS": "true",
+              "actual_MiniLM_cache_present": false,
+              "actual_model_inference_qualified": false
+            },
+            "role": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "execution_authority": {
+              "path": "scripts/rust-integration/channel-matching-source51/Source51/execution.json",
+              "sha256": "799095effd305dbb0f2e436e7efcc28e3b288bb24fb20d22a724c1db9a01871d"
+            },
+            "cleanup_authority": {
+              "path": "scripts/rust-integration/channel-matching-source51/Source51/cleanup.json",
+              "sha256": "bf84729148064e378e0e92807967686485aceaf0b95a620cacf2278a65fbb79f"
+            },
+            "Source_replayed_for_mapping": false
+          },
+          "assertions": [
+            "Actual admin POST HTTP202, exact Source response keys/body hash and no returned task UUID; only these unformatted routes observed.",
+            "Natural Source matching root/backend identity, ordered SQL assignments and actual update-group progress/result messages captured.",
+            "Caught single SQL refusal is SUCCESS with failure dict; bulk selected refusal is FAILURE, and following work continues.",
+            "Changed-only bulk versus single model-save cache/manual-group effects and actual XML/SD child selection/root/parent/terminal results retained."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_Source51_admin_POST_observations",
+            "Source_cases_passed": 7,
+            "Native_application_qualified": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "full_milestone_accepted": false,
+            "performance_verified": false,
+            "new_Source_cases_this_task": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-fd65e9e1f0e77228ecb1:POST",
+            "pattern_exact": "api/channels/^channels/(?P<pk>[^/.]+)/match-epg/$",
+            "source_handler": "apps.channels.api_views.ChannelViewSet",
+            "method": "POST",
+            "source_action": "match_channel_epg",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-Source51-channel-matching",
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_fixture_admin_Bearer",
+                "credential_backend_bypassed": false,
+                "full_actor_SQL_projected": false,
+                "credential_published": false
+              }
+            },
+            "cases": [
+              {
+                "source_index": 3,
+                "name": "single-exact-first-id-not-bulk-priority",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/3",
+                "record_sha256": "59f7e2396ad2685a0d10f97ec63984ed45d26170ee813caecd9b85a697e623b1",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+                "actual_root_task": "apps.channels.tasks.match_single_channel_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 4,
+                "name": "single-unchanged",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/4",
+                "record_sha256": "fd6d8937330f0d713c5167c110f3d21985ce9e6e33420cc146c04e69c060a6e1",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+                "actual_root_task": "apps.channels.tasks.match_single_channel_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 5,
+                "name": "single-exact-nameless-catalog",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/5",
+                "record_sha256": "ab6191d68623312a265741cc947e6b3611d05154fe693657ffae7cabe5d02ccc",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "ad1492badc8508d3d416a1e8b146c3271d661c309d151a31d2a9be8a0ea2cd46",
+                "actual_root_task": "apps.channels.tasks.match_single_channel_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 7,
+                "name": "single-no-match-no-model-needed",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/7",
+                "record_sha256": "8bb772365b461b9dbfe9293ac4a4b934a8b1b727859ad9655d20f0901df2c64e",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "ad1492badc8508d3d416a1e8b146c3271d661c309d151a31d2a9be8a0ea2cd46",
+                "actual_root_task": "apps.channels.tasks.match_single_channel_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 8,
+                "name": "single-caught-SQL-failure",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/8",
+                "record_sha256": "9e9839f661bc47b51410e8feb0509a0848b32e901a5a54ad53d8365fbaeb7bbe",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+                "actual_root_task": "apps.channels.tasks.match_single_channel_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 10,
+                "name": "single-high-confidence-normalization",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/10",
+                "record_sha256": "e355a205480635dd88f7126b3c81b9b100c1b4bf2d2b6e4c5b71032789f125e2",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "0f51162dfcbdd704dde3017d3a8d541d3f3d370468555d178fcdfec022a32c36",
+                "actual_root_task": "apps.channels.tasks.match_single_channel_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              },
+              {
+                "source_index": 13,
+                "name": "single-SD-direct-parse-cache-group",
+                "method": "POST",
+                "role": "admin",
+                "record_json_pointer": "/cases/13",
+                "record_sha256": "def4ecfbbe479ce04857011a470d32b1fcb4133068bd39b3f5ea6098857b5e1e",
+                "actual_HTTP_status": 202,
+                "actual_response_body_sha256": "2dddb2878828e9f3da37f3547940a9d48a9c158a82c47bdbf9884faecb3a30e8",
+                "actual_root_task": "apps.channels.tasks.match_single_channel_epg",
+                "backend_status": "SUCCESS",
+                "result": "retained_Source51_case_passed_Native_unmeasured"
+              }
+            ],
+            "assertions": [
+              "Actual admin POST HTTP202, exact Source response keys/body hash and no returned task UUID; only these unformatted routes observed.",
+              "Natural Source matching root/backend identity, ordered SQL assignments and actual update-group progress/result messages captured.",
+              "Caught single SQL refusal is SUCCESS with failure dict; bulk selected refusal is FAILURE, and following work continues.",
+              "Changed-only bulk versus single model-save cache/manual-group effects and actual XML/SD child selection/root/parent/terminal results retained."
+            ],
+            "result": {
+              "state": "retained_Original_Source51_admin_POST_observations",
+              "Source_cases_passed": 7,
+              "Native_application_qualified": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "full_milestone_accepted": false,
+              "performance_verified": false,
+              "new_Source_cases_this_task": 0
+            },
+            "fully_verified": false,
+            "remaining": [
+              "Nonadmin/anonymous/expired-token and full role matrix",
+              "OPTIONS/schema/method and format-suffix variants",
+              "Natural malformed-type/duplicate/concurrent-queryset branches",
+              "Native matching application not yet observed",
+              "Model-enabled inference/cache/download and general-plugin domains"
+            ]
+          }
         }
       ]
     },
