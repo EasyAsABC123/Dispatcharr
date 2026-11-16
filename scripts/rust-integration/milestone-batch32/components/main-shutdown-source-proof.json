@@ -1,0 +1,38 @@
+{
+  "state": "private production fix; canonical unchanged/not compiled/not executed",
+  "failure_authority": {
+    "path": "artifacts/rust/m8-native31-stopped-guide-readonly-1/report.json",
+    "sha256": "7f41625a3f31cda4ec9cbc16a2be3799f654915d07ce564ff385c68e7e033061"
+  },
+  "actual_caller_trace": [
+    "main.rs1183 graceful shutdown_signal returns",
+    "main.rs1191 spawns shutdown_components(signal_services)",
+    "main.rs1192 publishes actual JoinHandle throughoneshot then gracefulcallbackreturns",
+    "Axumservermaycompletewhileouteroneshotisalsoready",
+    "main.rs1199 servercompletionbranch starts shutdown_components(services) again",
+    "shutdown_components main.rs1313 callsSelectedJobs.shutdown",
+    "selected_jobs.rs724 normalqueue.shutdown",
+    "normal_queue.rs507\u2013515 eachfamily.shutdown",
+    "normal_registered_plugins.rs439\u2013442 onlyproductionPluginRuntime.shutdown caller",
+    "plugin_runtime.rs493 Host.shutdown receives repeatedcalls onalreadysettledactor; first7Ok then7Closed at11846msremaining"
+  ],
+  "why_not_family_duplicate": "normalqueue constructor explicitly rejects duplicatefamily; onlyonePluginRuntime shutdown callsite. ActualMainouterselect has two readyoutcomes, itsserverbranchignoredpublishedcleanuphandle.",
+  "change": "Production helper takes existingoneshot JoinHandle and awaits samephysicalcleanupowner. If no publishedowner exists after servercomplete, callbackcannotbefurtherpolled so fallbackexecutesexactlyonce. Existing actual cleanupfailure and JoinError remainfailures.",
+  "regression_tests": [
+    "bothselectbranchesready forcecompletedserverbranch: successesandactualcleanupfailure eachonly1spawnedowner",
+    "publishedowner stillphysicallyblocked: servercompletion mustwait existingJoinHandle, nofallback",
+    "unsignaledserverexit: emptyandclosednotices execute exactly1fallback andpropagatefailure"
+  ],
+  "tests_executed": false,
+  "compile_executed": false,
+  "app_executed": false,
+  "merge_instructions": "3way exactSDK41preimage ontoSDK42restore16 main.rs preserving bothdiffs; no canonicaledits here.",
+  "source_authorship_preserved": true,
+  "Axum_publication_order_authority": {
+    "path": "artifacts/rust/tooling/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/axum-0.8.9/src/serve/mod.rs",
+    "sha256": "063ccc352890e97c82d497b32888cf261921bb99687240120643d1d85c59324a",
+    "lines": "275\u2013279 spawn waits signal.await then drops signal_rx; accept select287 stops only signal_tx.closed() after callback fully completed, then close_tx.closed awaits allconnections",
+    "proof": "Main callback performs spawn+oneshotsend synchronously without await between shutdown_signal return and callback completion. Axum cannot complete graceful server future before thatsend. If outerserverbranch wins, try_recv necessarily observespublishedhandle. Before callbacktrigger servercannotcomplete throughgracefulsignal; normal transporterrorfallback ownscleanup. Closednotice doesnotmeanphysicalsuccess; fallbackstillrunsactualshutdown.",
+    "test_limit": "Deterministic test forces bothselectbranchesready with actual spawnedJoinHandle; tests shared Main coordinator ownership directly withoutfakePluginRuntime/Host or claim actualapp acceptance."
+  }
+}

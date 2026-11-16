@@ -1,5 +1,5 @@
 //! Job-free original backup HTTP/filesystem contracts. Original authors retain AGPL credit.
-//! Optional explicit create/status adapter; restore remains guarded. No worker starts here.
+//! Optional explicit shared create/status/current-schema restore adapter. No worker starts here.
 use crate::{AuthService, StoreError};
 use axum::{
     body::{Body, Bytes},
@@ -30,12 +30,19 @@ pub struct BackupFiles {
     jobs: Option<Arc<dyn BackupJobApi>>,
 }
 /// Explicit adapter avoids a Store -> job-transport dependency cycle. No default
-/// constructor, background worker, restore or scheduling authority is implied.
+/// constructor, background worker or unrestricted restore authority is implied.
 pub trait BackupJobApi: Send + Sync {
     fn create(
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> dispatcharr_contracts::BoxFuture<'_, Result<String, StoreError>>;
+    fn restore(
+        &self,
+        _filename: String,
+        _caller: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<String, StoreError>> {
+        Box::pin(async { Err(StoreError::Unsupported("Backup restore worker unavailable")) })
+    }
     fn status<'a>(
         &'a self,
         task_id: &'a str,
@@ -392,10 +399,14 @@ impl BackupFiles {
             return Ok(Json(json!({"token":mac(&self.secret,&filename)})).into_response());
         }
         if kind == "restore" {
-            return Ok(reply(
-                501,
-                "Native durable backup restore jobs are not migrated",
-            ));
+            let Some(jobs) = &self.jobs else {
+                return Ok(reply(
+                    501,
+                    "Native durable backup restore jobs are not migrated",
+                ));
+            };
+            let id = jobs.restore(filename, lease.clone()).await?;
+            return Ok((StatusCode::ACCEPTED,Json(json!({"detail":"Restore started","task_id":id,"task_token":mac(&self.secret,&id)}))).into_response());
         }
         if kind == "delete" {
             if !metadata.is_file() {

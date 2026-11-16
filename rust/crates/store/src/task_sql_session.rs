@@ -183,6 +183,9 @@ impl AuthService {
     }
 }
 impl TaskSqlSession {
+    pub(crate) fn shares_auth_writer(&self, auth: &AuthService) -> bool {
+        Arc::ptr_eq(self.state.writer.semaphore(), &auth.user_agent_workers)
+    }
     pub async fn run<T, F>(&self, work: F) -> Result<T, StoreError>
     where
         T: Send + 'static,
@@ -318,6 +321,112 @@ impl TaskSqlSession {
             Some(cache) => cache.settings_group("system_settings", load).await,
             None => load().await,
         }
+    }
+}
+
+/// Restore-only fence over ALL existing Main pool capacity. Every physical
+/// connection keeps the existing Ready/close/quarantine supervisor; this type
+/// cannot mint a connection, task owner, extra writer permit or transaction.
+pub(crate) enum BackupPoolFenceError {
+    Capacity,
+    Store(Box<StoreError>),
+}
+impl From<StoreError> for BackupPoolFenceError {
+    fn from(value: StoreError) -> Self {
+        Self::Store(Box::new(value))
+    }
+}
+pub(crate) struct BackupPoolFence {
+    sessions: Vec<TaskSqlSession>,
+}
+impl BackupPoolFence {
+    pub(crate) fn primary(&self) -> &TaskSqlSession {
+        &self.sessions[0]
+    }
+    pub(crate) async fn clear_prepared_statements(&self) -> Result<(), StoreError> {
+        for session in &self.sessions {
+            session
+                .run(|c| {
+                    Box::pin(async move {
+                        if !c.protocol_transaction_is_idle().await? {
+                            return Err(sqlx::Error::Protocol(
+                                "Restore requires idle Main pool connections".into(),
+                            ));
+                        }
+                        c.clear_cached_statements().await
+                    })
+                })
+                .await??;
+        }
+        Ok(())
+    }
+    pub(crate) async fn close(&self) -> Result<(), StoreError> {
+        let mut failed = false;
+        for session in &self.sessions {
+            if session.close().await.is_err() {
+                failed = true;
+            }
+        }
+        if failed {
+            Err(unavailable())
+        } else {
+            Ok(())
+        }
+    }
+}
+impl AuthService {
+    pub(crate) async fn borrow_backup_pool_fence(
+        &self,
+        owner: Owner,
+        deadline: tokio::time::Instant,
+    ) -> Result<BackupPoolFence, BackupPoolFenceError> {
+        // This is the SAME admitted writer, reused under one shared gate. The
+        // private constructor validates it belongs to this actual Auth budget.
+        let writer = match self.task_sql_writer() {
+            Ok(writer) => writer,
+            Err(StoreError::StatusBody(503, _)) => return Err(BackupPoolFenceError::Capacity),
+            Err(error) => return Err(error.into()),
+        };
+        let auth = self.clone().with_request_writer_permit(writer)?;
+        let gate = Arc::new(tokio::sync::Mutex::new(()));
+        let maximum = self.store.pool().options().get_max_connections();
+        let mut fence = BackupPoolFence {
+            sessions: Vec::with_capacity(maximum as usize),
+        };
+        for _ in 0..maximum {
+            let next = tokio::time::timeout_at(
+                deadline,
+                auth.borrow_task_sql_session_with_gate(owner.clone(), Some(gate.clone())),
+            )
+            .await;
+            match next {
+                Ok(Ok(session)) => fence.sessions.push(session),
+                Ok(Err(error)) => {
+                    fence.close().await?;
+                    return Err(
+                        if matches!(&error, StoreError::Database(sqlx::Error::PoolTimedOut)) {
+                            BackupPoolFenceError::Capacity
+                        } else {
+                            error.into()
+                        },
+                    );
+                }
+                Err(_) => {
+                    fence.close().await?;
+                    return Err(BackupPoolFenceError::Capacity);
+                }
+            }
+        }
+        if fence.sessions.is_empty() {
+            return Err(unavailable().into());
+        }
+        // Bound admission precedes all destructive restore work. A real busy
+        // owner can make this fail without dropping the schema or being killed.
+        if let Err(error) = fence.clear_prepared_statements().await {
+            fence.close().await?;
+            return Err(error.into());
+        }
+        Ok(fence)
     }
 }
 

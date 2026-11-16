@@ -1,0 +1,42 @@
+{
+  "state": "adversarial_static_review_only",
+  "base_git": "5a0a6882c54d4ada079a8dfb1e70749ae3de680a",
+  "candidate_map_sha256": "45c08dd3fc0c3d906cadede5fd8d97c6b119e049deeaa1655005c79b1971b317",
+  "concrete_fix": {
+    "path": "rust/crates/job-transport/src/normal_backup.rs",
+    "problem": "Intake-stop select dropped partially acquired fence; physical actor close failures could be lost before clean drain result.",
+    "change": "Existing spawned worker awaits actual prepare_restore completion; configured30s pool-acquisition deadline remains; stopped intake explicitly settles every acquired scope before no-claim return. Known admission/close errors retain original worker owner, so drain cannot silently succeed.",
+    "tests_required": "Root SDK; actual stop during partial pool acquisition with held existing pool owner and physical close/error observation remains unexecuted."
+  },
+  "same_pool_review": [
+    "All existing slots acquired using one original Auth writer and shared gate before exact queue CAS and DROP.",
+    "Capacity, changed head, post-admission intake close, revocation explicitly await full close; close failures retain scope/owner.",
+    "Ambiguous claim never executes; original scope/owner retained for nonzero drain.",
+    "Physical tool timeout/cancel/panic and unknown SQL outcomes retain admission; ordinary known server/archive failures settle all sessions before SUCCESS failed-dict.",
+    "Real TaskSqlSession actor owns each PoolConnection through actual close; no detach/new pool.",
+    "Serial close may remain pending on unknown physical outcome; this holds worker owner and cannot certify a normal drain."
+  ],
+  "Source_post_migrate_review": {
+    "application_signal_inventory": "Pinned Original Python sources contain only apps/plugins/apps.py application pre/post_migrate registration. Framework auth/contenttypes/migrate captured separately.",
+    "plugins": "Pinned loader.py89-139,139-329,676-703 compared. Empty filesystem/cache and disabled/nohistory rows are explicit scope guards; Source empty discovery sync has an empty atomic transaction, preserves DB-only rows, and emits no plugin children. Native supplied fenced session follows same narrow behavior; no forced reload or Original body invocation.",
+    "contenttypes": "Django6.0.9 create_contenttypes sorts only missing model names per app and does not update natural keys; Native matches current-schema dataset.",
+    "permissions": "Django6.0.9 create_permissions preserves existing (ctype,codename) names, creates missing; Native matches current-schema dataset.",
+    "limits": "Broader Django receivers/custom routers and historical migration graph remain unsupported; this review is no runtime proof."
+  },
+  "next_SDK": {
+    "lease": "Only after Root Main31 exclusive runtime lease and cleanup end",
+    "preparation": "Root verifies current preimages, applies all16 rows to shared SDK source preserving newer source changes, runs cargo fmt there; runner freezes that final input automatically.",
+    "command": "python artifacts/rust/normal-graph-batch17-sdk-1/run-sdk.py 42",
+    "cwd": "/home/justin/github/Dispatcharr",
+    "shared_target": "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target",
+    "runner_gates": [
+      "fmt --all -- --check",
+      "check --workspace --offline --locked",
+      "clippy --workspace --all-targets --offline --locked -- -D warnings",
+      "test --workspace --offline --locked"
+    ],
+    "status": "not executed"
+  },
+  "runtime": "none",
+  "credits": "Original Dispatcharr/Django/Celery/Kombu/PostgreSQL/dependency authors retain full application/library/license credit"
+}

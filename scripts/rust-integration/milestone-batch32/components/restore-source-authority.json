@@ -1,0 +1,103 @@
+{
+  "framework_capture": "artifacts/rust/m8-restore-framework-extraction-1/inventory.json",
+  "framework_capture_sha256": "66a1e1f871bf3f9feee737d5332861fb1e67a4b8cb435a11777b22d6b87cdf8d",
+  "Django": "6.0.9",
+  "framework": [
+    {
+      "path": "django/contrib/auth/management/__init__.py",
+      "sha256": "c95aba46d5b247f8399e7f824c8137bec921ea9065f42b81afbe5d61cd8b176a",
+      "bytes": 5390,
+      "functions": [
+        {
+          "name": "create_permissions",
+          "line": 38,
+          "end_line": 108
+        }
+      ]
+    },
+    {
+      "path": "django/contrib/contenttypes/management/__init__.py",
+      "sha256": "c61c82a426d949608188750964695cbd61a1cc0934549a515a0b412492ea3381",
+      "bytes": 4665,
+      "functions": [
+        {
+          "name": "create_contenttypes",
+          "line": 92,
+          "end_line": 135
+        }
+      ]
+    },
+    {
+      "path": "django/core/management/commands/migrate.py",
+      "sha256": "b426d73c14579b71175e8700eb873c106fb7e51c6a766cf330a7c296735cd4b3",
+      "bytes": 21359,
+      "functions": [
+        {
+          "name": "handle",
+          "line": 97,
+          "end_line": 388
+        }
+      ]
+    }
+  ],
+  "Source_application": "artifacts/rust/milestone-batch1-packages-1/package/safe17/original.tar",
+  "Source_functions": [
+    "apps/backups/api_views.py:313 restore_backup",
+    "apps/backups/tasks.py:57 restore_backup_task",
+    "apps/backups/services.py:283 restore_backup",
+    "apps/backups/services.py:127 _restore_postgresql",
+    "apps/plugins/apps.py:38 _post_migrate_discover"
+  ],
+  "explicit_guards": [
+    "pinned184 current migration graph only, checked on actual Main and pg_restore COPY projection before DROP",
+    "empty plugin module directory/cache plus restored pluginconfig disabled/no history; populated/import-side-effect restore task context remains unimplemented",
+    "archive/PG tools bounded by existing library limits; Source unbounded/archive filename custom representations not inferred",
+    "same Main pool retirement and post-migrate semantics require actual grouped acceptance; no runtime proof yet",
+    "Redis cache is not flushed and Beat schedule is not silently rewritten; Source actual restoration/cache behavior must be observed"
+  ],
+  "Source_application_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "primary_function_hashes": [
+    {
+      "path": "apps/backups/api_views.py",
+      "function": "restore_backup",
+      "line": 313,
+      "end_line": 341,
+      "sha256": "5b06011078526e8a6b8f9780bbf0d4b398bc2181c1679d824ae832bd7b8c35fd"
+    },
+    {
+      "path": "apps/backups/tasks.py",
+      "function": "restore_backup_task",
+      "line": 57,
+      "end_line": 78,
+      "sha256": "e106f85215adf318cf24070e75a1eb10e83d4ab083b610ef2160bb872e058d8e"
+    },
+    {
+      "path": "apps/backups/services.py",
+      "function": "_clean_postgresql_schema",
+      "line": 100,
+      "end_line": 124,
+      "sha256": "2d903ee86f7b38494a4bb6b99609e650d8b7963255488f2bdc6298fb8fbae10a"
+    },
+    {
+      "path": "apps/backups/services.py",
+      "function": "_restore_postgresql",
+      "line": 127,
+      "end_line": 169,
+      "sha256": "693cce9aa731419adbce027284b3be401f2bda844e3e0d898fc5b33dcfa43cba"
+    },
+    {
+      "path": "apps/backups/services.py",
+      "function": "restore_backup",
+      "line": 283,
+      "end_line": 312,
+      "sha256": "9a8a841b512161a0836b7651833014f7720357f3f1256dee09201a0a40968297"
+    },
+    {
+      "path": "apps/plugins/apps.py",
+      "function": "_post_migrate_discover",
+      "line": 38,
+      "end_line": 46,
+      "sha256": "f596e61e371a3edbc66ee42014d31d8ebd57b4ff72a8f80010f8c0369322be21"
+    }
+  ]
+}

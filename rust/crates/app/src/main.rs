@@ -997,6 +997,7 @@ async fn run() -> Result<(), String> {
                     .local_addr()
                     .map_err(|_| "Actual Main listener address unavailable")?,
                 existing,
+                plugin_actions.clone(),
             )
             .await?,
         )
@@ -1007,6 +1008,7 @@ async fn run() -> Result<(), String> {
         Some(selected) => plugin_actions.with_runtime(selected.plugin_runtime()),
         None => plugin_actions,
     };
+
     let backup_files = selected_jobs
         .as_ref()
         .map(|selected| selected.backup_files())
@@ -1196,7 +1198,7 @@ async fn run() -> Result<(), String> {
     tokio::pin!(server);
     tokio::select! {
         result=&mut server=>{
-            let cleanup=tokio::time::timeout(shutdown_timeout,shutdown_components(services)).await;
+            let cleanup=tokio::time::timeout(shutdown_timeout,finish_shutdown_after_server(&mut shutdown_notice,shutdown_components(services))).await;
             if selected_jobs_enabled || auth.stream_files_were_used() {match cleanup{Ok(result)=>result?,Err(_)=>return Err("Selected shutdown deadline expired; process termination may close outstanding resources".into())}}
             result.map_err(|_|"HTTP server failed".to_string())
         },
@@ -1215,6 +1217,27 @@ async fn run() -> Result<(), String> {
                 Err(_)=>{cleanup.abort();if selected_jobs_enabled || auth.stream_files_were_used() {Err("Selected shutdown deadline expired; cleanup was cancelled and process termination may close outstanding resources".into())}else{eprintln!("Shutdown deadline reached; closing remaining HTTP connections");Ok(())}},
             }
         }
+    }
+}
+
+// Axum may complete in the same poll that its graceful callback publishes
+// cleanup. The server-ready select branch must join that actual owner, never
+// run the shared physical service lifecycles a second time.
+async fn finish_shutdown_after_server<F>(
+    notice: &mut tokio::sync::oneshot::Receiver<tokio::task::JoinHandle<Result<(), String>>>,
+    fallback: F,
+) -> Result<(), String>
+where
+    F: std::future::Future<Output = Result<(), String>>,
+{
+    match notice.try_recv() {
+        Ok(cleanup) => cleanup
+            .await
+            .map_err(|_| "Selected shutdown supervisor failed; process termination may close outstanding resources".to_string())?,
+        // A completed server can no longer poll the graceful callback. An empty
+        // or closed notice therefore means no published cleanup owner exists.
+        Err(tokio::sync::oneshot::error::TryRecvError::Empty)
+        | Err(tokio::sync::oneshot::error::TryRecvError::Closed) => fallback.await,
     }
 }
 
@@ -1540,5 +1563,99 @@ async fn main() {
     if let Err(error) = run().await {
         eprintln!("Dispatcharr Rust startup failed: {error}");
         std::process::exit(1);
+    }
+}
+
+#[cfg(test)]
+mod shutdown_owner_tests {
+    use super::finish_shutdown_after_server;
+    use std::sync::{
+        atomic::{AtomicUsize, Ordering},
+        Arc,
+    };
+
+    // Force the same race as actual Main: Axum's graceful callback has sent
+    // the real cleanup JoinHandle and returned, so BOTH outer select branches
+    // are ready. Force server-completion selection and use the production join.
+    #[tokio::test]
+    async fn completed_server_joins_same_signal_cleanup_success_and_failure() {
+        for failure in [false, true] {
+            let calls = Arc::new(AtomicUsize::new(0));
+            let owner = calls.clone();
+            let (started, mut notice) = tokio::sync::oneshot::channel();
+            let cleanup = tokio::spawn(async move {
+                owner.fetch_add(1, Ordering::SeqCst);
+                if failure {
+                    Err("actual cleanup failure".to_owned())
+                } else {
+                    Ok(())
+                }
+            });
+            started.send(cleanup).unwrap();
+            let result = tokio::select! {
+                biased;
+                _ = std::future::ready(()) => {
+                    finish_shutdown_after_server(&mut notice, async {
+                        calls.fetch_add(1, Ordering::SeqCst);
+                        Err("duplicate cleanup must not execute".to_owned())
+                    }).await
+                },
+                _ = &mut notice => panic!("test must select the completed-server branch"),
+            };
+            assert_eq!(calls.load(Ordering::SeqCst), 1);
+            assert_eq!(
+                result,
+                if failure {
+                    Err("actual cleanup failure".to_owned())
+                } else {
+                    Ok(())
+                }
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn server_completion_waits_for_published_physical_owner() {
+        let (release, wait) = tokio::sync::oneshot::channel();
+        let (started, mut notice) = tokio::sync::oneshot::channel();
+        started
+            .send(tokio::spawn(async {
+                wait.await.unwrap();
+                Ok(())
+            }))
+            .unwrap();
+        let finishing = finish_shutdown_after_server(&mut notice, async {
+            panic!("an existing cleanup owner cannot be replaced")
+        });
+        tokio::pin!(finishing);
+        tokio::select! {
+            biased;
+            _ = &mut finishing => panic!("logical server completion is not physical drain"),
+            _ = tokio::task::yield_now() => {},
+        }
+        release.send(()).unwrap();
+        assert_eq!(finishing.await, Ok(()));
+    }
+
+    #[tokio::test]
+    async fn unsignaled_server_failure_starts_fallback_cleanup() {
+        for closed in [false, true] {
+            let (started, mut notice) = tokio::sync::oneshot::channel();
+            let sender = if closed {
+                drop(started);
+                None
+            } else {
+                Some(started)
+            };
+            let calls = AtomicUsize::new(0);
+            let result = finish_shutdown_after_server(&mut notice, async {
+                calls.fetch_add(1, Ordering::SeqCst);
+                Err("actual fallback failure".to_owned())
+            })
+            .await;
+            assert_eq!(calls.load(Ordering::SeqCst), 1);
+            assert_eq!(result, Err("actual fallback failure".to_owned()));
+            drop(sender);
+        }
     }
 }

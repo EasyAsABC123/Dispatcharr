@@ -1,0 +1,14 @@
+{
+  "paths": [
+    {
+      "path": "rust/crates/app/src/main.rs",
+      "preimage_path": "artifacts/rust/m8-main-signal-shutdown-owner-fix-1/preimage/main.rs",
+      "preimage_sha256": "6c6b346ae1dbcd5b8cdf7bb82e205e46f3de6c78de2c4dc665cab209d15e3c9b",
+      "overlay": "artifacts/rust/m8-main-signal-shutdown-owner-fix-1/rust/crates/app/src/main.rs",
+      "sha256": "0e0cf2a29304e2f38b2f2b9919e81c5214eff64e2e466dd3015f6664f3ff9543"
+    }
+  ],
+  "scope": "Reuse actual graceful callback cleanup JoinHandle when Axum server-completion branch wins samepoll; do not execute shared physical lifecycle twice. Fallbackcleanup only when completedserver has no published signalcleanup owner. No genericClosed acceptance, no PluginRuntime/Host changes.",
+  "validation": "Source review and3regressiontest implementations only; no Cargo or app execution during Main31 exclusivelease. Root will merge withSDK42restore16 and run allgates.",
+  "actual_failure_reference": "artifacts/rust/m8-native31-stopped-guide-readonly-1/report.json"
+}

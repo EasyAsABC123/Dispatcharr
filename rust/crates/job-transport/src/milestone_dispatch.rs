@@ -233,7 +233,9 @@ pub fn classify(raw: &[u8]) -> Option<Family> {
     let task = frame.get("headers")?.get("task")?.as_str()?;
     Some(match task {
         "apps.plugins.tasks.refresh_plugin_repos" => Family::PluginRefresh,
-        "apps.backups.tasks.create_backup_task" => Family::BackupCreate,
+        "apps.backups.tasks.create_backup_task" | "apps.backups.tasks.restore_backup_task" => {
+            Family::BackupCreate
+        }
         "apps.backups.tasks.scheduled_backup_task" => Family::BackupScheduled,
         "apps.m3u.tasks.refresh_account_info" => Family::XcAccountInfo,
         "apps.m3u.tasks.refresh_account_profiles" => Family::XcAccountProfiles,

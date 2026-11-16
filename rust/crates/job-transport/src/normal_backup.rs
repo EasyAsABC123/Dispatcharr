@@ -1,4 +1,4 @@
-//! Normal Main backup HTTP + shared-family consumer; restore remains separate.
+//! Normal Main backup HTTP and shared-family create/schedule/current-schema restore.
 //! Original Dispatcharr/Celery authors retain all application/protocol credit.
 use crate::{
     milestone_dispatch::{Disposition, Handler, Lifecycle},
@@ -8,7 +8,9 @@ use crate::{
 };
 pub use dispatcharr_backups::{PgConfig, Runtime};
 use dispatcharr_contracts::BoxFuture;
-use dispatcharr_store::{BackupJobApi, ProducerIdentitySource, Store, StoreError};
+use dispatcharr_store::{
+    AuthService, BackupJobApi, PluginActions, ProducerIdentitySource, Store, StoreError,
+};
 use serde_json::{json, Value};
 use std::{
     path::PathBuf,
@@ -51,6 +53,7 @@ impl Application {
         jobs: Jobs,
         revoked: crate::normal_revocation::Revoked,
         store: Store,
+        auth: AuthService,
         cache: String,
         config: PgConfig,
         runtime: Runtime,
@@ -70,7 +73,7 @@ impl Application {
                     cache.clone(),
                     identity.clone(),
                 ),
-                executor: Executor::prepare(store, cache, config, runtime, root, scratch)
+                executor: Executor::prepare(store, auth, cache, config, runtime, root, scratch)
                     .map_err(|_| Error::Configuration)?,
                 identity,
                 worker: Arc::new(Semaphore::new(1)),
@@ -80,6 +83,12 @@ impl Application {
                 uncertain: Mutex::new(Vec::with_capacity(1)),
             }),
         })
+    }
+    pub fn bind_restore_plugins(&self, plugins: PluginActions) -> Result<(), Error> {
+        self.inner
+            .executor
+            .bind_restore_plugins(plugins)
+            .map_err(|_| Error::Configuration)
     }
     pub async fn initialize_schedule(&self, owner: Arc<dyn Send + Sync>) -> Result<(), StoreError> {
         self.inner.schedule.initialize(owner).await
@@ -140,10 +149,30 @@ impl Application {
                     return Err(Disposition::Operational(format!("backup peek {error:?}")))
                 }
             };
+            let mut restore_scope=None;
+            let mut restore_preflight_result=None;
+            let is_restore=matches!(&candidate.message.kind,Kind::Restore(_));
+            let pre_revoked=if is_restore { inner.revoked.contains(&candidate.message.id.to_string()).map_err(|_|Disposition::Operational("backup revocation set unavailable".into()))? } else { false };
+            if is_restore && !pre_revoked {
+                // This existing spawned worker owns admission through the
+                // physical close receipt, even when intake closes. Cancelling
+                // a partially acquired fence would hide session close failures.
+                // Acquisition already has its actual thirty-second deadline;
+                // the closed-intake branch below settles every acquired scope.
+                let result=inner.executor.prepare_restore(owner.clone()).await;
+                match result {
+                    Ok(scope)=>restore_scope=Some(scope),
+                    Err(dispatcharr_store::BackupRestoreError::Capacity)=>return Ok(Disposition::Capacity),
+                    Err(dispatcharr_store::BackupRestoreError::UnsupportedSchema)=>restore_preflight_result=Some(json!({"status":"failed","error":"Native restore requires the current schema migration graph"})),
+                    Err(dispatcharr_store::BackupRestoreError::UnsupportedPlugins)=>restore_preflight_result=Some(json!({"status":"failed","error":"Native restore plugin modules require an actual restore-task context"})),
+                    Err(_)=>{retain(&inner,owner.clone());return Err(Disposition::Operational("restore SQL admission unsettled".into()));}
+                }
+            }
             if inner.closed.load(Ordering::Acquire) {
-                return Err(Disposition::Operational(
-                    "backup intake stopped before claim".into(),
-                ));
+                if let Some(scope)=restore_scope.take() {
+                    inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore preclaim drain unsettled".into()))?;
+                }
+                return if is_restore { Ok(Disposition::NotDue) } else { Err(Disposition::Operational("backup intake stopped before claim".into())) };
             }
             let message = match inner
                 .jobs
@@ -151,22 +180,32 @@ impl Application {
                 .await
             {
                 Ok(value) => value,
-                Err(TransportError::ClaimRace) => return Ok(Disposition::HeadChanged),
-                Err(TransportError::Capacity) => return Err(Disposition::Capacity),
+                Err(TransportError::ClaimRace) => {
+                    if let Some(scope)=restore_scope.take() { inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore race drain unsettled".into()))?; }
+                    return Ok(Disposition::HeadChanged);
+                },
+                Err(TransportError::Capacity) => {
+                    if let Some(scope)=restore_scope.take() { inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore capacity drain unsettled".into()))?; }
+                    return Err(Disposition::Capacity);
+                },
                 Err(error) => {
+                    if let Some(scope)=restore_scope.take() { inner.executor.retain_restore(scope,owner.clone()); }
                     retain(&inner, owner.clone());
                     return Err(Disposition::Operational(format!("backup claim {error:?}")));
                 }
             };
             inner.advanced.notify_one();
             let outcome = async {
-                if inner
+                if pre_revoked || inner
                     .revoked
                     .contains(&message.id.to_string())
                     .map_err(|_| {
                         Disposition::Operational("backup revocation set unavailable".into())
                     })?
                 {
+                    if let Some(scope)=restore_scope.take() {
+                        inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore revoked drain unsettled".into()))?;
+                    }
                     inner
                         .jobs
                         .write_normal_backup_revoked(&message, owner.clone())
@@ -177,17 +216,19 @@ impl Application {
                     return Ok(Disposition::Revoked(message.id));
                 }
 
-                let retention = match &message.kind {
-                    Kind::Create => None,
-                    Kind::Scheduled(value) => Some(value.clone()),
-                };
-                let result = inner
-                    .executor
-                    .execute(retention, owner.clone())
-                    .await
-                    .map_err(|_| {
-                        Disposition::Operational("backup archive/policy owner unsettled".into())
-                    })?;
+                let result=match &message.kind {
+                    Kind::Restore(filename)=>{
+                        if let Some(value)=restore_preflight_result.take() { Ok(value) }
+                        else {
+                            let scope=restore_scope.as_ref().ok_or_else(||Disposition::Operational("restore actual SQL admission missing".into()))?.clone();
+                            inner.executor.restore(filename.clone(),scope,owner.clone()).await
+                        }
+                    },
+                    kind=>{
+                        let retention=match kind { Kind::Scheduled(value)=>Some(value.clone()), _=>None };
+                        inner.executor.execute(retention,owner.clone()).await
+                    }
+                }.map_err(|_| Disposition::Operational("backup archive/restore owner unsettled".into()))?;
                 inner
                     .jobs
                     .write_normal_backup(&message, result, owner.clone())
@@ -199,6 +240,7 @@ impl Application {
             }
             .await;
             if outcome.is_err() {
+                if let Some(scope)=restore_scope.take() { inner.executor.retain_restore(scope,owner.clone()); }
                 retain(&inner, owner.clone());
             }
             outcome
@@ -224,7 +266,7 @@ impl Application {
             }
             tokio::time::sleep(Duration::from_millis(5)).await;
         }
-        true
+        !self.inner.executor.restore_unsettled()
     }
 }
 fn retain(inner: &Inner, owner: Arc<dyn Send + Sync>) {
@@ -288,6 +330,40 @@ impl BackupJobApi for Application {
                 jobs.publish_normal_backup(id, identity.reply_to, &identity.origin, owner)
                     .await
                     .map_err(|_| api_error())?;
+                Ok(id.to_string())
+            })
+            .await
+            .map_err(|_| api_error())?
+        })
+    }
+    fn restore(
+        &self,
+        filename: String,
+        caller: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<String, StoreError>> {
+        Box::pin(async move {
+            if !self.inner.executor.restore_ready() {
+                return Err(api_error());
+            }
+            let owner = self.owner(true, caller).map_err(|_| api_error())?;
+            let identity_source = self.inner.identity.clone();
+            let jobs = self.inner.jobs.clone();
+            let id = Uuid::new_v4();
+            tokio::spawn(async move {
+                let identity = identity_source.current()?;
+                let (args_repr, kwargs_repr) =
+                    identity_source.task_representations(&json!([filename]), &json!({}))?;
+                jobs.publish_normal_restore(
+                    filename,
+                    args_repr,
+                    kwargs_repr,
+                    id,
+                    identity.reply_to,
+                    &identity.origin,
+                    owner,
+                )
+                .await
+                .map_err(|_| api_error())?;
                 Ok(id.to_string())
             })
             .await

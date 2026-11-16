@@ -112,6 +112,7 @@ impl SelectedJobs {
         engine: &StreamEngine,
         actual: SocketAddr,
         existing: Existing,
+        restore_plugins: dispatcharr_store::PluginActions,
     ) -> Result<Self, String> {
         let local = loopback(actual)?;
         let beat_enabled = flag("RUST_EXPERIMENTAL_SELECTED_BEAT")?;
@@ -225,6 +226,7 @@ impl SelectedJobs {
             shared_jobs.clone(),
             revoked.clone(),
             store.clone(),
+            auth.clone(),
             cache.clone(),
             backup_database,
             backup_runtime,
@@ -233,6 +235,9 @@ impl SelectedJobs {
             auth.producer_identity_source(),
         )
         .map_err(|_| "Normal backup preparation unavailable")?;
+        backup_jobs
+            .bind_restore_plugins(restore_plugins)
+            .map_err(|_| "Backup restore plugin reconciliation binding failed")?;
         if backup_jobs.initialize_schedule(Arc::new(())).await.is_err() {
             eprintln!("Normal backup scheduler startup sync failed");
         }

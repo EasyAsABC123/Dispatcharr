@@ -1,6 +1,7 @@
 //! Same prepared Main Jobs ports; actual head/CAS and result replies retain caller.
 use super::*;
 use crate::normal_backup_protocol::{self, Message};
+use base64::{engine::general_purpose::STANDARD, Engine};
 pub(crate) struct BackupCandidate {
     raw: Vec<u8>,
     pub message: Message,
@@ -81,8 +82,55 @@ impl Jobs {
         if !self.allows_defaults() {
             return Err(Error::UnsupportedTask);
         }
-        let raw = protocol::encode(&Task::CreateBackup, id, reply_to, Uuid::new_v4(), origin)
+        self.publish_normal_backup_task(&Task::CreateBackup, id, reply_to, origin, owner)
+            .await
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) async fn publish_normal_restore(
+        &self,
+        filename: String,
+        args_repr: String,
+        kwargs_repr: String,
+        id: Uuid,
+        reply_to: Uuid,
+        origin: &str,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Published, Error> {
+        if !self.allows_defaults() {
+            return Err(Error::UnsupportedTask);
+        }
+        let raw = encode_restore(
+            &filename,
+            &args_repr,
+            &kwargs_repr,
+            id,
+            reply_to,
+            Uuid::new_v4(),
+            origin,
+        )?;
+        self.publish_normal_backup_raw(raw, id, owner).await
+    }
+    async fn publish_normal_backup_task(
+        &self,
+        task: &Task,
+        id: Uuid,
+        reply_to: Uuid,
+        origin: &str,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Published, Error> {
+        if !self.allows_defaults() {
+            return Err(Error::UnsupportedTask);
+        }
+        let raw = protocol::encode(task, id, reply_to, Uuid::new_v4(), origin)
             .map_err(|_| Error::Protocol)?;
+        self.publish_normal_backup_raw(raw, id, owner).await
+    }
+    async fn publish_normal_backup_raw(
+        &self,
+        raw: Vec<u8>,
+        id: Uuid,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Published, Error> {
         let limit = self.inner.config.max_queued_jobs.to_string();
         match self
             .inner
@@ -168,5 +216,81 @@ impl Jobs {
         }
         let bytes = serde_json::to_vec(&metadata).map_err(|_| Error::Protocol)?;
         match self.inner.result.command_classified::<i64,_>("redis.call('SETEX',KEYS[1],3600,ARGV[1]);redis.call('PUBLISH',KEYS[1],ARGV[1]);return 1",&[format!("celery-tasks:celery-task-meta-{}",message.id)],&[&bytes],self.lease(owner)?).await{Ok((1,_))=>Ok(true),Ok(_)=>Err(Error::Corrupt),Err(ClassifiedError::Backend)=>Err(Error::AmbiguousResult(message.id)),Err(error)=>Err(map(error))}
+    }
+}
+
+// Ordinary HTTP filenames use the SAME qualified envelope skeleton and actual
+// ProducerIdentitySource saferepr, without widening the old captured encoder.
+#[allow(clippy::too_many_arguments)]
+fn encode_restore(
+    filename: &str,
+    args_repr: &str,
+    kwargs_repr: &str,
+    id: Uuid,
+    reply: Uuid,
+    delivery: Uuid,
+    origin: &str,
+) -> Result<Vec<u8>, Error> {
+    if filename.is_empty()
+        || filename.len() > 255
+        || filename.contains(['/', '\\', '\0'])
+        || filename.contains("..")
+        || args_repr.len() > 16384
+        || kwargs_repr != "{}"
+    {
+        return Err(Error::Protocol);
+    }
+    let raw = protocol::encode(&Task::CreateBackup, id, reply, delivery, origin)
+        .map_err(|_| Error::Protocol)?;
+    let mut envelope: serde_json::Value =
+        serde_json::from_slice(&raw).map_err(|_| Error::Protocol)?;
+    envelope["headers"]["task"] = serde_json::json!("apps.backups.tasks.restore_backup_task");
+    envelope["headers"]["argsrepr"] = serde_json::json!(args_repr);
+    let body = serde_json::json!([[filename],{}, {"callbacks":null,"errbacks":null,"chain":null,"chord":null}]);
+    envelope["body"] =
+        serde_json::json!(STANDARD.encode(serde_json::to_vec(&body).map_err(|_| Error::Protocol)?));
+    let raw = serde_json::to_vec(&envelope).map_err(|_| Error::Protocol)?;
+    if raw.len() > protocol::MAX_ENVELOPE {
+        return Err(Error::Capacity);
+    }
+    Ok(raw)
+}
+#[cfg(test)]
+mod restore_encoding_tests {
+    use super::*;
+    #[test]
+    fn normal_restore_keeps_actual_filename_and_source_saferepr_separate_from_cas_bytes() {
+        let id = Uuid::new_v4();
+        let filename = "owned 'single' and \"double\" é.zip";
+        let representation = "(actual bounded Source saferepr,)";
+        let raw = encode_restore(
+            filename,
+            representation,
+            "{}",
+            id,
+            Uuid::new_v4(),
+            Uuid::new_v4(),
+            "gen1@owned",
+        )
+        .unwrap();
+        let header: serde_json::Value = serde_json::from_slice(&raw).unwrap();
+        assert_eq!(header["headers"]["argsrepr"], representation);
+        let actual = normal_backup_protocol::parse(&raw).unwrap();
+        assert!(
+            matches!(actual.kind,crate::normal_backup_protocol::Kind::Restore(value) if value==filename)
+        );
+        assert_eq!(actual.id, id);
+        for filename in ["../outside.zip", "nested/file.zip", "bad\0name.zip"] {
+            assert!(encode_restore(
+                filename,
+                representation,
+                "{}",
+                id,
+                Uuid::new_v4(),
+                Uuid::new_v4(),
+                "gen1@owned"
+            )
+            .is_err());
+        }
     }
 }

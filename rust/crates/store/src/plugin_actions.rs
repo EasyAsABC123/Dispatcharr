@@ -199,6 +199,54 @@ impl PluginActions {
         .await
         .map_err(|_| guard())?
     }
+    /// Guard import-side-effect workflows until their actual restore-task
+    /// context/trail port is composed. The real caller owns the blocking read.
+    pub async fn require_empty_restore_plugins(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<(), StoreError> {
+        let inner = self.inner.clone();
+        tokio::task::spawn_blocking(move || {
+            let _physical = owner;
+            if !files::discover(&inner.root)?.is_empty() {
+                return Err(StoreError::Unsupported(
+                    "Restore plugin modules require an actual restore-task context",
+                ));
+            }
+            if inner
+                .cache
+                .lock()
+                .map_err(|_| guard())?
+                .as_ref()
+                .is_some_and(|c| !c.plugins.is_empty())
+            {
+                return Err(StoreError::Unsupported(
+                    "Restore plugin modules require an actual restore-task context",
+                ));
+            }
+            Ok(())
+        })
+        .await
+        .map_err(|_| guard())?
+    }
+    /// Actual accepted restore task supplies its SAME fenced SQL session. This
+    /// is not new HTTP admission and stays available through an owned warm drain.
+    pub async fn reconcile_backup_restore(
+        &self,
+        admission: Arc<crate::BackupRestoreAdmission>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<(), StoreError> {
+        if !admission.shares_auth_writer(&self.inner.auth) {
+            return Err(guard());
+        }
+        self.require_empty_restore_plugins(owner.clone()).await?;
+        let session = admission.session();
+        let _physical = (owner, admission);
+        let snapshot = registry::snapshot(&session).await?;
+        registry::mutable(&snapshot)?;
+        let plugins = discovery(self.inner.clone(), false).await?;
+        registry::sync_caught(&session, plugins).await
+    }
     async fn operation(
         self,
         peer: SocketAddr,

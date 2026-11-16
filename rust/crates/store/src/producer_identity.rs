@@ -30,6 +30,18 @@ impl ProducerIdentitySource {
 }
 
 impl ProducerIdentitySource {
+    /// Actual Celery direct task arguments are tuples, including singleton
+    /// string filenames. Reuse the existing bounded Source saferepr policy.
+    pub fn task_representations(
+        &self,
+        args: &serde_json::Value,
+        kwargs: &serde_json::Value,
+    ) -> Result<(String, String), StoreError> {
+        Ok((
+            crate::celery_metadata::arguments(args)?,
+            crate::celery_metadata::keywords(kwargs)?,
+        ))
+    }
     /// Beat ModelEntry.args is a JSON list. Celery replaces an empty list with
     /// its empty tuple before rendering; nonempty lists retain list repr.
     pub fn periodic_representations(

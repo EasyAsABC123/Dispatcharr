@@ -1,7 +1,8 @@
-//! Bounded original v2 database-only backup component; app/jobs remain unwired.
+//! Bounded original v2 PostgreSQL backup/archive primitives.
 //! Original Dispatcharr authors retain full application credit and AGPL license.
-//! No HTTP, durable jobs, migrations, SQLite, timezone resolution or app wiring.
-//! Restore is intentionally restricted to explicitly owned disposable DB names.
+//! Normal HTTP/jobs compose these operations in job-transport; no Source task
+//! bodies or migration engine execute here. Disposable restore remains guarded;
+//! application restore additionally requires actual current-schema SQL authority.
 use serde::{Deserialize, Serialize};
 use std::{
     collections::BTreeMap,
@@ -609,8 +610,39 @@ fn preflight(file: &mut File, limits: &Limits) -> Result<(), Error> {
     file.rewind()?;
     Ok(())
 }
-/// Draft guarded restore. A completed return does NOT include migrations or
-/// establish application/job completion. Source runs Django migrate afterward.
+/// Compiled application port backed by an actual current-database SQL fence.
+/// Implementations must derive this from the admitted Main session, not HTTP IDs.
+pub trait CurrentSchemaRestoreAuthority: Send + Sync {
+    fn current_database(&self) -> &str;
+    fn server_started_micros(&self) -> i64;
+    fn expected_migrations(&self) -> &std::collections::BTreeSet<(String, String)>;
+}
+/// Application restore is separate from the unchanged disposable-only helper.
+/// Only the currently pinned migration graph is supported; inspection occurs
+/// BEFORE schema deletion and migration/post_migrate reconciliation is required
+/// by the real worker after this physical archive/PG command phase completes.
+pub fn restore_current_schema(
+    config: &PgConfig,
+    runtime: &Runtime,
+    archive: &Path,
+    scratch_root: &Path,
+    limits: &Limits,
+    cancel: &Cancellation,
+    authority: &dyn CurrentSchemaRestoreAuthority,
+) -> Result<(), Error> {
+    if authority.current_database() != config.database {
+        return Err(Error::FixtureAuthorization);
+    }
+    restore_archive(
+        config,
+        runtime,
+        archive,
+        scratch_root,
+        limits,
+        cancel,
+        Some(authority),
+    )
+}
 pub fn restore_fixture(
     config: &PgConfig,
     runtime: &Runtime,
@@ -625,6 +657,19 @@ pub fn restore_fixture(
     if authority.database != config.database {
         return Err(Error::FixtureAuthorization);
     }
+    restore_archive(config, runtime, archive, scratch_root, limits, cancel, None)
+}
+fn restore_archive(
+    config: &PgConfig,
+    runtime: &Runtime,
+    archive: &Path,
+    scratch_root: &Path,
+    limits: &Limits,
+    cancel: &Cancellation,
+    authority: Option<&dyn CurrentSchemaRestoreAuthority>,
+) -> Result<(), Error> {
+    limits.validate()?;
+    cancel.check()?;
     let scratch = OwnedDirectory::new(scratch_root)?;
     let mut file = File::open(archive)?;
     preflight(&mut file, limits)?;
@@ -671,6 +716,85 @@ pub fn restore_fixture(
     if kind != "postgresql" {
         return Err(Error::WrongDatabaseType);
     }
+    if let Some(authority) = authority {
+        let expected = authority.expected_migrations();
+        let migration_sql = scratch.0.join("migration-graph.sql");
+        let args = vec![
+            "--data-only".into(),
+            "--schema=public".into(),
+            "--table=django_migrations".into(),
+            "--file".into(),
+            migration_sql.to_string_lossy().into_owned(),
+            dump.to_string_lossy().into_owned(),
+        ];
+        checked(
+            run(
+                prepare_command(&runtime.pg_restore, config, &args, 1 << 20),
+                limits,
+                cancel,
+            )?,
+            "inspect restore migration graph",
+        )?;
+        let mut bytes = Vec::new();
+        File::open(migration_sql)?
+            .take((1 << 20) + 1)
+            .read_to_end(&mut bytes)?;
+        if bytes.len() > 1 << 20 || &parse_migration_copy(&bytes, expected.len())? != expected {
+            return Err(Error::Metadata);
+        }
+        let plugin_sql = scratch.0.join("restore-plugin-policy.sql");
+        let args = vec![
+            "--data-only".into(),
+            "--schema=public".into(),
+            "--table=plugins_pluginconfig".into(),
+            "--file".into(),
+            plugin_sql.to_string_lossy().into_owned(),
+            dump.to_string_lossy().into_owned(),
+        ];
+        checked(
+            run(
+                prepare_command(&runtime.pg_restore, config, &args, 1 << 20),
+                limits,
+                cancel,
+            )?,
+            "inspect restore plugin policy",
+        )?;
+        let mut bytes = Vec::new();
+        File::open(plugin_sql)?
+            .take((1 << 20) + 1)
+            .read_to_end(&mut bytes)?;
+        if bytes.len() > 1 << 20 {
+            return Err(Error::Metadata);
+        }
+        require_disabled_restore_plugins(&bytes)?;
+        // Prove the configured PG tool reaches the SAME observed Main server
+        // lifetime/database, not merely a different server with an equal DB name.
+        let identity_file = scratch.0.join("restore-target.json");
+        let mut args = connection_args(config);
+        args.extend(["-A".into(),"-t".into(),"--output".into(),identity_file.to_string_lossy().into_owned(),"-c".into(),"SELECT json_build_object('database',current_database(),'postmaster_micros',(extract(epoch FROM pg_postmaster_start_time())*1000000)::bigint)::text".into()]);
+        checked(
+            run(
+                prepare_command(&runtime.psql, config, &args, 65536),
+                limits,
+                cancel,
+            )?,
+            "verify restore target",
+        )?;
+        let mut raw = Vec::new();
+        File::open(identity_file)?
+            .take(65537)
+            .read_to_end(&mut raw)?;
+        if raw.len() > 65536 {
+            return Err(Error::FixtureAuthorization);
+        }
+        let identity: serde_json::Value =
+            serde_json::from_slice(&raw).map_err(|_| Error::FixtureAuthorization)?;
+        if identity["database"].as_str() != Some(authority.current_database())
+            || identity["postmaster_micros"].as_i64() != Some(authority.server_started_micros())
+        {
+            return Err(Error::FixtureAuthorization);
+        }
+    }
     let mut args = connection_args(config);
     args.extend(["-c".into(),"DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO public;".into()]);
     checked(
@@ -700,9 +824,144 @@ pub fn restore_fixture(
     Ok(())
 }
 
+/// Parse only the real pg_restore COPY projection, never execute its SQL output.
+fn parse_migration_copy(
+    bytes: &[u8],
+    maximum_rows: usize,
+) -> Result<std::collections::BTreeSet<(String, String)>, Error> {
+    let text = std::str::from_utf8(bytes).map_err(|_| Error::Metadata)?;
+    let mut found = false;
+    let mut ended = false;
+    let mut result = std::collections::BTreeSet::new();
+    for line in text.lines() {
+        if !found {
+            if line == "COPY public.django_migrations (id, app, name, applied) FROM stdin;" {
+                found = true;
+            }
+            continue;
+        }
+        if line == "\\." {
+            ended = true;
+            break;
+        }
+        let fields = line.splitn(5, '\t').collect::<Vec<_>>();
+        if fields.len() != 4
+            || fields[0].parse::<i64>().is_err()
+            || !fields[1..3]
+                .iter()
+                .all(|v| !v.is_empty() && v.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'_'))
+            || !result.insert((fields[1].to_string(), fields[2].to_string()))
+        {
+            return Err(Error::Metadata);
+        }
+        if result.len() > maximum_rows {
+            return Err(Error::Metadata);
+        }
+    }
+    if !found || !ended || result.is_empty() {
+        return Err(Error::Metadata);
+    }
+    Ok(result)
+}
+
+/// Before destructive SQL, keep enabled/history plugin restore explicitly gated
+/// until its actual restore-task context/owned child-trail port is composed.
+fn require_disabled_restore_plugins(bytes: &[u8]) -> Result<(), Error> {
+    let text = std::str::from_utf8(bytes).map_err(|_| Error::Metadata)?;
+    let prefix = "COPY public.plugins_pluginconfig (";
+    let mut columns: Option<Vec<&str>> = None;
+    let mut ended = false;
+    let mut rows = 0;
+    for line in text.lines() {
+        if columns.is_none() {
+            if let Some(names) = line
+                .strip_prefix(prefix)
+                .and_then(|v| v.strip_suffix(") FROM stdin;"))
+            {
+                let observed = names.splitn(65, ", ").collect::<Vec<_>>();
+                if observed.len() > 64 {
+                    return Err(Error::Metadata);
+                }
+                columns = Some(observed);
+            }
+            continue;
+        }
+        if line == "\\." {
+            ended = true;
+            break;
+        }
+        rows += 1;
+        if rows > 256 {
+            return Err(Error::Metadata);
+        }
+        let columns = columns.as_ref().ok_or(Error::Metadata)?;
+        let values = line.splitn(columns.len() + 1, '\t').collect::<Vec<_>>();
+        if values.len() != columns.len() {
+            return Err(Error::Metadata);
+        }
+        for (field, expected) in [
+            ("enabled", "f"),
+            ("ever_enabled", "f"),
+            ("owned_tasks", "[]"),
+            ("suspended_schedules", "[]"),
+        ] {
+            let index = columns
+                .iter()
+                .position(|v| *v == field)
+                .ok_or(Error::Metadata)?;
+            if values[index] != expected {
+                return Err(Error::Metadata);
+            }
+        }
+    }
+    if columns.is_none() || !ended {
+        return Err(Error::Metadata);
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn current_restore_graph_uses_real_copy_projection_not_executable_sql() {
+        let raw=b"-- pg_restore projection\nSET statement_timeout = 0;\nCOPY public.django_migrations (id, app, name, applied) FROM stdin;\n1\taccounts\t0001_initial\t2026-01-01 00:00:00+00\n2\tauth\t0001_initial\t2026-01-01 00:00:00+00\n\\.\nSELECT irrelevant();\n";
+        let graph = parse_migration_copy(raw, 2).unwrap();
+        assert_eq!(graph.len(), 2);
+        assert!(graph.contains(&("accounts".into(), "0001_initial".into())));
+        let mut duplicate = raw.to_vec();
+        let offset = duplicate.windows(3).position(|w| w == b"\\.\n").unwrap();
+        drop(
+            duplicate.splice(
+                offset..offset,
+                b"3\taccounts\t0001_initial\t2026-01-01 00:00:00+00\n"
+                    .iter()
+                    .copied(),
+            ),
+        );
+        assert!(parse_migration_copy(&duplicate, 2).is_err());
+        assert!(parse_migration_copy(b"SELECT 'COPY public.django_migrations';", 2).is_err());
+        assert!(parse_migration_copy(b"COPY public.django_migrations (id, app, name, applied) FROM stdin;\n1\taccounts\t0001_initial\tdate\n",2).is_err());
+    }
+    #[test]
+    fn current_restore_plugin_guard_rejects_active_or_history_before_any_drop() {
+        let header="COPY public.plugins_pluginconfig (key, enabled, owned_tasks, suspended_schedules, ever_enabled) FROM stdin;\n";
+        let body = |row: &str| format!("{header}{row}\n\\.\n");
+        assert!(require_disabled_restore_plugins(body("owned\tf\t[]\t[]\tf").as_bytes()).is_ok());
+        for row in [
+            "owned\tt\t[]\t[]\tf",
+            "owned\tf\t[]\t[]\tt",
+            "owned\tf\t[1]\t[]\tf",
+            "owned\tf\t[]\t[1]\tf",
+        ] {
+            assert!(require_disabled_restore_plugins(body(row).as_bytes()).is_err());
+        }
+        assert!(require_disabled_restore_plugins(
+            b"COPY public.plugins_pluginconfig (enabled) FROM stdin;\nf\n\\.\n"
+        )
+        .is_err());
+    }
+
     use std::sync::mpsc;
     #[test]
     fn owned_admission_survives_observer_drop() {

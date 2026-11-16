@@ -6,7 +6,7 @@ use crate::{
 };
 use chrono::{DateTime, Datelike, Local, Timelike, Utc};
 use dispatcharr_backups::{Error as ArchiveError, Limits, PgConfig, Runtime, SourceClock};
-use dispatcharr_store::Store;
+use dispatcharr_store::{AuthService, PluginActions, Store};
 use serde_json::{json, Value};
 use std::{path::PathBuf, sync::Arc, time::SystemTime};
 #[derive(Debug)]
@@ -15,9 +15,17 @@ pub enum Error {
     Supervisor,
     Configuration,
 }
+type RestoreScope = (
+    Arc<dispatcharr_store::BackupRestoreAdmission>,
+    Arc<dyn Send + Sync>,
+);
+type RestoreUncertain = Arc<std::sync::Mutex<Vec<RestoreScope>>>;
 #[derive(Clone)]
 pub struct Executor {
     store: Store,
+    auth: AuthService,
+    restore_plugins: Arc<std::sync::OnceLock<PluginActions>>,
+    uncertain_restore: RestoreUncertain,
     cache: String,
     config: PgConfig,
     runtime: Runtime,
@@ -68,8 +76,10 @@ impl SourceClock for Clock {
     }
 }
 impl Executor {
+    #[allow(clippy::too_many_arguments)]
     pub fn prepare(
         store: Store,
+        auth: AuthService,
         cache: String,
         config: PgConfig,
         runtime: Runtime,
@@ -81,6 +91,9 @@ impl Executor {
         }
         Ok(Self {
             store,
+            auth,
+            restore_plugins: Arc::new(std::sync::OnceLock::new()),
+            uncertain_restore: Arc::new(std::sync::Mutex::new(Vec::with_capacity(1))),
             cache,
             config,
             runtime,
@@ -117,6 +130,8 @@ impl Executor {
   }).await.map_err(|_|Error::Supervisor)
     }
 }
+#[path = "normal_backup_restore.rs"]
+mod restore;
 fn type_name(value: &Value) -> &'static str {
     match value {
         Value::Null => "NoneType",

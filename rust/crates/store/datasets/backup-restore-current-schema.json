@@ -1,0 +1,2340 @@
+{
+  "migrations": [
+    [
+      "epg",
+      "0001_initial"
+    ],
+    [
+      "epg",
+      "0002_epgsource_file_path"
+    ],
+    [
+      "epg",
+      "0003_alter_epgdata_tvg_id"
+    ],
+    [
+      "epg",
+      "0004_epgdata_epg_source_alter_epgdata_tvg_id"
+    ],
+    [
+      "core",
+      "0001_initial"
+    ],
+    [
+      "m3u",
+      "0001_initial"
+    ],
+    [
+      "m3u",
+      "0002_m3uaccount_locked"
+    ],
+    [
+      "core",
+      "0002_preload_user_agents"
+    ],
+    [
+      "core",
+      "0003_preload_stream_profiles"
+    ],
+    [
+      "core",
+      "0004_preload_core_settings"
+    ],
+    [
+      "m3u",
+      "0003_create_custom_account"
+    ],
+    [
+      "dispatcharr_channels",
+      "0001_initial"
+    ],
+    [
+      "dispatcharr_channels",
+      "0002_rename_channel_name_channel_name_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0003_channel_uuid"
+    ],
+    [
+      "dispatcharr_channels",
+      "0004_stream_is_custom"
+    ],
+    [
+      "dispatcharr_channels",
+      "0005_stream_channel_group_stream_last_seen_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0006_migrate_stream_groups"
+    ],
+    [
+      "dispatcharr_channels",
+      "0007_remove_stream_group_name"
+    ],
+    [
+      "dispatcharr_channels",
+      "0008_stream_stream_hash"
+    ],
+    [
+      "dispatcharr_channels",
+      "0009_remove_channel_tvg_name_channel_epg_data"
+    ],
+    [
+      "dispatcharr_channels",
+      "0010_stream_custom_properties"
+    ],
+    [
+      "dispatcharr_channels",
+      "0011_logo_remove_channel_logo_file_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0012_channelprofile_channelprofilemembership"
+    ],
+    [
+      "dispatcharr_channels",
+      "0013_alter_logo_url"
+    ],
+    [
+      "dispatcharr_channels",
+      "0014_recording"
+    ],
+    [
+      "dispatcharr_channels",
+      "0015_recording_custom_properties"
+    ],
+    [
+      "dispatcharr_channels",
+      "0016_channelstream_unique_channel_stream"
+    ],
+    [
+      "dispatcharr_channels",
+      "0017_alter_channelgroup_name"
+    ],
+    [
+      "dispatcharr_channels",
+      "0018_channelgroupm3uaccount_custom_properties_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0019_channel_tvc_guide_stationid"
+    ],
+    [
+      "dispatcharr_channels",
+      "0020_alter_channel_channel_number"
+    ],
+    [
+      "dispatcharr_channels",
+      "0021_channel_user_level"
+    ],
+    [
+      "contenttypes",
+      "0001_initial"
+    ],
+    [
+      "contenttypes",
+      "0002_remove_content_type_name"
+    ],
+    [
+      "auth",
+      "0001_initial"
+    ],
+    [
+      "auth",
+      "0002_alter_permission_name_max_length"
+    ],
+    [
+      "auth",
+      "0003_alter_user_email_max_length"
+    ],
+    [
+      "auth",
+      "0004_alter_user_username_opts"
+    ],
+    [
+      "auth",
+      "0005_alter_user_last_login_null"
+    ],
+    [
+      "auth",
+      "0006_require_contenttypes_0002"
+    ],
+    [
+      "auth",
+      "0007_alter_validators_add_error_messages"
+    ],
+    [
+      "auth",
+      "0008_alter_user_username_max_length"
+    ],
+    [
+      "auth",
+      "0009_alter_user_last_name_max_length"
+    ],
+    [
+      "auth",
+      "0010_alter_group_name_max_length"
+    ],
+    [
+      "auth",
+      "0011_update_proxy_permissions"
+    ],
+    [
+      "auth",
+      "0012_alter_user_first_name_max_length"
+    ],
+    [
+      "accounts",
+      "0001_initial"
+    ],
+    [
+      "accounts",
+      "0002_remove_user_channel_groups_user_channel_profiles_and_more"
+    ],
+    [
+      "accounts",
+      "0003_alter_user_custom_properties"
+    ],
+    [
+      "accounts",
+      "0004_user_api_key"
+    ],
+    [
+      "accounts",
+      "0005_alter_user_managers"
+    ],
+    [
+      "accounts",
+      "0006_user_stream_limit"
+    ],
+    [
+      "accounts",
+      "0007_user_app_data"
+    ],
+    [
+      "accounts",
+      "0008_userappdata_and_remove_user_app_data"
+    ],
+    [
+      "admin",
+      "0001_initial"
+    ],
+    [
+      "admin",
+      "0002_logentry_remove_auto_add"
+    ],
+    [
+      "admin",
+      "0003_logentry_add_action_flag_choices"
+    ],
+    [
+      "core",
+      "0005_streamprofile_locked_alter_streamprofile_command_and_more"
+    ],
+    [
+      "core",
+      "0006_set_locked_stream_profiles"
+    ],
+    [
+      "core",
+      "0007_create_proxy_and_redirect_stream_profiles"
+    ],
+    [
+      "core",
+      "0008_rename_profile_name_streamprofile_name_and_more"
+    ],
+    [
+      "core",
+      "0009_m3u_hash_settings"
+    ],
+    [
+      "core",
+      "0010_reload_additional_settings"
+    ],
+    [
+      "core",
+      "0011_fix_stream_profiles_and_user_agents"
+    ],
+    [
+      "core",
+      "0012_default_active_m3u_accounts"
+    ],
+    [
+      "core",
+      "0013_default_network_access_settings"
+    ],
+    [
+      "core",
+      "0014_default_proxy_settings"
+    ],
+    [
+      "core",
+      "0015_dvr_templates"
+    ],
+    [
+      "core",
+      "0016_update_dvr_template_paths"
+    ],
+    [
+      "core",
+      "0017_systemevent"
+    ],
+    [
+      "core",
+      "0018_alter_systemevent_event_type"
+    ],
+    [
+      "core",
+      "0019_add_vlc_stream_profile"
+    ],
+    [
+      "core",
+      "0020_change_coresettings_value_to_jsonfield"
+    ],
+    [
+      "core",
+      "0021_systemnotification_notificationdismissal"
+    ],
+    [
+      "core",
+      "022_default_user_limit_settings"
+    ],
+    [
+      "core",
+      "0023_alter_systemevent_event_type"
+    ],
+    [
+      "core",
+      "0024_outputprofile"
+    ],
+    [
+      "core",
+      "0025_move_preferred_region_and_auto_import_to_system_settings"
+    ],
+    [
+      "core",
+      "0026_add_channel_client_wait_period"
+    ],
+    [
+      "core",
+      "0027_vlc_play_and_exit"
+    ],
+    [
+      "core",
+      "0028_alter_systemevent_event_type"
+    ],
+    [
+      "core",
+      "0029_update_default_stream_and_output_profiles"
+    ],
+    [
+      "core",
+      "0030_rename_default_stream_profile_names"
+    ],
+    [
+      "core",
+      "0031_default_reverse_proxy_auth_settings"
+    ],
+    [
+      "core",
+      "0032_limit_default_interleave_delta"
+    ],
+    [
+      "dashboard",
+      "0001_initial"
+    ],
+    [
+      "m3u",
+      "0004_m3uaccount_stream_profile"
+    ],
+    [
+      "django_celery_beat",
+      "0001_initial"
+    ],
+    [
+      "django_celery_beat",
+      "0002_auto_20161118_0346"
+    ],
+    [
+      "django_celery_beat",
+      "0003_auto_20161209_0049"
+    ],
+    [
+      "django_celery_beat",
+      "0004_auto_20170221_0000"
+    ],
+    [
+      "vod",
+      "0001_initial"
+    ],
+    [
+      "django_celery_beat",
+      "0005_add_solarschedule_events_choices"
+    ],
+    [
+      "django_celery_beat",
+      "0006_auto_20180322_0932"
+    ],
+    [
+      "django_celery_beat",
+      "0007_auto_20180521_0826"
+    ],
+    [
+      "django_celery_beat",
+      "0008_auto_20180914_1922"
+    ],
+    [
+      "django_celery_beat",
+      "0006_auto_20180210_1226"
+    ],
+    [
+      "django_celery_beat",
+      "0006_periodictask_priority"
+    ],
+    [
+      "django_celery_beat",
+      "0009_periodictask_headers"
+    ],
+    [
+      "django_celery_beat",
+      "0010_auto_20190429_0326"
+    ],
+    [
+      "django_celery_beat",
+      "0011_auto_20190508_0153"
+    ],
+    [
+      "django_celery_beat",
+      "0012_periodictask_expire_seconds"
+    ],
+    [
+      "django_celery_beat",
+      "0013_auto_20200609_0727"
+    ],
+    [
+      "django_celery_beat",
+      "0014_remove_clockedschedule_enabled"
+    ],
+    [
+      "django_celery_beat",
+      "0015_edit_solarschedule_events_choices"
+    ],
+    [
+      "django_celery_beat",
+      "0016_alter_crontabschedule_timezone"
+    ],
+    [
+      "django_celery_beat",
+      "0017_alter_crontabschedule_month_of_year"
+    ],
+    [
+      "django_celery_beat",
+      "0018_improve_crontab_helptext"
+    ],
+    [
+      "django_celery_beat",
+      "0019_alter_periodictasks_options"
+    ],
+    [
+      "m3u",
+      "0005_m3uaccount_custom_properties_and_more"
+    ],
+    [
+      "m3u",
+      "0006_populate_periodic_tasks"
+    ],
+    [
+      "m3u",
+      "0007_remove_m3uaccount_uploaded_file_m3uaccount_file_path"
+    ],
+    [
+      "m3u",
+      "0008_m3uaccount_stale_stream_days"
+    ],
+    [
+      "m3u",
+      "0009_m3uaccount_account_type_m3uaccount_password_and_more"
+    ],
+    [
+      "m3u",
+      "0010_add_status_fields_and_remove_auto_now"
+    ],
+    [
+      "m3u",
+      "0011_alter_m3uaccount_status"
+    ],
+    [
+      "m3u",
+      "0012_alter_m3uaccount_refresh_interval"
+    ],
+    [
+      "m3u",
+      "0013_alter_m3ufilter_filter_type"
+    ],
+    [
+      "m3u",
+      "0014_alter_m3ufilter_options_m3ufilter_order"
+    ],
+    [
+      "m3u",
+      "0015_alter_m3ufilter_options_m3ufilter_custom_properties"
+    ],
+    [
+      "m3u",
+      "0016_m3uaccount_priority"
+    ],
+    [
+      "m3u",
+      "0017_alter_m3uaccount_custom_properties_and_more"
+    ],
+    [
+      "m3u",
+      "0018_add_profile_custom_properties"
+    ],
+    [
+      "m3u",
+      "0019_m3uaccountprofile_exp_date"
+    ],
+    [
+      "epg",
+      "0005_programdata_custom_properties_and_more"
+    ],
+    [
+      "epg",
+      "0006_epgsource_refresh_interval_epgsource_refresh_task"
+    ],
+    [
+      "epg",
+      "0007_populate_periodic_tasks"
+    ],
+    [
+      "epg",
+      "0008_epgsource_created_at_epgsource_updated_at"
+    ],
+    [
+      "epg",
+      "0009_alter_epgsource_created_at_and_more"
+    ],
+    [
+      "epg",
+      "0007_epgsource_status_epgsource_last_error"
+    ],
+    [
+      "epg",
+      "0010_merge_20250503_2147"
+    ],
+    [
+      "epg",
+      "0011_update_epgsource_fields"
+    ],
+    [
+      "epg",
+      "0012_alter_epgsource_status"
+    ],
+    [
+      "epg",
+      "0013_alter_epgsource_refresh_interval"
+    ],
+    [
+      "epg",
+      "0014_epgsource_extracted_file_path"
+    ],
+    [
+      "epg",
+      "0015_alter_programdata_custom_properties"
+    ],
+    [
+      "epg",
+      "0016_epgdata_icon_url"
+    ],
+    [
+      "epg",
+      "0017_alter_epgsource_url"
+    ],
+    [
+      "epg",
+      "0018_epgsource_custom_properties_and_more"
+    ],
+    [
+      "epg",
+      "0019_alter_programdata_sub_title"
+    ],
+    [
+      "epg",
+      "0020_migrate_time_to_starttime_placeholders"
+    ],
+    [
+      "epg",
+      "0021_epgsource_priority"
+    ],
+    [
+      "epg",
+      "0022_alter_epgdata_name"
+    ],
+    [
+      "dispatcharr_channels",
+      "0022_channel_auto_created_channel_auto_created_by_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0023_stream_stream_stats_stream_stream_stats_updated_at"
+    ],
+    [
+      "dispatcharr_channels",
+      "0024_alter_channelgroupm3uaccount_channel_group"
+    ],
+    [
+      "dispatcharr_channels",
+      "0025_alter_channelgroupm3uaccount_custom_properties_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0026_recurringrecordingrule"
+    ],
+    [
+      "dispatcharr_channels",
+      "0027_recurringrecordingrule_end_date_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0028_channel_created_at_channel_updated_at"
+    ],
+    [
+      "dispatcharr_channels",
+      "0029_backfill_custom_stream_hashes"
+    ],
+    [
+      "dispatcharr_channels",
+      "0030_alter_stream_url"
+    ],
+    [
+      "dispatcharr_channels",
+      "0031_channelgroupm3uaccount_is_stale_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0032_channel_is_adult_stream_is_adult"
+    ],
+    [
+      "dispatcharr_channels",
+      "0033_stream_id_stream_chno"
+    ],
+    [
+      "dispatcharr_channels",
+      "0034_remove_stream_dispatcharr_stream_id_idx_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0035_alter_channel_name_alter_stream_name"
+    ],
+    [
+      "dispatcharr_channels",
+      "0036_alter_stream_name"
+    ],
+    [
+      "dispatcharr_channels",
+      "0037_auto_sync_overhaul"
+    ],
+    [
+      "dispatcharr_channels",
+      "0038_add_catchup_fields"
+    ],
+    [
+      "dispatcharr_channels",
+      "0039_add_radio_fields"
+    ],
+    [
+      "dispatcharr_channels",
+      "0040_channelgroup_custom_relation"
+    ],
+    [
+      "dispatcharr_connect",
+      "0001_initial"
+    ],
+    [
+      "dispatcharr_connect",
+      "0002_alter_eventsubscription_event"
+    ],
+    [
+      "dispatcharr_connect",
+      "0003_alter_eventsubscription_event"
+    ],
+    [
+      "dispatcharr_connect",
+      "0004_alter_eventsubscription_event"
+    ],
+    [
+      "dispatcharr_connect",
+      "0005_alter_eventsubscription_event"
+    ],
+    [
+      "epg",
+      "0023_epgsource_programme_index"
+    ],
+    [
+      "epg",
+      "0024_remove_epgsource_api_key_epgsource_password_and_more"
+    ],
+    [
+      "epg",
+      "0025_programdata_epg_id_index"
+    ],
+    [
+      "epg",
+      "0026_epgsourceindex"
+    ],
+    [
+      "epg",
+      "0027_programdata_epg_start_end_index"
+    ],
+    [
+      "epg",
+      "0028_programdata_epg_end_index"
+    ],
+    [
+      "hdhr",
+      "0001_initial"
+    ],
+    [
+      "plugins",
+      "0001_initial"
+    ],
+    [
+      "plugins",
+      "0002_pluginrepo"
+    ],
+    [
+      "plugins",
+      "0003_update_official_repo_url"
+    ],
+    [
+      "plugins",
+      "0004_plugin_schedule_ownership"
+    ],
+    [
+      "sessions",
+      "0001_initial"
+    ],
+    [
+      "vod",
+      "0002_add_last_seen_with_default"
+    ],
+    [
+      "vod",
+      "0003_vodlogo_alter_movie_logo_alter_series_logo"
+    ],
+    [
+      "vod",
+      "0004_m3uepisoderelation_series_relation"
+    ],
+    [
+      "vod",
+      "0005_movie_is_adult"
+    ],
+    [
+      "vod",
+      "0006_movie_series_language"
+    ]
+  ],
+  "content_types": [
+    {
+      "app_label": "accounts",
+      "model": "user"
+    },
+    {
+      "app_label": "accounts",
+      "model": "userappdata"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "channel"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "channelgroup"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "channelgroupm3uaccount"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "channeloverride"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "channelprofile"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "channelprofilemembership"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "channelstream"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "logo"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "recording"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "recurringrecordingrule"
+    },
+    {
+      "app_label": "dispatcharr_channels",
+      "model": "stream"
+    },
+    {
+      "app_label": "dashboard",
+      "model": "settings"
+    },
+    {
+      "app_label": "epg",
+      "model": "epgdata"
+    },
+    {
+      "app_label": "epg",
+      "model": "epgsource"
+    },
+    {
+      "app_label": "epg",
+      "model": "epgsourceindex"
+    },
+    {
+      "app_label": "epg",
+      "model": "programdata"
+    },
+    {
+      "app_label": "epg",
+      "model": "sdprogrammd5"
+    },
+    {
+      "app_label": "epg",
+      "model": "sdschedulemd5"
+    },
+    {
+      "app_label": "hdhr",
+      "model": "hdhrdevice"
+    },
+    {
+      "app_label": "m3u",
+      "model": "m3uaccount"
+    },
+    {
+      "app_label": "m3u",
+      "model": "m3uaccountprofile"
+    },
+    {
+      "app_label": "m3u",
+      "model": "m3ufilter"
+    },
+    {
+      "app_label": "m3u",
+      "model": "servergroup"
+    },
+    {
+      "app_label": "vod",
+      "model": "episode"
+    },
+    {
+      "app_label": "vod",
+      "model": "m3uepisoderelation"
+    },
+    {
+      "app_label": "vod",
+      "model": "m3umovierelation"
+    },
+    {
+      "app_label": "vod",
+      "model": "m3useriesrelation"
+    },
+    {
+      "app_label": "vod",
+      "model": "m3uvodcategoryrelation"
+    },
+    {
+      "app_label": "vod",
+      "model": "movie"
+    },
+    {
+      "app_label": "vod",
+      "model": "series"
+    },
+    {
+      "app_label": "vod",
+      "model": "vodcategory"
+    },
+    {
+      "app_label": "vod",
+      "model": "vodlogo"
+    },
+    {
+      "app_label": "dispatcharr_connect",
+      "model": "deliverylog"
+    },
+    {
+      "app_label": "dispatcharr_connect",
+      "model": "eventsubscription"
+    },
+    {
+      "app_label": "dispatcharr_connect",
+      "model": "integration"
+    },
+    {
+      "app_label": "core",
+      "model": "coresettings"
+    },
+    {
+      "app_label": "core",
+      "model": "notificationdismissal"
+    },
+    {
+      "app_label": "core",
+      "model": "outputprofile"
+    },
+    {
+      "app_label": "core",
+      "model": "streamprofile"
+    },
+    {
+      "app_label": "core",
+      "model": "systemevent"
+    },
+    {
+      "app_label": "core",
+      "model": "systemnotification"
+    },
+    {
+      "app_label": "core",
+      "model": "useragent"
+    },
+    {
+      "app_label": "admin",
+      "model": "logentry"
+    },
+    {
+      "app_label": "auth",
+      "model": "group"
+    },
+    {
+      "app_label": "auth",
+      "model": "permission"
+    },
+    {
+      "app_label": "contenttypes",
+      "model": "contenttype"
+    },
+    {
+      "app_label": "sessions",
+      "model": "session"
+    },
+    {
+      "app_label": "django_celery_beat",
+      "model": "clockedschedule"
+    },
+    {
+      "app_label": "django_celery_beat",
+      "model": "crontabschedule"
+    },
+    {
+      "app_label": "django_celery_beat",
+      "model": "intervalschedule"
+    },
+    {
+      "app_label": "django_celery_beat",
+      "model": "periodictask"
+    },
+    {
+      "app_label": "django_celery_beat",
+      "model": "periodictasks"
+    },
+    {
+      "app_label": "django_celery_beat",
+      "model": "solarschedule"
+    },
+    {
+      "app_label": "plugins",
+      "model": "pluginconfig"
+    },
+    {
+      "app_label": "plugins",
+      "model": "pluginrepo"
+    }
+  ],
+  "permissions": [
+    {
+      "name": "Can add user",
+      "app_label": "accounts",
+      "model": "user",
+      "codename": "add_user"
+    },
+    {
+      "name": "Can change user",
+      "app_label": "accounts",
+      "model": "user",
+      "codename": "change_user"
+    },
+    {
+      "name": "Can delete user",
+      "app_label": "accounts",
+      "model": "user",
+      "codename": "delete_user"
+    },
+    {
+      "name": "Can view user",
+      "app_label": "accounts",
+      "model": "user",
+      "codename": "view_user"
+    },
+    {
+      "name": "Can add user app data",
+      "app_label": "accounts",
+      "model": "userappdata",
+      "codename": "add_userappdata"
+    },
+    {
+      "name": "Can change user app data",
+      "app_label": "accounts",
+      "model": "userappdata",
+      "codename": "change_userappdata"
+    },
+    {
+      "name": "Can delete user app data",
+      "app_label": "accounts",
+      "model": "userappdata",
+      "codename": "delete_userappdata"
+    },
+    {
+      "name": "Can view user app data",
+      "app_label": "accounts",
+      "model": "userappdata",
+      "codename": "view_userappdata"
+    },
+    {
+      "name": "Can add channel group",
+      "app_label": "dispatcharr_channels",
+      "model": "channelgroup",
+      "codename": "add_channelgroup"
+    },
+    {
+      "name": "Can change channel group",
+      "app_label": "dispatcharr_channels",
+      "model": "channelgroup",
+      "codename": "change_channelgroup"
+    },
+    {
+      "name": "Can delete channel group",
+      "app_label": "dispatcharr_channels",
+      "model": "channelgroup",
+      "codename": "delete_channelgroup"
+    },
+    {
+      "name": "Can view channel group",
+      "app_label": "dispatcharr_channels",
+      "model": "channelgroup",
+      "codename": "view_channelgroup"
+    },
+    {
+      "name": "Can add channel",
+      "app_label": "dispatcharr_channels",
+      "model": "channel",
+      "codename": "add_channel"
+    },
+    {
+      "name": "Can change channel",
+      "app_label": "dispatcharr_channels",
+      "model": "channel",
+      "codename": "change_channel"
+    },
+    {
+      "name": "Can delete channel",
+      "app_label": "dispatcharr_channels",
+      "model": "channel",
+      "codename": "delete_channel"
+    },
+    {
+      "name": "Can view channel",
+      "app_label": "dispatcharr_channels",
+      "model": "channel",
+      "codename": "view_channel"
+    },
+    {
+      "name": "Can add Stream",
+      "app_label": "dispatcharr_channels",
+      "model": "stream",
+      "codename": "add_stream"
+    },
+    {
+      "name": "Can change Stream",
+      "app_label": "dispatcharr_channels",
+      "model": "stream",
+      "codename": "change_stream"
+    },
+    {
+      "name": "Can delete Stream",
+      "app_label": "dispatcharr_channels",
+      "model": "stream",
+      "codename": "delete_stream"
+    },
+    {
+      "name": "Can view Stream",
+      "app_label": "dispatcharr_channels",
+      "model": "stream",
+      "codename": "view_stream"
+    },
+    {
+      "name": "Can add channel stream",
+      "app_label": "dispatcharr_channels",
+      "model": "channelstream",
+      "codename": "add_channelstream"
+    },
+    {
+      "name": "Can change channel stream",
+      "app_label": "dispatcharr_channels",
+      "model": "channelstream",
+      "codename": "change_channelstream"
+    },
+    {
+      "name": "Can delete channel stream",
+      "app_label": "dispatcharr_channels",
+      "model": "channelstream",
+      "codename": "delete_channelstream"
+    },
+    {
+      "name": "Can view channel stream",
+      "app_label": "dispatcharr_channels",
+      "model": "channelstream",
+      "codename": "view_channelstream"
+    },
+    {
+      "name": "Can add channel group m3u account",
+      "app_label": "dispatcharr_channels",
+      "model": "channelgroupm3uaccount",
+      "codename": "add_channelgroupm3uaccount"
+    },
+    {
+      "name": "Can change channel group m3u account",
+      "app_label": "dispatcharr_channels",
+      "model": "channelgroupm3uaccount",
+      "codename": "change_channelgroupm3uaccount"
+    },
+    {
+      "name": "Can delete channel group m3u account",
+      "app_label": "dispatcharr_channels",
+      "model": "channelgroupm3uaccount",
+      "codename": "delete_channelgroupm3uaccount"
+    },
+    {
+      "name": "Can view channel group m3u account",
+      "app_label": "dispatcharr_channels",
+      "model": "channelgroupm3uaccount",
+      "codename": "view_channelgroupm3uaccount"
+    },
+    {
+      "name": "Can add logo",
+      "app_label": "dispatcharr_channels",
+      "model": "logo",
+      "codename": "add_logo"
+    },
+    {
+      "name": "Can change logo",
+      "app_label": "dispatcharr_channels",
+      "model": "logo",
+      "codename": "change_logo"
+    },
+    {
+      "name": "Can delete logo",
+      "app_label": "dispatcharr_channels",
+      "model": "logo",
+      "codename": "delete_logo"
+    },
+    {
+      "name": "Can view logo",
+      "app_label": "dispatcharr_channels",
+      "model": "logo",
+      "codename": "view_logo"
+    },
+    {
+      "name": "Can add channel profile",
+      "app_label": "dispatcharr_channels",
+      "model": "channelprofile",
+      "codename": "add_channelprofile"
+    },
+    {
+      "name": "Can change channel profile",
+      "app_label": "dispatcharr_channels",
+      "model": "channelprofile",
+      "codename": "change_channelprofile"
+    },
+    {
+      "name": "Can delete channel profile",
+      "app_label": "dispatcharr_channels",
+      "model": "channelprofile",
+      "codename": "delete_channelprofile"
+    },
+    {
+      "name": "Can view channel profile",
+      "app_label": "dispatcharr_channels",
+      "model": "channelprofile",
+      "codename": "view_channelprofile"
+    },
+    {
+      "name": "Can add channel profile membership",
+      "app_label": "dispatcharr_channels",
+      "model": "channelprofilemembership",
+      "codename": "add_channelprofilemembership"
+    },
+    {
+      "name": "Can change channel profile membership",
+      "app_label": "dispatcharr_channels",
+      "model": "channelprofilemembership",
+      "codename": "change_channelprofilemembership"
+    },
+    {
+      "name": "Can delete channel profile membership",
+      "app_label": "dispatcharr_channels",
+      "model": "channelprofilemembership",
+      "codename": "delete_channelprofilemembership"
+    },
+    {
+      "name": "Can view channel profile membership",
+      "app_label": "dispatcharr_channels",
+      "model": "channelprofilemembership",
+      "codename": "view_channelprofilemembership"
+    },
+    {
+      "name": "Can add recording",
+      "app_label": "dispatcharr_channels",
+      "model": "recording",
+      "codename": "add_recording"
+    },
+    {
+      "name": "Can change recording",
+      "app_label": "dispatcharr_channels",
+      "model": "recording",
+      "codename": "change_recording"
+    },
+    {
+      "name": "Can delete recording",
+      "app_label": "dispatcharr_channels",
+      "model": "recording",
+      "codename": "delete_recording"
+    },
+    {
+      "name": "Can view recording",
+      "app_label": "dispatcharr_channels",
+      "model": "recording",
+      "codename": "view_recording"
+    },
+    {
+      "name": "Can add recurring recording rule",
+      "app_label": "dispatcharr_channels",
+      "model": "recurringrecordingrule",
+      "codename": "add_recurringrecordingrule"
+    },
+    {
+      "name": "Can change recurring recording rule",
+      "app_label": "dispatcharr_channels",
+      "model": "recurringrecordingrule",
+      "codename": "change_recurringrecordingrule"
+    },
+    {
+      "name": "Can delete recurring recording rule",
+      "app_label": "dispatcharr_channels",
+      "model": "recurringrecordingrule",
+      "codename": "delete_recurringrecordingrule"
+    },
+    {
+      "name": "Can view recurring recording rule",
+      "app_label": "dispatcharr_channels",
+      "model": "recurringrecordingrule",
+      "codename": "view_recurringrecordingrule"
+    },
+    {
+      "name": "Can add channel override",
+      "app_label": "dispatcharr_channels",
+      "model": "channeloverride",
+      "codename": "add_channeloverride"
+    },
+    {
+      "name": "Can change channel override",
+      "app_label": "dispatcharr_channels",
+      "model": "channeloverride",
+      "codename": "change_channeloverride"
+    },
+    {
+      "name": "Can delete channel override",
+      "app_label": "dispatcharr_channels",
+      "model": "channeloverride",
+      "codename": "delete_channeloverride"
+    },
+    {
+      "name": "Can view channel override",
+      "app_label": "dispatcharr_channels",
+      "model": "channeloverride",
+      "codename": "view_channeloverride"
+    },
+    {
+      "name": "Can add settings",
+      "app_label": "dashboard",
+      "model": "settings",
+      "codename": "add_settings"
+    },
+    {
+      "name": "Can change settings",
+      "app_label": "dashboard",
+      "model": "settings",
+      "codename": "change_settings"
+    },
+    {
+      "name": "Can delete settings",
+      "app_label": "dashboard",
+      "model": "settings",
+      "codename": "delete_settings"
+    },
+    {
+      "name": "Can view settings",
+      "app_label": "dashboard",
+      "model": "settings",
+      "codename": "view_settings"
+    },
+    {
+      "name": "Can add epg data",
+      "app_label": "epg",
+      "model": "epgdata",
+      "codename": "add_epgdata"
+    },
+    {
+      "name": "Can change epg data",
+      "app_label": "epg",
+      "model": "epgdata",
+      "codename": "change_epgdata"
+    },
+    {
+      "name": "Can delete epg data",
+      "app_label": "epg",
+      "model": "epgdata",
+      "codename": "delete_epgdata"
+    },
+    {
+      "name": "Can view epg data",
+      "app_label": "epg",
+      "model": "epgdata",
+      "codename": "view_epgdata"
+    },
+    {
+      "name": "Can add epg source",
+      "app_label": "epg",
+      "model": "epgsource",
+      "codename": "add_epgsource"
+    },
+    {
+      "name": "Can change epg source",
+      "app_label": "epg",
+      "model": "epgsource",
+      "codename": "change_epgsource"
+    },
+    {
+      "name": "Can delete epg source",
+      "app_label": "epg",
+      "model": "epgsource",
+      "codename": "delete_epgsource"
+    },
+    {
+      "name": "Can view epg source",
+      "app_label": "epg",
+      "model": "epgsource",
+      "codename": "view_epgsource"
+    },
+    {
+      "name": "Can add program data",
+      "app_label": "epg",
+      "model": "programdata",
+      "codename": "add_programdata"
+    },
+    {
+      "name": "Can change program data",
+      "app_label": "epg",
+      "model": "programdata",
+      "codename": "change_programdata"
+    },
+    {
+      "name": "Can delete program data",
+      "app_label": "epg",
+      "model": "programdata",
+      "codename": "delete_programdata"
+    },
+    {
+      "name": "Can view program data",
+      "app_label": "epg",
+      "model": "programdata",
+      "codename": "view_programdata"
+    },
+    {
+      "name": "Can add sd program m d5",
+      "app_label": "epg",
+      "model": "sdprogrammd5",
+      "codename": "add_sdprogrammd5"
+    },
+    {
+      "name": "Can change sd program m d5",
+      "app_label": "epg",
+      "model": "sdprogrammd5",
+      "codename": "change_sdprogrammd5"
+    },
+    {
+      "name": "Can delete sd program m d5",
+      "app_label": "epg",
+      "model": "sdprogrammd5",
+      "codename": "delete_sdprogrammd5"
+    },
+    {
+      "name": "Can view sd program m d5",
+      "app_label": "epg",
+      "model": "sdprogrammd5",
+      "codename": "view_sdprogrammd5"
+    },
+    {
+      "name": "Can add sd schedule m d5",
+      "app_label": "epg",
+      "model": "sdschedulemd5",
+      "codename": "add_sdschedulemd5"
+    },
+    {
+      "name": "Can change sd schedule m d5",
+      "app_label": "epg",
+      "model": "sdschedulemd5",
+      "codename": "change_sdschedulemd5"
+    },
+    {
+      "name": "Can delete sd schedule m d5",
+      "app_label": "epg",
+      "model": "sdschedulemd5",
+      "codename": "delete_sdschedulemd5"
+    },
+    {
+      "name": "Can view sd schedule m d5",
+      "app_label": "epg",
+      "model": "sdschedulemd5",
+      "codename": "view_sdschedulemd5"
+    },
+    {
+      "name": "Can add epg source index",
+      "app_label": "epg",
+      "model": "epgsourceindex",
+      "codename": "add_epgsourceindex"
+    },
+    {
+      "name": "Can change epg source index",
+      "app_label": "epg",
+      "model": "epgsourceindex",
+      "codename": "change_epgsourceindex"
+    },
+    {
+      "name": "Can delete epg source index",
+      "app_label": "epg",
+      "model": "epgsourceindex",
+      "codename": "delete_epgsourceindex"
+    },
+    {
+      "name": "Can view epg source index",
+      "app_label": "epg",
+      "model": "epgsourceindex",
+      "codename": "view_epgsourceindex"
+    },
+    {
+      "name": "Can add hdhr device",
+      "app_label": "hdhr",
+      "model": "hdhrdevice",
+      "codename": "add_hdhrdevice"
+    },
+    {
+      "name": "Can change hdhr device",
+      "app_label": "hdhr",
+      "model": "hdhrdevice",
+      "codename": "change_hdhrdevice"
+    },
+    {
+      "name": "Can delete hdhr device",
+      "app_label": "hdhr",
+      "model": "hdhrdevice",
+      "codename": "delete_hdhrdevice"
+    },
+    {
+      "name": "Can view hdhr device",
+      "app_label": "hdhr",
+      "model": "hdhrdevice",
+      "codename": "view_hdhrdevice"
+    },
+    {
+      "name": "Can add server group",
+      "app_label": "m3u",
+      "model": "servergroup",
+      "codename": "add_servergroup"
+    },
+    {
+      "name": "Can change server group",
+      "app_label": "m3u",
+      "model": "servergroup",
+      "codename": "change_servergroup"
+    },
+    {
+      "name": "Can delete server group",
+      "app_label": "m3u",
+      "model": "servergroup",
+      "codename": "delete_servergroup"
+    },
+    {
+      "name": "Can view server group",
+      "app_label": "m3u",
+      "model": "servergroup",
+      "codename": "view_servergroup"
+    },
+    {
+      "name": "Can add m3u account",
+      "app_label": "m3u",
+      "model": "m3uaccount",
+      "codename": "add_m3uaccount"
+    },
+    {
+      "name": "Can change m3u account",
+      "app_label": "m3u",
+      "model": "m3uaccount",
+      "codename": "change_m3uaccount"
+    },
+    {
+      "name": "Can delete m3u account",
+      "app_label": "m3u",
+      "model": "m3uaccount",
+      "codename": "delete_m3uaccount"
+    },
+    {
+      "name": "Can view m3u account",
+      "app_label": "m3u",
+      "model": "m3uaccount",
+      "codename": "view_m3uaccount"
+    },
+    {
+      "name": "Can add m3u filter",
+      "app_label": "m3u",
+      "model": "m3ufilter",
+      "codename": "add_m3ufilter"
+    },
+    {
+      "name": "Can change m3u filter",
+      "app_label": "m3u",
+      "model": "m3ufilter",
+      "codename": "change_m3ufilter"
+    },
+    {
+      "name": "Can delete m3u filter",
+      "app_label": "m3u",
+      "model": "m3ufilter",
+      "codename": "delete_m3ufilter"
+    },
+    {
+      "name": "Can view m3u filter",
+      "app_label": "m3u",
+      "model": "m3ufilter",
+      "codename": "view_m3ufilter"
+    },
+    {
+      "name": "Can add m3u account profile",
+      "app_label": "m3u",
+      "model": "m3uaccountprofile",
+      "codename": "add_m3uaccountprofile"
+    },
+    {
+      "name": "Can change m3u account profile",
+      "app_label": "m3u",
+      "model": "m3uaccountprofile",
+      "codename": "change_m3uaccountprofile"
+    },
+    {
+      "name": "Can delete m3u account profile",
+      "app_label": "m3u",
+      "model": "m3uaccountprofile",
+      "codename": "delete_m3uaccountprofile"
+    },
+    {
+      "name": "Can view m3u account profile",
+      "app_label": "m3u",
+      "model": "m3uaccountprofile",
+      "codename": "view_m3uaccountprofile"
+    },
+    {
+      "name": "Can add Movie",
+      "app_label": "vod",
+      "model": "movie",
+      "codename": "add_movie"
+    },
+    {
+      "name": "Can change Movie",
+      "app_label": "vod",
+      "model": "movie",
+      "codename": "change_movie"
+    },
+    {
+      "name": "Can delete Movie",
+      "app_label": "vod",
+      "model": "movie",
+      "codename": "delete_movie"
+    },
+    {
+      "name": "Can view Movie",
+      "app_label": "vod",
+      "model": "movie",
+      "codename": "view_movie"
+    },
+    {
+      "name": "Can add Series",
+      "app_label": "vod",
+      "model": "series",
+      "codename": "add_series"
+    },
+    {
+      "name": "Can change Series",
+      "app_label": "vod",
+      "model": "series",
+      "codename": "change_series"
+    },
+    {
+      "name": "Can delete Series",
+      "app_label": "vod",
+      "model": "series",
+      "codename": "delete_series"
+    },
+    {
+      "name": "Can view Series",
+      "app_label": "vod",
+      "model": "series",
+      "codename": "view_series"
+    },
+    {
+      "name": "Can add Episode",
+      "app_label": "vod",
+      "model": "episode",
+      "codename": "add_episode"
+    },
+    {
+      "name": "Can change Episode",
+      "app_label": "vod",
+      "model": "episode",
+      "codename": "change_episode"
+    },
+    {
+      "name": "Can delete Episode",
+      "app_label": "vod",
+      "model": "episode",
+      "codename": "delete_episode"
+    },
+    {
+      "name": "Can view Episode",
+      "app_label": "vod",
+      "model": "episode",
+      "codename": "view_episode"
+    },
+    {
+      "name": "Can add VOD Category",
+      "app_label": "vod",
+      "model": "vodcategory",
+      "codename": "add_vodcategory"
+    },
+    {
+      "name": "Can change VOD Category",
+      "app_label": "vod",
+      "model": "vodcategory",
+      "codename": "change_vodcategory"
+    },
+    {
+      "name": "Can delete VOD Category",
+      "app_label": "vod",
+      "model": "vodcategory",
+      "codename": "delete_vodcategory"
+    },
+    {
+      "name": "Can view VOD Category",
+      "app_label": "vod",
+      "model": "vodcategory",
+      "codename": "view_vodcategory"
+    },
+    {
+      "name": "Can add M3U VOD Category Relation",
+      "app_label": "vod",
+      "model": "m3uvodcategoryrelation",
+      "codename": "add_m3uvodcategoryrelation"
+    },
+    {
+      "name": "Can change M3U VOD Category Relation",
+      "app_label": "vod",
+      "model": "m3uvodcategoryrelation",
+      "codename": "change_m3uvodcategoryrelation"
+    },
+    {
+      "name": "Can delete M3U VOD Category Relation",
+      "app_label": "vod",
+      "model": "m3uvodcategoryrelation",
+      "codename": "delete_m3uvodcategoryrelation"
+    },
+    {
+      "name": "Can view M3U VOD Category Relation",
+      "app_label": "vod",
+      "model": "m3uvodcategoryrelation",
+      "codename": "view_m3uvodcategoryrelation"
+    },
+    {
+      "name": "Can add M3U Series Relation",
+      "app_label": "vod",
+      "model": "m3useriesrelation",
+      "codename": "add_m3useriesrelation"
+    },
+    {
+      "name": "Can change M3U Series Relation",
+      "app_label": "vod",
+      "model": "m3useriesrelation",
+      "codename": "change_m3useriesrelation"
+    },
+    {
+      "name": "Can delete M3U Series Relation",
+      "app_label": "vod",
+      "model": "m3useriesrelation",
+      "codename": "delete_m3useriesrelation"
+    },
+    {
+      "name": "Can view M3U Series Relation",
+      "app_label": "vod",
+      "model": "m3useriesrelation",
+      "codename": "view_m3useriesrelation"
+    },
+    {
+      "name": "Can add M3U Movie Relation",
+      "app_label": "vod",
+      "model": "m3umovierelation",
+      "codename": "add_m3umovierelation"
+    },
+    {
+      "name": "Can change M3U Movie Relation",
+      "app_label": "vod",
+      "model": "m3umovierelation",
+      "codename": "change_m3umovierelation"
+    },
+    {
+      "name": "Can delete M3U Movie Relation",
+      "app_label": "vod",
+      "model": "m3umovierelation",
+      "codename": "delete_m3umovierelation"
+    },
+    {
+      "name": "Can view M3U Movie Relation",
+      "app_label": "vod",
+      "model": "m3umovierelation",
+      "codename": "view_m3umovierelation"
+    },
+    {
+      "name": "Can add M3U Episode Relation",
+      "app_label": "vod",
+      "model": "m3uepisoderelation",
+      "codename": "add_m3uepisoderelation"
+    },
+    {
+      "name": "Can change M3U Episode Relation",
+      "app_label": "vod",
+      "model": "m3uepisoderelation",
+      "codename": "change_m3uepisoderelation"
+    },
+    {
+      "name": "Can delete M3U Episode Relation",
+      "app_label": "vod",
+      "model": "m3uepisoderelation",
+      "codename": "delete_m3uepisoderelation"
+    },
+    {
+      "name": "Can view M3U Episode Relation",
+      "app_label": "vod",
+      "model": "m3uepisoderelation",
+      "codename": "view_m3uepisoderelation"
+    },
+    {
+      "name": "Can add VOD Logo",
+      "app_label": "vod",
+      "model": "vodlogo",
+      "codename": "add_vodlogo"
+    },
+    {
+      "name": "Can change VOD Logo",
+      "app_label": "vod",
+      "model": "vodlogo",
+      "codename": "change_vodlogo"
+    },
+    {
+      "name": "Can delete VOD Logo",
+      "app_label": "vod",
+      "model": "vodlogo",
+      "codename": "delete_vodlogo"
+    },
+    {
+      "name": "Can view VOD Logo",
+      "app_label": "vod",
+      "model": "vodlogo",
+      "codename": "view_vodlogo"
+    },
+    {
+      "name": "Can add event subscription",
+      "app_label": "dispatcharr_connect",
+      "model": "eventsubscription",
+      "codename": "add_eventsubscription"
+    },
+    {
+      "name": "Can change event subscription",
+      "app_label": "dispatcharr_connect",
+      "model": "eventsubscription",
+      "codename": "change_eventsubscription"
+    },
+    {
+      "name": "Can delete event subscription",
+      "app_label": "dispatcharr_connect",
+      "model": "eventsubscription",
+      "codename": "delete_eventsubscription"
+    },
+    {
+      "name": "Can view event subscription",
+      "app_label": "dispatcharr_connect",
+      "model": "eventsubscription",
+      "codename": "view_eventsubscription"
+    },
+    {
+      "name": "Can add integration",
+      "app_label": "dispatcharr_connect",
+      "model": "integration",
+      "codename": "add_integration"
+    },
+    {
+      "name": "Can change integration",
+      "app_label": "dispatcharr_connect",
+      "model": "integration",
+      "codename": "change_integration"
+    },
+    {
+      "name": "Can delete integration",
+      "app_label": "dispatcharr_connect",
+      "model": "integration",
+      "codename": "delete_integration"
+    },
+    {
+      "name": "Can view integration",
+      "app_label": "dispatcharr_connect",
+      "model": "integration",
+      "codename": "view_integration"
+    },
+    {
+      "name": "Can add delivery log",
+      "app_label": "dispatcharr_connect",
+      "model": "deliverylog",
+      "codename": "add_deliverylog"
+    },
+    {
+      "name": "Can change delivery log",
+      "app_label": "dispatcharr_connect",
+      "model": "deliverylog",
+      "codename": "change_deliverylog"
+    },
+    {
+      "name": "Can delete delivery log",
+      "app_label": "dispatcharr_connect",
+      "model": "deliverylog",
+      "codename": "delete_deliverylog"
+    },
+    {
+      "name": "Can view delivery log",
+      "app_label": "dispatcharr_connect",
+      "model": "deliverylog",
+      "codename": "view_deliverylog"
+    },
+    {
+      "name": "Can add core settings",
+      "app_label": "core",
+      "model": "coresettings",
+      "codename": "add_coresettings"
+    },
+    {
+      "name": "Can change core settings",
+      "app_label": "core",
+      "model": "coresettings",
+      "codename": "change_coresettings"
+    },
+    {
+      "name": "Can delete core settings",
+      "app_label": "core",
+      "model": "coresettings",
+      "codename": "delete_coresettings"
+    },
+    {
+      "name": "Can view core settings",
+      "app_label": "core",
+      "model": "coresettings",
+      "codename": "view_coresettings"
+    },
+    {
+      "name": "Can add stream profile",
+      "app_label": "core",
+      "model": "streamprofile",
+      "codename": "add_streamprofile"
+    },
+    {
+      "name": "Can change stream profile",
+      "app_label": "core",
+      "model": "streamprofile",
+      "codename": "change_streamprofile"
+    },
+    {
+      "name": "Can delete stream profile",
+      "app_label": "core",
+      "model": "streamprofile",
+      "codename": "delete_streamprofile"
+    },
+    {
+      "name": "Can view stream profile",
+      "app_label": "core",
+      "model": "streamprofile",
+      "codename": "view_streamprofile"
+    },
+    {
+      "name": "Can add user agent",
+      "app_label": "core",
+      "model": "useragent",
+      "codename": "add_useragent"
+    },
+    {
+      "name": "Can change user agent",
+      "app_label": "core",
+      "model": "useragent",
+      "codename": "change_useragent"
+    },
+    {
+      "name": "Can delete user agent",
+      "app_label": "core",
+      "model": "useragent",
+      "codename": "delete_useragent"
+    },
+    {
+      "name": "Can view user agent",
+      "app_label": "core",
+      "model": "useragent",
+      "codename": "view_useragent"
+    },
+    {
+      "name": "Can add system event",
+      "app_label": "core",
+      "model": "systemevent",
+      "codename": "add_systemevent"
+    },
+    {
+      "name": "Can change system event",
+      "app_label": "core",
+      "model": "systemevent",
+      "codename": "change_systemevent"
+    },
+    {
+      "name": "Can delete system event",
+      "app_label": "core",
+      "model": "systemevent",
+      "codename": "delete_systemevent"
+    },
+    {
+      "name": "Can view system event",
+      "app_label": "core",
+      "model": "systemevent",
+      "codename": "view_systemevent"
+    },
+    {
+      "name": "Can add system notification",
+      "app_label": "core",
+      "model": "systemnotification",
+      "codename": "add_systemnotification"
+    },
+    {
+      "name": "Can change system notification",
+      "app_label": "core",
+      "model": "systemnotification",
+      "codename": "change_systemnotification"
+    },
+    {
+      "name": "Can delete system notification",
+      "app_label": "core",
+      "model": "systemnotification",
+      "codename": "delete_systemnotification"
+    },
+    {
+      "name": "Can view system notification",
+      "app_label": "core",
+      "model": "systemnotification",
+      "codename": "view_systemnotification"
+    },
+    {
+      "name": "Can add notification dismissal",
+      "app_label": "core",
+      "model": "notificationdismissal",
+      "codename": "add_notificationdismissal"
+    },
+    {
+      "name": "Can change notification dismissal",
+      "app_label": "core",
+      "model": "notificationdismissal",
+      "codename": "change_notificationdismissal"
+    },
+    {
+      "name": "Can delete notification dismissal",
+      "app_label": "core",
+      "model": "notificationdismissal",
+      "codename": "delete_notificationdismissal"
+    },
+    {
+      "name": "Can view notification dismissal",
+      "app_label": "core",
+      "model": "notificationdismissal",
+      "codename": "view_notificationdismissal"
+    },
+    {
+      "name": "Can add output profile",
+      "app_label": "core",
+      "model": "outputprofile",
+      "codename": "add_outputprofile"
+    },
+    {
+      "name": "Can change output profile",
+      "app_label": "core",
+      "model": "outputprofile",
+      "codename": "change_outputprofile"
+    },
+    {
+      "name": "Can delete output profile",
+      "app_label": "core",
+      "model": "outputprofile",
+      "codename": "delete_outputprofile"
+    },
+    {
+      "name": "Can view output profile",
+      "app_label": "core",
+      "model": "outputprofile",
+      "codename": "view_outputprofile"
+    },
+    {
+      "name": "Can add log entry",
+      "app_label": "admin",
+      "model": "logentry",
+      "codename": "add_logentry"
+    },
+    {
+      "name": "Can change log entry",
+      "app_label": "admin",
+      "model": "logentry",
+      "codename": "change_logentry"
+    },
+    {
+      "name": "Can delete log entry",
+      "app_label": "admin",
+      "model": "logentry",
+      "codename": "delete_logentry"
+    },
+    {
+      "name": "Can view log entry",
+      "app_label": "admin",
+      "model": "logentry",
+      "codename": "view_logentry"
+    },
+    {
+      "name": "Can add permission",
+      "app_label": "auth",
+      "model": "permission",
+      "codename": "add_permission"
+    },
+    {
+      "name": "Can change permission",
+      "app_label": "auth",
+      "model": "permission",
+      "codename": "change_permission"
+    },
+    {
+      "name": "Can delete permission",
+      "app_label": "auth",
+      "model": "permission",
+      "codename": "delete_permission"
+    },
+    {
+      "name": "Can view permission",
+      "app_label": "auth",
+      "model": "permission",
+      "codename": "view_permission"
+    },
+    {
+      "name": "Can add group",
+      "app_label": "auth",
+      "model": "group",
+      "codename": "add_group"
+    },
+    {
+      "name": "Can change group",
+      "app_label": "auth",
+      "model": "group",
+      "codename": "change_group"
+    },
+    {
+      "name": "Can delete group",
+      "app_label": "auth",
+      "model": "group",
+      "codename": "delete_group"
+    },
+    {
+      "name": "Can view group",
+      "app_label": "auth",
+      "model": "group",
+      "codename": "view_group"
+    },
+    {
+      "name": "Can add content type",
+      "app_label": "contenttypes",
+      "model": "contenttype",
+      "codename": "add_contenttype"
+    },
+    {
+      "name": "Can change content type",
+      "app_label": "contenttypes",
+      "model": "contenttype",
+      "codename": "change_contenttype"
+    },
+    {
+      "name": "Can delete content type",
+      "app_label": "contenttypes",
+      "model": "contenttype",
+      "codename": "delete_contenttype"
+    },
+    {
+      "name": "Can view content type",
+      "app_label": "contenttypes",
+      "model": "contenttype",
+      "codename": "view_contenttype"
+    },
+    {
+      "name": "Can add session",
+      "app_label": "sessions",
+      "model": "session",
+      "codename": "add_session"
+    },
+    {
+      "name": "Can change session",
+      "app_label": "sessions",
+      "model": "session",
+      "codename": "change_session"
+    },
+    {
+      "name": "Can delete session",
+      "app_label": "sessions",
+      "model": "session",
+      "codename": "delete_session"
+    },
+    {
+      "name": "Can view session",
+      "app_label": "sessions",
+      "model": "session",
+      "codename": "view_session"
+    },
+    {
+      "name": "Can add crontab",
+      "app_label": "django_celery_beat",
+      "model": "crontabschedule",
+      "codename": "add_crontabschedule"
+    },
+    {
+      "name": "Can change crontab",
+      "app_label": "django_celery_beat",
+      "model": "crontabschedule",
+      "codename": "change_crontabschedule"
+    },
+    {
+      "name": "Can delete crontab",
+      "app_label": "django_celery_beat",
+      "model": "crontabschedule",
+      "codename": "delete_crontabschedule"
+    },
+    {
+      "name": "Can view crontab",
+      "app_label": "django_celery_beat",
+      "model": "crontabschedule",
+      "codename": "view_crontabschedule"
+    },
+    {
+      "name": "Can add interval",
+      "app_label": "django_celery_beat",
+      "model": "intervalschedule",
+      "codename": "add_intervalschedule"
+    },
+    {
+      "name": "Can change interval",
+      "app_label": "django_celery_beat",
+      "model": "intervalschedule",
+      "codename": "change_intervalschedule"
+    },
+    {
+      "name": "Can delete interval",
+      "app_label": "django_celery_beat",
+      "model": "intervalschedule",
+      "codename": "delete_intervalschedule"
+    },
+    {
+      "name": "Can view interval",
+      "app_label": "django_celery_beat",
+      "model": "intervalschedule",
+      "codename": "view_intervalschedule"
+    },
+    {
+      "name": "Can add periodic task",
+      "app_label": "django_celery_beat",
+      "model": "periodictask",
+      "codename": "add_periodictask"
+    },
+    {
+      "name": "Can change periodic task",
+      "app_label": "django_celery_beat",
+      "model": "periodictask",
+      "codename": "change_periodictask"
+    },
+    {
+      "name": "Can delete periodic task",
+      "app_label": "django_celery_beat",
+      "model": "periodictask",
+      "codename": "delete_periodictask"
+    },
+    {
+      "name": "Can view periodic task",
+      "app_label": "django_celery_beat",
+      "model": "periodictask",
+      "codename": "view_periodictask"
+    },
+    {
+      "name": "Can add periodic task track",
+      "app_label": "django_celery_beat",
+      "model": "periodictasks",
+      "codename": "add_periodictasks"
+    },
+    {
+      "name": "Can change periodic task track",
+      "app_label": "django_celery_beat",
+      "model": "periodictasks",
+      "codename": "change_periodictasks"
+    },
+    {
+      "name": "Can delete periodic task track",
+      "app_label": "django_celery_beat",
+      "model": "periodictasks",
+      "codename": "delete_periodictasks"
+    },
+    {
+      "name": "Can view periodic task track",
+      "app_label": "django_celery_beat",
+      "model": "periodictasks",
+      "codename": "view_periodictasks"
+    },
+    {
+      "name": "Can add solar event",
+      "app_label": "django_celery_beat",
+      "model": "solarschedule",
+      "codename": "add_solarschedule"
+    },
+    {
+      "name": "Can change solar event",
+      "app_label": "django_celery_beat",
+      "model": "solarschedule",
+      "codename": "change_solarschedule"
+    },
+    {
+      "name": "Can delete solar event",
+      "app_label": "django_celery_beat",
+      "model": "solarschedule",
+      "codename": "delete_solarschedule"
+    },
+    {
+      "name": "Can view solar event",
+      "app_label": "django_celery_beat",
+      "model": "solarschedule",
+      "codename": "view_solarschedule"
+    },
+    {
+      "name": "Can add clocked",
+      "app_label": "django_celery_beat",
+      "model": "clockedschedule",
+      "codename": "add_clockedschedule"
+    },
+    {
+      "name": "Can change clocked",
+      "app_label": "django_celery_beat",
+      "model": "clockedschedule",
+      "codename": "change_clockedschedule"
+    },
+    {
+      "name": "Can delete clocked",
+      "app_label": "django_celery_beat",
+      "model": "clockedschedule",
+      "codename": "delete_clockedschedule"
+    },
+    {
+      "name": "Can view clocked",
+      "app_label": "django_celery_beat",
+      "model": "clockedschedule",
+      "codename": "view_clockedschedule"
+    },
+    {
+      "name": "Can add plugin config",
+      "app_label": "plugins",
+      "model": "pluginconfig",
+      "codename": "add_pluginconfig"
+    },
+    {
+      "name": "Can change plugin config",
+      "app_label": "plugins",
+      "model": "pluginconfig",
+      "codename": "change_pluginconfig"
+    },
+    {
+      "name": "Can delete plugin config",
+      "app_label": "plugins",
+      "model": "pluginconfig",
+      "codename": "delete_pluginconfig"
+    },
+    {
+      "name": "Can view plugin config",
+      "app_label": "plugins",
+      "model": "pluginconfig",
+      "codename": "view_pluginconfig"
+    },
+    {
+      "name": "Can add plugin repo",
+      "app_label": "plugins",
+      "model": "pluginrepo",
+      "codename": "add_pluginrepo"
+    },
+    {
+      "name": "Can change plugin repo",
+      "app_label": "plugins",
+      "model": "pluginrepo",
+      "codename": "change_pluginrepo"
+    },
+    {
+      "name": "Can delete plugin repo",
+      "app_label": "plugins",
+      "model": "pluginrepo",
+      "codename": "delete_pluginrepo"
+    },
+    {
+      "name": "Can view plugin repo",
+      "app_label": "plugins",
+      "model": "pluginrepo",
+      "codename": "view_pluginrepo"
+    }
+  ]
+}

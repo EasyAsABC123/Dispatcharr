@@ -56,6 +56,8 @@ mod epg_staging;
 pub use epg_staging::{GuideMapping, GuideStaging, GuideSwapCounts};
 pub use ip_lookup::IpLookupConfig;
 pub use schema::{initialize_empty_database, SchemaInitialization};
+mod backup_restore_schema;
+pub use backup_restore_schema::{BackupRestoreAdmission, BackupRestoreError};
 /// Source-compatible JSON decoder error text for management adapters.
 pub fn source_json_error(raw: &[u8], error: serde_json::Error) -> String {
     startup_bootstrap::json_error(raw, error)
