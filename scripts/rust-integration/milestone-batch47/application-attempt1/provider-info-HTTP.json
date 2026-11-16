@@ -1,0 +1,64 @@
+{
+  "context": "vod-series-info",
+  "method": "GET",
+  "path": "/api/vod/series/1/provider-info/",
+  "credential_role": "provider_info_standard",
+  "status": 200,
+  "body": {
+    "id": 1,
+    "series_id": "3000",
+    "name": "rust-probe-vod-rest-Series0",
+    "description": "Space, drama",
+    "year": 2010,
+    "genre": "Science Fiction",
+    "rating": "8.25",
+    "tmdb_id": null,
+    "imdb_id": null,
+    "category_id": 2,
+    "category_name": "rust-probe-vod-rest-Drama",
+    "cover": {
+      "id": 1,
+      "url": "https://fixture.invalid/logo.jpg",
+      "cache_url": "http://localhost/api/vod/vodlogos/1/cache/?v=3c61092e",
+      "name": "rust-probe-vod-rest-shared-logo"
+    },
+    "backdrop_path": [],
+    "last_refreshed": "2026-11-11T14:46:14.574109Z",
+    "custom_properties": {
+      "fixture": 0
+    },
+    "m3u_account": {
+      "id": 5,
+      "name": "rust-probe-vod-rest-active",
+      "account_type": "XC"
+    },
+    "episodes_fetched": true,
+    "detailed_fetched": true,
+    "episodes": {
+      "4": [
+        {
+          "id": 13,
+          "uuid": "52f2e7a0-0af9-46cd-bcee-69eac311d3e9",
+          "name": "Refreshed episode",
+          "title": "Refreshed episode",
+          "episode_number": 1,
+          "season_number": 4,
+          "description": "Episode plot",
+          "air_date": null,
+          "plot": "Episode plot",
+          "duration_secs": 1800,
+          "rating": "8.0",
+          "tmdb_id": null,
+          "imdb_id": null,
+          "movie_image": "",
+          "container_extension": "mkv",
+          "type": "episode",
+          "series": {
+            "id": 1,
+            "name": "rust-probe-vod-rest-Series0"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -12,8 +12,9 @@ alone does not establish application parity or an application performance gain.
 [Candidate47](rust-milestone-batch47.md) adds the Source-characterized bounded
 advanced-Series refresh and Requests CA trust for manual provider-info sessions,
 including exact category/relation sequence allocation. SDK65 passes all four
-gates with1,158 tests; physical37-statement/10-control schema checks pass. Docker,
-combined six-context application and fresh paired performance gates remain pending.
+gates with1,158 tests; physical37-statement/10-control schema checks pass. Its
+committed source builds and passes six package families; combined six-context
+application and fresh paired performance gates remain pending.
 
 [Candidate46](rust-milestone-batch46.md) reuses compiled queue observation scripts
 and passes all four SDK63 gates (1,148 tests) plus three explicit physical Redis

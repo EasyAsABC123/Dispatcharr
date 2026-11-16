@@ -41,8 +41,32 @@ misses and the final absent-object inspect. The exact fixture CID, eight capture
 positive PID generations and owned project resources are absent; default schema
 inventories stay byte-identical. This validates SQL types, not application DML.
 
-The committed-source Docker build,
-six package families, combined six-context Native application cohort and fresh
-full paired resource study remain pending. Source4 and unit checks alone do not
+Committed source `c21b9b10a2844264fe55e3dfaa5a121ef8d0b461` builds with actual
+upstream-http, Store and Main recompilation in301.607 seconds. Image
+`sha256:2136bff6593153f895b2682a7d44dc4c7da3f3ab4b468cc66b103812d88c3db1`
+passes all [six package families](../scripts/rust-integration/milestone-batch47/package/inventory.json);
+all55 exact package container IDs are independently absent. Installed Main ELF
+`fa1406741a2a348766a0ac595bc8f7a6dcda4afdcc30224e2cb5d90acd2af468`
+differs from Candidate46,45 and stale43/44; the operator hash is recorded too.
+The combined six-context Native application cohort and fresh full paired resource
+study remain pending. Source4 and unit checks alone do not
 qualify Native advanced refresh, full provider-info behavior, performance gains
 or any complete M0–M9 milestone. Candidate45's CPU-budget failure remains intact.
+
+## First combined application attempt
+
+The [first six-context attempt](../scripts/rust-integration/milestone-batch47/application-attempt1/identity.json)
+retains actual exit1 in314.940 seconds with settled EOF/process group and Root
+verification of eight exact containers, eight captured positive host PIDs and
+empty project resources. Movie repeat5, plain Series4, manual no-commercials
+Comskip3, shared two-viewer VLC and advanced Series4 pass. The advanced leaf
+matches complete rows, support objects and all11 sequences.
+
+Provider-info's first case reaches two verified TLS requests and matches SQL,
+all seven sequences and HTTP200 body; its sole provider-wire mismatch is the
+User-Agent header. Shared bootstrap selects TiviMate while the retained standalone
+Source case selects Dispatcharr0.33.0. The first case is failed and the remaining
+four are not run. Source models confirm the NULL-account-agent default selection
+path. A context-only stream-setting/cache prerequisite correction is in review;
+expected headers remain unchanged, and no Rust/image rebuild is implied.
+Whole six-context and resource acceptance remain pending a corrected complete run.

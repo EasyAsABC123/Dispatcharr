@@ -1,0 +1,131 @@
+[
+  {
+    "context": "vod-repeat",
+    "status": "passed",
+    "raw_report_sha256": "74b2d6cc8e8470909568854402cb06848fdf9ec12de7c21a36437155fe74e768",
+    "raw_report_private_path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-candidate47-combined-vod-1/fixtures/Native-74c540b7/vod-repeat/report.json",
+    "case_summaries": [
+      {
+        "name": "unchanged",
+        "status": "passed"
+      },
+      {
+        "name": "update-reassign-deduplicate-category-replace",
+        "status": "passed"
+      },
+      {
+        "name": "prune-stale-preserve-other-account",
+        "status": "passed"
+      },
+      {
+        "name": "empty-categories-preserve-selected-catalogue",
+        "status": "passed"
+      },
+      {
+        "name": "empty-Movies-clean-only-owned-stale-orphans",
+        "status": "passed"
+      }
+    ]
+  },
+  {
+    "context": "vod-series",
+    "status": "passed",
+    "raw_report_sha256": "6fd090d51f789fcbffaf606515d71207b49adb63df1afaadd69210f27ec0c319",
+    "raw_report_private_path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-candidate47-combined-vod-1/fixtures/Native-74c540b7/vod-series/report.json",
+    "case_summaries": [
+      {
+        "name": "fresh-nonempty-Series-no-Movies",
+        "status": "passed"
+      },
+      {
+        "name": "unchanged-Series-repeat",
+        "status": "passed"
+      },
+      {
+        "name": "Series-reassign-globaldedup-category-replace",
+        "status": "passed"
+      },
+      {
+        "name": "empty-Series-prunes-only-stale-Series",
+        "status": "passed"
+      }
+    ]
+  },
+  {
+    "context": "comskip-manual",
+    "status": "passed",
+    "raw_report_sha256": "96688a1dd9c02f00a17457057f7d0641d16736232f07e16f4eb9ba23c800fa1e",
+    "raw_report_private_path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-candidate47-combined-vod-1/fixtures/Native-74c540b7/comskip-manual/report.json",
+    "case_summaries": [
+      {
+        "name": "no-file",
+        "status": "passed"
+      },
+      {
+        "name": "real-manual-mark",
+        "status": "passed"
+      },
+      {
+        "name": "actual-repeat-already-processed",
+        "status": "passed"
+      }
+    ]
+  },
+  {
+    "context": "vlc-live",
+    "status": "passed",
+    "raw_report_sha256": "d25ac3085583615594bcb313bd7cf2950355b6fbbcc4e188f8c0d0c82f563f77",
+    "raw_report_private_path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-candidate47-combined-vod-1/fixtures/Native-74c540b7/vlc-profile-capture/report.json",
+    "case_summaries": [],
+    "viewers": 2,
+    "inputs": 1,
+    "upstreams": 1,
+    "provider_slots": 1,
+    "Main_readiness_status": 200,
+    "Main_loaded_graph_health": {
+      "status": "ready",
+      "backend": "rust",
+      "parity_complete": false,
+      "selected_workers": {
+        "scope": "experimental selected normal families plus startup recovery; not Source47 parity",
+        "ready": true,
+        "startup": "Started",
+        "startup_error": null,
+        "control": "Subscribed",
+        "celery": "Observed(Empty)",
+        "dvr": "Observed(Empty)",
+        "clocked_scheduler": "Observed(Tick { reloaded: false, published: None, publication_error: None, disabled: 0, synchronized: 0, missing: 0, invalid_rows: 0, delay_seconds: 5.0 })",
+        "clocked_scheduler_enabled": true,
+        "dvr_plugin_domain": "empty_directory_rechecked_before_recording_effects",
+        "startup_recovery_deferred_unsupported_domain": false,
+        "parity_complete": false
+      }
+    },
+    "idle_input_retired": true,
+    "Main_exit": 0
+  },
+  {
+    "context": "vod-series-advanced",
+    "status": "passed",
+    "raw_report_sha256": "c01f7013a1aa74fe7ecc987d0f5684249a9ff498630b8373ca7d723b073a4217",
+    "raw_report_private_path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-candidate47-combined-vod-1/fixtures/Native-74c540b7/vod-series-advanced/report.json",
+    "case_summaries": [
+      {
+        "name": "sparse-list-preserves-detail-and-Episodes",
+        "status": "passed"
+      },
+      {
+        "name": "advanced-catalogue-repeat",
+        "status": "passed"
+      },
+      {
+        "name": "prune-cascades-detail-Episodes-and-streams",
+        "status": "passed"
+      },
+      {
+        "name": "yearless-list-reassigns-and-cascades-old-details",
+        "status": "passed"
+      }
+    ]
+  }
+]

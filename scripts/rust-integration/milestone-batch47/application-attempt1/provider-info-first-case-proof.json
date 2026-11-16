@@ -1,0 +1,220 @@
+{
+  "overall_case_status": "failed",
+  "failure": "Source User-Agent default path differs from fixture-inherited TiviMate setting",
+  "actual_HTTP_status": 200,
+  "Source_HTTP_body_compared_exact_after_existing_account_ID_and_new_episode_UUID_binding": true,
+  "seven_sequence_before": {
+    "public.m3u_m3uaccount_id_seq": {
+      "last_value": 7,
+      "is_called": true
+    },
+    "public.vod_movie_id_seq": {
+      "last_value": 27,
+      "is_called": true
+    },
+    "public.vod_series_id_seq": {
+      "last_value": 4,
+      "is_called": true
+    },
+    "public.vod_episode_id_seq": {
+      "last_value": 12,
+      "is_called": true
+    },
+    "public.vod_m3umovierelation_id_seq": {
+      "last_value": 28,
+      "is_called": true
+    },
+    "public.vod_m3useriesrelation_id_seq": {
+      "last_value": 4,
+      "is_called": true
+    },
+    "public.vod_m3uepisoderelation_id_seq": {
+      "last_value": 8,
+      "is_called": true
+    }
+  },
+  "seven_sequence_after": {
+    "public.m3u_m3uaccount_id_seq": {
+      "last_value": 7,
+      "is_called": true
+    },
+    "public.vod_movie_id_seq": {
+      "last_value": 27,
+      "is_called": true
+    },
+    "public.vod_series_id_seq": {
+      "last_value": 4,
+      "is_called": true
+    },
+    "public.vod_episode_id_seq": {
+      "last_value": 13,
+      "is_called": true
+    },
+    "public.vod_m3umovierelation_id_seq": {
+      "last_value": 28,
+      "is_called": true
+    },
+    "public.vod_m3useriesrelation_id_seq": {
+      "last_value": 4,
+      "is_called": true
+    },
+    "public.vod_m3uepisoderelation_id_seq": {
+      "last_value": 9,
+      "is_called": true
+    }
+  },
+  "seven_expected_sequence_after": {
+    "public.m3u_m3uaccount_id_seq": {
+      "last_value": 7,
+      "is_called": true
+    },
+    "public.vod_movie_id_seq": {
+      "last_value": 27,
+      "is_called": true
+    },
+    "public.vod_series_id_seq": {
+      "last_value": 4,
+      "is_called": true
+    },
+    "public.vod_episode_id_seq": {
+      "last_value": 13,
+      "is_called": true
+    },
+    "public.vod_m3umovierelation_id_seq": {
+      "last_value": 28,
+      "is_called": true
+    },
+    "public.vod_m3useriesrelation_id_seq": {
+      "last_value": 4,
+      "is_called": true
+    },
+    "public.vod_m3uepisoderelation_id_seq": {
+      "last_value": 9,
+      "is_called": true
+    }
+  },
+  "all7_sequences_exact": true,
+  "exact_Source_SQL_comparison_passed": true,
+  "declared_entropy": [
+    {
+      "table": "vod_episode",
+      "id": 13,
+      "field": "uuid",
+      "new_episode_UUIDv4": true
+    },
+    {
+      "table": "vod_episode",
+      "id": 13,
+      "field": "created_at",
+      "own_actual_interval": true
+    },
+    {
+      "table": "vod_episode",
+      "id": 13,
+      "field": "updated_at",
+      "own_actual_interval": true
+    },
+    {
+      "table": "vod_m3useriesrelation",
+      "id": 1,
+      "field": "updated_at",
+      "own_actual_interval": true
+    },
+    {
+      "table": "vod_m3useriesrelation",
+      "id": 1,
+      "field": "last_episode_refresh",
+      "own_actual_interval": true
+    },
+    {
+      "table": "vod_m3uepisoderelation",
+      "id": 9,
+      "field": "created_at",
+      "own_actual_interval": true
+    },
+    {
+      "table": "vod_m3uepisoderelation",
+      "id": 9,
+      "field": "updated_at",
+      "own_actual_interval": true
+    },
+    {
+      "table": "vod_m3uepisoderelation",
+      "id": 9,
+      "field": "last_seen",
+      "own_actual_interval": true
+    }
+  ],
+  "actual_TLS_HTTP_requests": 2,
+  "transport": [
+    {
+      "request": 1,
+      "method": "GET",
+      "path": "/xc/player_api.php",
+      "actual_TLS": true,
+      "status": 200,
+      "provider_response_bytes_match_Source": true,
+      "owned_query_comparison_passed": true,
+      "headers_compared": [
+        "User-Agent",
+        "Accept",
+        "Accept-Encoding",
+        "Connection"
+      ],
+      "header_mismatch": {
+        "User-Agent": {
+          "expected_Source": "Dispatcharr/0.33.0",
+          "actual_Native": "TiviMate/5.1.6 (Android 12)"
+        }
+      }
+    },
+    {
+      "request": 2,
+      "method": "GET",
+      "path": "/xc/player_api.php",
+      "actual_TLS": true,
+      "status": 200,
+      "provider_response_bytes_match_Source": true,
+      "owned_query_comparison_passed": true,
+      "headers_compared": [
+        "User-Agent",
+        "Accept",
+        "Accept-Encoding",
+        "Connection"
+      ],
+      "header_mismatch": {
+        "User-Agent": {
+          "expected_Source": "Dispatcharr/0.33.0",
+          "actual_Native": "TiviMate/5.1.6 (Android 12)"
+        }
+      }
+    }
+  ],
+  "remaining_provider_info_cases": [
+    {
+      "name": "series_fresh",
+      "status": "not_run"
+    },
+    {
+      "name": "series_force",
+      "status": "not_run"
+    },
+    {
+      "name": "series_empty_episodes",
+      "status": "not_run"
+    },
+    {
+      "name": "series_no_stored_empty",
+      "status": "not_run"
+    }
+  ],
+  "comparison_helper_sha256": "6acd39b340895d7448467e4cbc5bfbe33673dd3dd6b9bfe7fb1cb34791e0a73f",
+  "raw_capture_sha256": {
+    "SQL-before.json": "e9039602bdbd2eb26b08dec8d715f6b4a2aefb66e3c7a1c4b1027e400a37b91f",
+    "SQL-after.json": "11c02a854afad3da1eed8e3c22e3c16b1840f7a0e37e6bded1fa90264164c5f9",
+    "HTTP.json": "5b1aed89a9f29609ec93c14c71ad7c8114130d449e952f474e2d4031e1c2d332",
+    "Origin.json": "01e3943259ba469c8f28a2884cbbf4329c4c3eb9672dd390c65657211adb3f20",
+    "SQL-comparison.json": "bbd60011c1f94dfda1552e2f9975ee1dc485477abeed859a8d66d7fc2fc5f84f"
+  },
+  "validation_scope": "Offline recheck of already captured results and existing unchanged comparison functions, not another API/SQL/test execution"
+}
