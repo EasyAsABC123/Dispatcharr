@@ -1,0 +1,433 @@
+{
+  "cases": [
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 2,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "99c09704ae95e51235f17e6e451046965ed54c5c8accbb35f77c3bf99e644a40",
+      "actual_response_keys": [
+        "message"
+      ],
+      "backend_result_sha256": "b4fb462a8f87d627826c7d9c5e5c6842d0fa5b5a431ec41d3db9bb024262ed6c",
+      "backend_result_type": "str",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": false,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_match"
+      ],
+      "name": "all-exact-gracenote-priority-inactive-unassigned",
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "090fd0010a4c7a916d26e0540c662f967a33663df83789f4bb29eb838f2f5aa6",
+      "root_task": "apps.channels.tasks.match_epg_channels",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 1,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "5b1b1b8ef1589f333292d890fa51b046cf72ea0f9518db83832c769044fd2484",
+      "actual_response_keys": [
+        "message"
+      ],
+      "backend_result_sha256": "2a360522e3d20a8ca6087a0cfaffc614af673678d5fd6a664cb68a7f256bb3ff",
+      "backend_result_type": "str",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": false,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_match"
+      ],
+      "name": "selected-includes-assigned-changed-and-unchanged",
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "39abf3b68468b7b63f260fc3fc7a6816b37a40984f2b54b5b7ae822017884ded",
+      "root_task": "apps.channels.tasks.match_selected_channels_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 0,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+      "actual_response_keys": [
+        "message"
+      ],
+      "backend_result_sha256": "a98bf0e0d51facd3e202032315c3d1462fef1e6d90bb18b9fc8620e2b015f13f",
+      "backend_result_type": "str",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": false,
+      "matching_event_types": [
+        "epg_match"
+      ],
+      "name": "selected-no-existing-ids",
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "2e9ac0ce7f86cf4fbb83d8be30ffbc19bbe87732d0387b8faf6730c782deafab",
+      "root_task": "apps.channels.tasks.match_selected_channels_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 1,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "backend_result_sha256": "8a3911887bfe3ab3a80e6f3b181e5105a4682130edd19fe323dcfbbb231d818f",
+      "backend_result_type": "dict",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": true,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-exact-first-id-not-bulk-priority",
+      "output_cache_generation_after": 1,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "820d2ae4fa6057cc86aeb4ba77d4e93910631dec10711b06a9c350c1a4f80d00",
+      "root_task": "apps.channels.tasks.match_single_channel_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 0,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "backend_result_sha256": "7c4f88ab6137053606363d95cd472db154ac77053be80d1f464543d507eb5fa7",
+      "backend_result_type": "dict",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": false,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-unchanged",
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "181979ad07319aa9df2d779f11c1651316e6d479db82f2ae37e814c9e67989ba",
+      "root_task": "apps.channels.tasks.match_single_channel_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 1,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "ad1492badc8508d3d416a1e8b146c3271d661c309d151a31d2a9be8a0ea2cd46",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "backend_result_sha256": "d5eb4b4d5596487484f45d3234433cf37d38e0af75b9bb0b098c8d6d1a77bffa",
+      "backend_result_type": "dict",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": true,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-exact-nameless-catalog",
+      "output_cache_generation_after": 1,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "79b981a173eb9814e8c265e49d51e17d60d9dd72dfb56319ae52f751b8d04b53",
+      "root_task": "apps.channels.tasks.match_single_channel_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 0,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "99c09704ae95e51235f17e6e451046965ed54c5c8accbb35f77c3bf99e644a40",
+      "actual_response_keys": [
+        "message"
+      ],
+      "backend_result_sha256": "57319f03b2bac5ae94b880c43d86ea3a3899cef7870779509bc7132fc272af02",
+      "backend_result_type": "str",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": false,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_match"
+      ],
+      "name": "all-excludes-nameless-catalog",
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "5a210c26147434f67970d4cb40de1d358a4a0c77428fb55c7b0c425af7f40a18",
+      "root_task": "apps.channels.tasks.match_epg_channels",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 0,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "ad1492badc8508d3d416a1e8b146c3271d661c309d151a31d2a9be8a0ea2cd46",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "backend_result_sha256": "e2ca7e037b6d38b149c75870374c6b66fb359c2eb31ce504e40a6d34ab4e005b",
+      "backend_result_type": "dict",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": false,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-no-match-no-model-needed",
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "26e55b967cf7f710f1815bfa5ef3a7ef31d66313ee0c1201af0fd206cb36e180",
+      "root_task": "apps.channels.tasks.match_single_channel_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 0,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "backend_result_sha256": "c51e49f96dab9b9cd12408af3f87d25448e403371f8b3351ec6676400d913ac9",
+      "backend_result_type": "dict",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": false,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-caught-SQL-failure",
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "646f58a88c9da60e93a378aa9d97d62ef5e46c37261d3db68ba4c8821d383698",
+      "root_task": "apps.channels.tasks.match_single_channel_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 0,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+      "actual_response_keys": [
+        "message"
+      ],
+      "backend_result_sha256": "51ad5ad6ef13c2b665b9820435ec3ac1ea921ec0da677db727cf3bec4ab8fba6",
+      "backend_result_type": "str",
+      "backend_status": "FAILURE",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": false,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress"
+      ],
+      "name": "selected-SQL-failure-and-following-continuation",
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "d8d41df318bf369776eafb1b7069a200e65d5b616932fb037d4d69ca4d4202a6",
+      "root_task": "apps.channels.tasks.match_selected_channels_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 1,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "0f51162dfcbdd704dde3017d3a8d541d3f3d370468555d178fcdfec022a32c36",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "backend_result_sha256": "244f8f957ca3de75382611f398a2c291de2e34a0691ed6981d1b74024157f490",
+      "backend_result_type": "dict",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": true,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-high-confidence-normalization",
+      "output_cache_generation_after": 1,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "fae7655daeb2a4983c7e92bebd50c5c578f2e4716b4c3f2e14456836dd3356e3",
+      "root_task": "apps.channels.tasks.match_single_channel_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 1,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [],
+      "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+      "actual_response_keys": [
+        "message"
+      ],
+      "backend_result_sha256": "4f5f54d403a47b754c811c3a74f72b6bbcfbb74e7260ec74b846f02fb9aece9c",
+      "backend_result_type": "str",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [],
+      "manual_group_custom_after": false,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_match"
+      ],
+      "name": "selected-region-priority-fuzzy",
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "593b5e15b0a7bd2cab50f31b7f514428315f5cfa3f812c94a8e80b8b304e1d67",
+      "root_task": "apps.channels.tasks.match_selected_channels_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 5,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [
+        "apps.epg.tasks.parse_programs_for_tvg_id",
+        "apps.epg.tasks.fetch_sd_mapped_guide_batch"
+      ],
+      "actual_response_body_sha256": "e8fafec6cb54093cfaa676c9cfc71dd8131f4f7e05e0655b52ecf28e944cf08f",
+      "actual_response_keys": [
+        "message"
+      ],
+      "backend_result_sha256": "4221bb3a88e3cbdad7b31f84b528ec257a7a52b997759b270244f92c4d005869",
+      "backend_result_type": "str",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "manual_group_custom_after": false,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_match"
+      ],
+      "name": "selected-mixed-SD-batch-XML-dummy",
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "96d0a7ee45c019b4438fa8774b9a3260c61c4d92819a1a33a33a51f5df9705c5",
+      "root_task": "apps.channels.tasks.match_selected_channels_epg",
+      "status": "passed"
+    },
+    {
+      "DB1_journal_terminal_durable": true,
+      "actual_HTTP_status": 202,
+      "actual_changed_assignments": 1,
+      "actual_child_parent_and_root_match": true,
+      "actual_direct_child_tasks": [
+        "apps.epg.tasks.parse_programs_for_tvg_id"
+      ],
+      "actual_response_body_sha256": "2dddb2878828e9f3da37f3547940a9d48a9c158a82c47bdbf9884faecb3a30e8",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "backend_result_sha256": "28001d004a76e2c49d01b26f1212ca58505be572ca19e48a666f526317647002",
+      "backend_result_type": "dict",
+      "backend_status": "SUCCESS",
+      "child_terminal_statuses": [
+        "SUCCESS"
+      ],
+      "manual_group_custom_after": true,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-SD-direct-parse-cache-group",
+      "output_cache_generation_after": 1,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "root_frame_sha256": "072aeaaa14df48c7abf8a3ac43bd3b5b4efbcefdafe0aec3df2bddcf7585285e",
+      "root_task": "apps.channels.tasks.match_single_channel_epg",
+      "status": "passed"
+    }
+  ],
+  "full_payloads_SQL_frames_tokens_published": false,
+  "normalization_of_raw_frame_hash": "SHA256 of sorted-key json.dumps parsed actual frame; original raw MONITOR bytes remain private",
+  "raw_helper_report": "artifacts/rust/normal-graph-batch51-channel-matching-1/fixtures/Original-8e4c22f0/matching-characterization/report.json",
+  "raw_helper_report_sha256": "25d7b65d4600ac854fe88de560e8c15ad60030aecc682ffc5144ca59f9275397"
+}

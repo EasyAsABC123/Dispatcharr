@@ -1,0 +1,114 @@
+   Compiling sqlx-core v0.8.6 (/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-matching-runtime-1/source/rust/vendor/sqlx-core-0.8.6)
+   Compiling dispatcharr-ingest-core v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-matching-runtime-1/source/rust/crates/ingest-core)
+   Compiling dispatcharr-upstream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-matching-runtime-1/source/rust/crates/upstream-http)
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+   Compiling dispatcharr-contracts v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-matching-runtime-1/source/rust/crates/contracts)
+   Compiling sqlx-postgres v0.8.6 (/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-matching-runtime-1/source/rust/vendor/sqlx-postgres-0.8.6)
+warning: `sqlx-core` (lib) generated 3 warnings
+warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+   --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+    |
+335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+    |                                                        ^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: variant `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+   |
+68 | pub enum FrontendMessageFormat {
+   |          --------------------- variant in this enum
+...
+76 |     Flush = b'H',
+   |     ^^^^^
+   |
+   = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: struct `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+   |
+11 | pub struct Flush;
+   |            ^^^^^
+
+   Compiling sqlx v0.8.6
+   Compiling dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m6-channel-matching-runtime-1/source/rust/crates/store)
+warning: `sqlx-postgres` (lib) generated 3 warnings
+    Finished `test` profile [unoptimized] target(s) in 43.02s
+     Running unittests src/lib.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/dispatcharr_store-b6509772c8ebe32f)
+     Running tests/auth_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/auth_sql-66e8eee9e477aae2)
+     Running tests/browser_reads_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/browser_reads_sql-ac3af04befe4c3df)
+     Running tests/channel_uuids_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/channel_uuids_sql-5dfd3523dc7b5fe1)
+     Running tests/epg_current_lookup_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_current_lookup_sql-d0c59622431cf845)
+     Running tests/epg_current_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_current_sql-a6224c50c4b3c219)
+     Running tests/epg_grid_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_grid_sql-c0b4acf997868986)
+     Running tests/epg_order_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_order_sql-6e85b14d82992bed)
+     Running tests/epg_program_http_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_program_http_sql-61020445ab6d87d5)
+     Running tests/epg_reads_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_reads_sql-40eb16dcacd79e30)
+     Running tests/epg_staging_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/epg_staging_sql-21630159c484128f)
+     Running tests/grid_concurrency_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/grid_concurrency_sql-eb1429d734055eed)
+     Running tests/import_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/import_sql-170c1b31469d3e96)
+     Running tests/ip_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/ip_sql-ae2fa2b499a8a924)
+     Running tests/logo_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/logo_sql-d10ec0b748a749c3)
+     Running tests/notifications_mutations_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/notifications_mutations_sql-ca29d38277d8c25c)
+     Running tests/notifications_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/notifications_sql-6042edfa250e0d62)
+     Running tests/operator_commands_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/operator_commands_sql-23e786d72a460afa)
+     Running tests/operator_create_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/operator_create_sql-5dd714e838803500)
+     Running tests/postgres.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/postgres-f7cf77b02e3737b6)
+     Running tests/python_regex_physical.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/python_regex_physical-5a1b583e877aa19c)
+     Running tests/schema_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/schema_sql-84c93cc12dd2887b)
+     Running tests/serializer_null_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/serializer_null_sql-74a7a3d427f7aec2)
+     Running tests/startup_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/startup_sql-83da70e9cb7e05d0)
+     Running tests/user_agent_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/user_agent_sql-4abf09053d89d82e)
+     Running tests/xc_sql.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/xc_sql-23d809dff2d8561e)

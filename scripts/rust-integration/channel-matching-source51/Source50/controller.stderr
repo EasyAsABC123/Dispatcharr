@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-40-channel-matching-1/cohort/run.py", line 68, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-40-channel-matching-1/cohort/run.py", line 64, in main
+    exceptional=paired_exceptional_ranges(a.output,binding);save(a.output/'paired-exceptional-ranges.json',exceptional)
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-40-channel-matching-1/cohort/run.py", line 14, in paired_exceptional_ranges
+    path=Path(binding['retained_Source_playback'])if backend=='Original'else output/backend/'overlap-completed-playback.json'
+              ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'retained_Source_playback'
