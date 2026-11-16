@@ -3098,5 +3098,24 @@
       "reason": "http-admin-management-entrypoint"
     }
   ],
-  "application_execution_qualified": false
+  "application_execution_qualified": false,
+  "namespace_directories": [
+    {
+      "path": "apps/api",
+      "installed_app": "apps.api",
+      "source_members": [
+        {
+          "path": "apps/api/schema_views.py",
+          "sha256": "f6c9b86a70f542d82aea28ef20ec7ab3970d501c0be85d7879e4c7bcd0cf0df4",
+          "reason": "http-admin-management-entrypoint"
+        },
+        {
+          "path": "apps/api/urls.py",
+          "sha256": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6",
+          "reason": "http-admin-management-entrypoint"
+        }
+      ],
+      "reason": "Pinned Original installed-app namespace contains only excluded HTTP files; retain its empty package directory without HTTP modules or invented app/model/ready code."
+    }
+  ]
 }

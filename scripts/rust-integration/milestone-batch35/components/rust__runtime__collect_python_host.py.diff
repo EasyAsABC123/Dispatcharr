@@ -1,0 +1,28 @@
+--- rust/runtime/collect_python_host.py
++++ rust/runtime/collect_python_host.py
+@@ -98,6 +98,25 @@
+ for name,data in validated:
+  target=DOCS/'Dispatcharr-LICENSE'if name=='LICENSE'else app/name
+  target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data);target.chmod(0o444)
++# Django must still import Source's installed-app namespace even when every
++# module beneath it is intentionally excluded HTTP code. Original apps.api
++# has no __init__.py, AppConfig, models or ready hook: preserving its EMPTY
++# namespace directory keeps app identity without adding a fallback backend.
++namespace_directories=source_manifest.get('namespace_directories',[])
++if len(namespace_directories)!=1:raise RuntimeError('Expected reviewed installed-app namespace inventory')
++namespace=namespace_directories[0]
++if namespace.get('path')!='apps/api'or namespace.get('installed_app')!='apps.api':raise RuntimeError('Unreviewed installed-app namespace')
++api_sources={item['path']:item for item in source_manifest['excluded']if item['path'].startswith('apps/api/')}
++if set(api_sources)!={'apps/api/schema_views.py','apps/api/urls.py'}or namespace.get('source_members')!=list(api_sources.values()):raise RuntimeError('Source namespace member inventory changed')
++if any(name.startswith('apps/api/')for name in expected):raise RuntimeError('Expected HTTP-only Original namespace')
++settings_bytes=next(data for name,data in validated if name=='dispatcharr/settings.py')
++settings_ast=ast.parse(settings_bytes,filename='dispatcharr/settings.py')
++installed_apps=[ast.literal_eval(node.value)for node in settings_ast.body if isinstance(node,ast.Assign)and any(isinstance(target,ast.Name)and target.id=='INSTALLED_APPS'for target in node.targets)]
++if len(installed_apps)!=1 or installed_apps[0][0]!='apps.api':raise RuntimeError('Original installed-app namespace identity changed')
++namespace_path=app/'apps/api'
++if namespace_path.exists():raise RuntimeError('Unexpected existing compatibility namespace path')
++namespace_path.mkdir(mode=0o755)
++namespace_path.chmod(0o755)
+ copy_file(source_input/'manifest.json',DOCS/'source-manifest.json')
+ excluded_source_assets.extend(source_manifest['excluded'])
+ licenses={};wheel_owners={}

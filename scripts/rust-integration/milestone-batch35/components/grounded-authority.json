@@ -1,0 +1,207 @@
+{
+  "state": "grounded_static_package_correction_NOT_runtime_acceptance",
+  "observed_Main35_stderr": {
+    "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/private/command-0673.stderr",
+    "sha256": "cdc5ee04746bd348358f49e6bb57cf0dd0886ebcc06aa98fa9e434e6981c133d",
+    "safe_records": [
+      {
+        "stage": "spawn_requested",
+        "category": "tasks"
+      },
+      {
+        "stage": "startup_ready_wait",
+        "operation": "startup",
+        "host_error": "Child",
+        "python_class": null
+      },
+      {
+        "stage": "stderr_signature",
+        "known_guard_signature": null,
+        "first_python_class": "ModuleNotFoundError",
+        "last_python_class": "ModuleNotFoundError",
+        "framework_locations": [
+          {
+            "file": "dispatcharr_native/bootstrap.py",
+            "line": 144
+          },
+          {
+            "file": "dispatcharr_native/bootstrap.py",
+            "line": 33
+          },
+          {
+            "file": "django/__init__.py",
+            "line": 24
+          },
+          {
+            "file": "django/apps/registry.py",
+            "line": 91
+          },
+          {
+            "file": "django/apps/config.py",
+            "line": 193
+          }
+        ],
+        "scanned_bytes": 1270,
+        "scan_clipped": false
+      },
+      {
+        "stage": "physical_retire",
+        "actual_exit": null,
+        "wait_observed": true,
+        "stdout_eof": true,
+        "stderr_eof": true,
+        "stderr_bytes": 1270,
+        "forced": true,
+        "descendants_absent": true,
+        "callbacks_settled": true
+      },
+      {
+        "stage": "spawn_result",
+        "operation": "startup",
+        "host_error": "Protocol",
+        "python_class": null
+      },
+      {
+        "stage": "sd_hook_begin",
+        "category": "StoreUnsupported"
+      },
+      {
+        "stage": "sd_audit_hook_setup",
+        "category": "StoreUnsupported"
+      },
+      {
+        "stage": "sd_guide_effects",
+        "category": "StoreUnsupported"
+      }
+    ]
+  },
+  "actual_candidate_image": "sha256:b7e0b01a3c55721dd6dfbca94e7c4acb7f06be4cfb48c90dc0e51750a9db7c08",
+  "actual_candidate_source_git": "8c872439590511258750b31d856432e553f8192f",
+  "build_inputs_byteexact_current": true,
+  "Source_original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "Source_full_api_members": [
+    {
+      "path": "apps/api/schema_views.py",
+      "bytes": 7086,
+      "sha256": "f6c9b86a70f542d82aea28ef20ec7ab3970d501c0be85d7879e4c7bcd0cf0df4"
+    },
+    {
+      "path": "apps/api/urls.py",
+      "bytes": 2095,
+      "sha256": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6"
+    }
+  ],
+  "Source_namespace_has_init_AppConfig_models_ready": false,
+  "packaged_settings_sha256": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+  "first_installed_app": "apps.api",
+  "retained_subset_files": 328,
+  "local_installed_app_inventory": [
+    {
+      "entry": "apps.api",
+      "retained_files": 0,
+      "declared_empty_namespace": true
+    },
+    {
+      "entry": "apps.accounts",
+      "retained_files": 19,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.backups.apps.BackupsConfig",
+      "retained_files": 7,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.channels.apps.ChannelsConfig",
+      "retained_files": 53,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.dashboard",
+      "retained_files": 5,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.epg",
+      "retained_files": 40,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.hdhr",
+      "retained_files": 6,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.m3u",
+      "retained_files": 29,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.output",
+      "retained_files": 5,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.proxy.apps.ProxyConfig",
+      "retained_files": 43,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.proxy.live_proxy",
+      "retained_files": 33,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.vod.apps.VODConfig",
+      "retained_files": 14,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.connect.apps.ConnectConfig",
+      "retained_files": 16,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "core",
+      "retained_files": 50,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.plugins",
+      "retained_files": 12,
+      "declared_empty_namespace": false
+    },
+    {
+      "entry": "apps.timeshift.apps.TimeshiftConfig",
+      "retained_files": 6,
+      "declared_empty_namespace": false
+    }
+  ],
+  "prior_subset_api_members": 0,
+  "new_namespace_declaration": [
+    {
+      "path": "apps/api",
+      "installed_app": "apps.api",
+      "source_members": [
+        {
+          "path": "apps/api/schema_views.py",
+          "sha256": "f6c9b86a70f542d82aea28ef20ec7ab3970d501c0be85d7879e4c7bcd0cf0df4",
+          "reason": "http-admin-management-entrypoint"
+        },
+        {
+          "path": "apps/api/urls.py",
+          "sha256": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6",
+          "reason": "http-admin-management-entrypoint"
+        }
+      ],
+      "reason": "Pinned Original installed-app namespace contains only excluded HTTP files; retain its empty package directory without HTTP modules or invented app/model/ready code."
+    }
+  ],
+  "AST_collector": "passed",
+  "Source_body_or_HTTP_file_added": false,
+  "existing_Source_files_and_archive_unchanged": true,
+  "actual_rootcause_scope": "Concrete first local installed-app package hole matches observed django.setup/AppConfig frame order; no hidden exception message or successful later startup claimed.",
+  "runtime": false,
+  "compile": false,
+  "credits": "Original authors retain full credit/licenses"
+}

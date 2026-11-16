@@ -1,0 +1,102 @@
+{
+  "state": "local_actual_Django6_source_API_review_no_interpreter_execution",
+  "version_source": {
+    "path": "artifacts/rust/tooling/docker-data/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/19632/fs/opt/dispatcharr-python/lib/python3.13/dist-packages/django/__init__.py",
+    "sha256": "57294da38f072b796f59499797f05a663c6210195568f31fceef40b512bde8f7",
+    "VERSION_literal": [
+      6,
+      0,
+      9,
+      "final",
+      0
+    ]
+  },
+  "actual_Candidate34_package_manifest_audit": {
+    "summary_path": "artifacts/rust/milestone-batch34-python-host-probe-2/manifest-summary.stdout",
+    "summary_sha256": "499045ba812d36c935dda478d7be2a78551a4a1753db97230f38260c478a01b6",
+    "installed_manifest_sha256": "318904ee9a324ccbf2c725671af13bb81d93413a0199857663ac923cc3771f0c",
+    "installed_manifest_files_checked": 32192
+  },
+  "framework_sources": [
+    {
+      "local_actual_installed_file": "artifacts/rust/tooling/docker-data/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/19632/fs/opt/dispatcharr-python/lib/python3.13/dist-packages/django/apps/config.py",
+      "installed_path": "/opt/dispatcharr-python/lib/python3.13/dist-packages/django/apps/config.py",
+      "sha256": "d59871b783abc119ce9ac4ff07f06eac89b3de88bcdf7d13246d2b451279f1b4",
+      "functions": [
+        {
+          "function": "__init__",
+          "line": 16,
+          "end_line": 56,
+          "sha256": "95a6da4ec2be625a5c462881118943477091c9ff293e2e5c605aa8a991e54594"
+        },
+        {
+          "function": "_path_from_module",
+          "line": 71,
+          "end_line": 97,
+          "sha256": "2ddf0a36556c0636111dfd6aa0ee2e0a8da58d470f9f78413c041d55f35738e8"
+        },
+        {
+          "function": "create",
+          "line": 100,
+          "end_line": 222,
+          "sha256": "f2e80e6419ca8b1805840700e546ad0c3202f3b46a5ae996828550ad4cbb62e1"
+        },
+        {
+          "function": "import_models",
+          "line": 262,
+          "end_line": 269,
+          "sha256": "76ecd7845168f9906f0f7de5554a945a652285cb1cf00c62c4a99fa6598aa996"
+        },
+        {
+          "function": "ready",
+          "line": 271,
+          "end_line": 274,
+          "sha256": "cb2aa2d61a1340abc005ede6323803db23491fab74040d928dbfb07be3e99bc7"
+        }
+      ]
+    },
+    {
+      "local_actual_installed_file": "artifacts/rust/tooling/docker-data/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/19632/fs/opt/dispatcharr-python/lib/python3.13/dist-packages/django/apps/registry.py",
+      "installed_path": "/opt/dispatcharr-python/lib/python3.13/dist-packages/django/apps/registry.py",
+      "sha256": "ec931677450952aad787249d5582cc3fe0cb0bdb2a9a7ee7fdd817c4263a0d66",
+      "functions": [
+        {
+          "function": "__init__",
+          "line": 20,
+          "end_line": 59,
+          "sha256": "23f4fe95f393a2a06af554569fda8e2e99430dee9932773eede093bad6650553"
+        }
+      ]
+    },
+    {
+      "local_actual_installed_file": "artifacts/rust/tooling/docker-data/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/19632/fs/opt/dispatcharr-python/lib/python3.13/dist-packages/django/utils/module_loading.py",
+      "installed_path": "/opt/dispatcharr-python/lib/python3.13/dist-packages/django/utils/module_loading.py",
+      "sha256": "a196e7d0511d2357bf4253e9d1c50baca0d183cb24caba94360e9fffa77f2c1f",
+      "functions": [
+        {
+          "function": "module_has_submodule",
+          "line": 74,
+          "end_line": 89,
+          "sha256": "0c96d494d7433cbea38dcbe266881f171b82fa2941052adc50eb8372268e4e3a"
+        }
+      ]
+    }
+  ],
+  "semantics": [
+    "AppConfig.create imports namespace and checks optional apps with find_spec; empty namespace means base AppConfig.",
+    "AppConfig.__init__ sets identity/path/None model fields without loading settings/models/SQL.",
+    "AppConfig.ready has docstring only; import_models is separate and never called by probe.",
+    "Global Apps(installed_apps=None) does not populate; module_has_submodule uses importlib find_spec."
+  ],
+  "frozen_namespace_fix_map": {
+    "path": "artifacts/rust/m8-api-namespace-bootstrap-fix-1/candidate-map.json",
+    "sha256": "70b15b15e13f02617f740cc1f16554f4c7559a4245f823226a16bd49592b6a5b"
+  },
+  "guest": {
+    "path": "artifacts/rust/m8-api-namespace-package-control-1/namespace_guest.py",
+    "sha256": "587d8073cebc17b047f2ea8e9cfd6c438724a13fe34ac1d547afc57fa3f628e4",
+    "AST": "passed",
+    "actual_execution": "not run"
+  },
+  "credit": "Original Dispatcharr/Django/CPython authors retain all credit/licenses"
+}
