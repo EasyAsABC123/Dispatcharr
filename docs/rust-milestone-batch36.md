@@ -40,3 +40,17 @@ Source `350b4fdacc45ea7ec4136398d7e7bae4ba4b1f73` built with actual exit 0 in 13
 Main39 completed naturally with [actual exit 1 in 599.675 seconds](../scripts/rust-integration/milestone-batch36/application/execution.json). The complete Guide context and empty-plugin grouped-M6 regression passed. M8 proved exactly two real startup roots with explicit recovery deferral, and reload/enable returned 200, then its pool ownership observer failed reading `/proc/1/exe` as UID65532. Eight held Main sockets are not inferred; the following negative domain controls were not run. The empty-plugin recording/recovery restart passed its recorded state checks but failed the strict decoder-stderr criterion on a repeated audio DTS warning despite decoder exit 0. Both failed workflow results remain failed. All eight exact containers and individual process generations are absent, independently verified after cleanup.
 
 The earlier [Main38 infrastructure attempt](../scripts/rust-integration/milestone-batch36/infra-38/inventory.json) exited 1 in 0.917 seconds because the launch omitted the tooling environment and Compose rejected its command before application bootstrap. Its raw cleanup remains false/unknown; a separate exact-project read-only inventory verified no containers, networks or volumes remained. No application pass is derived from that attempt. These batches establish no full milestone or new performance gain.
+
+
+The [bounded recording-audio diagnostic](../scripts/rust-integration/milestone-batch36/restart-audio-diagnostic/summary.json)
+reads the exact failed Source12 and Native39 recording3 MKVs using the same
+pinned Source FFprobe image. Both commands exit 0 with EOF/group settlement and
+exact container absence. Around 7–10 seconds, all 144 audio packets match across
+backends, including file positions and payload hashes. At 8.000 seconds three
+distinct AAC packets share the same PTS/DTS; their sizes are 343/437/372 bytes and
+their payload hashes differ. This is a timestamp collision of distinct packets,
+not repetition of one encoded packet. It does not identify the precise capture
+or remux step that collapsed timestamps. Earlier Source12 and Native15 decoder3
+results already exhibit the same strict audio-DTS failure as Native39. All full
+decoder failures remain failed; no remux flags or no-stderr criteria change. No
+application, full decode rerun, performance gain or media acceptance is claimed.

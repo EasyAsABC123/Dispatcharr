@@ -1,0 +1,231 @@
+{
+  "passed": true,
+  "scope": "Independent current exactproject/CID absence only; raw unknown generations retained",
+  "raw_aggregate_cleanup_passed": true,
+  "raw_source": "artifacts/rust/normal-graph-batch36-react-functional-1/results/report.json",
+  "raw_source_sha256": "d7ea4aba58ee2e344c53b869a6df62fb272aa791efb0ccc09360654a374c32bc",
+  "projects": [
+    "dispatcharr-normal-dvr-89552e6f07",
+    "dispatcharr-normal-dvr-df6232e5f0"
+  ],
+  "independent_project_inventories_empty": true,
+  "independent_exact_CIDs_absent": [
+    "6c67388d2825fe2ff0c9a956ab648b929deb43bc3ae65b3345be067ee9fe7a79",
+    "2d844888271cacb25e4984073a0fb9ce05b33dff45710d10d4ba9d016d8bd6c1",
+    "f8dd637a65fa39f9499b9eb6bf55f77ccbffedd698909e404b45174c03c3b616",
+    "a02f5496fbb8e3b3546bb9532d33093855863c74a554ce4cfded19d25a268553",
+    "eb0e54192fd3e6a2c9bc3f800b4b5d476bd0b56b1b072b77b06069418f635d98",
+    "74ca6285e92eae430bfc2ff165a94e3d99c8cd22b26d9f066cc2cdbdcb4c92ab"
+  ],
+  "independent_exact_CID_count": 6,
+  "individual_generation_unknown": [
+    "f8dd637a65fa39f9499b9eb6bf55f77ccbffedd698909e404b45174c03c3b616"
+  ],
+  "actual_commands": [
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-89552e6f07",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.010215063011855818,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-89552e6f07",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.00959511598921381,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-89552e6f07",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009756721003213897,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=6c67388d2825fe2ff0c9a956ab648b929deb43bc3ae65b3345be067ee9fe7a79",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008855585008859634,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=2d844888271cacb25e4984073a0fb9ce05b33dff45710d10d4ba9d016d8bd6c1",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009102561991312541,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=f8dd637a65fa39f9499b9eb6bf55f77ccbffedd698909e404b45174c03c3b616",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009279817008064128,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-df6232e5f0",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009082361008040607,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-df6232e5f0",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008992878996650688,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-df6232e5f0",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009659597999416292,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=a02f5496fbb8e3b3546bb9532d33093855863c74a554ce4cfded19d25a268553",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008876036008587107,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=eb0e54192fd3e6a2c9bc3f800b4b5d476bd0b56b1b072b77b06069418f635d98",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.00985088299785275,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=74ca6285e92eae430bfc2ff165a94e3d99c8cd22b26d9f066cc2cdbdcb4c92ab",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009661147996666841,
+      "actual_wait_and_pipe_EOF": true
+    }
+  ],
+  "application_acceptance": false
+}

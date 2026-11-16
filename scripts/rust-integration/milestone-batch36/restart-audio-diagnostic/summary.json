@@ -1,0 +1,109 @@
+{
+  "state": "Actual media-only diagnostic complete; strict Source/Native full-file failures preserved",
+  "lease_seconds": 0.6701008300005924,
+  "Source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "executable": "ffprobe, same pinned image/executable resolution as actual original decoder helpers",
+  "actual_commands_exit": [
+    0,
+    0
+  ],
+  "actual_EOF_and_groups_settled": true,
+  "exact_CIDs_absent": 2,
+  "input_files": "Exact failed Source12 and Native39 recording3 MKVs remain present; decoder argv hash reconstruction matches both original command receipts, lengths match; no file body/hash reread performed",
+  "window": "Requested7\u201310 seconds; actual retained packet order is identical for144audio packets",
+  "audio": {
+    "codec": "aac",
+    "sample_rate": 48000,
+    "time_base": "1/1000"
+  },
+  "equal_timestamp_packets": [
+    {
+      "pts": 8000,
+      "pts_time": "8.000000",
+      "dts": 8000,
+      "dts_time": "8.000000",
+      "duration": 21,
+      "duration_time": "0.021000",
+      "size": "343",
+      "pos": "1187566",
+      "data_hash": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f"
+    },
+    {
+      "pts": 8000,
+      "pts_time": "8.000000",
+      "dts": 8000,
+      "dts_time": "8.000000",
+      "duration": 21,
+      "duration_time": "0.021000",
+      "size": "437",
+      "pos": "1187916",
+      "data_hash": "SHA256:b9fc3dd121baa8c08de3819f89f17b5c35cab29ed9a8a0f68cc30a1711ca6332"
+    },
+    {
+      "pts": 8000,
+      "pts_time": "8.000000",
+      "dts": 8000,
+      "dts_time": "8.000000",
+      "duration": 21,
+      "duration_time": "0.021000",
+      "size": "372",
+      "pos": "1188360",
+      "data_hash": "SHA256:ddb60a9c97a8caaab1be86394f0d34dafed9cb5672af368dd553c0e2c4b1f1ef"
+    }
+  ],
+  "finding": "Three distinct compressed AAC packets share PTS/DTS8.000s in both exact Source and Native final files; payload hashes differ within triplet and match across backends. Timestamp collision, not duplicate identical AAC payload.",
+  "not_proved": [
+    "Which capture/discontinuity/remux stage caused the collapsed timestamps",
+    "Decoded PCM identity or whole-file equivalence",
+    "Healthy media/no-stderr acceptance or Native-only regression"
+  ],
+  "historical_failures": "Source12 decoder3, Native15 decoder3 and Native39 decoder3 all retain strict failure on equal audioDTS384000; no threshold or decoder flags changed",
+  "pure_TS_scope": {
+    "sibling_record2_prefixes_byte_equal": true,
+    "TS_index_error_count_both": 0,
+    "media_reads_bytes": 7412088,
+    "not_the_failed_record3_join": true
+  },
+  "Source_or_Native_code_changed": false,
+  "apps_started": false,
+  "ffmpeg_decode_rerun": false,
+  "performance_acceptance": false,
+  "evidence": [
+    {
+      "path": "artifacts/rust/m6-restart39-audio-dts-review-1/exact-recording3-inputs.json",
+      "sha256": "7a39f7dca676a605014aa013cf0f1a6f28b5ee2090b05597ad0b2b91e02f5c8a"
+    },
+    {
+      "path": "artifacts/rust/m6-restart39-audio-dts-review-1/Native39-audio-packets.stdout",
+      "sha256": "55889642cb035f1331d4eb017532fa393228b38be091454bdb30228c901a3cc9"
+    },
+    {
+      "path": "artifacts/rust/m6-restart39-audio-dts-review-1/Native39-audio-packets.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rust/m6-restart39-audio-dts-review-1/Native39-audio-packets-execution.json",
+      "sha256": "e0612439fe79895bfd0fecd24b47358b3e9727a56743572ce4c5514ac8315937"
+    },
+    {
+      "path": "artifacts/rust/m6-restart39-audio-dts-review-1/Source12-audio-packets.stdout",
+      "sha256": "7a64987df6631163dcdc5ed4371811a5aa34379e6d68091093980e3c0c20bbd7"
+    },
+    {
+      "path": "artifacts/rust/m6-restart39-audio-dts-review-1/Source12-audio-packets.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rust/m6-restart39-audio-dts-review-1/Source12-audio-packets-execution.json",
+      "sha256": "5ab902e875e9d2d4ff329fbf5a17d124a9340fd67403b0174555d68ba3e04308"
+    },
+    {
+      "path": "artifacts/rust/m6-restart39-audio-dts-review-1/audio-packets-executions.json",
+      "sha256": "006c60527327b4a4ea596543a9c06e3247a9098486b58367f74b77e038f6e0fe"
+    },
+    {
+      "path": "artifacts/rust/m6-restart39-audio-dts-review-1/source-join-authority.json",
+      "sha256": "b7bdb28b630674374758e9ba256c51ba19308ae918f43a64146dc5bfd2cdf457"
+    }
+  ]
+}

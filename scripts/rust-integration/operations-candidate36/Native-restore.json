@@ -1,0 +1,50 @@
+{
+  "raw_source": "artifacts/rust/normal-graph-batch40-operations-1/fixtures/Native-d3b9ca29/backup-restore/report.json",
+  "raw_sha256": "148579e77eed70e1489d081979da6cf4f61b5cc5244092e717010c3833a60865",
+  "status": "failed",
+  "cells": [
+    {
+      "name": "actual_current_schema_archive",
+      "status": "passed",
+      "archive": {
+        "archive_bytes": 41068,
+        "archive_sha256": "5e93aff64fde1cc99efde24e24f038f04dc03ff0ee6701d77113391385529bea",
+        "database_signature": "PGDMP",
+        "members": [
+          "database.dump",
+          "metadata.json"
+        ]
+      }
+    },
+    {
+      "name": "actual_intervening_database_mutation",
+      "status": "passed"
+    },
+    {
+      "name": "actual_REST202_restore_and_post_migrate",
+      "status": "failed",
+      "error_type": "RuntimeError"
+    },
+    {
+      "name": "same_Main_restored_login_settings_channels_and_pool_retirement",
+      "status": "not_run",
+      "reason": "failed actual prerequisite"
+    },
+    {
+      "name": "caught_archive_failure_is_SUCCESS_failed_dict",
+      "status": "failed",
+      "error_type": "AssertionError"
+    },
+    {
+      "name": "actual_normal_Main0",
+      "status": "passed",
+      "actual": {
+        "actual_exit": 0,
+        "expected_exit": 0,
+        "oom_killed": false
+      }
+    }
+  ],
+  "whole_restore_accepted": false,
+  "Native_pool_restore_validation_not_run": true
+}

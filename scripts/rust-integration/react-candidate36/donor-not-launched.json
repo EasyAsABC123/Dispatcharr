@@ -1,0 +1,45 @@
+{
+  "CID": "f8dd637a65fa39f9499b9eb6bf55f77ccbffedd698909e404b45174c03c3b616",
+  "classification": "not_launched_frontend_donor",
+  "raw_individual_generation": null,
+  "raw_null_rewritten": false,
+  "authority": "Three consecutive actual argv-hash-matched create/cp/nonforced-rm commands; frozen helper appends this exact donor with PID0/starttimeNone and never starts it.",
+  "helper_source": "artifacts/rust/m6-react-workflow-driver-2/cohort/react_fixture_adapter.py",
+  "helper_sha256": "094fd1412ac0dd0308d4f77d677c39a25b040c4f9797792bd34c17093df850d7",
+  "actual_commands": [
+    {
+      "source": "artifacts/rust/normal-graph-batch36-react-functional-1/fixtures/Original-b9fe58da/command-0024.json",
+      "source_sha256": "4d6e9a44872cb5426ad702635bc78ef9a3bbfb3723400c7792ee9670b67e9a37",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "create",
+        "--label",
+        "com.docker.compose.project=dispatcharr-normal-dvr-89552e6f07",
+        "sha256:dc9f08a7fb9a3a178dd7b8635543ff002dfd91998503e50f0404eee5ccfa286d"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "source": "artifacts/rust/normal-graph-batch36-react-functional-1/fixtures/Original-b9fe58da/command-0025.json",
+      "source_sha256": "184d0ebbd3bf320bf6ad56fac0961b404515947edd24815a16f98c35de536e98",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "cp",
+        "f8dd637a65fa39f9499b9eb6bf55f77ccbffedd698909e404b45174c03c3b616:/opt/dispatcharr-frontend/.",
+        "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch36-react-functional-1/fixtures/Original-b9fe58da/Original/frontend/dist"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "source": "artifacts/rust/normal-graph-batch36-react-functional-1/fixtures/Original-b9fe58da/command-0026.json",
+      "source_sha256": "7d0c0451a36871bb22894948bbc9402308f96cd5854b20566e811ad813973cc5",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "rm",
+        "f8dd637a65fa39f9499b9eb6bf55f77ccbffedd698909e404b45174c03c3b616"
+      ],
+      "actual_exit": 0
+    }
+  ],
+  "running_process_retirement_inferred": false
+}

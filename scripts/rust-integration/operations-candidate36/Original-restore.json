@@ -1,0 +1,55 @@
+{
+  "raw_source": "artifacts/rust/normal-graph-batch40-operations-1/fixtures/Original-11ca524a/backup-restore/report.json",
+  "raw_sha256": "959e2717c3112c5464c780f76b42b19ea8b11e60eba8dffc2e7ed07bd9e2e686",
+  "status": "failed",
+  "cells": [
+    {
+      "name": "actual_current_schema_archive",
+      "status": "passed",
+      "archive": {
+        "archive_bytes": 41237,
+        "archive_sha256": "88cb9de6a39b38a01a006fd2c3d2e748ed34a243aa3f95f02797203a61b236ff",
+        "database_signature": "PGDMP",
+        "members": [
+          "database.dump",
+          "metadata.json"
+        ]
+      }
+    },
+    {
+      "name": "actual_intervening_database_mutation",
+      "status": "passed"
+    },
+    {
+      "name": "actual_REST202_restore_and_post_migrate",
+      "status": "passed",
+      "actual": {
+        "actual_lock_wait_observed": true,
+        "actual_restore_task": "b19fbee2-ddb4-4235-b5b2-bc241f7a336b",
+        "actual_result": {
+          "filename": "dispatcharr-backup-2026.11.16.07.16.55.zip",
+          "status": "completed"
+        },
+        "same_Main_instance": true
+      }
+    },
+    {
+      "name": "same_Main_restored_login_settings_channels_and_pool_retirement",
+      "status": "passed",
+      "actual": {
+        "actual_DDL_PG_tool_generation_absent": true,
+        "old_Native_pool_generations_absent": false,
+        "restored_channel_HTTP200": true,
+        "restored_login_HTTP200": true,
+        "restored_settings_HTTP200": true
+      }
+    },
+    {
+      "name": "caught_archive_failure_is_SUCCESS_failed_dict",
+      "status": "failed",
+      "error_type": "AssertionError"
+    }
+  ],
+  "whole_restore_accepted": false,
+  "Native_pool_restore_validation_not_run": false
+}

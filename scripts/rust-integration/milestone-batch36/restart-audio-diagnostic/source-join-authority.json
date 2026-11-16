@@ -1,0 +1,16 @@
+{
+  "scope": "Static Source/native relevant normal HLS capture/remux branch comparison; no Source task/helper or remux code changed",
+  "Source": {
+    "path": "artifacts/rust/normal-graph-batch39-functional-1/Original/apps/channels/tasks.py",
+    "sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+    "capture": "_dvr_build_ffmpeg_cmd: +genpts,ignore_err,copy,make_zero,hls_time4,append_list+omit_endlist+independent_segments",
+    "remux": "_dvr_build_hls_playlist_remux_cmd: +genpts+discardcorrupt,ignore_err,optional0:v/0:a,copy,make_zero"
+  },
+  "Native": {
+    "path": "artifacts/rust/normal-graph-batch17-sdk-1/attempt47/source/rust/crates/job-transport/src/recording_process.rs",
+    "sha256": "efeb29f11213f75aaa573737bd0bf61196f09f37bde070a71fc015b7e46ac502",
+    "capture": "recording_process normal capture uses same relevant flags and4s append-list HLS",
+    "remux": "recording_process::remux normal first attempt mirrors relevant Source flags"
+  },
+  "limitation": "Static equivalent flags do not prove which precise step produced the collision. Exact failed final files prove identical packet timestamp collapse; pre-remux record3 join chunks/playlist were not retained."
+}

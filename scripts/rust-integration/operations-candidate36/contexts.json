@@ -1,0 +1,46 @@
+{
+  "Original": {
+    "source": "artifacts/rust/normal-graph-batch40-operations-1/results/Original/report.json",
+    "sha256": "837801b6d10f6db55f455c6009516e5dfd1720a6d3305e92916d8cb50bf87b41",
+    "status": "failed",
+    "cases": [
+      {
+        "case": "normal-backup",
+        "status": "retained_source_authority",
+        "reason": ""
+      },
+      {
+        "case": "normal-backup-restore",
+        "status": "failed",
+        "reason": "Whole normal restore cell failed; see precise subcells."
+      },
+      {
+        "case": "normal-backup-restore-enabled-source",
+        "status": "failed",
+        "reason": "TypeError:string indices must be integers, not 'str'"
+      },
+      {
+        "case": "recording-plugin-characterization",
+        "status": "failed",
+        "reason": "TypeError:string indices must be integers, not 'str'"
+      }
+    ]
+  },
+  "Native": {
+    "source": "artifacts/rust/normal-graph-batch40-operations-1/results/Native/report.json",
+    "sha256": "7b49f5ef8a1ba8a48cd77d06fb49b22e86372c9b4b1e66e5982fbf363799ca52",
+    "status": "failed",
+    "cases": [
+      {
+        "case": "normal-backup-restore",
+        "status": "failed",
+        "reason": "Whole normal restore cell failed; see precise subcells."
+      },
+      {
+        "case": "normal-backup-restore-partial-admission",
+        "status": "failed",
+        "reason": "TimeoutError:ActualExistingMainSQLSocketHeld:RuntimeError"
+      }
+    ]
+  }
+}

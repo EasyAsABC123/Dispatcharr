@@ -1,0 +1,27 @@
+{
+  "source": "artifacts/rust/normal-graph-batch40-operations-1/fixtures/Native-d3b9ca29/backup-restore-admission/report.json",
+  "sha256": "f596e0107334fb146b8601b21b059b9f8230513f60718f3c1b529dfef4e88298",
+  "status": "failed",
+  "cells": [
+    {
+      "error_type": "TimeoutError",
+      "name": "stopped_partial_admission_never_claims_or_drops_and_reports_actual_settlement",
+      "status": "failed"
+    }
+  ],
+  "actual_HTTP_caller_receipts": {
+    "TERM_sent": false,
+    "all_threads_settled": true,
+    "results": [
+      {
+        "bytes": 742,
+        "label": "held-existing-owner",
+        "sha256": "149a7b03e819f9ea4397113baf53be90eea34abd124030aca15563e4953f6113",
+        "status": 200
+      }
+    ]
+  },
+  "restore_publication_or_TERM_observed": false,
+  "actual_pool_observer": "Repeated proc1exe PermissionError before required held condition",
+  "partial_cancellation_acceptance": false
+}
