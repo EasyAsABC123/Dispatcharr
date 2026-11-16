@@ -1,0 +1,66 @@
+{
+  "git_revision": "ca2e173c797b050dc42ef897501a8fcd5db0f552",
+  "image_id": "sha256:6cd3617f698006c85bdb7696f3f3b2e441b101aa885d6be9b96ab6635f7ef8bf",
+  "source_tree_sha256": "71303d1ce5914dffddcfeaf280b1c096d9a272c7b37d74a3c7e1d1ec84012574",
+  "complete_build_record_sha256": "4c09433b45f5dec5989b8ad6198f51ee1adfc1074845dfa3278cdd016ea92007",
+  "complete_build_record_source": "artifacts/rust/milestone-batch31-build-2/build.json",
+  "reports": [
+    {
+      "name": "archive-assets",
+      "source": "artifacts/rust/milestone-batch31-build-2/Root-build-review.json",
+      "sha256": "5439511ac97af7fc1b5b5dd6c96e4014477629d0d0b8a77f53fd3fb2a71a8406",
+      "published": "scripts/rust-integration/milestone-batch31/package/archive-assets.json",
+      "passed": true
+    },
+    {
+      "name": "crypto",
+      "source": "artifacts/rust/milestone-batch31-build-2/Root-crypto-runtime-probe.json",
+      "sha256": "0c779f98645d1051b5b05753a6ef389fee72e7ca61a5b87b892510434ad6763d",
+      "published": "scripts/rust-integration/milestone-batch31/package/crypto.json",
+      "passed": true
+    },
+    {
+      "name": "postgres",
+      "source": "artifacts/rust/milestone-batch31-build-2/Root-postgres-runtime-probe.json",
+      "sha256": "c44b9f40be9aef7482441cdc67685e6688cfefe6d5d9326f46155dd787f75682",
+      "published": "scripts/rust-integration/milestone-batch31/package/postgres.json",
+      "passed": true
+    },
+    {
+      "name": "regex",
+      "source": "artifacts/rust/milestone-batch31-regex-probe-1/report.json",
+      "sha256": "8a2bb9cde7b83f5c2eee05ce17d50dd96f9ee76898a5643ed0ccf714925c464e",
+      "published": "scripts/rust-integration/milestone-batch31/package/regex.json",
+      "passed": true
+    },
+    {
+      "name": "python-host",
+      "source": "artifacts/rust/milestone-batch31-python-host-probe-2/report.json",
+      "sha256": "6f4bb2ec5a2976128edc4ef8a8dde8f6043b47b3a213487b3e44f6a1046f326d",
+      "published": "scripts/rust-integration/milestone-batch31/package/python-host.json",
+      "passed": true
+    },
+    {
+      "name": "vlc",
+      "source": "artifacts/rust/milestone-batch31-vlc-probe-1/report.json",
+      "sha256": "aa58e6640380f71762ad737013cb5449f9e402bf8c44ad972deb1ccebb2ce6a1",
+      "published": "scripts/rust-integration/milestone-batch31/package/vlc.json",
+      "passed": true
+    }
+  ],
+  "all_six_package_families_passed": true,
+  "all_six_Root_actual_waits_consumed_exit0": true,
+  "independent_exact_CID_inventory_count": 53,
+  "independent_inventories_empty": true,
+  "build_attempt1": {
+    "actual_exit": 1,
+    "seconds": 607.1634942469973,
+    "cause": "Runner omitted retained BuildKit environment and classic builder rejected COPY --chmod; production Rust compile0. Corrected environment only, same immutable commit; no runtime/source change."
+  },
+  "build_attempt2_actual_exit": 0,
+  "Main_application_status": "NOT_ACCEPTED; corrected whole application batch pending",
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "full_milestones_accepted": false,
+  "scope": "Git-exact archive/SDK41 Rust/unchanged React and Original credits; crypto/PostgreSQL legal closure and execution; framed dependency regex; declared full Python compatibility-host closure; useful VLC package/media controls. No Main shutdown, enabled-plugin, application or performance acceptance."
+}

@@ -1,0 +1,991 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon   36.8MB
+Step 1/64 : FROM node:24@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40 AS frontend-dependencies
+24: Pulling from library/node
+Digest: sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40
+Status: Downloaded newer image for node:24@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40
+ ---> 8fa96264f302
+Step 2/64 : WORKDIR /dispatcharr-frontend
+ ---> Running in c61145fc5b76
+ ---> Removed intermediate container c61145fc5b76
+ ---> 28efbbc172f9
+Step 3/64 : COPY frontend/package.json frontend/package-lock.json ./
+ ---> 7cba4502636b
+Step 4/64 : RUN npm ci --no-audit --no-fund
+ ---> Running in 9c8208b8f09d
+[91mnpm warn gitignore-fallback No .npmignore file found, using .gitignore for file exclusion. Consider creating a .npmignore file to explicitly control published files.
+[0m
+added 387 packages in 11s
+[91mnpm warn install-scripts 2 packages have install scripts not yet covered by allowScripts:
+npm warn install-scripts   @swc/core@1.15.11 (postinstall: node postinstall.js)
+npm warn install-scripts   esbuild@0.28.1 (postinstall: node install.js)
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+[0m[91mnpm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice
+[0m ---> Removed intermediate container 9c8208b8f09d
+ ---> 1ffd921d0e9b
+Step 5/64 : COPY frontend/ ./
+ ---> f85d9b4bddcd
+Step 6/64 : FROM frontend-dependencies AS frontend-tests
+ ---> f85d9b4bddcd
+Step 7/64 : RUN mkdir -p /verification-results && npm test -- --maxWorkers=2 --no-file-parallelism --reporter=json --outputFile=/verification-results/frontend-tests.json
+ ---> Running in c70790d59eb7
+
+> frontend@0.0.0 test
+> vitest --run --maxWorkers=2 --no-file-parallelism --reporter=json --outputFile=/verification-results/frontend-tests.json
+
+[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mWarning: A vi.mock('./Logo.jsx') call in "/dispatcharr-frontend/src/components/forms/__tests__/LiveGroupFilter.test.jsx" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0m[91mNot implemented: HTMLFormElement's requestSubmit() method
+[0mJSON report written to /verification-results/frontend-tests.json
+ ---> Removed intermediate container c70790d59eb7
+ ---> 582b03ef127e
+Step 8/64 : FROM frontend-dependencies AS frontend
+ ---> f85d9b4bddcd
+Step 9/64 : RUN npm run build
+ ---> Running in edc91b9cabc8
+
+> frontend@0.0.0 build
+> vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+[91mnode_modules/react-virtualized/dist/es/WindowScroller/utils/onScroll.js (1:0): Module level directives cause errors when bundled, "no babel-plugin-flow-react-proptypes" in "node_modules/react-virtualized/dist/es/WindowScroller/utils/onScroll.js" was ignored.
+[0m✓ 2974 modules transformed.
+rendering chunks...
+[91m[plugin vite:reporter] 
+(!) /dispatcharr-frontend/src/store/notifications.jsx is dynamically imported by /dispatcharr-frontend/src/WebSocket.jsx, /dispatcharr-frontend/src/WebSocket.jsx, /dispatcharr-frontend/src/api.js, /dispatcharr-frontend/src/api.js, /dispatcharr-frontend/src/api.js, /dispatcharr-frontend/src/api.js but also statically imported by /dispatcharr-frontend/src/components/NotificationCenter.jsx, dynamic import will not move module into another chunk.
+
+[0m[91m[plugin vite:reporter] 
+(!) /dispatcharr-frontend/src/components/forms/Logo.jsx is dynamically imported by /dispatcharr-frontend/src/components/forms/LiveGroupFilter.jsx but also statically imported by /dispatcharr-frontend/src/components/forms/Channel.jsx, /dispatcharr-frontend/src/components/tables/LogosTable.jsx, dynamic import will not move module into another chunk.
+
+[0m[91m[plugin vite:reporter] 
+(!) /dispatcharr-frontend/src/utils/forms/ChannelUtils.js is dynamically imported by /dispatcharr-frontend/src/utils/forms/ChannelBatchUtils.js but also statically imported by /dispatcharr-frontend/src/components/forms/Channel.jsx, /dispatcharr-frontend/src/components/forms/ChannelBatch.jsx, /dispatcharr-frontend/src/components/tables/ChannelsTable.jsx, /dispatcharr-frontend/src/components/tables/ChannelsTable/EditableCell.jsx, /dispatcharr-frontend/src/components/tables/StreamsTable.jsx, /dispatcharr-frontend/src/utils/tables/ChannelsTableUtils.js, dynamic import will not move module into another chunk.
+
+[0mcomputing gzip size...
+dist/index.html                                      0.86 kB │ gzip:   0.40 kB
+dist/assets/ghost-B-MnEueJ.svg                       4.43 kB │ gzip:   2.17 kB
+dist/assets/logo-iSLm6iWa.png                       44.56 kB
+dist/assets/index-Ds5qLkMK.css                     227.83 kB │ gzip:  34.06 kB
+dist/assets/useSettingsSaveGuard-Chgmn8L5.js         0.21 kB │ gzip:   0.19 kB │ map:      1.07 kB
+dist/assets/profileTableUtils-zZGKorT6.js            0.22 kB │ gzip:   0.18 kB │ map:      1.14 kB
+dist/assets/hard-drive-upload-CJKU5jP9.js            0.31 kB │ gzip:   0.23 kB │ map:      1.34 kB
+dist/assets/VODCardUtils-DIYkmJ5y.js                 0.78 kB │ gzip:   0.47 kB │ map:      2.35 kB
+dist/assets/SeriesCard-nIrbNhW6.js                   1.16 kB │ gzip:   0.59 kB │ map:      3.83 kB
+dist/assets/UserLimitsForm-DKU89a5m.js               1.33 kB │ gzip:   0.76 kB │ map:      5.33 kB
+dist/assets/VODCard-Bk3A366L.js                      1.70 kB │ gzip:   0.76 kB │ map:      5.92 kB
+dist/assets/ProgramRecordingModal-yDhujtuM.js        1.85 kB │ gzip:   0.88 kB │ map:      7.15 kB
+dist/assets/UiSettingsForm-U9t_T8Et.js               2.45 kB │ gzip:   1.21 kB │ map:     10.36 kB
+dist/assets/SeriesRecordingModal-Cwbw3JTq.js         2.54 kB │ gzip:   1.20 kB │ map:      8.75 kB
+dist/assets/ReverseProxyAuthForm-Dis7QfvD.js         2.59 kB │ gzip:   1.36 kB │ map:      6.81 kB
+dist/assets/YouTubeTrailerModal-BZ-GC9Ch.js          2.67 kB │ gzip:   1.37 kB │ map:     10.38 kB
+dist/assets/EpgSettingsForm-CRQQIb4W.js              2.72 kB │ gzip:   1.21 kB │ map:      8.15 kB
+dist/assets/ProxySettingsForm-B_ZhG06B.js            3.03 kB │ gzip:   1.34 kB │ map:     11.93 kB
+dist/assets/NetworkAccessForm-GvCADT6-.js            3.31 kB │ gzip:   1.73 kB │ map:     14.41 kB
+dist/assets/NavOrderForm-Dp4YJNQe.js                 3.41 kB │ gzip:   1.57 kB │ map:     14.60 kB
+dist/assets/SuperuserForm-Dqptn28e.js                3.62 kB │ gzip:   1.59 kB │ map:     11.17 kB
+dist/assets/UserAgentsTable-q2JNACvR.js              4.33 kB │ gzip:   1.87 kB │ map:     17.20 kB
+dist/assets/StreamSettingsForm-B20C56UL.js           4.83 kB │ gzip:   2.14 kB │ map:     16.78 kB
+dist/assets/TimeshiftConnectionCard-DvzQlmEO.js      6.23 kB │ gzip:   2.29 kB │ map:     20.94 kB
+dist/assets/ProgramDetailModal-CU9z2sBV.js           6.26 kB │ gzip:   2.26 kB │ map:     23.04 kB
+dist/assets/SystemSettingsForm-B2q0UWwL.js           6.26 kB │ gzip:   2.40 kB │ map:     17.45 kB
+dist/assets/DvrSettingsForm-vijCk3d1.js              6.35 kB │ gzip:   2.36 kB │ map:     17.09 kB
+dist/assets/OutputProfilesTable-DvQjd_jX.js          6.93 kB │ gzip:   2.83 kB │ map:     24.87 kB
+dist/assets/VodConnectionCard-Dz0CitJC.js            7.44 kB │ gzip:   2.59 kB │ map:     28.25 kB
+dist/assets/StreamProfilesTable-BbaQQ7kb.js          7.77 kB │ gzip:   3.16 kB │ map:     28.12 kB
+dist/assets/VODModal-CjfWk3Ax.js                     8.33 kB │ gzip:   3.03 kB │ map:     31.46 kB
+dist/assets/SeriesRuleEditorModal-BNjdSgfn.js        8.73 kB │ gzip:   3.58 kB │ map:     32.74 kB
+dist/assets/RecordingDetailsModal-Bzan6k05.js        9.00 kB │ gzip:   3.56 kB │ map:     35.43 kB
+dist/assets/SeriesModal-COKfj0Xi.js                  9.87 kB │ gzip:   3.19 kB │ map:     39.77 kB
+dist/assets/BackupManager-Bpj-Brsf.js               10.56 kB │ gzip:   3.65 kB │ map:     41.68 kB
+dist/assets/StreamConnectionCard-BNKfPfs2.js        10.84 kB │ gzip:   3.94 kB │ map:     42.55 kB
+dist/assets/AutoSyncAdvanced-D0rSnRij.js            12.27 kB │ gzip:   4.10 kB │ map:     42.93 kB
+dist/assets/PluginCard-Dl686k9g.js                  12.47 kB │ gzip:   4.29 kB │ map:     46.22 kB
+dist/assets/symbolicate-BmJUPGzU.js                 30.02 kB │ gzip:   9.55 kB │ map:    156.64 kB
+dist/assets/index-msm8qEOi.js                    2,654.22 kB │ gzip: 778.12 kB │ map: 10,749.63 kB
+[91m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[0m✓ built in 6.44s
+ ---> Removed intermediate container edc91b9cabc8
+ ---> b97162b5db65
+Step 10/64 : FROM rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f AS build
+ ---> 3914072ca0c3
+Step 11/64 : WORKDIR /workspace
+ ---> Running in a4c2a94e2c66
+ ---> Removed intermediate container a4c2a94e2c66
+ ---> 4a434b22e1b9
+Step 12/64 : ENV CARGO_TARGET_DIR=/tmp/dispatcharr-target
+ ---> Running in 33daad8b2b20
+ ---> Removed intermediate container 33daad8b2b20
+ ---> bbe186c0b674
+Step 13/64 : COPY rust/ ./rust/
+ ---> 3dbcf2f02817
+Step 14/64 : RUN mkdir -p "$CARGO_TARGET_DIR" && cargo build --manifest-path rust/Cargo.toml --locked --release -p dispatcharr-rs
+ ---> Running in f0653e9157a9
+[91m    Updating crates.io index
+[0m[91m Downloading crates ...
+[0m[91m  Downloaded atomic-waker v1.1.2
+[0m[91m  Downloaded atoi v2.0.0
+[0m[91m  Downloaded async-stream-impl v0.3.6
+[0m[91m  Downloaded async-stream v0.3.6
+[0m[91m  Downloaded allocator-api2 v0.2.21
+[0m[91m  Downloaded autocfg v1.5.1
+[0m[91m  Downloaded crc-catalog v2.5.0
+[0m[91m  Downloaded itoa v1.0.19
+[0m[91m  Downloaded ipnet v2.12.2
+[0m[91m  Downloaded either v1.19.0
+[0m[91m  Downloaded futures-channel v0.3.34
+[0m[91m  Downloaded axum v0.8.9
+[0m[91m  Downloaded inout v0.1.4
+[0m[91m  Downloaded http-body v1.1.0
+[0m[91m  Downloaded aho-corasick v1.1.5
+[0m[91m  Downloaded http-range-header v0.4.2
+[0m[91m  Downloaded hmac v0.12.1
+[0m[91m  Downloaded getrandom v0.2.17
+[0m[91m  Downloaded foldhash v0.2.0
+[0m[91m  Downloaded httpdate v1.0.3
+[0m[91m  Downloaded idna v1.1.0
+[0m[91m  Downloaded http v1.5.0
+[0m[91m  Downloaded potential_utf v0.1.6
+[0m[91m  Downloaded errno v0.3.14
+[0m[91m  Downloaded crypto-common v0.2.2
+[0m[91m  Downloaded cfg_aliases v0.2.2
+[0m[91m  Downloaded futures-executor v0.3.34
+[0m[91m  Downloaded futures-io v0.3.34
+[0m[91m  Downloaded equivalent v1.0.3
+[0m[91m  Downloaded crossbeam-queue v0.3.14
+[0m[91m  Downloaded find-msvc-tools v0.1.15
+[0m[91m  Downloaded parking v2.2.1
+[0m[91m  Downloaded jsonwebtoken v9.3.1
+[0m[91m  Downloaded icu_collections v2.4.0
+[0m[91m  Downloaded futures-task v0.3.34
+[0m[91m  Downloaded flate2 v1.1.11
+[0m[91m  Downloaded cipher v0.4.4
+[0m[91m  Downloaded bytes v1.12.1
+[0m[91m  Downloaded iana-time-zone v0.1.65
+[0m[91m  Downloaded icu_normalizer_data v2.4.0
+[0m[91m  Downloaded hex v0.4.3
+[0m[91m  Downloaded futures-sink v0.3.34
+[0m[91m  Downloaded crypto-common v0.1.7
+[0m[91m  Downloaded hybrid-array v0.4.15
+[0m[91m  Downloaded heck v0.5.0
+[0m[91m  Downloaded getrandom v0.3.4
+[0m[91m  Downloaded data-encoding v2.11.1
+[0m[91m  Downloaded icu_provider v2.4.0
+[0m[91m  Downloaded hashbrown v0.17.1
+[0m[91m  Downloaded base64 v0.23.1
+[0m[91m  Downloaded serde_urlencoded v0.7.1
+[0m[91m  Downloaded siphasher v1.0.4
+[0m[91m  Downloaded futures-macro v0.3.34
+[0m[91m  Downloaded crc v3.4.0
+[0m[91m  Downloaded hyper-rustls v0.27.10
+[0m[91m  Downloaded tokio-macros v2.7.2
+[0m[91m  Downloaded stable_deref_trait v1.2.1
+[0m[91m  Downloaded bzip2 v0.6.1
+[0m[91m  Downloaded spki v0.7.3
+[0m[91m  Downloaded sync_wrapper v1.0.2
+[0m[91m  Downloaded thiserror v2.0.21
+[0m[91m  Downloaded want v0.3.2
+[0m[91m  Downloaded tokio-rustls v0.26.6
+[0m[91m  Downloaded yoke v0.8.4
+[0m[91m  Downloaded md-5 v0.10.6
+[0m[91m  Downloaded tokio-stream v0.1.19
+[0m[91m  Downloaded zerofrom v0.1.8
+[0m[91m  Downloaded utf_types v1.0.0
+[0m[91m  Downloaded writeable v0.6.4
+[0m[91m  Downloaded time-macros v0.2.32
+[0m[91m  Downloaded psl-types v2.0.11
+[0m[91m  Downloaded unicode-properties v0.1.5
+[0m[91m  Downloaded version_check v0.9.5
+[0m[91m  Downloaded yoke-derive v0.8.4
+[0m[91m  Downloaded zerovec-derive v0.11.7
+[0m[91m  Downloaded syn v2.0.119
+[0m[91m  Downloaded whoami v1.6.1
+[0m[91m  Downloaded tokio-tungstenite v0.29.0
+[0m[91m  Downloaded serde_derive v1.0.229
+[0m[91m  Downloaded sqlx-mysql v0.8.6
+[0m[91m  Downloaded serde v1.0.229
+[0m[91m  Downloaded url v2.5.8
+[0m[91m  Downloaded zmij v1.0.23
+[0m[91m  Downloaded num-bigint-dig v0.8.6
+[0m[91m  Downloaded zeroize v1.9.1
+[0m[91m  Downloaded zerotrie v0.2.5
+[0m[91m  Downloaded libm v0.2.16
+[0m[91m  Downloaded reqwest v0.12.28
+[0m[91m  Downloaded zlib-rs v0.6.8
+[0m[91m  Downloaded typed-path v0.13.0
+[0m[91m  Downloaded lzma-rust2 v0.25.0
+[0m[91m  Downloaded tungstenite v0.29.0
+[0m[91m  Downloaded zip v9.5.0
+[0m[91m  Downloaded typenum v1.20.1
+[0m[91m  Downloaded zerovec v0.11.9
+[0m[91m  Downloaded rustls v0.23.46
+[0m[91m  Downloaded regex-syntax v0.8.11
+[0m[91m  Downloaded redis v0.32.7
+[0m[91m  Downloaded nix v0.31.3
+[0m[91m  Downloaded syn v3.0.10
+[0m[91m  Downloaded deranged v0.5.9
+[0m[91m  Downloaded quinn-proto v0.11.19
+[0m[91m  Downloaded webpki-roots v1.0.11
+[0m[91m  Downloaded unicode-normalization v0.1.26
+[0m[91m  Downloaded regex v1.13.1
+[0m[91m  Downloaded zerofrom-derive v0.1.8
+[0m[91m  Downloaded webpki-roots v0.26.11
+[0m[91m  Downloaded regex-automata v0.4.18
+[0m[91m  Downloaded uuid v1.29.2
+[0m[91m  Downloaded untrusted v0.9.0
+[0m[91m  Downloaded tracing-core v0.1.36
+[0m[91m  Downloaded tower-http v0.6.11
+[0m[91m  Downloaded serde_json v1.0.154
+[0m[91m  Downloaded icu_properties_data v2.4.0
+[0m[91m  Downloaded zerocopy v0.8.63
+[0m[91m  Downloaded try-lock v0.2.5
+[0m[91m  Downloaded tracing-attributes v0.1.31
+[0m[91m  Downloaded tower-layer v0.3.3
+[0m[91m  Downloaded tokio v1.54.1
+[0m[91m  Downloaded rand v0.10.3
+[0m[91m  Downloaded lzma-sys v0.1.20
+[0m[91m  Downloaded rand v0.9.5
+[0m[91m  Downloaded num-bigint v0.4.8
+[0m[91m  Downloaded libc v0.2.191
+[0m[91m  Downloaded mio v1.2.4
+[0m[91m  Downloaded memchr v2.8.3
+[0m[91m  Downloaded unicase v2.10.0
+[0m[91m  Downloaded tower v0.5.3
+[0m[91m  Downloaded rsa v0.9.10
+[0m[91m  Downloaded rand v0.8.8
+[0m[91m  Downloaded quinn v0.11.12
+[0m[91m  Downloaded publicsuffix v2.3.0
+[0m[91m  Downloaded rustls-webpki v0.103.16
+[0m[91m  Downloaded proc-macro2 v1.0.107
+[0m[91m  Downloaded chrono-tz v0.10.4
+[0m[91m  Downloaded libbz2-rs-sys v0.2.6
+[0m[91m  Downloaded serde_core v1.0.229
+[0m[91m  Downloaded rustls-pki-types v1.15.1
+[0m[91m  Downloaded num-traits v0.2.19
+[0m[91m  Downloaded log v0.4.35
+[0m[91m  Downloaded time v0.3.55
+[0m[91m  Downloaded ryu v1.0.23
+[0m[91m  Downloaded rustversion v1.0.23
+[0m[91m  Downloaded quinn-udp v0.5.16
+[0m[91m  Downloaded pkcs1 v0.7.5
+[0m[91m  Downloaded pem-rfc7468 v0.7.0
+[0m[91m  Downloaded parking_lot_core v0.9.12
+[0m[91m  Downloaded parking_lot v0.12.5
+[0m[91m  Downloaded once_cell v1.21.4
+[0m[91m  Downloaded multer v3.1.0
+[0m[91m  Downloaded mime_guess v2.0.5
+[0m[91m  Downloaded matchit v0.8.4
+[0m[91m  Downloaded lock_api v0.4.14
+[0m[91m  Downloaded litrs v1.0.1
+[0m[91m  Downloaded indexmap v2.14.2
+[0m[91m  Downloaded icu_normalizer v2.4.0
+[0m[91m  Downloaded tracing v0.1.44
+[0m[91m  Downloaded sqlx-macros-core v0.8.6
+[0m[91m  Downloaded simdutf8 v0.1.5
+[0m[91m  Downloaded signal-hook-registry v1.4.8
+[0m[91m  Downloaded sha2 v0.10.9
+[0m[91m  Downloaded serde_path_to_error v0.1.20
+[0m[91m  Downloaded rand_core v0.9.5
+[0m[91m  Downloaded rand_core v0.6.4
+[0m[91m  Downloaded rand_chacha v0.9.0
+[0m[91m  Downloaded quote v1.0.47
+[0m[91m  Downloaded ppv-lite86 v0.2.21
+[0m[91m  Downloaded pkg-config v0.3.34
+[0m[91m  Downloaded pin-project-lite v0.2.17
+[0m[91m  Downloaded pem v3.0.6
+[0m[91m  Downloaded num-integer v0.1.47
+[0m[91m  Downloaded phf_shared v0.12.1
+[0m[91m  Downloaded mime v0.3.18
+[0m[91m  Downloaded zeroize_derive v1.5.0
+[0m[91m  Downloaded xz2 v0.1.7
+[0m[91m  Downloaded vcpkg v0.2.15
+[0m[91m  Downloaded utf8_iter v1.1.0
+[0m[91m  Downloaded tower-service v0.3.3
+[0m[91m  Downloaded tinystr v0.8.5
+[0m[91m  Downloaded sqlx v0.8.6
+[0m[91m  Downloaded rand_core v0.10.1
+[0m[91m  Downloaded litemap v0.8.3
+[0m[91m  Downloaded encoding_rs v0.8.44
+[0m[91m  Downloaded chrono v0.4.45
+[0m[91m  Downloaded sha2 v0.11.1
+[0m[91m  Downloaded pkcs8 v0.10.2
+[0m[91m  Downloaded password-hash v0.5.0
+[0m[91m  Downloaded hkdf v0.12.4
+[0m[91m  Downloaded shlex v2.0.1
+[0m[91m  Downloaded sha1 v0.10.7
+[0m[91m  Downloaded rand_chacha v0.3.1
+[0m[91m  Downloaded ring v0.17.14
+[0m[91m  Downloaded tokio-util v0.7.20
+[0m[91m  Downloaded percent-encoding v2.3.2
+[0m[91m  Downloaded multiversion_no_op v1.0.0
+[0m[91m  Downloaded cc v1.11.1
+[0m[91m  Downloaded sha1_smol v1.0.1
+[0m[91m  Downloaded scopeguard v1.2.0
+[0m[91m  Downloaded powerfmt v0.2.1
+[0m[91m  Downloaded pbkdf2 v0.12.2
+[0m[91m  Downloaded num-iter v0.1.46
+[0m[91m  Downloaded icu_properties v2.4.0
+[0m[91m  Downloaded hashbrown v0.15.5
+[0m[91m  Downloaded combine v4.6.9
+[0m[91m  Downloaded tinyvec v1.13.3
+[0m[91m  Downloaded sqlx-sqlite v0.8.6
+[0m[91m  Downloaded signature v2.2.0
+[0m[91m  Downloaded rustc-hash v2.1.3
+[0m[91m  Downloaded unicode-bidi v0.3.18
+[0m[91m  Downloaded thiserror-impl v2.0.21
+[0m[91m  Downloaded stringprep v0.1.5
+[0m[91m  Downloaded icu_locale_core v2.4.0
+[0m[91m  Downloaded futures-util v0.3.34
+[0m[91m  Downloaded unicode-ident v1.0.27
+[0m[91m  Downloaded sqlx-macros v0.8.6
+[0m[91m  Downloaded num-conv v0.2.2
+[0m[91m  Downloaded flume v0.11.1
+[0m[91m  Downloaded synstructure v0.14.0
+[0m[91m  Downloaded const-oid v0.9.6
+[0m[91m  Downloaded lazy_static v1.5.1
+[0m[91m  Downloaded const-oid v0.10.2
+[0m[91m  Downloaded bitflags v2.13.2
+[0m[91m  Downloaded socket2 v0.6.5
+[0m[91m  Downloaded scrypt v0.11.0
+[0m[91m  Downloaded salsa20 v0.10.2
+[0m[91m  Downloaded httparse v1.10.1
+[0m[91m  Downloaded crc32fast v1.5.4
+[0m[91m  Downloaded cookie v0.18.2
+[0m[91m  Downloaded base64 v0.22.1
+[0m[91m  Downloaded axum-core v0.5.6
+[0m[91m  Downloaded spin v0.9.9
+[0m[91m  Downloaded smallvec v1.16.5
+[0m[91m  Downloaded slab v0.4.12
+[0m[91m  Downloaded simple_asn1 v0.6.4
+[0m[91m  Downloaded hyper v1.12.0
+[0m[91m  Downloaded der v0.7.10
+[0m[91m  Downloaded subtle v2.6.1
+[0m[91m  Downloaded rand_pcg v0.10.2
+[0m[91m  Downloaded phf v0.12.1
+[0m[91m  Downloaded hyper-util v0.1.21
+[0m[91m  Downloaded cookie_store v0.22.1
+[0m[91m  Downloaded getrandom v0.4.3
+[0m[91m  Downloaded block-buffer v0.12.1
+[0m[91m  Downloaded time-core v0.1.9
+[0m[91m  Downloaded http-body-util v0.1.5
+[0m[91m  Downloaded cfg-if v1.0.5
+[0m[91m  Downloaded cpufeatures v0.3.1
+[0m[91m  Downloaded constant_time_eq v0.6.1
+[0m[91m  Downloaded foldhash v0.1.5
+[0m[91m  Downloaded event-listener v5.4.2
+[0m[91m  Downloaded digest v0.10.7
+[0m[91m  Downloaded byteorder v1.5.0
+[0m[91m  Downloaded base64ct v1.8.3
+[0m[91m  Downloaded backon v1.6.0
+[0m[91m  Downloaded lru-slab v0.1.3
+[0m[91m  Downloaded futures-intrusive v0.5.0
+[0m[91m  Downloaded futures-core v0.3.34
+[0m[91m  Downloaded block-buffer v0.10.4
+[0m[91m  Downloaded displaydoc v0.2.7
+[0m[91m  Downloaded crossbeam-utils v0.8.23
+[0m[91m  Downloaded chacha20 v0.10.2
+[0m[91m  Downloaded core_detect v1.0.0
+[0m[91m  Downloaded digest v0.11.3
+[0m[91m  Downloaded cpufeatures v0.2.17
+[0m[91m  Downloaded fastrand v2.5.0
+[0m[91m  Downloaded document-features v0.2.12
+[0m[91m  Downloaded home v0.5.12
+[0m[91m  Downloaded hashlink v0.10.0
+[0m[91m  Downloaded generic-array v0.14.7
+[0m[91m  Downloaded form_urlencoded v1.2.2
+[0m[91m  Downloaded dotenvy v0.15.7
+[0m[91m  Downloaded idna_adapter v1.2.2
+[0m[91m  Downloaded arc-swap v1.9.5
+[0m[91m  Downloaded libsqlite3-sys v0.30.1
+[0m[91m   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+[0m[91m   Compiling unicode-ident v1.0.27
+[0m[91m   Compiling libc v0.2.191
+[0m[91m   Compiling version_check v0.9.5
+[0m[91m   Compiling serde v1.0.229
+[0m[91m   Compiling cfg-if v1.0.5
+[0m[91m   Compiling serde_core v1.0.229
+[0m[91m   Compiling find-msvc-tools v0.1.15
+[0m[91m   Compiling shlex v2.0.1
+[0m[91m   Compiling typenum v1.20.1
+[0m[91m   Compiling autocfg v1.5.1
+[0m[91m   Compiling itoa v1.0.19
+[0m[91m   Compiling memchr v2.8.3
+[0m[91m   Compiling bytes v1.12.1
+[0m[91m   Compiling pin-project-lite v0.2.17
+[0m[91m   Compiling icu_normalizer_data v2.4.0
+[0m[91m   Compiling icu_properties_data v2.4.0
+[0m[91m   Compiling futures-core v0.3.34
+[0m[91m   Compiling subtle v2.6.1
+[0m[91m   Compiling stable_deref_trait v1.2.1
+[0m[91m   Compiling zmij v1.0.23
+[0m[91m   Compiling futures-sink v0.3.34
+[0m[91m   Compiling litemap v0.8.3
+[0m[91m   Compiling rustversion v1.0.23
+[0m[91m   Compiling utf_types v1.0.0
+[0m[91m   Compiling zerocopy v0.8.63
+[0m[91m   Compiling equivalent v1.0.3
+[0m[91m   Compiling writeable v0.6.4
+[0m[91m   Compiling percent-encoding v2.3.2
+[0m[91m   Compiling futures-task v0.3.34
+[0m[91m   Compiling hashbrown v0.17.1
+[0m[91m   Compiling futures-io v0.3.34
+[0m[91m   Compiling cc v1.11.1
+[0m[91m   Compiling slab v0.4.12
+[0m[91m   Compiling serde_json v1.0.154
+[0m[91m   Compiling thiserror v2.0.21
+[0m[91m   Compiling foldhash v0.2.0
+[0m[91m   Compiling rustls v0.23.46
+[0m[91m   Compiling once_cell v1.21.4
+[0m[91m   Compiling log v0.4.35
+[0m[91m   Compiling generic-array v0.14.7
+[0m[91m   Compiling form_urlencoded v1.2.2
+[0m[91m   Compiling futures-channel v0.3.34
+[0m[91m   Compiling getrandom v0.4.3
+   Compiling parking_lot_core v0.9.12
+[0m[91m   Compiling utf8_iter v1.1.0
+[0m[91m   Compiling untrusted v0.9.0
+[0m[91m   Compiling num-traits v0.2.19
+[0m[91m   Compiling httparse v1.10.1
+[0m[91m   Compiling cpufeatures v0.2.17
+[0m[91m   Compiling crossbeam-utils v0.8.23
+[0m[91m   Compiling tracing-core v0.1.36
+[0m[91m   Compiling scopeguard v1.2.0
+[0m[91m   Compiling ryu v1.0.23
+[0m[91m   Compiling[0m[91m tower-service v0.3.3
+[0m[91m   Compiling getrandom v0.3.4
+[0m[91m   Compiling num-conv v0.2.2
+[0m[91m   Compiling base64 v0.22.1
+[0m[91m   Compiling time-core v0.1.9
+[0m[91m   Compiling mime v0.3.18
+[0m[91m   Compiling[0m[91m httpdate v1.0.3
+[0m[91m   Compiling[0m[91m powerfmt v0.2.1
+[0m[91m   Compiling deranged v0.5.9
+   Compiling try-lock v0.2.5
+[0m[91m   Compiling zeroize v1.9.1
+[0m[91m   Compiling http v1.5.0
+[0m[91m   Compiling want v0.3.2
+[0m[91m   Compiling time-macros v0.2.32
+[0m[91m   Compiling[0m[91m sync_wrapper v1.0.2
+[0m[91m   Compiling[0m[91m rustls-pki-types v1.15.1
+[0m[91m   Compiling[0m[91m bitflags v2.13.2
+[0m[91m   Compiling unicase v2.10.0
+[0m[91m   Compiling fastrand v2.5.0
+[0m[91m   Compiling tower-layer v0.3.3
+[0m[91m   Compiling[0m[91m iana-time-zone v0.1.65
+[0m[91m   Compiling atomic-waker v1.1.2
+[0m[91m   Compiling indexmap v2.14.2
+[0m[91m   Compiling zlib-rs v0.6.8
+[0m[91m   Compiling[0m[91m arc-swap v1.9.5
+[0m[91m   Compiling[0m[91m backon v1.6.0
+[0m[91m   Compiling[0m[91m mime_guess v2.0.5
+[0m[91m   Compiling cookie v0.18.2
+[0m[91m   Compiling ipnet v2.12.2
+[0m[91m   Compiling syn v3.0.10
+[0m[91m   Compiling syn v2.0.119
+[0m[91m   Compiling base64 v0.23.1
+[0m[91m   Compiling[0m[91m sha1_smol v1.0.1
+[0m[91m   Compiling lock_api v0.4.14
+[0m[91m   Compiling[0m[91m encoding_rs v0.8.44
+[0m[91m   Compiling litrs v1.0.1
+[0m[91m   Compiling[0m[91m hybrid-array v0.4.15
+[0m[91m   Compiling allocator-api2 v0.2.21
+[0m[91m   Compiling foldhash v0.1.5
+[0m[91m   Compiling const-oid v0.10.2
+[0m[91m   Compiling[0m[91m psl-types v2.0.11
+[0m[91m   Compiling num-integer v0.1.47
+[0m[91m   Compiling[0m[91m hashbrown v0.15.5
+[0m[91m   Compiling webpki-roots v1.0.11
+[0m[91m   Compiling constant_time_eq v0.6.1
+[0m[91m   Compiling http-body v1.1.0
+[0m[91m   Compiling[0m[91m document-features v0.2.12
+[0m[91m   Compiling multer v3.1.0
+[0m[91m   Compiling tinyvec v1.13.3
+[0m[91m   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+[0m[91m   Compiling http-body-util v0.1.5
+[0m[91m   Compiling crypto-common v0.2.2
+[0m[91m   Compiling num-bigint v0.4.8
+[0m[91m   Compiling digest v0.10.7
+[0m[91m   Compiling getrandom v0.2.17
+   Compiling socket2 v0.6.5
+[0m[91m   Compiling[0m[91m mio v1.2.4
+[0m[91m   Compiling block-buffer v0.12.1
+[0m[91m   Compiling[0m[91m http-range-header v0.4.2
+[0m[91m   Compiling[0m[91m rand_core v0.6.4
+[0m[91m   Compiling data-encoding v2.11.1
+[0m[91m   Compiling[0m[91m core_detect v1.0.0
+[0m[91m   Compiling[0m[91m sha2 v0.10.9
+[0m[91m   Compiling[0m[91m simdutf8 v0.1.5
+[0m[91m   Compiling ring v0.17.14
+[0m[91m   Compiling md-5 v0.10.6
+[0m[91m   Compiling[0m[91m sha1 v0.10.7
+[0m[91m   Compiling[0m[91m cpufeatures v0.3.1
+[0m[91m   Compiling crc-catalog v2.5.0
+[0m[91m   Compiling time v0.3.55
+[0m[91m   Compiling parking v2.2.1
+[0m[91m   Compiling multiversion_no_op v1.0.0
+[0m[91m   Compiling tokio v1.54.1
+[0m[91m   Compiling pkg-config v0.3.34
+[0m[91m   Compiling crc32fast v1.5.4
+[0m[91m   Compiling[0m[91m event-listener v5.4.2
+[0m[91m   Compiling[0m[91m crc v3.4.0
+[0m[91m   Compiling futures-util v0.3.34
+[0m[91m   Compiling hashlink v0.10.0
+[0m[91m   Compiling[0m[91m hmac v0.12.1
+[0m[91m   Compiling unicode-normalization v0.1.26
+[0m[91m   Compiling chrono v0.4.45
+[0m[91m   Compiling[0m[91m crossbeam-queue v0.3.14
+[0m[91m   Compiling webpki-roots v0.26.11
+[0m[91m   Compiling[0m[91m uuid v1.29.2
+[0m[91m   Compiling[0m[91m unicode-properties v0.1.5
+[0m[91m   Compiling libbz2-rs-sys v0.2.6
+[0m[91m   Compiling[0m[91m unicode-bidi v0.3.18
+[0m[91m   Compiling errno v0.3.14
+[0m[91m   Compiling signal-hook-registry v1.4.8
+[0m[91m   Compiling spin v0.9.9
+[0m[91m   Compiling digest v0.11.3
+[0m[91m   Compiling rand_core v0.9.5
+   Compiling lzma-sys v0.1.20
+[0m[91m   Compiling stringprep v0.1.5
+[0m[91m   Compiling[0m[91m sha2 v0.11.1
+[0m[91m   Compiling[0m[91m hkdf v0.12.4
+[0m[91m   Compiling bzip2 v0.6.1
+[0m[91m   Compiling[0m[91m serde_path_to_error v0.1.20
+[0m[91m   Compiling atoi v2.0.0
+[0m[91m   Compiling[0m[91m aho-corasick v1.1.5
+[0m[91m   Compiling[0m[91m home v0.5.12
+[0m[91m   Compiling[0m[91m flate2 v1.1.11
+[0m[91m   Compiling[0m[91m byteorder v1.5.0
+[0m[91m   Compiling[0m[91m siphasher v1.0.4
+[0m[91m   Compiling dotenvy v0.15.7
+[0m[91m   Compiling[0m[91m whoami v1.6.1
+[0m[91m   Compiling matchit v0.8.4
+[0m[91m   Compiling hex v0.4.3
+[0m[91m   Compiling regex-syntax v0.8.11
+[0m[91m   Compiling typed-path v0.13.0
+[0m[91m   Compiling[0m[91m phf_shared v0.12.1
+[0m[91m   Compiling lzma-rust2 v0.25.0
+[0m[91m   Compiling[0m[91m inout v0.1.4
+[0m[91m   Compiling[0m[91m chrono-tz v0.10.4
+[0m[91m   Compiling heck v0.5.0
+[0m[91m   Compiling cipher v0.4.4
+[0m[91m   Compiling phf v0.12.1
+[0m[91m   Compiling base64ct v1.8.3
+[0m[91m   Compiling[0m[91m salsa20 v0.10.2
+[0m[91m   Compiling pbkdf2 v0.12.2
+[0m[91m   Compiling pem v3.0.6
+[0m[91m   Compiling dispatcharr-contracts v0.1.0 (/workspace/rust/crates/contracts)
+[0m[91m   Compiling dispatcharr-xmltv-parser v0.1.0 (/workspace/rust/crates/xmltv-parser)
+[0m[91m   Compiling dispatcharr-stream-core v0.1.0 (/workspace/rust/crates/stream-core)
+[0m[91m   Compiling cfg_aliases v0.2.2
+[0m[91m   Compiling dispatcharr-fmp4-core v0.1.0 (/workspace/rust/crates/fmp4-core)
+[0m[91m   Compiling[0m[91m password-hash v0.5.0
+[0m[91m   Compiling nix v0.31.3
+[0m[91m   Compiling dispatcharr-hls-core v0.1.0 (/workspace/rust/crates/hls-core)
+[0m[91m   Compiling scrypt v0.11.0
+[0m[91m   Compiling synstructure v0.14.0
+[0m[91m   Compiling ppv-lite86 v0.2.21
+[0m[91m   Compiling regex-automata v0.4.18
+[0m[91m   Compiling serde_derive v1.0.229
+[0m[91m   Compiling[0m[91m zerofrom-derive v0.1.8
+[0m[91m   Compiling yoke-derive v0.8.4
+   Compiling zerovec-derive v0.11.7
+[0m[91m   Compiling displaydoc v0.2.7
+[0m[91m   Compiling tokio-macros v2.7.2
+[0m[91m   Compiling futures-macro v0.3.34
+[0m[91m   Compiling[0m[91m zeroize_derive v1.5.0
+[0m[91m   Compiling tracing-attributes v0.1.31
+[0m[91m   Compiling[0m[91m thiserror-impl v2.0.21
+[0m[91m   Compiling rand_chacha v0.9.0
+[0m[91m   Compiling rustls-webpki v0.103.16
+[0m[91m   Compiling rand v0.9.5
+[0m[91m   Compiling tokio-stream v0.1.19
+[0m[91m   Compiling async-stream-impl v0.3.6
+[0m[91m   Compiling rand_chacha v0.3.1
+[0m[91m   Compiling[0m[91m rand v0.8.8
+[0m[91m   Compiling zerofrom v0.1.8
+[0m[91m   Compiling yoke v0.8.4
+[0m[91m   Compiling async-stream v0.3.6
+[0m[91m   Compiling[0m[91m zip v9.5.0
+[0m[91m   Compiling zerovec v0.11.9
+[0m[91m   Compiling zerotrie v0.2.5
+[0m[91m   Compiling[0m[91m tracing v0.1.44
+[0m[91m   Compiling tungstenite v0.29.0
+[0m[91m   Compiling simple_asn1 v0.6.4
+[0m[91m   Compiling axum-core v0.5.6
+[0m[91m   Compiling tinystr v0.8.5
+   Compiling potential_utf v0.1.6
+[0m[91m   Compiling icu_collections v2.4.0
+[0m[91m   Compiling icu_locale_core v2.4.0
+[0m[91m   Compiling regex v1.13.1
+[0m[91m   Compiling smallvec v1.16.5
+   Compiling either v1.19.0
+[0m[91m   Compiling serde_urlencoded v0.7.1
+[0m[91m   Compiling icu_provider v2.4.0
+[0m[91m   Compiling parking_lot v0.12.5
+[0m[91m   Compiling icu_properties v2.4.0
+[0m[91m   Compiling[0m[91m icu_normalizer v2.4.0
+[0m[91m   Compiling futures-intrusive v0.5.0
+[0m[91m   Compiling dispatcharr-backups v0.1.0 (/workspace/rust/crates/backups)
+[0m[91m   Compiling idna_adapter v1.2.2
+[0m[91m   Compiling idna v1.1.0
+[0m[91m   Compiling url v2.5.8
+[0m[91m   Compiling publicsuffix v2.3.0
+[0m[91m   Compiling sqlx-core v0.8.6 (/workspace/rust/vendor/sqlx-core-0.8.6)
+[0m[91m   Compiling cookie_store v0.22.1
+[0m[91m   Compiling tokio-util v0.7.20
+   Compiling hyper v1.12.0
+[0m[91m   Compiling tower v0.5.3
+[0m[91m   Compiling tokio-tungstenite v0.29.0
+[0m[91m   Compiling dispatcharr-stream-runtime v0.1.0 (/workspace/rust/crates/stream-runtime)
+[0m[91m   Compiling xz2 v0.1.7
+[0m[91m   Compiling dispatcharr-ingest-core v0.1.0 (/workspace/rust/crates/ingest-core)
+[0m[91m   Compiling combine v4.6.9
+[0m[91m   Compiling tower-http v0.6.11
+[0m[91m   Compiling jsonwebtoken v9.3.1
+[0m[91m   Compiling hyper-util v0.1.21
+[0m[91mwarning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+[0m[91mwarning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+[0m[91mwarning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | [0m[91m) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+[0m[91m    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+[0m[91m368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+[0m[91m   Compiling sqlx-postgres v0.8.6 (/workspace/rust/vendor/sqlx-postgres-0.8.6)
+[0m[91mwarning: `sqlx-core` (lib) generated 3 warnings
+[0m[91mwarning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+   --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+    |
+335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+    |                                                        ^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+[0m[91m   Compiling axum v0.8.9
+[0m[91m   Compiling dispatcharr-timeshift-core v0.1.0 (/workspace/rust/crates/timeshift-core)
+[0m[91mwarning: variant `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+   |
+68 | pub enum FrontendMessageFormat {
+   |          --------------------- variant in this enum
+...
+76 |     Flush = b'H',
+   |     ^^^^^
+   |
+   = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: struct `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+   |
+11 | pub struct Flush;
+   |            ^^^^^
+
+[0m[91m   Compiling redis v0.32.7
+[0m[91m   Compiling sqlx-macros-core v0.8.6
+[0m[91m   Compiling tokio-rustls v0.26.6
+[0m[91m   Compiling hyper-rustls v0.27.10
+[0m[91m   Compiling reqwest v0.12.28
+[0m[91mwarning[0m[91m: `sqlx-postgres` (lib) generated 3 warnings
+[0m[91m   Compiling sqlx-macros v0.8.6
+[0m[91m   Compiling dispatcharr-upstream-http v0.1.0 (/workspace/rust/crates/upstream-http)
+[0m[91mwarning: `sqlx-core` (lib) generated 3 warnings (3 duplicates)
+[0m[91m   Compiling sqlx v0.8.6
+[0m[91m   Compiling dispatcharr-output-store v0.1.0 (/workspace/rust/crates/output-store)
+[0m[91m   Compiling dispatcharr-store v0.1.0 (/workspace/rust/crates/store)
+[0m[91m   Compiling dispatcharr-coordination v0.1.0 (/workspace/rust/crates/coordination)
+[0m[91m   Compiling dispatcharr-clients v0.1.0 (/workspace/rust/crates/clients)
+[0m[91m   Compiling[0m[91m dispatcharr-input-store v0.1.0 (/workspace/rust/crates/input-store)
+[0m[91m   Compiling[0m[91m dispatcharr-stream-http v0.1.0 (/workspace/rust/crates/stream-http)
+[0m[91mwarning: `sqlx-postgres` (lib) generated 3 warnings (3 duplicates)
+[0m[91m   Compiling dispatcharr-fmp4-http v0.1.0 (/workspace/rust/crates/fmp4-http)
+   Compiling dispatcharr-hls-http v0.1.0 (/workspace/rust/crates/hls-http)
+[0m[91m   Compiling dispatcharr-output-http v0.1.0 (/workspace/rust/crates/output-http)
+[0m[91m   Compiling dispatcharr-ingest-epg v0.1.0 (/workspace/rust/crates/ingest-epg)
+[0m[91m   Compiling dispatcharr-realtime v0.1.0 (/workspace/rust/crates/realtime)
+   Compiling dispatcharr-vod-http v0.1.0 (/workspace/rust/crates/vod-http)
+   Compiling dispatcharr-timeshift-http v0.1.0 (/workspace/rust/crates/timeshift-http)
+   Compiling dispatcharr-hdhr-http v0.1.0 (/workspace/rust/crates/hdhr-http)
+[0m[91m   Compiling dispatcharr-xc-http v0.1.0 (/workspace/rust/crates/xc-http)
+[0m[91m   Compiling dispatcharr-job-transport v0.1.0 (/workspace/rust/crates/job-transport)
+[0m[91m   Compiling dispatcharr-xmltv-http v0.1.0 (/workspace/rust/crates/xmltv-http)
+[0m[91m   Compiling dispatcharr-rs v0.1.0 (/workspace/rust/crates/app)
+[0m[91m    Finished `release` profile [optimized] target(s) in 2m 04s
+[0m ---> Removed intermediate container f0653e9157a9
+ ---> bf7c7351309d
+Step 15/64 : FROM build AS xmltv-parser-tests
+ ---> bf7c7351309d
+Step 16/64 : RUN cargo test --manifest-path rust/Cargo.toml --locked -p dispatcharr-xmltv-parser --all-targets && cargo build --manifest-path rust/Cargo.toml --locked --release -p dispatcharr-xmltv-parser --examples && cp /tmp/dispatcharr-target/release/examples/xmltv_stream_parity /usr/local/bin/dispatcharr-xmltv-parity
+ ---> Running in 8868d6e24a20
+[91m   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+[0m[91m   Compiling proc-macro2 v1.0.107
+[0m[91m   Compiling unicode-ident v1.0.27
+[0m[91m   Compiling cfg-if v1.0.5
+[0m[91m   Compiling quote v1.0.47
+[0m[91m   Compiling find-msvc-tools v0.1.15
+[0m[91m   Compiling shlex v2.0.1
+[0m[91m   Compiling libc v0.2.191
+[0m[91m   Compiling rustversion v1.0.23
+[0m[91m   Compiling memchr v2.8.3
+[0m[91m   Compiling autocfg v1.5.1
+[0m[91m   Compiling serde_core v1.0.229
+[0m[91m   Compiling pkg-config v0.3.34
+[0m[91m   Compiling cpufeatures v0.2.17
+[0m[91m   Compiling const-oid v0.10.2
+[0m[91m   Compiling crc32fast v1.5.4
+[0m[91m   Compiling getrandom v0.4.3
+[0m[91m   Compiling cpufeatures v0.3.1
+[0m[91m   Compiling zmij v1.0.23
+[0m[91m   Compiling serde_json v1.0.154
+[0m[91m   Compiling libbz2-rs-sys v0.2.6
+[0m[91m   Compiling serde v1.0.229
+[0m[91m   Compiling zlib-rs v0.6.8
+[0m[91m   Compiling equivalent v1.0.3
+[0m[91m   Compiling hashbrown v0.17.1
+[0m[91m   Compiling regex-syntax v0.8.11
+[0m[91m   Compiling itoa v1.0.19
+[0m[91m   Compiling typed-path v0.13.0
+[0m[91m   Compiling base64 v0.22.1
+[0m[91m   Compiling cc v1.11.1
+[0m[91m   Compiling generic-array v0.14.7
+[0m[91m   Compiling num-traits v0.2.19
+[0m[91m   Compiling constant_time_eq v0.6.1
+[0m[91m   Compiling aho-corasick v1.1.5
+[0m[91m   Compiling bzip2 v0.6.1
+[0m[91m   Compiling indexmap v2.14.2
+[0m[91m   Compiling syn v2.0.119
+[0m[91m   Compiling syn v3.0.10
+[0m[91m   Compiling chrono v0.4.45
+[0m[91m   Compiling hybrid-array v0.4.15
+[0m[91m   Compiling block-buffer v0.10.4
+[0m[91m   Compiling crypto-common v0.1.7
+[0m[91m   Compiling lzma-sys v0.1.20
+[0m[91m   Compiling digest v0.10.7
+[0m[91m   Compiling block-buffer v0.12.1
+   Compiling crypto-common v0.2.2
+[0m[91m   Compiling sha2 v0.10.9
+[0m[91m   Compiling regex-automata v0.4.18
+[0m[91m   Compiling dispatcharr-xmltv-parser v0.1.0 (/workspace/rust/crates/xmltv-parser)
+[0m[91m   Compiling digest v0.11.3
+[0m[91m   Compiling sha2 v0.11.1
+[0m[91m   Compiling serde_derive v1.0.229
+[0m[91m   Compiling lzma-rust2 v0.25.0
+[0m[91m   Compiling regex v1.13.1
+[0m[91m   Compiling flate2 v1.1.11
+[0m[91m   Compiling zeroize_derive v1.5.0
+[0m[91m   Compiling zeroize v1.9.1
+[0m[91m   Compiling zip v9.5.0
+[0m[91m   Compiling xz2 v0.1.7
+[0m[91m   Compiling dispatcharr-ingest-core v0.1.0 (/workspace/rust/crates/ingest-core)
+[0m[91m    Finished `test` profile [unoptimized] target(s) in 10.31s
+[0m[91m     Running unittests src/lib.rs (/tmp/dispatcharr-target/debug/deps/dispatcharr_xmltv_parser-f90f90f37d84dd89)
+[0m
+running 5 tests
+test strict::owned_resources::only_owned_external_file_and_loopback_references_are_probed ... ok
+test strict::tests::one_strict_root_whitespace_and_rejected_partial_documents ... ok
+test strict::tests::input_nodes_and_small_native_heap_fail_closed ... ok
+test strict::tests::cancelled_partial_native_context_stays_owned_until_reader_returns ... ok
+test strict::tests::concurrent_strict_failures_do_not_poison_existing_recover_arenas ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+[91m     Running tests/streaming.rs (/tmp/dispatcharr-target/debug/deps/streaming-fa9222a9790e9ef0)
+[0m
+running 9 tests
+test failed_sink_stops_before_later_records ... ok
+test cancellation_from_sink_cannot_complete_job ... ok
+test incorrect_safe_reader_cannot_expose_foreign_out_of_bounds_memory ... ok
+test interrupted_read_retries_without_discarding_parser_state ... ok
+test io_failure_and_early_cancellation_never_call_sink ... ok
+test sink_panic_is_contained_at_foreign_boundary ... ok
+test independent_contexts_do_not_share_failure_budget ... ok
+test actual_record_budget_refuses_oversized_body ... ok
+test repeated_entity_markup_is_bounded_before_any_sink_commit ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+[91m     Running unittests examples/strict_element_parity.rs (/tmp/dispatcharr-target/debug/examples/strict_element_parity-12682053ed39df2c)
+[0m
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+[91m     Running unittests examples/xmltv_scan.rs (/tmp/dispatcharr-target/debug/examples/xmltv_scan-dde322c8472379eb)
+[0m
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+[91m     Running unittests examples/xmltv_stream_parity.rs (/tmp/dispatcharr-target/debug/examples/xmltv_stream_parity-c09c9c0d05dcea89)
+[0m
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+[91m   Compiling serde_core v1.0.229
+[0m[91m   Compiling serde_json v1.0.154
+[0m[91m   Compiling libc v0.2.191
+[0m[91m   Compiling num-traits v0.2.19
+[0m[91m   Compiling serde v1.0.229
+[0m[91m   Compiling digest v0.10.7
+[0m[91m   Compiling syn v2.0.119
+[0m[91m   Compiling syn v3.0.10
+[0m[91m   Compiling sha2 v0.10.9
+[0m[91m   Compiling dispatcharr-xmltv-parser v0.1.0 (/workspace/rust/crates/xmltv-parser)
+[0m[91m   Compiling chrono v0.4.45
+[0m[91m   Compiling lzma-sys v0.1.20
+   Compiling getrandom v0.4.3
+[0m[91m   Compiling xz2 v0.1.7
+[0m[91m   Compiling serde_derive v1.0.229
+[0m[91m   Compiling zeroize_derive v1.5.0
+[0m[91m   Compiling zeroize v1.9.1
+[0m[91m   Compiling zip v9.5.0
+[0m[91m   Compiling dispatcharr-ingest-core v0.1.0 (/workspace/rust/crates/ingest-core)
+[0m[91m    Finished `release` profile [optimized] target(s) in 9.61s
+[0m ---> Removed intermediate container 8868d6e24a20
+ ---> 67f2028ebe3e
+Step 17/64 : COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
+ ---> 1b929ac77d03
+Step 18/64 : COPY rust/crates/xmltv-parser/vendor/Copyright /usr/share/doc/dispatcharr/libxml2-Copyright
+ ---> 99899d2a49d1
+Step 19/64 : COPY rust/crates/xmltv-parser/vendor/NOTICES /usr/share/doc/dispatcharr/libxml2-NOTICES
+ ---> 8190e3e23193
+Step 20/64 : USER 65532:65532
+ ---> Running in b590d6a0f4f0
+ ---> Removed intermediate container b590d6a0f4f0
+ ---> efe06af6bf41
+Step 21/64 : ENTRYPOINT ["/usr/local/bin/dispatcharr-xmltv-parity"]
+ ---> Running in b83b8d2db74b
+ ---> Removed intermediate container b83b8d2db74b
+ ---> 72adbfbb40bd
+Step 22/64 : FROM ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f AS media
+ ---> 34f9011514ed
+Step 23/64 : COPY rust/runtime/collect_media.py /tmp/collect_media.py
+ ---> 6c97607a192b
+Step 24/64 : RUN /dispatcharrpy/bin/python /tmp/collect_media.py
+ ---> Running in c28e8afd3d90
+ ---> Removed intermediate container c28e8afd3d90
+ ---> f18cea5fda6d
+Step 25/64 : COPY rust/runtime/collect_crypto.py /tmp/collect_crypto.py
+ ---> 550fa19f3ad0
+Step 26/64 : RUN /dispatcharrpy/bin/python /tmp/collect_crypto.py
+ ---> Running in 4d11850db4f7
+ ---> Removed intermediate container 4d11850db4f7
+ ---> 37bb6bd75a64
+Step 27/64 : COPY rust/runtime/collect_postgres.py /tmp/collect_postgres.py
+ ---> fde100a4322e
+Step 28/64 : RUN /dispatcharrpy/bin/python /tmp/collect_postgres.py
+ ---> Running in 5978287921f6
+ ---> Removed intermediate container 5978287921f6
+ ---> fe8a7db716fb
+Step 29/64 : COPY rust/runtime/collect_vlc.py /tmp/collect_vlc.py
+ ---> 71ac6f4a7d4c
+Step 30/64 : RUN /dispatcharrpy/bin/python /tmp/collect_vlc.py
+ ---> Running in f7650ae5a837
+ ---> Removed intermediate container f7650ae5a837
+ ---> 249bd427f1e1
+Step 31/64 : COPY rust/runtime/collect_static.py rust/runtime/drf-static-source-1.json /tmp/
+ ---> bfe08aca0975
+Step 32/64 : RUN /dispatcharrpy/bin/python /tmp/collect_static.py
+ ---> Running in c6fdc35d1706
+ ---> Removed intermediate container c6fdc35d1706
+ ---> fa418a066f28
+Step 33/64 : COPY rust/runtime/collect_regex_host.py /tmp/collect_regex_host.py
+ ---> cdbca7bd3edb
+Step 34/64 : RUN /dispatcharrpy/bin/python /tmp/collect_regex_host.py
+ ---> Running in d21162a02231
+ ---> Removed intermediate container d21162a02231
+ ---> 2090253c12f8
+Step 35/64 : COPY --chmod=0555 rust/runtime/regex_bridge/ /media-runtime/opt/dispatcharr-python/bridge/
+the --chmod option requires BuildKit. Refer to https://docs.docker.com/go/buildkit/ to learn how to build images with BuildKit enabled
