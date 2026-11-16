@@ -1,6 +1,6 @@
 # Rust milestone batch 36: bounded DVR capability admission
 
-SDK47 passes all four toolchain gates and installs nine exact frozen Rust paths. The change permits unrelated Main work to start with a populated plugin directory while refusing unsupported DVR work before queue claim or producer effects. This is a limited stable, owned namespace capability boundary; Candidate36 Docker and all six package families pass; application acceptance remains pending.
+SDK47 passes all four toolchain gates and installs nine exact frozen Rust paths. The change permits unrelated Main work to start with a populated plugin directory while refusing unsupported DVR work before queue claim or producer effects. This is a limited stable, owned namespace capability boundary; Candidate36 Docker and all six package families pass. Its complete affected Native batch passes Guide and grouped recording/settings; M8 and recording/recovery restart remain failed.
 
 Original Dispatcharr, plugin and dependency authors retain full application, library and algorithm credit. This migration claims none of their original work.
 
@@ -27,7 +27,7 @@ SDK46 namespace packaging evidence remains in [batch 35](rust-milestone-batch35.
 - Exercise real normal, revoked and missing-row recording heads, recovery heads and offset heads. Observe exact queued bytes, no claim/ACK, preserved prior backend values and absence of SQL/media/event/provider/revoke effects through physical shutdown.
 - Exercise valid authenticated recording POST/PUT/PATCH and Core DVR-offset writes, proving refusal before SQL, Beat, cache, broker or revoke effects. Retain auth/validation ordering and stop/DELETE cleanup behavior.
 - Run empty-directory regressions, directory replacement, plugin addition/removal and configured symlink retarget controls; distinguish operational errors from known unsupported capability.
-- Resolve the existing Guide audit-baseline failure, then qualify the complete application milestones and matched CPU/memory/stream workloads. No performance gains are established by this packet.
+- Retain the fresh complete Guide pass with the corrected audit observer; qualify remaining application milestones and matched CPU/memory/stream workloads. No performance gains are established by this packet.
 
 The [packet index](../scripts/rust-integration/milestone-batch36/index.json) hashes the public evidence. Root owns review, commit and publication.
 
@@ -35,4 +35,8 @@ The [packet index](../scripts/rust-integration/milestone-batch36/index.json) has
 
 Source `350b4fdacc45ea7ec4136398d7e7bae4ba4b1f73` built with actual exit 0 in 135.333 seconds. Its immutable image is `sha256:dc9f08a7fb9a3a178dd7b8635543ff002dfd91998503e50f0404eee5ccfa286d`. All six [package families](../scripts/rust-integration/milestone-batch36/package/inventory.json) exited 0: Git/SDK source and unchanged React/credits, crypto, PostgreSQL, dependency regex, Python compatibility runtime and VLC. The Python control also runs the production command-line launcher and verifies the installed empty Source API namespace. These controls do not execute a DVR plugin or close an application milestone.
 
-[Independent cleanup](../scripts/rust-integration/milestone-batch36/package/cleanup.json) confirms all 55 exact package containers absent using 104 actual empty-inventory commands, each with exit 0 and completed wait/pipe EOF. The complete affected Native M8, Guide, grouped recording/settings and recording/recovery restart batch remains pending; earlier failed Guide results remain unchanged.
+[Independent cleanup](../scripts/rust-integration/milestone-batch36/package/cleanup.json) confirms all 55 exact package containers absent using 104 actual empty-inventory commands, each with exit 0 and completed wait/pipe EOF. The affected application batch completed as described below; earlier failed Guide results remain unchanged.
+
+Main39 completed naturally with [actual exit 1 in 599.675 seconds](../scripts/rust-integration/milestone-batch36/application/execution.json). The complete Guide context and empty-plugin grouped-M6 regression passed. M8 proved exactly two real startup roots with explicit recovery deferral, and reload/enable returned 200, then its pool ownership observer failed reading `/proc/1/exe` as UID65532. Eight held Main sockets are not inferred; the following negative domain controls were not run. The empty-plugin recording/recovery restart passed its recorded state checks but failed the strict decoder-stderr criterion on a repeated audio DTS warning despite decoder exit 0. Both failed workflow results remain failed. All eight exact containers and individual process generations are absent, independently verified after cleanup.
+
+The earlier [Main38 infrastructure attempt](../scripts/rust-integration/milestone-batch36/infra-38/inventory.json) exited 1 in 0.917 seconds because the launch omitted the tooling environment and Compose rejected its command before application bootstrap. Its raw cleanup remains false/unknown; a separate exact-project read-only inventory verified no containers, networks or volumes remained. No application pass is derived from that attempt. These batches establish no full milestone or new performance gain.

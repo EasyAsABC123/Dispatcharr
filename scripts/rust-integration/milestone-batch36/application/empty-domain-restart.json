@@ -1,0 +1,23 @@
+{
+  "workflow_status": "failed",
+  "source": "artifacts/rust/normal-graph-batch39-functional-1/results/Native/restart-recovery.json",
+  "source_sha256": "23ac7c9a6809b6ef08f98b1672f50ce36d827db4af10006dd00375d3ac3c7570",
+  "recording_recovery_state_flags": {
+    "old_frame_actual_cas": true,
+    "named_and_UUID_keys_preserved": true,
+    "due_actual_media": true,
+    "expired_actual_remux": true,
+    "expired_missing_playlist_interrupted": true,
+    "future_periodic_repaired": true,
+    "queued_deleted_row_consumed": true,
+    "revoked_deleted_row_consumed": true,
+    "original_recording_window_preserved": true,
+    "all_owned_recording_children_retired": true
+  },
+  "decoder_actual_exit": 0,
+  "decoder_stderr": "[null @ 0x5604cf574680] Application provided invalid, non monotonically increasing dts to muxer in stream 1: 384000 >= 384000\n",
+  "decoder_stderr_sha256": "13cb5e64a5630d97ad78fc315b9767f9ae44a1d99f38d4f09454241d56c7ce80",
+  "failed_criterion": "internal_damage_detected requires empty decoder stderr; actual repeated audio DTS warning retained. Successful decoder exit/frame counts do not relabel workflow.",
+  "Source_current_media_parity": "not measured by this Native-only context; historical Source decoder warning stays scoped",
+  "nonempty_name_means": "Nonempty recording/broker/media state with EMPTY configured plugin directory"
+}

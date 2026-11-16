@@ -14,7 +14,9 @@ The newest source candidate is [Candidate36](rust-milestone-batch36.md), runtime
 1,115 tests, zero failures and 783 ignored. It allows unrelated Main startup
 with a populated plugin directory while refusing unsupported DVR effects before
 queue claim or producer mutation. Docker and all six package families pass;
-actual application boundary acceptance remains pending. This does not implement DVR plugin execution, Source three-root
+Main39 passes complete Guide and grouped recording/settings. M8 fails its
+process observer and restart fails strict decoder verification; queue/API
+boundary controls remain unrun. This does not implement DVR plugin execution, Source three-root
 startup parity or enabled-plugin restore. The [DVR compatibility analysis](rust-dvr-plugin-compatibility.md)
 identifies the remaining recording-event and constructor-extension interfaces.
 All full M0–M9 milestones and new

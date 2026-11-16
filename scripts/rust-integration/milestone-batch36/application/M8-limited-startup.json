@@ -1,0 +1,244 @@
+{
+  "passed": true,
+  "root_ids": [
+    "4ca70100-3748-4858-8d13-f4abc21d9e68",
+    "79a12184-306d-4390-879f-617cb822df40"
+  ],
+  "backend": {
+    "79a12184-306d-4390-879f-617cb822df40": {
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T07:03:36.145638+00:00",
+        "task_id": "79a12184-306d-4390-879f-617cb822df40"
+      },
+      "actual_key": "celery-tasks:celery-task-meta-79a12184-306d-4390-879f-617cb822df40"
+    },
+    "4ca70100-3748-4858-8d13-f4abc21d9e68": {
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T07:03:46.164434+00:00",
+        "task_id": "4ca70100-3748-4858-8d13-f4abc21d9e68"
+      },
+      "actual_key": "celery-tasks:celery-task-meta-4ca70100-3748-4858-8d13-f4abc21d9e68"
+    }
+  },
+  "queues": [
+    0,
+    0
+  ],
+  "unacked_counts": [
+    0,
+    0
+  ],
+  "actual_startup_frames": [
+    {
+      "frame": {
+        "body": "W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "core.tasks.check_for_version_update",
+          "id": "79a12184-306d-4390-879f-617cb822df40",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "79a12184-306d-4390-879f-617cb822df40",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen1@b6974f8d0798",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "79a12184-306d-4390-879f-617cb822df40",
+          "reply_to": "0b636b0f-f694-370d-8e29-9f629304319b",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "1d8ca422-9730-4696-bf97-e643ab89b06f"
+        }
+      },
+      "actual_redis_time": 1794812616.139417,
+      "client_address": "lua",
+      "queue": "celery"
+    },
+    {
+      "frame": {
+        "body": "W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.plugins.tasks.refresh_plugin_repos",
+          "id": "4ca70100-3748-4858-8d13-f4abc21d9e68",
+          "shadow": null,
+          "eta": "2026-11-16T07:03:46.139467+00:00",
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "4ca70100-3748-4858-8d13-f4abc21d9e68",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen1@b6974f8d0798",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "4ca70100-3748-4858-8d13-f4abc21d9e68",
+          "reply_to": "1fc3d00e-fc8b-3d19-af69-635646476c6c",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "1b04fc72-38f9-4f24-8d20-cc2e4c55c4e9"
+        }
+      },
+      "actual_redis_time": 1794812616.139823,
+      "client_address": "lua",
+      "queue": "celery"
+    }
+  ],
+  "plugin_countdown_at_LPUSH_seconds": 9.999644041061401,
+  "repository_fence": {
+    "enabled_repositories": [],
+    "refresh_interval_input": 0
+  },
+  "business_network_fence": {
+    "actual_closed_proxy": {
+      "loopback_proxy_port": 9,
+      "actual_connect_ex": 111
+    },
+    "owned_NO_PROXY": [
+      "localhost",
+      "127.0.0.1",
+      "::1",
+      "baseline",
+      "origin",
+      "11.254.252.2",
+      "11.254.252.3"
+    ],
+    "provider_owned_proxy_preserved": false,
+    "scope": "Actual application env; no HTTP-client/function replacement or Source SSRF bypass"
+  },
+  "observer_actual_UID_proof": {
+    "actual_MONITOR_subscribed": true,
+    "actual_euid": 65532,
+    "actual_egid": 65532,
+    "pid": 316,
+    "generation": "12558372"
+  },
+  "scope": "Actual natural startup publications and terminal results; limited Native populated-plugin mode explicitly defers recovery and has no Source three-root parity.",
+  "actual_startup_root_count": 2,
+  "DVR_domain_capability": {
+    "actual_health_status": 200,
+    "selected_workers": {
+      "scope": "experimental selected normal families plus startup recovery; not Source47 parity",
+      "ready": true,
+      "startup": "Started",
+      "startup_error": null,
+      "control": "Subscribed",
+      "celery": "Observed(Empty)",
+      "dvr": "Observed(Empty)",
+      "clocked_scheduler": "Observed(Tick { reloaded: true, published: None, publication_error: None, disabled: 0, synchronized: 0, missing: 0, invalid_rows: 0, delay_seconds: 5.0 })",
+      "clocked_scheduler_enabled": true,
+      "dvr_plugin_domain": "unsupported_configured_plugin_hooks",
+      "startup_recovery_deferred_unsupported_domain": true,
+      "parity_complete": false
+    },
+    "expected_actual_startup_roots": 2,
+    "Source_three_root_parity": false,
+    "DVR_plugin_domain_supported": false,
+    "recovery_root_published": false,
+    "scope": "Idle startup capability only; unsupported recording work must be refused separately."
+  },
+  "observer_role_stop": {
+    "role": "plugin-startup-observer",
+    "socket": "/tmp/normal-dvr-roles/631467cac4c240048ee583720212c3d4.sock",
+    "owner_pid": 315,
+    "owner_starttime": "12558370",
+    "pid": 316,
+    "starttime": "12558372",
+    "actual_pgid": 316,
+    "process_group_authority": "successful Popen(start_new_session=True)",
+    "actual_argv": [
+      "/dispatcharrpy/bin/python",
+      "/normal-dvr-tools/startup_observer.py"
+    ],
+    "log_paths": {
+      "stdout": "/tmp/normal-dvr-roles/631467cac4c240048ee583720212c3d4/stdout.log",
+      "stderr": "/tmp/normal-dvr-roles/631467cac4c240048ee583720212c3d4/stderr.log"
+    },
+    "shutdown_started": true,
+    "signal_settled": true,
+    "actual_master_SIGTERM_sent": true,
+    "shutdown_settled": true,
+    "running": false,
+    "actual_exit": 0,
+    "actual_wait_completed": true,
+    "forced": false,
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "failures": [],
+    "actual_reaped_adopted_children": [],
+    "owned_generations": [
+      {
+        "pid": 316,
+        "starttime": "12558372",
+        "absent": true
+      }
+    ],
+    "all_original_process_generations_absent": true
+  },
+  "observer_final": {
+    "thread_settled": true,
+    "actual_rows": 1161,
+    "written_rows": 1161,
+    "persisted_rows": 1161,
+    "captured_bytes": 216579,
+    "row_limit": 20000,
+    "byte_limit": 16777216,
+    "terminal_reader_error": null,
+    "close_after_cases": true,
+    "terminal_marker": "plugin-startup-terminal-a2289da77e5a4fec9b04fc80fd9a73d6",
+    "terminal_marker_read": true,
+    "terminal_barrier_observed": true,
+    "terminal_barrier_fsynced": true,
+    "writer_closed": true,
+    "flush_calls": 2,
+    "fsync_calls": 1,
+    "scope": "All commands through the actual terminal ECHO are buffered in bounded batches then flush/fsync completes before the durable marker event; no subsequent background polls are included.",
+    "observer_error": null
+  }
+}

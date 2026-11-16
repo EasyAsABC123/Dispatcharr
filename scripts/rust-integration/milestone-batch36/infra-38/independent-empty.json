@@ -1,0 +1,57 @@
+{
+  "scope": "Independent exact project inventory after Main38 Docker Compose CLI environment failure; raw fixture cleanup remains false/unknown unchanged",
+  "project": "dispatcharr-normal-dvr-a29081e1cb",
+  "inventories_empty": true,
+  "commands": [
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-a29081e1cb",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009506242000497878,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-a29081e1cb",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008918894993257709,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-a29081e1cb",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.04045151699392591,
+      "actual_wait_and_pipe_EOF": true
+    }
+  ],
+  "app_acceptance": false,
+  "raw_cleanup_relabelled": false
+}

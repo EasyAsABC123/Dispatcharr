@@ -1,0 +1,214 @@
+{
+  "passed": true,
+  "project": "dispatcharr-normal-dvr-a2bcfdd0a0",
+  "independent_project_inventories_empty": true,
+  "independent_exact_CID_count": 8,
+  "independent_exact_CIDs_absent": [
+    "b6974f8d079879646c38ce42de5aca75eac7fcdb99733da9f0ba5d6b9fd5e811",
+    "f92551cb77f026a7e4e47e0f9b95790ec83ce5f57bb61eb1f6adfea8aa6073a7",
+    "328cd8ee9fa951259c6c3620f05868b47810ec2ede6138392ae2a0d006e12fe3",
+    "38af1f594897c15d7c67d7abf2a62ee27f0621384d0cf884c9bc811f38f9e361",
+    "ab9cdc5d345271d8e5b221b0c8295411f5efb16d98269353cb47b0559b5a2028",
+    "3f9eb6397ee23e8770e91aa96d08579ba55e5999018e1d1e7a49f7be2bc1c8e1",
+    "4b81f1551d51f77d365fe0467765d40b6746aaf509a2f04d1b0cebe591e2e3b7",
+    "2bbcf9f5d06f6d1ddddb56bbbe792d5c0ff57e381500ac8598b38f2ab75adf88"
+  ],
+  "raw_cleanup_source": "artifacts/rust/normal-graph-batch39-functional-1/results/report.json",
+  "raw_cleanup_source_sha256": "6982a001ed877b40dc0414eaad2706b282e7e6e657499a62f75510b244d1bf1d",
+  "individual_generation_unknown": [],
+  "actual_commands": [
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-a2bcfdd0a0",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.00997093299520202,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-a2bcfdd0a0",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009259272992494516,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-a2bcfdd0a0",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009131218990660273,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=b6974f8d079879646c38ce42de5aca75eac7fcdb99733da9f0ba5d6b9fd5e811",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009309493994805962,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=f92551cb77f026a7e4e47e0f9b95790ec83ce5f57bb61eb1f6adfea8aa6073a7",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009391817002324387,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=328cd8ee9fa951259c6c3620f05868b47810ec2ede6138392ae2a0d006e12fe3",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008894332990166731,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=38af1f594897c15d7c67d7abf2a62ee27f0621384d0cf884c9bc811f38f9e361",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.00904926699877251,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=ab9cdc5d345271d8e5b221b0c8295411f5efb16d98269353cb47b0559b5a2028",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008678337006131187,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=3f9eb6397ee23e8770e91aa96d08579ba55e5999018e1d1e7a49f7be2bc1c8e1",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008724618004634976,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=4b81f1551d51f77d365fe0467765d40b6746aaf509a2f04d1b0cebe591e2e3b7",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.008850721002090722,
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=2bbcf9f5d06f6d1ddddb56bbbe792d5c0ff57e381500ac8598b38f2ab75adf88",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.009226561989635229,
+      "actual_wait_and_pipe_EOF": true
+    }
+  ],
+  "application_acceptance": false
+}

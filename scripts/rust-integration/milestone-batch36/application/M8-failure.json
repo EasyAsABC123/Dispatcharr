@@ -1,0 +1,14 @@
+{
+  "actual_command_source": "artifacts/rust/normal-graph-batch39-functional-1/fixtures/Native-e41bbb6c/command-0073.json",
+  "actual_command_sha256": "3f8182747e7af1b063ea71005e6947794dd0747014e8a8096cced4a4d7b44602",
+  "actual_exit": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 19, in <module>\n    print(json.dumps({'actual_native_pid':pid,'actual_generation':generation,'actual_executable':os.readlink('/proc/1/exe'),'actual_uid':Path('/proc/1/status').read_text().split('Uid:',1)[1].splitlines()[0].strip(),'sockets':sockets,'errors':errors}))\n                                                                                                 ~~~~~~~~~~~^^^^^^^^^^^^^^^\nPermissionError: [Errno 13] Permission denied: '/proc/1/exe'\n",
+  "stderr_sha256": "3f22aa87576d1d39594d4150d0d08a85942078a43082d36c9f193859125ea416",
+  "observational_failure": "UID65532 proc1 executable readlink PermissionError; FD errors were not skipped or eight sockets inferred",
+  "reload_status": 200,
+  "enable_status": 200,
+  "M8_workflow_passed": false,
+  "negative_domain_boundaries": "NOT RUN: preceding M8 action workflow aborted before callback",
+  "limited_initial_startup_roots": 2,
+  "Source_three_root_recovery_parity": false
+}

@@ -1,0 +1,103 @@
+{
+  "status": "passed",
+  "source": "artifacts/rust/normal-graph-batch39-functional-1/results/Native/grouped-m6.json",
+  "source_sha256": "756d45237ffa37b20f7a58fcff673c9511518e82f706bb13497cac31cb3500f8",
+  "cells": [
+    {
+      "name": "cleanup",
+      "status": "passed",
+      "started_epoch": 1794812952.7589614,
+      "finished_epoch": 1794812954.2628355,
+      "queue_after": [
+        [],
+        [],
+        0
+      ],
+      "observation_sha256": "895b5f6eeef1a3d01d4dde57bdeab4263ec79a86415e2ff9218a428617ef2fd6",
+      "observation_keys": [
+        "task_id",
+        "backend",
+        "sentinel_after"
+      ]
+    },
+    {
+      "name": "scanner",
+      "status": "passed",
+      "started_epoch": 1794812954.2632031,
+      "finished_epoch": 1794812957.783759,
+      "queue_after": [
+        [],
+        [],
+        0
+      ],
+      "observation_sha256": "b2f4bdafca3d00b75febf6aa333005cbfd58edc718e834420904d83345ae0210",
+      "observation_keys": [
+        "task_id",
+        "backend",
+        "children",
+        "sql",
+        "mapped_epg_seed"
+      ]
+    },
+    {
+      "name": "recurring",
+      "status": "passed",
+      "started_epoch": 1794812957.7845085,
+      "finished_epoch": 1794812961.5590572,
+      "queue_after": [
+        [],
+        [],
+        0
+      ],
+      "observation_sha256": "5243f017053d540ab801262b939f5eb8852c1fa6568291da4b7cc1d529d3a554",
+      "observation_keys": [
+        "rule",
+        "task_id",
+        "backend",
+        "repeat_id",
+        "repeat",
+        "sql"
+      ]
+    },
+    {
+      "name": "expiration",
+      "status": "passed",
+      "started_epoch": 1794812961.5597293,
+      "finished_epoch": 1794812965.7999797,
+      "queue_after": [
+        [],
+        [],
+        0
+      ],
+      "observation_sha256": "27a6b2d3489a10dcbdf83e39157478db3ef099a98783abf3884982393621fdcf",
+      "observation_keys": [
+        "task_id",
+        "backend",
+        "seed",
+        "sql",
+        "events"
+      ]
+    },
+    {
+      "name": "empty-stats",
+      "status": "passed",
+      "started_epoch": 1794812965.8008368,
+      "finished_epoch": 1794812968.5247557,
+      "queue_after": [
+        [],
+        [],
+        0
+      ],
+      "observation_sha256": "a7c51d959a534ef3cfd0864d5706985ec75c5ecad3b45fdc46eb92ae6dac18e2",
+      "observation_keys": [
+        "task_id",
+        "backend",
+        "events",
+        "decoded_stats",
+        "scope"
+      ]
+    }
+  ],
+  "scope": "Compact actual named cell outcomes only; complete observations/SQL remain at exact hashed raw source.",
+  "full_milestone_accepted": false
+}
