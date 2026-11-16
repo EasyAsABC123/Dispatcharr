@@ -1,0 +1,964 @@
+{
+  "runtime": "Tokio multi_thread worker_threads2",
+  "seed_source": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/private/command-0485.stdout",
+  "seed_sha256": "50fa7d06aef2f65ce595a2bf492a6287838d6040276f5ecebbf46239386f710a",
+  "seed_trace_records": 103,
+  "binary_sha256": "210259eef44cdf39838c288713057ef5865d351ac37f414c1cea95548f0dfce7",
+  "origin_sha256": "0688803ce720da56d84c126faab04ccc822ef77d8c09416895f58231a74b171c",
+  "environment": {
+    "HTTPS_PROXY": "http://127.0.0.1:39375",
+    "https_proxy": "http://127.0.0.1:39375",
+    "HTTP_PROXY": "http://127.0.0.1:39375",
+    "http_proxy": "http://127.0.0.1:39375",
+    "ALL_PROXY": "http://127.0.0.1:39375",
+    "all_proxy": "http://127.0.0.1:39375",
+    "NO_PROXY": "127.0.0.1,localhost",
+    "no_proxy": "127.0.0.1,localhost"
+  },
+  "rows": [
+    {
+      "n": 0,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-0.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.18030675400223117,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-0.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-0.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286538,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 1,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-1.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.16089668299537152,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-1.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-1.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286543,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 2,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-2.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.16905087999475654,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-2.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-2.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286548,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 3,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-3.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.1719316910021007,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-3.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-3.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286553,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 4,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-4.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.17020200200204272,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-4.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-4.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286558,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 5,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-5.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.1655273020005552,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-5.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-5.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286563,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 6,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-6.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.1638713860011194,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-6.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-6.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286568,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 7,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-7.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.16496627598826308,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-7.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-7.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286573,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 8,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-8.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.16385231500316877,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-8.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-8.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286578,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 9,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-9.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.19040577601117548,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-9.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-9.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286583,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 10,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-10.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.17977368000720162,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-10.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-10.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286588,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 11,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-11.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.18128236100892536,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-11.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-11.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286629,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 12,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-12.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.16696848199353553,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-12.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-12.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286634,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 13,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-13.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.16784811699471902,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-13.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-13.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286653,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 14,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-14.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.1724741859943606,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-14.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-14.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286658,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 15,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-15.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.16791147900221404,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-15.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-15.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286663,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 16,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-16.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.1673221320088487,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-16.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-16.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286668,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 17,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-17.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.16667905400390737,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-17.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-17.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286673,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 18,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-18.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.1773046310117934,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-18.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-18.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286678,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 19,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:39375/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/body-19.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.17301263099943753,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-19.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/old-19.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2286683,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    }
+  ],
+  "server_thread_retired": true,
+  "server_active": 0,
+  "seconds": 3.841314962992328,
+  "body_retention": "Per-call length/hash captured before removal of reproducible fixture body; exact first current-thread body retained separately."
+}

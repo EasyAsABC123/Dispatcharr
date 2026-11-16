@@ -1,0 +1,40 @@
+{
+  "cases": [
+    {
+      "actual": {
+        "actual_busy_parent_and_fifteen_second_child": true,
+        "actual_durable_receipt_and_due_forced_unmapped_parse": true
+      },
+      "name": "source-refresh-busy-durable-retry",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "actual480_limit_no_child_no_parse": true
+      },
+      "name": "source-refresh-defer-limit480",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "actual_pidbox_revoke_terminal_and_reservation_absence": true
+      },
+      "name": "source-refresh-deferred-revoked",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "actual_normal_stop0_and_owner_receipt": true,
+        "actual_restored_pair_and_same_child_consumed_after_restart": true
+      },
+      "name": "source-refresh-warm-restored-restart",
+      "status": "passed"
+    }
+  ],
+  "status": "passed",
+  "unqualified": [
+    "cold visibility/revoke races beyond this warm restart",
+    "held physical shutdown",
+    "missing-file download and incomplete-file policies"
+  ]
+}

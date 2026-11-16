@@ -1,0 +1,134 @@
+{
+  "state": "Minimal owned positive-contract fixture correction; isolated Source and OLD Native controls qualify; fresh full affected Source guide workflow REQUIRED",
+  "change": "Only add Connection: close to302 redirect response which already sets close_connection=True; no response body/Location/status/auth/cookie/application/client modifications",
+  "credit": "Original Dispatcharr, Requests, CPython and dependency authors retain full credit.",
+  "base_driver": "Driver32",
+  "helper": {
+    "sha256": "0688803ce720da56d84c126faab04ccc822ef77d8c09416895f58231a74b171c",
+    "mode": "0o444",
+    "directory_mode": "0o755"
+  },
+  "source_pinned_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "seed": {
+    "initial_records": 103,
+    "bytes": 32904,
+    "sha256": "50fa7d06aef2f65ce595a2bf492a6287838d6040276f5ecebbf46239386f710a",
+    "retention": "Each20-call cohort starts at exact103-record snapshot; trace appends naturally through successive calls. No synthetic sleeps/delays inside Origin. Source observer waits for actual request activity0 after each result before snapshot/assertion."
+  },
+  "implicit_close_observations": {
+    "old_Native_passed": 1,
+    "old_Native_failed": 19,
+    "old_Native_error": "Owned request debug: reqwest Request -> hyper_util SendRequest -> hyper IncompleteMessage",
+    "Source_passed": 7,
+    "Source_failed": 13,
+    "Source_failures": "ConnectionError; separate actual failure stack retained as RemoteDisconnected",
+    "Source_collector_exit0_means": "Collection complete, not all requests passed",
+    "private_pool0_passed": 20,
+    "pool_candidate_excluded": true
+  },
+  "explicit_close": {
+    "Source_passed": 20,
+    "old_Native_passed": 20,
+    "every_success": "Exactly302then200, Owned-XMLTV/2.0 on both GETs,6750261-byte finalXML SHA9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+    "cookie_contract": "Actual Origin neither sets nor changes cookies; earlier separately retained three-mode controls verify owned cookie retention. No cookie header was added to this exact-Origin fixture.",
+    "Source_exact_CID_absent": true,
+    "all_processes_EOF_and_groups_settled": true,
+    "server_threads_retired_and_active0": true
+  },
+  "retained_harness_failure": "Source seeded attempt1 Docker125 before child launch due stale originalCIDfilename in argv; immutable evidence retained. Attempt2 actual Source ConnectionError. Attempt3 completed bounded20-call collector.",
+  "runtime_change_landed": false,
+  "application_acceptance": false,
+  "performance_claim": false,
+  "heavy_lease_released": true,
+  "next_step": "Create fresh readable/mode-bound Driver33 helper overlay and Source affected-guide characterization; bind controls/actual bytes, preserve all historical failures and no-retroactive pass claims; then new Native affected guide alongside separate Host fix candidate.",
+  "evidence": [
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/explicit-close-helper/sd_guide_origin.py",
+      "sha256": "0688803ce720da56d84c126faab04ccc822ef77d8c09416895f58231a74b171c"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/explicit-close-helper/overlay-map.json",
+      "sha256": "adf322c080bc1fb3b540184e1472e42c293d8e4d6d7bb13383c65d4963fdc134"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/explicit-close-helper/helper.patch",
+      "sha256": "525dca4298563cf94bcb2e98b0d02a378ca832a7092bce53550979cd094f0598"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-explicit-control1-command.json",
+      "sha256": "ae04c9c0a60badbe481fdc6448ea616a468faf5ebc21e89bc8bca521c53459fc"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-explicit-control1.stdout",
+      "sha256": "4f4f05973294d8cb2fee7fe95c5086a0fc97ea544d5f15da0db79457c5263a86"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-explicit-control1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-explicit-control1-cleanup.json",
+      "sha256": "26158c91f115208d1e3bfd112ad4a7015a3d23b206ef2ba4ae0fb2c44af1f247"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-explicit-old-1/report.json",
+      "sha256": "d34ac34ec462e6f09f8c7e622cf3f5ddc80c30b86f329c286a9e5cdcde98e221"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/run_source_explicit.py",
+      "sha256": "d3e59107eeead71ae4d0d5d0d7692769e397d7280f4232ec8061ed17efdb1ddc"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/source_explicit_collect.py",
+      "sha256": "80a0a6b0b5743cc35fdadd3abbcd11ee691aef983759d1cc45a1d38b8ada04c1"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/run_multithread_explicit_old.py",
+      "sha256": "5b7fda26375642ca1bf6654766ff69df83035b1c252bb866be10af0bc633a2a0"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-seeded-control-command.json",
+      "sha256": "66cd021c632bd3fe7eee420da7cd0ad991273cf4fa0e1a7e471335be35a17537"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-seeded-control.stderr",
+      "sha256": "6b9e103fbe4d4cec5f5ff3067cab503688e62c57a30effe79b162609411ca0bb"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-seeded-control2-command.json",
+      "sha256": "365f8dadf60c7b4731a7b223002b4e55c7c3daec1cd72bc916a06f2d5c9259ea"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-seeded-control2.stderr",
+      "sha256": "57b8388d34de725f22d4e901e1cfe7ea04e65a6e97cac35a999d809ae7202848"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-seeded-control2-cleanup.json",
+      "sha256": "2b6e66215e72f66f501e720d9255de56606353b4f7a6e75687210efe1de2c84f"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-seeded-control3-command.json",
+      "sha256": "76dd3f9cd0d456b89d80f558269e03f415a609a3a9323a0893d00002efa3721f"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-seeded-control3.stdout",
+      "sha256": "e9fa601807fec17c6678afd9a59bf9ec62a474a7bc428385193e0d38144a1e75"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/Source-seeded-control3-cleanup.json",
+      "sha256": "9bc40712633402512d88b182c00aeaec489eba4c6ca816d96c3d8082e7b4c7a7"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/report.json",
+      "sha256": "8548dd5fb9e9d7c5f7f7d7053f2bef7e890ed06a7d94f2118f4c1264fc5f3ba1"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-new-1/report.json",
+      "sha256": "2e8b3bf58f44ece001439ac992b1cc1ce0789f86c9ae82b5472e87698fb9c29b"
+    },
+    {
+      "path": "artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-new-1/build.json",
+      "sha256": "2f1ab00cdb4d1ce5e6c4fb0bda9f9a9a2818866afff5d15af5c65d129e6636d2"
+    }
+  ]
+}

@@ -1,0 +1,698 @@
+{
+  "runtime": "Tokio multi_thread worker_threads2",
+  "seed_source": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/private/command-0485.stdout",
+  "seed_sha256": "50fa7d06aef2f65ce595a2bf492a6287838d6040276f5ecebbf46239386f710a",
+  "seed_trace_records": 103,
+  "binary_sha256": "210259eef44cdf39838c288713057ef5865d351ac37f414c1cea95548f0dfce7",
+  "origin_sha256": "23b890127b613f2d9081fc5211870b61742021b509fc2c04479b39d4ded67339",
+  "environment": {
+    "HTTPS_PROXY": "http://127.0.0.1:46713",
+    "https_proxy": "http://127.0.0.1:46713",
+    "HTTP_PROXY": "http://127.0.0.1:46713",
+    "http_proxy": "http://127.0.0.1:46713",
+    "ALL_PROXY": "http://127.0.0.1:46713",
+    "all_proxy": "http://127.0.0.1:46713",
+    "NO_PROXY": "127.0.0.1,localhost",
+    "no_proxy": "127.0.0.1,localhost"
+  },
+  "rows": [
+    {
+      "n": 0,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-0.xml"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.1683739200088894,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-0.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-0.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281242,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 48,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        },
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/guide.xml",
+          "status": 200,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 6750261,
+          "decoded_fixture_bytes": 6750261,
+          "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+          "consumer_disconnected": false,
+          "compression": "none"
+        }
+      ],
+      "body": {
+        "bytes": 6750261,
+        "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+      }
+    },
+    {
+      "n": 1,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-1.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06905278899648692,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-1.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-1.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281247,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 2,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-2.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.0697285680071218,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-2.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-2.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281251,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 3,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-3.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.07311859200126491,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-3.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-3.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281255,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 4,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-4.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.07042385799286421,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-4.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-4.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281259,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 5,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-5.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.07278340299671981,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-5.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-5.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281263,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 6,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-6.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.07040422699355986,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-6.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-6.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281272,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 7,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-7.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.0713674139988143,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-7.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-7.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281276,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 8,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-8.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06970972799172159,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-8.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-8.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281280,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 9,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-9.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06526607400155626,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-9.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-9.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281284,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 10,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-10.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.065061819012044,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-10.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-10.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281288,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 11,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-11.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06547746001160704,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-11.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-11.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281292,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 12,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-12.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06583823000255506,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-12.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-12.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281296,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 13,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-13.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06754246800846886,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-13.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-13.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281300,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 14,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-14.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06788522700662725,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-14.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-14.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281304,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 15,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-15.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06706385400320869,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-15.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-15.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281308,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 16,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-16.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06642937699507456,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-16.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-16.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281312,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 17,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-17.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06667496298905462,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-17.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-17.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281316,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 18,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-18.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.0662352910003392,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-18.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-18.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281320,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    },
+    {
+      "n": 19,
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/examples/owned_xmltv_redirect",
+        "http://127.0.0.1:46713/xmltv/redirect.xml",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/body-19.xml"
+      ],
+      "receipt": {
+        "actual_exit": 2,
+        "failure": null,
+        "seconds": 0.06678804599505384,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-19.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-XMLTV-redirect-connection-candidate-1/multithread-seeded-old-1/old-19.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 2281324,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 192,
+        "output_bytes_discarded": 0
+      },
+      "trace": [
+        {
+          "kind": "owned_XMLTV_request",
+          "path": "/xmltv/redirect.xml",
+          "status": 302,
+          "user_agent": "Owned-XMLTV/2.0",
+          "wire_bytes": 0
+        }
+      ],
+      "body": null
+    }
+  ],
+  "server_thread_retired": true,
+  "server_active": 0,
+  "seconds": 1.9281357080035377,
+  "body_retention": "Per-call length/hash captured before removal of reproducible fixture body; exact first current-thread body retained separately."
+}

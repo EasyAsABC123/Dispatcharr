@@ -46,10 +46,10 @@ settlement; the owned Origin finishes with no active requests and a retired
 server thread. These isolated controls do not qualify the failed packaged
 application workflow.
 
-The private control preview includes the proposed constructor refactoring, but
-explicitly selects the old public factory with unchanged pool1 configuration;
-the new no-idle constructor is never selected. Its conditional pool change is
-excluded from this candidate. The Source cleanup observer originally expected
+Those initial private controls include the proposed constructor refactoring,
+but explicitly select the old public factory with unchanged pool1 configuration;
+the new no-idle constructor was not selected in those initial controls. The pool
+change remains excluded from this candidate. The Source cleanup observer originally expected
 capitalized `No such`; Docker returned lowercase `error: no such object` for the
 exact owned CID. A supplemental exact-signature receipt establishes absence
 while retaining the original false checker result. No raw failure is rewritten.
@@ -81,3 +81,40 @@ physical and independent business outcomes retain their old-image scopes.
 These package and readability controls establish no new RPC/restore/application,
 full milestone or performance acceptance, and introduce no pool or HTTP behavior
 fix.
+
+
+## Source36: fresh full-guide qualification of the owned redirect fixture
+
+The [fresh Source-only guide batch](../scripts/rust-integration/milestone-batch34/Source-qualification/inventory.json)
+actually exits 0 after331.843 seconds. All 36 cases across 11 guide groups pass,
+including SD refresh/retries, XMLTV deferral/download/selection/output, Connect,
+local and remote hooks, fallback, stream names and custom guides. Both pipes
+reach EOF and the process group settles. Cleanup passes for one project, both
+exact Source container IDs and their original process generations. Source
+application code is unchanged; no Native application context or separate Source
+M8 context executes. This qualifies the declared fixture wire behavior for
+Source; it accepts no Native milestone or performance gain.
+
+The actual workflow redirect records 302 then 200 with `Owned-XMLTV/2.0` on both
+requests. Source reaches success, promotes the 6,750,261-byte XML cache with
+SHA256 `9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1`,
+persists its selected programme and leaves no incoming temporary file. The
+[one-header helper correction](../scripts/rust-integration/milestone-batch34/Source-qualification/helper.patch)
+adds `Connection: close` to the owned 302 response, which already intended to
+close its socket. Location, status and body are unchanged. Exactly one of 138
+Driver32 payloads changes; directories declare 0755, files 0444, and an actual
+UID65532 control reads and hashes all 138 files and verifies its container absent.
+
+[Further causal controls](../scripts/rust-integration/milestone-batch34/Source-qualification/fixture-controls.json)
+explain why the earlier isolated successes were insufficient. The actual Origin
+sends 302 headers, then serializes its accumulated trace before closing. With the
+saved 103-record prelude, the old two-worker Rust client passes 1/20 and fails 19
+with Hyper `IncompleteMessage`; pinned Requests passes 7/20 and fails 13 with
+connection errors. Each cohort begins with that exact prelude and appends its
+trace naturally. These implicit-close failures remain preserved observations.
+The same explicit-close fixture passes 20/20 for both pinned Requests and the
+old Rust client, preserving two GETs, User-Agent and final body. The actual
+fixture neither sets nor changes cookies; earlier independent controls retain
+their separate cookie proof. A private no-idle-pool counterpart also passes 20/20,
+but is excluded because this close race affects Source too. No production HTTP,
+retry or pool behavior change is accepted.

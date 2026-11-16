@@ -1,0 +1,54 @@
+{
+  "state": "Fresh Source-only full-guide explicit-close qualification passed with exactcleanup; no Native workflow acceptance",
+  "Source_application_code_changed": false,
+  "only_fixture_change": "Owned302 response now advertises Connection:close, matching its existing intended close_connection=True",
+  "Source_contexts_passed": [
+    "schedules-direct"
+  ],
+  "Source_M8_context_executed": false,
+  "Native_contexts_executed": [],
+  "controller_actual_exit": 0,
+  "controller_seconds": 331.84296851699764,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "physical_process_group_settled": true,
+  "guide_groups": 11,
+  "guide_leaf_cases_passed": 36,
+  "guide_leaf_cases_failed": 0,
+  "cleanup_projects": 1,
+  "exact_Source_CIDs_absent": 2,
+  "all_original_generations_absent": true,
+  "redirect": {
+    "actual_statuses": [
+      302,
+      200
+    ],
+    "both_agents": "Owned-XMLTV/2.0",
+    "SQLstatus": "success",
+    "body_bytes": 6750261,
+    "body_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1",
+    "programmes": 1,
+    "incoming_empty": true
+  },
+  "binding_sha256": "3cecd7137f88d387318c95b5f7b45660601b55b31931587b7af45be2f2ce91b9",
+  "driver_closure_sha256": "3a958b32ac5dd85566994f644aa752a6cb0a1c26d2524226e1958aa4ec805309",
+  "Current_candidate_dependency": "sha256:b7e0b01a3c55721dd6dfbca94e7c4acb7f06be4cfb48c90dc0e51750a9db7c08",
+  "implicit_close_race": {
+    "old_Native_passed": 1,
+    "old_Native_failed": 19,
+    "old_Native_error": "Owned request debug: reqwest Request -> hyper_util SendRequest -> hyper IncompleteMessage",
+    "Source_passed": 7,
+    "Source_failed": 13,
+    "Source_failures": "ConnectionError; separate actual failure stack retained as RemoteDisconnected",
+    "Source_collector_exit0_means": "Collection complete, not all requests passed",
+    "private_pool0_passed": 20,
+    "pool_candidate_excluded": true
+  },
+  "explicit_close_isolated_Source_passed": 20,
+  "explicit_close_isolated_old_Native_passed": 20,
+  "earlier_failure_statuses_rewritten": false,
+  "Native_application_acceptance": false,
+  "full_milestone_accepted": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr, Requests, CPython, Django, Celery and dependency authors retain full application/library/algorithm credit."
+}

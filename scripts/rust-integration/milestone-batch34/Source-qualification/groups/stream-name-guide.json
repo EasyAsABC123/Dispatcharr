@@ -1,0 +1,70 @@
+{
+  "cases": [
+    {
+      "actual": {
+        "channels": 9,
+        "display_names_unchanged_parse_names_used_for_programmes": true,
+        "programme_counts": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "source_byte_clock_parity_claimed": false
+      },
+      "name": "actual-stream-name-XMLTV",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "dummy_rows_by_channel": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "existing_dummy_custom_identity_prefix_preserved": true
+      },
+      "name": "actual-stream-name-grid",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "actual_XC_short_rows_by_channel": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "credential_logs_public": false
+      },
+      "name": "actual-stream-name-XC",
+      "status": "passed"
+    }
+  ],
+  "full_M7_or_custom_dummy_parity": false,
+  "performance_verified": false,
+  "status": "passed",
+  "unqualified": [
+    "actual regex/time/date pattern generation",
+    "tie choice for equal-order distinct stream names",
+    "custom logo/poster/category/live/new fields",
+    "malformed Source error-body parity",
+    "physical guide cancellation/large scaling"
+  ]
+}

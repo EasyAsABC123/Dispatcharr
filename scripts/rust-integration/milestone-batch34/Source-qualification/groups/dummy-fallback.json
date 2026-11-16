@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "actual": {
+        "channels": 4,
+        "literal_braces_not_interpolated": true,
+        "programme_counts": [
+          6,
+          6,
+          6,
+          6
+        ],
+        "source_byte_clock_parity_claimed": false
+      },
+      "name": "actual-dummy-fallback-XMLTV",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "dummy_rows_by_channel": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "existing_dummy_custom_identity_prefix_preserved": true
+      },
+      "name": "actual-dummy-fallback-grid",
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "actual_XC_short_rows_by_channel": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "credential_logs_public": false
+      },
+      "name": "actual-dummy-fallback-XC",
+      "status": "passed"
+    }
+  ],
+  "full_M7_or_custom_dummy_parity": false,
+  "performance_verified": false,
+  "status": "passed",
+  "unqualified": [
+    "actual regex/time/date pattern generation",
+    "stream-name ordered lookup",
+    "custom logo/poster/category/live/new fields",
+    "malformed Source error-body parity",
+    "physical guide cancellation/large scaling"
+  ]
+}

@@ -1,0 +1,11 @@
+--- a/sd_guide_origin.py
++++ b/sd_guide_origin.py
+@@ -139,7 +139,7 @@
+    except(BrokenPipeError,ConnectionResetError):disconnected=True
+    self.close_connection=True;self.server.state.record({'kind':'owned_XMLTV_selected_request','path':parsed.path,'status':200,'selected_valid_programmes':6001,'invalid_sibling_programmes':1,'wire_bytes':sent,'decoded_fixture_bytes':decoded,'wire_sha256':sha.hexdigest(),'consumer_disconnected':disconnected});return
+   if leaf=='redirect.xml':
+-   self.send_response(302);self.send_header('Location','/xmltv/guide.xml');self.send_header('Content-Length','0');self.end_headers();self.close_connection=True;self.server.state.record({'kind':'owned_XMLTV_request','path':parsed.path,'status':302,'user_agent':self.headers.get('User-Agent'),'wire_bytes':0});return
++   self.send_response(302);self.send_header('Location','/xmltv/guide.xml');self.send_header('Content-Length','0');self.send_header('Connection','close');self.end_headers();self.close_connection=True;self.server.state.record({'kind':'owned_XMLTV_request','path':parsed.path,'status':302,'user_agent':self.headers.get('User-Agent'),'wire_bytes':0});return
+   if leaf=='missing.xml':
+    body=b'owned XMLTV not found';self.send_response(404);self.send_header('Content-Length',str(len(body)));self.send_header('Connection','close');self.end_headers();self.wfile.write(body);self.close_connection=True;self.server.state.record({'kind':'owned_XMLTV_request','path':parsed.path,'status':404,'user_agent':self.headers.get('User-Agent'),'wire_bytes':len(body)});return
+   if leaf not in('guide.xml','guide.xml.gz','encoded.xml','incomplete.xml'):
