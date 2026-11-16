@@ -48,6 +48,7 @@ impl PluginHookTaskContext {
                 | "apps.epg.tasks.refresh_all_epg_data"
                 | "apps.epg.tasks.refresh_epg_data"
                 | "apps.epg.tasks.parse_programs_for_tvg_id"
+                | "apps.epg.tasks.fetch_schedules_direct_stations"
                 | "apps.epg.tasks.fetch_sd_mapped_guide_batch"
                 | "apps.epg.tasks.fetch_sd_guide_for_epg"
         ) {

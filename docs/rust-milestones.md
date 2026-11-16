@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The next [Candidate39 source](rust-milestone-batch39.md) passes SDK53 with 1,135
+tests and the physical 15-statement schema check. Its station and aggregate
+refresh worker paths include the Source55 default-custom caught-error contract;
+image/package and the two complete Native cohorts are pending.
+
 The newest qualified packaged runtime is
 [Candidate38](rust-channel-matching-native.md): all four SDK51 gates pass with
 1,130 tests, the physical 11-statement schema check and all six package families

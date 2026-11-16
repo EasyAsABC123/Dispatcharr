@@ -32,6 +32,13 @@ fn diagnostic_error(stage: &'static str, error: &Error) {
 pub enum Request {
     Mapped { source: i64, force: bool },
     Single { epg: i64, force: bool },
+    Stations { source: i64 },
+}
+pub(super) enum StationOutcome {
+    Auth(auth::AuthResult),
+    Idle(String),
+    Error(String),
+    Success(u64),
 }
 #[derive(Debug)]
 pub enum Error {
@@ -138,8 +145,8 @@ impl Admission {
     ) -> Result<Self, Error> {
         let session = auth.borrow_task_sql_session(owner.clone()).await?;
         let read=async{
-   let (source_id,already_present)=match request{Request::Mapped{source,..}=>(Some(source),false),Request::Single{epg,..}=>session.run(move|c|Box::pin(async move{let row=sqlx::query("SELECT epg_source_id::bigint,EXISTS(SELECT 1 FROM epg_programdata p WHERE p.epg_id=e.id) AS has_data FROM epg_epgdata e WHERE e.id=$1").bind(epg).fetch_optional(c).await?;match row{None=>Ok::<(Option<i64>,bool),sqlx::Error>((None,false)),Some(row)=>Ok((row.try_get("epg_source_id")?,row.try_get("has_data")?))}})).await??};
-   let (source,wrong_type)=match source_id{None=>(None,false),Some(id)=>match Source::read(id,session.clone(),auth.clone(),owner.clone()).await?{auth::Read::Missing=>(None,false),auth::Read::Other=>(None,true),auth::Read::Source(source)=>(Some(*source),false)}};
+   let (source_id,already_present)=match request{Request::Mapped{source,..}|Request::Stations{source}=>(Some(source),false),Request::Single{epg,..}=>session.run(move|c|Box::pin(async move{let row=sqlx::query("SELECT epg_source_id::bigint,EXISTS(SELECT 1 FROM epg_programdata p WHERE p.epg_id=e.id) AS has_data FROM epg_epgdata e WHERE e.id=$1").bind(epg).fetch_optional(c).await?;match row{None=>Ok::<(Option<i64>,bool),sqlx::Error>((None,false)),Some(row)=>Ok((row.try_get("epg_source_id")?,row.try_get("has_data")?))}})).await??};
+   let (source,wrong_type)=match source_id{None=>(None,false),Some(id)=>match if matches!(request,Request::Stations{..}){Source::read_station_task(id,session.clone(),auth.clone(),owner.clone()).await?}else{Source::read(id,session.clone(),auth.clone(),owner.clone()).await?}{auth::Read::Missing=>(None,false),auth::Read::Other=>(None,true),auth::Read::Source(source)=>(Some(*source),false)}};
    // Legacy constructors remain gated. The typed real runtime supplies
    // the scoped template/plugin port; scripts still need their physical port.
    let bound=hook_runtime.is_some();
@@ -229,6 +236,7 @@ impl Admission {
     }
     pub fn early_result(&self) -> Option<Value> {
         match (self.request, self.source.is_some(), self.already_present) {
+            (Request::Stations { .. }, false, _) => Some(Value::Null),
             (Request::Mapped { .. }, false, _) => Some(if self.wrong_type {
                 json!("Not a Schedules Direct source")
             } else {
@@ -370,6 +378,70 @@ impl Admission {
         }
         result
     }
+    async fn execute_stations(
+        &mut self,
+        stopped: &(dyn Fn() -> bool + Send + Sync),
+    ) -> Result<Value, Error> {
+        let id = self.source_id().ok_or(Error::Unsupported)?;
+        self.status(
+            id,
+            Some("fetching"),
+            "Authenticating with Schedules Direct...",
+        )
+        .await?;
+        self.event(
+            id,
+            "parsing_programs",
+            2,
+            None,
+            Some("Authenticating with Schedules Direct..."),
+            None,
+        )
+        .await?;
+        let progress = Progress::new(id, self.events.clone(), self.owner.clone());
+        let outcome = super::sd_station_discovery::discover(
+            self.source.as_mut().ok_or(Error::Unsupported)?,
+            &progress,
+            stopped,
+        )
+        .await?;
+        match outcome {
+            StationOutcome::Success(count) => {
+                let message=format!("{count} stations loaded from Schedules Direct. Run Auto-match EPG to map your channels, then use the Refresh button to populate guide data.");
+                let text = message.clone();
+                self.session.run(move|c|Box::pin(async move{sqlx::query("UPDATE epg_epgsource SET status='success',last_message=$2,updated_at=$3 WHERE id=$1").bind(id).bind(text).bind(Utc::now()).execute(c).await.map(|_|()).map_err(StoreError::from)})).await??;
+                let _=self.events.send_retained("updates",json!({"type":"update","data":{"progress":100,"type":"epg_refresh","source":id,"action":"parsing_channels","status":"success","message":message,"channels_count":count}}),self.owner.clone()).await;
+            }
+            outcome => {
+                let (status, message, error) = match outcome {
+                    StationOutcome::Auth(auth) => (
+                        if auth.soft { "idle" } else { "error" },
+                        auth.message,
+                        !auth.soft,
+                    ),
+                    StationOutcome::Idle(message) => ("idle", message, false),
+                    StationOutcome::Error(message) => ("error", message, true),
+                    StationOutcome::Success(_) => unreachable!(),
+                };
+                self.status(id, Some(status), &message).await?;
+                self.event(
+                    id,
+                    "refresh",
+                    100,
+                    Some(status),
+                    if error { None } else { Some(&message) },
+                    if error { Some(&message) } else { None },
+                )
+                .await?;
+                if error {
+                    let name = self.source.as_ref().ok_or(Error::Unsupported)?.name.clone();
+                    self.audit("epg_error", json!({"source_name":name,"message":message}))
+                        .await?;
+                }
+            }
+        }
+        Ok(Value::Null)
+    }
     async fn execute_inner(
         &mut self,
         stopped: &(dyn Fn() -> bool + Send + Sync),
@@ -394,11 +466,17 @@ impl Admission {
                 .await?;
             self.audit("epg_error", json!({"source_name":name,"message":message}))
                 .await?;
+            if matches!(self.request, Request::Stations { .. }) {
+                return Ok(Value::Null);
+            }
             return Ok(json!(if single.is_some() {
                 "SD guide fetch complete"
             } else {
                 "SD mapped guide batch complete"
             }));
+        }
+        if matches!(self.request, Request::Stations { .. }) {
+            return self.execute_stations(stopped).await;
         }
         self.event(
             id,

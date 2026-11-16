@@ -121,6 +121,56 @@ impl Prepared {
             }),
         })
     }
+    /// Narrow future natural HTTP producer port. Only this already-prepared
+    /// SD consumer can publish station roots; unknown broker replies remain
+    /// ambiguous and callers must not retry/create a second root silently.
+    pub async fn publish_stations(
+        &self,
+        source: i64,
+        countdown: bool,
+        owner: Owner,
+    ) -> Result<uuid::Uuid, WireError> {
+        use base64::{engine::general_purpose::STANDARD, Engine};
+        if self.inner.closed.load(Ordering::Acquire) || !(1..=i64::from(i32::MAX)).contains(&source)
+        {
+            return Err(WireError::UnsupportedTask);
+        }
+        let identity = self
+            .inner
+            .identity
+            .current()
+            .map_err(|_| WireError::Protocol)?;
+        let id = uuid::Uuid::new_v4();
+        let raw = crate::protocol::encode(
+            &crate::protocol::Task::CreateBackup,
+            id,
+            identity.reply_to,
+            uuid::Uuid::new_v4(),
+            &identity.origin,
+        )
+        .map_err(|_| WireError::Protocol)?;
+        let mut frame: Value = serde_json::from_slice(&raw).map_err(|_| WireError::Protocol)?;
+        frame["headers"]["task"] = json!("apps.epg.tasks.fetch_schedules_direct_stations");
+        frame["headers"]["timelimit"] = json!([null, null]);
+        frame["headers"]["argsrepr"] = json!(format!("({source},)"));
+        frame["headers"]["kwargsrepr"] = json!("{}");
+        if countdown {
+            frame["headers"]["eta"] = json!((chrono::Utc::now() + chrono::Duration::seconds(3))
+                .to_rfc3339_opts(chrono::SecondsFormat::Micros, false));
+        }
+        frame["body"] = json!(STANDARD.encode(
+            serde_json::to_vec(
+                &json!([[source],{},{"callbacks":null,"errbacks":null,"chain":null,"chord":null}])
+            )
+            .map_err(|_| WireError::Protocol)?
+        ));
+        let raw = serde_json::to_vec(&frame).map_err(|_| WireError::Protocol)?;
+        let receipt = self.inner.jobs.publish_sd_guide(&raw, owner).await?;
+        if receipt.task_id != id {
+            return Err(WireError::Corrupt);
+        }
+        Ok(id)
+    }
     pub fn bind_hook_runtime(&self, runtime: dispatcharr_store::PluginRuntime) -> Result<(), D> {
         self.inner
             .hook_runtime
@@ -303,6 +353,9 @@ impl Prepared {
                     return Ok(D::Revoked(id));
                 }
                 let request = match message.kind {
+                    Kind::Stations => Request::Stations {
+                        source: message.target,
+                    },
                     Kind::Mapped => Request::Mapped {
                         source: message.target,
                         force: message.force,
@@ -511,6 +564,16 @@ async fn execute_body(
         return Ok((value, Vec::new()));
     }
     let source = admission.source_id().ok_or(D::UnsupportedDomain)?;
+    if message.kind == Kind::Stations {
+        let stopped = || inner.closed.load(Ordering::Acquire);
+        return Ok((
+            admission
+                .execute(&stopped)
+                .await
+                .map_err(|_| fault("station discovery effects"))?,
+            Vec::new(),
+        ));
+    }
     if message.kind == Kind::Single
         && inner
             .locks
@@ -522,6 +585,7 @@ async fn execute_body(
         return deferred(inner, message, owner, "Deferred - mapped batch in progress").await;
     }
     let (key, target) = match message.kind {
+        Kind::Stations => unreachable!("station discovery has no Source task lock"),
         Kind::Mapped => ("sd_mapped_guide_fetch", source),
         Kind::Single => ("parse_epg_programs", message.target),
     };

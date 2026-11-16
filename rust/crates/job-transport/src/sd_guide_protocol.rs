@@ -6,6 +6,7 @@ use serde_json::{json, Value};
 pub(crate) enum Kind {
     Mapped,
     Single,
+    Stations,
 }
 #[derive(Clone)]
 pub(crate) struct Message {
@@ -69,12 +70,18 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     }
 
     let (kind, delegated) = match frame["headers"]["task"].as_str() {
+        Some("apps.epg.tasks.fetch_schedules_direct_stations") => (Kind::Stations, false),
         Some("apps.epg.tasks.fetch_sd_mapped_guide_batch") => (Kind::Mapped, false),
         Some("apps.epg.tasks.fetch_sd_guide_for_epg") => (Kind::Single, false),
         Some("apps.epg.tasks.parse_programs_for_tvg_id") => (Kind::Single, true),
         _ => return Err(()),
     };
-    if frame["headers"]["timelimit"] != json!([3600, 3500]) {
+    let limit = if kind == Kind::Stations {
+        json!([null, null])
+    } else {
+        json!([3600, 3500])
+    };
+    if frame["headers"]["timelimit"] != limit {
         return Err(());
     }
     let eta = match &frame["headers"]["eta"] {
@@ -92,11 +99,14 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     let mut body: Value = serde_json::from_slice(&raw).map_err(|_| ())?;
     let args = body[0].as_array().ok_or(())?;
     let kwargs = body[1].as_object().ok_or(())?;
-    let target_name = if kind == Kind::Mapped {
+    let target_name = if kind != Kind::Single {
         "source_id"
     } else {
         "epg_id"
     };
+    if kind == Kind::Stations && (args.len() > 1 || kwargs.keys().any(|k| k != "source_id")) {
+        return Err(());
+    }
     if args.len() > 3
         || kwargs
             .keys()
@@ -140,6 +150,7 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
         return Err(());
     }
     frame["headers"]["task"] = json!("apps.m3u.tasks.refresh_single_m3u_account");
+    frame["headers"]["timelimit"] = json!([3600, 3500]);
     frame["headers"]["eta"] = Value::Null;
     frame["headers"]["argsrepr"] = json!(format!("({target},)"));
     frame["headers"]["kwargsrepr"] = json!("{}");
@@ -164,6 +175,9 @@ pub(crate) fn retry_frame(
     origin: &str,
     now: DateTime<Utc>,
 ) -> Result<Vec<u8>, ()> {
+    if message.kind == Kind::Stations {
+        return Err(());
+    }
     let raw = crate::protocol::encode(
         &crate::protocol::Task::CreateBackup,
         id,
@@ -176,6 +190,7 @@ pub(crate) fn retry_frame(
     frame["headers"]["task"] = json!(match message.kind {
         Kind::Mapped => "apps.epg.tasks.fetch_sd_mapped_guide_batch",
         Kind::Single => "apps.epg.tasks.fetch_sd_guide_for_epg",
+        Kind::Stations => return Err(()),
     });
     frame["headers"]["timelimit"] = json!([3600, 3500]);
     frame["headers"]["argsrepr"] = json!(format!("[{}]", message.target));
@@ -270,5 +285,39 @@ mod controls {
         let message = parse(&serde_json::to_vec(&raw).unwrap()).unwrap();
         assert!(message.delegated && message.force);
         assert_eq!(message.defer, 0);
+    }
+    #[test]
+    fn station_natural_shape_and_eta_use_existing_codec() {
+        let mut frame: Value = serde_json::from_slice(&initial()).unwrap();
+        frame["headers"]["task"] = json!("apps.epg.tasks.fetch_schedules_direct_stations");
+        frame["headers"]["timelimit"] = json!([null, null]);
+        let raw = serde_json::to_vec(&frame).unwrap();
+        let message = parse(&raw).unwrap();
+        assert_eq!(message.kind, Kind::Stations);
+        assert_eq!(message.target, 21);
+        assert!(message.eta.is_none());
+        frame["headers"]["eta"] = json!("2026-11-16T12:00:03+00:00");
+        assert_eq!(
+            parse_eta(&serde_json::to_vec(&frame).unwrap())
+                .unwrap()
+                .kind,
+            Kind::Stations
+        );
+        frame["headers"]["timelimit"] = json!([3600, 3500]);
+        assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err());
+    }
+    #[test]
+    fn station_does_not_accept_mapped_force_signature() {
+        let mut frame: Value = serde_json::from_slice(&initial()).unwrap();
+        frame["headers"]["task"] = json!("apps.epg.tasks.fetch_schedules_direct_stations");
+        frame["headers"]["timelimit"] = json!([null, null]);
+        frame["headers"]["argsrepr"] = json!("(21, True)");
+        frame["body"] = json!(STANDARD.encode(
+            serde_json::to_vec(
+                &json!([[21,true],{},{"callbacks":null,"errbacks":null,"chain":null,"chord":null}])
+            )
+            .unwrap()
+        ));
+        assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err());
     }
 }

@@ -1,6 +1,6 @@
-//! Exact compiled matching SQL against an owned migrated Source PostgreSQL schema.
+//! Exact compiled matching, station and aggregate SQL against an owned migrated Source PostgreSQL schema.
 //! Original Dispatcharr/Django/SQLx authors retain model/algorithm/library credit.
-//! This peer prepares production statements; it never executes matching DML.
+//! This peer prepares production statements; it never executes application DML.
 use serde_json::{json, Value};
 use sqlx::{postgres::PgTypeInfo, Column, Connection, Executor, Statement, Type, TypeInfo};
 use std::{collections::BTreeSet, path::Path, str::FromStr};
@@ -8,13 +8,37 @@ use std::{collections::BTreeSet, path::Path, str::FromStr};
 fn statements() -> Vec<(&'static str, String)> {
     // Actual constants used by production queries, including the SAME dynamic
     // serializer formatter. No query body or stand-in table is copied here.
-    crate::channel_epg_match_task::schema_statements()
+    let mut rows = crate::channel_epg_match_task::schema_statements();
+    rows.extend([
+        (
+            "station_existing",
+            crate::sd_station_discovery::EXISTING.to_owned(),
+        ),
+        (
+            "station_insert",
+            crate::sd_station_discovery::INSERT.to_owned(),
+        ),
+        (
+            "station_update",
+            crate::sd_station_discovery::UPDATE.to_owned(),
+        ),
+        (
+            "aggregate_active",
+            crate::m3u_refresh_all::schema_active_selection().to_owned(),
+        ),
+    ]);
+    rows
 }
 fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
     // Named descriptors audited against each actual .bind expression. These
     // provide PostgreSQL the production Rust wire types, rather than asking it
     // to infer convenient types from otherwise-unbound SQL placeholders.
     match name {
+        "station_existing" => vec![<i64 as Type<sqlx::Postgres>>::type_info()],
+        "station_insert" | "station_update" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <Value as Type<sqlx::Postgres>>::type_info(),
+        ],
         "channels" => vec![
             <bool as Type<sqlx::Postgres>>::type_info(),
             <Vec<i64> as Type<sqlx::Postgres>>::type_info(),
@@ -28,7 +52,7 @@ fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
             <i64 as Type<sqlx::Postgres>>::type_info(),
         ],
         "serialize" => vec![<i64 as Type<sqlx::Postgres>>::type_info()],
-        "settings" | "plugins" => vec![],
+        "settings" | "plugins" | "aggregate_active" => vec![],
         _ => panic!("unreviewed production matching statement: {name}"),
     }
 }
@@ -42,6 +66,9 @@ enum Output {
 fn outputs(name: &str) -> Vec<(&'static str, Output)> {
     use Output::*;
     match name {
+        "station_existing" => vec![("tvg_id", Text)],
+        "aggregate_active" => vec![("id", Int8)],
+        "station_insert" | "station_update" => vec![],
         "channels" => vec![
             ("id", Int8),
             ("name", Text),
@@ -93,7 +120,7 @@ fn compatible(kind: Output, actual: &PgTypeInfo) -> bool {
 #[test]
 fn compiled_matching_statements_and_bind_ordinals_are_complete() {
     let rows = statements();
-    assert_eq!(rows.len(), 11);
+    assert_eq!(rows.len(), 15);
     let names: BTreeSet<_> = rows.iter().map(|(name, _)| *name).collect();
     assert_eq!(names.len(), rows.len());
     assert_eq!(
@@ -109,7 +136,11 @@ fn compiled_matching_statements_and_bind_ordinals_are_complete() {
             "single_update",
             "mark_custom",
             "serialize",
-            "plugins"
+            "plugins",
+            "station_existing",
+            "station_insert",
+            "station_update",
+            "aggregate_active"
         ]
         .into_iter()
         .collect()
@@ -198,20 +229,29 @@ async fn actual_compiled_matching_schema_prepare_only() {
         });
     }
     let mut negatives = Vec::new();
-    for name in ["channels", "bulk_candidates"] {
+    for (name, index) in [
+        ("channels", 0),
+        ("bulk_candidates", 0),
+        ("station_insert", 1),
+        ("station_existing", 0),
+    ] {
         let sql = statements()
             .into_iter()
             .find(|(n, _)| *n == name)
             .unwrap()
             .1;
         let mut types = parameter_types(name);
-        types[0] = <i64 as Type<sqlx::Postgres>>::type_info();
+        types[index] = if name == "station_existing" {
+            <bool as Type<sqlx::Postgres>>::type_info()
+        } else {
+            <i64 as Type<sqlx::Postgres>>::type_info()
+        };
         let result = (&mut connection).prepare_with(&sql, &types).await;
         negatives.push(json!({"name":name,"same_production_SQL":true,"deliberately_wrong_types":types.iter().map(TypeInfo::name).collect::<Vec<_>>(),"rejected":result.is_err(),"error":result.err().map(|e|format!("{e:?}"))}));
     }
     let ready = connection.ping().await;
     let closed = connection.close().await;
-    let passed = rows.len() == 11
+    let passed = rows.len() == 15
         && rows.iter().all(|r| {
             r["prepared"] == true
                 && r["row_decoder_compatible"] == true
@@ -221,7 +261,7 @@ async fn actual_compiled_matching_schema_prepare_only() {
         && ready.is_ok()
         && closed.is_ok();
     let report = json!({"passed":passed,"schema_only":true,"DML_executed":false,"task_or_media_executed":false,
-        "actual_readonly":readonly,"statement_cache_disabled":true,"statements":rows,"wrong_bind_type_controls":negatives,
+        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1},"statements":rows,"wrong_bind_type_controls":negatives,
         "ready":format!("{ready:?}"),"closed":format!("{closed:?}"),"scope":"Compiled production SQL/constants and audited actual Rust bind types; prepares/row shapes only, not DML/data/event/task parity."});
     let bytes = serde_json::to_vec_pretty(&report).expect("report");
     assert!(bytes.len() <= 131072);
@@ -236,6 +276,6 @@ async fn actual_compiled_matching_schema_prepare_only() {
     );
     assert!(
         passed,
-        "actual compiled matching SQL/schema/type prepare failed"
+        "actual compiled matching/station/aggregate SQL/schema/type prepare failed"
     );
 }

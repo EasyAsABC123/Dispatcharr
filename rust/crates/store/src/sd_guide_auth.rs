@@ -130,11 +130,31 @@ impl Source {
         auth: AuthService,
         owner: Owner,
     ) -> Result<Read, Error> {
+        Self::read_inner(id, session, auth, owner, true).await
+    }
+    /// The original stations task loads by primary key without type/active
+    /// filtering, including a source edited after its countdown publication.
+    /// Share all bounded SQL/credential/cache ownership with strict guide reads.
+    pub async fn read_station_task(
+        id: i64,
+        session: TaskSqlSession,
+        auth: AuthService,
+        owner: Owner,
+    ) -> Result<Read, Error> {
+        Self::read_inner(id, session, auth, owner, false).await
+    }
+    async fn read_inner(
+        id: i64,
+        session: TaskSqlSession,
+        auth: AuthService,
+        owner: Owner,
+        require_sd_type: bool,
+    ) -> Result<Read, Error> {
         let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT source_type,name,CASE WHEN COALESCE(octet_length(username),0)<=65536 THEN username END AS username,CASE WHEN COALESCE(octet_length(password),0)<=65536 THEN password END AS password,CASE WHEN octet_length(custom_properties::text)<=65536 THEN custom_properties END AS custom_properties,COALESCE(octet_length(username),0)<=65536 AND COALESCE(octet_length(password),0)<=65536 AND COALESCE(octet_length(custom_properties::text),0)<=65536 AS fits FROM epg_epgsource WHERE id=$1").bind(id).fetch_optional(c).await})).await??;
         let Some(row) = row else {
             return Ok(Read::Missing);
         };
-        if row.try_get::<String, _>("source_type")? != "schedules_direct" {
+        if require_sd_type && row.try_get::<String, _>("source_type")? != "schedules_direct" {
             return Ok(Read::Other);
         }
         if !row.try_get::<bool, _>("fits")? {

@@ -187,6 +187,28 @@ impl Worker {
                     Err(StoreError::Unsupported(_)) => return Err(D::UnsupportedDomain),
                     Err(_) => return Err(fault("SQL admission")),
                 };
+                if prepared.missing_input() {
+                    if candidate.message.kind != Kind::Single {
+                        prepared
+                            .close()
+                            .await
+                            .map_err(|_| fault("missing input Groups admission close"))?;
+                        return Err(D::UnsupportedDomain);
+                    }
+                    if let Err(error) = admit_missing_input_cache(
+                        inner.cache.clone(),
+                        candidate.message.account,
+                        owner.clone(),
+                    )
+                    .await
+                    {
+                        prepared
+                            .close()
+                            .await
+                            .map_err(|_| fault("missing input cache admission close"))?;
+                        return Err(error);
+                    }
+                }
                 if inner.closed.load(Ordering::Acquire) {
                     prepared.close().await.map_err(|_| fault("SQL close"))?;
                     return Err(fault("admission stopped"));
@@ -455,12 +477,20 @@ async fn execute_body(
         } else {
             None
         };
-        let transfer = dispatcharr_store::remote_m3u_io::transfer(
-            prepared.remote_input(inner.cache.clone(), message.use_cache),
-            prepared.clone(),
-            owner.clone(),
-        )
-        .await;
+        // The Source STD missing-input branch returns a caught fetch failure;
+        // no HTTP request, parser, fake document or downloader is involved.
+        let transfer = if prepared.missing_input() {
+            Err(dispatcharr_store::remote_m3u_io::Error::Caught(
+                "No M3U source available (missing URL and file)".to_owned(),
+            ))
+        } else {
+            dispatcharr_store::remote_m3u_io::transfer(
+                prepared.remote_input(inner.cache.clone(), message.use_cache),
+                prepared.clone(),
+                owner.clone(),
+            )
+            .await
+        };
         let downloaded = match transfer {
             Ok(v) => v,
             Err(dispatcharr_store::remote_m3u_io::Error::Caught(message_text)) => {
@@ -654,4 +684,24 @@ fn open_cache(
         return Err(CacheReadError::Capacity);
     }
     ValidatedCache::from_file(file, CacheReadLimits::default())
+}
+
+/// Shared with aggregate admission: Source missing-input error slice is cold
+/// parsed-cache Single only. Observe the actual configured directory/file under
+/// the same owner; no file is created, removed or renamed during admission.
+pub(crate) async fn admit_missing_input_cache(
+    directory: std::path::PathBuf,
+    account: i64,
+    owner: Owner,
+) -> Result<(), D> {
+    let supported=tokio::task::spawn_blocking(move || {
+        let _owner=owner;
+        if !std::fs::metadata(&directory).is_ok_and(|metadata|metadata.is_dir()){return false;}
+        matches!(std::fs::symlink_metadata(directory.join(format!("{account}.json"))),Err(error) if error.kind()==std::io::ErrorKind::NotFound)
+    }).await.map_err(|_|fault("missing input cache observation unsettled"))?;
+    if supported {
+        Ok(())
+    } else {
+        Err(D::UnsupportedDomain)
+    }
 }

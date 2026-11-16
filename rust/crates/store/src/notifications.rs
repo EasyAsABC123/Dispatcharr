@@ -284,7 +284,7 @@ impl NotificationCache {
         F: FnOnce() -> Fut,
         Fut: std::future::Future<Output = Result<Value, StoreError>>,
     {
-        self.settings_group_inner(key, load, false).await
+        self.settings_group_inner(key, load, false, false).await
     }
     pub(crate) async fn settings_group_bounded<F, Fut>(
         &self,
@@ -295,13 +295,28 @@ impl NotificationCache {
         F: FnOnce() -> Fut,
         Fut: std::future::Future<Output = Result<Value, StoreError>>,
     {
-        self.settings_group_inner(key, load, true).await
+        self.settings_group_inner(key, load, true, false).await
+    }
+    /// Observe the SAME authoritative cache/value/version domain for admission,
+    /// without filling a cache before the parent task is claimed.
+    pub(crate) async fn settings_group_observe<F, Fut>(
+        &self,
+        key: &str,
+        load: F,
+        bounded: bool,
+    ) -> Result<Value, StoreError>
+    where
+        F: FnOnce() -> Fut,
+        Fut: std::future::Future<Output = Result<Value, StoreError>>,
+    {
+        self.settings_group_inner(key, load, bounded, true).await
     }
     async fn settings_group_inner<F, Fut>(
         &self,
         key: &str,
         load: F,
         bounded: bool,
+        observe_only: bool,
     ) -> Result<Value, StoreError>
     where
         F: FnOnce() -> Fut,
@@ -345,10 +360,12 @@ impl NotificationCache {
             Ok(raw) => raw.map(|raw| decode(&raw).ok_or_else(failed)).transpose()?,
             Err(_) => return Ok(value),
         };
-        if crate::json_compat::python_equal(
-            before.as_ref().unwrap_or(&Value::Null),
-            after.as_ref().unwrap_or(&Value::Null),
-        ) {
+        if !observe_only
+            && crate::json_compat::python_equal(
+                before.as_ref().unwrap_or(&Value::Null),
+                after.as_ref().unwrap_or(&Value::Null),
+            )
+        {
             let _ = self.set(&group_key, &value).await;
         }
         Ok(value)

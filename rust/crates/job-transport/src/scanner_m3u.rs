@@ -235,7 +235,7 @@ pub(crate) struct Prepared {
     missing_input: bool,
     cached: Option<Catalog>,
     owner: Arc<Operation>,
-    done: tokio::sync::oneshot::Receiver<()>,
+    done: Option<tokio::sync::oneshot::Receiver<()>>,
 }
 impl Prepared {
     pub(crate) fn output_cache_needed(&self, kind: Kind) -> bool {
@@ -542,13 +542,13 @@ impl Service {
             session,
             service: self.inner.normal.then(|| Arc::downgrade(&self.inner)),
         });
-        if self.inner.closed.load(Ordering::Acquire) {
-            return Err(Error::Closed);
-        }
         let mut stage = "admission";
-        let result = self
-            .prepare_inner(id, kind, owner.clone(), done, &mut stage)
-            .await;
+        let result = if self.inner.closed.load(Ordering::Acquire) {
+            Err(Error::Closed)
+        } else {
+            self.prepare_inner(id, kind, owner.clone(), &mut stage)
+                .await
+        };
         if self.inner.normal && preparation_diagnostics() {
             if let Err(error) = &result {
                 eprintln!(
@@ -564,16 +564,48 @@ impl Service {
                 eprintln!("Selected M3U prepare account={id} kind={kind:?} stage=physical_fence error={error:?}");
             }
         }
+        let result = fenced.and(result);
         drop(owner);
-        fenced?;
-        result
+        match result {
+            Ok(mut prepared) => {
+                prepared.done = Some(done);
+                Ok(prepared)
+            }
+            Err(error) => {
+                // Admission failure must observe the SAME physical close before
+                // an aggregate can classify it as unsupported without retention.
+                tokio::time::timeout(Duration::from_secs(5), done)
+                    .await
+                    .map_err(|_| Error::DrainTimeout)?
+                    .map_err(|_| Error::Operational)?;
+                if self.inner.normal && self.inner.session_failed.load(Ordering::Acquire) {
+                    return Err(Error::Operational);
+                }
+                Err(error)
+            }
+        }
+    }
+    /// Read-only whole Single domain admission for an aggregate producer.
+    /// prepare probes SQL/files/cache and lock PRESENCE, never acquires a task
+    /// lock, fills a cache, writes account state, or executes the child body.
+    pub(crate) async fn admit_single(&self, id: i64, caller: Owner) -> Result<(), Error> {
+        let prepared = self.prepare(id, Kind::Single, caller).await?;
+        let Prepared { owner, done, .. } = prepared;
+        drop(owner);
+        tokio::time::timeout(Duration::from_secs(5), done.ok_or(Error::Operational)?)
+            .await
+            .map_err(|_| Error::DrainTimeout)?
+            .map_err(|_| Error::Operational)?;
+        if self.inner.normal && self.inner.session_failed.load(Ordering::Acquire) {
+            return Err(Error::Operational);
+        }
+        Ok(())
     }
     async fn prepare_inner(
         &self,
         id: i64,
         kind: Kind,
         owner: Arc<Operation>,
-        done: tokio::sync::oneshot::Receiver<()>,
         stage: &mut &'static str,
     ) -> Result<Prepared, Error> {
         *stage = "account_sql";
@@ -633,7 +665,7 @@ impl Service {
             missing_input: false,
             cached: None,
             owner,
-            done,
+            done: None,
         };
         *stage = "input_or_cache_files";
         if prepared.account.active {
@@ -1166,7 +1198,7 @@ impl Service {
         // local Arc, then wait for its physical-drop receipt before task metadata.
         let Prepared { owner, done, .. } = prepared;
         drop(owner);
-        tokio::time::timeout(Duration::from_secs(5), done)
+        tokio::time::timeout(Duration::from_secs(5), done.ok_or(Error::Operational)?)
             .await
             .map_err(|_| Error::DrainTimeout)?
             .map_err(|_| Error::Operational)?;

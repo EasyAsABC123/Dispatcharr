@@ -302,6 +302,19 @@ impl TaskSqlSession {
     /// Same shared settings cache/version fence, with its SQL loader routed to
     /// this actual connection rather than an arbitrary second pool checkout.
     pub async fn system_settings(&self, auth: AuthService) -> Result<Value, StoreError> {
+        self.system_settings_mode(auth, false).await
+    }
+    pub(crate) async fn observe_system_settings(
+        &self,
+        auth: AuthService,
+    ) -> Result<Value, StoreError> {
+        self.system_settings_mode(auth, true).await
+    }
+    async fn system_settings_mode(
+        &self,
+        auth: AuthService,
+        observe_only: bool,
+    ) -> Result<Value, StoreError> {
         if !Arc::ptr_eq(self.state.writer.semaphore(), &auth.user_agent_workers) {
             return Err(unavailable());
         }
@@ -318,6 +331,11 @@ impl TaskSqlSession {
             })).await?
         };
         match &auth.notification_cache {
+            Some(cache) if observe_only => {
+                cache
+                    .settings_group_observe("system_settings", load, false)
+                    .await
+            }
             Some(cache) => cache.settings_group("system_settings", load).await,
             None => load().await,
         }

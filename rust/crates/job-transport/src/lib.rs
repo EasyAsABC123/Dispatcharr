@@ -319,3 +319,5 @@ mod registered_plugin_eta;
 mod registered_plugin_protocol;
 
 pub mod normal_channel_matching;
+
+mod m3u_refresh_all_protocol;

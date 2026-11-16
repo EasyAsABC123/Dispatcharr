@@ -165,6 +165,52 @@ impl Prepared {
     }
 }
 impl dispatcharr_store::xc_account_http::Publisher for Prepared {
+    fn publish_all_refresh(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), StoreError>> {
+        Box::pin(async move {
+            if self.inner.closed.load(Ordering::Acquire) {
+                return Err(StoreError::Unsupported("M3U aggregate producer closed"));
+            }
+            dispatcharr_store::m3u_refresh_all::require_supported_domain(
+                &self.inner.auth,
+                owner.clone(),
+            )
+            .await?;
+            let identity = self.inner.identity.current()?;
+            let id = Uuid::new_v4();
+            let raw = crate::m3u_refresh_all_protocol::encode_root(id, &identity)
+                .map_err(|_| StoreError::Unsupported("M3U aggregate root envelope"))?;
+            if self.inner.closed.load(Ordering::Acquire) {
+                return Err(StoreError::Unsupported("M3U aggregate producer draining"));
+            }
+            let retained: Arc<dyn Send + Sync> = Arc::new((owner, id, raw.clone()));
+            match self
+                .inner
+                .jobs
+                .publish_m3u_all_frame(&raw, None, retained.clone())
+                .await
+            {
+                Ok(receipt) if receipt.task_id == id => Ok(()),
+                other => {
+                    // Even a wrong receipt cannot release the actual HTTP owner.
+                    // Preserve exact frame/UUID for unknown publication outcome.
+                    if !matches!(other, Err(crate::transport::Error::Capacity)) {
+                        self.inner
+                            .uncertain
+                            .lock()
+                            .unwrap_or_else(|e| e.into_inner())
+                            .push(retained);
+                    }
+                    Err(StoreError::StatusBody(
+                        503,
+                        json!({"error":"M3U aggregate broker publication did not acknowledge"}),
+                    ))
+                }
+            }
+        })
+    }
     fn publish_refresh(
         &self,
         account: i64,

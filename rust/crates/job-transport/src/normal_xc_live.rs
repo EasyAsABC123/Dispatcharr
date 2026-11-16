@@ -712,3 +712,6 @@ mod source_controls {
         assert!(parse(&serde_json::to_vec(&value).unwrap()).is_err());
     }
 }
+
+#[path = "normal_m3u_all.rs"]
+mod all;

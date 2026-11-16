@@ -343,6 +343,14 @@ pub(crate) async fn load_group(
     key: &str,
     defaults: Value,
 ) -> Result<Value, StoreError> {
+    load_group_mode(auth, key, defaults, false).await
+}
+async fn load_group_mode(
+    auth: &AuthService,
+    key: &str,
+    defaults: Value,
+    observe_only: bool,
+) -> Result<Value, StoreError> {
     let load = || async move {
         let mut c = auth.store.pool().acquire().await?;
         let result=sqlx::query("SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=65536 THEN value::text END AS value_text FROM core_coresettings WHERE key=$1").bind(key).fetch_optional(&mut*c).await;
@@ -372,6 +380,7 @@ pub(crate) async fn load_group(
         })
     };
     match &auth.notification_cache {
+        Some(cache) if observe_only => cache.settings_group_observe(key, load, true).await,
         Some(cache) => cache.settings_group_bounded(key, load).await,
         None => Err(StoreError::Unsupported(
             "Real shared settings cache required",
@@ -383,6 +392,15 @@ pub(crate) async fn load_group(
 /// Uses the same shared cache and actual SQL Ready fence. Main's existing
 /// image/default-UA consumers are unchanged and not qualified by this helper.
 pub(crate) async fn default_user_agent(auth: &AuthService) -> Result<String, StoreError> {
+    default_user_agent_mode(auth, false).await
+}
+pub(crate) async fn observe_default_user_agent(auth: &AuthService) -> Result<String, StoreError> {
+    default_user_agent_mode(auth, true).await
+}
+async fn default_user_agent_mode(
+    auth: &AuthService,
+    observe_only: bool,
+) -> Result<String, StoreError> {
     let cache = auth.notification_cache.as_ref().ok_or_else(capacity)?;
     let get = |key: &'static str| async move {
         let mut cmd = redis::cmd("EVAL");
@@ -390,7 +408,13 @@ pub(crate) async fn default_user_agent(auth: &AuthService) -> Result<String, Sto
         cache.command::<Option<Vec<u8>>>(cmd).await
     };
     let load = || async {
-        let group = load_group(auth, "stream_settings", json!({"default_user_agent":null})).await?;
+        let group = load_group_mode(
+            auth,
+            "stream_settings",
+            json!({"default_user_agent":null}),
+            observe_only,
+        )
+        .await?;
         let id = group.get("default_user_agent").and_then(|v| {
             v.as_i64()
                 .or_else(|| v.as_bool().map(i64::from))
@@ -444,7 +468,7 @@ pub(crate) async fn default_user_agent(auth: &AuthService) -> Result<String, Sto
         Ok(raw) => raw,
         Err(_) => return Ok(value),
     };
-    if before == after {
+    if !observe_only && before == after {
         let _ = cache.set_for(KEY, &json!(value), 300).await;
     }
     Ok(value)

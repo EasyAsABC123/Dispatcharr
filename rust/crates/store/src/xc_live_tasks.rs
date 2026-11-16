@@ -23,6 +23,7 @@ struct Account {
     name: String,
     active: bool,
     kind: String,
+    missing_input: bool,
     status: String,
     message: Option<String>,
     base: String,
@@ -57,7 +58,20 @@ pub async fn prepare(
     owner: Owner,
     events: Arc<dyn UpdateEventSink>,
 ) -> Result<Option<Prepared>, StoreError> {
-    prepare_for(store, auth, id, owner, events, "XC", false).await
+    prepare_for(
+        store,
+        auth,
+        id,
+        owner,
+        events,
+        PreparationMode {
+            expected_type: "XC",
+            allow_auto: false,
+            observe_only: false,
+        },
+    )
+    .await
+    .map_err(PreparationError::into_store)
 }
 /// Actual remote STD accounts use the same owned preparation/writer/session;
 /// missing/nonremote types delegate without claiming the broker head.
@@ -68,7 +82,20 @@ pub async fn prepare_std_remote(
     owner: Owner,
     events: Arc<dyn UpdateEventSink>,
 ) -> Result<Option<Prepared>, StoreError> {
-    prepare_for(store, auth, id, owner, events, "STD", false).await
+    prepare_for(
+        store,
+        auth,
+        id,
+        owner,
+        events,
+        PreparationMode {
+            expected_type: "STD",
+            allow_auto: false,
+            observe_only: false,
+        },
+    )
+    .await
+    .map_err(PreparationError::into_store)
 }
 pub async fn prepare_with_auto(
     store: Store,
@@ -78,7 +105,20 @@ pub async fn prepare_with_auto(
     events: Arc<dyn UpdateEventSink>,
 ) -> Result<Option<Prepared>, StoreError> {
     crate::auto_sync_language::Language::source()?;
-    prepare_for(store, auth, id, owner, events, "XC", true).await
+    prepare_for(
+        store,
+        auth,
+        id,
+        owner,
+        events,
+        PreparationMode {
+            expected_type: "XC",
+            allow_auto: true,
+            observe_only: false,
+        },
+    )
+    .await
+    .map_err(PreparationError::into_store)
 }
 pub async fn prepare_std_remote_with_auto(
     store: Store,
@@ -88,7 +128,103 @@ pub async fn prepare_std_remote_with_auto(
     events: Arc<dyn UpdateEventSink>,
 ) -> Result<Option<Prepared>, StoreError> {
     crate::auto_sync_language::Language::source()?;
-    prepare_for(store, auth, id, owner, events, "STD", true).await
+    prepare_for(
+        store,
+        auth,
+        id,
+        owner,
+        events,
+        PreparationMode {
+            expected_type: "STD",
+            allow_auto: true,
+            observe_only: false,
+        },
+    )
+    .await
+    .map_err(PreparationError::into_store)
+}
+struct PreparationMode {
+    expected_type: &'static str,
+    allow_auto: bool,
+    observe_only: bool,
+}
+enum PreparationError {
+    Domain(StoreError),
+    Operational(StoreError),
+}
+impl From<StoreError> for PreparationError {
+    fn from(error: StoreError) -> Self {
+        Self::Operational(error)
+    }
+}
+impl PreparationError {
+    fn into_store(self) -> StoreError {
+        match self {
+            Self::Domain(error) | Self::Operational(error) => error,
+        }
+    }
+}
+pub enum SingleAdmission {
+    Xc,
+    MissingStdInput,
+    RemoteStd,
+    LocalStd,
+}
+pub enum ChildAdmissionError {
+    Unsupported,
+    Operational(StoreError),
+}
+/// Reuse the production XC/remote-STD predicate with actual cached values and
+/// read-only settings observation. No status/cache/lock/publication side effects.
+/// LocalStd delegates only observed nonremote rows to their existing file service.
+pub async fn admit_refresh_single(
+    store: Store,
+    auth: AuthService,
+    id: i64,
+    owner: Owner,
+    events: Arc<dyn UpdateEventSink>,
+    allow_auto: bool,
+) -> Result<SingleAdmission, ChildAdmissionError> {
+    if allow_auto {
+        crate::auto_sync_language::Language::source()
+            .map_err(|_| ChildAdmissionError::Unsupported)?;
+    }
+    for expected_type in ["XC", "STD"] {
+        let result = prepare_for(
+            store.clone(),
+            auth.clone(),
+            id,
+            owner.clone(),
+            events.clone(),
+            PreparationMode {
+                expected_type,
+                allow_auto,
+                observe_only: true,
+            },
+        )
+        .await;
+        match result {
+            Ok(Some(prepared)) => {
+                prepared
+                    .close()
+                    .await
+                    .map_err(ChildAdmissionError::Operational)?;
+                return Ok(if prepared.missing_input() {
+                    SingleAdmission::MissingStdInput
+                } else if expected_type == "XC" {
+                    SingleAdmission::Xc
+                } else {
+                    SingleAdmission::RemoteStd
+                });
+            }
+            Ok(None) => {}
+            Err(PreparationError::Domain(_)) => return Err(ChildAdmissionError::Unsupported),
+            Err(PreparationError::Operational(error)) => {
+                return Err(ChildAdmissionError::Operational(error))
+            }
+        }
+    }
+    Ok(SingleAdmission::LocalStd)
 }
 async fn prepare_for(
     store: Store,
@@ -96,24 +232,33 @@ async fn prepare_for(
     id: i64,
     owner: Owner,
     events: Arc<dyn UpdateEventSink>,
-    expected_type: &'static str,
-    allow_auto: bool,
-) -> Result<Option<Prepared>, StoreError> {
+    mode: PreparationMode,
+) -> Result<Option<Prepared>, PreparationError> {
+    let PreparationMode {
+        expected_type,
+        allow_auto,
+        observe_only,
+    } = mode;
     if !auth.uses_store_pool(&store) {
-        return Err(unsupported());
+        return Err(PreparationError::Domain(unsupported()));
     }
     let writer = auth.task_sql_writer()?;
     let owner: Owner = Arc::new((owner, writer.clone()));
     let auth = auth
         .with_request_writer_permit(writer)?
         .with_retained_scope(owner.clone());
-    let default_agent = crate::core_settings_special_effects::default_user_agent(&auth).await?;
+    let default_agent = if observe_only {
+        crate::core_settings_special_effects::observe_default_user_agent(&auth).await?
+    } else {
+        crate::core_settings_special_effects::default_user_agent(&auth).await?
+    };
     let session = auth.borrow_task_sql_session(owner.clone()).await?;
     let read=async {
-        let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT a.id::bigint,a.name,a.account_type,a.status,CASE WHEN COALESCE(octet_length(a.last_message),0)<=65536 THEN a.last_message END AS last_message,a.is_active,a.locked,a.stale_stream_days::bigint,CASE WHEN COALESCE(octet_length(a.server_url),0)<=65536 THEN a.server_url END AS server_url,CASE WHEN COALESCE(octet_length(a.username),0)<=65536 THEN a.username END AS username,CASE WHEN COALESCE(octet_length(a.password),0)<=65536 THEN a.password END AS password,CASE WHEN COALESCE(octet_length(u.user_agent),0)<=65536 THEN u.user_agent END AS user_agent,CASE WHEN COALESCE(octet_length(a.custom_properties::text),0)<=65536 THEN a.custom_properties END AS custom_properties,(COALESCE(octet_length(a.last_message),0)<=65536 AND COALESCE(octet_length(a.server_url),0)<=65536 AND COALESCE(octet_length(a.username),0)<=65536 AND COALESCE(octet_length(a.password),0)<=65536 AND COALESCE(octet_length(a.custom_properties::text),0)<=65536 AND COALESCE(octet_length(u.user_agent),0)<=65536) AS fits FROM m3u_m3uaccount a LEFT JOIN core_useragent u ON u.id=a.user_agent_id WHERE a.id=$1").bind(id).fetch_optional(&mut*c).await})).await??;
+        let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT a.id::bigint,a.name,a.account_type,a.file_path,a.status,CASE WHEN COALESCE(octet_length(a.last_message),0)<=65536 THEN a.last_message END AS last_message,a.is_active,a.locked,a.stale_stream_days::bigint,CASE WHEN COALESCE(octet_length(a.server_url),0)<=65536 THEN a.server_url END AS server_url,CASE WHEN COALESCE(octet_length(a.username),0)<=65536 THEN a.username END AS username,CASE WHEN COALESCE(octet_length(a.password),0)<=65536 THEN a.password END AS password,CASE WHEN COALESCE(octet_length(u.user_agent),0)<=65536 THEN u.user_agent END AS user_agent,CASE WHEN COALESCE(octet_length(a.custom_properties::text),0)<=65536 THEN a.custom_properties END AS custom_properties,(COALESCE(octet_length(a.last_message),0)<=65536 AND COALESCE(octet_length(a.server_url),0)<=65536 AND COALESCE(octet_length(a.username),0)<=65536 AND COALESCE(octet_length(a.password),0)<=65536 AND COALESCE(octet_length(a.custom_properties::text),0)<=65536 AND COALESCE(octet_length(u.user_agent),0)<=65536) AS fits FROM m3u_m3uaccount a LEFT JOIN core_useragent u ON u.id=a.user_agent_id WHERE a.id=$1").bind(id).fetch_optional(&mut*c).await})).await??;
         let Some(row)=row else{return Err(StoreError::NotFound)};
         if row.try_get::<String,_>("account_type")?!=expected_type{return Ok(None)}
-        if expected_type=="STD"&&row.try_get::<Option<String>,_>("server_url")?.is_none_or(|v|v.is_empty()){return Ok(None)}
+        let missing_input=expected_type=="STD"&&row.try_get::<Option<String>,_>("server_url")?.is_none_or(|v|v.is_empty())&&row.try_get::<Option<String>,_>("file_path")?.is_none_or(|v|v.is_empty());
+        if expected_type=="STD"&&row.try_get::<Option<String>,_>("server_url")?.is_none_or(|v|v.is_empty())&&!missing_input{return Ok(None)}
         if !row.try_get::<bool,_>("is_active")?{return Err(unsupported())}
         if !row.try_get::<bool,_>("fits")? {return Err(unsupported())}
         let properties=properties(row.try_get::<Option<Value>,_>("custom_properties")?.unwrap_or(Value::Null))?;
@@ -121,10 +266,10 @@ async fn prepare_for(
         let forbidden=session.run(move|c|Box::pin(async move{sqlx::query_scalar::<_,bool>("SELECT (NOT $2 AND EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync)) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).bind(allow_auto).fetch_one(&mut*c).await})).await??;
         if forbidden{return Err(unsupported())}
         if allow_auto{crate::auto_sync::preflight(&session,id).await?;}
-        let account=Account{id,kind:row.try_get("account_type")?,name:row.try_get("name")?,status:row.try_get("status")?,message:row.try_get("last_message")?,active:row.try_get("is_active")?,base:row.try_get::<Option<String>,_>("server_url")?.unwrap_or_default(),user:row.try_get::<Option<String>,_>("username")?.unwrap_or_default(),password:row.try_get::<Option<String>,_>("password")?.unwrap_or_default(),agent:row.try_get::<Option<String>,_>("user_agent")?.filter(|v|!v.is_empty()).unwrap_or(default_agent),properties,locked:row.try_get("locked")?,days:row.try_get("stale_stream_days")?};
-        let settings=session.system_settings(auth.clone()).await?;
+        let account=Account{id,kind:row.try_get("account_type")?,missing_input,name:row.try_get("name")?,status:row.try_get("status")?,message:row.try_get("last_message")?,active:row.try_get("is_active")?,base:row.try_get::<Option<String>,_>("server_url")?.unwrap_or_default(),user:row.try_get::<Option<String>,_>("username")?.unwrap_or_default(),password:row.try_get::<Option<String>,_>("password")?.unwrap_or_default(),agent:row.try_get::<Option<String>,_>("user_agent")?.filter(|v|!v.is_empty()).unwrap_or(default_agent),properties,locked:row.try_get("locked")?,days:row.try_get("stale_stream_days")?};
+        let settings=if observe_only {session.observe_system_settings(auth.clone()).await?}else{session.system_settings(auth.clone()).await?};
         let max_events=match settings.get("max_system_events"){None|Some(Value::Null)=>100,Some(v)if v==&json!(0)=>100,Some(v)=>v.as_i64().filter(|v|(1..=10000).contains(v)).ok_or_else(unsupported)?};
-        let stream=stream_settings(&auth,&session).await?;
+        let stream=stream_settings(&auth,&session,observe_only).await?;
         let hash_keys=hash_keys(account.properties.get("hash_key").unwrap_or(&Value::Null),stream.get("m3u_hash_key").unwrap_or(&Value::Null))?;
         let filters=crate::xc_live_filters::Filters::read(&session,id).await?;
         Ok(Some((account,max_events,hash_keys,filters)))
@@ -142,8 +287,14 @@ async fn prepare_for(
             filters,
         })),
         other => {
-            session.close().await?;
-            other.map(|_| None)
+            session
+                .close()
+                .await
+                .map_err(PreparationError::Operational)?;
+            other.map(|_| None).map_err(|error| match error {
+                StoreError::Unsupported(_) => PreparationError::Domain(error),
+                other => PreparationError::Operational(other),
+            })
         }
     }
 }
@@ -161,12 +312,18 @@ fn properties(raw: Value) -> Result<Map<String, Value>, StoreError> {
 async fn stream_settings(
     auth: &AuthService,
     session: &TaskSqlSession,
+    observe_only: bool,
 ) -> Result<Value, StoreError> {
     let session = session.clone();
     let load = move || async move {
         session.run(|c|Box::pin(async move{let row=sqlx::query("SELECT octet_length(value::text)<=65536 AS fits,CASE WHEN octet_length(value::text)<=65536 THEN value END AS value FROM core_coresettings WHERE key='stream_settings'").fetch_optional(&mut*c).await?;match row{None=>Ok(json!({"m3u_hash_key":""})),Some(row)=>{if !row.try_get::<bool,_>("fits")?{return Err(unsupported())}let v:Value=row.try_get("value")?;if v.is_object(){Ok(v)}else{Ok(json!({"m3u_hash_key":""}))}}}})).await?
     };
     match &auth.notification_cache {
+        Some(cache) if observe_only => {
+            cache
+                .settings_group_observe("stream_settings", load, false)
+                .await
+        }
         Some(cache) => cache.settings_group("stream_settings", load).await,
         None => load().await,
     }
@@ -197,6 +354,11 @@ fn hash_keys(account: &Value, global: &Value) -> Result<Vec<String>, StoreError>
     }
 }
 impl Prepared {
+    /// Actual STD row had neither a truthy server URL nor uploaded file path.
+    /// Its caller must require cold parsed cache and Single task semantics.
+    pub fn missing_input(&self) -> bool {
+        self.account.missing_input
+    }
     pub async fn close(&self) -> Result<(), StoreError> {
         self.session.close().await
     }

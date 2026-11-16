@@ -1,0 +1,406 @@
+{
+  "passed": true,
+  "schema_only": true,
+  "DML_executed": false,
+  "task_or_media_executed": false,
+  "actual_readonly": "on",
+  "statement_cache_disabled": true,
+  "components": {
+    "matching": 11,
+    "station": 3,
+    "aggregate": 1
+  },
+  "statements": [
+    {
+      "name": "channels",
+      "sql": "SELECT id::bigint,name,tvg_id,tvc_guide_stationid,epg_data_id::bigint,auto_created,channel_group_id::bigint FROM dispatcharr_channels_channel WHERE ($1 AND epg_data_id IS NULL) OR (NOT $1 AND id=ANY($2)) LIMIT 65537",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "BOOL",
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "BOOL",
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tvg_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tvc_guide_stationid",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "epg_data_id",
+          "type": "INT8"
+        },
+        {
+          "name": "auto_created",
+          "type": "BOOL"
+        },
+        {
+          "name": "channel_group_id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "single_exact",
+      "sql": "SELECT e.id::bigint FROM epg_epgdata e JOIN epg_epgsource s ON s.id=e.epg_source_id WHERE s.is_active AND UPPER(e.tvg_id::text)=UPPER($1) ORDER BY e.id ASC LIMIT 1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "TEXT"
+      ],
+      "provided_parameter_types": [
+        "TEXT"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "catalog",
+      "sql": "SELECT e.id::bigint,e.name,e.tvg_id,e.epg_source_id::bigint,s.priority::bigint,s.source_type,EXISTS(SELECT 1 FROM epg_programdata p WHERE p.epg_id=e.id) AS has_programs FROM epg_epgdata e JOIN epg_epgsource s ON s.id=e.epg_source_id WHERE s.is_active AND ($1::bigint IS NULL OR e.id=$1) LIMIT 65537",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tvg_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "epg_source_id",
+          "type": "INT8"
+        },
+        {
+          "name": "priority",
+          "type": "INT8"
+        },
+        {
+          "name": "source_type",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "has_programs",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "settings",
+      "sql": "SELECT key,CASE WHEN octet_length(value::text)<=65536 THEN value ELSE NULL END AS value,COALESCE(octet_length(value::text),0)<=65536 AS supported FROM core_coresettings WHERE key IN ('preferred-region','epg_settings')",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [],
+      "provided_parameter_types": [],
+      "columns": [
+        {
+          "name": "key",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "value",
+          "type": "JSONB"
+        },
+        {
+          "name": "supported",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "bulk_candidates",
+      "sql": "SELECT c.id::bigint,x.epg FROM dispatcharr_channels_channel c JOIN jsonb_to_recordset($1) x(id bigint,epg bigint) ON x.id=c.id JOIN epg_epgdata e ON e.id=x.epg WHERE c.epg_data_id IS DISTINCT FROM x.epg",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "epg",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "bulk_update",
+      "sql": "UPDATE dispatcharr_channels_channel c SET epg_data_id=x.epg_data_id FROM jsonb_to_recordset($1) x(channel_id bigint,epg_data_id bigint) WHERE c.id=x.channel_id",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "child_epgs",
+      "sql": "SELECT e.id::bigint,e.name,e.tvg_id,e.epg_source_id::bigint,s.source_type,EXISTS(SELECT 1 FROM epg_programdata p WHERE p.epg_id=e.id) AS has_programs FROM epg_epgdata e LEFT JOIN epg_epgsource s ON s.id=e.epg_source_id WHERE e.id=ANY($1)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tvg_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "epg_source_id",
+          "type": "INT8"
+        },
+        {
+          "name": "source_type",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "has_programs",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "single_update",
+      "sql": "UPDATE dispatcharr_channels_channel SET epg_data_id=$2 WHERE id=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "mark_custom",
+      "sql": "INSERT INTO dispatcharr_channels_channelgroupm3uaccount(channel_group_id,m3u_account_id,custom_properties,enabled,auto_channel_sync,auto_sync_channel_start,auto_sync_channel_end,last_seen,is_stale) SELECT $1,id,'{}'::jsonb,true,false,NULL,NULL,now(),false FROM m3u_m3uaccount WHERE name='custom' AND locked ON CONFLICT(channel_group_id,m3u_account_id) DO NOTHING",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "serialize",
+      "sql": "SELECT to_jsonb(c) AS raw,CASE WHEN o.id IS NULL THEN NULL ELSE to_jsonb(o) END AS ov,a.name AS account_name,COALESCE((SELECT jsonb_agg(jsonb_build_object('raw',to_jsonb(s),'account_name',ma.name) ORDER BY cs.\"order\") FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id LEFT JOIN m3u_m3uaccount ma ON ma.id=s.m3u_account_id WHERE cs.channel_id=c.id),'[]'::jsonb) AS streams FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id LEFT JOIN m3u_m3uaccount a ON a.id=c.auto_created_by_id LEFT JOIN dispatcharr_channels_channelgroup g ON g.id=c.channel_group_id LEFT JOIN dispatcharr_channels_channelgroup og ON og.id=o.channel_group_id LEFT JOIN epg_epgdata e ON e.id=c.epg_data_id LEFT JOIN epg_epgdata oe ON oe.id=o.epg_data_id LEFT JOIN epg_epgsource es ON es.id=e.epg_source_id LEFT JOIN epg_epgsource oes ON oes.id=oe.epg_source_id WHERE true AND c.id=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "raw",
+          "type": "JSONB"
+        },
+        {
+          "name": "ov",
+          "type": "JSONB"
+        },
+        {
+          "name": "account_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "streams",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "plugins",
+      "sql": "SELECT EXISTS(SELECT 1 FROM plugins_pluginconfig)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [],
+      "provided_parameter_types": [],
+      "columns": [
+        {
+          "name": "exists",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "station_existing",
+      "sql": "SELECT tvg_id FROM epg_epgdata WHERE epg_source_id=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "tvg_id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "station_insert",
+      "sql": "INSERT INTO epg_epgdata(tvg_id,name,icon_url,epg_source_id) SELECT x.sid,x.name,x.logo,$1 FROM jsonb_to_recordset($2) x(sid text,name text,logo text) ON CONFLICT DO NOTHING",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "station_update",
+      "sql": "UPDATE epg_epgdata e SET name=x.name,icon_url=x.logo FROM jsonb_to_recordset($2) x(sid text,name text,logo text) WHERE e.epg_source_id=$1 AND e.tvg_id=x.sid AND (e.name IS DISTINCT FROM x.name OR e.icon_url IS DISTINCT FROM x.logo)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "aggregate_active",
+      "sql": "SELECT id::bigint FROM m3u_m3uaccount WHERE is_active LIMIT 4097",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [],
+      "provided_parameter_types": [],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    }
+  ],
+  "wrong_bind_type_controls": [
+    {
+      "name": "channels",
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42804\", message: \"argument of AND must be type boolean, not type bigint\", detail: None, hint: None, position: Some(Original(150)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_coerce.c\"), line: Some(1180), routine: Some(\"coerce_to_boolean\") })"
+    },
+    {
+      "name": "bulk_candidates",
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_to_recordset(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(68)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "station_insert",
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_to_recordset(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(96)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "station_existing",
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(51)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    }
+  ],
+  "ready": "Ok(())",
+  "closed": "Ok(())",
+  "scope": "Compiled production SQL/constants and audited actual Rust bind types; prepares/row shapes only, not DML/data/event/task parity."
+}

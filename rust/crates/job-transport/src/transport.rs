@@ -1787,3 +1787,6 @@ mod registered_plugin_visibility;
 
 #[path = "channel_matching_transport.rs"]
 mod channel_matching_transport;
+
+#[path = "m3u_refresh_all_transport.rs"]
+mod m3u_refresh_all_transport;

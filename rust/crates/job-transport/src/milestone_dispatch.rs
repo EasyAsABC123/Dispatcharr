@@ -20,6 +20,7 @@ pub enum Family {
     Scanner,
     M3uGroups,
     M3uSingle,
+    M3uAll,
     AutoChannels,
     Refresh,
     ProgrammeIndex,
@@ -250,13 +251,14 @@ pub fn classify(raw: &[u8]) -> Option<Family> {
         "core.tasks.scan_and_process_files" => Family::Scanner,
         "apps.m3u.tasks.refresh_m3u_groups" => Family::M3uGroups,
         "apps.m3u.tasks.refresh_single_m3u_account" => Family::M3uSingle,
+        "apps.m3u.tasks.refresh_m3u_accounts" => Family::M3uAll,
         "apps.m3u.tasks.sync_auto_channels" => Family::AutoChannels,
         "apps.epg.tasks.refresh_epg_data" => Family::Refresh,
         "apps.epg.tasks.build_programme_index_task" => Family::ProgrammeIndex,
         "apps.epg.tasks.parse_programs_for_tvg_id" => Family::TvgProgrammes,
-        "apps.epg.tasks.fetch_sd_mapped_guide_batch" | "apps.epg.tasks.fetch_sd_guide_for_epg" => {
-            Family::SdGuide
-        }
+        "apps.epg.tasks.fetch_schedules_direct_stations"
+        | "apps.epg.tasks.fetch_sd_mapped_guide_batch"
+        | "apps.epg.tasks.fetch_sd_guide_for_epg" => Family::SdGuide,
         "apps.channels.tasks.evaluate_series_rules" => Family::Series,
         "apps.channels.tasks.maintain_recurring_recordings" => Family::Recurring,
         "apps.channels.tasks.prefetch_recording_artwork" => Family::Artwork,
