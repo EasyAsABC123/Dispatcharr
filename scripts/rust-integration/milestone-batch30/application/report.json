@@ -1,0 +1,91 @@
+{
+  "scope": "Actual Main30 Source-first affected application batch, interrupted after proven shared NativeSD consumer fault",
+  "status": "failed",
+  "contexts": [
+    {
+      "backend": "Original",
+      "cases": [
+        {
+          "case": "schedules-direct",
+          "status": "failed"
+        },
+        {
+          "case": "redirect-common",
+          "status": "passed"
+        },
+        {
+          "case": "process-transports",
+          "status": "failed"
+        },
+        {
+          "case": "m8-actions",
+          "status": "failed"
+        },
+        {
+          "case": "stream-file-crud",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "backend": "Native",
+      "cases": [
+        {
+          "case": "schedules-direct",
+          "status": "failed"
+        }
+      ]
+    }
+  ],
+  "remaining_Native_contexts": [
+    {
+      "case": "vlc-live",
+      "status": "not_run"
+    },
+    {
+      "case": "auto-sync",
+      "status": "not_run"
+    },
+    {
+      "case": "redirect-common",
+      "status": "not_run"
+    },
+    {
+      "case": "process-transports",
+      "status": "not_run"
+    },
+    {
+      "case": "m8-actions",
+      "status": "not_run"
+    },
+    {
+      "case": "stream-file-crud",
+      "status": "not_run"
+    },
+    {
+      "case": "recording-output-profile",
+      "status": "not_run"
+    },
+    {
+      "case": "output-profile",
+      "status": "not_run"
+    },
+    {
+      "case": "custom-guide-held",
+      "status": "not_run"
+    }
+  ],
+  "source_passed_contexts": 2,
+  "Source_total_contexts": 5,
+  "Native_failed_contexts": 1,
+  "Native_remaining_not_run": 9,
+  "exact_cleanup_passed": true,
+  "full_milestone_passed": false,
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "gain_accepted": false,
+  "raw_reference": {
+    "path": "artifacts/rust/normal-graph-batch30-functional-1/results/report.json",
+    "sha256": "1319a217ce8335ef36f5a6c73b99fb6cb0df717ca9b8de848be7dcca5c9d4069"
+  }
+}

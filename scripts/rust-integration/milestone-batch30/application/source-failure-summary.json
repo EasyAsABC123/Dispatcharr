@@ -1,0 +1,131 @@
+{
+  "backend": "Original",
+  "status": "failed",
+  "passed_contexts": [
+    "redirect-common",
+    "stream-file-crud"
+  ],
+  "good_leaf_scopes_not_whole_guide_acceptance": {
+    "SD9": {
+      "status": "passed",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/schedules-direct/report.json",
+        "sha256": "21b0455b08f3590b65ba8251bc5286074b28b76c9c1b3094586c58c67aa3ab50"
+      }
+    },
+    "XMLTV_deferral": {
+      "status": "passed",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/xml-tvg-deferral/report.json",
+        "sha256": "ac1a75c3fca24c87f4ccef61be111f4b3810092dd5c0ca20c7f187bc4bd40c59"
+      }
+    },
+    "selected_XMLTV": {
+      "status": "passed",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/xmltv-selected/report.json",
+        "sha256": "cc7a9e205637518a88aadb6665ff8a77f5650d1136bc9c90bd461ec083defd6f"
+      }
+    },
+    "EPG_Connect": {
+      "status": "passed",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/epg-connect/report.json",
+        "sha256": "6c684e555fe04ff7b4b78f2192dda7c651fc36596ac08fd9521129f33f72d1e1"
+      }
+    },
+    "local_XML_hooks": {
+      "status": "passed",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/xml-local-hooks/report.json",
+        "sha256": "d958dc7897b0dd31105c864e5385ce14476b6af19c8204d960b43c305606e2f5"
+      }
+    },
+    "remote_XML_hooks": {
+      "status": "passed",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/xml-remote-hooks/report.json",
+        "sha256": "77960989611ee937bd6685945ebdf5001ef642ddb652fbec6070e45fe77cc115"
+      }
+    },
+    "Redirect_extensions": {
+      "status": "passed",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/redirect-extension-composition.json",
+        "sha256": "d500cb66b8e5f3fd72e37f8d405991da46309c6c7fd2d48524769403c1ab0a07"
+      }
+    },
+    "Stream_file_CRUD": {
+      "status": "passed",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/stream-file-crud/report.json",
+        "sha256": "80ce58556921b4a263f404871313e049758848855a30c8646ff0d07e668c22f4"
+      }
+    }
+  },
+  "failures": [
+    {
+      "case": "schedules-direct",
+      "cause_scope": "five actual-file observers looked under host case_data rather than Source persisted /app/media path; four XMLTV output requests correctly denied403 by M3U_EPG policy while onlySTREAMS ownedCIDR was added",
+      "references": [
+        {
+          "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/xmltv-download/report.json",
+          "sha256": "bd09155b1e2079502b9531bec87928442f31e7b00bf4ed123a9ec073718061d5"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/custom-guide/report.json",
+          "sha256": "85eb077883b78f0744231a5c2f08ff92eb0c56e1cbb617e8e1457109cb70c8a3"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/schedules-direct-actual-owned-network-policy.json",
+          "sha256": "6d7bc2a3b7cf20038724efb7e72af995dc03157621fe4c769ea5525ade2c9a33"
+        },
+        {
+          "path": "artifacts/rust/m6-source30-XML-file-observer-capture-2/report.json",
+          "sha256": "b90c0f725302130000d2e7a4f17be8486acc9358f77ca70ec77c9b23ac69d90a"
+        }
+      ],
+      "later_file_capture_scope": "IDs5/6 both6750261bytes/sameSHA; later filesystem observation, no retroactive per-case-time file proof or XML HTTP success"
+    },
+    {
+      "case": "process-transports",
+      "cause_scope": "new certified strict useful-window adjacency failed: actual video PTS1751040 to1758000 delta6960, required3600. Audio contiguous. Old raw failures unchanged; no certificate relaxation or offlinepass",
+      "reference": {
+        "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/process-transport-capture/report.json",
+        "sha256": "e42fcc5ea3e6a9273569f646307e1ae37acf374f8feb90ac3448979b300445a5"
+      }
+    },
+    {
+      "case": "m8-actions",
+      "cause_scope": "four parent_started/fourpublished/zerochild_started; Source HTTP500 names owned_m8_actions.physical_child; Source worker process-init-only discovery requires consumer registration fixture work. Raw worker log gap remains; no fabricated child completion.",
+      "references": [
+        {
+          "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/m8-actions-report.json",
+          "sha256": "a573bdd91065f6ba7801c8b2c3c0b2f2c2ac927a14966d18115ea70dacc92c35"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/m8-actions-four-actual-children-held-latest.json",
+          "sha256": "51ea61862b2edd4b883f17a938f764195eb5a968eef0cf974628b2f6621d7188"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/m8-actions-HTTP-four-2092eb1b.json",
+          "sha256": "0979b8e949224597c94a84e33dfd35de5d74ee2555190eabbe9acda6c26f1fb2"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/m8-actions-HTTP-four-3a3384de.json",
+          "sha256": "9799f4a0273aaffeff5cfc799bd33d6196e3863b9e734e5c7e1581a14cd7ed69"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/m8-actions-HTTP-four-8fa0f57e.json",
+          "sha256": "a59773a154f0e0b119ad5ab06b5258f2aad88ea74973c5e58481a001b22d9f02"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Original-d0a81a36/m8-actions-HTTP-four-eb4f593b.json",
+          "sha256": "a1243d4a36fe8a6abd7a970f096370f89ba3c0c893152568d060b9f1bec836f3"
+        }
+      ]
+    }
+  ],
+  "full_milestone_passed": false,
+  "performance_verified": false
+}

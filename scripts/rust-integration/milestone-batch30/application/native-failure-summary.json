@@ -1,0 +1,64 @@
+{
+  "backend": "Native",
+  "attempted_contexts": [
+    "schedules-direct"
+  ],
+  "status": "failed",
+  "actual_fault": "health503; shared celery Fault(Operational SD guide hook context setup unsettled)",
+  "grounded_static_cause": "Actual SD task name apps.epg.tasks.fetch_sd_mapped_guide_batch rejected by exact built hook-context parser accepting fabricated apps.epg.sd_tasks namespace. Synchronous bind fails before host creation; no pendingHost records inferred.",
+  "actual_readonly_capture": {
+    "path": "artifacts/rust/m6-native30-SD-stall-readonly-1/report.json",
+    "sha256": "f956550c27634ef2d532e3627da7b48bcffb919422f425e592e19b3206c8ebd3"
+  },
+  "actual_source_bound_diagnosis": {
+    "path": "artifacts/rust/m6-native30-SD-stall-readonly-1/diagnosis.json",
+    "sha256": "cee1d585c68aeb00b5b3ac09844884841248e4d86e981ff6ba3b1082b3f6b69a"
+  },
+  "stopped_Main_logs_hash_only": [
+    {
+      "path": "artifacts/rust/normal-graph-batch30-functional-1/fixtures/Native-b6aaa1b5/private/dispatcharr-normal-dvr-36cc2eefe9-native-7234a.logs",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "remaining_contexts": [
+    {
+      "case": "vlc-live",
+      "status": "not_run"
+    },
+    {
+      "case": "auto-sync",
+      "status": "not_run"
+    },
+    {
+      "case": "redirect-common",
+      "status": "not_run"
+    },
+    {
+      "case": "process-transports",
+      "status": "not_run"
+    },
+    {
+      "case": "m8-actions",
+      "status": "not_run"
+    },
+    {
+      "case": "stream-file-crud",
+      "status": "not_run"
+    },
+    {
+      "case": "recording-output-profile",
+      "status": "not_run"
+    },
+    {
+      "case": "output-profile",
+      "status": "not_run"
+    },
+    {
+      "case": "custom-guide-held",
+      "status": "not_run"
+    }
+  ],
+  "future_parser_fix_not_Main30_acceptance": true,
+  "Main_application_acceptance": false,
+  "gain_accepted": false
+}

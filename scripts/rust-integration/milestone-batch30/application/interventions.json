@@ -1,0 +1,26 @@
+{
+  "normal_acceptance": false,
+  "faulted_Main_stop": {
+    "actual_stop_exit": 1,
+    "actual_running": false,
+    "OOMKilled": false,
+    "seconds": 12.075588173000142,
+    "reference": {
+      "path": "artifacts/rust/normal-graph-batch30-functional-1/Root-faulted-SD-intervention.json",
+      "sha256": "84d424bc629c17e07681d93a8e34adc50392f08465e5d59f1db7b07c9b0d10b9"
+    }
+  },
+  "controller_SIGINT": {
+    "signal": "SIGINT",
+    "reference": {
+      "path": "artifacts/rust/normal-graph-batch30-functional-1/Root-controller-intervention.json",
+      "sha256": "4aa396f44e8af7d6c3dcb357ae097d4fb173fe8bf9dd8ada1f7fc6284a16fe7a"
+    },
+    "actual_effect": "SIGINT was swallowed by per-cell except BaseException; controller continued terminal waits. No immediate finally or cleanup is claimed."
+  },
+  "final_completion": "Original absolute deadline expired; actual controller exit1 after2415.179718s, then retained exactcleanup true. No additional force signal claimed.",
+  "final_receipt": {
+    "path": "artifacts/rust/normal-graph-batch30-functional-1/dispatch/execution.json",
+    "sha256": "d4cef5a49f7ab05ce2772dbcf4a211546608884915366a62dfefec75ba3af7ee"
+  }
+}
