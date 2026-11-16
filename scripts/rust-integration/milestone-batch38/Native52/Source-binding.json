@@ -1,0 +1,45 @@
+{
+  "Source51_authorities": {
+    "aggregate_report": {
+      "path": "artifacts/rust/normal-graph-batch51-channel-matching-1/results/report.json",
+      "sha256": "25bd7ae8bb1e215498c0dd1376d58d0034d866d979fe57fa49c5cf4faa5fd1e3"
+    },
+    "cleanup": {
+      "path": "artifacts/rust/m6-source51-independent-cleanup-1/report.json",
+      "sha256": "bf84729148064e378e0e92807967686485aceaf0b95a620cacf2278a65fbb79f"
+    },
+    "execution": {
+      "path": "artifacts/rust/normal-graph-batch51-channel-matching-1/dispatch/execution.json",
+      "sha256": "799095effd305dbb0f2e436e7efcc28e3b288bb24fb20d22a724c1db9a01871d"
+    },
+    "report": {
+      "path": "artifacts/rust/normal-graph-batch51-channel-matching-1/fixtures/Original-8e4c22f0/matching-characterization/report.json",
+      "sha256": "25d7b65d4600ac854fe88de560e8c15ad60030aecc682ffc5144ca59f9275397"
+    },
+    "vectors": {
+      "path": "artifacts/rust/normal-graph-batch51-channel-matching-1/fixtures/Original-8e4c22f0/matching-characterization/private/Source-pure-vectors.json",
+      "sha256": "a9b3a9f4a2ab6b0c104164aba260b0fcd02917af22bef461b32356e9c545ad67"
+    }
+  },
+  "Source51_public_qualification": {
+    "path": "scripts/rust-integration/channel-matching-source51/Source51/qualification.json",
+    "sha256": "7ffd10806cb2407432d21953387b85832e6d8a07afeeee899fd746c3ac66be6d"
+  },
+  "Source_replayed": false,
+  "fixture_setup_call_fusion": {
+    "Native_Django_invocations_per_case_before": 3,
+    "after": 1,
+    "offline_control": {
+      "path": "artifacts/rust/m6-channel-matching-native-helper-2/offline-fusion-control.json",
+      "sha256": "6a0ac898f6b2c01cea8fa40276e4e4f94395cf82652931da200766d84daf41ee"
+    },
+    "planned_invocations_avoided": 28,
+    "runtime_speedup_measured": false,
+    "unchanged_order": [
+      "seed",
+      "receiver_begin",
+      "snapshot"
+    ]
+  },
+  "scope": "Exact14 unchanged specs and original case assertions; no default/model/generalplugin/full role/schema scope transfer"
+}

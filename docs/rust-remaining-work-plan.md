@@ -19,14 +19,15 @@ capability inventory and historical component checkpoint.
 
 Current implementation and executable coverage are reconciled in the
 [worker graph](rust-default-worker-graph.md) and
-[47-declaration producer review](rust-source-task-coverage.md). Candidate37
-registers 29 literal application task names plus backend cleanup and dynamic
-plugins. Its [Native46 whole run](rust-milestone-batch37.md) retains five passing
-contexts and two failures; Native47 retains five passes and two failures, while
-Native48 qualifies the affected recording-event slice. See the same candidate
-record for exact scopes. The generated
-contract register still needs exact case bindings. Those implementation and
-workflow observations do not close full milestones or matched-work performance.
+[47-declaration producer review](rust-source-task-coverage.md). Candidate38
+registers 32 literal application task names plus backend cleanup and dynamic
+plugins. Its [Native52 matching cohort](rust-channel-matching-native.md) passes
+all 14 cases in the explicit no-download/absent-model/empty-plugin domain.
+Candidate37's Native46/47 whole runs retain five passing contexts and two failures;
+Native48 qualifies their affected recording-event slice on that earlier image.
+The contract register now has 136 partial HTTP Source assignments, including
+exact Source51 admin matching bindings; broader case/role coverage remains open.
+None of these observations closes full milestones or matched-work performance.
 The candidate paragraphs below are historical checkpoints, not current missing-
 registration claims or a current execution queue.
 

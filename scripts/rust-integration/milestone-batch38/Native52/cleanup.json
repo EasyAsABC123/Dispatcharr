@@ -1,0 +1,143 @@
+{
+  "Source_replayed": false,
+  "commands": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=0db265e79b45ff1c2417af65d64f66ecb0f370054d1f5922756bfd3504f5a919",
+        "--format",
+        "{{.ID}}"
+      ],
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=4f79b75f8009bd0f44108108f4e33a3f763888bd3004266f72b6ac88410f5191",
+        "--format",
+        "{{.ID}}"
+      ],
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=59a22b352c18b78ec972828839764da5a4bf5232a6fafd72ebfe0d41109998e8",
+        "--format",
+        "{{.ID}}"
+      ],
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=68d7e3958e53c4402f2f810a208c403656e48b283b5318f8682669f6d9561520",
+        "--format",
+        "{{.ID}}"
+      ],
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-81ef7f2da3",
+        "--format",
+        "{{.ID}}"
+      ],
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-81ef7f2da3",
+        "--format",
+        "{{.ID}}"
+      ],
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-81ef7f2da3",
+        "--format",
+        "{{.Name}}"
+      ],
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "fixture_CIDs": [
+    "0db265e79b45ff1c2417af65d64f66ecb0f370054d1f5922756bfd3504f5a919",
+    "4f79b75f8009bd0f44108108f4e33a3f763888bd3004266f72b6ac88410f5191",
+    "68d7e3958e53c4402f2f810a208c403656e48b283b5318f8682669f6d9561520"
+  ],
+  "full_milestone_accepted": false,
+  "observer_CIDs": [
+    "59a22b352c18b78ec972828839764da5a4bf5232a6fafd72ebfe0d41109998e8"
+  ],
+  "original_host_PIDs": {
+    "0db265e79b45ff1c2417af65d64f66ecb0f370054d1f5922756bfd3504f5a919": {
+      "evidence": "artifacts/rust/normal-graph-batch52-channel-matching-1/fixtures/Native-f8f72713/dispatcharr-normal-dvr-81ef7f2da3-native-53e27-inspection.json",
+      "original_positive_PID_absent": true,
+      "pid": 3467101,
+      "sha256": "5a26458d98442b380c0c9f6416a42db12b479234ab0bcadf9128db1617b678df"
+    },
+    "4f79b75f8009bd0f44108108f4e33a3f763888bd3004266f72b6ac88410f5191": {
+      "evidence": "artifacts/rust/normal-graph-batch52-channel-matching-1/fixtures/Native-f8f72713/command-0008.stdout",
+      "original_positive_PID_absent": true,
+      "pid": 3464242,
+      "sha256": "b85b64bd235877b3164467eec2cbe4a22c191ac082d2efe1ceee900b037ad887"
+    },
+    "68d7e3958e53c4402f2f810a208c403656e48b283b5318f8682669f6d9561520": {
+      "evidence": "artifacts/rust/normal-graph-batch52-channel-matching-1/fixtures/Native-f8f72713/command-0009.stdout",
+      "original_positive_PID_absent": true,
+      "pid": 3464155,
+      "sha256": "36147bc31a9cfbf300271507c4958c174b83c2e0980c1b81c5752a9c67d29e25"
+    }
+  },
+  "passed": true,
+  "performance_verified": false,
+  "scope": "Independent exact four CIDs/project inventories and three persisted original positive host PIDs; observer host PID was not independently captured"
+}

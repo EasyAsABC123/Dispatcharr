@@ -1,0 +1,28 @@
+{
+  "correction": "Only driver root chmod0755 to declared existing mode; payload bytes/closure/image unchanged. No helper import altered its mode.",
+  "failed_attempt160": {
+    "app_started": false,
+    "cause": "Driver root mkdir honored restrictive umask; normalization omitted root itself, leaving0700; children0755/files0444. All161 hash reads PermissionDenied before application.",
+    "exact_CID_absent": true,
+    "passed": false,
+    "report": {
+      "path": "artifacts/rust/m6-channel-matching-native-UID-160/report.json",
+      "sha256": "67b1146d7bb4d1d431e0dcc28b5f2d8d552998551be500198d9faaa4808b96fc"
+    }
+  },
+  "fresh_attempt161": {
+    "actual_UID": 65532,
+    "actual_exit": 0,
+    "app_started": false,
+    "driver_closure_sha256": "3f8c3775186d64deaa8d993bb5dbfa45afa7e8a69466b39dda4a0886da286973",
+    "exact_CID_absent": true,
+    "exact_readable_hashed_inputs": 161,
+    "passed": true,
+    "report": {
+      "path": "artifacts/rust/m6-channel-matching-native-UID-161/report.json",
+      "sha256": "f7a1a19c72e91ec27c3da241c229d84a819d5279471c53b11170a4370097dd42"
+    }
+  },
+  "new_application_attempt_after_failed160": 1,
+  "performance_or_business_failure_relabelled": false
+}

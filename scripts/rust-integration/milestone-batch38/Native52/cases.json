@@ -1,0 +1,807 @@
+{
+  "cases": [
+    {
+      "DB1_journal_sha256": "b19edc9249fa541d2e17fd8f30052fff3732fbf8eaa5f05c541c04234b7b6ef5",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "b4fb462a8f87d627826c7d9c5e5c6842d0fa5b5a431ec41d3db9bb024262ed6c",
+      "actual_backend_result_type": "str",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 2,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_epg_channels",
+      "actual_response_body_sha256": "99c09704ae95e51235f17e6e451046965ed54c5c8accbb35f77c3bf99e644a40",
+      "actual_response_keys": [
+        "message"
+      ],
+      "actual_root_frame_sha256": "b77f492b5030b8ca9508f504cd92a85534fe48c3823f02fc385f506ce1f403f5",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 107,
+        "captured_bytes": 19711,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 26293,
+          "2": 1821
+        },
+        "excluded_rows_by_database": {
+          "0": 106,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": false,
+      "matching_event_count": 6,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_match"
+      ],
+      "name": "all-exact-gracenote-priority-inactive-unassigned",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 0,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "faf7ff18bf8d1f401c585171f600ef0060e51dd3bb864ab8bbc1e43e1f7d3f95",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "2a360522e3d20a8ca6087a0cfaffc614af673678d5fd6a664cb68a7f256bb3ff",
+      "actual_backend_result_type": "str",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 1,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_selected_channels_epg",
+      "actual_response_body_sha256": "5b1b1b8ef1589f333292d890fa51b046cf72ea0f9518db83832c769044fd2484",
+      "actual_response_keys": [
+        "message"
+      ],
+      "actual_root_frame_sha256": "509ed463893c566720e01d9de0898a9b41906e34ed3c539eba13b21649887773",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 107,
+        "captured_bytes": 19788,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 21507,
+          "2": 1846
+        },
+        "excluded_rows_by_database": {
+          "0": 91,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": false,
+      "matching_event_count": 5,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_match"
+      ],
+      "name": "selected-includes-assigned-changed-and-unchanged",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 1,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "7ff7a211fa27bd0cbcc363d5c419fb39f0cd3324fd65487b94acfa074cbc1f05",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "a98bf0e0d51facd3e202032315c3d1462fef1e6d90bb18b9fc8620e2b015f13f",
+      "actual_backend_result_type": "str",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 0,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_selected_channels_epg",
+      "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+      "actual_response_keys": [
+        "message"
+      ],
+      "actual_root_frame_sha256": "271a2dab831a15d50d45b1301eb7f6f1109a0c74e6228c18fa16af755efb1ff9",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 107,
+        "captured_bytes": 19825,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 7751,
+          "2": 1830
+        },
+        "excluded_rows_by_database": {
+          "0": 37,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": false,
+      "matching_event_count": 1,
+      "matching_event_types": [
+        "epg_match"
+      ],
+      "name": "selected-no-existing-ids",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 2,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "a0d1f2ed8b4d1f913eafcc91d9cc2a7537fe8d1a34a5d169fef773e90129e9e8",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "8587cb7df5665837de4a8da21f7eaa0c01dfefc969ea52ef1527a4d083f82171",
+      "actual_backend_result_type": "dict",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 1,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_single_channel_epg",
+      "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "actual_root_frame_sha256": "b583f859953f95e37b8fe281e937b2fc037cb80eedcac3bd3d0fd431439fb23c",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 127,
+        "captured_bytes": 23097,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 17861,
+          "2": 2091
+        },
+        "excluded_rows_by_database": {
+          "0": 70,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": true,
+      "matching_event_count": 3,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-exact-first-id-not-bulk-priority",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": 1,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 3,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "5548a2bf8313ac70b8bf74dd5ec6fba393745b8358f846220b37c6039cdd0e3a",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "c301101a39e96d9cfbfd71dd8c5cf577b6654065541c68c85a74a195c17225b6",
+      "actual_backend_result_type": "dict",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 0,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_single_channel_epg",
+      "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "actual_root_frame_sha256": "d68b37ba7c42fa102c23e4df0e4f370492202da7c6e5eb7255590be32c3c4dad",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 127,
+        "captured_bytes": 23103,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 18892,
+          "2": 2171
+        },
+        "excluded_rows_by_database": {
+          "0": 76,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": false,
+      "matching_event_count": 3,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-unchanged",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 4,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "df98587b00da99f845b2c82da6941a6f9ad6ee3f3ac1c12443b8a3f76a9c0ec4",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "4c2758a90b090f2bbe72093053c8b729890aa10e1f26a22b6f79851998f3448c",
+      "actual_backend_result_type": "dict",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 1,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_single_channel_epg",
+      "actual_response_body_sha256": "ad1492badc8508d3d416a1e8b146c3271d661c309d151a31d2a9be8a0ea2cd46",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "actual_root_frame_sha256": "7b304e9db1bbb28a23f98d59761990a8cfba258ef5421d8d697cdf7c88ddb517",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 105,
+        "captured_bytes": 19418,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 17838,
+          "2": 2070
+        },
+        "excluded_rows_by_database": {
+          "0": 70,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": true,
+      "matching_event_count": 3,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-exact-nameless-catalog",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": 1,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 5,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "2d359756dd6d8ea0ca65156ccf2d8ecaca220ce8dd28b1fe402a820f4a38c9eb",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "57319f03b2bac5ae94b880c43d86ea3a3899cef7870779509bc7132fc272af02",
+      "actual_backend_result_type": "str",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 0,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_epg_channels",
+      "actual_response_body_sha256": "99c09704ae95e51235f17e6e451046965ed54c5c8accbb35f77c3bf99e644a40",
+      "actual_response_keys": [
+        "message"
+      ],
+      "actual_root_frame_sha256": "be9e5190a65b2e45d4769a9438a26923e2053e28583117dc6585568fe001129f",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 107,
+        "captured_bytes": 19714,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 18626,
+          "2": 1821
+        },
+        "excluded_rows_by_database": {
+          "0": 80,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": false,
+      "matching_event_count": 4,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_match"
+      ],
+      "name": "all-excludes-nameless-catalog",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 6,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "6d5031d71615f54210b07fddd2d5fa92bb4032fbd6c45463537ba4ad0db9f4e3",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "98333f75b8f9e13a0b9392509181402e95a1662f87690bf365aa4bf8bf17c11d",
+      "actual_backend_result_type": "dict",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 0,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_single_channel_epg",
+      "actual_response_body_sha256": "ad1492badc8508d3d416a1e8b146c3271d661c309d151a31d2a9be8a0ea2cd46",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "actual_root_frame_sha256": "fc64e5daafe89299bec0f99d5b6ef04aff9c986956963a67104be30e1d88f699",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 107,
+        "captured_bytes": 19734,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 17572,
+          "2": 1924
+        },
+        "excluded_rows_by_database": {
+          "0": 69,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": false,
+      "matching_event_count": 3,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-no-match-no-model-needed",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 7,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "b1d536c6fa9393e3c85f03815fee12dab53e54806d4b7fe8d0a6855556b97217",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "012458ae246ea470b0889e1652dcf50419d1b87ab7566d6fbad8eba77aef7527",
+      "actual_backend_result_type": "dict",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 0,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_single_channel_epg",
+      "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "actual_root_frame_sha256": "a5413ddab15ec53d0392b7947d398c29d22a2539710d263f70d38df7895ec61f",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 97,
+        "captured_bytes": 18053,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 15489,
+          "2": 2148
+        },
+        "excluded_rows_by_database": {
+          "0": 61,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": false,
+      "matching_event_count": 2,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-caught-SQL-failure",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 8,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "ae92545cfef583e19df0774145a8fdc35a0c6923087fb873c7740db95396a130",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "51ad5ad6ef13c2b665b9820435ec3ac1ea921ec0da677db727cf3bec4ab8fba6",
+      "actual_backend_result_type": "str",
+      "actual_backend_status": "FAILURE",
+      "actual_changed_assignments": 0,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_selected_channels_epg",
+      "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+      "actual_response_keys": [
+        "message"
+      ],
+      "actual_root_frame_sha256": "018b61092b862580623f1ded23a796afec256f01ac355362862fc6ee77e32ec4",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 93,
+        "captured_bytes": 17459,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 15881,
+          "2": 2556
+        },
+        "excluded_rows_by_database": {
+          "0": 69,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": false,
+      "matching_event_count": 3,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress"
+      ],
+      "name": "selected-SQL-failure-and-following-continuation",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 9,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "cb011a19d8ab7399a4bd416534ccb35b3c403e4beea21fe27ff6d8b457f99886",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "a0f5ec2a4fc86b8e71f3c1e966e3fb49855b30a6a85ff720ed2754e40f503b2c",
+      "actual_backend_result_type": "dict",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 1,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_single_channel_epg",
+      "actual_response_body_sha256": "0f51162dfcbdd704dde3017d3a8d541d3f3d370468555d178fcdfec022a32c36",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "actual_root_frame_sha256": "ccb5c3e90b601d7f3b96673c9e9c2551ddbec40d9a91066a74d4782962dbba0d",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 97,
+        "captured_bytes": 18059,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 17782,
+          "2": 2139
+        },
+        "excluded_rows_by_database": {
+          "0": 70,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": true,
+      "matching_event_count": 3,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-high-confidence-normalization",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": 1,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 10,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "200b8d76c6e9c4c7c42e34f7f0d16faceb3f2a91c18a6a478640f53bed07d9aa",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "4f5f54d403a47b754c811c3a74f72b6bbcfbb74e7260ec74b846f02fb9aece9c",
+      "actual_backend_result_type": "str",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 1,
+      "actual_children": [],
+      "actual_matching_root_task": "apps.channels.tasks.match_selected_channels_epg",
+      "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+      "actual_response_keys": [
+        "message"
+      ],
+      "actual_root_frame_sha256": "90cb8054f9c800d05df4cfb2b1643360bcfdc4e85dbee21bc08932eb39e5e47d",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 117,
+        "captured_bytes": 21444,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 18767,
+          "2": 1848
+        },
+        "excluded_rows_by_database": {
+          "0": 80,
+          "2": 6
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": false,
+      "matching_event_count": 4,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_match"
+      ],
+      "name": "selected-region-priority-fuzzy",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 11,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "9b81e884a7317494132b8a60dbaa7dcc22989d0798acaf00074210317f85c906",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "4221bb3a88e3cbdad7b31f84b528ec257a7a52b997759b270244f92c4d005869",
+      "actual_backend_result_type": "str",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 5,
+      "actual_children": [
+        {
+          "argument_kind": "EPGData_ID",
+          "parent_is_actual_claimed_matching_UUID": true,
+          "root_is_actual_matching_UUID": true,
+          "task": "apps.epg.tasks.parse_programs_for_tvg_id",
+          "terminal_status": "SUCCESS"
+        },
+        {
+          "argument_kind": "EPGSource_ID",
+          "parent_is_actual_claimed_matching_UUID": true,
+          "root_is_actual_matching_UUID": true,
+          "task": "apps.epg.tasks.fetch_sd_mapped_guide_batch",
+          "terminal_status": "SUCCESS"
+        }
+      ],
+      "actual_matching_root_task": "apps.channels.tasks.match_selected_channels_epg",
+      "actual_response_body_sha256": "e8fafec6cb54093cfaa676c9cfc71dd8131f4f7e05e0655b52ecf28e944cf08f",
+      "actual_response_keys": [
+        "message"
+      ],
+      "actual_root_frame_sha256": "39a749242c507caa7bd496f11df1d5e42faf572306c7f56aba661bf751ec5a06",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 131,
+        "captured_bytes": 29303,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 47277,
+          "2": 5319
+        },
+        "excluded_rows_by_database": {
+          "0": 202,
+          "2": 14
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": false,
+      "matching_event_count": 8,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "epg_match"
+      ],
+      "name": "selected-mixed-SD-batch-XML-dummy",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": null,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 12,
+      "status": "passed"
+    },
+    {
+      "DB1_journal_sha256": "5dd18fc4aa4b21e539e38b3ee0287fec5f8ffbe3b157cb3d4bb47301edd85df5",
+      "HTTP_method": "POST",
+      "actual_HTTP_status": 202,
+      "actual_backend_result_sha256": "d10db86d1b4a1467cd56cf1da26d519b3ccaea82d4a3021a8e3ae5c9d748009f",
+      "actual_backend_result_type": "dict",
+      "actual_backend_status": "SUCCESS",
+      "actual_changed_assignments": 1,
+      "actual_children": [
+        {
+          "argument_kind": "EPGData_ID",
+          "parent_is_actual_claimed_matching_UUID": true,
+          "root_is_actual_matching_UUID": true,
+          "task": "apps.epg.tasks.parse_programs_for_tvg_id",
+          "terminal_status": "SUCCESS"
+        }
+      ],
+      "actual_matching_root_task": "apps.channels.tasks.match_single_channel_epg",
+      "actual_response_body_sha256": "2dddb2878828e9f3da37f3547940a9d48a9c158a82c47bdbf9884faecb3a30e8",
+      "actual_response_keys": [
+        "accepted",
+        "channel_id",
+        "message"
+      ],
+      "actual_root_frame_sha256": "e6d2e7466c2e629a03c0fb0d536c7e3a41e5bb87ad19fd51b8b42ce9d9d7d3c1",
+      "exact_backend_result_equals_Source51": true,
+      "journal_terminal": {
+        "actual_rows": 147,
+        "captured_bytes": 29145,
+        "complete_all_database_journal": false,
+        "database_filter": 1,
+        "excluded_bytes_by_database": {
+          "0": 25551,
+          "2": 3818
+        },
+        "excluded_rows_by_database": {
+          "0": 106,
+          "2": 10
+        },
+        "observer_error": null,
+        "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+        "terminal_barrier_fsynced": true,
+        "terminal_barrier_observed": true,
+        "terminal_marker_read": true,
+        "terminal_reader_error": null,
+        "thread_settled": true,
+        "writer_closed": true
+      },
+      "manual_group_custom_after": true,
+      "matching_event_count": 3,
+      "matching_event_types": [
+        "epg_matching_progress",
+        "epg_matching_progress",
+        "single_channel_epg_match"
+      ],
+      "name": "single-SD-direct-parse-cache-group",
+      "ordered_matching_event_scalar_projection_equals_Source51": true,
+      "output_cache_generation_after": 1,
+      "output_cache_generation_before": null,
+      "raw_full_values_published": false,
+      "role": "actual_admin_Bearer",
+      "source_index": 13,
+      "status": "passed"
+    }
+  ],
+  "scope": "Actual Native52 whole14 Source51-matched finite assertions; scalar WS projection is additional evidence, not full channel serializer parity"
+}

@@ -14,10 +14,10 @@ an executable crosswalk. Its `runtime_registration_verified` and
 
 ## Current implementation mapping
 
-Candidate37 source `da75542b6f46ea982dfefb75b5541757e78cd34a` has moved beyond
+Candidate38 source `3ffa1bb118baca2731efc45a1ce4d5df5ffaf2e5` has moved beyond
 the historical selected14 proposal. The literal classifier in
 [milestone_dispatch.rs](../rust/crates/job-transport/src/milestone_dispatch.rs)
-recognizes 29 of the 47 application names, plus framework
+recognizes 32 of the 47 application names, plus framework
 `celery.backend_cleanup`. [SelectedJobs](../rust/crates/app/src/selected_jobs.rs)
 assembles their real family handlers, registered plugin tasks and the normal
 Beat scheduler. Some names share a family; these are not counts of independent
@@ -26,6 +26,7 @@ result, child publication or shutdown path works.
 
 | Mapped application declarations | Main composition | Executed evidence and limits |
 | --- | --- | --- |
+| Channel matching all/selected/single (3) | Matching HTTP roots and shared normal worker | [Native52](rust-channel-matching-native.md) passes all 14 actual matching cases against retained Source51 in the explicit no-download domain; real model inference, wider roles and faults remain open. |
 | Backup create/restore/scheduled (3) | Normal backup jobs and restore plugin binding | Candidate37 Native46 ordinary restore six cells and partial-admission two cells pass; general enabled-plugin/history restore remains open. |
 | Channel bulk creation, names/logos/TVG maintenance, Series, recurring, artwork, recording, startup recovery and offset rescheduling (10) | Channel handlers, Series/artwork, normal DVR/recovery and Core handlers | Native46 grouped recurring and explicit Connect/recovery refusal controls pass. Its ordinary event workflow fails observation and nonempty restart fails strict decoding. Older channel/artwork successes retain their own image/input scopes. |
 | Refresh, programme index, per-channel programmes and two SD guide task names (5) | Refresh/index/TVG handlers and SD guide wrapper | Fresh Source36 guide authority and later Native guide batches cover declared cases; they do not establish every EPG producer or automatically pass Candidate37. |
@@ -37,8 +38,8 @@ The [Candidate37 whole-run record](rust-milestone-batch37.md) and
 record five passing contexts and two failed contexts, actual exit 1 and exact
 cleanup. [Source44](../scripts/rust-integration/milestone-batch37/Source44/qualification.json)
 qualifies the extra event observer and Source stopped/completed behavior only.
-Native47's observer-corrected seven-context rerun is pending at this checkpoint;
-no pass is inferred. These links establish their stated workflow scopes, not
+Native47 retains five passing and two failed contexts; Native48 separately
+qualifies the affected recording-event slice on that earlier image. These links establish their stated workflow scopes, not
 case bindings for every generated register row.
 
 Core99's natural `core.tasks.rehash_streams` and
@@ -50,10 +51,12 @@ while [Candidate12](rust-batch12-functional-observations.md) separately passed
 rehash and preserved its offset failure. Later capability guards and negative
 controls do not turn all offset/artwork/plugin domains into successful execution.
 
-## Eighteen declarations without a literal classifier entry
+## Producer reconciliation beyond the earlier 29-name map
 
-The following is a static producer/direct-call reconciliation, not eighteen
-proven missing algorithms. Call sites below refer to the pinned Source files;
+The earlier Candidate37 review found 18 declarations without literal entries.
+Candidate38 maps the three matching declarations, leaving 15 without literal
+entries. The table retains all original rows to preserve the producer crosswalk;
+it is not a list of 18 proven missing algorithms. Call sites below refer to the pinned Source files;
 all nine inventoried Source file hashes still match the committed inventory.
 A task name appearing in `dispatcharr/celery.py`'s memory-cleanup list is not
 itself a producer. A natural queued workflow needs its actual HTTP/signal/Beat
@@ -62,7 +65,7 @@ by Source and production execution evidence.
 
 | Declaration(s) | Pinned Source authority | Remaining executable mapping |
 | --- | --- | --- |
-| `match_epg_channels`, `match_selected_channels_epg`, `match_single_channel_epg` | `apps/channels/api_views.py:2601–2620` queues all/selected/single matching from real actions | [Source51](rust-channel-matching-source51.md) now qualifies 14 natural HTTP cases in its explicit no-download domain and supplies pure decision vectors. Rust HTTP/worker/SQL integration, broader roles/concurrency and real model inference remain open; maintenance name/logo/TVG tasks are different workflows. |
+| `match_epg_channels`, `match_selected_channels_epg`, `match_single_channel_epg` | `apps/channels/api_views.py:2601–2620` queues all/selected/single matching from real actions | [Source51](rust-channel-matching-source51.md) now qualifies 14 natural HTTP cases in its explicit no-download domain and supplies pure decision vectors. [Native52](rust-channel-matching-native.md) now qualifies the integrated HTTP/worker/SQL slice in the same domain. Broader roles/concurrency and real model inference remain open; maintenance name/logo/TVG tasks are different workflows. |
 | `comskip_process_recording` | `apps/channels/tasks.py:3094` and `apps/channels/api_views.py:3752` queue processing | A concrete implementation gap: normal recording policy explicitly refuses enabled comskip (`recording_normal_policy.rs`). Standalone/manual processing also needs producer/consumer acceptance. |
 | `fetch_schedules_direct_stations` | `apps/epg/signals.py:22` and `apps/epg/sd_api.py:274` queue station discovery | Map the station-discovery producer separately from the two registered guide-fetch names; guide-fetch success alone cannot close it. |
 | `refresh_m3u_accounts` | `apps/m3u/api_views.py:765` queues the all-active-accounts task; task then queues one child per active account (`tasks.py:725`) | Verify the aggregate API/root/result and exact single-account descendants. A registered single-account consumer alone is insufficient. |
@@ -79,8 +82,8 @@ visible and unchanged, rather than being counted as executed or silently dropped
 
 ## Next acceptance work
 
-Start with the demonstrated queued gaps: channel matching, station discovery,
-all-account refresh and VOD ingestion, plus explicit comskip support. For each,
+Finish matching's remaining domains while addressing the demonstrated queued gaps:
+station discovery, all-account refresh and VOD ingestion, plus explicit comskip support. For each,
 map the real Source producer, arguments/options, parent/children, result and
 SQL/cache/media/event effects to its current Rust route/service. Reuse qualified
 Source evidence only where its state and inputs actually apply; characterize
@@ -89,7 +92,7 @@ case bindings to the [contract register](rust-contract-register.md). Do not
 manually promote static inventory fields or generated register rows to passes.
 
 Keep M0 executable coverage, M6 and final parity open until the required
-workflows pass. The 783 SDK-ignored tests are not a count of missing workflows.
+workflows pass. The 784 SDK51-ignored tests are not a count of missing workflows.
 
 ```sh
 python3 -B scripts/rust-job-contracts/source_task_inventory.py \

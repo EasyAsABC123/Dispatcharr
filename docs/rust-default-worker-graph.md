@@ -3,9 +3,9 @@
 Original Dispatcharr/Celery/django-celery-beat and dependency authors retain all
 application, algorithm and protocol credit.
 
-Candidate37 source `da75542b6f46ea982dfefb75b5541757e78cd34a` assembles the
+Candidate38 source `3ffa1bb118baca2731efc45a1ce4d5df5ffaf2e5` assembles the
 current graph in [SelectedJobs](../rust/crates/app/src/selected_jobs.rs).
-The literal task mapping now covers 29 of the 47 static application declarations,
+The literal task mapping now covers 32 of the 47 static application declarations,
 plus framework backend cleanup and dynamic plugin registration. The
 [Source-task reconciliation](rust-source-task-coverage.md) separates those
 registrations from actual natural producers, executable evidence and remaining
@@ -13,6 +13,7 @@ unmapped workflows. Neither a family count nor compilation closes M6.
 
 | Family group | Current Main composition | Actual acceptance and remaining scope |
 | --- | --- | --- |
+| Channel matching (all, selected, single) | Shared Main queue, matching HTTP producers, existing Auth/cache/events/SD child capability | [Native52](rust-channel-matching-native.md) passes all 14 Source51-derived cases in the no-download/absent-model/empty-plugin domain. Model inference, broader roles and concurrency remain open. |
 | Refresh, index, TVG, SD guide, Series, artwork, version | Real handlers and SD/ingestion plugin binding | Later guide workflows execute actual Connect and downloads; their recorded Source/image scopes remain separate. Candidate37-wide acceptance is not inferred. |
 | Recording and startup recovery | Normal DVR, real HTTP controls, claimed-task Connect binding and recovery capability guard | Native46 first STOP200 retains the claimed task through End/SUCCESS and decoding; the full event context fails observer capacity. Connect recovery/direct DELETE refusal controls pass. Nonempty restart retains strict decoder failure. |
 | Scanner, M3U groups/single, auto-sync and XC account info/profiles | Real scanner/M3U/XC handlers and shared provenance | Native46 grouped scanner passes; older XC/auto-sync evidence retains its own domain and image. Remote/all-account/VOD workflows still need exact producer mapping. |
@@ -24,8 +25,9 @@ unmapped workflows. Neither a family count nor compilation closes M6.
 The [Native46 whole run](../scripts/rust-integration/milestone-batch37/Native46/qualification.json)
 exits 1 with five passing and two failed contexts, settled pipes/process group and
 exact cleanup. Source44's fresh event-observer qualification remains Source-only.
-Native47's corrected observer rerun is pending at this checkpoint. Preserve failed
-whole runs even when independent cells pass.
+Native47 also retains five passing and two failed contexts; Native48 qualifies
+its affected recording-event slice. Their exact image scopes do not transfer
+to Candidate38. Preserve failed whole runs even when independent cells pass.
 
 `RUST_EXPERIMENTAL_SELECTED_JOBS` and `RUST_EXPERIMENTAL_SELECTED_BEAT` default
 off; Beat requires selected jobs and exactly one configured Beat instance. Main

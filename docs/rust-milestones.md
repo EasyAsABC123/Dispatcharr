@@ -9,12 +9,14 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The [integrated matching source](rust-channel-matching-native.md) passes all
-four SDK51 gates with 1,130 tests and the physical 11-statement schema check.
-Its Candidate38 image/package and whole Native14 acceptance are pending;
-Candidate37 below remains the last qualified packaged runtime.
+The newest qualified packaged runtime is
+[Candidate38](rust-channel-matching-native.md): all four SDK51 gates pass with
+1,130 tests, the physical 11-statement schema check and all six package families
+pass, and Native52 passes the complete 14-case matching cohort with retained
+Source51 authority. The no-download/absent-model/empty-plugin scope is explicit;
+full M6, broader application regression and new performance acceptance remain open.
 
-The last qualified packaged candidate is [Candidate37](rust-milestone-batch37.md): all
+The preceding packaged candidate is [Candidate37](rust-milestone-batch37.md): all
 four SDK49 gates pass with 1,117 tests, zero failures and 783 ignored. It adds
 Connect delivery and enrichment at actual claimed normal-recording start/end,
 using short event sessions on the existing Auth pool and template runtime.

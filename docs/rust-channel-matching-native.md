@@ -40,14 +40,43 @@ SDK51 gate times were 3.031 seconds formatting, 19.246 compilation, 50.551 stric
 lint and 125.059 workspace tests. These are validation timings, not application
 performance gains.
 
-## Required application acceptance
+## Candidate38 application acceptance
 
-At this source checkpoint the Candidate38 Docker build, six package checks and
-complete Native14 matching cohort remain pending. The cohort reuses qualified
-Source51 observations and runs all 14 natural HTTP/task/SQL/child/cache/event
-cases together. Its Native setup combines the unchanged seed, receiver setup
-and before-state functions in their original order into one Django invocation;
-it does not invoke or replace matching task bodies.
+Candidate38 builds committed runtime
+`3ffa1bb118baca2731efc45a1ce4d5df5ffaf2e5` as image
+`sha256:10ca1c528f01abfbd7bb27eb8d9f5ba13f6e51186d15de67627fbb3a85058981`.
+The actual build exited 0 in 147.791 seconds. All
+[six package families](../scripts/rust-integration/milestone-batch38/package/inventory.json)
+pass; independent inventories verified all 55 package containers absent.
+The archive's Rust bytes match SDK51, React assets remain unchanged and original
+credits/dependency notices remain installed.
+
+[Native52](../scripts/rust-integration/milestone-batch38/Native52/qualification.json)
+passes the complete 14-case matching cohort at actual exit 0 in 124.030 seconds,
+with both pipe EOFs and an empty owned process group. It reuses qualified
+Source51 observations with no new Source execution. All 14 actual backend result
+values and ordered matching-event scalar projections equal the retained Source
+reference: 13 SUCCESS, one expected FAILURE and three real child tasks. These
+scalar comparisons do not establish every serialized channel field or every role.
+
+The Native setup combines unchanged seed, receiver setup and before-state
+functions in their original order into one Django invocation. It does not
+invoke or replace matching task bodies. The first UID preflight failed because
+the frozen driver root was mode 0700; the intended root-only 0755 correction
+left all payload bytes unchanged. A fresh UID preflight passed for all 161 files.
+The failed attempt remains recorded; no application privilege change, business
+replay or rebuild was used to fix it.
+
+Independent cleanup verified the three fixture containers, one read-only
+observer container and all project resources absent, along with three recorded
+original positive host PIDs. The observer's host PID was not independently
+captured. Main exited normally. Full per-event SQL physical-settlement and
+broader cancellation/loss acceptance are
+still separate requirements.
+
+These are functional and validation timings, not matched-work application
+performance measurements. In particular, the Source51 and Native52 elapsed
+values cannot establish a gain from the setup-call fusion.
 
 The supported characterization domain is DISABLE_ML_DOWNLOADS=true, an actually
 absent MiniLM model cache and empty general-plugin configuration/directory.
