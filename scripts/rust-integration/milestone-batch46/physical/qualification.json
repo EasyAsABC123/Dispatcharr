@@ -1,0 +1,66 @@
+{
+  "scope": "SDK63 existing prepared-transport physical ownership/reconnect batch; no performance acceptance",
+  "passed": true,
+  "attempts": [
+    {
+      "attempt": 1,
+      "actual_exit": 1,
+      "ELF_sha256": "a4e84be0c16cd28f2c3806bc03cbb6ed7b044ef17636a99370fc9ab32c48663b",
+      "CID": "65275e54d85379d2e9e22a6b9aa819fcb6349caa6a57d0ff5dab8ccabb9b97df",
+      "project": "dispatcharr-peek-c37ca2db91db",
+      "host_process": {
+        "PID": 368487,
+        "generation": "17592275"
+      },
+      "cleanup_passed": true,
+      "tests_started": false,
+      "physical_tests_passed": 0,
+      "reason": "Internal Docker network retained requested PortBindings without actual host publication; controller assertion before test launch"
+    },
+    {
+      "attempt": 2,
+      "actual_exit": 1,
+      "ELF_sha256": "a4e84be0c16cd28f2c3806bc03cbb6ed7b044ef17636a99370fc9ab32c48663b",
+      "CID": "e38d7645869a2345684ed24b168ae286dd3acf21c5486483432b14b6149ff8e0",
+      "project": "dispatcharr-peek-c066545df0e1",
+      "host_process": {
+        "PID": 369833,
+        "generation": "17597336"
+      },
+      "cleanup_passed": true,
+      "tests_started": true,
+      "physical_tests_passed": 0,
+      "reason": "Existing JOB_DISPOSABLE_FIXTURE marker omitted; all3 tests refused at initial guard before transport"
+    },
+    {
+      "attempt": 3,
+      "actual_exit": 0,
+      "ELF_sha256": "a4e84be0c16cd28f2c3806bc03cbb6ed7b044ef17636a99370fc9ab32c48663b",
+      "CID": "84b2e8c34b57bdf4d56e740520913ab0478b10bfe4092b4d949e587125093a4b",
+      "project": "dispatcharr-peek-d5cf04dbb4bf",
+      "host_process": {
+        "PID": 371145,
+        "generation": "17601052"
+      },
+      "cleanup_passed": true,
+      "tests_started": true,
+      "physical_tests_passed": 3,
+      "reason": "All3 existing physical Redis tests passed after correcting only disposable fixture networking/marker"
+    }
+  ],
+  "actual_final_test_count": 3,
+  "current_NormalHead_physical_lane_or_NOSCRIPT_qualified": false,
+  "exact_PEEK_CREATE_Lua_sha256": "fbc0bd3920b6caa8e8b8378f386f2600a12fda78d3f9e66e7efa8ecd44be336e",
+  "static_source_three_paths_bound": true,
+  "static_lane_wire_only": true,
+  "workspace_ignored_physical_case": true,
+  "final_ELF_unchanged": true,
+  "SDK63_inputs_sha256": "3f049511789cadbf2438aa5dcf96ef1559adb77b3147fdd18cee43d6778a6ee0",
+  "SDK63_checks_sha256": "ce7c590f1eeba7a67ae4ade0dbc5b6ca5b655eb45825aaad0a8c7e8d66036cea",
+  "gain_accepted": false,
+  "full_milestone_accepted": false,
+  "Root_independent_cleanup": {
+    "path": "scripts/rust-integration/milestone-batch46/physical/Root-independent-cleanup.json",
+    "sha256": "bda71a8050095179097166c008333a25c82856aa7fbf55fb1e844f6f25600637"
+  }
+}

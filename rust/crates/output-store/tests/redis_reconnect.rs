@@ -267,6 +267,7 @@ async fn logical_timeout_does_not_reconnect_or_free_a_still_pending_physical_rep
         .query_async(&mut redis)
         .await
         .unwrap();
+    let compiled = Arc::new(redis::Script::new(script));
     let proxy = proxy().await;
     let transport =
         RedisTransport::connect_classified(&proxy.url, config(1, Duration::from_millis(75)))
@@ -276,8 +277,8 @@ async fn logical_timeout_does_not_reconnect_or_free_a_still_pending_physical_rep
     let dropped = Arc::new(AtomicUsize::new(0));
     proxy.hold.send_replace(true);
     let result = transport
-        .command_classified::<i64, _>(
-            script,
+        .command_script_classified::<i64, _>(
+            compiled.clone(),
             std::slice::from_ref(&key),
             &[],
             Arc::new(Owner(dropped.clone())),
@@ -306,6 +307,15 @@ async fn logical_timeout_does_not_reconnect_or_free_a_still_pending_physical_rep
         .await
         .unwrap();
     assert_eq!(value, 1);
+    assert_eq!(proxy.accepted.load(Ordering::SeqCst), 1);
+    let (value, _) = transport
+        .command_script_classified::<i64, _>(compiled, std::slice::from_ref(&key), &[], ())
+        .await
+        .unwrap();
+    assert_eq!(
+        value, 2,
+        "same compiled script executes again after settlement"
+    );
     assert_eq!(proxy.accepted.load(Ordering::SeqCst), 1);
     let _: () = redis.del(key).await.unwrap();
 }

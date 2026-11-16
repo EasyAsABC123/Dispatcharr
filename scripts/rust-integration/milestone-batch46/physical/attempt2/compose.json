@@ -1,0 +1,56 @@
+{
+  "services": {
+    "redis": {
+      "image": "redis@sha256:c5d34a98396a4775e223c74e929162c35c5a2182901ba26b50ade939941ce14b",
+      "user": "65532:65532",
+      "entrypoint": [
+        "redis-server"
+      ],
+      "command": [
+        "--save",
+        "",
+        "--appendonly",
+        "no",
+        "--protected-mode",
+        "no",
+        "--dir",
+        "/data",
+        "--requirepass",
+        "playback-fixture-only"
+      ],
+      "read_only": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges"
+      ],
+      "mem_limit": "128m",
+      "cpus": 1,
+      "pids_limit": 64,
+      "tmpfs": [
+        "/data:rw,nosuid,nodev,noexec,size=32m,mode=1777"
+      ],
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "redis-cli",
+          "-a",
+          "playback-fixture-only",
+          "PING"
+        ],
+        "interval": "1s",
+        "timeout": "1s",
+        "retries": 15
+      },
+      "ports": [
+        "127.0.0.1::6379"
+      ]
+    }
+  },
+  "networks": {
+    "default": {
+      "internal": false
+    }
+  }
+}

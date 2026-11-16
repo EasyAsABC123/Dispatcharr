@@ -69,6 +69,18 @@ impl OperationError {
         }
     }
 }
+enum CommandScript {
+    OneOff(Script),
+    Prepared(Arc<Script>),
+}
+impl CommandScript {
+    fn script(&self) -> &Script {
+        match self {
+            Self::OneOff(script) => script,
+            Self::Prepared(script) => script,
+        }
+    }
+}
 struct Inner {
     shared_subscription: tokio::sync::Mutex<Option<SharedSubscription>>,
     endpoint: redis::ConnectionInfo,
@@ -158,6 +170,33 @@ impl RedisTransport {
             .await
             .map_err(OperationError::classified)
     }
+    /// Reuse a caller-owned compiled script without a transport-wide cache.
+    /// Admission, physical response ownership and error classification are the
+    /// same as command_classified(); Redis still handles NOSCRIPT normally.
+    pub async fn command_script_classified<
+        T: redis::FromRedisValue + Send + 'static,
+        G: Send + 'static,
+    >(
+        &self,
+        script: Arc<Script>,
+        keys: &[String],
+        args: &[&[u8]],
+        guard: G,
+    ) -> Result<(T, G), ClassifiedError> {
+        let operation = self
+            .acquire_operation()
+            .await
+            .map_err(OperationError::classified)?;
+        self.command_admitted(
+            CommandScript::Prepared(script),
+            keys,
+            args,
+            guard,
+            operation,
+        )
+        .await
+        .map_err(OperationError::classified)
+    }
     async fn command_inner<T: redis::FromRedisValue + Send + 'static, G: Send + 'static>(
         &self,
         source: &str,
@@ -166,12 +205,28 @@ impl RedisTransport {
         guard: G,
     ) -> Result<(T, G), OperationError> {
         let operation = self.acquire_operation().await?;
-        let script = Script::new(source);
+        self.command_admitted(
+            CommandScript::OneOff(Script::new(source)),
+            keys,
+            args,
+            guard,
+            operation,
+        )
+        .await
+    }
+    async fn command_admitted<T: redis::FromRedisValue + Send + 'static, G: Send + 'static>(
+        &self,
+        script: CommandScript,
+        keys: &[String],
+        args: &[&[u8]],
+        guard: G,
+        operation: tokio::sync::OwnedSemaphorePermit,
+    ) -> Result<(T, G), OperationError> {
         let keys = keys.to_vec();
         let args: Vec<Vec<u8>> = args.iter().map(|value| value.to_vec()).collect();
         let mut connection = self.inner.connection.clone();
         let task = tokio::spawn(async move {
-            let mut invocation = script.prepare_invoke();
+            let mut invocation = script.script().prepare_invoke();
             for key in keys {
                 invocation.key(key);
             }

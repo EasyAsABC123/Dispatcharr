@@ -6,6 +6,7 @@ No application starts unless the explicit `run` command is requested.
 import argparse,fcntl,hashlib,importlib.util,io,json,os,shutil,signal,subprocess,sys,tarfile,time
 from pathlib import Path
 sys.dont_write_bytecode=True
+os.environ['PYTHONDONTWRITEBYTECODE']='1'
 HERE=Path(__file__).resolve().parent
 ORIGINAL='1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 ARCHIVE_SHA='f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff'
@@ -17,6 +18,7 @@ def load(p):return json.loads(Path(p).read_text())
 def save(p,v):
  p=Path(p);p.parent.mkdir(parents=True,exist_ok=True);temporary=p.with_suffix(p.suffix+'.tmp');temporary.write_text(json.dumps(v,indent=2,sort_keys=True)+'\n');temporary.chmod(0o600);temporary.replace(p)
 def module(p,name):
+ sys.dont_write_bytecode=True;os.environ['PYTHONDONTWRITEBYTECODE']='1'
  spec=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
 
 def support_inputs(repo):
@@ -25,6 +27,32 @@ def support_inputs(repo):
   files.extend(p for p in(repo/name).rglob('*')if p.is_file()and'__pycache__'not in p.parts)
  files.extend(repo/p for p in ['scripts/rust-integration/fixture_ports.py','scripts/rust-integration/seed_accounts.py','docker/compose.rust-playback.yml','scripts/rust-milestone-batches/coordinator.py'])
  return files
+
+def prepare_catalogue(args,repo,out,build,archive,source):
+ tools=repo/'scripts/rust-integration/catalogue-comskip-cohort'
+ manifest=load(tools/'payloads.json');assert manifest['selected_runtime_payloads']==25 and manifest['frozen_driver_total_payloads']==168
+ for row in manifest['files']:assert sha(tools/row['path'])==row['sha256'],('FrozenPublicHelperChanged',row['path'])
+ retained=load(tools/'retained-Source-refs.json');bound={};authority=[]
+ for group,rows in retained.items():
+  bound[group]={}
+  for name,ref in rows.items():
+   path=repo/ref['path'];assert path.is_file()and sha(path)==ref['sha256'],('ExactPublicSourceAuthorityRequired',group,name)
+   bound[group][name]={'path':str(path.resolve()),'sha256':ref['sha256']};authority.append(path)
+ assert bound['Comskip']['input']['sha256']=='ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d'
+ assert Path(bound['Comskip']['input']['path']).stat().st_size==719267
+ e=load(bound['Source58']['execution']['path']);assert e['actual_exit']==0 and e['stdout_EOF']and e['stderr_EOF']and e['process_group_settled']
+ assert load(bound['Source58']['report']['path'])['status']=='passed'and load(bound['Source58']['cleanup']['path'])['all_owned_resources_absent']
+ e=load(bound['VODRepeat']['execution']['path']);assert e['actual_exit']==1 and e['stdout_EOF']and e['stderr_EOF']and e['process_group_settled']
+ assert load(bound['VODRepeat']['report']['path'])['status']=='failed'and load(bound['VODRepeat']['offline_correction']['path'])['offline_corrected_capture_qualified']is True
+ e=load(bound['Comskip']['execution']['path']);assert e['actual_exit']==0 and e['stdout_EOF']and e['stderr_EOF']and e['process_group_settled']
+ assert load(bound['Comskip']['report']['path'])['status']=='passed'and load(bound['Comskip']['cleanup']['path'])['exact_owned_absence']
+ e=load(bound['Series']['execution']['path']);assert e['actual_exit']==1 and e['stdout_EOF']and e['stderr_EOF']and e['process_group_settled']
+ assert load(bound['Series']['report']['path'])['status']=='passed'and load(bound['Series']['qualification']['path'])['Source_Series_context_capture_qualified']is True and load(bound['Series']['Root_cleanup']['path'])['passed']
+ public=[p for p in tools.rglob('*')if p.is_file()and'__pycache__'not in p.parts]
+ inputs={str(p.resolve()):sha(p)for p in [HERE/'prepare.py',*public,*support_inputs(repo),*[repo/name for name in build['source_sha256']if name.startswith('rust/')],archive,args.build.resolve(),*authority]}
+ binding={'status':'prepared_not_run','performance':False,'full_milestone_accepted':False,'candidate_image_id':build['image_id'],'candidate_git_revision':build['git_revision'],'candidate_source_tree_sha256':build['source_tree_sha256'],'candidate_build':str(args.build.resolve()),'docker':args.docker,'support_root':str(repo),'functional_pids_limit':1600,'functional_budget_scope':'Functional four-context cohort only; no performance-equivalence claim','fixture_output':str(out/'fixtures'),'Original_archive':str(archive),'Original_source_root':str(out/'Original-source'),'Original_source_sha256':source,'adapter_sha256':sha(tools/'fixture_adapter.py'),'instrumented_fixture_adapter':str(tools/'fixture_adapter.py'),'retained_Source_playback':str(out/'unmeasured-exceptional-playback.json'),'retained_source_contexts':{},'retained_native_contexts':{},'restore_callbacks':{},'retained_source_vod_ingestion':bound['Source58'],'retained_source_vod_repeat':bound['VODRepeat'],'retained_source_comskip':bound['Comskip'],'retained_source_vod_series':bound['Series'],'inputs':[{'path':p,'sha256':h}for p,h in sorted(inputs.items())]}
+ plan={'state':'UNQUALIFIED_PUBLIC_EXPORT_PREPARED','workflow':'catalogue-series-comskip-vlc','repo':str(repo),'cohort_root':str(tools),'output':str(out),'base_binding':binding,'source_contexts':[],'native_contexts':['vod-repeat','vod-series','comskip-manual','vlc-live'],'Docker_host':args.docker_host,'source_seconds':1200,'native_seconds':1200,'cleanup_seconds':90,'qualification':'Exact25 frozen payload subset; public closure still requires actual clean-checkout validation. Retained Source captures are reused, including literal failed VOD controller/offline correction.','credit':'Original Dispatcharr and dependencies retain all application/model/task/protocol/algorithm credit.'}
+ save(out/'plan.json',plan);print(json.dumps({'plan':str(out/'plan.json'),'state':plan['state'],'applications_started':0,'native_contexts':plan['native_contexts']}))
 
 def prepare(args):
  repo=args.repo.resolve();out=args.output.resolve();assert repo==HERE.parents[2],'Run the tools from their matching repository checkout'
@@ -44,6 +72,9 @@ def prepare(args):
   for item in reader:
    if item.isfile():
     path=Path(item.name);assert not path.is_absolute()and'..'not in path.parts;source[item.name]=hashlib.sha256(reader.extractfile(item).read()).hexdigest()
+ if args.workflow=='catalogue-series-comskip-vlc':
+  assert not args.all_native,'all-native applies only to the recording Connect workflow'
+  prepare_catalogue(args,repo,out,build,archive,source);return
  public=[p for p in HERE.rglob('*')if p.is_file()and'__pycache__'not in p.parts]
  inputs={str(p):sha(p)for p in [*public,*support_inputs(repo),*[repo/name for name in build['source_sha256']if name.startswith('rust/')],archive,args.build.resolve(),repo/'rust/crates/job-transport/datasets/source-default-stats-wire.json']}
  binding={'status':'prepared_not_run','performance':False,'full_milestone_accepted':False,'candidate_image_id':build['image_id'],'candidate_git_revision':build['git_revision'],'candidate_source_tree_sha256':build['source_tree_sha256'],'candidate_build':str(args.build.resolve()),'docker':args.docker,'support_root':str(repo),'functional_pids_limit':1600,'functional_budget_scope':'Functional cohort only; no performance-equivalence claim','fixture_output':str(out/'fixtures'),'Original_archive':str(archive),'Original_source_root':str(out/'Original-source'),'Original_source_sha256':source,'adapter_sha256':sha(HERE/'fixture_adapter.py'),'instrumented_fixture_adapter':str(HERE/'fixture_adapter.py'),'m6_adapter':str(HERE/'m6_adapter.py'),'m6_adapter_sha256':sha(HERE/'m6_adapter.py'),'normal_backup_case':str(HERE/'cohort/normal_backup_case.py'),'normal_backup_case_sha256':sha(HERE/'cohort/normal_backup_case.py'),'backup_physical_case_sha256':sha(HERE/'cohort/backup_physical_case.py'),'retained_Source_playback':str(out/'unmeasured-exceptional-playback.json'),'retained_source_contexts':{},'retained_native_contexts':{},'restore_callbacks':{},'inputs':[{'path':p,'sha256':h}for p,h in sorted(inputs.items())]}
@@ -54,9 +85,9 @@ def prepare(args):
  save(out/'plan.json',plan);print(json.dumps({'plan':str(out/'plan.json'),'state':plan['state'],'applications_started':0,'native_contexts':contexts}))
 
 def uid_probe(plan,coordinator):
- out=Path(plan['output'])/'uid';out.mkdir();base=plan['base_binding'];cidfile=out/'probe.cid';name='dispatcharr-public-connect-uid-'+os.urandom(6).hex();expected={str(Path(row['path']).relative_to(HERE)):row['sha256']for row in base['inputs']if Path(row['path']).is_relative_to(HERE)}
+ out=Path(plan['output'])/'uid';out.mkdir();base=plan['base_binding'];tools=Path(plan.get('cohort_root',str(HERE)));cidfile=out/'probe.cid';name='dispatcharr-public-connect-uid-'+os.urandom(6).hex();expected={str(Path(row['path']).relative_to(tools)):row['sha256']for row in base['inputs']if Path(row['path']).is_relative_to(tools)}
  guest="import hashlib,json,os;from pathlib import Path;assert os.geteuid()==65532;names="+repr(sorted(expected))+";print(json.dumps({'UID':os.geteuid(),'files':{n:hashlib.sha256((Path('/tools')/n).read_bytes()).hexdigest()for n in names}}))"
- argv=[base['docker'],'run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--user','65532:65532','--pids-limit','16','--memory','64m','--name',name,'--cidfile',str(cidfile),'--mount','type=bind,src='+str(HERE)+',dst=/tools,readonly','--entrypoint','/usr/local/bin/dispatcharr-python',base['candidate_image_id'],'-I','-B','-c',guest]
+ argv=[base['docker'],'run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--user','65532:65532','--pids-limit','16','--memory','64m','--name',name,'--cidfile',str(cidfile),'--mount','type=bind,src='+str(tools)+',dst=/tools,readonly','--entrypoint','/usr/local/bin/dispatcharr-python',base['candidate_image_id'],'-I','-B','-c',guest]
  save(out/'identity.json',{'owned_probe_name':name,'CID_file':str(cidfile),'image_id':base['candidate_image_id'],'app_started':False})
  env=dict(os.environ)
  if plan['Docker_host']:env['DOCKER_HOST']=plan['Docker_host']
@@ -93,21 +124,23 @@ def run(args):
   def stop(signum,frame):cancelled.append(signum)
   previous={sig:signal.signal(sig,stop)for sig in(signal.SIGINT,signal.SIGTERM)}
   combined=[];safe_cleanup=False;backend_started=None;launcher_error=None;uid_attempted=False;uid_safe=False
+  expected_backends=[backend for backend,key in [('Original','source_contexts'),('Native','native_contexts')]if plan[key]];assert expected_backends
   try:
    uid_attempted=True
    uid=uid_probe(plan,coordinator);save(out/'uid-proof.json',uid);uid_safe=uid['passed']and uid['exact_CID_absent']
    for backend,key in [('Original','source_contexts'),('Native','native_contexts')]:
     if cancelled:break
+    if not plan[key]:continue
     directory=out/backend;directory.mkdir();binding=dict(plan['base_binding']);contexts=plan[key];seconds=plan['source_seconds']if backend=='Original'else plan['native_seconds']
     binding.update(backend_order=[backend],execution_contexts={'Original':contexts if backend=='Original'else[],'Native':contexts if backend=='Native'else[]},declared_contexts={'Original':contexts if backend=='Original'else[],'Native':contexts if backend=='Native'else[]},whole_cohort_seconds=seconds,execution_scope='Fresh public-export '+backend+' selected functional cohort; all broader parity/performance gates remain unqualified.')
-    if backend=='Native':
+    if backend=='Native'and plan.get('workflow','recording-connect')=='recording-connect':
      sources=list((out/'fixtures').glob('Original-*/recording-connect-capture/report.json'));assert len(sources)==1 and load(sources[0])['status']=='passed'
      binding['local_source_contract']=str(sources[0].parent/'private/locally-collected-contract.json');assert Path(binding['local_source_contract']).is_file()
      authority=[Path(binding['local_source_contract']),sources[0],sources[0].parent/'private/source-payloads.json',sources[0].parents[1]/'independent-cleanup.json',out/'Original/execution.json',out/'Original/results/report.json']
      binding['inputs']=[*binding['inputs'],*[{'path':str(path),'sha256':sha(path)}for path in authority]]
     context={'heavy_exclusive':True,'active_functional_fixtures':1,'attempt':1,'claim_persisted':True,'deadline_monotonic':time.monotonic()+seconds,'cleanup_seconds':90,'actual_local_lease':str(lock_path),'whole_migration_or_performance_authority':False}
     save(directory/'binding.json',binding);save(directory/'context.json',context)
-    argv=[sys.executable,'-B',str(HERE/'cohort/run.py'),'--adapter',str(HERE/'fixture_adapter.py'),'--binding',str(directory/'binding.json'),'--global-context',str(directory/'context.json'),'--output',str(directory/'results')]
+    argv=[sys.executable,'-B',str(Path(plan.get('cohort_root',str(HERE)))/'cohort/run.py'),'--adapter',str(Path(plan.get('cohort_root',str(HERE)))/'fixture_adapter.py'),'--binding',str(directory/'binding.json'),'--global-context',str(directory/'context.json'),'--output',str(directory/'results')]
     env=dict(os.environ)
     if plan['Docker_host']:env['DOCKER_HOST']=plan['Docker_host']
     safe_cleanup=False;backend_started=backend
@@ -131,12 +164,12 @@ def run(args):
    if backend_started is not None and not safe_cleanup:
     save(repo/'.dispatcharr-recording-cohort-cleanup-required.json',{'owned_run':str(out),'backend':backend_started,'fixture_output':plan['base_binding']['fixture_output'],'reason':'Actual backend execution did not establish complete owned cleanup/EOF/group settlement.'})
    for sig,handler in previous.items():signal.signal(sig,handler)
-   save(out/'report.json',{'state':'ACTUAL_PUBLIC_EXPORT_ATTEMPT','backends':combined,'launcher_error':launcher_error,'interruption_requested':cancelled,'interrupt_policy':'Finish current bounded owned cohort/finally; do not start another backend. Forced process termination cannot claim cleanup.','selected_pair_passed':len(combined)==2 and all(x['selected_passed']for x in combined),'full_milestone_passed':False,'performance_verified':False,'export_qualification_requires_review':True})
-  return 0 if len(combined)==2 and all(x['selected_passed']for x in combined)and not cancelled else 1
+   save(out/'report.json',{'state':'ACTUAL_PUBLIC_EXPORT_ATTEMPT','backends':combined,'launcher_error':launcher_error,'interruption_requested':cancelled,'interrupt_policy':'Finish current bounded owned cohort/finally; do not start another backend. Forced process termination cannot claim cleanup.','selected_pair_passed':len(combined)==2 and all(x['selected_passed']for x in combined),'selected_workflow_passed':len(combined)==len(expected_backends)and all(x['selected_passed']for x in combined),'full_milestone_passed':False,'performance_verified':False,'export_qualification_requires_review':True})
+  return 0 if len(combined)==len(expected_backends)and all(x['selected_passed']for x in combined)and not cancelled else 1
 
 def main():
  parser=argparse.ArgumentParser(description=__doc__);sub=parser.add_subparsers(dest='command',required=True)
- p=sub.add_parser('prepare');p.add_argument('--repo',type=Path,default=HERE.parents[2]);p.add_argument('--output',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--source-archive',type=Path);p.add_argument('--docker',default='docker');p.add_argument('--docker-host');p.add_argument('--all-native',action='store_true',help='Run all seven affected Native contexts; strict restart remains a known open failure.')
+ p=sub.add_parser('prepare');p.add_argument('--repo',type=Path,default=HERE.parents[2]);p.add_argument('--output',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--source-archive',type=Path);p.add_argument('--docker',default='docker');p.add_argument('--docker-host');p.add_argument('--all-native',action='store_true',help='Run all seven affected Native contexts; strict restart remains a known open failure.');p.add_argument('--workflow',choices=['recording-connect','catalogue-series-comskip-vlc'],default='recording-connect',help='Select the existing public Connect pair or retained-Source Native catalogue/comskip/VLC cohort.')
  p=sub.add_parser('run');p.add_argument('--plan',type=Path,required=True)
  args=parser.parse_args()
  if args.command=='prepare':prepare(args);return 0

@@ -1,0 +1,16 @@
+
+thread 'concurrent_future_operations_share_one_bounded_reconnect_attempt' panicked at crates/output-store/tests/redis_reconnect.rs:136:5:
+assertion `left == right` failed
+  left: Err(NotPresent)
+ right: Ok("playback-fixture-only")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'logical_timeout_does_not_reconnect_or_free_a_still_pending_physical_reply' panicked at crates/output-store/tests/redis_reconnect.rs:136:5:
+assertion `left == right` failed
+  left: Err(NotPresent)
+ right: Ok("playback-fixture-only")
+
+thread 'lost_publication_reply_is_not_replayed_and_future_commands_reconnect' panicked at crates/output-store/tests/redis_reconnect.rs:136:5:
+assertion `left == right` failed
+  left: Err(NotPresent)
+ right: Ok("playback-fixture-only")

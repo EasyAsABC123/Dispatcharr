@@ -6,12 +6,15 @@ use dispatcharr_contracts::BoxFuture;
 pub(crate) struct NormalHead {
     jobs: Jobs,
     queue: Queue,
+    // One immutable compiled script per owned lane, never an unbounded cache.
+    peek: Arc<redis::Script>,
 }
 impl NormalHead {
     pub(crate) async fn connect(broker: &str, backend: &str, queue: Queue) -> Result<Self, Error> {
         Ok(Self {
             jobs: Jobs::connect_series(broker, backend, Config::default()).await?,
             queue,
+            peek: Arc::new(redis::Script::new(PEEK_CREATE)),
         })
     }
     pub(crate) async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
@@ -39,7 +42,12 @@ impl Head for NormalHead {
                 .jobs
                 .inner
                 .broker
-                .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &[key.into()], &[], lease)
+                .command_script_classified::<(i64, Vec<u8>), _>(
+                    self.peek.clone(),
+                    &[key.into()],
+                    &[],
+                    lease,
+                )
                 .await
                 .map_err(|e| Disposition::Operational(format!("queue observation {:?}", map(e))))?;
             match reply.0 {
