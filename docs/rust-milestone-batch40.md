@@ -55,7 +55,13 @@ pre-existing notification digest failure, whose evidence/assertion was not edite
 
 ## Complete affected batch
 
-At this source checkpoint image/package and application execution are pending.
+The committed candidate `a119544a2fd2e19ab3934cd40cc9e5c66968ff6b` built
+successfully in 142.248 seconds. Image
+`sha256:ea39fd7ad7dee75b71a6c8df89fd219d2e240f9d4d2be1abefcf717828b48f38`
+passes all [six package-family probes](../scripts/rust-integration/milestone-batch40/package/inventory.json),
+with actual exit zero for every probe. Independent cleanup confirms all 55
+owned container IDs are absent. These checks cover packaging; application
+execution remains pending.
 One controller will run aggregate refresh four phases, real station HTTP four
 phases and VOD ingestion three cases in dependency order, with retained
 Source55/53/58 and no reference business replay. Reuse the existing Compose
