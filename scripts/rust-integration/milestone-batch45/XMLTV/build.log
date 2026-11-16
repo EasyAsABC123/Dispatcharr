@@ -1,0 +1,111 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load remote build context
+#1 DONE 0.1s
+
+#1 [internal] load remote build context
+#1 CACHED
+
+#2 copy /context /
+#2 CACHED
+
+#3 [internal] load metadata for docker.io/library/rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f
+#3 DONE 0.4s
+
+#4 [build 1/7] FROM docker.io/library/rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f
+#4 resolve docker.io/library/rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f 0.0s done
+#4 DONE 0.0s
+
+#5 [build 2/7] WORKDIR /workspace
+#5 CACHED
+
+#6 [build 3/7] COPY rust/Cargo.toml rust/Cargo.lock rust/rust-toolchain.toml ./rust/
+#6 CACHED
+
+#7 [build 4/7] COPY rust/crates/ ./rust/crates/
+#7 CACHED
+
+#8 [build 5/7] COPY rust/vendor/ ./rust/vendor/
+#8 CACHED
+
+#9 [build 6/7] COPY rust/runtime/drf-static-source-1.json ./rust/runtime/drf-static-source-1.json
+#9 CACHED
+
+#10 [build 7/7] RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked     --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked     mkdir -p "/tmp/dispatcharr-target" /out &&     find rust/crates rust/vendor -type f -exec touch {} + &&     touch rust/Cargo.toml rust/Cargo.lock rust/rust-toolchain.toml rust/runtime/drf-static-source-1.json &&     cargo build --manifest-path rust/Cargo.toml --locked --release --jobs 2 -p dispatcharr-rs &&     cp "/tmp/dispatcharr-target/release/dispatcharr-rs" /out/dispatcharr-rs &&     cp "/tmp/dispatcharr-target/release/dispatcharr-operator" /out/dispatcharr-operator
+#10 CACHED
+
+#11 [xmltv-parser-tests 1/4] RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked     --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked     find rust/crates rust/vendor -type f -exec touch {} + &&     touch rust/Cargo.toml rust/Cargo.lock rust/rust-toolchain.toml rust/runtime/drf-static-source-1.json &&     cargo test --manifest-path rust/Cargo.toml --locked --jobs 2 -p dispatcharr-xmltv-parser --all-targets &&     cargo build --manifest-path rust/Cargo.toml --locked --release --jobs 2 -p dispatcharr-xmltv-parser --examples &&     cp "/tmp/dispatcharr-target/release/examples/xmltv_stream_parity" /usr/local/bin/dispatcharr-xmltv-parity
+#11 0.426    Compiling dispatcharr-xmltv-parser v0.1.0 (/workspace/rust/crates/xmltv-parser)
+#11 0.426    Compiling dispatcharr-ingest-core v0.1.0 (/workspace/rust/crates/ingest-core)
+#11 1.434     Finished `test` profile [unoptimized] target(s) in 1.18s
+#11 1.439      Running unittests src/lib.rs (/tmp/dispatcharr-target/debug/deps/dispatcharr_xmltv_parser-f90f90f37d84dd89)
+#11 1.440 
+#11 1.440 running 5 tests
+#11 1.441 test strict::owned_resources::only_owned_external_file_and_loopback_references_are_probed ... ok
+#11 1.441 test strict::tests::one_strict_root_whitespace_and_rejected_partial_documents ... ok
+#11 1.445 test strict::tests::input_nodes_and_small_native_heap_fail_closed ... ok
+#11 1.446 test strict::tests::cancelled_partial_native_context_stays_owned_until_reader_returns ... ok
+#11 1.449 test strict::tests::concurrent_strict_failures_do_not_poison_existing_recover_arenas ... ok
+#11 1.449 
+#11 1.449 test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+#11 1.449 
+#11 1.449      Running tests/streaming.rs (/tmp/dispatcharr-target/debug/deps/streaming-fa9222a9790e9ef0)
+#11 1.450 
+#11 1.450 running 9 tests
+#11 1.451 test failed_sink_stops_before_later_records ... ok
+#11 1.451 test cancellation_from_sink_cannot_complete_job ... ok
+#11 1.451 test incorrect_safe_reader_cannot_expose_foreign_out_of_bounds_memory ... ok
+#11 1.451 test interrupted_read_retries_without_discarding_parser_state ... ok
+#11 1.451 test io_failure_and_early_cancellation_never_call_sink ... ok
+#11 1.451 test sink_panic_is_contained_at_foreign_boundary ... ok
+#11 1.452 test independent_contexts_do_not_share_failure_budget ... ok
+#11 1.457 test actual_record_budget_refuses_oversized_body ... ok
+#11 1.468 test repeated_entity_markup_is_bounded_before_any_sink_commit ... ok
+#11 1.468 
+#11 1.468 test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+#11 1.468 
+#11 1.468      Running unittests examples/strict_element_parity.rs (/tmp/dispatcharr-target/debug/examples/strict_element_parity-12682053ed39df2c)
+#11 1.469 
+#11 1.469 running 0 tests
+#11 1.469 
+#11 1.469 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+#11 1.469 
+#11 1.469      Running unittests examples/xmltv_scan.rs (/tmp/dispatcharr-target/debug/examples/xmltv_scan-dde322c8472379eb)
+#11 1.470 
+#11 1.470 running 0 tests
+#11 1.470 
+#11 1.470 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+#11 1.470 
+#11 1.470      Running unittests examples/xmltv_stream_parity.rs (/tmp/dispatcharr-target/debug/examples/xmltv_stream_parity-c09c9c0d05dcea89)
+#11 1.471 
+#11 1.471 running 0 tests
+#11 1.471 
+#11 1.471 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+#11 1.471 
+#11 1.605    Compiling dispatcharr-xmltv-parser v0.1.0 (/workspace/rust/crates/xmltv-parser)
+#11 1.605    Compiling dispatcharr-ingest-core v0.1.0 (/workspace/rust/crates/ingest-core)
+#11 5.114     Finished `release` profile [optimized] target(s) in 3.60s
+#11 DONE 5.2s
+
+#12 [xmltv-parser-tests 2/4] COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
+#12 DONE 0.2s
+
+#13 [xmltv-parser-tests 3/4] COPY rust/crates/xmltv-parser/vendor/Copyright /usr/share/doc/dispatcharr/libxml2-Copyright
+#13 DONE 0.1s
+
+#14 [xmltv-parser-tests 4/4] COPY rust/crates/xmltv-parser/vendor/NOTICES /usr/share/doc/dispatcharr/libxml2-NOTICES
+#14 DONE 0.1s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 4.3s done
+#15 exporting manifest sha256:d1730a590259fa17936fdb8f7e7b173e0086847ae3c6f2734051a91b5fa7ee74 0.1s done
+#15 exporting config sha256:a65279a25df0f1bdb850a8d4c1047072e8f3b250f541304f8d774d20e6a398ac
+#15 exporting config sha256:a65279a25df0f1bdb850a8d4c1047072e8f3b250f541304f8d774d20e6a398ac 0.2s done
+#15 exporting attestation manifest sha256:22c38ded92d64cfce241d5e8c6444af54bdafe01c739a8d852532adaeff093bd 0.1s done
+#15 exporting manifest list sha256:662082cc940c6ec9fd6018c610c12ce22206e9fd92d4c602b0b6ee20cbf316e2
+#15 exporting manifest list sha256:662082cc940c6ec9fd6018c610c12ce22206e9fd92d4c602b0b6ee20cbf316e2 0.1s done
+#15 naming to docker.io/library/dispatcharr-rust-xmltv-tests:xmltv-a4fc987125cf 0.0s done
+#15 unpacking to docker.io/library/dispatcharr-rust-xmltv-tests:xmltv-a4fc987125cf
+#15 unpacking to docker.io/library/dispatcharr-rust-xmltv-tests:xmltv-a4fc987125cf 2.4s done
+#15 DONE 7.2s

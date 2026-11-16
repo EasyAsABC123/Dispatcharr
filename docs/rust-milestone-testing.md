@@ -62,3 +62,32 @@ not establish gains for the current candidate or the full worker graph. The
 [new resource preflight](rust-milestone-batch2-resource-preflight.md) failed before
 any Native measurement and supplies no accepted comparison. All formal
 milestones retain their current open status until their required criteria pass.
+
+## Build and fixture lessons from Candidates43–45
+
+A successful Docker command is insufficient when compilation caches are shared.
+The source archive normalizes timestamps to zero; Cargo's timestamp checks then
+reused Candidate43 executables despite Candidate44's seven changed Rust files.
+The [negative comparison](../scripts/rust-integration/milestone-batch44/package/UNTRUSTED.json)
+keeps CLI success separate from code provenance. Every uncached Cargo build must
+refresh all local compile-input timestamps before compilation. Keep registry
+caches, record actual local-crate compilation, and verify the changed Main ELF.
+Runtime-only layer hits can still reuse an unchanged compiled layer. Never count
+a stale executable's short build as a speed improvement.
+
+Compose the real recording router during cheap development checks. Candidate43's
+modules compiled, but its separate Comskip route conflicted with the existing
+catchall and panicked at Main startup. The regression now composes the same
+recording, playback and Comskip services used by Main, with closed lazy services
+to distinguish dispatch without SQL. The complete application batch is still
+required after this development check.
+
+Fixture ownership must match the actual rootless mapping. Preserve captured
+input bytes; stage a current-user-owned copy instead of archiving an out-of-range
+host subuid. Change ownership only through the existing owned fixture setup;
+production Main remains UID65532 with capabilities dropped. The
+[staging controls](../scripts/rust-integration/milestone-batch44/copy-staging/qualification.json)
+also retain observer failures from an unnecessary chmod and a mode0700 parent.
+Use the real Fixture's directory mode and operations, not additional permission
+steps. Disable Python bytecode before importing frozen helpers so validation does
+not create unreadable mode0700 cache directories in the bound source closure.

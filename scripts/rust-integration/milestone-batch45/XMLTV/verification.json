@@ -1,0 +1,93 @@
+{
+  "scope": "immutable-native-XML-parser-Compose-component",
+  "passed": true,
+  "source_tree_sha256": "6bdc918b9e40a72548a948bde9f56582e91fcc4a753d54a818328299b852fb60",
+  "source_archive_sha256": "11f357003289312e52228e6da0e6e1eb8d5298d6d92788001c1f92fe8f10e373",
+  "app_manifest_sha256": "684f53792f43bdeca468b5dfd98dafdfeed84f3e7a1738c18d48ac8d2b6e991e",
+  "goldens_sha256": "d16119cfaf554e2040911bcd47856fc83d0ec98cd2e6df9e5f5d69570df46f86",
+  "cases": 1144,
+  "tool_sha256": "ea37c0403d82ad53ff9572a3157995114d188356ea358d7ab6018c297058d1fa",
+  "application_performance_verified": false,
+  "full_refresh_job_verified": false,
+  "build_seconds": 13.481350285001099,
+  "image_id": "sha256:662082cc940c6ec9fd6018c610c12ce22206e9fd92d4c602b0b6ee20cbf316e2",
+  "actual_parity_generation": {
+    "exact_CID": "d9f0631d9271507f8e8ac135da1ed7f9673232f109d4f81863b34784b9e10fb8",
+    "original_positive_host_PID": 47065,
+    "starttime": "17182488",
+    "boot_id": "e90bf624-4ea1-4f93-8994-7b91f35f0f3f"
+  },
+  "parity_CLI_actual_wait_completed": true,
+  "exit_code": 0,
+  "retained_parity_ELF": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-xmltv-cached-target45-1/runtime/dispatcharr-xmltv-parity",
+    "sha256": "5950bef03ed7719d30714f4f1d10dcf88e177b833b5656b12d610d2907d52930",
+    "bytes": 2059752
+  },
+  "responses": 1144,
+  "differences": [],
+  "limits": [
+    "Immutable Rust/cc library test target; no Python backend or mounted application source.",
+    "Container has no network and runs read-only/nonroot with256MiB and2CPU limits.",
+    "Full ingestion scheduling, SQL guide swap and job/playback resource acceptance remain open."
+  ],
+  "exact_owned_CID_absent": true,
+  "original_positive_host_generation_absent": true,
+  "cleanup_passed": true,
+  "independent_project_inventories": {
+    "container": {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=xmltv-a4fc987125cf",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "empty": true
+    },
+    "network": {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=xmltv-a4fc987125cf",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "empty": true
+    },
+    "volume": {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=xmltv-a4fc987125cf",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "empty": true
+    }
+  },
+  "logs_sha256": {
+    "build.log": "be881b14e430c414d20f8acdccd9560fe89868cf1dc1bc1c01d1dd74398edaa5",
+    "compose.json": "2b78f27f160993ef904bffd22c53915f85ba4a3a5e61cbab69636af85c006597",
+    "stdout.jsonl": "b6eecbdbb4ab7270992fbb1eea284c3d0491da14df08354f8b3579d909335bd0",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "running-container-inspection.json": "8785c9780fa2bb42371613d0731e1dd058548844f0df349e743e0e213e41e8c7",
+    "dispatcharr-xmltv-parity": "5950bef03ed7719d30714f4f1d10dcf88e177b833b5656b12d610d2907d52930"
+  }
+}

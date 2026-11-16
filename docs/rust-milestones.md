@@ -14,7 +14,9 @@ and Source-characterized basic Series ingestion. SDK61 passes all four gates
 with 1,148 tests. Its CLI-successful Docker attempt is untrusted because a
 normalized timestamp/cache interaction reused stale executables. No package or
 Native run was dispatched. [Candidate45](rust-milestone-batch45.md) corrects
-compile freshness and passes all SDK62 gates; its Docker/Native checks are pending;
+compile freshness, passes all SDK62 gates and six package families, and passes
+the four-context Native batch (repeat5, Series4, Comskip3, shared loaded VLC).
+Current paired resource qualification remains separate;
 Candidate43 startup and fixture failures remain unchanged below.
 
 The [Candidate41 source](rust-milestone-batch41.md) passes all SDK58 gates

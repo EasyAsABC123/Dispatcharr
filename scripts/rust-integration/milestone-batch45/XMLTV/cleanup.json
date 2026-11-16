@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "project": "xmltv-a4fc987125cf",
+  "exact_CID": "d9f0631d9271507f8e8ac135da1ed7f9673232f109d4f81863b34784b9e10fb8",
+  "exact_CID_absent": true,
+  "original_positive_host_PID": 47065,
+  "original_starttime": "17182488",
+  "original_generation_absent": true,
+  "all_project_inventories_empty": true,
+  "commands": [
+    {
+      "name": "exact-CID",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=d9f0631d9271507f8e8ac135da1ed7f9673232f109d4f81863b34784b9e10fb8",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "containers",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=xmltv-a4fc987125cf",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "networks",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=xmltv-a4fc987125cf",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "volumes",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=xmltv-a4fc987125cf",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "scope": "Fresh independent readonly after actual XMLTV45 component terminal; no new workload"
+}

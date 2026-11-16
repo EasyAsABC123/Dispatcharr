@@ -1,0 +1,66 @@
+{
+  "passed": true,
+  "scope": "ONE actual four-context Native45 batch; Source0/Native4, retained exact Source58/Movie-repeat/Series-leaf/manual-Comskip authority; no Source business replay",
+  "actual_source_revision": "7c75cb07ba08544c903b9db953d00b2309e40f1b",
+  "actual_image_id": "sha256:09bebef535ebfa571db5950af063b706a613cb559cb7720dd54824384ffd788b",
+  "SDK": 62,
+  "actual_controller_exit": 0,
+  "seconds": 230.51731326599838,
+  "actual_wait_consumed": true,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "process_group_settled": true,
+  "contexts": [
+    {
+      "name": "vod-repeat",
+      "passed_cases": 5,
+      "causal_fresh_ingest_additional": true,
+      "Source_semantics_equal": true
+    },
+    {
+      "name": "vod-series",
+      "passed_cases": 4,
+      "Source_semantics_equal": true
+    },
+    {
+      "name": "comskip-manual",
+      "passed_cases": 3,
+      "Source_semantics_equal": true,
+      "observed_real_processing_result": "no_commercials",
+      "nonempty_mark_task_FFprobe_qualified": false
+    },
+    {
+      "name": "vlc-live",
+      "viewers": 2,
+      "inputs": 1,
+      "upstreams": 1,
+      "provider_slots": 1,
+      "AV_prefix_seconds": 3,
+      "video_frames_per_viewer": [
+        74,
+        74
+      ],
+      "decoder_stderr_bytes": [
+        0,
+        0
+      ],
+      "actual_ready_Jobs_and_Beat": true
+    }
+  ],
+  "six_exact_fixture_CIDs_absent": true,
+  "six_captured_original_positive_host_PIDs_absent": true,
+  "project_empty": true,
+  "UID_probe_exact_CID_absent": true,
+  "UID_probe_host_generation_independently_captured": false,
+  "input_MKV_bytes": 719267,
+  "input_MKV_sha256": "ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d",
+  "fresh_compile_and_all_six_packages_prerequisite": "Recorded separately in milestone-batch45/package; prior44 stale-cache build is unqualified",
+  "original_failed_attempts_preserved": [
+    "Native43 startup route conflict and unmapped copy ownership",
+    "Candidate44 stale-ELF provenance failure",
+    "Source positive-Comskip target returned no_commercials; only its Series leaf qualified"
+  ],
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "Original_credit": "Original Dispatcharr, Comskip, FFmpeg, VLC and dependencies retain all original application and algorithm credit."
+}

@@ -1,0 +1,186 @@
+{
+  "scope": "manual completed imported local MKV; actual exit1 no_commercials only",
+  "cases": [
+    {
+      "name": "no-file",
+      "HTTP": {
+        "context": "comskip-manual",
+        "method": "POST",
+        "path": "/api/channels/recordings/<owned-recording>/comskip/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "success": true,
+          "queued": true
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "no_file",
+        "traceback": null,
+        "children": []
+      },
+      "properties_before": {
+        "status": "completed",
+        "program": {
+          "title": "Owned no-file Comskip input"
+        },
+        "remux_success": true
+      },
+      "properties_after": {
+        "status": "completed",
+        "program": {
+          "title": "Owned no-file Comskip input"
+        },
+        "remux_success": true
+      },
+      "media_before": {
+        "input_sha256": "ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d",
+        "input_bytes": 719267,
+        "EDL_exists": false,
+        "EDL_sha256": null,
+        "EDL_text": null
+      },
+      "media_after": {
+        "input_sha256": "ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d",
+        "input_bytes": 719267,
+        "EDL_exists": false,
+        "EDL_sha256": null,
+        "EDL_text": null
+      },
+      "updates": []
+    },
+    {
+      "name": "real-manual-mark",
+      "HTTP": {
+        "context": "comskip-manual",
+        "method": "POST",
+        "path": "/api/channels/recordings/<owned-recording>/comskip/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "success": true,
+          "queued": true
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "no_commercials",
+        "traceback": null,
+        "children": []
+      },
+      "properties_before": {
+        "status": "completed",
+        "program": {
+          "title": "Owned manual Comskip input"
+        },
+        "file_path": "<owned-input>",
+        "remux_success": true
+      },
+      "properties_after": {
+        "status": "completed",
+        "comskip": {
+          "status": "completed",
+          "skipped": true,
+          "ini_path": "/app/docker/comskip.ini"
+        },
+        "program": {
+          "title": "Owned manual Comskip input"
+        },
+        "file_path": "<owned-input>",
+        "remux_success": true
+      },
+      "media_before": {
+        "input_sha256": "ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d",
+        "input_bytes": 719267,
+        "EDL_exists": false,
+        "EDL_sha256": null,
+        "EDL_text": null
+      },
+      "media_after": {
+        "input_sha256": "ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d",
+        "input_bytes": 719267,
+        "EDL_exists": true,
+        "EDL_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "EDL_text": ""
+      },
+      "updates": [
+        {
+          "success": true,
+          "type": "comskip_status",
+          "status": "started",
+          "recording_id": "<owned-recording>",
+          "title": "Owned manual Comskip input"
+        },
+        {
+          "success": true,
+          "type": "comskip_status",
+          "status": "skipped",
+          "recording_id": "<owned-recording>",
+          "reason": "no_commercials_detected"
+        }
+      ]
+    },
+    {
+      "name": "actual-repeat-already-processed",
+      "HTTP": {
+        "context": "comskip-manual",
+        "method": "POST",
+        "path": "/api/channels/recordings/<owned-recording>/comskip/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "success": true,
+          "queued": true
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "already_processed",
+        "traceback": null,
+        "children": []
+      },
+      "properties_before": {
+        "status": "completed",
+        "comskip": {
+          "status": "completed",
+          "skipped": true,
+          "ini_path": "/app/docker/comskip.ini"
+        },
+        "program": {
+          "title": "Owned manual Comskip input"
+        },
+        "file_path": "<owned-input>",
+        "remux_success": true
+      },
+      "properties_after": {
+        "status": "completed",
+        "comskip": {
+          "status": "completed",
+          "skipped": true,
+          "ini_path": "/app/docker/comskip.ini"
+        },
+        "program": {
+          "title": "Owned manual Comskip input"
+        },
+        "file_path": "<owned-input>",
+        "remux_success": true
+      },
+      "media_before": {
+        "input_sha256": "ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d",
+        "input_bytes": 719267,
+        "EDL_exists": true,
+        "EDL_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "EDL_text": ""
+      },
+      "media_after": {
+        "input_sha256": "ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d",
+        "input_bytes": 719267,
+        "EDL_exists": true,
+        "EDL_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "EDL_text": ""
+      },
+      "updates": []
+    }
+  ]
+}
