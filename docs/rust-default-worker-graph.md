@@ -3,27 +3,39 @@
 Original Dispatcharr/Celery/django-celery-beat and dependency authors retain all
 application, algorithm and protocol credit.
 
-Runtime `52e8ebc7` now registers the selected14 families plus startup recovery in
-one experimental Main assembly. Both worker and clocked-only scheduler flags
-remain off by default. Its [actual selected cohort](rust-batch7-selected-m6-observations.md)
-passes222 checks; this is not full Source47/default-Beat acceptance.
+Candidate37 source `da75542b6f46ea982dfefb75b5541757e78cd34a` assembles the
+current graph in [SelectedJobs](../rust/crates/app/src/selected_jobs.rs).
+The literal task mapping now covers 29 of the 47 static application declarations,
+plus framework backend cleanup and dynamic plugin registration. The
+[Source-task reconciliation](rust-source-task-coverage.md) separates those
+registrations from actual natural producers, executable evidence and remaining
+unmapped workflows. Neither a family count nor compilation closes M6.
 
-| Family group | Current Main composition | Actual current acceptance |
+| Family group | Current Main composition | Actual acceptance and remaining scope |
 | --- | --- | --- |
-| Refresh, index, TVG, Series, version | Registered with real existing services | Selected API chains/retained consumers, failure continuation and version startup pass |
-| Artwork | Registered child/root consumers | Captured configured-Series children pass; normal root/manual/no-image/provider coverage remains incomplete |
-| Recording | Registered generic DVR consumer and actual HTTP controls | Normal media/control/restart workflows await the shared actual Source/Native cohort |
-| Scanner, M3U groups, M3U single | Registered with shared first-scan state and owned SQL sessions | Grouped mixed-file/descendant acceptance prepared, not yet run |
-| Recurring, expiration, cleanup, proxy stats | Registered real services | Grouped empty/active/default/effect acceptance prepared, not yet run |
-| Startup recovery | Real worker-ready publication and consumer | Empty recovery passes; owner/cache-loss/nonempty and warm-restart scopes remain separate |
-| Clocked scheduler | Explicit single-instance opt-in | Startup/readiness and retained import coexistence pass; interval/crontab/full default Beat remains absent |
+| Refresh, index, TVG, SD guide, Series, artwork, version | Real handlers and SD/ingestion plugin binding | Later guide workflows execute actual Connect and downloads; their recorded Source/image scopes remain separate. Candidate37-wide acceptance is not inferred. |
+| Recording and startup recovery | Normal DVR, real HTTP controls, claimed-task Connect binding and recovery capability guard | Native46 first STOP200 retains the claimed task through End/SUCCESS and decoding; the full event context fails observer capacity. Connect recovery/direct DELETE refusal controls pass. Nonempty restart retains strict decoder failure. |
+| Scanner, M3U groups/single, auto-sync and XC account info/profiles | Real scanner/M3U/XC handlers and shared provenance | Native46 grouped scanner passes; older XC/auto-sync evidence retains its own domain and image. Remote/all-account/VOD workflows still need exact producer mapping. |
+| Recurring, expiration, cleanup, proxy stats | Real default services and live statistics source | Native46 grouped M6 passes all five cells (including scanner); broader settings, calendar and fault branches remain separate. |
+| Core rehash/offsets and channel bulk/name/logo/TVG tasks | Real Core and Channel handlers, not absent registrations | Older production batches contain scoped successes and failures; current implementation mapping is not fresh acceptance of every effect/domain. Populated plugin/offset guards remain explicit. |
+| Backup create/restore/scheduled and plugins | Shared normal backup ports, restore binding, plugin runtime and registered jobs | Native46 actions/strict negatives and ordinary restore/partial admission pass; general enabled-plugin/history restore and full M8 remain open. |
+| Normal Beat | Assembled shared-pool scheduler implements clocked, interval and crontab rows | Implementation exists; full Source schedule/timezone/default-task acceptance is not established by registration or the selected batches. |
 
-Ordinary admission allows six concurrent tasks, but some individual services
-still allow only one task per family. Normal DVR admits twenty tasks. Those
-facts do not prove Source concurrency parity. Actual Core rehash and offset
-rescheduling publications need downstream handlers beyond the selected14;
-implementation is in progress. SQLite, physical cancellation/fault variants,
-Source task coverage and equivalent-work performance remain open.
+The [Native46 whole run](../scripts/rust-integration/milestone-batch37/Native46/qualification.json)
+exits 1 with five passing and two failed contexts, settled pipes/process group and
+exact cleanup. Source44's fresh event-observer qualification remains Source-only.
+Native47's corrected observer rerun is pending at this checkpoint. Preserve failed
+whole runs even when independent cells pass.
+
+`RUST_EXPERIMENTAL_SELECTED_JOBS` and `RUST_EXPERIMENTAL_SELECTED_BEAT` default
+off; Beat requires selected jobs and exactly one configured Beat instance. Main
+uses the normal scheduler, rather than the historical clocked-only adapter.
+Ordinary admission allows six concurrent tasks and normal DVR allows twenty;
+individual-family limits and unsupported domains still preclude a Source
+concurrency-parity claim. The readiness response observes actual startup,
+control, worker and scheduler states and still reports `parity_complete:false`.
+Full task/route coverage, SQLite, physical fault/cancellation branches, strict
+recording media quality and equivalent-work resource acceptance remain open.
 
 ## Historical batch3 audit
 
@@ -56,7 +68,13 @@ producers outside this selected graph. Its completion cannot alone close M6.
 | Version / core.tasks.check_for_version_update | separately enabled | version_application actually passed four owned HTTP200 cases, real notices/events and physical HTTP runtime drain. Original normal startup schedules it; current Main flag is default-off. Development/non-numeric/error branches remain outside proven stable subset. |
 | Account expiry / apps.m3u.tasks.check_account_expirations | absent | DefaultWorker + KnownDomains::with_active_notifications and actual retained notification service exist. Register with the real Main realtime sink; preserve caught task failures versus unsettled operations and full account/profile query semantics. |
 
-## Generic prerequisites, rather than fixture requirements
+## Historical batch3 prerequisites and proposed cohort
+
+The remaining text preserves the batch3 planning checkpoint. Its absent-family,
+clocked-only scheduler and readiness limitations describe that earlier code;
+the current composition and unresolved acceptance are summarized above. It is
+not the launch plan for Candidate37 or a claim that those registrations are
+still missing.
 
 `SourcePathContext` only resolves stored relative file paths and cache locations.
 It does not read Python code. Dockerfile.app already creates empty /app and
@@ -92,7 +110,7 @@ not observe stopped/faulted background lanes. Production readiness must include
 the actual required worker/producer states and their drain/ownership status;
 missing families must remain visible rather than being mistaken for a full port.
 
-## One affected finite Main cohort for the next candidate
+### Historical proposed next-candidate cohort
 
 Reuse the existing M6 cloned database, files, envelopes, real API producer chain,
 failure/continuation, version Origin and cleanup in one run. Remove only Native's

@@ -12,7 +12,18 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
-The current source [Candidate28](rust-milestone-batch28.md) passes all four SDK
+Current implementation and executable coverage are reconciled in the
+[worker graph](rust-default-worker-graph.md) and
+[47-declaration producer review](rust-source-task-coverage.md). Candidate37
+registers 29 literal application task names plus backend cleanup and dynamic
+plugins. Its [Native46 whole run](rust-milestone-batch37.md) retains five passing
+contexts and two failures; Native47 is pending at this checkpoint. The generated
+contract register still needs exact case bindings. Those implementation and
+workflow observations do not close full milestones or matched-work performance.
+The candidate paragraphs below are historical checkpoints, not current missing-
+registration claims or a current execution queue.
+
+The historical source [Candidate28](rust-milestone-batch28.md) passes all four SDK
 gates with1,088 tests, zero failures and783 ignored. Guide scopes/output, builtin
 task handoff, process ingress and ordinary Channel/account compatibility are
 joined; Docker, Main/physical and performance acceptance remain required.

@@ -5,37 +5,91 @@ The pinned Source revision is
 `1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430`.
 
 The [reproducible static inventory](../scripts/rust-job-contracts/source-task-declarations.json)
-finds47 top-level task-decorated functions outside test files. It records exact
-Source paths, lines, file hashes and literal decorator options. Root reproduced
-the JSON byte for byte from Git without importing Source or running a service.
-This is not the runtime registry, an implementation count or a passing coverage
-gate: aliases, dynamic registration, nested definitions and required framework
-workflows still need an executable crosswalk.
+finds 47 top-level task-decorated functions outside test files. It records exact
+Source paths, lines, file hashes and literal decorator options. This is not the
+runtime registry, an implementation count or a passing coverage gate: aliases,
+dynamic registration, direct calls and required framework workflows still need
+an executable crosswalk. Its `runtime_registration_verified` and
+`source_execution` fields describe that static capture and remain unchanged.
 
-The existing default-dispatch proposal selects14 families, including framework
-backend cleanup. It includes13 of those47 application declarations. Completing
-that selected graph alone cannot establish full application coverage. Additional
-declarations include Core rehash/offset rescheduling, backup/restore, channel
-matching/bulk actions, Schedules Direct guide fetches, M3U account/profile actions,
-plugin repository refresh and VOD batch/metadata cleanup.
+## Current implementation mapping
 
-For each declaration, map its actual natural producer or callback to the Rust
-production entrypoint, required effects, existing Source authority and acceptance
-cohort. A missing registration is distinct from a missing algorithm; some native
-HTTP/service components already implement portions of these workflows. A
-decorated helper such as Source's `_safe_name` is not proof of a natural queued
-workflow. Preserve behavior without requiring Rust to reproduce an unused Celery
-internal interface. Record unused/direct-only cases with their actual callsites,
-and include dynamically registered or framework tasks when application workflows
-depend on them.
+Candidate37 source `da75542b6f46ea982dfefb75b5541757e78cd34a` has moved beyond
+the historical selected14 proposal. The literal classifier in
+[milestone_dispatch.rs](../rust/crates/job-transport/src/milestone_dispatch.rs)
+recognizes 29 of the 47 application names, plus framework
+`celery.backend_cleanup`. [SelectedJobs](../rust/crates/app/src/selected_jobs.rs)
+assembles their real family handlers, registered plugin tasks and the normal
+Beat scheduler. Some names share a family; these are not counts of independent
+passing workflows. Registration does not establish that every producer, domain,
+result, child publication or shutdown path works.
 
-Core99 already demonstrates two required natural producers outside the selected
-graph: `core.tasks.rehash_streams` and
-`apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change`.
-Their actual envelopes are observed but downstream execution is unqualified.
-These heads must not disappear from acceptance merely because the selected
-dispatcher enum does not contain them. Keep M0 executable coverage, M6 and final
-parity open until this crosswalk and the required workflows pass.
+| Mapped application declarations | Main composition | Executed evidence and limits |
+| --- | --- | --- |
+| Backup create/restore/scheduled (3) | Normal backup jobs and restore plugin binding | Candidate37 Native46 ordinary restore six cells and partial-admission two cells pass; general enabled-plugin/history restore remains open. |
+| Channel bulk creation, names/logos/TVG maintenance, Series, recurring, artwork, recording, startup recovery and offset rescheduling (10) | Channel handlers, Series/artwork, normal DVR/recovery and Core handlers | Native46 grouped recurring and explicit Connect/recovery refusal controls pass. Its ordinary event workflow fails observation and nonempty restart fails strict decoding. Older channel/artwork successes retain their own image/input scopes. |
+| Refresh, programme index, per-channel programmes and two SD guide task names (5) | Refresh/index/TVG handlers and SD guide wrapper | Fresh Source36 guide authority and later Native guide batches cover declared cases; they do not establish every EPG producer or automatically pass Candidate37. |
+| Account info/profiles, expiry, groups, single-account refresh and auto-channel sync (6) | XC, scanner/M3U, default expiry and auto-sync handlers | Native46 grouped scanner/expiry pass for that cohort. Older XC/auto-sync cases remain historical references with their original domains and images. |
+| Plugin repository refresh (1), proxy stats (1), scanner/version/rehash (3) | Plugin/default/scanner/Core handlers | Native46 grouped stats/scanner pass. Rehash is implemented and has older production execution evidence; current registration is not fresh rehash acceptance. |
+
+The [Candidate37 whole-run record](rust-milestone-batch37.md) and
+[Native46 qualification](../scripts/rust-integration/milestone-batch37/Native46/qualification.json)
+record five passing contexts and two failed contexts, actual exit 1 and exact
+cleanup. [Source44](../scripts/rust-integration/milestone-batch37/Source44/qualification.json)
+qualifies the extra event observer and Source stopped/completed behavior only.
+Native47's observer-corrected seven-context rerun is pending at this checkpoint;
+no pass is inferred. These links establish their stated workflow scopes, not
+case bindings for every generated register row.
+
+Core99's natural `core.tasks.rehash_streams` and
+`apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change` heads are
+no longer absent from the classifier. [normal_core_tasks.rs](../rust/crates/job-transport/src/normal_core_tasks.rs)
+registers both and performs actual envelope admission/claim before execution.
+The earlier [Core99 capture](rust-batch5-ops-acceptance.md) qualified publications,
+while [Candidate12](rust-batch12-functional-observations.md) separately passed
+rehash and preserved its offset failure. Later capability guards and negative
+controls do not turn all offset/artwork/plugin domains into successful execution.
+
+## Eighteen declarations without a literal classifier entry
+
+The following is a static producer/direct-call reconciliation, not eighteen
+proven missing algorithms. Call sites below refer to the pinned Source files;
+all nine inventoried Source file hashes still match the committed inventory.
+A task name appearing in `dispatcharr/celery.py`'s memory-cleanup list is not
+itself a producer. A natural queued workflow needs its actual HTTP/signal/Beat
+producer mapped to the intended Rust consumer or equivalent service, followed
+by Source and production execution evidence.
+
+| Declaration(s) | Pinned Source authority | Remaining executable mapping |
+| --- | --- | --- |
+| `match_epg_channels`, `match_selected_channels_epg`, `match_single_channel_epg` | `apps/channels/api_views.py:2601–2620` queues all/selected/single matching from real actions | Trace each action to its Rust dispatch and matching effects; maintenance name/logo/TVG tasks are different workflows. |
+| `comskip_process_recording` | `apps/channels/tasks.py:3094` and `apps/channels/api_views.py:3752` queue processing | A concrete implementation gap: normal recording policy explicitly refuses enabled comskip (`recording_normal_policy.rs`). Standalone/manual processing also needs producer/consumer acceptance. |
+| `fetch_schedules_direct_stations` | `apps/epg/signals.py:22` and `apps/epg/sd_api.py:274` queue station discovery | Map the station-discovery producer separately from the two registered guide-fetch names; guide-fetch success alone cannot close it. |
+| `refresh_m3u_accounts` | `apps/m3u/api_views.py:765` queues the all-active-accounts task; task then queues one child per active account (`tasks.py:725`) | Verify the aggregate API/root/result and exact single-account descendants. A registered single-account consumer alone is insufficient. |
+| `refresh_vod_content` | M3U API create/update and `apps/m3u/tasks.py:4064` queue VOD ingestion | Map natural import through VOD child/direct work and current production effects; live-channel account refresh is not that acceptance. |
+| `_safe_name` | Direct calls in `apps/channels/tasks.py:1226,1393–1414` | Preserve naming through the calling channel workflows; no queued producer identified in this static review. |
+| `process_groups` | Direct call in `apps/m3u/tasks.py:1971` | Map inline M3U group processing; do not require a separate worker solely because it has a decorator. |
+| `cleanup_orphaned_vod_content`, `process_movie_batch`, `process_series_batch`, `refresh_movie_advanced_data` | Direct calls in `apps/vod/tasks.py:164,287,342`, `apps/vod/api_views.py:229` and `apps/output/views.py:1704` | Preserve effects through actual import/metadata/output callers; queued registration is not proved necessary by these direct calls. |
+| `purge_recurring_rule`, `rebuild_recurring_rule` | Decorated wrappers in `apps/channels/tasks.py`; API/helper paths call the purge implementation directly | Map direct rule mutation/rebuild effects and inspect any persisted schedule producer; no natural queued wrapper producer identified here. |
+| `refresh_all_epg_data`, `batch_refresh_series_episodes`, `beat_periodic_task` | Definitions in `apps/epg/tasks.py:483`, `apps/vod/tasks.py:1846`, `core/tasks.py:56` | No natural queued producer identified here. Inspect persisted/user-created Beat rows and API/callback callers before classifying these as unused or requiring new consumers. |
+
+Dynamic plugin registrations and framework tasks remain additional workflow
+contracts outside the 47-name inventory. Unsupported FIFO heads must remain
+visible and unchanged, rather than being counted as executed or silently dropped.
+
+## Next acceptance work
+
+Start with the demonstrated queued gaps: channel matching, station discovery,
+all-account refresh and VOD ingestion, plus explicit comskip support. For each,
+map the real Source producer, arguments/options, parent/children, result and
+SQL/cache/media/event effects to its current Rust route/service. Reuse qualified
+Source evidence only where its state and inputs actually apply; characterize
+missing branches in the existing milestone cohort. Then add reviewed exact
+case bindings to the [contract register](rust-contract-register.md). Do not
+manually promote static inventory fields or generated register rows to passes.
+
+Keep M0 executable coverage, M6 and final parity open until the required
+workflows pass. The 783 SDK-ignored tests are not a count of missing workflows.
 
 ```sh
 python3 -B scripts/rust-job-contracts/source_task_inventory.py \
