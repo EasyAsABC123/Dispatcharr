@@ -1,4 +1,4 @@
-//! Initial nonempty VOD catalog workflow from Original apps/vod/tasks.py.
+//! Bounded plain Movie catalog initial/repeat workflow from Original apps/vod/tasks.py.
 //! Original Dispatcharr/Django/Celery authors retain all algorithms and credit.
 use crate::{xc_live_provider::Client, AuthService, StoreError};
 use dispatcharr_contracts::UpdateEventSink;
@@ -56,7 +56,7 @@ pub async fn preflight(
                 AdmissionError::Operational(unsupported())
             }
         })?;
-    if !sql::fresh(auth, owner.clone()).await? {
+    if !sql::supported_catalog(auth, owner.clone()).await? {
         return Err(AdmissionError::Unsupported);
     }
     Ok(Prepared {
@@ -121,7 +121,7 @@ pub async fn execute(
     if account != prepared.account {
         return Err(unsupported());
     }
-    if !sql::fresh(&auth, owner.clone()).await? {
+    if !sql::supported_catalog(&auth, owner.clone()).await? {
         return Err(unsupported());
     }
     crate::m3u_refresh_all::require_supported_domain(&auth, owner.clone()).await?;
@@ -157,6 +157,9 @@ pub async fn execute(
         draining(cancellation.as_ref())?;
         let movie_categories =
             values::categories(action(&mut client, "get_vod_categories").await?)?;
+        if movie_categories.is_empty()&&sql::has_selected_categories(&auth,owner.clone(),account.id,"movie").await?{
+          return Err(Step::Caught(format!("Provider returned no VOD categories for account {}; aborting VOD refresh to preserve existing category selections",account.name)));
+        }
         let mut movie_map = sql::categories(
             &auth,
             owner.clone(),
@@ -169,6 +172,9 @@ pub async fn execute(
         draining(cancellation.as_ref())?;
         let series_categories =
             values::categories(action(&mut client, "get_series_categories").await?)?;
+        if series_categories.is_empty()&&sql::has_selected_categories(&auth,owner.clone(),account.id,"series").await?{
+          return Err(Step::Caught(format!("Provider returned no VOD categories for account {}; aborting VOD refresh to preserve existing category selections",account.name)));
+        }
         let _series_map = sql::categories(
             &auth,
             owner.clone(),

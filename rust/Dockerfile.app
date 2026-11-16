@@ -27,6 +27,8 @@ ENTRYPOINT ["/usr/local/bin/dispatcharr-xmltv-parity"]
 FROM ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f AS media
 COPY rust/runtime/collect_media.py /tmp/collect_media.py
 RUN /dispatcharrpy/bin/python /tmp/collect_media.py
+COPY rust/runtime/collect_comskip.py rust/runtime/comskip-source.ini rust/runtime/comskip-LICENSE rust/runtime/comskip-NOTICE rust/runtime/comskip-Original-DispatcharrBase /tmp/
+RUN /dispatcharrpy/bin/python /tmp/collect_comskip.py
 COPY rust/runtime/collect_crypto.py /tmp/collect_crypto.py
 RUN /dispatcharrpy/bin/python /tmp/collect_crypto.py
 COPY rust/runtime/collect_postgres.py /tmp/collect_postgres.py

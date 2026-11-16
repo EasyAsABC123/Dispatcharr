@@ -1793,3 +1793,6 @@ mod m3u_refresh_all_transport;
 
 #[path = "vod_ingestion_transport.rs"]
 mod vod_ingestion_transport;
+
+#[path = "comskip_transport.rs"]
+mod comskip_transport;

@@ -13,7 +13,7 @@ pub(super) struct Category {
 pub(super) struct Movie {
     pub name: String,
     pub year: Option<i32>,
-    pub adult: bool,
+    pub adult: Option<bool>,
     pub stream: String,
     pub provider: Option<String>,
     pub extension: String,
@@ -89,7 +89,7 @@ fn year(row: &serde_json::Map<String, Value>, name: &str) -> Result<Option<i32>,
     }
     Ok(None)
 }
-/// Fresh basic-list slice: no metadata/logo/identity conflict or language split
+/// Bounded basic-list slice: no metadata/logo/identity conflict or language split
 /// is silently converted to a sparse row. Those values require later slices.
 pub(super) fn movies(
     value: Value,
@@ -97,10 +97,9 @@ pub(super) fn movies(
 ) -> Result<Vec<Movie>, StoreError> {
     let rows = value
         .as_array()
-        .filter(|rows| !rows.is_empty() && rows.len() <= 64)
+        .filter(|rows| rows.len() <= 64)
         .ok_or_else(unsupported)?;
     let mut streams = HashSet::new();
-    let mut identities = HashSet::new();
     rows.iter()
         .map(|value| {
             if is_draining() {
@@ -169,12 +168,9 @@ pub(super) fn movies(
                 _ => return Err(unsupported()),
             };
             let year = year(row, raw_name)?;
-            if !identities.insert((name.clone(), year)) {
-                return Err(unsupported());
-            }
             Ok(Movie {
                 year,
-                adult: adult(row.get("is_adult")),
+                adult: row.get("is_adult").map(|v| adult(Some(v))),
                 name,
                 stream,
                 provider,
@@ -212,7 +208,7 @@ mod source_basic_list_controls {
         assert_eq!(imported.len(), 2);
         assert_eq!(imported[0].year, Some(2020));
         assert_eq!(imported[1].year, Some(2021));
-        assert!(!imported[0].adult);
+        assert_eq!(imported[0].adult, Some(false));
         let mut expected = rows[0].clone();
         expected["_provider_category_id"] = json!("4");
         expected["_category_id"] = json!(42);
@@ -228,12 +224,24 @@ mod source_basic_list_controls {
             assert!(movies(metadata, &|| false).is_err(), "{field}");
         }
         let imported = movies(plain, &|| false).unwrap();
-        assert!(imported[0].adult);
+        assert_eq!(imported[0].adult, Some(true));
         assert_eq!(imported[0].year, Some(2020));
         assert!(movies(
             json!([{"stream_id":1,"name":"Owned"},{"stream_id":1,"name":"Other"}]),
             &|| false
         )
         .is_err());
+    }
+    #[test]
+    fn multiple_provider_streams_share_identity_and_missing_adult_is_distinct() {
+        let rows=movies(json!([{"stream_id":1,"name":"Shared (2020)"},{"stream_id":2,"name":"Shared (2020)","is_adult":"1"}]),&||false).unwrap();
+        assert_eq!(
+            (rows[0].name.as_str(), rows[0].year),
+            (rows[1].name.as_str(), rows[1].year)
+        );
+        assert_eq!(rows[0].adult, None);
+        assert_eq!(rows[1].adult, Some(true));
+        assert_ne!(rows[0].stream, rows[1].stream);
+        assert!(movies(json!([]), &|| false).unwrap().is_empty());
     }
 }

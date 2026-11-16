@@ -54,6 +54,7 @@ struct Inner {
     backup_jobs: jobs::normal_backup::Application,
     channel_http: dispatcharr_store::channel_maintenance_http::ChannelMaintenanceHttp,
     matching_http: dispatcharr_store::channel_epg_match_http::ChannelEpgMatchHttp,
+    comskip_http: dispatcharr_store::comskip_http::ComskipHttp,
     sd_source_http: dispatcharr_store::sd_source_http::SdSourceHttp,
 }
 #[derive(Clone)]
@@ -338,6 +339,16 @@ impl SelectedJobs {
                 auth.producer_identity_source(),
             )),
         );
+        let comskip = jobs::normal_comskip::Prepared::new(
+            shared_jobs.clone(),
+            auth.clone(),
+            events.clone(),
+            auth.producer_identity_source(),
+            revoked.clone(),
+        )
+        .map_err(|_| "Selected manual Comskip authority unavailable")?;
+        let comskip_http =
+            dispatcharr_store::comskip_http::ComskipHttp::prepare(Arc::new(comskip.clone()));
         let recording_http = dispatcharr_store::recording_http::RecordingHttp::prepare(
             auth.clone(),
             recording_jobs.clone(),
@@ -483,6 +494,7 @@ impl SelectedJobs {
                 matching_tasks.handler(jobs::normal_channel_matching::Kind::Single),
             ),
         ]);
+        entries.push((Family::ComskipManual, comskip.handler()));
         entries.push(plugin_refresh.entry());
         entries.push(plugin_tasks.entry());
         entries.extend(xc.entries());
@@ -572,6 +584,7 @@ impl SelectedJobs {
                 backup_jobs,
                 channel_http,
                 matching_http,
+                comskip_http,
                 sd_source_http,
             }),
         })
@@ -592,6 +605,7 @@ impl SelectedJobs {
             .router_with_playback(self.inner.recording_playback.clone())
             .merge(self.inner.channel_http.clone().router())
             .merge(self.inner.matching_http.clone().router())
+            .merge(self.inner.comskip_http.clone().router())
             .merge(self.inner.xc_http.clone().router())
     }
     pub fn readiness(&self) -> (bool, serde_json::Value) {
@@ -711,6 +725,7 @@ impl SelectedJobs {
         self.inner.backup_jobs.close_admission();
         self.inner.channel_http.close_admission();
         self.inner.matching_http.close_admission();
+        self.inner.comskip_http.close_admission();
         self.inner.sd_source_http.close_admission();
         self.inner.recording_http.close_admission();
         self.inner.xc_http.close_admission();
@@ -746,6 +761,14 @@ impl SelectedJobs {
             .await
         {
             return selected_shutdown_failed("matching_http");
+        }
+        if !self
+            .inner
+            .comskip_http
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            return selected_shutdown_failed("comskip_http");
         }
         if !self
             .inner

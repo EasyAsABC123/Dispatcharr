@@ -392,15 +392,24 @@ impl OwnedChild {
         transcript: Arc<Transcript>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<(Self, DateTime<Utc>, Vec<String>), Error> {
-        let mut argv = vec!["ffmpeg".to_owned()];
+        Self::spawn_program("ffmpeg", args, transcript, caller, None)
+    }
+    fn spawn_program(
+        program: &str,
+        args: &[String],
+        transcript: Arc<Transcript>,
+        caller: Arc<dyn Send + Sync>,
+        stdout: Option<fs::File>,
+    ) -> Result<(Self, DateTime<Utc>, Vec<String>), Error> {
+        let mut argv = vec![program.to_owned()];
         argv.extend_from_slice(args);
         let started = Utc::now();
         let record = transcript.begin(argv.clone(), started)?;
-        let mut command = Command::new("ffmpeg");
+        let mut command = Command::new(program);
         command
             .args(args)
             .stdin(Stdio::null())
-            .stdout(Stdio::null())
+            .stdout(stdout.map(Stdio::from).unwrap_or_else(Stdio::null))
             .stderr(Stdio::piped())
             .process_group(0);
         let child = match command.spawn() {
@@ -1154,5 +1163,49 @@ mod dvr_output_profile_url {
         )
         .is_err());
         assert!(ObservedLocalOrigin::from_explicit_setting("http://127.0.0.1:9192").is_err());
+    }
+}
+
+/// Real comskip/ffprobe invocation through the existing DVR child transcript,
+/// identity, stderr reader, wait and emergency owner retention. No shell.
+pub(crate) fn comskip_program(
+    program: &str,
+    args: &[String],
+    stdout: Option<fs::File>,
+    shutdown: Arc<AtomicBool>,
+    owner: Arc<dyn Send + Sync>,
+    transcript: Arc<Transcript>,
+    seconds: u64,
+) -> Result<ProcessReceipt, Error> {
+    if !(1..=300).contains(&seconds)
+        || !matches!(program, "/usr/local/bin/comskip" | "/usr/local/bin/ffprobe")
+    {
+        return Err(Error::Unsupported);
+    }
+    let (mut owned, started, argv) =
+        OwnedChild::spawn_program(program, args, transcript, owner, stdout)?;
+    let identity = owned.identity()?;
+    let deadline = Instant::now() + Duration::from_secs(seconds);
+    loop {
+        if let Some(status) = owned.try_wait()? {
+            return owned.receipt(status, identity, argv, started, false, false);
+        }
+        if shutdown.load(Ordering::Acquire) || Instant::now() >= deadline {
+            signal_int(&mut owned.child, &identity)?;
+            let grace = Instant::now() + Duration::from_secs(10);
+            let (status, forced) = loop {
+                if let Some(status) = owned.try_wait()? {
+                    break (status, false);
+                }
+                if Instant::now() >= grace {
+                    owned.kill()?;
+                    break (owned.wait()?, true);
+                }
+                thread::sleep(Duration::from_millis(25));
+            };
+            let receipt = owned.receipt(status, identity, argv, started, true, forced)?;
+            return Err(Error::CallerShutdown(Box::new(receipt)));
+        }
+        thread::sleep(Duration::from_millis(25));
     }
 }

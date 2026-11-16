@@ -26,6 +26,10 @@ fn statements() -> Vec<(&'static str, String)> {
             "aggregate_active",
             crate::m3u_refresh_all::schema_active_selection().to_owned(),
         ),
+        ("comskip_select", crate::comskip_task::SELECT.to_owned()),
+        ("comskip_update", crate::comskip_task::UPDATE.to_owned()),
+        ("comskip_settings", crate::comskip_task::SETTINGS.to_owned()),
+        ("comskip_exists", crate::comskip_http::EXISTS.to_owned()),
     ]);
     rows
 }
@@ -34,8 +38,10 @@ fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
     // provide PostgreSQL the production Rust wire types, rather than asking it
     // to infer convenient types from otherwise-unbound SQL placeholders.
     match name {
-        "station_existing" => vec![<i64 as Type<sqlx::Postgres>>::type_info()],
-        "station_insert" | "station_update" => vec![
+        "station_existing" | "comskip_select" | "comskip_exists" => {
+            vec![<i64 as Type<sqlx::Postgres>>::type_info()]
+        }
+        "station_insert" | "station_update" | "comskip_update" => vec![
             <i64 as Type<sqlx::Postgres>>::type_info(),
             <Value as Type<sqlx::Postgres>>::type_info(),
         ],
@@ -52,7 +58,7 @@ fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
             <i64 as Type<sqlx::Postgres>>::type_info(),
         ],
         "serialize" => vec![<i64 as Type<sqlx::Postgres>>::type_info()],
-        "settings" | "plugins" | "aggregate_active" => vec![],
+        "settings" | "plugins" | "aggregate_active" | "comskip_settings" => vec![],
         _ => panic!("unreviewed production matching statement: {name}"),
     }
 }
@@ -67,8 +73,10 @@ fn outputs(name: &str) -> Vec<(&'static str, Output)> {
     use Output::*;
     match name {
         "station_existing" => vec![("tvg_id", Text)],
-        "aggregate_active" => vec![("id", Int8)],
-        "station_insert" | "station_update" => vec![],
+        "aggregate_active" | "comskip_exists" => vec![("id", Int8)],
+        "comskip_select" => vec![("properties", Jsonb), ("bounded", Bool)],
+        "comskip_settings" => vec![("value", Jsonb)],
+        "station_insert" | "station_update" | "comskip_update" => vec![],
         "channels" => vec![
             ("id", Int8),
             ("name", Text),
@@ -120,7 +128,7 @@ fn compatible(kind: Output, actual: &PgTypeInfo) -> bool {
 #[test]
 fn compiled_matching_statements_and_bind_ordinals_are_complete() {
     let rows = statements();
-    assert_eq!(rows.len(), 15);
+    assert_eq!(rows.len(), 19);
     let names: BTreeSet<_> = rows.iter().map(|(name, _)| *name).collect();
     assert_eq!(names.len(), rows.len());
     assert_eq!(
@@ -140,7 +148,11 @@ fn compiled_matching_statements_and_bind_ordinals_are_complete() {
             "station_existing",
             "station_insert",
             "station_update",
-            "aggregate_active"
+            "aggregate_active",
+            "comskip_select",
+            "comskip_update",
+            "comskip_settings",
+            "comskip_exists"
         ]
         .into_iter()
         .collect()
@@ -234,6 +246,8 @@ async fn actual_compiled_matching_schema_prepare_only() {
         ("bulk_candidates", 0),
         ("station_insert", 1),
         ("station_existing", 0),
+        ("comskip_select", 0),
+        ("comskip_update", 1),
     ] {
         let sql = statements()
             .into_iter()
@@ -241,7 +255,7 @@ async fn actual_compiled_matching_schema_prepare_only() {
             .unwrap()
             .1;
         let mut types = parameter_types(name);
-        types[index] = if name == "station_existing" {
+        types[index] = if matches!(name, "station_existing" | "comskip_select") {
             <bool as Type<sqlx::Postgres>>::type_info()
         } else {
             <i64 as Type<sqlx::Postgres>>::type_info()
@@ -251,7 +265,7 @@ async fn actual_compiled_matching_schema_prepare_only() {
     }
     let ready = connection.ping().await;
     let closed = connection.close().await;
-    let passed = rows.len() == 15
+    let passed = rows.len() == 19
         && rows.iter().all(|r| {
             r["prepared"] == true
                 && r["row_decoder_compatible"] == true
@@ -261,7 +275,7 @@ async fn actual_compiled_matching_schema_prepare_only() {
         && ready.is_ok()
         && closed.is_ok();
     let report = json!({"passed":passed,"schema_only":true,"DML_executed":false,"task_or_media_executed":false,
-        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1},"statements":rows,"wrong_bind_type_controls":negatives,
+        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1,"comskip":4},"statements":rows,"wrong_bind_type_controls":negatives,
         "ready":format!("{ready:?}"),"closed":format!("{closed:?}"),"scope":"Compiled production SQL/constants and audited actual Rust bind types; prepares/row shapes only, not DML/data/event/task parity."});
     let bytes = serde_json::to_vec_pretty(&report).expect("report");
     assert!(bytes.len() <= 131072);
