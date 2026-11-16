@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "name": "non-XC-HTTP400-no-publication",
+      "status": "passed",
+      "actual": {
+        "actual_HTTP": 400,
+        "actual_publications": 0,
+        "SQL_and_owned_cache_unchanged": true
+      }
+    },
+    {
+      "name": "disabled-HTTP400-no-publication",
+      "status": "passed",
+      "actual": {
+        "actual_HTTP": 400,
+        "actual_publications": 0,
+        "SQL_and_owned_cache_unchanged": true
+      }
+    },
+    {
+      "name": "natural-HTTP202-fresh-Movies-emptySeries-inline-helpers",
+      "status": "passed",
+      "actual": {
+        "actual_HTTP202": true,
+        "actual_task": "1e974f0f-faa0-4b2a-a5c8-06acf25cab8f",
+        "actual_claimed_backend_SUCCESS": true,
+        "actual_movies": 2,
+        "actual_movie_relations": 2,
+        "actual_category_relations": 3,
+        "actual_series": 0,
+        "actual_children": 0,
+        "actual_TLS_provider_requests": 5,
+        "actual_WS_updates": 2,
+        "actual_catalogue_HTTP200": true,
+        "Source_task_bodies_or_inline_helpers_called_by_observer": false
+      }
+    }
+  ],
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "metadata_update_conflict_language_and_nonempty_Series_parity": false
+}

@@ -1,0 +1,67 @@
+{
+  "SQL": {
+    "program_md5": 0,
+    "programmes": 0,
+    "schedule_md5": 0,
+    "source": {
+      "id": 4,
+      "message": null,
+      "status": "idle",
+      "updated_at": null
+    },
+    "stations": []
+  },
+  "actual_frame_ETA": "2026-11-16T15:13:02.077018+00:00",
+  "actual_observation_time": "2026-11-16T15:13:00.307082+00:00",
+  "actual_terminal_backend": null,
+  "actual_unacked": {
+    "actual_tuple": [
+      {
+        "body": "W1s0XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "argsrepr": "[4]",
+          "eta": "2026-11-16T15:13:02.077018+00:00",
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "id": "92f5d5a0-26f6-45a7-9a4c-6602aa5d868b",
+          "ignore_result": false,
+          "kwargsrepr": "{}",
+          "lang": "py",
+          "origin": "gen805@1fd0804b2651",
+          "parent_id": null,
+          "replaced_task_nesting": 0,
+          "retries": 0,
+          "root_id": "92f5d5a0-26f6-45a7-9a4c-6602aa5d868b",
+          "shadow": null,
+          "stamped_headers": null,
+          "stamps": {},
+          "task": "apps.epg.tasks.fetch_schedules_direct_stations",
+          "timelimit": [
+            null,
+            null
+          ]
+        },
+        "properties": {
+          "body_encoding": "base64",
+          "correlation_id": "92f5d5a0-26f6-45a7-9a4c-6602aa5d868b",
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "delivery_mode": 2,
+          "delivery_tag": "07519b19-138b-4007-b8cd-2164ce17f24b",
+          "priority": 0,
+          "reply_to": "e1f8714e-9415-34b9-8120-5a81e62e52f1"
+        }
+      },
+      "",
+      "celery"
+    ],
+    "tag": "07519b19-138b-4007-b8cd-2164ce17f24b"
+  },
+  "before_actual_ETA": true,
+  "scope": "Fresh real Source apply_async(countdown3); no past-frame replay, synthetic queue write or timing rewrite"
+}

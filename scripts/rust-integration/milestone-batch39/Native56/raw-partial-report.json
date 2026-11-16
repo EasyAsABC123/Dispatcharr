@@ -1,0 +1,31 @@
+{
+  "status": "running",
+  "cases": [
+    {
+      "name": "natural-POST-zero-active",
+      "status": "passed",
+      "actual": {
+        "actual_update_group": {
+          "actual_receiver": "specific.aggregate_0e4a0b9def5f4c48a616672cb58bed52!receiver",
+          "events": [],
+          "raw_events_base64": []
+        },
+        "child_account_id_by_task": {},
+        "actual_root": "c9db267e-dba7-4336-8ed4-b61d04cc36a1",
+        "actual_child_ids": [],
+        "actual_account_ids": [],
+        "result": "Queued M3U refresh for 0 active account(s).",
+        "durable_journal_sha256": "6dc6a9a3c55335f8f31d5d01864a48b6db8d5260b39d8252252dc2da082db0d6"
+      }
+    },
+    {
+      "name": "natural-POST-local-STD-whole-children",
+      "status": "failed",
+      "failure_type": "TimeoutError",
+      "observer_cleanup_error": "RuntimeError"
+    }
+  ],
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "general_custom_refresh_parity": false
+}

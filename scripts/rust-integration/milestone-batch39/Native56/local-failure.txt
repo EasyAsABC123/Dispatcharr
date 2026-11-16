@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-46-m3u-aggregate-native-1/cohort/m3u_refresh_all_cases.py", line 159, in phase
+    actual=body();save(private/(name+'-actual.json'),actual)
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-46-m3u-aggregate-native-1/cohort/m3u_refresh_all_cases.py", line 174, in local
+    actual=_settled(f,*_post(f,'local',private),'local',ids,private)
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-46-m3u-aggregate-native-1/cohort/m3u_refresh_all_cases.py", line 108, in _settled
+    results={child:f.wait(lambda child=child:terminal(f,child),120,'actual-aggregate-'+label+'-child-terminal')for child in actual_ids}
+                   ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-recording-following-driver-46-m3u-aggregate-native-1/cohort/fixture.py", line 76, in wait
+    raise TimeoutError(label+':'+str(last))
+TimeoutError: actual-aggregate-local-child-terminal:None

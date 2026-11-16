@@ -14,10 +14,10 @@ an executable crosswalk. Its `runtime_registration_verified` and
 
 ## Current implementation mapping
 
-Candidate38 source `3ffa1bb118baca2731efc45a1ce4d5df5ffaf2e5` has moved beyond
+Candidate39 source `bd7984bb207dcbc4c00fe1a69ad432fe5cd6b1f4` has moved beyond
 the historical selected14 proposal. The literal classifier in
 [milestone_dispatch.rs](../rust/crates/job-transport/src/milestone_dispatch.rs)
-recognizes 32 of the 47 application names, plus framework
+recognizes 34 of the 47 application names, plus framework
 `celery.backend_cleanup`. [SelectedJobs](../rust/crates/app/src/selected_jobs.rs)
 assembles their real family handlers, registered plugin tasks and the normal
 Beat scheduler. Some names share a family; these are not counts of independent
@@ -26,6 +26,7 @@ result, child publication or shutdown path works.
 
 | Mapped application declarations | Main composition | Executed evidence and limits |
 | --- | --- | --- |
+| Station discovery and all-account refresh (2) | Shared SD/ETA and M3U/XC aggregate handlers | [Candidate39](rust-milestone-batch39.md) passes four station worker cases; aggregate zero-active/parent publication passes but local children require a broker-scope correction. Native SD HTTP remains unqualified. |
 | Channel matching all/selected/single (3) | Matching HTTP roots and shared normal worker | [Native52](rust-channel-matching-native.md) passes all 14 actual matching cases against retained Source51 in the explicit no-download domain; real model inference, wider roles and faults remain open. |
 | Backup create/restore/scheduled (3) | Normal backup jobs and restore plugin binding | Candidate37 Native46 ordinary restore six cells and partial-admission two cells pass; general enabled-plugin/history restore remains open. |
 | Channel bulk creation, names/logos/TVG maintenance, Series, recurring, artwork, recording, startup recovery and offset rescheduling (10) | Channel handlers, Series/artwork, normal DVR/recovery and Core handlers | Native46 grouped recurring and explicit Connect/recovery refusal controls pass. Its ordinary event workflow fails observation and nonempty restart fails strict decoding. Older channel/artwork successes retain their own image/input scopes. |
@@ -54,8 +55,8 @@ controls do not turn all offset/artwork/plugin domains into successful execution
 ## Producer reconciliation beyond the earlier 29-name map
 
 The earlier Candidate37 review found 18 declarations without literal entries.
-Candidate38 maps the three matching declarations, leaving 15 without literal
-entries. The table retains all original rows to preserve the producer crosswalk;
+Candidate38 maps the three matching declarations; Candidate39 additionally maps
+station discovery and aggregate refresh, leaving 13 without literal entries. The table retains all original rows to preserve the producer crosswalk;
 it is not a list of 18 proven missing algorithms. Call sites below refer to the pinned Source files;
 all nine inventoried Source file hashes still match the committed inventory.
 A task name appearing in `dispatcharr/celery.py`'s memory-cleanup list is not
@@ -67,8 +68,8 @@ by Source and production execution evidence.
 | --- | --- | --- |
 | `match_epg_channels`, `match_selected_channels_epg`, `match_single_channel_epg` | `apps/channels/api_views.py:2601–2620` queues all/selected/single matching from real actions | [Source51](rust-channel-matching-source51.md) now qualifies 14 natural HTTP cases in its explicit no-download domain and supplies pure decision vectors. [Native52](rust-channel-matching-native.md) now qualifies the integrated HTTP/worker/SQL slice in the same domain. Broader roles/concurrency and real model inference remain open; maintenance name/logo/TVG tasks are different workflows. |
 | `comskip_process_recording` | `apps/channels/tasks.py:3094` and `apps/channels/api_views.py:3752` queue processing | A concrete implementation gap: normal recording policy explicitly refuses enabled comskip (`recording_normal_policy.rs`). Standalone/manual processing also needs producer/consumer acceptance. |
-| `fetch_schedules_direct_stations` | `apps/epg/signals.py:22` and `apps/epg/sd_api.py:274` queue station discovery | [Source53](../scripts/rust-integration/channel-stations-source53/README.md) passes four actual creation/countdown, lineup-add, partial-detail and idle cases with real task/SQL/channel-layer evidence. Native worker/ETA integration is private and uncompiled; Native CRUD/lineup producers and broader domains remain open. Guide-fetch success alone cannot close this workflow. |
-| `refresh_m3u_accounts` | `apps/m3u/api_views.py:765` queues the all-active-accounts task; task then queues one child per active account (`tasks.py:725`) | [Source55](rust-m3u-aggregate-source55.md) passes four natural API phases, including the active custom account's caught-error child contract. Native aggregate/child integration is private pending SDK53/image and full four-phase execution; a registered single-account consumer alone is insufficient. |
+| `fetch_schedules_direct_stations` | `apps/epg/signals.py:22` and `apps/epg/sd_api.py:274` queue station discovery | [Source53](../scripts/rust-integration/channel-stations-source53/README.md) passes four actual creation/countdown, lineup-add, partial-detail and idle cases with real task/SQL/channel-layer evidence. [Native57](rust-milestone-batch39.md) passes the four worker/ETA cases; Native CRUD/lineup producers and broader domains remain open. Guide-fetch success alone cannot close this workflow. |
+| `refresh_m3u_accounts` | `apps/m3u/api_views.py:765` queues the all-active-accounts task; task then queues one child per active account (`tasks.py:725`) | [Source55](rust-m3u-aggregate-source55.md) passes four natural API phases, including the active custom account's caught-error child contract. [Native56](rust-milestone-batch39.md) passes zero-active and publishes the two local children, but they remain blocked by a legacy scanner-parent receipt; a successor fix and full four-phase qualification remain required; a registered single-account consumer alone is insufficient. |
 | `refresh_vod_content` | M3U API create/update and `apps/m3u/tasks.py:4064` queue VOD ingestion | Map natural import through VOD child/direct work and current production effects; live-channel account refresh is not that acceptance. |
 | `_safe_name` | Direct calls in `apps/channels/tasks.py:1226,1393–1414` | Preserve naming through the calling channel workflows; no queued producer identified in this static review. |
 | `process_groups` | Direct call in `apps/m3u/tasks.py:1971` | Map inline M3U group processing; do not require a separate worker solely because it has a decorator. |

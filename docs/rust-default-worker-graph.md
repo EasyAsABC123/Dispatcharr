@@ -3,9 +3,9 @@
 Original Dispatcharr/Celery/django-celery-beat and dependency authors retain all
 application, algorithm and protocol credit.
 
-Candidate38 source `3ffa1bb118baca2731efc45a1ce4d5df5ffaf2e5` assembles the
+Candidate39 source `bd7984bb207dcbc4c00fe1a69ad432fe5cd6b1f4` assembles the
 current graph in [SelectedJobs](../rust/crates/app/src/selected_jobs.rs).
-The literal task mapping now covers 32 of the 47 static application declarations,
+The literal task mapping now covers 34 of the 47 static application declarations,
 plus framework backend cleanup and dynamic plugin registration. The
 [Source-task reconciliation](rust-source-task-coverage.md) separates those
 registrations from actual natural producers, executable evidence and remaining
@@ -13,6 +13,7 @@ unmapped workflows. Neither a family count nor compilation closes M6.
 
 | Family group | Current Main composition | Actual acceptance and remaining scope |
 | --- | --- | --- |
+| Station discovery and all-account M3U refresh | Existing SD family/ETA consumer and shared M3U/XC aggregate handler/HTTP producer | [Native57](rust-milestone-batch39.md) passes four station worker/ETA cases. Native56's successful parent leaves local children blocked by a scanner-only receipt guard; successor fix and full aggregate qualification remain open. Native SD HTTP producers remain unqualified. |
 | Channel matching (all, selected, single) | Shared Main queue, matching HTTP producers, existing Auth/cache/events/SD child capability | [Native52](rust-channel-matching-native.md) passes all 14 Source51-derived cases in the no-download/absent-model/empty-plugin domain. Model inference, broader roles and concurrency remain open. |
 | Refresh, index, TVG, SD guide, Series, artwork, version | Real handlers and SD/ingestion plugin binding | Later guide workflows execute actual Connect and downloads; their recorded Source/image scopes remain separate. Candidate37-wide acceptance is not inferred. |
 | Recording and startup recovery | Normal DVR, real HTTP controls, claimed-task Connect binding and recovery capability guard | Native46 first STOP200 retains the claimed task through End/SUCCESS and decoding; the full event context fails observer capacity. Connect recovery/direct DELETE refusal controls pass. Nonempty restart retains strict decoder failure. |

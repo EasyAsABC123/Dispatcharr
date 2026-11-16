@@ -9,12 +9,13 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The next [Candidate39 source](rust-milestone-batch39.md) passes SDK53 with 1,135
-tests and the physical 15-statement schema check. Its station and aggregate
-refresh worker paths include the Source55 default-custom caught-error contract;
-image/package and the two complete Native cohorts are pending.
+The newest packaged [Candidate39](rust-milestone-batch39.md) passes SDK53 with
+1,135 tests, the physical 15-statement schema check and all six package families.
+Native57 passes all four station worker/ETA cases. Native56 preserves its actual
+aggregate child-admission failure after a successful zero-active case and parent
+publication; the narrow broker-scope correction awaits a successor image.
 
-The newest qualified packaged runtime is
+The preceding packaged runtime is
 [Candidate38](rust-channel-matching-native.md): all four SDK51 gates pass with
 1,130 tests, the physical 11-statement schema check and all six package families
 pass, and Native52 passes the complete 14-case matching cohort with retained
@@ -350,7 +351,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 
 | ID | Deliverable | Depends on | Current status | Evidence required to pass |
 | --- | --- | --- | --- | --- |
-| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 136 scoped HTTP Source assignments plus eight model/task/consumer candidates; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
+| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 139 scoped HTTP Source assignments plus eight model/task/consumer candidates; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
 | M1 | Shared bounded streaming core | M0 | In progress (technical core gates passed; M0 executable-contract prerequisite open) | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
 | M2 | Authenticated live TS vertical slice | M1 | In progress | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
 | M3 | Complete live playback formats and profiles | M2 | In progress (HLS component and gateway) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |

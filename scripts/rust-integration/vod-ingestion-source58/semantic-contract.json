@@ -1,0 +1,139 @@
+{
+  "scope": "Actual fresh basic Movies/empty-Series Source58 only; semantic projection normalizes owned IDs and duration, raw captures retained privately.",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "actual_root": "1e974f0f-faa0-4b2a-a5c8-06acf25cab8f",
+  "actual_backend": {
+    "status": "SUCCESS",
+    "result": "Batch VOD refresh completed for account Owned VOD ingest in 0.04 seconds",
+    "traceback": null,
+    "children": [],
+    "date_done": "2026-11-16T15:18:28.677804+00:00",
+    "task_id": "1e974f0f-faa0-4b2a-a5c8-06acf25cab8f"
+  },
+  "semantic_projection": {
+    "movies": [
+      {
+        "name": "Owned Movie (2020)",
+        "year": 2020,
+        "language": "",
+        "tmdb_id": null,
+        "imdb_id": null,
+        "description": "",
+        "rating": null,
+        "genre": "",
+        "duration_secs": null,
+        "custom_properties": null,
+        "is_adult": false,
+        "logo_id": null
+      },
+      {
+        "name": "Owned Second Movie (2021)",
+        "year": 2021,
+        "language": "",
+        "tmdb_id": null,
+        "imdb_id": null,
+        "description": "",
+        "rating": null,
+        "genre": "",
+        "duration_secs": null,
+        "custom_properties": null,
+        "is_adult": false,
+        "logo_id": null
+      }
+    ],
+    "relations": [
+      {
+        "stream_id": "9101",
+        "movie": "Owned Movie (2020)",
+        "category": "Owned Films",
+        "container_extension": "mp4",
+        "basic_data": {
+          "num": 1,
+          "name": "Owned Movie (2020)",
+          "is_adult": "0",
+          "stream_id": 9101,
+          "category_id": "4",
+          "_category_id": "<owned-movie-category>",
+          "container_extension": "mp4",
+          "_provider_category_id": "4"
+        },
+        "detailed_fetched": false
+      },
+      {
+        "stream_id": "9102",
+        "movie": "Owned Second Movie (2021)",
+        "category": "Owned Films",
+        "container_extension": "mkv",
+        "basic_data": {
+          "num": 2,
+          "name": "Owned Second Movie (2021)",
+          "is_adult": "0",
+          "stream_id": 9102,
+          "category_id": "4",
+          "_category_id": "<owned-movie-category>",
+          "container_extension": "mkv",
+          "_provider_category_id": "4"
+        },
+        "detailed_fetched": false
+      }
+    ],
+    "category_links": [
+      {
+        "name": "Owned Films",
+        "type": "movie",
+        "enabled": true,
+        "custom_properties": {}
+      },
+      {
+        "name": "Uncategorized",
+        "type": "movie",
+        "enabled": true,
+        "custom_properties": {}
+      },
+      {
+        "name": "Uncategorized",
+        "type": "series",
+        "enabled": true,
+        "custom_properties": {}
+      }
+    ],
+    "Series_count": 0,
+    "Episode_count": 0,
+    "queued_inline_helpers": 0,
+    "actual_provider_actions": [
+      null,
+      "get_vod_categories",
+      "get_series_categories",
+      "get_vod_streams",
+      "get_series"
+    ],
+    "actual_VOD_updates": [
+      {
+        "progress": 0,
+        "type": "m3u_refresh",
+        "account": "<owned-account>",
+        "action": "vod_refresh",
+        "message": "Owned VOD account baseline",
+        "status": "processing"
+      },
+      {
+        "progress": 100,
+        "type": "m3u_refresh",
+        "account": "<owned-account>",
+        "action": "vod_refresh",
+        "status": "success",
+        "message": "VOD refresh completed in <duration> seconds"
+      }
+    ],
+    "account_unchanged": true,
+    "SystemEvents_unchanged": true,
+    "owned_Core_cache_unchanged": true,
+    "catalogue_count": 2,
+    "task_status": "SUCCESS",
+    "completion_template": "Batch VOD refresh completed for account Owned VOD ingest in <duration> seconds"
+  },
+  "raw_authority": {
+    "path": "artifacts/rust/normal-graph-batch58-vod-ingestion-source-1/fixtures/Original-adeeea89/vod-ingestion/private/actual-contract.json",
+    "sha256": "9e0ff85515947058e65db4e501d8bf12b7b9c82ae493dd51bf76848b1cf4d318"
+  }
+}

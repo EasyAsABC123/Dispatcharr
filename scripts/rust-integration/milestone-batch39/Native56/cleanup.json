@@ -1,0 +1,122 @@
+{
+  "passed": true,
+  "fixture_CIDs": [
+    "1c881c2c7c99c210fe7eb578c3f4a23093515a3919c5a55d7e5baf944bf5e5f7",
+    "69aa83ee1ef289b98556955a64ce59e2ae04c7080a4d8af6b4f80c7937c62695",
+    "d4f18e0ab021b03eedcafb9b063895c9d1b0f7bb7c9993ae8aae4d1924d02e80"
+  ],
+  "original_positive_host_PIDs": {
+    "1c881c2c7c99c210fe7eb578c3f4a23093515a3919c5a55d7e5baf944bf5e5f7": {
+      "pid": 3664717,
+      "evidence": "artifacts/rust/normal-graph-batch56-m3u-aggregate-native-1/fixtures/Native-65d48fea/command-0008.stdout",
+      "sha256": "2443b5acd5d13c4085d9d46fc0dba08f7251597c8498b2cdb81a9f045491aff1",
+      "original_positive_PID_absent": true
+    },
+    "69aa83ee1ef289b98556955a64ce59e2ae04c7080a4d8af6b4f80c7937c62695": {
+      "pid": 3664592,
+      "evidence": "artifacts/rust/normal-graph-batch56-m3u-aggregate-native-1/fixtures/Native-65d48fea/command-0009.stdout",
+      "sha256": "155494d60d12614997c784b5ab5b20e8ac59f5a763f4d09c2bd9d6abcbe19154",
+      "original_positive_PID_absent": true
+    },
+    "d4f18e0ab021b03eedcafb9b063895c9d1b0f7bb7c9993ae8aae4d1924d02e80": {
+      "pid": 3666930,
+      "evidence": "artifacts/rust/normal-graph-batch56-m3u-aggregate-native-1/fixtures/Native-65d48fea/dispatcharr-normal-dvr-4b271f971e-native-e5f63-inspection.json",
+      "sha256": "960e8e635c7c6122ef767f49e8fe1e670d0b3b0c324c5951073ed4f02ee58027",
+      "original_positive_PID_absent": true
+    }
+  },
+  "project": "dispatcharr-normal-dvr-4b271f971e",
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=1c881c2c7c99c210fe7eb578c3f4a23093515a3919c5a55d7e5baf944bf5e5f7",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=69aa83ee1ef289b98556955a64ce59e2ae04c7080a4d8af6b4f80c7937c62695",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=d4f18e0ab021b03eedcafb9b063895c9d1b0f7bb7c9993ae8aae4d1924d02e80",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-4b271f971e",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-4b271f971e",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-4b271f971e",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "business_batch_passed": false
+}

@@ -63,14 +63,39 @@ claimed by SQL preparation.
 
 ## Required application acceptance
 
-At this source checkpoint the committed Candidate39 image build and all six
-package checks remain pending. Two complete affected cohorts follow: four
-aggregate HTTP/root/child/status/cache/audit/event phases against retained
-Source55, and four station worker/ETA phases against retained Source53. The
-station workload uses the real pinned Source Celery publisher in the Native
-fixture; it must not be described as a Native HTTP producer. Newly produced
-future ETAs require an actual early unacked reservation with no SQL/backend
-result, followed by due completion; replaying an old ETA cannot prove this.
+Candidate39 builds runtime `bd7984bb207dcbc4c00fe1a69ad432fe5cd6b1f4` as
+image `sha256:ad1242dd0f60c60d4425c29bd549dbbef37a32272956f9b3b277e9b93348f7b2`.
+The actual build exits 0 in 136.807 seconds; all
+[six package families](../scripts/rust-integration/milestone-batch39/package/inventory.json)
+pass with all 55 package CIDs independently absent. The Rust archive matches
+SDK53; React and installed original/dependency credits remain unchanged.
+
+[Native56](../scripts/rust-integration/milestone-batch39/Native56/qualification.json)
+exits 1 in 191.559 seconds with both EOFs and settled process group. Zero-active
+refresh passes. The two-account local parent returns SUCCESS with the correct
+count and two real child IDs, but child completion times out and its broker
+observer also reaches its limit. Later phases are not run. The raw partial
+report's `running` top-level status is preserved beside the actual failed whole
+execution. Independent cleanup verifies three fixture CIDs, three original
+positive host PIDs and empty project inventories.
+
+The causal code review finds that the local consumer still requires the
+scanner parent's result to be null. Actual aggregate parent results are strings.
+A private correction gives only an authenticated, exact broker-head/digest scope
+the appropriate parent-independent admission; legacy scanner receipt checks,
+SQL/file admission and exact CAS stay intact. This run does not qualify that fix.
+
+[Native57](../scripts/rust-integration/milestone-batch39/Native57/qualification.json)
+passes all four station worker cases at actual exit 0 in 88.384 seconds, with
+both EOFs, settled process group and independent three-CID/three-positive-PID
+project cleanup. The workload uses the real pinned Source Celery publisher in
+the Native fixture, so Native HTTP creation/lineup routes are not qualified.
+Three newly produced countdown-3 ETAs show actual early unacked reservations,
+idle/empty SQL state and no terminal backend before their actual due time,
+followed by real successful execution. Lineup addition uses an immediate Source
+workload frame. No historical ETA was replayed or shifted. Actual station rows,
+progress/channel deliveries, partial provider failure and 4102 idle results match
+the retained Source53 contracts.
 
 Required guards, nonempty cache/update cases, wider metadata and provider errors,
 series/VOD ingestion, model-enabled matching, concurrency/loss/rollback and full
