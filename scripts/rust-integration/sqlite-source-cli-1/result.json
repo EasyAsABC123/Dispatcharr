@@ -1,0 +1,56 @@
+{
+  "state": "actual_Source_SQLite_fresh_migration_failed",
+  "Source_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "command": [
+    "/dispatcharrpy/bin/python",
+    "manage.py",
+    "migrate",
+    "--noinput"
+  ],
+  "migration_executed_derived_from_actual_stdout_traceback": true,
+  "raw_controller_migration_run_false": "Unset controller field; contradicted by actual Applying output, migration traceback and 158 applied rows. Raw report preserved unchanged.",
+  "effective_settings": {
+    "phase": "effective_production_settings",
+    "module": "dispatcharr.settings",
+    "DB_ENGINE": "sqlite",
+    "engine": "django.db.backends.sqlite3",
+    "path": "/data/dispatcharr.db",
+    "skip_redis_cache": "1"
+  },
+  "first_failed_migration": "dispatcharr_channels.0038_add_catchup_fields",
+  "first_failure_class": "django.db.utils.OperationalError",
+  "first_failure_message": "near \"~\": syntax error",
+  "source_frame": "apps/channels/migrations/0038_add_catchup_fields.py:9 backfill_stream_catchup cursor.execute",
+  "CLI_exit": 1,
+  "container_exit": 1,
+  "OOMKilled": false,
+  "CLI_seconds": 4.505517996993149,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "process_group_settled": true,
+  "output_bytes_discarded": 0,
+  "UID_preflight_passed": true,
+  "final_labelled_CID_absence": true,
+  "migration_applied_count": 158,
+  "last_applied": [
+    "dispatcharr_channels",
+    "0037_auto_sync_overhaul"
+  ],
+  "table_count": 44,
+  "quick_check": [
+    [
+      "ok"
+    ]
+  ],
+  "readonly_observer_exit": 0,
+  "VOD0003": "Not reached; static portability concern remains unexecuted.",
+  "default_entrypoint_selection": "not_run; CLI overrides entrypoint",
+  "SQLite_application_baseline": "blocked; no complete fresh schema",
+  "REST_backup_restore": "blocked; no legitimate usable baseline",
+  "Native_SQLite": "unimplemented/open",
+  "performance_verified": false,
+  "full_milestone_passed": false,
+  "credits": "Original Dispatcharr authors and contributors retain application/algorithm credit; all dependency authors retain credit/licenses."
+}
