@@ -1,6 +1,6 @@
 # DVR plugin compatibility: remaining interfaces
 
-SDK47 established idle Main startup and early refusal of unsupported DVR work in a stable owned namespace. SDK49 subsequently implemented a narrower claimed normal-recording event slice with an empty general-plugin domain. Neither change closes M8 or establishes general DVR plugin compatibility. Source42 and fresh Source44 have measured the event contract; Native event application acceptance remains separate from implementation and package checks.
+SDK47 established idle Main startup and early refusal of unsupported DVR work in a stable owned namespace. SDK49 subsequently implemented a narrower claimed normal-recording event slice with an empty general-plugin domain. Neither change closes M8 or establishes general DVR plugin compatibility. Source42 and fresh Source44 measured the event contract. Native48 passes its named empty-plugin recording Connect workflow; general plugin and per-event physical settlement acceptance remain separate.
 
 Original Dispatcharr, plugin, Celery, Django and other dependency authors retain full application, library and algorithm credit.
 
@@ -39,7 +39,7 @@ Source [DELETE](../apps/channels/api_views.py#L4194) directly emits cancelled En
 
 ## Smallest coherent next slice
 
-Source event characterization and the SDK49 claimed-task integration above are complete within their recorded scopes. The next acceptance step is the coherent Native event/template/caught-failure/history/media/closure batch on the exact installed image, including actual stopped and completed tasks, direct cancellation and recovery refusals, and legacy regressions. Until its actual terminal receipts are reviewed, implementation and package success do not establish Native event parity. Keep arbitrary helper replacement explicitly guarded until characterized.
+Source event characterization and the SDK49 claimed-task integration above are complete within their recorded scopes. Native48 now passes actual stopped and completed events, strict payload/template/caught-failure/history and decoded-media checks in its empty-plugin scope. Five unchanged Native47 workflow passes are retained, while restart media quality remains failed. Its normal Main exit and absent database clients do not independently establish per-Host EOF or per-event SQL settlement. See the [scoped acceptance](rust-milestone-batch37.md#native48-selected-claimed-recording-connect-workflow-passed). Keep arbitrary helper replacement explicitly guarded until characterized.
 
 For the separate monkeypatch slice, an enabled Source plugin can ordinarily wrap `_dvr_recording_end_payload` ([definition](../apps/channels/tasks.py#L1644)), call its original pure helper and record before/after observations. Observe constructor/cache behavior and normal/stop/recovery calls without patching backend task bodies, private cache clearing or calling the helper from the test controller. That establishes one concrete helper seam; it cannot qualify all possible user monkeypatches.
 

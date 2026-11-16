@@ -1,0 +1,41 @@
+{
+  "Source42_invariant_comparison_strict": true,
+  "Source44_payload_comparison_strict": true,
+  "actual_readonly_warm_assignment_present": true,
+  "actual_second_claimed_task_id": "62343e72-6f59-4af7-ab43-25f7d3cb4326",
+  "actual_second_start_captured_before_first_validation": true,
+  "actual_second_start_keys": [
+    "channel_id",
+    "channel_name",
+    "channel_url",
+    "profile_used",
+    "provider_name",
+    "recording_id",
+    "stream_id",
+    "stream_name",
+    "stream_url"
+  ],
+  "actual_warm_assignment_required_stream_id": 1,
+  "declared_booking_offset_seconds": 3,
+  "first_backend_status": "SUCCESS",
+  "first_claimed_task_id": "ceb88fbd-5c6f-47c1-b7ef-6309775eeab0",
+  "first_end_event_audit_present": true,
+  "first_pair_saved_before_second_book": true,
+  "first_recording_end_delivery_status": "failed",
+  "full_payload_values_or_URLs_published": false,
+  "observed_start_minus_HTTP_begin_seconds": 2.999939,
+  "raw_alias_observation": {
+    "path": "artifacts/rust/normal-graph-batch48-recording-Connect-functional-1/fixtures/Native-916ab966/recording-connect-capture/private/actual-warm-assignment-before-book.json",
+    "sha256": "a3fe5f87d0c7a292d4e88f2b470100ca87bee5c64de7008c07b9c24321c364c1"
+  },
+  "raw_first_pair": {
+    "path": "artifacts/rust/normal-graph-batch48-recording-Connect-functional-1/fixtures/Native-916ab966/recording-connect-capture/private/first-pair-before-next-book.json",
+    "sha256": "3cd51506257afeea529dc87e7cb7abe804424ca49b7cef2c09038213fe4c9e01"
+  },
+  "raw_second_start": {
+    "path": "artifacts/rust/normal-graph-batch48-recording-Connect-functional-1/fixtures/Native-916ab966/recording-connect-capture/private/actual-second-start-before-first-validation.json",
+    "sha256": "9bcfcfea6c53aea945929e371a1798fc36a92af7498aebec4e23d95f2cec4e90"
+  },
+  "scope": "Actual firstEnd+backend barrier and actualwarmStart witness before deferred firstpairvalidation; no cache writes/grace increases/production changes.",
+  "shutdown_grace_config_changed": false
+}

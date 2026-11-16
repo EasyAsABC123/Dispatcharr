@@ -1,0 +1,118 @@
+{
+  "actual_first_recording_STOP200_claimed_End_and_backendSUCCESS": true,
+  "actual_observer_terminal": {
+    "actual_rows": 2893,
+    "byte_limit": 16777216,
+    "captured_bytes": 486866,
+    "close_after_cases": true,
+    "complete_all_database_journal": false,
+    "database_filter": 1,
+    "excluded_bytes_by_database": {
+      "0": 89123613,
+      "2": 17862
+    },
+    "excluded_rows_by_database": {
+      "0": 40549,
+      "2": 62
+    },
+    "flush_calls": 3,
+    "fsync_calls": 1,
+    "observer_error": null,
+    "persisted_rows": 2893,
+    "raw_bytes_received": 89628341,
+    "raw_rows_received": 43504,
+    "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+    "row_limit": 20000,
+    "scope": "Only actual database1 commands through the actual database1 terminal ECHO are retained; other databases counted but excluded before retained byte/row budgets. Flush/fsync barrier is unchanged; no all-database coverage claimed.",
+    "terminal_barrier_fsynced": true,
+    "terminal_barrier_observed": true,
+    "terminal_marker": "plugin-startup-terminal-c8b2af80215b420fac5a5ee35886a38c",
+    "terminal_marker_read": true,
+    "terminal_reader_error": null,
+    "thread_settled": true,
+    "writer_closed": true,
+    "written_rows": 2893
+  },
+  "actual_second_start_keys": [
+    "channel_id",
+    "channel_name",
+    "recording_id"
+  ],
+  "common_start_values_equal": true,
+  "dynamic_ID_values_not_compared_unbound": true,
+  "first_backend_status": "SUCCESS",
+  "first_failure": {
+    "cleanup_masking_first_failure": false,
+    "primary_traceback": {
+      "path": "artifacts/rust/normal-graph-batch47-recording-Connect-functional-1/fixtures/Native-4f2365eb/recording-connect-capture/private/primary-event-failure.json",
+      "sha256": "d145448b1db3f9da65e44f9b69aa75d6622184506d3dddda1dc3a947811fc4b4"
+    },
+    "stage": "second recording_start normalized payload != qualified Source44 warm-start payload",
+    "type": "AssertionError"
+  },
+  "first_task_id": "226b8417-9e3c-4895-a104-45dc3af33a39",
+  "full_payload_values_or_URLs_published": false,
+  "missing_second_start_keys": [
+    "channel_url",
+    "profile_used",
+    "provider_name",
+    "stream_id",
+    "stream_name",
+    "stream_url"
+  ],
+  "payload_fields_dropped_or_fabricated_for_pass": false,
+  "per_event_physical_Host_SQL_receipts_independently_qualified": false,
+  "production_divergence_established": false,
+  "qualified_Source44_second_start_keys": [
+    "channel_id",
+    "channel_name",
+    "channel_url",
+    "profile_used",
+    "provider_name",
+    "recording_id",
+    "stream_id",
+    "stream_name",
+    "stream_url"
+  ],
+  "raw_saved_second_payload_projection": {
+    "path": "artifacts/rust/normal-graph-batch47-recording-Connect-functional-1/fixtures/Native-4f2365eb/recording-connect-capture/private/completion-SQL-before-validation-1.json",
+    "sha256": "d90c94f2b28f3ee9ce8219beba0937410c421fc34991df1162dbd007bb4e59ff"
+  },
+  "second_end_keys": [
+    "bytes_written",
+    "channel_id",
+    "channel_name",
+    "channel_url",
+    "end_time",
+    "file_name",
+    "file_path",
+    "file_size",
+    "file_url",
+    "has_file",
+    "outcome",
+    "profile_used",
+    "provider_name",
+    "recording_id",
+    "remux_success",
+    "start_time",
+    "status",
+    "stream_id",
+    "stream_name",
+    "stream_url"
+  ],
+  "state": "STRICT_WARM_PHASE_COMPARISON_FAILED_NO_RUST_FAULT_INFERRED",
+  "temporal_evidence": {
+    "Native47_End1_delivery": "2026-11-16T10:22:25.444911+00:00",
+    "Native47_Start2_delivery": "2026-11-16T10:22:33.700070+00:00",
+    "Native47_actual_aliases_still_present_observation": "2026-11-16T10:22:29.045044+00:00",
+    "Native47_first_pair_completion_saved": "2026-11-16T10:22:30.639641+00:00",
+    "Source44_End1_delivery": "2026-11-16T09:53:42.237205+00:00",
+    "Source44_Start2_delivery": "2026-11-16T09:53:47.603016+00:00",
+    "Source44_stopped_observation_saved": "2026-11-16T09:53:44.581123+00:00",
+    "actual_alias_deletion_time": "UNOBSERVED; DB0 excluded by declared broker journal",
+    "file_save_times_are_host_mtime_context_not_backend_event_timestamps": true,
+    "grace_changed": false,
+    "shutdown_grace_config_seconds": 5
+  },
+  "whole_event_workflow_accepted": false
+}
