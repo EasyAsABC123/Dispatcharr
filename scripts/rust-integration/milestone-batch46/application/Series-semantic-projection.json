@@ -1,0 +1,1303 @@
+{
+  "scope": "basic yearNULL Series/category-metadata list import/repeat/reassignment/dedup/cleanup; no episodes/advanced metadata/general API serialization",
+  "phases": [
+    {
+      "name": "fresh-nonempty-Series-no-Movies",
+      "HTTP": {
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "before": {
+        "Series": [],
+        "categories": [],
+        "M3USeriesRelation": [],
+        "category_links": [],
+        "empty_models": {
+          "Movie": 0,
+          "Episode": 0,
+          "VODLogo": 0,
+          "M3UMovieRelation": 0,
+          "M3UEpisodeRelation": 0
+        }
+      },
+      "after": {
+        "Series": [
+          {
+            "name": "Owned Second Series",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "11"
+            }
+          },
+          {
+            "name": "Owned Series (2020)",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "11"
+            }
+          }
+        ],
+        "categories": [
+          {
+            "name": "Owned Series",
+            "type": "series"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "movie"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "series"
+          }
+        ],
+        "M3USeriesRelation": [
+          {
+            "external_series_id": "9202",
+            "custom_properties": {
+              "basic_data": {
+                "num": 2,
+                "name": "Owned Second Series",
+                "series_id": 9202,
+                "category_id": "11",
+                "_category_id": [
+                  "Owned Series",
+                  "series"
+                ],
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "series": [
+              "Owned Second Series",
+              null
+            ],
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": false
+          },
+          {
+            "external_series_id": "9201",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "Owned Series (2020)",
+                "series_id": 9201,
+                "category_id": "11",
+                "_category_id": [
+                  "Owned Series",
+                  "series"
+                ],
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "series": [
+              "Owned Series (2020)",
+              null
+            ],
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": false
+          }
+        ],
+        "category_links": [
+          {
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "movie"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          }
+        ],
+        "empty_models": {
+          "Movie": 0,
+          "Episode": 0,
+          "VODLogo": 0,
+          "M3UMovieRelation": 0,
+          "M3UEpisodeRelation": 0
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in <duration> seconds",
+        "children": [],
+        "traceback": null
+      },
+      "provider": [
+        {
+          "action": null,
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_vod_categories",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_series_categories",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_vod_streams",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_series",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        }
+      ],
+      "updates": [
+        {
+          "progress": 0,
+          "type": "m3u_refresh",
+          "account": "<owned-account>",
+          "action": "vod_refresh",
+          "status": "processing",
+          "message": "Owned VOD account baseline"
+        },
+        {
+          "progress": 100,
+          "type": "m3u_refresh",
+          "account": "<owned-account>",
+          "action": "vod_refresh",
+          "status": "success",
+          "message": "VOD refresh completed in <duration> seconds"
+        }
+      ],
+      "catalogue": {
+        "status": 200,
+        "count": 2,
+        "names": [
+          "Owned Second Series",
+          "Owned Series (2020)"
+        ]
+      }
+    },
+    {
+      "name": "unchanged-Series-repeat",
+      "HTTP": {
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "before": {
+        "Series": [
+          {
+            "name": "Owned Second Series",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "11"
+            }
+          },
+          {
+            "name": "Owned Series (2020)",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "11"
+            }
+          }
+        ],
+        "categories": [
+          {
+            "name": "Owned Series",
+            "type": "series"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "movie"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "series"
+          }
+        ],
+        "M3USeriesRelation": [
+          {
+            "external_series_id": "9202",
+            "custom_properties": {
+              "basic_data": {
+                "num": 2,
+                "name": "Owned Second Series",
+                "series_id": 9202,
+                "category_id": "11",
+                "_category_id": [
+                  "Owned Series",
+                  "series"
+                ],
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "series": [
+              "Owned Second Series",
+              null
+            ],
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": false
+          },
+          {
+            "external_series_id": "9201",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "Owned Series (2020)",
+                "series_id": 9201,
+                "category_id": "11",
+                "_category_id": [
+                  "Owned Series",
+                  "series"
+                ],
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "series": [
+              "Owned Series (2020)",
+              null
+            ],
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": false
+          }
+        ],
+        "category_links": [
+          {
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "movie"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          }
+        ],
+        "empty_models": {
+          "Movie": 0,
+          "Episode": 0,
+          "VODLogo": 0,
+          "M3UMovieRelation": 0,
+          "M3UEpisodeRelation": 0
+        }
+      },
+      "after": {
+        "Series": [
+          {
+            "name": "Owned Second Series",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "11"
+            }
+          },
+          {
+            "name": "Owned Series (2020)",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "11"
+            }
+          }
+        ],
+        "categories": [
+          {
+            "name": "Owned Series",
+            "type": "series"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "movie"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "series"
+          }
+        ],
+        "M3USeriesRelation": [
+          {
+            "external_series_id": "9202",
+            "custom_properties": {
+              "basic_data": {
+                "num": 2,
+                "name": "Owned Second Series",
+                "series_id": 9202,
+                "category_id": "11",
+                "_category_id": [
+                  "Owned Series",
+                  "series"
+                ],
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "series": [
+              "Owned Second Series",
+              null
+            ],
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": false
+          },
+          {
+            "external_series_id": "9201",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "Owned Series (2020)",
+                "series_id": 9201,
+                "category_id": "11",
+                "_category_id": [
+                  "Owned Series",
+                  "series"
+                ],
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "series": [
+              "Owned Series (2020)",
+              null
+            ],
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": false
+          }
+        ],
+        "category_links": [
+          {
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "movie"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          }
+        ],
+        "empty_models": {
+          "Movie": 0,
+          "Episode": 0,
+          "VODLogo": 0,
+          "M3UMovieRelation": 0,
+          "M3UEpisodeRelation": 0
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in <duration> seconds",
+        "children": [],
+        "traceback": null
+      },
+      "provider": [
+        {
+          "action": null,
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_vod_categories",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_series_categories",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_vod_streams",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_series",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        }
+      ],
+      "updates": [
+        {
+          "progress": 0,
+          "type": "m3u_refresh",
+          "account": "<owned-account>",
+          "action": "vod_refresh",
+          "status": "processing",
+          "message": "Owned VOD account baseline"
+        },
+        {
+          "progress": 100,
+          "type": "m3u_refresh",
+          "account": "<owned-account>",
+          "action": "vod_refresh",
+          "status": "success",
+          "message": "VOD refresh completed in <duration> seconds"
+        }
+      ],
+      "catalogue": {
+        "status": 200,
+        "count": 2,
+        "names": [
+          "Owned Second Series",
+          "Owned Series (2020)"
+        ]
+      }
+    },
+    {
+      "name": "Series-reassign-globaldedup-category-replace",
+      "HTTP": {
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "before": {
+        "Series": [
+          {
+            "name": "Owned Second Series",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "11"
+            }
+          },
+          {
+            "name": "Owned Series (2020)",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "11"
+            }
+          }
+        ],
+        "categories": [
+          {
+            "name": "Owned Series",
+            "type": "series"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "movie"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "series"
+          }
+        ],
+        "M3USeriesRelation": [
+          {
+            "external_series_id": "9202",
+            "custom_properties": {
+              "basic_data": {
+                "num": 2,
+                "name": "Owned Second Series",
+                "series_id": 9202,
+                "category_id": "11",
+                "_category_id": [
+                  "Owned Series",
+                  "series"
+                ],
+                "_provider_category_id": "11"
+              },
+              "owned_note": "preserve",
+              "detailed_fetched": true,
+              "episodes_fetched": true
+            },
+            "series": [
+              "Owned Second Series",
+              null
+            ],
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": true
+          },
+          {
+            "external_series_id": "9201",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "Owned Series (2020)",
+                "series_id": 9201,
+                "category_id": "11",
+                "_category_id": [
+                  "Owned Series",
+                  "series"
+                ],
+                "_provider_category_id": "11"
+              },
+              "owned_note": "preserve",
+              "detailed_fetched": true,
+              "episodes_fetched": true
+            },
+            "series": [
+              "Owned Series (2020)",
+              null
+            ],
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": true
+          }
+        ],
+        "category_links": [
+          {
+            "category": [
+              "Owned Series",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "movie"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          }
+        ],
+        "empty_models": {
+          "Movie": 0,
+          "Episode": 0,
+          "VODLogo": 0,
+          "M3UMovieRelation": 0,
+          "M3UEpisodeRelation": 0
+        }
+      },
+      "after": {
+        "Series": [
+          {
+            "name": "Owned Replacement Series",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "15"
+            }
+          },
+          {
+            "name": "Owned Series (2020)",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "15"
+            }
+          }
+        ],
+        "categories": [
+          {
+            "name": "Uncategorized",
+            "type": "movie"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "series"
+          },
+          {
+            "name": "Updated Series",
+            "type": "series"
+          }
+        ],
+        "M3USeriesRelation": [
+          {
+            "external_series_id": "9202",
+            "custom_properties": {
+              "basic_data": {
+                "num": 2,
+                "name": "Owned Replacement Series",
+                "series_id": 9202,
+                "category_id": "15",
+                "_category_id": [
+                  "Updated Series",
+                  "series"
+                ],
+                "_provider_category_id": "15"
+              },
+              "owned_note": "preserve",
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "series": [
+              "Owned Replacement Series",
+              null
+            ],
+            "category": [
+              "Updated Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": true
+          },
+          {
+            "external_series_id": "9201",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "Owned Series (2020)",
+                "series_id": 9201,
+                "category_id": "15",
+                "_category_id": [
+                  "Updated Series",
+                  "series"
+                ],
+                "_provider_category_id": "15"
+              },
+              "owned_note": "preserve",
+              "detailed_fetched": true,
+              "episodes_fetched": true
+            },
+            "series": [
+              "Owned Series (2020)",
+              null
+            ],
+            "category": [
+              "Updated Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": true
+          },
+          {
+            "external_series_id": "9203",
+            "custom_properties": {
+              "basic_data": {
+                "num": 3,
+                "name": "Owned Series (2020)",
+                "series_id": 9203,
+                "category_id": "15",
+                "_category_id": [
+                  "Updated Series",
+                  "series"
+                ],
+                "_provider_category_id": "15"
+              },
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "series": [
+              "Owned Series (2020)",
+              null
+            ],
+            "category": [
+              "Updated Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": false
+          }
+        ],
+        "category_links": [
+          {
+            "category": [
+              "Uncategorized",
+              "movie"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Updated Series",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          }
+        ],
+        "empty_models": {
+          "Movie": 0,
+          "Episode": 0,
+          "VODLogo": 0,
+          "M3UMovieRelation": 0,
+          "M3UEpisodeRelation": 0
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in <duration> seconds",
+        "children": [],
+        "traceback": null
+      },
+      "provider": [
+        {
+          "action": null,
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_vod_categories",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_series_categories",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_vod_streams",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_series",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        }
+      ],
+      "updates": [
+        {
+          "progress": 0,
+          "type": "m3u_refresh",
+          "account": "<owned-account>",
+          "action": "vod_refresh",
+          "status": "processing",
+          "message": "Owned VOD account baseline"
+        },
+        {
+          "progress": 100,
+          "type": "m3u_refresh",
+          "account": "<owned-account>",
+          "action": "vod_refresh",
+          "status": "success",
+          "message": "VOD refresh completed in <duration> seconds"
+        }
+      ],
+      "catalogue": {
+        "status": 200,
+        "count": 2,
+        "names": [
+          "Owned Replacement Series",
+          "Owned Series (2020)"
+        ]
+      }
+    },
+    {
+      "name": "empty-Series-prunes-only-stale-Series",
+      "HTTP": {
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "before": {
+        "Series": [
+          {
+            "name": "Owned Replacement Series",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "15"
+            }
+          },
+          {
+            "name": "Owned Series (2020)",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "15"
+            }
+          }
+        ],
+        "categories": [
+          {
+            "name": "Uncategorized",
+            "type": "movie"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "series"
+          },
+          {
+            "name": "Updated Series",
+            "type": "series"
+          }
+        ],
+        "M3USeriesRelation": [
+          {
+            "external_series_id": "9202",
+            "custom_properties": {
+              "basic_data": {
+                "num": 2,
+                "name": "Owned Replacement Series",
+                "series_id": 9202,
+                "category_id": "15",
+                "_category_id": [
+                  "Updated Series",
+                  "series"
+                ],
+                "_provider_category_id": "15"
+              },
+              "owned_note": "preserve",
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "series": [
+              "Owned Replacement Series",
+              null
+            ],
+            "category": [
+              "Updated Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": true
+          },
+          {
+            "external_series_id": "9201",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "Owned Series (2020)",
+                "series_id": 9201,
+                "category_id": "15",
+                "_category_id": [
+                  "Updated Series",
+                  "series"
+                ],
+                "_provider_category_id": "15"
+              },
+              "owned_note": "preserve",
+              "detailed_fetched": true,
+              "episodes_fetched": true
+            },
+            "series": [
+              "Owned Series (2020)",
+              null
+            ],
+            "category": [
+              "Updated Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": true
+          },
+          {
+            "external_series_id": "9203",
+            "custom_properties": {
+              "basic_data": {
+                "num": 3,
+                "name": "Owned Series (2020)",
+                "series_id": 9203,
+                "category_id": "15",
+                "_category_id": [
+                  "Updated Series",
+                  "series"
+                ],
+                "_provider_category_id": "15"
+              },
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "series": [
+              "Owned Series (2020)",
+              null
+            ],
+            "category": [
+              "Updated Series",
+              "series"
+            ],
+            "owned_account": true,
+            "last_episode_refresh_provided": false
+          }
+        ],
+        "category_links": [
+          {
+            "category": [
+              "Uncategorized",
+              "movie"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Updated Series",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          }
+        ],
+        "empty_models": {
+          "Movie": 0,
+          "Episode": 0,
+          "VODLogo": 0,
+          "M3UMovieRelation": 0,
+          "M3UEpisodeRelation": 0
+        }
+      },
+      "after": {
+        "Series": [],
+        "categories": [
+          {
+            "name": "Uncategorized",
+            "type": "movie"
+          },
+          {
+            "name": "Uncategorized",
+            "type": "series"
+          },
+          {
+            "name": "Updated Series",
+            "type": "series"
+          }
+        ],
+        "M3USeriesRelation": [],
+        "category_links": [
+          {
+            "category": [
+              "Uncategorized",
+              "movie"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Uncategorized",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          },
+          {
+            "category": [
+              "Updated Series",
+              "series"
+            ],
+            "owned_account": true,
+            "enabled": true,
+            "custom_properties": {}
+          }
+        ],
+        "empty_models": {
+          "Movie": 0,
+          "Episode": 0,
+          "VODLogo": 0,
+          "M3UMovieRelation": 0,
+          "M3UEpisodeRelation": 0
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in <duration> seconds",
+        "children": [],
+        "traceback": null
+      },
+      "provider": [
+        {
+          "action": null,
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_vod_categories",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_series_categories",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_vod_streams",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        },
+        {
+          "action": "get_series",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "status": 200,
+          "actual_TLS": true,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion"
+        }
+      ],
+      "updates": [
+        {
+          "progress": 0,
+          "type": "m3u_refresh",
+          "account": "<owned-account>",
+          "action": "vod_refresh",
+          "status": "processing",
+          "message": "Owned VOD account baseline"
+        },
+        {
+          "progress": 100,
+          "type": "m3u_refresh",
+          "account": "<owned-account>",
+          "action": "vod_refresh",
+          "status": "success",
+          "message": "VOD refresh completed in <duration> seconds"
+        }
+      ],
+      "catalogue": {
+        "status": 200,
+        "count": 0,
+        "names": []
+      }
+    }
+  ]
+}

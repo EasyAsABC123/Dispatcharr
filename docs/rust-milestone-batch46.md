@@ -36,8 +36,19 @@ passes all [six package families](../scripts/rust-integration/milestone-batch46/
 all55 exact package container IDs are independently absent. Main ELF
 `8087459c7484ae38f8af3c1e49fa4327e4a44fd96c9f42328b0d4b17c90f6433`
 differs from Candidate45 and stale43/44. The operator hash is recorded too.
-The complete affected application cohort and a fresh complete paired performance
-study remain pending. No performance gain or full milestone is
+The [clean committed-source public cohort](../scripts/rust-integration/milestone-batch46/application/qualification.json)
+passes all four contexts with actual exit0 in231.701 seconds: Movie repeat5,
+basic Series4, manual no-commercials Comskip3 and two-viewer shared VLC. Public
+tools are committed at `11fded2c465ca78c8f484cb1581fdb9649387b15`; all Rust
+inputs remain identical to the image built from99f0ce78. Its26 frozen helpers
+and retained Source authorities resolve without the dirty canonical checkout.
+One bootstrap and fresh DB/cache/media/Main generations cover Source0/Native4.
+Both EOFs and process group settle; seven exact CIDs (six fixtures plus UID),
+six captured positive container host PIDs, launcher/controller and owned project
+resources are independently absent. This one run qualifies both the affected
+application regression and portable export. A new performance study is deferred
+until the TLS/advanced-Series combined successor passes functional validation;
+Candidate45's failed CPU pair is unchanged. No performance gain or full milestone is
 accepted. Candidate45 measurements and failures remain immutable.
 
 The existing public recording-Connect launcher also gains a selectable
@@ -55,7 +66,7 @@ selection. The initial run preserved two KeyErrors before UID execution; this
 was a stale unit fixture, with no Docker or application start. Runtime helpers
 and Candidate46 executable bytes are unchanged by that test-fixture correction.
 
-Initial clean-export application validation remains failed. Attempt1 stops at the
+Initial clean-export application attempts retain their failures. Attempt1 stops at the
 UID probe because owned helper directories inherited mode0700; only directory
 modes are corrected to0755, with all input hashes unchanged. Attempt2 exits1
 in150.624 seconds with settled EOF/process group: generated receiver setup cannot
@@ -63,5 +74,5 @@ import omitted `matching_guest`, so VOD repeat, Series and Comskip stop before
 business calls. The independent shared VLC context passes. All seven exact
 containers, six captured positive container host PIDs and launcher/controller,
 and project resources are independently absent. The corrected26-file public closure includes
-the exact frozen guest dependency; another complete four-context run is pending;
+the exact frozen guest dependency; the later complete four-context run passes;
 these failed attempts do not establish public cohort acceptance.

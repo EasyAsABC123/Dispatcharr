@@ -1,0 +1,96 @@
+{
+  "scope": "Fresh public-export Native selected functional cohort; all broader parity/performance gates remain unqualified.",
+  "historical_native20_contexts": {},
+  "backends": [
+    {
+      "status": "passed",
+      "cases": [
+        {
+          "case": "vod-repeat",
+          "status": "passed"
+        },
+        {
+          "case": "vod-series",
+          "status": "passed"
+        },
+        {
+          "case": "comskip-manual",
+          "status": "passed"
+        },
+        {
+          "case": "vlc-live",
+          "status": "passed"
+        }
+      ],
+      "full_milestone_passed": false,
+      "performance_verified": false,
+      "no_Source_model18_replay": true,
+      "executed_slice_passed": true
+    }
+  ],
+  "expected_backend_order": [
+    "Native"
+  ],
+  "expected_cleanup_count": 1,
+  "cleanup": [
+    {
+      "project": "dispatcharr-normal-dvr-85679db7f5",
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "d9c93d752a2c8ca65f046f733eab0cc94216237a25e0e1ee9882343e0049621c",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "03d74f45342b34824b2178ffa52361ce1ee5b803e82f6615d71467c1eaf32481",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "fe50f22cad5624b2074aeadcd7fc083beae265b3ccba1d0411eeacca377e5ea5",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "363368ca1afd2ef95b45d58d04d09b1db64fbb4f6cbdb31afe44ec050e8faecc",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "aacddf68000ffb376c610c335e57b4466676fea489835ea91c7d0fda6be32b02",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "ff7b89b0040b8affd875f7e189a0b29035d5f4f8aa3fd31dd7db97fb4217cbde",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    }
+  ],
+  "selected_application_cells_passed": true,
+  "exact_cleanup_passed": true,
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "paired_exceptional_ranges": {
+    "status": "blocked",
+    "reason": "both actual completed playback captures required"
+  },
+  "retained_known_required_gaps": [
+    "Source exceptional-range transport",
+    "Source historical warm/crash periodic previousrow/delete/orphan transition",
+    "unqualified enabled-plugin/eager edges, custom guides and held-search Main cancellation",
+    "remote-owner wider profile/fault domains"
+  ],
+  "combined_selected_workflow_passed": true
+}
