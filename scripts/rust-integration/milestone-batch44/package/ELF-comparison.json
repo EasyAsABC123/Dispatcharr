@@ -1,0 +1,92 @@
+{
+  "state": "CANDIDATE44_STALE_PRODUCTION_ELFS_PROVEN_UNTRUSTED",
+  "both_main_and_operator_ELFs_identical_despite_seven_changed_Rust_files": true,
+  "Source43_main_hash_matches_prior_independent_archive_probe": true,
+  "raw_Docker_build_actual_exit": 0,
+  "actual_Cargo_build_seconds": 0.42,
+  "declared_source_archive_member_mtimes": 0,
+  "compiled_source_provenance_accepted": false,
+  "application_or_media_started": false,
+  "commands": [
+    {
+      "candidate": 43,
+      "image_id": "sha256:7d41646ca5db1847d7367a0926504d8db4ff2ba2902d2c69277b931c084a2f64",
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "--pids-limit",
+        "16",
+        "--memory",
+        "32m",
+        "--name",
+        "dispatcharr-stale-elf-43-4172735",
+        "--cidfile",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch44-tools-1/stale-ELF-comparison/43.cid",
+        "--entrypoint",
+        "sha256sum",
+        "sha256:7d41646ca5db1847d7367a0926504d8db4ff2ba2902d2c69277b931c084a2f64",
+        "/usr/local/bin/dispatcharr-rs",
+        "/usr/local/bin/dispatcharr-operator"
+      ],
+      "actual_exit": 0,
+      "stdout": "c69795073edd1eed1b42ec78b0b993dbeb58aa0dfc82c95f7b7e38dfc87d9149  /usr/local/bin/dispatcharr-rs\nd3a18b296886623d442db8848e160f23f1fd1452d00cbdefcab5b43e5b7bd947  /usr/local/bin/dispatcharr-operator\n",
+      "stderr": "",
+      "exact_CID": "ed6d28fdd5c8e65b510f7726348dfc02ed3eb2fff68fc4d0612932d7c91e2115",
+      "application_started": false,
+      "original_host_PID_independently_captured": false,
+      "exact_CID_absent": true,
+      "ELF_sha256": {
+        "/usr/local/bin/dispatcharr-rs": "c69795073edd1eed1b42ec78b0b993dbeb58aa0dfc82c95f7b7e38dfc87d9149",
+        "/usr/local/bin/dispatcharr-operator": "d3a18b296886623d442db8848e160f23f1fd1452d00cbdefcab5b43e5b7bd947"
+      }
+    },
+    {
+      "candidate": 44,
+      "image_id": "sha256:30e13db79650a084f3ff56d5ff3389fe360ca9e74f66b4a1f5b96b0f2f420190",
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "--pids-limit",
+        "16",
+        "--memory",
+        "32m",
+        "--name",
+        "dispatcharr-stale-elf-44-4172735",
+        "--cidfile",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch44-tools-1/stale-ELF-comparison/44.cid",
+        "--entrypoint",
+        "sha256sum",
+        "sha256:30e13db79650a084f3ff56d5ff3389fe360ca9e74f66b4a1f5b96b0f2f420190",
+        "/usr/local/bin/dispatcharr-rs",
+        "/usr/local/bin/dispatcharr-operator"
+      ],
+      "actual_exit": 0,
+      "stdout": "c69795073edd1eed1b42ec78b0b993dbeb58aa0dfc82c95f7b7e38dfc87d9149  /usr/local/bin/dispatcharr-rs\nd3a18b296886623d442db8848e160f23f1fd1452d00cbdefcab5b43e5b7bd947  /usr/local/bin/dispatcharr-operator\n",
+      "stderr": "",
+      "exact_CID": "853161b782fefa1b1a382886ca5cc21888b570d8b37d00c570f1b810057bd81a",
+      "application_started": false,
+      "original_host_PID_independently_captured": false,
+      "exact_CID_absent": true,
+      "ELF_sha256": {
+        "/usr/local/bin/dispatcharr-rs": "c69795073edd1eed1b42ec78b0b993dbeb58aa0dfc82c95f7b7e38dfc87d9149",
+        "/usr/local/bin/dispatcharr-operator": "d3a18b296886623d442db8848e160f23f1fd1452d00cbdefcab5b43e5b7bd947"
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import os,hashlib,json;from pathlib import Path;p=Path('/shared/comskip-manual/manual.mkv');assert os.geteuid()==65532;assert p.stat().st_uid==65532 and p.stat().st_gid==65532;assert p.stat().st_mode&0o777==0o644;assert p.stat().st_size==719267;digest=hashlib.sha256(p.read_bytes()).hexdigest();assert digest=='ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d';print(json.dumps({'actual_euid':os.geteuid(),'file_uid':p.stat().st_uid,'file_gid':p.stat().st_gid,'file_mode':oct(p.stat().st_mode&0o777),'bytes':p.stat().st_size,'sha256':digest}))
+                                                                                                                                  ~~~~~~^^
+  File "/opt/dispatcharr-python/lib/python3.13/pathlib/_local.py", line 515, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/shared/comskip-manual/manual.mkv'

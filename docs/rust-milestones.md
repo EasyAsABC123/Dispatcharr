@@ -11,7 +11,10 @@ alone does not establish application parity or an application performance gain.
 
 [Candidate44](rust-milestone-batch44.md) joins the recording catchall correction
 and Source-characterized basic Series ingestion. SDK61 passes all four gates
-with 1,148 tests. Its Docker/package/four-context Native validation is pending;
+with 1,148 tests. Its CLI-successful Docker attempt is untrusted because a
+normalized timestamp/cache interaction reused stale executables. No package or
+Native run was dispatched. [Candidate45](rust-milestone-batch45.md) corrects
+compile freshness and passes all SDK62 gates; its Docker/Native checks are pending;
 Candidate43 startup and fixture failures remain unchanged below.
 
 The [Candidate41 source](rust-milestone-batch41.md) passes all SDK58 gates

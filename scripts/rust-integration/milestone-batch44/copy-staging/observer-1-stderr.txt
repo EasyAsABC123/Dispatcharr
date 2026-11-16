@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import os,hashlib,json;from pathlib import Path;p=Path('/shared/comskip-manual/manual.mkv');before=p.stat().st_uid;os.chown(p,65532,65532);p.chmod(0o644);print(json.dumps({'before_chown_uid':before,'actual_uid':p.stat().st_uid,'actual_gid':p.stat().st_gid,'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}))
+                                                                                                                                               ~~~~~~~^^^^^^^
+  File "/opt/dispatcharr-python/lib/python3.13/pathlib/_local.py", line 738, in chmod
+    os.chmod(self, mode, follow_symlinks=follow_symlinks)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted: '/shared/comskip-manual/manual.mkv'

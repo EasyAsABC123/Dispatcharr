@@ -1,0 +1,71 @@
+{
+  "state": "UNTRUSTED_COMPILATION_STALE43_EXECUTABLES_IN_CANDIDATE44",
+  "accepted": false,
+  "git_revision": "ac5616618388e2b9b41c2cc6dbc81a7e06eb0522",
+  "image_id": "sha256:30e13db79650a084f3ff56d5ff3389fe360ca9e74f66b4a1f5b96b0f2f420190",
+  "raw_Docker_build_actual_exit": 0,
+  "raw_build_manifest_passed_flag_preserved": true,
+  "raw_build_seconds": 4.255333636014257,
+  "compiled_source_provenance_accepted": false,
+  "changed_application_Rust_inputs": [
+    "rust/crates/app/src/selected_jobs.rs",
+    "rust/crates/store/src/comskip_http.rs",
+    "rust/crates/store/src/recording_http.rs",
+    "rust/crates/store/src/vod_ingestion.rs",
+    "rust/crates/store/src/vod_ingestion_series_sql.rs",
+    "rust/crates/store/src/vod_ingestion_series_values.rs",
+    "rust/crates/store/src/vod_ingestion_sql.rs"
+  ],
+  "immutable_tar_member_mtime": 0,
+  "cause": "Shared Cargo target cache trusted mtime-zero input files as older than cached outputs; Cargo did not compile the seven changed Rust files",
+  "both_production_ELFs_identical_to43": true,
+  "all_image_filesystem_layers_identical_to43": true,
+  "ELF_sha256": {
+    "/usr/local/bin/dispatcharr-rs": "c69795073edd1eed1b42ec78b0b993dbeb58aa0dfc82c95f7b7e38dfc87d9149",
+    "/usr/local/bin/dispatcharr-operator": "d3a18b296886623d442db8848e160f23f1fd1452d00cbdefcab5b43e5b7bd947"
+  },
+  "ELF_comparison_actual_exits": [
+    0,
+    0
+  ],
+  "ELF_hash_container_CIDs_independently_absent": true,
+  "ELF_hash_container_original_host_PIDs_captured": false,
+  "six_package_families": "NOT_RUN_after_proven_stale_compilation",
+  "Native_application_batch": "NOT_RUN",
+  "application_performance_verified": false,
+  "full_milestones_accepted": false,
+  "fix_validation": "NEXT_CANDIDATE_REQUIRED_touch_all_local_compile_inputs_before_uncached_Cargo_RUN",
+  "credit": "Original Dispatcharr and dependency authors retain all application/algorithm/library credit",
+  "files": [
+    {
+      "path": "scripts/rust-integration/milestone-batch44/package/build.json",
+      "sha256": "499eed9c09a0e428f71960e0f7e28366ff0b5ca579eff32d1d8067721d9976c6",
+      "source": "artifacts/rust/milestone-batch44-build-1/build.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch44/package/build-execution.json",
+      "sha256": "e5cd31f0c31a3226aabc83b74d17f44afb830ce4ed9d1e079c0a777b4ab5947c",
+      "source": "artifacts/rust/milestone-batch44-tools-1/build/build-execution.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch44/package/SDK-input-binding.json",
+      "sha256": "f90659f69f6a8f45d7f5767be42ff1fc7e9716be2693f41e562ec7dde4826655",
+      "source": "artifacts/rust/milestone-batch44-build-1/SDK-input-binding.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch44/package/stale-cache-diagnostic.json",
+      "sha256": "36112622b4a94498ce872402adec1ed33a382ba22789819024a51af32f8706d8",
+      "source": "artifacts/rust/milestone-batch44-tools-1/stale-cache-diagnostic.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch44/package/ELF-comparison.json",
+      "sha256": "d009e07b282998a2fb440b331b53b6daedd081a3f6acc06ca08bd64fd2aa236e",
+      "source": "artifacts/rust/milestone-batch44-tools-1/stale-ELF-comparison/report.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch44/package/build.log",
+      "sha256": "a3466e13d8166e56cf0f2d92c32a8019d170e1182888f3d55b028ade1eccb526",
+      "source": "artifacts/rust/milestone-batch44-build-1/build.log"
+    }
+  ]
+}

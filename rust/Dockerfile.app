@@ -20,9 +20,13 @@ COPY rust/vendor/ ./rust/vendor/
 COPY rust/runtime/drf-static-source-1.json ./rust/runtime/drf-static-source-1.json
 # One coordinated target cache; compiled products must leave the mount before
 # another image stage can COPY them. The first build seeds this cache.
+# Deterministic source tar mtimes are zero; refresh ALL local compile-input
+# mtimes inside every uncached Cargo RUN so changed bytes cannot look fresh.
 RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked \
     --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked \
     mkdir -p "$CARGO_TARGET_DIR" /out && \
+    find rust/crates rust/vendor -type f -exec touch {} + && \
+    touch rust/Cargo.toml rust/Cargo.lock rust/rust-toolchain.toml rust/runtime/drf-static-source-1.json && \
     cargo build --manifest-path rust/Cargo.toml --locked --release --jobs 2 -p dispatcharr-rs && \
     cp "$CARGO_TARGET_DIR/release/dispatcharr-rs" /out/dispatcharr-rs && \
     cp "$CARGO_TARGET_DIR/release/dispatcharr-operator" /out/dispatcharr-operator
@@ -30,6 +34,8 @@ RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/
 FROM build AS xmltv-parser-tests
 RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked \
     --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked \
+    find rust/crates rust/vendor -type f -exec touch {} + && \
+    touch rust/Cargo.toml rust/Cargo.lock rust/rust-toolchain.toml rust/runtime/drf-static-source-1.json && \
     cargo test --manifest-path rust/Cargo.toml --locked --jobs 2 -p dispatcharr-xmltv-parser --all-targets && \
     cargo build --manifest-path rust/Cargo.toml --locked --release --jobs 2 -p dispatcharr-xmltv-parser --examples && \
     cp "$CARGO_TARGET_DIR/release/examples/xmltv_stream_parity" /usr/local/bin/dispatcharr-xmltv-parity

@@ -25,8 +25,16 @@ inferred from its no-commercials result.
 [SDK61](../scripts/rust-integration/milestone-batch44/checks.json) passes all four
 gates with unchanged inputs: 1,148 tests passed, zero failures and 784 ignored
 fixture tests across 180 result blocks. There are 1,450 inputs, including
-1,444 Rust inputs. Seven source paths change from SDK60. Docker build, six
-package families and the one Native four-context batch remain pending.
+1,444 Rust inputs. Seven source paths change from SDK60.
+
+The [Docker attempt](../scripts/rust-integration/milestone-batch44/package/UNTRUSTED.json)
+returns CLI zero in 4.255 seconds but is **untrusted**. Cargo reuses old products
+from the new shared target: all archive timestamps are normalized to zero, so
+changed Rust files appear older than the cached artifacts. Both actual production
+ELF hashes and final root-filesystem layers are identical to Candidate43 despite
+seven changed source paths. No package or Native batch was dispatched. This
+is a provenance failure, not a build-speed gain. The negative attempt remains
+unchanged; [Candidate45](rust-milestone-batch45.md) corrects cache freshness.
 
 The Native cohort will run VOD repeat5, Series4, manual Comskip3 and shared VLC
 viewing with actual worker/scheduler readiness. Source captures are retained
