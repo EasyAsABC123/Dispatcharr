@@ -1,5 +1,15 @@
 # Remaining streaming and integration gates
 
+This is a **historical owner checklist**. References below to “current”, image54,
+missing Main handlers or queued next work describe the recorded checkpoint.
+Use the [current milestone ledger](rust-milestones.md#current-integrated-work),
+[current worker graph](rust-default-worker-graph.md) and
+[delivery workflow](rust-migration-acceleration.md) for live priorities and exact
+qualified scopes. In particular, a historical “latest built Candidate25” label
+is not the current runtime selection. All full M0–M9 gates, wider roles and
+current full-service performance acceptance remain open; historical observations
+retain their original source/image bindings.
+
 Owner checklist prepared against committed `044f3ad0`. This separates missing implementation from missing Source, current-image or performance evidence. Consult the [current milestone ledger](rust-milestones.md) for later results: image54 now has all28 selected package groups passed; the three Main gates are in progress. Historical preparation labels below retain their original context.
 
 Static checklist against committed `044f3ad0` / 792 Rust inputs. Image 54 is a candidate under the admitted corrected package cohort; image 53 evidence retains its own f0 / 791 binding. Root owns ledger/commit/integration; notification Main belongs to the Source agent and M6 to the Store agent. No M1 rerun, automatic benchmark, default graph change or unreviewed Source experiment is proposed.

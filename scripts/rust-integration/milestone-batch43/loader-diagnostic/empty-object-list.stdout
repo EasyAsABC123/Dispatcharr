@@ -1,0 +1,57 @@
+The commandline used was:
+	/opt/dispatcharr-comskip/bin/comskip
+	--version
+
+
+Usage:
+  comskip  [-h|--help] [-w|--debugwindow] [-n|--playnice] [--zpcut] [--zpchapter] [--scf] [--videoredo] [--videoredo3] [--csvout] [--quality] [--plist] [-m|--demux] [--hwassist] [--cuvid] [--vdpau] [--dxva2] [--qsv] [--decoders] [--threads=<int>] [-p|--pid=<string>] [-t|--ts] [-d|--detectmethod=<int>] [-v|--verbose=<int>] [-u|--dump=<int>] [-s|--play] [--timing] [-q|--quiet] [--ini=<file>] [--logo=<file>] [--cut=<file>] [--output=<file>] [--output-filename=<file>] [--selftest=<int>] <file> [<file>]
+
+  -h, --help                Display syntax
+  -w, --debugwindow         Show debug window
+  -n, --playnice            Slows detection down
+  --zpcut                   Outputs a ZoomPlayer cutlist
+  --zpchapter               Outputs a ZoomPlayer chapter file
+  --scf                     Outputs a simple chapter file for mkvmerge
+  --videoredo               Outputs a VideoRedo cutlist
+  --videoredo3              Outputs a VideoRedo3 cutlist
+  --csvout                  Outputs a csv of the frame array
+  --quality                 Outputs a csv of false detection segments
+  --plist                   Outputs a mac-style plist for addition to an EyeTV archive as the 'markers' property
+  -m, --demux               Demux the input into elementary streams
+  --hwassist                Activate Hardware Assisted video decoding
+  --cuvid                   Use NVIDIA Video Decoder (CUVID), if available
+  --vdpau                   Use NVIDIA Video Decode and Presentation API (VDPAU), if available
+  --dxva2                   Use DXVA2 Video Decode and Presentation API (DXVA2), if available
+  --qsv                     Use Intel Quick Sync Video acceleration (QSV), if available
+  --decoders                List all decoders and exit
+  --threads=<int>           The number of threads to use
+  -p, --pid=<string>        The PID of the video in the TS
+  -t, --ts                  The input file is a Transport Stream
+  -d, --detectmethod=<int>  An integer sum of the detection methods to use
+  -v, --verbose=<int>       Verbose level
+  -u, --dump=<int>          Dump the cutscene at this frame number
+  -s, --play                Play the video
+  --timing                  Dump the timing into a file
+  -q, --quiet               Not output logging to the console window
+  --ini=<file>              Ini file to use
+  --logo=<file>             Logo file to use
+  --cut=<file>              CutScene file to use
+  --output=<file>           Folder to use for all output files
+  --output-filename=<file>  Filename base to use for all output files
+  --selftest=<int>          Execute a selftest
+  <file>                    Input file
+  <file>                    Output folder for cutlist
+
+Detection methods available:
+	  1 - Black Frame
+	  2 - Logo
+	  4 - Scene Change
+	  8 - Resolution Change
+	 16 - Closed Captions
+	 32 - Aspect Ratio
+	 64 - Silence
+	128 - CutScenes
+	255 - USE ALL AVAILABLE
+
+Errors:
+ComSkip: invalid option "--version"

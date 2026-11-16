@@ -6,6 +6,13 @@ organized, not the 1:1 backend scope, unchanged React UI, original authorship or
 and dependency authors retain full application and algorithm credit.
 No new acceptance or application performance gain is claimed by this plan.
 
+The candidate names and “Next” labels in this original review are historical;
+use the [current ledger](rust-milestones.md#current-integrated-work) and
+[worker graph](rust-default-worker-graph.md) for current scope. Matching14 and
+Candidate40 aggregate/station/fresh-VOD acceptance are already recorded there;
+qualified Source references are retained rather than replayed. The ownership,
+one-heavy-workload rule and milestone-wide validation workflow below still apply.
+
 At review, Git HEAD `9b6262e9` includes documentation and Source evidence. The
 last qualified runtime is Candidate37 at `da75542b`, image
 `sha256:83edf4700ef2be10b6812c8045d0d5fca94216861854067465dd36154f83bb88`.

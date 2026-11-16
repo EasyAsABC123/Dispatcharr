@@ -13,11 +13,26 @@ RUN npm run build
 FROM rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f AS build
 WORKDIR /workspace
 ENV CARGO_TARGET_DIR=/tmp/dispatcharr-target
-COPY rust/ ./rust/
-RUN mkdir -p "$CARGO_TARGET_DIR" && cargo build --manifest-path rust/Cargo.toml --locked --release -p dispatcharr-rs
+COPY rust/Cargo.toml rust/Cargo.lock rust/rust-toolchain.toml ./rust/
+COPY rust/crates/ ./rust/crates/
+COPY rust/vendor/ ./rust/vendor/
+# This one runtime JSON is a compile-time include in app/static_assets.rs.
+COPY rust/runtime/drf-static-source-1.json ./rust/runtime/drf-static-source-1.json
+# One coordinated target cache; compiled products must leave the mount before
+# another image stage can COPY them. The first build seeds this cache.
+RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked \
+    --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked \
+    mkdir -p "$CARGO_TARGET_DIR" /out && \
+    cargo build --manifest-path rust/Cargo.toml --locked --release --jobs 2 -p dispatcharr-rs && \
+    cp "$CARGO_TARGET_DIR/release/dispatcharr-rs" /out/dispatcharr-rs && \
+    cp "$CARGO_TARGET_DIR/release/dispatcharr-operator" /out/dispatcharr-operator
 
 FROM build AS xmltv-parser-tests
-RUN cargo test --manifest-path rust/Cargo.toml --locked -p dispatcharr-xmltv-parser --all-targets && cargo build --manifest-path rust/Cargo.toml --locked --release -p dispatcharr-xmltv-parser --examples && cp /tmp/dispatcharr-target/release/examples/xmltv_stream_parity /usr/local/bin/dispatcharr-xmltv-parity
+RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked \
+    --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked \
+    cargo test --manifest-path rust/Cargo.toml --locked --jobs 2 -p dispatcharr-xmltv-parser --all-targets && \
+    cargo build --manifest-path rust/Cargo.toml --locked --release --jobs 2 -p dispatcharr-xmltv-parser --examples && \
+    cp "$CARGO_TARGET_DIR/release/examples/xmltv_stream_parity" /usr/local/bin/dispatcharr-xmltv-parity
 COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
 COPY rust/crates/xmltv-parser/vendor/Copyright /usr/share/doc/dispatcharr/libxml2-Copyright
 COPY rust/crates/xmltv-parser/vendor/NOTICES /usr/share/doc/dispatcharr/libxml2-NOTICES
@@ -54,8 +69,8 @@ LABEL org.opencontainers.image.title="Dispatcharr derivative Rust backend port" 
       org.opencontainers.image.licenses="AGPL-3.0-only" \
       org.opencontainers.image.description="Original Dispatcharr credit belongs to its original authors and contributors; see /usr/share/doc/dispatcharr/ATTRIBUTION.md. Migration parity is incomplete."
 COPY --from=media /media-runtime/ /
-COPY --from=build /tmp/dispatcharr-target/release/dispatcharr-rs /usr/local/bin/dispatcharr-rs
-COPY --from=build /tmp/dispatcharr-target/release/dispatcharr-operator /usr/local/bin/dispatcharr-operator
+COPY --from=build /out/dispatcharr-rs /usr/local/bin/dispatcharr-rs
+COPY --from=build /out/dispatcharr-operator /usr/local/bin/dispatcharr-operator
 COPY --from=frontend /dispatcharr-frontend/dist/ /opt/dispatcharr-frontend/
 COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
 COPY rust/crates/output-http/data/Django-LICENSE /usr/share/doc/dispatcharr/Django-LICENSE

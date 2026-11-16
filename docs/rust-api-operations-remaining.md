@@ -1,5 +1,15 @@
 # Remaining M5 / M8 work — private ownership checklist
 
+This is a **historical owner checklist**. References below to “current”, image54,
+missing Main handlers or queued next work describe the recorded checkpoint.
+Use the [current milestone ledger](rust-milestones.md#current-integrated-work),
+[current worker graph](rust-default-worker-graph.md) and
+[delivery workflow](rust-migration-acceleration.md) for live priorities and exact
+qualified scopes. In particular, a historical “latest built Candidate25” label
+is not the current runtime selection. All full M0–M9 gates, wider roles and
+current full-service performance acceptance remain open; historical observations
+retain their original source/image bindings.
+
 Owner checklist prepared against committed `044f3ad0`. This separates missing implementation from missing Source, current-image or performance evidence. Consult the [current milestone ledger](rust-milestones.md) for later results: image54 now has all28 selected package groups passed; the three Main gates are in progress. Historical preparation labels below retain their original context.
 
 Base: immutable runtime044f3ad0fb3ee68ffb17b23bbb796ccdae954298 /792 Rust inputs; React stays byte-identical and Original Dispatcharr credit stays intact. This is an unmet-work checklist, not milestone acceptance. Existing scoped passes are retained and will not be rerun without a changed prerequisite or an unresolved check. Root owns formal M0/M1, integration/cutover, ledger and Git; Stream owns M2–M4/M7/package54 and Store owns M6. Cross-track rows below identify dependencies rather than reassigning files.

@@ -8,6 +8,26 @@ python scripts/rust-milestone-batches/m6/entrypoint.py --export-matrix
 
 Exports 47 required nodes (46 behavior cells and one grouped Source prerequisite) across ingestion/API/descendants, scheduler/default families, and physical/restart; actual missing-capabilities are explicit. A prepared library, existing component proof or unexecuted cell does not pass the matrix.
 
+The matrix now binds retained scoped authorities for TVG, version200, VOD and
+matching. Candidate40 passes its11 aggregate/station/fresh-VOD cases; Candidate38
+passes matching14 in its no-download domain. Source VOD repeat observations are
+qualified by a separate offline observer correction while their original failed
+controller stays failed. These subsets do not pass their broader required cells.
+Four version200 Source cases already exist, so that exact row does not require a
+new Source capture; current Native/default-schedule acceptance remains separate.
+TVG refresh-held and wider Source domains remain unobserved requirements. The
+Source prerequisite stays blocked until its exact authority and remaining scope
+are bound through the existing coordinator. No required node, authorization or
+full-milestone gate is removed by this reconciliation.
+
+For current composition and exact image scopes use the
+[worker graph](../../../docs/rust-default-worker-graph.md) and
+[milestone ledger](../../../docs/rust-milestones.md#current-integrated-work).
+The implementation/diagnostic paragraphs below preserve earlier preparation
+checkpoints; statements about an empty-Series consumer or missing constructors
+are historical, not claims that the current assembled handlers are absent.
+
+
 The same runner accepts Root's common owned context for one real production HTTP probe:
 
 ```sh

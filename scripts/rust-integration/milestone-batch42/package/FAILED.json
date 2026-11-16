@@ -1,0 +1,95 @@
+{
+  "state": "BUILD_PASSED_PACKAGE_BATCH_FAILED_COMSKIP_ACTUAL_LOADER_FAILURE",
+  "passed": false,
+  "git_revision": "09d34a0516c8018f1e92d5a7503a4314434bdad8",
+  "image_id": "sha256:b0d2cf8d0c0677f1afc98ddb6b985bda74cdf532494adfff9b229edd2c307083",
+  "actual_package_exits": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "all_six_actual_waits_consumed": true,
+  "independent_exact_CIDs_absent": 55,
+  "independent_cleanup_passed": true,
+  "failed_family": "archive-assets",
+  "actual_failure": "Pinned Comskip runtime loader selected incompatible base /usr/lib libraries; actual --version exit1, expected unsupported-option exit2 not reached",
+  "five_independent_families_passed": [
+    "crypto",
+    "postgres",
+    "regex",
+    "python-host",
+    "vlc"
+  ],
+  "all_six_package_families_passed": false,
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "full_milestones_accepted": false,
+  "Original_credit": "Original Dispatcharr, Comskip and dependency authors retain all application/protocol/algorithm/library credit",
+  "files": [
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/build.json",
+      "sha256": "dda5bd14c5b132b63720f47d021ad4ec3fa7cb46ae32830ddaccd6fb9f82f860",
+      "source": "artifacts/rust/milestone-batch42-build-1/build.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/build-execution.json",
+      "sha256": "9faa34901546e4a81d37c67727bb6511b96ed152e41a72fdef63d80601499335",
+      "source": "artifacts/rust/milestone-batch42-tools-1/build/build-execution.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/SDK-input-binding.json",
+      "sha256": "8c6ed746266d26dd01c0c41327c85073b503de0fd689d4155262494c1ff5286c",
+      "source": "artifacts/rust/milestone-batch42-tools-1/build/SDK-input-binding.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/executions.json",
+      "sha256": "aa5b179039d95f5bacc57b8e803452a38e52298ea9218ba181f32f1f503c14ca",
+      "source": "artifacts/rust/milestone-batch42-tools-1/package-executions.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/cleanup.json",
+      "sha256": "a06a2183df1c337312ee69e77451a4b7c80cd5bc47fd2992d5a34c6ff2177534",
+      "source": "artifacts/rust/milestone-batch42-tools-1/independent-cleanup.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/archive-assets-failure.json",
+      "sha256": "7ac870620fc6a5aeb9c508cc8c6510ad4e0719e98b44db0cf1b062495095d3fc",
+      "source": "artifacts/rust/milestone-batch42-build-1/Root-probe-failure.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/crypto.json",
+      "sha256": "853083e4835acbac6df5c14a229f81293af20a39cecb6422b4cb1a6b0fe23859",
+      "source": "artifacts/rust/milestone-batch42-build-1/Root-crypto-runtime-probe.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/postgres.json",
+      "sha256": "c3648c9149961b0e7da7a3fb7da434a930c0abc225d3a0678c12ff51d0f08d57",
+      "source": "artifacts/rust/milestone-batch42-build-1/Root-postgres-runtime-probe.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/regex.json",
+      "sha256": "2bbf63892cca74a85ca921143344e637b0289b53fbdd8d98029538703bc92c26",
+      "source": "artifacts/rust/milestone-batch42-regex-probe-1/report.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/python-host.json",
+      "sha256": "3f0887f4925b5752fb00e51f4ec6ff63f014b0bc542f3b839d0af22fd960c901",
+      "source": "artifacts/rust/milestone-batch42-python-host-probe-2/report.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/vlc.json",
+      "sha256": "9451d4d2624f9790471b595dc686a8f629a91faa44ef3c8dd13e1773634f1fbd",
+      "source": "artifacts/rust/milestone-batch42-vlc-probe-1/report.json"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch42/package/Comskip-runtime-failure.json",
+      "sha256": "6ba3e20757fcc1a1e26278489e8c1f5153b5e162acbe2a5b529d90a153114768",
+      "source": "artifacts/rust/milestone-batch42-build-1/Root-probe-commands.json",
+      "source_sha256": "7d2971b7f8aa4748fc407b908d9290058398ffbe3879ea31bc43063c8f2406c7",
+      "projection": "literal final JSON stdout line of actual archive/assets container command"
+    }
+  ]
+}

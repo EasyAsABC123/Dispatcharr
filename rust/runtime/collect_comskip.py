@@ -26,7 +26,7 @@ for line in p.stdout.splitlines():
   manifest['libraries'][path.name]={'source':str(path),'sha256':actual}
   if path.name.startswith('ld-linux-'):loader=path.name
 assert loader
-wrapper=ROOT/'usr/local/bin/comskip';wrapper.write_text('#!/bin/sh\nexec /opt/dispatcharr-comskip/lib/'+loader+' --library-path /opt/dispatcharr-comskip/lib /opt/dispatcharr-comskip/bin/comskip "$@"\n');wrapper.chmod(0o755)
+wrapper=ROOT/'usr/local/bin/comskip';wrapper.write_text('#!/bin/sh\nexec /opt/dispatcharr-comskip/lib/'+loader+' --inhibit-rpath "" --library-path /opt/dispatcharr-comskip/lib /opt/dispatcharr-comskip/bin/comskip "$@"\n');wrapper.chmod(0o755)
 ini=Path('/tmp/comskip-source.ini');assert digest(ini)==INI
 target=ROOT/'app/docker/comskip.ini';target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(ini,target)
 # collect_media already retained every available pinned Source package copyright,

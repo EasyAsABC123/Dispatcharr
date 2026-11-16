@@ -1,5 +1,15 @@
 # M6 remaining work and execution order
 
+This is a **historical owner checklist**. References below to “current”, image54,
+missing Main handlers or queued next work describe the recorded checkpoint.
+Use the [current milestone ledger](rust-milestones.md#current-integrated-work),
+[current worker graph](rust-default-worker-graph.md) and
+[delivery workflow](rust-migration-acceleration.md) for live priorities and exact
+qualified scopes. In particular, a historical “latest built Candidate25” label
+is not the current runtime selection. All full M0–M9 gates, wider roles and
+current full-service performance acceptance remain open; historical observations
+retain their original source/image bindings.
+
 Historical owner checklist prepared against committed `044f3ad0`. The current bounded delivered/remaining sequence below supersedes its former next-normal-domain priority.
 
 ## Historical preparation baseline (044f3ad0)

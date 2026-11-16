@@ -26,9 +26,18 @@
       },
       {
         "id": "channel-signal-tvg-programmes",
-        "authority": "SOURCE_REQUIRED",
+        "authority": "scripts/rust-job-contracts/m6-missing-source/manifest.json",
         "required": true,
-        "Source_extension_needed": true
+        "Source_extension_needed": true,
+        "retained_scoped_authority": [
+          {
+            "path": "scripts/rust-job-contracts/m6-missing-source/source-tvg-prefix-review-1.json",
+            "scope": "Six actual Source TVG cases: natural Channel signal, repeat, missing, dummy, unmapped and INSERT P0001; first host exit1 retained; observer tooling was not frozen at launch.",
+            "sha256": "f827df0c41d5e7faa354f788c7c83ea384a828dc4863d16b9fa83432e8885cc7"
+          }
+        ],
+        "remaining_required_scope": "Refresh-held deferral and broader Source inputs, full current-image worker/fault/role/SQL/cache/media acceptance; retain exact original epoch limits.",
+        "full_cell_accepted": false
       },
       {
         "id": "refresh-local-positive",
@@ -98,9 +107,28 @@
       },
       {
         "id": "vod-import",
-        "authority": "SOURCE_REQUIRED",
+        "authority": "scripts/rust-integration/vod-ingestion-source58/index.json",
         "required": true,
-        "Source_extension_needed": true
+        "Source_extension_needed": true,
+        "retained_scoped_authority": [
+          {
+            "path": "scripts/rust-integration/vod-ingestion-source58/index.json",
+            "scope": "Source58 three natural HTTP cases, fresh basic Movies and empty Series.",
+            "sha256": "3bf917a84d904cc1a5d00948c6772d0991fb625e5142e76a25bcb5a4c6be5cdd"
+          },
+          {
+            "path": "scripts/rust-integration/milestone-batch40/application/Native61-vod.json",
+            "scope": "Candidate40 passes the same bounded three-case Native workflow.",
+            "sha256": "ea939af2f428f5b4140e9adf0bd550fbbd61e1682dcf7ca2a33c61dcd4ea5abf"
+          },
+          {
+            "path": "scripts/rust-integration/vod-repeat-source1/offline-correction.json",
+            "scope": "Five repeat business captures qualified offline after correcting inactive-account catalogue visibility; original controller1/4pass1fail remains literal.",
+            "sha256": "82af69ebaa384cf70aa6ee185ffd97511d366474091288f0ff787da402873ec7"
+          }
+        ],
+        "remaining_required_scope": "Actual Native repeat comparison, nonempty Series, metadata/languages/external IDs/episodes, automatic M3U-to-VOD and wider failure/concurrency/role domains.",
+        "full_cell_accepted": false
       },
       {
         "id": "python-regex-filters-general-hash",
@@ -122,9 +150,23 @@
       },
       {
         "id": "matching-custom-dummy-offsets",
-        "authority": "SOURCE_REQUIRED",
+        "authority": "scripts/rust-integration/milestone-batch38/Native52/qualification.json",
         "required": true,
-        "Source_extension_needed": true
+        "Source_extension_needed": true,
+        "retained_scoped_authority": [
+          {
+            "path": "scripts/rust-integration/milestone-batch38/Native52/qualification.json",
+            "scope": "Candidate38 all14 Source51-backed matching cases in no-download/absent-model/empty-plugin domain; backend values and ordered event scalar projections only.",
+            "sha256": "888f8fb9285f15b2113d862632dfb9d2fad79f8b28b9344641b0d1594cb25851"
+          },
+          {
+            "path": "scripts/rust-contracts/channel-matching-source51-bindings.json",
+            "scope": "Exact existing Source51 matching definitions, not all method/role/input combinations.",
+            "sha256": "69d62de9764d29ad55abb8acf1208b17d0106ee11bacb4d2236957d79de449e9"
+          }
+        ],
+        "remaining_required_scope": "Model-enabled matching, wider roles/options/concurrency/physical faults, custom/dummy/offset rules and full output fields remain required.",
+        "full_cell_accepted": false
       },
       {
         "id": "stream-rehash-settings-callback",
@@ -190,9 +232,18 @@
       },
       {
         "id": "version200-update-no-update-malformed",
-        "authority": "SOURCE_REQUIRED",
+        "authority": "scripts/rust-job-contracts/m6-missing-source/epoch2/m6-missing-domains/Source-extension.json",
         "required": true,
-        "Source_extension_needed": true
+        "Source_extension_needed": false,
+        "retained_scoped_authority": [
+          {
+            "path": "scripts/rust-job-contracts/m6-missing-source/manifest.json",
+            "scope": "Second epoch actual host0, four version200 no-update/update/repeat/malformed cases; first epoch failures and launch-tool-binding limits remain separate.",
+            "sha256": "c56be2a0bb088efd4a81e39a971af638bbba21ff4b15641d5dbef5a47e853307"
+          }
+        ],
+        "remaining_required_scope": "Current-candidate normal producer/worker/result/effect and default scheduler lineage; wider version/development/fault branches remain outside these four Source cases.",
+        "full_cell_accepted": false
       },
       {
         "id": "scheduler-normal-stop",
@@ -289,9 +340,9 @@
     ]
   },
   "Source_extensions_one_batch": [
-    "per-channel TVG actual worker positive/repeat/missing/dummy/unmapped/refresh-held/owned-INSERT-failure",
-    "owned version endpoint200 update/no-update/malformed; retain existing503 authority",
-    "whole default startup/FIFO and shutdown/restart recovery if readiness permits"
+    "Retain six actual TVG observations from first epoch and four version200 observations from second epoch in scripts/rust-job-contracts/m6-missing-source; do not replay them solely to repair old host status.",
+    "Characterize only unobserved TVG refresh-held and broader required Source domains through the existing cohort.",
+    "Whole default startup/FIFO and shutdown/restart recovery where required observations remain absent."
   ],
   "no_repeat_old_Source_recording_cases": true,
   "final_candidate_full_batch_after_integration_changes": true,
@@ -311,13 +362,14 @@
     "authority": "producer wire only; body/SQL/task-result still unmeasured"
   },
   "currently_blocking": [
-    "Native TVG-programme whole task",
-    "version positive Source authority/runtime",
-    "normal defaultqueue configured-Series attachment",
-    "full poisoned-owner recovery/longrunning default worker"
+    "Full current-image TVG deferral/fault/role/effect scope beyond retained normal/repeat/P0001 observations.",
+    "Current-candidate version and default-scheduler lineage beyond retained four version200 Source cases; those Source cases are not missing.",
+    "Broader configured-Series/rule/timezone/current default-FIFO integration beyond retained bounded configured/parented recording evidence.",
+    "Full poisoned-owner recovery, durable retry/cancel/restart, provider/metadata/Series/model domains and full-service resource acceptance."
   ],
   "ready_for_app": false,
   "formal_criteria": "docs/rust-milestones.md#M6; full provider/guide/matching/jobs and performance scope, not recording subset",
   "global_dispatch_owner": "Root, shared across all milestone owners",
-  "owner_private_concurrency_pool": false
+  "owner_private_concurrency_pool": false,
+  "reconciliation_scope": "Retained observations identify qualified subsets only. All46 required behavior IDs, fullM6 criteria, application authorization false, ready_for_app false and no-skip/no-replay rules remain unchanged; no new application execution or full cell acceptance."
 }

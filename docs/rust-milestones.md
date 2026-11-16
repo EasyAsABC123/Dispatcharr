@@ -15,8 +15,11 @@ bounded VOD updates and manual commercial detection. Its first Docker build
 fails on a Comskip/shared-media library hash collision; a separately isolated
 runtime bundle is the next correction. No Candidate41 image or Native result
 is qualified. The [Candidate42 successor](rust-milestone-batch42.md) isolates
-those libraries and passes all four SDK59 gates; its Docker and Native checks
-are pending.
+those libraries and passes all four SDK59 gates. Its build passes, while actual
+Comskip invocation fails the package gate on embedded RPATH library selection.
+The [Candidate43 successor](rust-milestone-batch43.md) applies the observed loader
+fix and reusable Docker compilation layout; SDK60 passes all four gates, with
+Docker/package/Native checks pending.
 
 The current packaged [Candidate40](rust-milestone-batch40.md) passes SDK56 with
 1,141 tests and all six package families. One combined application batch passes
@@ -228,7 +231,8 @@ committed Git blobs. It adds plugin actions/managed ZIP installation, remote
 playlist/full-result handling and VLC/grouped-credential input work. Its Docker
 build and application acceptance remain pending.
 
-The latest built runtime is Candidate25 at
+The historical Candidate25–18 build checkpoint below is retained for its original
+scope; the current candidates are listed above. Candidate25 was built at
 `6612ec14757bdfb7f31a3e546ed9a6cbd8a7ad7d`; package and eighteen joined
 physical controls pass; selected Main workflows are qualified across named
 executions, while full milestone/resource acceptance remains open. Candidate24 at
