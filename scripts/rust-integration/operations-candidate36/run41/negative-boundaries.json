@@ -1,0 +1,39 @@
+{
+  "source": "artifacts/rust/normal-graph-batch41-operations-1/fixtures/Native-69fec455/dvr-domain-boundaries/report.json",
+  "sha256": "702e76a45f2d49cabd0b033ff4e2d2eb096744c40328de89a686403d7e125fb0",
+  "status": "failed",
+  "passed_cells": [
+    {
+      "SQL_Beat_DVR_cache_broker_unchanged": true,
+      "name": "POST /api/channels/recordings/",
+      "status": "passed"
+    },
+    {
+      "SQL_Beat_DVR_cache_broker_unchanged": true,
+      "name": "PUT /api/channels/recordings/1/",
+      "status": "passed"
+    },
+    {
+      "SQL_Beat_DVR_cache_broker_unchanged": true,
+      "name": "PATCH /api/channels/recordings/1/",
+      "status": "passed"
+    }
+  ],
+  "Core_actual_HTTP_status": 501,
+  "Core_before_after_source": "artifacts/rust/normal-graph-batch41-operations-1/fixtures/Native-69fec455/dvr-domain-boundaries/private/producer-3.json",
+  "Core_before_after_sha256": "1fe9805ef5e9fcfc0a723e393384ccae04036085c2992759d1c723cbd133665b",
+  "changed_SQL_relations": [
+    "django_celery_beat_periodictask"
+  ],
+  "PeriodicTask_before": {
+    "rows": 9,
+    "sha256": "49f62b7baba8d443c87f2302a069db434cb04d3e9f3ff438fc4d77e051f75279"
+  },
+  "PeriodicTask_after": {
+    "rows": 9,
+    "sha256": "0d5804927016f850069fff77835eb34f88652e45780c3443b021ab50844fbc6c"
+  },
+  "Core_Settings_recording_other_SQL_DVRcache_broker_media_unchanged": true,
+  "cause": "UNATTRIBUTED; full row fields not retained",
+  "queued_normal_revoked_missing_recovery_offsets": "NOT RUN"
+}

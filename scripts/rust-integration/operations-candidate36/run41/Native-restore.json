@@ -1,0 +1,35 @@
+{
+  "source": "artifacts/rust/normal-graph-batch41-operations-1/fixtures/Native-69fec455/backup-restore/report.json",
+  "sha256": "fdfe99db0c0be09e97c9db1dcec49a99d3634fdaf89a88d0acf04d218ddf7163",
+  "status": "failed",
+  "cells": [
+    {
+      "name": "actual_current_schema_archive",
+      "status": "passed"
+    },
+    {
+      "name": "actual_intervening_database_mutation",
+      "status": "passed"
+    },
+    {
+      "name": "actual_REST202_restore_and_post_migrate",
+      "status": "failed",
+      "error_type": "RuntimeError"
+    },
+    {
+      "name": "same_Main_restored_login_settings_channels_and_pool_retirement",
+      "status": "not_run",
+      "reason": "failed actual prerequisite"
+    },
+    {
+      "name": "caught_archive_failure_is_SUCCESS_failed_dict",
+      "status": "passed"
+    },
+    {
+      "name": "actual_normal_Main0",
+      "status": "passed"
+    }
+  ],
+  "whole_restore_accepted": false,
+  "scope": "Current-schema ordinary restore only; no historical/enabled/SQLite/fullmilestone parity"
+}

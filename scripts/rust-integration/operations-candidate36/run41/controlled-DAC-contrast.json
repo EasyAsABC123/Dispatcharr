@@ -1,0 +1,27 @@
+{
+  "source": "artifacts/rust/m8-proc-DAC-readsearch-control-1/report.json",
+  "sha256": "d675702b998a8468784063f7ac86e174ffa534a31197223e801bf3a5513b82d3",
+  "actual_controller_exit": 0,
+  "seconds": 4.711454390999279,
+  "same_sleep_target_and_generation": true,
+  "observations": [
+    {
+      "directory_access": false,
+      "error_type": "PermissionError",
+      "fd_directory_mode": "0o500",
+      "fd_directory_UID": 65532,
+      "effective_capability_mask": 524288
+    },
+    {
+      "directory_access": true,
+      "error_type": null,
+      "fd_directory_mode": "0o500",
+      "fd_directory_UID": 65532,
+      "effective_capability_mask": 524292
+    }
+  ],
+  "all3_control_CIDs_absent": true,
+  "application_started": false,
+  "Main_or_pool8_claimed": false,
+  "scope": "Controlled same-image UID65532 sleep process only. Supports observer-only DAC_READ_SEARCH addition, without proving access on production Main."
+}

@@ -25,9 +25,10 @@ full-service performance acceptance remain open.
 The separate [operations batch](rust-operations-candidate36.md) and
 [unchanged React batch](rust-react-candidate36.md) completed with failed workflow
 checks and independently absent owned containers. Observed restore subcells and
-observer failures retain their actual scope; corrected M8/restore observers are
-running in one Source-first follow-up batch. No new performance acceptance is
-inherited from these attempts.
+observer failures retain their actual scope. Operations41 passes all five Source
+normal-restore checks; Native M8/restore/cancellation remain blocked by the
+process observer, and Source event retirement remains unqualified. No new
+performance acceptance is inherited from these attempts.
 
 The preceding [Candidate35](rust-milestone-batch35.md), runtime
 `b0fc1ab1085ae765cbc978b349f08171066edfff`, passes all four SDK46 gates and
