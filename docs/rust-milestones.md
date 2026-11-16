@@ -9,16 +9,23 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The next [Candidate40 source](rust-milestone-batch40.md) passes SDK56 with 1,141
-tests. It joins the aggregate broker-child correction, real station HTTP
-producers and fresh basic Movie ingestion. One affected eleven-case Native
-batch and clean-commit Docker verifier execution remain pending.
+The current packaged [Candidate40](rust-milestone-batch40.md) passes SDK56 with
+1,141 tests and all six package families. One combined application batch passes
+all eleven cases: aggregate refresh four, real Native station HTTP four and
+fresh basic Movie ingestion three, retaining Source55/53/58 without replay.
+Actual exit is zero in 164.960 seconds; all five fixture containers and recorded
+positive original host PIDs are absent. This delivers the aggregate broker-child
+correction and qualifies the bounded station HTTP and fresh VOD workflows.
+The clean-commit Docker verifier passes both focused public contract groups;
+the full verifier CMD was not executed. Full milestones and
+new matched-work application performance acceptance remain open.
 
-The newest packaged [Candidate39](rust-milestone-batch39.md) passes SDK53 with
+The preceding packaged [Candidate39](rust-milestone-batch39.md) passes SDK53 with
 1,135 tests, the physical 15-statement schema check and all six package families.
 Native57 passes all four station worker/ETA cases. Native56 preserves its actual
 aggregate child-admission failure after a successful zero-active case and parent
-publication; the narrow broker-scope correction awaits a successor image.
+publication; Candidate40's successor correction passes the affected aggregate
+cohort without changing that historical failed result.
 
 The preceding packaged runtime is
 [Candidate38](rust-channel-matching-native.md): all four SDK51 gates pass with

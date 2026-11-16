@@ -1,0 +1,218 @@
+{
+  "one_actual_controller": true,
+  "shared_raw_run": "artifacts/rust/normal-graph-batch59-61-m6-functional-1",
+  "projection_not_independent_run": true,
+  "git_revision": "a119544a2fd2e19ab3934cd40cc9e5c66968ff6b",
+  "image_id": "sha256:ea39fd7ad7dee75b71a6c8df89fd219d2e240f9d4d2be1abefcf717828b48f38",
+  "actual_batch_seconds": 164.96037125299335,
+  "full_milestone_accepted": false,
+  "performance_verified": false,
+  "projection_id": "Native61",
+  "status": "passed",
+  "cases": [
+    {
+      "name": "non-XC-HTTP400-no-publication",
+      "status": "passed",
+      "actual": {
+        "actual_HTTP": 400,
+        "actual_publications": 0,
+        "SQL_and_owned_cache_unchanged": true
+      }
+    },
+    {
+      "name": "disabled-HTTP400-no-publication",
+      "status": "passed",
+      "actual": {
+        "actual_HTTP": 400,
+        "actual_publications": 0,
+        "SQL_and_owned_cache_unchanged": true
+      }
+    },
+    {
+      "name": "natural-HTTP202-fresh-Movies-emptySeries-inline-helpers",
+      "status": "passed",
+      "actual": {
+        "actual_HTTP202": true,
+        "actual_task": "d92d5b8d-e782-4b0c-8f6e-f20449379072",
+        "actual_claimed_backend_SUCCESS": true,
+        "actual_movies": 2,
+        "actual_movie_relations": 2,
+        "actual_category_relations": 3,
+        "actual_series": 0,
+        "actual_children": 0,
+        "actual_TLS_provider_requests": 5,
+        "actual_WS_updates": 2,
+        "actual_catalogue_HTTP200": true,
+        "Source_task_bodies_or_inline_helpers_called_by_observer": false
+      }
+    }
+  ],
+  "actual_backend": {
+    "status": "SUCCESS",
+    "result": "Batch VOD refresh completed for account Owned VOD ingest in 0.04 seconds",
+    "traceback": null,
+    "children": [],
+    "date_done": "2026-11-16T15:51:42.403811+00:00",
+    "task_id": "d92d5b8d-e782-4b0c-8f6e-f20449379072"
+  },
+  "semantic_projection": {
+    "movies": [
+      {
+        "name": "Owned Movie (2020)",
+        "year": 2020,
+        "language": "",
+        "tmdb_id": null,
+        "imdb_id": null,
+        "description": "",
+        "rating": null,
+        "genre": "",
+        "duration_secs": null,
+        "custom_properties": null,
+        "is_adult": false,
+        "logo_id": null
+      },
+      {
+        "name": "Owned Second Movie (2021)",
+        "year": 2021,
+        "language": "",
+        "tmdb_id": null,
+        "imdb_id": null,
+        "description": "",
+        "rating": null,
+        "genre": "",
+        "duration_secs": null,
+        "custom_properties": null,
+        "is_adult": false,
+        "logo_id": null
+      }
+    ],
+    "relations": [
+      {
+        "stream_id": "9101",
+        "movie": "Owned Movie (2020)",
+        "category": "Owned Films",
+        "container_extension": "mp4",
+        "basic_data": {
+          "num": 1,
+          "name": "Owned Movie (2020)",
+          "is_adult": "0",
+          "stream_id": 9101,
+          "category_id": "4",
+          "_category_id": "<owned-movie-category>",
+          "container_extension": "mp4",
+          "_provider_category_id": "4"
+        },
+        "detailed_fetched": false
+      },
+      {
+        "stream_id": "9102",
+        "movie": "Owned Second Movie (2021)",
+        "category": "Owned Films",
+        "container_extension": "mkv",
+        "basic_data": {
+          "num": 2,
+          "name": "Owned Second Movie (2021)",
+          "is_adult": "0",
+          "stream_id": 9102,
+          "category_id": "4",
+          "_category_id": "<owned-movie-category>",
+          "container_extension": "mkv",
+          "_provider_category_id": "4"
+        },
+        "detailed_fetched": false
+      }
+    ],
+    "category_links": [
+      {
+        "name": "Owned Films",
+        "type": "movie",
+        "enabled": true,
+        "custom_properties": {}
+      },
+      {
+        "name": "Uncategorized",
+        "type": "movie",
+        "enabled": true,
+        "custom_properties": {}
+      },
+      {
+        "name": "Uncategorized",
+        "type": "series",
+        "enabled": true,
+        "custom_properties": {}
+      }
+    ],
+    "Series_count": 0,
+    "Episode_count": 0,
+    "queued_inline_helpers": 0,
+    "actual_provider_actions": [
+      null,
+      "get_vod_categories",
+      "get_series_categories",
+      "get_vod_streams",
+      "get_series"
+    ],
+    "actual_VOD_updates": [
+      {
+        "progress": 0,
+        "type": "m3u_refresh",
+        "account": "<owned-account>",
+        "action": "vod_refresh",
+        "status": "processing",
+        "message": "Owned VOD account baseline"
+      },
+      {
+        "progress": 100,
+        "type": "m3u_refresh",
+        "account": "<owned-account>",
+        "action": "vod_refresh",
+        "status": "success",
+        "message": "VOD refresh completed in <duration> seconds"
+      }
+    ],
+    "account_unchanged": true,
+    "SystemEvents_unchanged": true,
+    "owned_Core_cache_unchanged": true,
+    "catalogue_count": 2,
+    "task_status": "SUCCESS",
+    "completion_template": "Batch VOD refresh completed for account Owned VOD ingest in <duration> seconds"
+  },
+  "strict_retained_Source58_comparison_passed": true,
+  "retained_Source58": {
+    "contract": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/vod-ingestion-source58/semantic-contract.json",
+      "sha256": "bf3b58e56d8f36efca8832d081afc1bbb1279d65263eb78936492bbf5434d8bd"
+    },
+    "report": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/vod-ingestion-source58/cases.json",
+      "sha256": "27e026c741c84dae09eb3f21d5e38d4f42c0fc48e03574162996448e055eb0d0"
+    },
+    "execution": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/vod-ingestion-source58/execution.json",
+      "sha256": "ad66c7c5a18b4a94657f728136269f06db0f97f04e5679c907067de2316558b5"
+    },
+    "cleanup": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/vod-ingestion-source58/cleanup.json",
+      "sha256": "6b656d42149f9198d0d4f8756e856476bf024efd758f83db885eb07c255e0e1c"
+    },
+    "qualification": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/vod-ingestion-source58/qualification.json",
+      "sha256": "9b5da57951b73dbbbee1f1f433d7d248ee4f7088cc354c78cf7e2311841ecc29"
+    },
+    "transport": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/vod-ingestion-source58/provider-transport.json",
+      "sha256": "292f21bbde113e37f73b3d7a9e1a1b9d9683bcc3b3fabc8203b92c8283071015"
+    }
+  },
+  "raw_report": {
+    "path": "artifacts/rust/normal-graph-batch59-61-m6-functional-1/fixtures/Native-28ec04fe/vod-ingestion/report.json",
+    "sha256": "4ef895d8cef63e165f26d4e1197e11e4acf19347156ddc7167c2a1947c595c22"
+  },
+  "raw_actual_contract": {
+    "path": "artifacts/rust/normal-graph-batch59-61-m6-functional-1/fixtures/Native-28ec04fe/vod-ingestion/private/actual-contract.json",
+    "sha256": "a5fcf9085cfa2ac25501265fdcbbcdeae76c419ce46323861852a4d2a8d68d7b"
+  },
+  "metadata_update_conflict_language_and_nonempty_Series_parity": false,
+  "auto_M3U_to_VOD_child_qualified": false,
+  "channel_layer_not_browser_WS_transport": true
+}

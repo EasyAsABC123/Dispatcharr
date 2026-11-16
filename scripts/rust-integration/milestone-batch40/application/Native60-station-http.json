@@ -1,0 +1,241 @@
+{
+  "one_actual_controller": true,
+  "shared_raw_run": "artifacts/rust/normal-graph-batch59-61-m6-functional-1",
+  "projection_not_independent_run": true,
+  "git_revision": "a119544a2fd2e19ab3934cd40cc9e5c66968ff6b",
+  "image_id": "sha256:ea39fd7ad7dee75b71a6c8df89fd219d2e240f9d4d2be1abefcf717828b48f38",
+  "actual_batch_seconds": 164.96037125299335,
+  "full_milestone_accepted": false,
+  "performance_verified": false,
+  "projection_id": "Native60",
+  "status": "passed",
+  "Native_HTTP_producers_qualified": true,
+  "cases": [
+    {
+      "name": "natural-create-or-explicit-native-worker",
+      "status": "passed",
+      "actual_HTTP_method": "POST",
+      "actual_HTTP_path": "/api/epg/sources/",
+      "actual_HTTP_status": 201,
+      "actual_task_id": "09fc0561-92a2-4f30-900e-211516f62cd1",
+      "actual_root_id": "09fc0561-92a2-4f30-900e-211516f62cd1",
+      "actual_parent_id": null,
+      "actual_ETA_present": true,
+      "actual_timelimit": [
+        null,
+        null
+      ],
+      "backend_status": "SUCCESS",
+      "backend_result": null,
+      "actual_station_count": 2,
+      "actual_source_status": "success",
+      "actual_programme_rows": 0,
+      "actual_schedule_MD5_rows": 0,
+      "actual_program_MD5_rows": 0,
+      "Source_publisher_fallback": false,
+      "early_actual_ETA_noeffects": {
+        "before_actual_ETA": true,
+        "actual_frame_ETA": "2026-11-16T15:50:57.163665+00:00",
+        "actual_observation_time": "2026-11-16T15:50:55.816900+00:00",
+        "actual_unacked_matches_task_uuid": true,
+        "actual_terminal_backend": null,
+        "actual_station_rows": 0,
+        "actual_source_updated_at": null,
+        "raw_receipt": {
+          "path": "artifacts/rust/normal-graph-batch59-61-m6-functional-1/fixtures/Native-28ec04fe/sd-station-discovery/private/creation-Native-early-no-effects.json",
+          "sha256": "77fad32d39c2995b18c5d3681fe354fe92e20f10d8f23098cc45ac667ce58a7a"
+        },
+        "scope": "Fresh real Native source-create HTTP producer countdown3; no Source publisher fallback, past-frame replay, synthetic queue write or timing rewrite"
+      }
+    },
+    {
+      "name": "natural-lineup-add-or-explicit-native-worker",
+      "status": "passed",
+      "actual_HTTP_method": "POST",
+      "actual_HTTP_path": "/api/epg/sources/3/sd-lineups/",
+      "actual_HTTP_status": 200,
+      "actual_task_id": "ba0be34b-47ff-4fa7-975f-94a3bda0888e",
+      "actual_root_id": "ba0be34b-47ff-4fa7-975f-94a3bda0888e",
+      "actual_parent_id": null,
+      "actual_ETA_present": false,
+      "actual_timelimit": [
+        null,
+        null
+      ],
+      "backend_status": "SUCCESS",
+      "backend_result": null,
+      "actual_station_count": 2,
+      "actual_source_status": "success",
+      "actual_programme_rows": 0,
+      "actual_schedule_MD5_rows": 0,
+      "actual_program_MD5_rows": 0,
+      "Source_publisher_fallback": false
+    },
+    {
+      "name": "partial-detail-error-continues",
+      "status": "passed",
+      "actual_HTTP_method": "POST",
+      "actual_HTTP_path": "/api/epg/sources/",
+      "actual_HTTP_status": 201,
+      "actual_task_id": "c1aeb9fb-460f-4b95-a77b-b54c213031ee",
+      "actual_root_id": "c1aeb9fb-460f-4b95-a77b-b54c213031ee",
+      "actual_parent_id": null,
+      "actual_ETA_present": true,
+      "actual_timelimit": [
+        null,
+        null
+      ],
+      "backend_status": "SUCCESS",
+      "backend_result": null,
+      "actual_station_count": 2,
+      "actual_source_status": "success",
+      "actual_programme_rows": 0,
+      "actual_schedule_MD5_rows": 0,
+      "actual_program_MD5_rows": 0,
+      "Source_publisher_fallback": false,
+      "early_actual_ETA_noeffects": {
+        "before_actual_ETA": true,
+        "actual_frame_ETA": "2026-11-16T15:51:05.633466+00:00",
+        "actual_observation_time": "2026-11-16T15:51:04.317837+00:00",
+        "actual_unacked_matches_task_uuid": true,
+        "actual_terminal_backend": null,
+        "actual_station_rows": 0,
+        "actual_source_updated_at": null,
+        "raw_receipt": {
+          "path": "artifacts/rust/normal-graph-batch59-61-m6-functional-1/fixtures/Native-28ec04fe/sd-station-discovery/private/partial-Native-early-no-effects.json",
+          "sha256": "49b213cc6c01f3a823c81b310865f1fe484f6f8cb9b72a5ec9f06d4c48855916"
+        },
+        "scope": "Fresh real Native source-create HTTP producer countdown3; no Source publisher fallback, past-frame replay, synthetic queue write or timing rewrite"
+      }
+    },
+    {
+      "name": "no-lineups4102-idle-terminal-success",
+      "status": "passed",
+      "actual_HTTP_method": "POST",
+      "actual_HTTP_path": "/api/epg/sources/",
+      "actual_HTTP_status": 201,
+      "actual_task_id": "b496e36b-bd20-440c-8a5e-6627a782ba44",
+      "actual_root_id": "b496e36b-bd20-440c-8a5e-6627a782ba44",
+      "actual_parent_id": null,
+      "actual_ETA_present": true,
+      "actual_timelimit": [
+        null,
+        null
+      ],
+      "backend_status": "SUCCESS",
+      "backend_result": null,
+      "actual_station_count": 0,
+      "actual_source_status": "idle",
+      "actual_programme_rows": 0,
+      "actual_schedule_MD5_rows": 0,
+      "actual_program_MD5_rows": 0,
+      "Source_publisher_fallback": false,
+      "early_actual_ETA_noeffects": {
+        "before_actual_ETA": true,
+        "actual_frame_ETA": "2026-11-16T15:51:10.714289+00:00",
+        "actual_observation_time": "2026-11-16T15:51:09.392415+00:00",
+        "actual_unacked_matches_task_uuid": true,
+        "actual_terminal_backend": null,
+        "actual_station_rows": 0,
+        "actual_source_updated_at": null,
+        "raw_receipt": {
+          "path": "artifacts/rust/normal-graph-batch59-61-m6-functional-1/fixtures/Native-28ec04fe/sd-station-discovery/private/empty4102-Native-early-no-effects.json",
+          "sha256": "ab15c741f1db10911adee97a2a28bbb8c720a2c125304fc772c14a081809996e"
+        },
+        "scope": "Fresh real Native source-create HTTP producer countdown3; no Source publisher fallback, past-frame replay, synthetic queue write or timing rewrite"
+      }
+    }
+  ],
+  "retained_Source53": {
+    "metadata": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/metadata.json",
+      "sha256": "e4a4f681bc2fcaef96fa412f50cbd1ed5c57e53bdfcf379f441a565157dc3327"
+    },
+    "execution": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/execution.json",
+      "sha256": "d3e4be0c56504356787fe6397f620edbb895172f82bdece8ec682cd0dda5f0e9"
+    },
+    "report": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/report.json",
+      "sha256": "7bd689b89a8126d51b3dc065b5ba0ae9466ff602038ce1d8bb168035fbcabfe4"
+    },
+    "independent-cleanup": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/independent-cleanup.json",
+      "sha256": "af0f70b6e5a4cd528505f8ba27dbe5c24a40a968e9d2864a10916da3740843c3"
+    },
+    "transport-trust": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/transport-trust.json",
+      "sha256": "93c8089044f1fb103d1bc0d106c2c426bb4666466a1a644d8dc8a049c0dea1dd"
+    },
+    "creation-actual-frame": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/creation-actual-frame.json",
+      "sha256": "aa7a1915a32c1ceff70d2d0f7b5caba05c3f3456d268b2357ebe7fa3b6515a54"
+    },
+    "creation-backend": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/creation-backend.json",
+      "sha256": "6576808085d269c5ec383e20dcd66386d7a83598cb0f4cb306ca98648b21d041"
+    },
+    "creation-SQL": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/creation-SQL.json",
+      "sha256": "0b3a4b5de9732567af0b80c79df36cac8cb2141e0b901a99292fabeb860aa9d4"
+    },
+    "creation-channel-layer-events": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/creation-channel-layer-events.json",
+      "sha256": "2b3500916534793e1751aabc4cebb09ae834be5182c15aea0455256496aea9b7"
+    },
+    "lineup-add-actual-frame": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/lineup-add-actual-frame.json",
+      "sha256": "96272be76e37259c723f64c614dcdb69184a75bde908f5ade9a4a4157fe91b22"
+    },
+    "lineup-add-backend": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/lineup-add-backend.json",
+      "sha256": "faeb0199d5560bc2f4232d50d8ec4c5dca0a051e9c0252d6cbc030f929239f47"
+    },
+    "lineup-add-SQL": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/lineup-add-SQL.json",
+      "sha256": "0e3041755b406a1c510b3099ce13d24eea139871dbafce1333accf62b71e4e97"
+    },
+    "lineup-add-channel-layer-events": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/lineup-add-channel-layer-events.json",
+      "sha256": "2b3500916534793e1751aabc4cebb09ae834be5182c15aea0455256496aea9b7"
+    },
+    "partial-actual-frame": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/partial-actual-frame.json",
+      "sha256": "c25fe0abcf635bc422d2b61485b61f56767896ef7d350d0b1b6cd35d39efea47"
+    },
+    "partial-backend": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/partial-backend.json",
+      "sha256": "b2e878b7c3d6aeab73c5de6e6daa90b6d63412c723d862050e1651b2ca39eb1d"
+    },
+    "partial-SQL": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/partial-SQL.json",
+      "sha256": "439dc94b2af9d1ed6fd1568b8421fc6996a93524fb4f45d962acd2a136e0984c"
+    },
+    "partial-channel-layer-events": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/partial-channel-layer-events.json",
+      "sha256": "308b383ee5bcaa094471cb0740f65b31e0199fec34fc229049a2191add103017"
+    },
+    "empty4102-actual-frame": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/empty4102-actual-frame.json",
+      "sha256": "90c1897cfb99360aa2e9cb31a7a9d08b442f8e1a64f4e6d3d4e1e7ad0e957963"
+    },
+    "empty4102-backend": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/empty4102-backend.json",
+      "sha256": "51069a28257f0aed600bf97dcb976d31234dd4eb54e155abcf59acdd1f910753"
+    },
+    "empty4102-SQL": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/empty4102-SQL.json",
+      "sha256": "639d425da879743a54b5648a913d818b1fde6770540f21de18da38fa4ec36d32"
+    },
+    "empty4102-channel-layer-events": {
+      "path": "/home/justin/github/Dispatcharr/scripts/rust-integration/channel-stations-source53/empty4102-channel-layer-events.json",
+      "sha256": "f00f0f1069dfd6c3c645ebdcb1caa3f0d35eb234d252d3e67ad05bfdb06dda4e"
+    }
+  },
+  "raw_report": {
+    "path": "artifacts/rust/normal-graph-batch59-61-m6-functional-1/fixtures/Native-28ec04fe/sd-station-discovery/report.json",
+    "sha256": "59b56a33ae661111f3882be0304083c936ce98d089bd75ff928edd6bd5b7d339"
+  },
+  "historical_Native57_worker_only_scope_preserved": true,
+  "channel_layer_not_browser_WS_transport": true
+}

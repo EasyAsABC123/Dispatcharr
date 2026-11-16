@@ -49,7 +49,11 @@ files; the intermediate unchanged-input SDK55 pass remains in local artifacts.
 The verifier's Dockerfile-specific ignore/COPY closure now includes exactly the
 23 public Source51/53/55 authority files required by contract tests, while private
 artifacts remain excluded. Building a verifier image does not run its CMD tests.
-Actual clean-commit verifier execution remains pending. The scoped Source mapping
+The [clean-commit Docker verifier](../scripts/rust-integration/milestone-batch40/verifier/index.json)
+builds successfully and both focused groups exit zero: 23 Source-contract tests
+pass, and the evidence-register group passes its public reproduction/control test
+with one optional private-raw test skipped. Both owned containers are independently
+absent. The full verifier CMD was not executed. The scoped Source mapping
 checks pass; the broader existing register module retains a separately proven
 pre-existing notification digest failure, whose evidence/assertion was not edited.
 
@@ -60,14 +64,39 @@ successfully in 142.248 seconds. Image
 `sha256:ea39fd7ad7dee75b71a6c8df89fd219d2e240f9d4d2be1abefcf717828b48f38`
 passes all [six package-family probes](../scripts/rust-integration/milestone-batch40/package/inventory.json),
 with actual exit zero for every probe. Independent cleanup confirms all 55
-owned container IDs are absent. These checks cover packaging; application
-execution remains pending.
-One controller will run aggregate refresh four phases, real station HTTP four
-phases and VOD ingestion three cases in dependency order, with retained
-Source55/53/58 and no reference business replay. Reuse the existing Compose
-fixture/bootstrap with explicit state and Main-generation boundaries; namespace
-and cleanup failures block further dispatch. Individual case success cannot
-promote the whole batch. Preserve the earlier failed aggregate and raw promotion
-media attempts. Required broader roles, hot cache/update, metadata/Series, plugin,
-concurrency/loss, soak/rollback and paired resource gates remain open. No new
-application CPU or memory gain is claimed by compilation or test counts.
+owned container IDs are absent.
+
+The [combined application batch](../scripts/rust-integration/milestone-batch40/application/qualification.json)
+now passes all 11 required cases in one actual controller, one reused Compose
+bootstrap and three Native contexts, with actual exit zero in 164.960 seconds.
+Standard output/error reached EOF and the process group settled. Database,
+cache and media reset between contexts, and each used a fresh Main generation.
+Source55, Source53 and Source58 remain the retained reference authorities;
+no Source business workflow was replayed. Native59/60/61 are projections of
+this single run, rather than three independent executions.
+
+| Context | Cases passed | Qualified behavior |
+| --- | ---: | --- |
+| Aggregate refresh | 4 | Actual HTTP roots, active-account membership, ordered child claims/results, default custom-account error behavior |
+| Station discovery | 4 | Real Native source-create/lineup HTTP, countdown admission without early effects, station SQL/provider/progress and partial provider failures |
+| Basic VOD ingestion | 3 | Non-XC/disabled rejection without publication; natural HTTP 202 and queue execution, fresh Movies/relations/categories and empty Series |
+
+Station producers use actual Native HTTP with no Source-publisher fallback.
+The VOD success case creates two Movies, two provider relations and three
+category relations, makes five actual TLS provider requests and emits two
+updates; its catalogue read succeeds. These are the bounded fresh-catalogue
+cases, with no metadata/update/nonempty-Series acceptance implied.
+
+[Cleanup](../scripts/rust-integration/milestone-batch40/application/cleanup.json)
+confirms all five fixture container IDs and their recorded positive original
+host PIDs are absent, with empty project container/network/volume inventories.
+The separate UID-probe container is absent; its host process generation was
+not independently captured. A fresh independent read-only cleanup check also
+passes. The [execution record](../scripts/rust-integration/milestone-batch40/application/execution.json)
+binds the exact raw controller, aggregate report and candidate binding by SHA.
+
+The earlier failed aggregate and raw promotion-media attempts remain unchanged.
+Required broader roles, hot cache/update, metadata/Series, plugin,
+concurrency/loss, soak/rollback and paired resource gates remain open. Full M6
+and the overall rewrite remain unaccepted. No new application CPU or memory
+gain is claimed by this functional batch.

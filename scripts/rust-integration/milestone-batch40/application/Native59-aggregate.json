@@ -1,0 +1,119 @@
+{
+  "one_actual_controller": true,
+  "shared_raw_run": "artifacts/rust/normal-graph-batch59-61-m6-functional-1",
+  "projection_not_independent_run": true,
+  "git_revision": "a119544a2fd2e19ab3934cd40cc9e5c66968ff6b",
+  "image_id": "sha256:ea39fd7ad7dee75b71a6c8df89fd219d2e240f9d4d2be1abefcf717828b48f38",
+  "actual_batch_seconds": 164.96037125299335,
+  "full_milestone_accepted": false,
+  "performance_verified": false,
+  "projection_id": "Native59",
+  "status": "passed",
+  "cases": [
+    {
+      "name": "natural-POST-zero-active",
+      "status": "passed",
+      "actual_root": "b0955fe8-c8fe-430b-a1b7-323535dc9f75",
+      "actual_parent_result": "Queued M3U refresh for 0 active account(s).",
+      "actual_direct_children": 0,
+      "actual_child_statuses": [],
+      "actual_child_results": [],
+      "actual_Channels_group_updates": 0,
+      "actual_journal_sha256": "b04dc833bd99298d64a0558fc41e89e7aa65865ab1700513fe9c376a28a3e17e",
+      "actual_member_and_child_order_assertions_passed": true
+    },
+    {
+      "name": "natural-POST-local-STD-whole-children",
+      "status": "passed",
+      "actual_root": "3c578e7a-a768-4c80-b648-0295b94f79e8",
+      "actual_parent_result": "Queued M3U refresh for 2 active account(s).",
+      "actual_direct_children": 2,
+      "actual_child_statuses": [
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "actual_child_results": [
+        "Dispatched jobs complete.",
+        "Dispatched jobs complete."
+      ],
+      "actual_Channels_group_updates": 6,
+      "actual_journal_sha256": "859433e423eb43da8ebd0589006145ce279cff6d0b7b3287f3ddb51b115d189b",
+      "actual_member_and_child_order_assertions_passed": true,
+      "actual_streams": 2,
+      "actual_account_successes": 2
+    },
+    {
+      "name": "natural-POST-XC-caught-error-readonly-cache-miss",
+      "status": "passed",
+      "actual_root": "79c4797a-9b5d-4bd3-855e-e59c3664a7b7",
+      "actual_parent_result": "Queued M3U refresh for 1 active account(s).",
+      "actual_direct_children": 1,
+      "actual_child_statuses": [
+        "SUCCESS"
+      ],
+      "actual_child_results": [
+        "Failed to update m3u account - download failed or other error"
+      ],
+      "actual_Channels_group_updates": 1,
+      "actual_journal_sha256": "bcc7281d1a5388648337969830310f818c82975f009c0056053e3b4ef342b989",
+      "actual_member_and_child_order_assertions_passed": true,
+      "actual_XC_error_is_caught_SUCCESS": true,
+      "Native_cache_miss_preclaim_observed": true
+    },
+    {
+      "name": "natural-POST-mixed-defaultCustom-and-XC-caught-errors",
+      "status": "passed",
+      "actual_root": "5e6c2d98-d3aa-426e-9950-9cce80c15aeb",
+      "actual_parent_result": "Queued M3U refresh for 2 active account(s).",
+      "actual_direct_children": 2,
+      "actual_child_statuses": [
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "actual_child_results": [
+        "Failed to update m3u account - download failed or other error",
+        "Failed to update m3u account - download failed or other error"
+      ],
+      "actual_Channels_group_updates": 2,
+      "actual_journal_sha256": "a4e9a63a9e1dfad879ad14f67dc6098f3069359bb6ec790a9f0f5799e915ad80",
+      "actual_member_and_child_order_assertions_passed": true,
+      "actual_default_custom_caught_error_SUCCESS": true,
+      "actual_default_custom_error_audits": 1
+    }
+  ],
+  "retained_Source55": {
+    "custom_contract": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/mixed-custom-exact-contract.json",
+      "sha256": "7b423961da035e8ef08ab523218c5eec57e0f31a09ce5c4dd8fcdc69c4ad254e"
+    },
+    "report": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/report.json",
+      "sha256": "634bda9396e8119b4fbd851cbaf6fe0777c24e48570611ae0735c5b5e5085a65"
+    },
+    "execution": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/dispatch/execution.json",
+      "sha256": "28aa2fb81cdb47585d774396b089b08db5386f9dbc4c0bafdae6abcf7c222404"
+    },
+    "cleanup": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/Ops-independent-cleanup.json",
+      "sha256": "2a17661e179e3c91d8bb30e316474fc4a6e8e63162fcecd79e1d07ae4a8b66f4"
+    },
+    "binding": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/binding.json",
+      "sha256": "9a5a07711da1222f45dbbf0b45e57227fa0b8a6b423cc7dbf8757ef977161623"
+    },
+    "aggregate": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/results/report.json",
+      "sha256": "be4ea562ce9d63446a7d227628e9bf3951b7e637ecf062bc35a03b9d699af756"
+    }
+  },
+  "actual_direct_children_total": 5,
+  "actual_default_custom_SQL_audit_WS_source_comparison_passed": true,
+  "actual_error_result_is_caught_SUCCESS_not_ingestion_success": true,
+  "raw_report": {
+    "path": "artifacts/rust/normal-graph-batch59-61-m6-functional-1/fixtures/Native-28ec04fe/m6-m3u-refresh-all/report.json",
+    "sha256": "cf082e2828818e0588d6d61fde74f7c33903634124fb979198fc98c83574b760"
+  },
+  "prior_Native56_failure_preserved": true,
+  "general_custom_provider_parity": false
+}
