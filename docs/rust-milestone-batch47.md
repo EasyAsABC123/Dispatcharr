@@ -9,7 +9,7 @@ The existing bounded CA loader is now shared with that manual factory, preservin
 certificate verification, override precedence, manual redirects and cookie
 ownership. Missing or invalid selected overrides remain errors.
 
-Four new Original application refresh cases pass with actual exit0 in105.983
+Four [new Original application refresh cases](rust-advanced-series-source1.md) pass with actual exit0 in105.983
 seconds: sparse list preservation of detailed Series/Episodes, repeat refresh,
 pruning descendants and a yearless identity replacement. Source metadata, UUIDs,
 clock transitions, relation flags, full support rows and all11 sequences are
