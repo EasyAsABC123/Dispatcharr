@@ -62,8 +62,16 @@ all UserAgent rows, records Source's effective Dispatcharr0.33.0 fallback, force
 the cold Native default path, then restores the exact prior Core row and four
 named cache states after Main/roles stop. All four actual prior cache keys were
 absent; broader cache equivalence is not claimed. Earlier failed evidence stays
-unchanged. This qualifies the private functional cohort; clean public29 execution
-and fresh paired resource acceptance remain pending. Source4 and unit checks alone do not
+unchanged. This qualifies the private functional cohort. A separate
+[clean public29 execution](../scripts/rust-integration/milestone-batch47/public-application/qualification.json)
+also passes all six contexts with actual outer exit0 in347.129 seconds and inner
+exit0 in346.478 seconds. All29 helper hashes,32 UID-readable files,33 Source
+references and1,444 Rust inputs match the clean a7c18b3e archive. Safe Source5
+login redaction changes no expected SQL/body/sequence/header behavior. Nine exact
+containers including UID, eight captured positive host PIDs and owned project
+resources are independently absent. The fast UID probe's host PID was not captured.
+This validates the public runner without Source replay or image rebuild. Fresh
+paired resource acceptance remains open as detailed below. Source4 and unit checks alone do not
 qualify Native advanced refresh, full provider-info behavior, performance gains
 or any complete M0–M9 milestone. Candidate45's CPU-budget failure remains intact.
 

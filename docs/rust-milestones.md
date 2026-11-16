@@ -16,8 +16,8 @@ gates with1,158 tests; physical37-statement/10-control schema checks pass. Its
 committed source builds, passes six package families and the combined six-context
 Native cohort (including provider-info5 and advanced-Series4). Its fresh12-phase
 viewing study is valid but fails one CPU pair (0.9284 >0.90); observed CPU/working
-memory estimates fall about10.6%/70.7%. Clean public29 execution and resource
-acceptance remain pending.
+memory estimates fall about10.6%/70.7%. The clean public29 six-context run also
+passes; resource acceptance and full milestones remain open.
 
 [Candidate46](rust-milestone-batch46.md) reuses compiled queue observation scripts
 and passes all four SDK63 gates (1,148 tests) plus three explicit physical Redis

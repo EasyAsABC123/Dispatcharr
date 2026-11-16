@@ -126,3 +126,39 @@ Python strings as well as ordinary host imports. Catalogue receiver setup uses
 module-import audit. Preserve the actual omitted-module failure and add the exact
 frozen guest helper with its recursive imports and mount path. Then execute the
 complete affected public cohort; static byte equality with a subset is insufficient.
+
+## Compare complete state and control observer cost
+
+Advanced-Series characterization exposed four ID-allocation differences that
+entity counts alone missed. PostgreSQL `INSERT ... ON CONFLICT DO NOTHING` can
+consume a sequence value even when no row is created. Preserve Source's actual
+get-or-create versus bulk-insert behavior, including deliberate conflict burns;
+compare all relevant support rows and sequences. Never normalize IDs or sequence
+state away to make an otherwise similar import pass.
+
+Shared integration bootstrap is also part of a case's prerequisites. Provider-info
+used the configured TiviMate default while its standalone Source reference used
+Dispatcharr's fallback. Restore the Source-equivalent setting in that owned
+context, verify effective Source getters and actual Native headers, and restore
+prior settings before another context. Keep account foreign keys and agent rows
+unchanged. Canonicalize complete model rows with a lossless datetime encoder
+before comparing them with JSON snapshots. Cache snapshots need atomic value and
+absolute-expiry capture; restore only after actual Main/role retirement, retaining
+natural expiry and all failed teardown outcomes.
+
+The Candidate47 viewing study retains its CPU-budget miss despite every phase's
+valid output. Infrastructure cgroup CPU includes short-lived sampler children;
+two process-endpoint inventories cannot attribute that transient work. Include
+observer costs exactly as declared and preserve the failure. A persistent observer
+is a new instrumentation protocol, requiring fresh Source/Native qualification
+and all fresh paired phases. It is not a Rust application optimization or grounds
+for subtracting historical cost. Match inherited `REDISCLI_AUTH`, query order,
+Lua, cadence and database; killing Docker's CLI alone cannot prove an exec guest
+retired. Verify the actual guest/host PID generation and cgroup and bound all pipes,
+sockets, deadlines and fallback cleanup.
+
+Validate script readability using the actual child UID at its direct mount. A
+root-owned helper wrapper or copied support file can be readable while the proxy's
+separately mounted original remains0700/0600. Mode-only repairs must preserve
+payload hashes and failed startup receipts; verify the corrected UID before
+another complete run.

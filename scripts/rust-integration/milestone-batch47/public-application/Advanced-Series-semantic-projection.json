@@ -1,0 +1,4720 @@
+{
+  "phase_chain": {
+    "phase1_to_phase2": "exact_raw_state",
+    "phase2_to_phase3": "exact_raw_state",
+    "phase3_to_phase4": "only_declared_four_tables_and_sequences_reseeded"
+  },
+  "phases": {
+    "sparse-list-preserves-detail-and-Episodes": {
+      "before": {
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": "<fixture-account-clock>",
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": true,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": null,
+            "refresh_interval": 24,
+            "refresh_task_id": 1,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-group-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": 1,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "hash_key": "name,url",
+              "enable_vod": true,
+              "probe_numbers": {
+                "large": 100000000000000000000000,
+                "integer": 1,
+                "fraction": 1.5,
+                "integral_float": 2.0
+              },
+              "auto_enable_new_groups_live": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-inactive-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-read-xc",
+            "server_url": "http://example.invalid",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "Owned VOD ingest",
+            "server_url": "https://xc-vod-owned.invalid/xc/player_api.php?discard=1#fragment",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "success",
+            "last_message": "Owned VOD account baseline",
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 6,
+            "name": "Owned VOD disabled",
+            "server_url": "https://xc-vod-owned.invalid/xc",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 7,
+            "name": "Owned VOD non-XC",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "vod_movie": [],
+        "vod_series": [
+          {
+            "id": 1,
+            "uuid": "dc1b7a1c-8fe4-460c-9320-eff67e68694e",
+            "name": "rust-probe-vod-rest-Series0",
+            "description": "Space, drama",
+            "year": 2010,
+            "rating": "8.25",
+            "genre": "Science Fiction",
+            "logo_id": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "fixture": 0
+            },
+            "created_at": "2026-11-11T14:46:14.574104+00:00",
+            "updated_at": "2026-11-11T14:46:14.574109+00:00"
+          }
+        ],
+        "vod_episode": [
+          {
+            "id": 1,
+            "uuid": "b8e039a1-0405-4113-9236-5d2111ed2962",
+            "name": "rust-probe-vod-rest-Episode0-0",
+            "description": null,
+            "air_date": "2026-01-01",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 0
+            },
+            "created_at": "2026-11-11T14:46:14.575576+00:00",
+            "updated_at": "2026-11-11T14:46:14.575581+00:00"
+          },
+          {
+            "id": 2,
+            "uuid": "69d0c0b1-fb23-479a-ba82-2133f228efe1",
+            "name": "rust-probe-vod-rest-Episode0-1",
+            "description": null,
+            "air_date": "2026-01-02",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 2,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 1
+            },
+            "created_at": "2026-11-11T14:46:14.576986+00:00",
+            "updated_at": "2026-11-11T14:46:14.576990+00:00"
+          },
+          {
+            "id": 3,
+            "uuid": "d7e22675-6a6b-4c21-8bd7-d132afd59e7d",
+            "name": "rust-probe-vod-rest-Episode0-2",
+            "description": null,
+            "air_date": "2026-01-03",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": null,
+            "episode_number": 3,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 2
+            },
+            "created_at": "2026-11-11T14:46:14.577733+00:00",
+            "updated_at": "2026-11-11T14:46:14.577738+00:00"
+          },
+          {
+            "id": 13,
+            "uuid": "e45638b5-1c41-4120-8384-2ebcfa208caf",
+            "name": "Refreshed episode",
+            "description": "Episode plot",
+            "air_date": null,
+            "rating": "8.0",
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 4,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": null,
+            "created_at": "2026-11-11T14:46:27.701467+00:00",
+            "updated_at": "2026-11-11T14:46:27.701476+00:00"
+          }
+        ],
+        "vod_m3umovierelation": [],
+        "vod_m3useriesrelation": [
+          {
+            "id": 1,
+            "m3u_account_id": 5,
+            "series_id": 1,
+            "category_id": 2,
+            "external_series_id": "3000",
+            "custom_properties": {
+              "detailed_fetched": true,
+              "episodes_fetched": true
+            },
+            "created_at": "2026-11-11T14:46:14.574712+00:00",
+            "updated_at": "2026-11-11T14:46:27.705134+00:00",
+            "last_episode_refresh": "2026-11-11T14:46:27.705072+00:00",
+            "last_seen": "<seed-or-causal-last-seen>"
+          }
+        ],
+        "vod_m3uepisoderelation": [
+          {
+            "id": 9,
+            "m3u_account_id": 5,
+            "episode_id": 13,
+            "series_relation_id": 1,
+            "stream_id": "refresh-stream-1",
+            "container_extension": "mkv",
+            "custom_properties": {
+              "info": {
+                "id": "refresh-stream-1",
+                "info": {
+                  "plot": "Episode plot",
+                  "rating": "8.0",
+                  "duration_secs": "1800"
+                },
+                "title": "Refreshed episode",
+                "episode_num": "1",
+                "_season_number": 4,
+                "container_extension": "mkv"
+              },
+              "season_number": 4
+            },
+            "created_at": "2026-11-11T14:46:27.703117+00:00",
+            "updated_at": "2026-11-11T14:46:27.703128+00:00",
+            "last_seen": "2026-11-11T14:46:27.701276+00:00"
+          }
+        ],
+        "support": {
+          "vod_vodlogo": [
+            {
+              "id": 1,
+              "name": "rust-probe-vod-rest-shared-logo",
+              "url": "https://fixture.invalid/logo.jpg"
+            }
+          ],
+          "vod_vodcategory": [
+            {
+              "id": 2,
+              "name": "rust-probe-vod-rest-Drama",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "vod_m3uvodcategoryrelation": [],
+          "core_systemevent": [
+            {
+              "id": 1,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-01T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": null,
+              "details": {
+                "ordinal": 1,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 2,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-02T03:04:05.123456+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 2,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 3,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-03T03:04:05+00:00",
+              "channel_id": "00000000-0000-0000-0000-000000000000",
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 3,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 4,
+              "event_type": "vod_stop",
+              "timestamp": "2020-01-04T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-display-event",
+              "details": {
+                "owned_fixture": true
+              }
+            }
+          ]
+        },
+        "sequences": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 7,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 13,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 9,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 3,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": "<fixture-account-clock>",
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": true,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": null,
+            "refresh_interval": 24,
+            "refresh_task_id": 1,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-group-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": 1,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "hash_key": "name,url",
+              "enable_vod": true,
+              "probe_numbers": {
+                "large": 100000000000000000000000,
+                "integer": 1,
+                "fraction": 1.5,
+                "integral_float": 2.0
+              },
+              "auto_enable_new_groups_live": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-inactive-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-read-xc",
+            "server_url": "http://example.invalid",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "Owned VOD ingest",
+            "server_url": "https://xc-vod-owned.invalid/xc/player_api.php?discard=1#fragment",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "success",
+            "last_message": "Owned VOD account baseline",
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 6,
+            "name": "Owned VOD disabled",
+            "server_url": "https://xc-vod-owned.invalid/xc",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 7,
+            "name": "Owned VOD non-XC",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "vod_movie": [],
+        "vod_series": [
+          {
+            "id": 1,
+            "uuid": "dc1b7a1c-8fe4-460c-9320-eff67e68694e",
+            "name": "rust-probe-vod-rest-Series0",
+            "description": "Space, drama",
+            "year": 2010,
+            "rating": "8.25",
+            "genre": "Science Fiction",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "fixture": 0,
+              "category_id": "11",
+              "releaseDate": "2010-01-01"
+            },
+            "created_at": "2026-11-11T14:46:14.574104+00:00",
+            "updated_at": "2026-11-11T14:46:14.574109+00:00"
+          }
+        ],
+        "vod_episode": [
+          {
+            "id": 1,
+            "uuid": "b8e039a1-0405-4113-9236-5d2111ed2962",
+            "name": "rust-probe-vod-rest-Episode0-0",
+            "description": null,
+            "air_date": "2026-01-01",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 0
+            },
+            "created_at": "2026-11-11T14:46:14.575576+00:00",
+            "updated_at": "2026-11-11T14:46:14.575581+00:00"
+          },
+          {
+            "id": 2,
+            "uuid": "69d0c0b1-fb23-479a-ba82-2133f228efe1",
+            "name": "rust-probe-vod-rest-Episode0-1",
+            "description": null,
+            "air_date": "2026-01-02",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 2,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 1
+            },
+            "created_at": "2026-11-11T14:46:14.576986+00:00",
+            "updated_at": "2026-11-11T14:46:14.576990+00:00"
+          },
+          {
+            "id": 3,
+            "uuid": "d7e22675-6a6b-4c21-8bd7-d132afd59e7d",
+            "name": "rust-probe-vod-rest-Episode0-2",
+            "description": null,
+            "air_date": "2026-01-03",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": null,
+            "episode_number": 3,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 2
+            },
+            "created_at": "2026-11-11T14:46:14.577733+00:00",
+            "updated_at": "2026-11-11T14:46:14.577738+00:00"
+          },
+          {
+            "id": 13,
+            "uuid": "e45638b5-1c41-4120-8384-2ebcfa208caf",
+            "name": "Refreshed episode",
+            "description": "Episode plot",
+            "air_date": null,
+            "rating": "8.0",
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 4,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": null,
+            "created_at": "2026-11-11T14:46:27.701467+00:00",
+            "updated_at": "2026-11-11T14:46:27.701476+00:00"
+          }
+        ],
+        "vod_m3umovierelation": [],
+        "vod_m3useriesrelation": [
+          {
+            "id": 1,
+            "m3u_account_id": 5,
+            "series_id": 1,
+            "category_id": 2,
+            "external_series_id": "3000",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "rust-probe-vod-rest-Series0",
+                "series_id": 3000,
+                "category_id": "11",
+                "releaseDate": "2010-01-01",
+                "_category_id": 2,
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": true,
+              "episodes_fetched": true
+            },
+            "created_at": "2026-11-11T14:46:14.574712+00:00",
+            "updated_at": "2026-11-11T14:46:27.705134+00:00",
+            "last_episode_refresh": "2026-11-11T14:46:27.705072+00:00",
+            "last_seen": "<seed-or-causal-last-seen>"
+          }
+        ],
+        "vod_m3uepisoderelation": [
+          {
+            "id": 9,
+            "m3u_account_id": 5,
+            "episode_id": 13,
+            "series_relation_id": 1,
+            "stream_id": "refresh-stream-1",
+            "container_extension": "mkv",
+            "custom_properties": {
+              "info": {
+                "id": "refresh-stream-1",
+                "info": {
+                  "plot": "Episode plot",
+                  "rating": "8.0",
+                  "duration_secs": "1800"
+                },
+                "title": "Refreshed episode",
+                "episode_num": "1",
+                "_season_number": 4,
+                "container_extension": "mkv"
+              },
+              "season_number": 4
+            },
+            "created_at": "2026-11-11T14:46:27.703117+00:00",
+            "updated_at": "2026-11-11T14:46:27.703128+00:00",
+            "last_seen": "2026-11-11T14:46:27.701276+00:00"
+          }
+        ],
+        "support": {
+          "vod_vodlogo": [
+            {
+              "id": 1,
+              "name": "rust-probe-vod-rest-shared-logo",
+              "url": "https://fixture.invalid/logo.jpg"
+            }
+          ],
+          "vod_vodcategory": [
+            {
+              "id": 2,
+              "name": "rust-probe-vod-rest-Drama",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 4,
+              "name": "Uncategorized",
+              "category_type": "movie",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 5,
+              "name": "Uncategorized",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "vod_m3uvodcategoryrelation": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "category_id": 2,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 5,
+              "category_id": 4,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 3,
+              "m3u_account_id": 5,
+              "category_id": 5,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "core_systemevent": [
+            {
+              "id": 1,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-01T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": null,
+              "details": {
+                "ordinal": 1,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 2,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-02T03:04:05.123456+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 2,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 3,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-03T03:04:05+00:00",
+              "channel_id": "00000000-0000-0000-0000-000000000000",
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 3,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 4,
+              "event_type": "vod_stop",
+              "timestamp": "2020-01-04T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-display-event",
+              "details": {
+                "owned_fixture": true
+              }
+            }
+          ]
+        },
+        "sequences": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 7,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 13,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 9,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 3,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "clock_effects": {
+        "m3u_m3uaccount/1/updated_at": "unchanged",
+        "m3u_m3uaccount/1/created_at": "unchanged",
+        "m3u_m3uaccount/2/updated_at": "unchanged",
+        "m3u_m3uaccount/2/created_at": "unchanged",
+        "m3u_m3uaccount/3/updated_at": "unchanged",
+        "m3u_m3uaccount/3/created_at": "unchanged",
+        "m3u_m3uaccount/4/updated_at": "unchanged",
+        "m3u_m3uaccount/4/created_at": "unchanged",
+        "m3u_m3uaccount/5/updated_at": "unchanged",
+        "m3u_m3uaccount/5/created_at": "unchanged",
+        "m3u_m3uaccount/6/updated_at": "unchanged",
+        "m3u_m3uaccount/6/created_at": "unchanged",
+        "m3u_m3uaccount/7/updated_at": "unchanged",
+        "m3u_m3uaccount/7/created_at": "unchanged",
+        "vod_series/1/updated_at": "unchanged",
+        "vod_series/1/created_at": "unchanged",
+        "vod_episode/1/updated_at": "unchanged",
+        "vod_episode/1/created_at": "unchanged",
+        "vod_episode/2/updated_at": "unchanged",
+        "vod_episode/2/created_at": "unchanged",
+        "vod_episode/3/updated_at": "unchanged",
+        "vod_episode/3/created_at": "unchanged",
+        "vod_episode/13/updated_at": "unchanged",
+        "vod_episode/13/created_at": "unchanged",
+        "vod_m3useriesrelation/1/updated_at": "unchanged",
+        "vod_m3useriesrelation/1/created_at": "unchanged",
+        "vod_m3useriesrelation/1/last_episode_refresh": "unchanged",
+        "vod_m3useriesrelation/1/last_seen": "changed",
+        "vod_m3uepisoderelation/9/updated_at": "unchanged",
+        "vod_m3uepisoderelation/9/created_at": "unchanged",
+        "vod_m3uepisoderelation/9/last_seen": "unchanged",
+        "vod_vodcategory/2/updated_at": "unchanged",
+        "vod_vodcategory/2/created_at": "unchanged",
+        "vod_vodcategory/4/updated_at": "created",
+        "vod_vodcategory/4/created_at": "created",
+        "vod_vodcategory/5/updated_at": "created",
+        "vod_vodcategory/5/created_at": "created",
+        "vod_m3uvodcategoryrelation/1/updated_at": "created",
+        "vod_m3uvodcategoryrelation/1/created_at": "created",
+        "vod_m3uvodcategoryrelation/2/updated_at": "created",
+        "vod_m3uvodcategoryrelation/2/created_at": "created",
+        "vod_m3uvodcategoryrelation/3/updated_at": "created",
+        "vod_m3uvodcategoryrelation/3/created_at": "created",
+        "core_systemevent/1/timestamp": "unchanged",
+        "core_systemevent/2/timestamp": "unchanged",
+        "core_systemevent/3/timestamp": "unchanged",
+        "core_systemevent/4/timestamp": "unchanged"
+      },
+      "HTTP": {
+        "context": "vod-series-advanced",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "catalogue": {
+        "context": "vod-series-advanced",
+        "method": "GET",
+        "path": "/api/vod/series/?page_size=100",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "count": 1,
+          "next": null,
+          "previous": null,
+          "results": [
+            {
+              "id": 1,
+              "logo": null,
+              "episode_count": 4,
+              "custom_properties": {
+                "fixture": 0,
+                "category_id": "11",
+                "releaseDate": "2010-01-01"
+              },
+              "uuid": "dc1b7a1c-8fe4-460c-9320-eff67e68694e",
+              "name": "rust-probe-vod-rest-Series0",
+              "description": "Space, drama",
+              "year": 2010,
+              "rating": "8.25",
+              "genre": "Science Fiction",
+              "tmdb_id": null,
+              "imdb_id": null,
+              "language": "",
+              "created_at": "2026-11-11T14:46:14.574104Z",
+              "updated_at": "2026-11-11T14:46:14.574109Z"
+            }
+          ]
+        }
+      },
+      "provider": [
+        {
+          "case": "vod-advanced-matching",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 59,
+          "response_sha256": "627001fc8aa10bfef8f596b5b66589916cdfb4b9614adfce4f7f7c3dcb57264d",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-matching",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "1dfe7f4281482e8b24120c08db056b98ca6e981fd79f646ee4123bcf4cf451ec"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 2,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-matching",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "b714fc72935915ac3d55c16ab2edadc64e4bbaed9db386e99808aadf382d8cdb"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 66,
+          "response_sha256": "76569d935884945d2871ad93947b6b1e5c9d25d6b77724feacf0efceced1c990",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-matching",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "5be4700eb8c136893c3b9dad543590b2329684c9c5f04c14416035d741b9b790"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 2,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-matching",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "53bc99f84c3e122726e48034a269688f373a009e30d87f2bccdbc0fe850af132"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 111,
+          "response_sha256": "3d59b7a70c2ff126b05e9515236a7c41ae4c648b26f30e0ac497e31e195ef2e0",
+          "actual_TLS": true
+        }
+      ],
+      "provider_errors": [],
+      "ordered_WS": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 0,
+            "type": "m3u_refresh",
+            "account": 5,
+            "action": "vod_refresh",
+            "status": "processing",
+            "message": "Owned VOD account baseline"
+          },
+          "__asgi_channel__": [
+            "<owned-update-receiver>"
+          ]
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "m3u_refresh",
+            "account": 5,
+            "action": "vod_refresh",
+            "status": "success",
+            "message": "VOD refresh completed in <duration> seconds"
+          },
+          "__asgi_channel__": [
+            "<owned-update-receiver>"
+          ]
+        }
+      ],
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in <duration> seconds",
+        "children": []
+      }
+    },
+    "advanced-catalogue-repeat": {
+      "before": {
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": "<fixture-account-clock>",
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": true,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": null,
+            "refresh_interval": 24,
+            "refresh_task_id": 1,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-group-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": 1,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "hash_key": "name,url",
+              "enable_vod": true,
+              "probe_numbers": {
+                "large": 100000000000000000000000,
+                "integer": 1,
+                "fraction": 1.5,
+                "integral_float": 2.0
+              },
+              "auto_enable_new_groups_live": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-inactive-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-read-xc",
+            "server_url": "http://example.invalid",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "Owned VOD ingest",
+            "server_url": "https://xc-vod-owned.invalid/xc/player_api.php?discard=1#fragment",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "success",
+            "last_message": "Owned VOD account baseline",
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 6,
+            "name": "Owned VOD disabled",
+            "server_url": "https://xc-vod-owned.invalid/xc",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 7,
+            "name": "Owned VOD non-XC",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "vod_movie": [],
+        "vod_series": [
+          {
+            "id": 1,
+            "uuid": "dc1b7a1c-8fe4-460c-9320-eff67e68694e",
+            "name": "rust-probe-vod-rest-Series0",
+            "description": "Space, drama",
+            "year": 2010,
+            "rating": "8.25",
+            "genre": "Science Fiction",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "fixture": 0,
+              "category_id": "11",
+              "releaseDate": "2010-01-01"
+            },
+            "created_at": "2026-11-11T14:46:14.574104+00:00",
+            "updated_at": "2026-11-11T14:46:14.574109+00:00"
+          }
+        ],
+        "vod_episode": [
+          {
+            "id": 1,
+            "uuid": "b8e039a1-0405-4113-9236-5d2111ed2962",
+            "name": "rust-probe-vod-rest-Episode0-0",
+            "description": null,
+            "air_date": "2026-01-01",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 0
+            },
+            "created_at": "2026-11-11T14:46:14.575576+00:00",
+            "updated_at": "2026-11-11T14:46:14.575581+00:00"
+          },
+          {
+            "id": 2,
+            "uuid": "69d0c0b1-fb23-479a-ba82-2133f228efe1",
+            "name": "rust-probe-vod-rest-Episode0-1",
+            "description": null,
+            "air_date": "2026-01-02",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 2,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 1
+            },
+            "created_at": "2026-11-11T14:46:14.576986+00:00",
+            "updated_at": "2026-11-11T14:46:14.576990+00:00"
+          },
+          {
+            "id": 3,
+            "uuid": "d7e22675-6a6b-4c21-8bd7-d132afd59e7d",
+            "name": "rust-probe-vod-rest-Episode0-2",
+            "description": null,
+            "air_date": "2026-01-03",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": null,
+            "episode_number": 3,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 2
+            },
+            "created_at": "2026-11-11T14:46:14.577733+00:00",
+            "updated_at": "2026-11-11T14:46:14.577738+00:00"
+          },
+          {
+            "id": 13,
+            "uuid": "e45638b5-1c41-4120-8384-2ebcfa208caf",
+            "name": "Refreshed episode",
+            "description": "Episode plot",
+            "air_date": null,
+            "rating": "8.0",
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 4,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": null,
+            "created_at": "2026-11-11T14:46:27.701467+00:00",
+            "updated_at": "2026-11-11T14:46:27.701476+00:00"
+          }
+        ],
+        "vod_m3umovierelation": [],
+        "vod_m3useriesrelation": [
+          {
+            "id": 1,
+            "m3u_account_id": 5,
+            "series_id": 1,
+            "category_id": 2,
+            "external_series_id": "3000",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "rust-probe-vod-rest-Series0",
+                "series_id": 3000,
+                "category_id": "11",
+                "releaseDate": "2010-01-01",
+                "_category_id": 2,
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": true,
+              "episodes_fetched": true
+            },
+            "created_at": "2026-11-11T14:46:14.574712+00:00",
+            "updated_at": "2026-11-11T14:46:27.705134+00:00",
+            "last_episode_refresh": "2026-11-11T14:46:27.705072+00:00",
+            "last_seen": "<seed-or-causal-last-seen>"
+          }
+        ],
+        "vod_m3uepisoderelation": [
+          {
+            "id": 9,
+            "m3u_account_id": 5,
+            "episode_id": 13,
+            "series_relation_id": 1,
+            "stream_id": "refresh-stream-1",
+            "container_extension": "mkv",
+            "custom_properties": {
+              "info": {
+                "id": "refresh-stream-1",
+                "info": {
+                  "plot": "Episode plot",
+                  "rating": "8.0",
+                  "duration_secs": "1800"
+                },
+                "title": "Refreshed episode",
+                "episode_num": "1",
+                "_season_number": 4,
+                "container_extension": "mkv"
+              },
+              "season_number": 4
+            },
+            "created_at": "2026-11-11T14:46:27.703117+00:00",
+            "updated_at": "2026-11-11T14:46:27.703128+00:00",
+            "last_seen": "2026-11-11T14:46:27.701276+00:00"
+          }
+        ],
+        "support": {
+          "vod_vodlogo": [
+            {
+              "id": 1,
+              "name": "rust-probe-vod-rest-shared-logo",
+              "url": "https://fixture.invalid/logo.jpg"
+            }
+          ],
+          "vod_vodcategory": [
+            {
+              "id": 2,
+              "name": "rust-probe-vod-rest-Drama",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 4,
+              "name": "Uncategorized",
+              "category_type": "movie",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 5,
+              "name": "Uncategorized",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "vod_m3uvodcategoryrelation": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "category_id": 2,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 5,
+              "category_id": 4,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 3,
+              "m3u_account_id": 5,
+              "category_id": 5,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "core_systemevent": [
+            {
+              "id": 1,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-01T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": null,
+              "details": {
+                "ordinal": 1,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 2,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-02T03:04:05.123456+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 2,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 3,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-03T03:04:05+00:00",
+              "channel_id": "00000000-0000-0000-0000-000000000000",
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 3,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 4,
+              "event_type": "vod_stop",
+              "timestamp": "2020-01-04T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-display-event",
+              "details": {
+                "owned_fixture": true
+              }
+            }
+          ]
+        },
+        "sequences": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 7,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 13,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 9,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 3,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": "<fixture-account-clock>",
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": true,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": null,
+            "refresh_interval": 24,
+            "refresh_task_id": 1,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-group-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": 1,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "hash_key": "name,url",
+              "enable_vod": true,
+              "probe_numbers": {
+                "large": 100000000000000000000000,
+                "integer": 1,
+                "fraction": 1.5,
+                "integral_float": 2.0
+              },
+              "auto_enable_new_groups_live": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-inactive-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-read-xc",
+            "server_url": "http://example.invalid",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "Owned VOD ingest",
+            "server_url": "https://xc-vod-owned.invalid/xc/player_api.php?discard=1#fragment",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "success",
+            "last_message": "Owned VOD account baseline",
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 6,
+            "name": "Owned VOD disabled",
+            "server_url": "https://xc-vod-owned.invalid/xc",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 7,
+            "name": "Owned VOD non-XC",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "vod_movie": [],
+        "vod_series": [
+          {
+            "id": 1,
+            "uuid": "dc1b7a1c-8fe4-460c-9320-eff67e68694e",
+            "name": "rust-probe-vod-rest-Series0",
+            "description": "Space, drama",
+            "year": 2010,
+            "rating": "8.25",
+            "genre": "Science Fiction",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "fixture": 0,
+              "category_id": "11",
+              "releaseDate": "2010-01-01"
+            },
+            "created_at": "2026-11-11T14:46:14.574104+00:00",
+            "updated_at": "2026-11-11T14:46:14.574109+00:00"
+          }
+        ],
+        "vod_episode": [
+          {
+            "id": 1,
+            "uuid": "b8e039a1-0405-4113-9236-5d2111ed2962",
+            "name": "rust-probe-vod-rest-Episode0-0",
+            "description": null,
+            "air_date": "2026-01-01",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 0
+            },
+            "created_at": "2026-11-11T14:46:14.575576+00:00",
+            "updated_at": "2026-11-11T14:46:14.575581+00:00"
+          },
+          {
+            "id": 2,
+            "uuid": "69d0c0b1-fb23-479a-ba82-2133f228efe1",
+            "name": "rust-probe-vod-rest-Episode0-1",
+            "description": null,
+            "air_date": "2026-01-02",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 2,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 1
+            },
+            "created_at": "2026-11-11T14:46:14.576986+00:00",
+            "updated_at": "2026-11-11T14:46:14.576990+00:00"
+          },
+          {
+            "id": 3,
+            "uuid": "d7e22675-6a6b-4c21-8bd7-d132afd59e7d",
+            "name": "rust-probe-vod-rest-Episode0-2",
+            "description": null,
+            "air_date": "2026-01-03",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": null,
+            "episode_number": 3,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 2
+            },
+            "created_at": "2026-11-11T14:46:14.577733+00:00",
+            "updated_at": "2026-11-11T14:46:14.577738+00:00"
+          },
+          {
+            "id": 13,
+            "uuid": "e45638b5-1c41-4120-8384-2ebcfa208caf",
+            "name": "Refreshed episode",
+            "description": "Episode plot",
+            "air_date": null,
+            "rating": "8.0",
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 4,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": null,
+            "created_at": "2026-11-11T14:46:27.701467+00:00",
+            "updated_at": "2026-11-11T14:46:27.701476+00:00"
+          }
+        ],
+        "vod_m3umovierelation": [],
+        "vod_m3useriesrelation": [
+          {
+            "id": 1,
+            "m3u_account_id": 5,
+            "series_id": 1,
+            "category_id": 2,
+            "external_series_id": "3000",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "rust-probe-vod-rest-Series0",
+                "series_id": 3000,
+                "category_id": "11",
+                "releaseDate": "2010-01-01",
+                "_category_id": 2,
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": true,
+              "episodes_fetched": true
+            },
+            "created_at": "2026-11-11T14:46:14.574712+00:00",
+            "updated_at": "2026-11-11T14:46:27.705134+00:00",
+            "last_episode_refresh": "2026-11-11T14:46:27.705072+00:00",
+            "last_seen": "<seed-or-causal-last-seen>"
+          }
+        ],
+        "vod_m3uepisoderelation": [
+          {
+            "id": 9,
+            "m3u_account_id": 5,
+            "episode_id": 13,
+            "series_relation_id": 1,
+            "stream_id": "refresh-stream-1",
+            "container_extension": "mkv",
+            "custom_properties": {
+              "info": {
+                "id": "refresh-stream-1",
+                "info": {
+                  "plot": "Episode plot",
+                  "rating": "8.0",
+                  "duration_secs": "1800"
+                },
+                "title": "Refreshed episode",
+                "episode_num": "1",
+                "_season_number": 4,
+                "container_extension": "mkv"
+              },
+              "season_number": 4
+            },
+            "created_at": "2026-11-11T14:46:27.703117+00:00",
+            "updated_at": "2026-11-11T14:46:27.703128+00:00",
+            "last_seen": "2026-11-11T14:46:27.701276+00:00"
+          }
+        ],
+        "support": {
+          "vod_vodlogo": [
+            {
+              "id": 1,
+              "name": "rust-probe-vod-rest-shared-logo",
+              "url": "https://fixture.invalid/logo.jpg"
+            }
+          ],
+          "vod_vodcategory": [
+            {
+              "id": 2,
+              "name": "rust-probe-vod-rest-Drama",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 4,
+              "name": "Uncategorized",
+              "category_type": "movie",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 5,
+              "name": "Uncategorized",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "vod_m3uvodcategoryrelation": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "category_id": 2,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 5,
+              "category_id": 4,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 3,
+              "m3u_account_id": 5,
+              "category_id": 5,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "core_systemevent": [
+            {
+              "id": 1,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-01T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": null,
+              "details": {
+                "ordinal": 1,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 2,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-02T03:04:05.123456+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 2,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 3,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-03T03:04:05+00:00",
+              "channel_id": "00000000-0000-0000-0000-000000000000",
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 3,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 4,
+              "event_type": "vod_stop",
+              "timestamp": "2020-01-04T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-display-event",
+              "details": {
+                "owned_fixture": true
+              }
+            }
+          ]
+        },
+        "sequences": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 7,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 13,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 9,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "clock_effects": {
+        "m3u_m3uaccount/1/updated_at": "unchanged",
+        "m3u_m3uaccount/1/created_at": "unchanged",
+        "m3u_m3uaccount/2/updated_at": "unchanged",
+        "m3u_m3uaccount/2/created_at": "unchanged",
+        "m3u_m3uaccount/3/updated_at": "unchanged",
+        "m3u_m3uaccount/3/created_at": "unchanged",
+        "m3u_m3uaccount/4/updated_at": "unchanged",
+        "m3u_m3uaccount/4/created_at": "unchanged",
+        "m3u_m3uaccount/5/updated_at": "unchanged",
+        "m3u_m3uaccount/5/created_at": "unchanged",
+        "m3u_m3uaccount/6/updated_at": "unchanged",
+        "m3u_m3uaccount/6/created_at": "unchanged",
+        "m3u_m3uaccount/7/updated_at": "unchanged",
+        "m3u_m3uaccount/7/created_at": "unchanged",
+        "vod_series/1/updated_at": "unchanged",
+        "vod_series/1/created_at": "unchanged",
+        "vod_episode/1/updated_at": "unchanged",
+        "vod_episode/1/created_at": "unchanged",
+        "vod_episode/2/updated_at": "unchanged",
+        "vod_episode/2/created_at": "unchanged",
+        "vod_episode/3/updated_at": "unchanged",
+        "vod_episode/3/created_at": "unchanged",
+        "vod_episode/13/updated_at": "unchanged",
+        "vod_episode/13/created_at": "unchanged",
+        "vod_m3useriesrelation/1/updated_at": "unchanged",
+        "vod_m3useriesrelation/1/created_at": "unchanged",
+        "vod_m3useriesrelation/1/last_episode_refresh": "unchanged",
+        "vod_m3useriesrelation/1/last_seen": "changed",
+        "vod_m3uepisoderelation/9/updated_at": "unchanged",
+        "vod_m3uepisoderelation/9/created_at": "unchanged",
+        "vod_m3uepisoderelation/9/last_seen": "unchanged",
+        "vod_vodcategory/2/updated_at": "unchanged",
+        "vod_vodcategory/2/created_at": "unchanged",
+        "vod_vodcategory/4/updated_at": "unchanged",
+        "vod_vodcategory/4/created_at": "unchanged",
+        "vod_vodcategory/5/updated_at": "unchanged",
+        "vod_vodcategory/5/created_at": "unchanged",
+        "vod_m3uvodcategoryrelation/1/updated_at": "unchanged",
+        "vod_m3uvodcategoryrelation/1/created_at": "unchanged",
+        "vod_m3uvodcategoryrelation/2/updated_at": "unchanged",
+        "vod_m3uvodcategoryrelation/2/created_at": "unchanged",
+        "vod_m3uvodcategoryrelation/3/updated_at": "unchanged",
+        "vod_m3uvodcategoryrelation/3/created_at": "unchanged",
+        "core_systemevent/1/timestamp": "unchanged",
+        "core_systemevent/2/timestamp": "unchanged",
+        "core_systemevent/3/timestamp": "unchanged",
+        "core_systemevent/4/timestamp": "unchanged"
+      },
+      "HTTP": {
+        "context": "vod-series-advanced",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "catalogue": {
+        "context": "vod-series-advanced",
+        "method": "GET",
+        "path": "/api/vod/series/?page_size=100",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "count": 1,
+          "next": null,
+          "previous": null,
+          "results": [
+            {
+              "id": 1,
+              "logo": null,
+              "episode_count": 4,
+              "custom_properties": {
+                "fixture": 0,
+                "category_id": "11",
+                "releaseDate": "2010-01-01"
+              },
+              "uuid": "dc1b7a1c-8fe4-460c-9320-eff67e68694e",
+              "name": "rust-probe-vod-rest-Series0",
+              "description": "Space, drama",
+              "year": 2010,
+              "rating": "8.25",
+              "genre": "Science Fiction",
+              "tmdb_id": null,
+              "imdb_id": null,
+              "language": "",
+              "created_at": "2026-11-11T14:46:14.574104Z",
+              "updated_at": "2026-11-11T14:46:14.574109Z"
+            }
+          ]
+        }
+      },
+      "provider": [
+        {
+          "case": "vod-advanced-matching",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 59,
+          "response_sha256": "627001fc8aa10bfef8f596b5b66589916cdfb4b9614adfce4f7f7c3dcb57264d",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-matching",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "1dfe7f4281482e8b24120c08db056b98ca6e981fd79f646ee4123bcf4cf451ec"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 2,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-matching",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "b714fc72935915ac3d55c16ab2edadc64e4bbaed9db386e99808aadf382d8cdb"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 66,
+          "response_sha256": "76569d935884945d2871ad93947b6b1e5c9d25d6b77724feacf0efceced1c990",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-matching",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "5be4700eb8c136893c3b9dad543590b2329684c9c5f04c14416035d741b9b790"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 2,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-matching",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "53bc99f84c3e122726e48034a269688f373a009e30d87f2bccdbc0fe850af132"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 111,
+          "response_sha256": "3d59b7a70c2ff126b05e9515236a7c41ae4c648b26f30e0ac497e31e195ef2e0",
+          "actual_TLS": true
+        }
+      ],
+      "provider_errors": [],
+      "ordered_WS": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 0,
+            "type": "m3u_refresh",
+            "account": 5,
+            "action": "vod_refresh",
+            "status": "processing",
+            "message": "Owned VOD account baseline"
+          },
+          "__asgi_channel__": [
+            "<owned-update-receiver>"
+          ]
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "m3u_refresh",
+            "account": 5,
+            "action": "vod_refresh",
+            "status": "success",
+            "message": "VOD refresh completed in <duration> seconds"
+          },
+          "__asgi_channel__": [
+            "<owned-update-receiver>"
+          ]
+        }
+      ],
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in <duration> seconds",
+        "children": []
+      }
+    },
+    "prune-cascades-detail-Episodes-and-streams": {
+      "before": {
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": "<fixture-account-clock>",
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": true,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": null,
+            "refresh_interval": 24,
+            "refresh_task_id": 1,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-group-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": 1,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "hash_key": "name,url",
+              "enable_vod": true,
+              "probe_numbers": {
+                "large": 100000000000000000000000,
+                "integer": 1,
+                "fraction": 1.5,
+                "integral_float": 2.0
+              },
+              "auto_enable_new_groups_live": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-inactive-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-read-xc",
+            "server_url": "http://example.invalid",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "Owned VOD ingest",
+            "server_url": "https://xc-vod-owned.invalid/xc/player_api.php?discard=1#fragment",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "success",
+            "last_message": "Owned VOD account baseline",
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 6,
+            "name": "Owned VOD disabled",
+            "server_url": "https://xc-vod-owned.invalid/xc",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 7,
+            "name": "Owned VOD non-XC",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "vod_movie": [],
+        "vod_series": [
+          {
+            "id": 1,
+            "uuid": "dc1b7a1c-8fe4-460c-9320-eff67e68694e",
+            "name": "rust-probe-vod-rest-Series0",
+            "description": "Space, drama",
+            "year": 2010,
+            "rating": "8.25",
+            "genre": "Science Fiction",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "fixture": 0,
+              "category_id": "11",
+              "releaseDate": "2010-01-01"
+            },
+            "created_at": "2026-11-11T14:46:14.574104+00:00",
+            "updated_at": "2026-11-11T14:46:14.574109+00:00"
+          }
+        ],
+        "vod_episode": [
+          {
+            "id": 1,
+            "uuid": "b8e039a1-0405-4113-9236-5d2111ed2962",
+            "name": "rust-probe-vod-rest-Episode0-0",
+            "description": null,
+            "air_date": "2026-01-01",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 0
+            },
+            "created_at": "2026-11-11T14:46:14.575576+00:00",
+            "updated_at": "2026-11-11T14:46:14.575581+00:00"
+          },
+          {
+            "id": 2,
+            "uuid": "69d0c0b1-fb23-479a-ba82-2133f228efe1",
+            "name": "rust-probe-vod-rest-Episode0-1",
+            "description": null,
+            "air_date": "2026-01-02",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 2,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 1
+            },
+            "created_at": "2026-11-11T14:46:14.576986+00:00",
+            "updated_at": "2026-11-11T14:46:14.576990+00:00"
+          },
+          {
+            "id": 3,
+            "uuid": "d7e22675-6a6b-4c21-8bd7-d132afd59e7d",
+            "name": "rust-probe-vod-rest-Episode0-2",
+            "description": null,
+            "air_date": "2026-01-03",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": null,
+            "episode_number": 3,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 2
+            },
+            "created_at": "2026-11-11T14:46:14.577733+00:00",
+            "updated_at": "2026-11-11T14:46:14.577738+00:00"
+          },
+          {
+            "id": 13,
+            "uuid": "e45638b5-1c41-4120-8384-2ebcfa208caf",
+            "name": "Refreshed episode",
+            "description": "Episode plot",
+            "air_date": null,
+            "rating": "8.0",
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 4,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": null,
+            "created_at": "2026-11-11T14:46:27.701467+00:00",
+            "updated_at": "2026-11-11T14:46:27.701476+00:00"
+          }
+        ],
+        "vod_m3umovierelation": [],
+        "vod_m3useriesrelation": [
+          {
+            "id": 1,
+            "m3u_account_id": 5,
+            "series_id": 1,
+            "category_id": 2,
+            "external_series_id": "3000",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "rust-probe-vod-rest-Series0",
+                "series_id": 3000,
+                "category_id": "11",
+                "releaseDate": "2010-01-01",
+                "_category_id": 2,
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": true,
+              "episodes_fetched": true
+            },
+            "created_at": "2026-11-11T14:46:14.574712+00:00",
+            "updated_at": "2026-11-11T14:46:27.705134+00:00",
+            "last_episode_refresh": "2026-11-11T14:46:27.705072+00:00",
+            "last_seen": "<seed-or-causal-last-seen>"
+          }
+        ],
+        "vod_m3uepisoderelation": [
+          {
+            "id": 9,
+            "m3u_account_id": 5,
+            "episode_id": 13,
+            "series_relation_id": 1,
+            "stream_id": "refresh-stream-1",
+            "container_extension": "mkv",
+            "custom_properties": {
+              "info": {
+                "id": "refresh-stream-1",
+                "info": {
+                  "plot": "Episode plot",
+                  "rating": "8.0",
+                  "duration_secs": "1800"
+                },
+                "title": "Refreshed episode",
+                "episode_num": "1",
+                "_season_number": 4,
+                "container_extension": "mkv"
+              },
+              "season_number": 4
+            },
+            "created_at": "2026-11-11T14:46:27.703117+00:00",
+            "updated_at": "2026-11-11T14:46:27.703128+00:00",
+            "last_seen": "2026-11-11T14:46:27.701276+00:00"
+          }
+        ],
+        "support": {
+          "vod_vodlogo": [
+            {
+              "id": 1,
+              "name": "rust-probe-vod-rest-shared-logo",
+              "url": "https://fixture.invalid/logo.jpg"
+            }
+          ],
+          "vod_vodcategory": [
+            {
+              "id": 2,
+              "name": "rust-probe-vod-rest-Drama",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 4,
+              "name": "Uncategorized",
+              "category_type": "movie",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 5,
+              "name": "Uncategorized",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "vod_m3uvodcategoryrelation": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "category_id": 2,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 5,
+              "category_id": 4,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 3,
+              "m3u_account_id": 5,
+              "category_id": 5,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "core_systemevent": [
+            {
+              "id": 1,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-01T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": null,
+              "details": {
+                "ordinal": 1,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 2,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-02T03:04:05.123456+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 2,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 3,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-03T03:04:05+00:00",
+              "channel_id": "00000000-0000-0000-0000-000000000000",
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 3,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 4,
+              "event_type": "vod_stop",
+              "timestamp": "2020-01-04T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-display-event",
+              "details": {
+                "owned_fixture": true
+              }
+            }
+          ]
+        },
+        "sequences": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 7,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 13,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 9,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": "<fixture-account-clock>",
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": true,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": null,
+            "refresh_interval": 24,
+            "refresh_task_id": 1,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-group-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": 1,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "hash_key": "name,url",
+              "enable_vod": true,
+              "probe_numbers": {
+                "large": 100000000000000000000000,
+                "integer": 1,
+                "fraction": 1.5,
+                "integral_float": 2.0
+              },
+              "auto_enable_new_groups_live": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-inactive-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-read-xc",
+            "server_url": "http://example.invalid",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "Owned VOD ingest",
+            "server_url": "https://xc-vod-owned.invalid/xc/player_api.php?discard=1#fragment",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "success",
+            "last_message": "Owned VOD account baseline",
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 6,
+            "name": "Owned VOD disabled",
+            "server_url": "https://xc-vod-owned.invalid/xc",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 7,
+            "name": "Owned VOD non-XC",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "vod_movie": [],
+        "vod_series": [],
+        "vod_episode": [],
+        "vod_m3umovierelation": [],
+        "vod_m3useriesrelation": [],
+        "vod_m3uepisoderelation": [],
+        "support": {
+          "vod_vodlogo": [
+            {
+              "id": 1,
+              "name": "rust-probe-vod-rest-shared-logo",
+              "url": "https://fixture.invalid/logo.jpg"
+            }
+          ],
+          "vod_vodcategory": [
+            {
+              "id": 2,
+              "name": "rust-probe-vod-rest-Drama",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 4,
+              "name": "Uncategorized",
+              "category_type": "movie",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 5,
+              "name": "Uncategorized",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "vod_m3uvodcategoryrelation": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "category_id": 2,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 5,
+              "category_id": 4,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 3,
+              "m3u_account_id": 5,
+              "category_id": 5,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "core_systemevent": [
+            {
+              "id": 1,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-01T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": null,
+              "details": {
+                "ordinal": 1,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 2,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-02T03:04:05.123456+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 2,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 3,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-03T03:04:05+00:00",
+              "channel_id": "00000000-0000-0000-0000-000000000000",
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 3,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 4,
+              "event_type": "vod_stop",
+              "timestamp": "2020-01-04T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-display-event",
+              "details": {
+                "owned_fixture": true
+              }
+            }
+          ]
+        },
+        "sequences": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 7,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 13,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 9,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "clock_effects": {
+        "m3u_m3uaccount/1/updated_at": "unchanged",
+        "m3u_m3uaccount/1/created_at": "unchanged",
+        "m3u_m3uaccount/2/updated_at": "unchanged",
+        "m3u_m3uaccount/2/created_at": "unchanged",
+        "m3u_m3uaccount/3/updated_at": "unchanged",
+        "m3u_m3uaccount/3/created_at": "unchanged",
+        "m3u_m3uaccount/4/updated_at": "unchanged",
+        "m3u_m3uaccount/4/created_at": "unchanged",
+        "m3u_m3uaccount/5/updated_at": "unchanged",
+        "m3u_m3uaccount/5/created_at": "unchanged",
+        "m3u_m3uaccount/6/updated_at": "unchanged",
+        "m3u_m3uaccount/6/created_at": "unchanged",
+        "m3u_m3uaccount/7/updated_at": "unchanged",
+        "m3u_m3uaccount/7/created_at": "unchanged",
+        "vod_vodcategory/2/updated_at": "unchanged",
+        "vod_vodcategory/2/created_at": "unchanged",
+        "vod_vodcategory/4/updated_at": "unchanged",
+        "vod_vodcategory/4/created_at": "unchanged",
+        "vod_vodcategory/5/updated_at": "unchanged",
+        "vod_vodcategory/5/created_at": "unchanged",
+        "vod_m3uvodcategoryrelation/1/updated_at": "unchanged",
+        "vod_m3uvodcategoryrelation/1/created_at": "unchanged",
+        "vod_m3uvodcategoryrelation/2/updated_at": "unchanged",
+        "vod_m3uvodcategoryrelation/2/created_at": "unchanged",
+        "vod_m3uvodcategoryrelation/3/updated_at": "unchanged",
+        "vod_m3uvodcategoryrelation/3/created_at": "unchanged",
+        "core_systemevent/1/timestamp": "unchanged",
+        "core_systemevent/2/timestamp": "unchanged",
+        "core_systemevent/3/timestamp": "unchanged",
+        "core_systemevent/4/timestamp": "unchanged"
+      },
+      "HTTP": {
+        "context": "vod-series-advanced",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "catalogue": {
+        "context": "vod-series-advanced",
+        "method": "GET",
+        "path": "/api/vod/series/?page_size=100",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "count": 0,
+          "next": null,
+          "previous": null,
+          "results": []
+        }
+      },
+      "provider": [
+        {
+          "case": "vod-advanced-empty",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 59,
+          "response_sha256": "627001fc8aa10bfef8f596b5b66589916cdfb4b9614adfce4f7f7c3dcb57264d",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-empty",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "1dfe7f4281482e8b24120c08db056b98ca6e981fd79f646ee4123bcf4cf451ec"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 2,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-empty",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "b714fc72935915ac3d55c16ab2edadc64e4bbaed9db386e99808aadf382d8cdb"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 66,
+          "response_sha256": "76569d935884945d2871ad93947b6b1e5c9d25d6b77724feacf0efceced1c990",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-empty",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "5be4700eb8c136893c3b9dad543590b2329684c9c5f04c14416035d741b9b790"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 2,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-empty",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "53bc99f84c3e122726e48034a269688f373a009e30d87f2bccdbc0fe850af132"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 2,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "actual_TLS": true
+        }
+      ],
+      "provider_errors": [],
+      "ordered_WS": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 0,
+            "type": "m3u_refresh",
+            "account": 5,
+            "action": "vod_refresh",
+            "status": "processing",
+            "message": "Owned VOD account baseline"
+          },
+          "__asgi_channel__": [
+            "<owned-update-receiver>"
+          ]
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "m3u_refresh",
+            "account": 5,
+            "action": "vod_refresh",
+            "status": "success",
+            "message": "VOD refresh completed in <duration> seconds"
+          },
+          "__asgi_channel__": [
+            "<owned-update-receiver>"
+          ]
+        }
+      ],
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in <duration> seconds",
+        "children": []
+      }
+    },
+    "yearless-list-reassigns-and-cascades-old-details": {
+      "before": {
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": "<fixture-account-clock>",
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": true,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": null,
+            "refresh_interval": 24,
+            "refresh_task_id": 1,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-group-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": 1,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "hash_key": "name,url",
+              "enable_vod": true,
+              "probe_numbers": {
+                "large": 100000000000000000000000,
+                "integer": 1,
+                "fraction": 1.5,
+                "integral_float": 2.0
+              },
+              "auto_enable_new_groups_live": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-inactive-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-read-xc",
+            "server_url": "http://example.invalid",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "Owned VOD ingest",
+            "server_url": "https://xc-vod-owned.invalid/xc/player_api.php?discard=1#fragment",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "success",
+            "last_message": "Owned VOD account baseline",
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 6,
+            "name": "Owned VOD disabled",
+            "server_url": "https://xc-vod-owned.invalid/xc",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 7,
+            "name": "Owned VOD non-XC",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "vod_movie": [],
+        "vod_series": [
+          {
+            "id": 1,
+            "uuid": "dc1b7a1c-8fe4-460c-9320-eff67e68694e",
+            "name": "rust-probe-vod-rest-Series0",
+            "description": "Space, drama",
+            "year": 2010,
+            "rating": "8.25",
+            "genre": "Science Fiction",
+            "logo_id": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "fixture": 0
+            },
+            "created_at": "2026-11-11T14:46:14.574104+00:00",
+            "updated_at": "2026-11-11T14:46:14.574109+00:00"
+          }
+        ],
+        "vod_episode": [
+          {
+            "id": 1,
+            "uuid": "b8e039a1-0405-4113-9236-5d2111ed2962",
+            "name": "rust-probe-vod-rest-Episode0-0",
+            "description": null,
+            "air_date": "2026-01-01",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 0
+            },
+            "created_at": "2026-11-11T14:46:14.575576+00:00",
+            "updated_at": "2026-11-11T14:46:14.575581+00:00"
+          },
+          {
+            "id": 2,
+            "uuid": "69d0c0b1-fb23-479a-ba82-2133f228efe1",
+            "name": "rust-probe-vod-rest-Episode0-1",
+            "description": null,
+            "air_date": "2026-01-02",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 1,
+            "episode_number": 2,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 1
+            },
+            "created_at": "2026-11-11T14:46:14.576986+00:00",
+            "updated_at": "2026-11-11T14:46:14.576990+00:00"
+          },
+          {
+            "id": 3,
+            "uuid": "d7e22675-6a6b-4c21-8bd7-d132afd59e7d",
+            "name": "rust-probe-vod-rest-Episode0-2",
+            "description": null,
+            "air_date": "2026-01-03",
+            "rating": null,
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": null,
+            "episode_number": 3,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": {
+              "fixture": 2
+            },
+            "created_at": "2026-11-11T14:46:14.577733+00:00",
+            "updated_at": "2026-11-11T14:46:14.577738+00:00"
+          },
+          {
+            "id": 13,
+            "uuid": "e45638b5-1c41-4120-8384-2ebcfa208caf",
+            "name": "Refreshed episode",
+            "description": "Episode plot",
+            "air_date": null,
+            "rating": "8.0",
+            "duration_secs": 1800,
+            "series_id": 1,
+            "season_number": 4,
+            "episode_number": 1,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "custom_properties": null,
+            "created_at": "2026-11-11T14:46:27.701467+00:00",
+            "updated_at": "2026-11-11T14:46:27.701476+00:00"
+          }
+        ],
+        "vod_m3umovierelation": [],
+        "vod_m3useriesrelation": [
+          {
+            "id": 1,
+            "m3u_account_id": 5,
+            "series_id": 1,
+            "category_id": 2,
+            "external_series_id": "3000",
+            "custom_properties": {
+              "detailed_fetched": true,
+              "episodes_fetched": true
+            },
+            "created_at": "2026-11-11T14:46:14.574712+00:00",
+            "updated_at": "2026-11-11T14:46:27.705134+00:00",
+            "last_episode_refresh": "2026-11-11T14:46:27.705072+00:00",
+            "last_seen": "<seed-or-causal-last-seen>"
+          }
+        ],
+        "vod_m3uepisoderelation": [
+          {
+            "id": 9,
+            "m3u_account_id": 5,
+            "episode_id": 13,
+            "series_relation_id": 1,
+            "stream_id": "refresh-stream-1",
+            "container_extension": "mkv",
+            "custom_properties": {
+              "info": {
+                "id": "refresh-stream-1",
+                "info": {
+                  "plot": "Episode plot",
+                  "rating": "8.0",
+                  "duration_secs": "1800"
+                },
+                "title": "Refreshed episode",
+                "episode_num": "1",
+                "_season_number": 4,
+                "container_extension": "mkv"
+              },
+              "season_number": 4
+            },
+            "created_at": "2026-11-11T14:46:27.703117+00:00",
+            "updated_at": "2026-11-11T14:46:27.703128+00:00",
+            "last_seen": "2026-11-11T14:46:27.701276+00:00"
+          }
+        ],
+        "support": {
+          "vod_vodlogo": [
+            {
+              "id": 1,
+              "name": "rust-probe-vod-rest-shared-logo",
+              "url": "https://fixture.invalid/logo.jpg"
+            }
+          ],
+          "vod_vodcategory": [
+            {
+              "id": 2,
+              "name": "rust-probe-vod-rest-Drama",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 4,
+              "name": "Uncategorized",
+              "category_type": "movie",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 5,
+              "name": "Uncategorized",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "vod_m3uvodcategoryrelation": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "category_id": 2,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 5,
+              "category_id": 4,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 3,
+              "m3u_account_id": 5,
+              "category_id": 5,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "core_systemevent": [
+            {
+              "id": 1,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-01T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": null,
+              "details": {
+                "ordinal": 1,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 2,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-02T03:04:05.123456+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 2,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 3,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-03T03:04:05+00:00",
+              "channel_id": "00000000-0000-0000-0000-000000000000",
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 3,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 4,
+              "event_type": "vod_stop",
+              "timestamp": "2020-01-04T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-display-event",
+              "details": {
+                "owned_fixture": true
+              }
+            }
+          ]
+        },
+        "sequences": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 7,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 13,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 9,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "after": {
+        "m3u_m3uaccount": [
+          {
+            "id": 1,
+            "name": "custom",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": "<fixture-account-clock>",
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": true,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": null,
+            "refresh_interval": 24,
+            "refresh_task_id": 1,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-group-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": 1,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "hash_key": "name,url",
+              "enable_vod": true,
+              "probe_numbers": {
+                "large": 100000000000000000000000,
+                "integer": 1,
+                "fraction": 1.5,
+                "integral_float": 2.0
+              },
+              "auto_enable_new_groups_live": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-inactive-provider",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-read-xc",
+            "server_url": "http://example.invalid",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "Owned VOD ingest",
+            "server_url": "https://xc-vod-owned.invalid/xc/player_api.php?discard=1#fragment",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "success",
+            "last_message": "Owned VOD account baseline",
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 6,
+            "name": "Owned VOD disabled",
+            "server_url": "https://xc-vod-owned.invalid/xc",
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": 4,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "XC",
+            "username": "<fixture-credential>",
+            "password": "<fixture-credential>",
+            "custom_properties": {
+              "enable_vod": false
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 7,
+            "name": "Owned VOD non-XC",
+            "server_url": null,
+            "file_path": null,
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "<fixture-account-clock>",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {
+              "enable_vod": true
+            },
+            "refresh_interval": 0,
+            "refresh_task_id": null,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "vod_movie": [],
+        "vod_series": [
+          {
+            "id": 5,
+            "uuid": "<new-Series-UUIDv4>",
+            "name": "rust-probe-vod-rest-Series0",
+            "description": "",
+            "year": null,
+            "rating": null,
+            "genre": "",
+            "logo_id": null,
+            "tmdb_id": null,
+            "imdb_id": null,
+            "language": "",
+            "custom_properties": {
+              "category_id": "11"
+            },
+            "created_at": "<causal-created-clock>",
+            "updated_at": "<causal-created-clock>"
+          }
+        ],
+        "vod_episode": [],
+        "vod_m3umovierelation": [],
+        "vod_m3useriesrelation": [
+          {
+            "id": 1,
+            "m3u_account_id": 5,
+            "series_id": 5,
+            "category_id": 2,
+            "external_series_id": "3000",
+            "custom_properties": {
+              "basic_data": {
+                "num": 1,
+                "name": "rust-probe-vod-rest-Series0",
+                "series_id": 3000,
+                "category_id": "11",
+                "_category_id": 2,
+                "_provider_category_id": "11"
+              },
+              "detailed_fetched": false,
+              "episodes_fetched": false
+            },
+            "created_at": "2026-11-11T14:46:14.574712+00:00",
+            "updated_at": "2026-11-11T14:46:27.705134+00:00",
+            "last_episode_refresh": "2026-11-11T14:46:27.705072+00:00",
+            "last_seen": "<seed-or-causal-last-seen>"
+          }
+        ],
+        "vod_m3uepisoderelation": [],
+        "support": {
+          "vod_vodlogo": [
+            {
+              "id": 1,
+              "name": "rust-probe-vod-rest-shared-logo",
+              "url": "https://fixture.invalid/logo.jpg"
+            }
+          ],
+          "vod_vodcategory": [
+            {
+              "id": 2,
+              "name": "rust-probe-vod-rest-Drama",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 4,
+              "name": "Uncategorized",
+              "category_type": "movie",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 5,
+              "name": "Uncategorized",
+              "category_type": "series",
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "vod_m3uvodcategoryrelation": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "category_id": 2,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 5,
+              "category_id": 4,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            },
+            {
+              "id": 3,
+              "m3u_account_id": 5,
+              "category_id": 5,
+              "enabled": true,
+              "custom_properties": {},
+              "created_at": "<fixture-or-causal-support-clock>",
+              "updated_at": "<fixture-or-causal-support-clock>"
+            }
+          ],
+          "core_systemevent": [
+            {
+              "id": 1,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-01T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": null,
+              "details": {
+                "ordinal": 1,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 2,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-02T03:04:05.123456+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 2,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 3,
+              "event_type": "rust-probe-event-kind",
+              "timestamp": "2020-01-03T03:04:05+00:00",
+              "channel_id": "00000000-0000-0000-0000-000000000000",
+              "channel_name": "rust-probe-event",
+              "details": {
+                "ordinal": 3,
+                "fraction": 1.5,
+                "integral": 2.0
+              }
+            },
+            {
+              "id": 4,
+              "event_type": "vod_stop",
+              "timestamp": "2020-01-04T03:04:05+00:00",
+              "channel_id": null,
+              "channel_name": "rust-probe-display-event",
+              "details": {
+                "owned_fixture": true
+              }
+            }
+          ]
+        },
+        "sequences": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 7,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 13,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 9,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 6,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "clock_effects": {
+        "m3u_m3uaccount/1/updated_at": "unchanged",
+        "m3u_m3uaccount/1/created_at": "unchanged",
+        "m3u_m3uaccount/2/updated_at": "unchanged",
+        "m3u_m3uaccount/2/created_at": "unchanged",
+        "m3u_m3uaccount/3/updated_at": "unchanged",
+        "m3u_m3uaccount/3/created_at": "unchanged",
+        "m3u_m3uaccount/4/updated_at": "unchanged",
+        "m3u_m3uaccount/4/created_at": "unchanged",
+        "m3u_m3uaccount/5/updated_at": "unchanged",
+        "m3u_m3uaccount/5/created_at": "unchanged",
+        "m3u_m3uaccount/6/updated_at": "unchanged",
+        "m3u_m3uaccount/6/created_at": "unchanged",
+        "m3u_m3uaccount/7/updated_at": "unchanged",
+        "m3u_m3uaccount/7/created_at": "unchanged",
+        "vod_series/5/updated_at": "created",
+        "vod_series/5/created_at": "created",
+        "vod_m3useriesrelation/1/updated_at": "unchanged",
+        "vod_m3useriesrelation/1/created_at": "unchanged",
+        "vod_m3useriesrelation/1/last_episode_refresh": "unchanged",
+        "vod_m3useriesrelation/1/last_seen": "changed",
+        "vod_vodcategory/2/updated_at": "unchanged",
+        "vod_vodcategory/2/created_at": "unchanged",
+        "vod_vodcategory/4/updated_at": "unchanged",
+        "vod_vodcategory/4/created_at": "unchanged",
+        "vod_vodcategory/5/updated_at": "unchanged",
+        "vod_vodcategory/5/created_at": "unchanged",
+        "vod_m3uvodcategoryrelation/1/updated_at": "unchanged",
+        "vod_m3uvodcategoryrelation/1/created_at": "unchanged",
+        "vod_m3uvodcategoryrelation/2/updated_at": "unchanged",
+        "vod_m3uvodcategoryrelation/2/created_at": "unchanged",
+        "vod_m3uvodcategoryrelation/3/updated_at": "unchanged",
+        "vod_m3uvodcategoryrelation/3/created_at": "unchanged",
+        "core_systemevent/1/timestamp": "unchanged",
+        "core_systemevent/2/timestamp": "unchanged",
+        "core_systemevent/3/timestamp": "unchanged",
+        "core_systemevent/4/timestamp": "unchanged"
+      },
+      "HTTP": {
+        "context": "vod-series-advanced",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "catalogue": {
+        "context": "vod-series-advanced",
+        "method": "GET",
+        "path": "/api/vod/series/?page_size=100",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "count": 1,
+          "next": null,
+          "previous": null,
+          "results": [
+            {
+              "id": 5,
+              "logo": null,
+              "episode_count": 0,
+              "custom_properties": {
+                "category_id": "11"
+              },
+              "uuid": "<new-Series-UUIDv4>",
+              "name": "rust-probe-vod-rest-Series0",
+              "description": "",
+              "year": null,
+              "rating": null,
+              "genre": "",
+              "tmdb_id": null,
+              "imdb_id": null,
+              "language": "",
+              "created_at": "<causal-created-clock>",
+              "updated_at": "<causal-created-clock>"
+            }
+          ]
+        }
+      },
+      "provider": [
+        {
+          "case": "vod-advanced-yearless",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 59,
+          "response_sha256": "627001fc8aa10bfef8f596b5b66589916cdfb4b9614adfce4f7f7c3dcb57264d",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-yearless",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "1dfe7f4281482e8b24120c08db056b98ca6e981fd79f646ee4123bcf4cf451ec"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 2,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-yearless",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "b714fc72935915ac3d55c16ab2edadc64e4bbaed9db386e99808aadf382d8cdb"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 66,
+          "response_sha256": "76569d935884945d2871ad93947b6b1e5c9d25d6b77724feacf0efceced1c990",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-yearless",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "5be4700eb8c136893c3b9dad543590b2329684c9c5f04c14416035d741b9b790"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 2,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "actual_TLS": true
+        },
+        {
+          "case": "vod-advanced-yearless",
+          "host": "xc-vod-owned.invalid",
+          "method": "GET",
+          "path": "/xc/player_api.php",
+          "query_sha256": {
+            "username": [
+              "<owned-credential-sha256>"
+            ],
+            "password": [
+              "<owned-credential-sha256>"
+            ],
+            "action": [
+              "53bc99f84c3e122726e48034a269688f373a009e30d87f2bccdbc0fe850af132"
+            ]
+          },
+          "range": null,
+          "actual_user_agent": "dispatcharr-owned-vod-ingestion",
+          "actual_request_headers": {
+            "User-Agent": "dispatcharr-owned-vod-ingestion",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive"
+          },
+          "status": 200,
+          "response_bytes": 84,
+          "response_sha256": "7ece7cbaa74e29a82b822f123b416b6950810cc5f7ba0322acc4fdcf2a4e0093",
+          "actual_TLS": true
+        }
+      ],
+      "provider_errors": [],
+      "ordered_WS": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 0,
+            "type": "m3u_refresh",
+            "account": 5,
+            "action": "vod_refresh",
+            "status": "processing",
+            "message": "Owned VOD account baseline"
+          },
+          "__asgi_channel__": [
+            "<owned-update-receiver>"
+          ]
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "m3u_refresh",
+            "account": 5,
+            "action": "vod_refresh",
+            "status": "success",
+            "message": "VOD refresh completed in <duration> seconds"
+          },
+          "__asgi_channel__": [
+            "<owned-update-receiver>"
+          ]
+        }
+      ],
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in <duration> seconds",
+        "children": []
+      }
+    }
+  }
+}

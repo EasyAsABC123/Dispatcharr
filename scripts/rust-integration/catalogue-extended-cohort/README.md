@@ -5,8 +5,9 @@ model, task and protocol credit.
 
 These29 Python files match the qualified private171-file Candidate47 cohort.
 The private run passes all six contexts with actual exit0 in346.941 seconds,
-settled EOF/process group and independent cleanup. This smaller public closure
-still requires complete clean-checkout execution. It preserves the original four
+settled EOF/process group and independent cleanup. The smaller public closure also passes complete clean-checkout execution
+with actual exit0 in347.129 seconds on committed tools a7c18b3e and the same
+Candidate47 image. It preserves the original four
 contexts and adds provider-info5 and advanced Series4, using one bootstrap and
 fresh DB/cache/media/Main boundaries. Retained Source observations are reused.
 
@@ -35,6 +36,6 @@ restoration remain independently asserted. Source7 advanced authority retains
 all11 sequences and raw phase-chain checks. No header or sequence waiver is added.
 
 Frozen helper trailing blank lines remain intentional checksum-preservation
-exceptions to whitespace checks. Failed attempts stay literal. Clean public-six,
-performance gains and complete migration milestones remain unaccepted until
+exceptions to whitespace checks. Failed attempts stay literal. Clean public-six is qualified by the separate public-application packet.
+Performance gains and complete migration milestones remain unaccepted until
 their required checks pass.
