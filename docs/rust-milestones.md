@@ -19,8 +19,10 @@ named empty-plugin claimed-recording Connect slice, including actual stopped
 and completed events, strict Source payloads, caught delivery failures and
 history trimming. Five unchanged Native47 workflow passes retain their scopes;
 nonempty restart still fails strict media validation. General plugin and
-per-event physical settlement acceptance remain open. Earlier image results
-retain their own scopes. All full milestones and matched-work
+per-event physical settlement acceptance remain open. The [portable recording
+workflow](rust-recording-connect-public-tests.md) also passes its fresh Source→Native
+default pair without private historical captures; full M0 remains open. Earlier
+image results retain their own scopes. All full milestones and matched-work
 performance acceptance remain open.
 
 The preceding source candidate is [Candidate36](rust-milestone-batch36.md), runtime
