@@ -1,0 +1,28 @@
+--- a/cohort/xml_hook_cases.py
++++ b/cohort/xml_hook_cases.py
+@@ -7,6 +7,16 @@
+ from backend_terminal import require_backend_dependency,wait_backend_terminal,BlockedBackendDependency
+ CASE='schedules-direct';ORIGIN='http://127.0.0.1:18097';NAME='Owned local XML scoped hooks'
+ def save(path,value):path.write_text(json.dumps(value,indent=2,sort_keys=True)+'\n')
++def require_local_audit_delta(before,after):
++ # Earlier real scanner tasks may legitimately populate the same source.
++ # Preserve every observed prior row; qualify only this completed task window.
++ prior={row['id']:row for row in before['audit']}
++ current={row['id']:row for row in after['audit']}
++ assert len(prior)==len(before['audit'])and len(current)==len(after['audit'])
++ assert all(ident in current and current[ident]==row for ident,row in prior.items())
++ added=[row for row in after['audit']if row['id']not in prior]
++ assert len(added)==1 and all('chosen'not in row['details']for row in after['audit'])
++ return added[0]
+ def prepare_context(fixture):
+  if fixture.case!=CASE:return
+  root=fixture.case_data/'epgs';root.mkdir(exist_ok=True)
+@@ -45,7 +55,7 @@
+   assert logs['unknown']['status']=='failed'and logs['unknown']['error_message']=="No handler for integration type 'api'"
+   assert'chosen'not in logs['plain']['request_payload']and all(logs[x]['request_payload']['chosen']==NAME for x in ['rejected','invalid','unknown'])
+   assert json.loads(logs['json']['request_payload'])=={'source':NAME}and logs['nan']['request_payload']=='NaN'
+-  assert len(after['audit'])==1 and'chosen'not in after['audit'][0]['details']
++  require_local_audit_delta(before,after)
+   assert base64.b64decode(requests[-1]['body_base64'],validate=True)==b'NaN'
+   row.update(status='passed',actual={'parent':made['id'],'settled_native_children':2,'deliveries':6,'owned_HTTP_requests':5,'shared_template_mutation':True,'actual_backend_SUCCESS':True,'Native_API_producer_parity_claimed':False})
+  except BlockedBackendDependency as error:row.update(status='blocked',reason='ActualNativeCommonCeleryFault',task_produced=False)

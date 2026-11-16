@@ -1,0 +1,395 @@
+{
+  "state": "Grounded observer baseline mismatch: same Source/Native scanner age rule, different actual prepared-file age at natural periodic scan; no production scanner/refresh change",
+  "rows": [
+    {
+      "backend": "Native37",
+      "source_id": 10,
+      "source_name": "Owned local XML scoped hooks",
+      "scanner_publications": [
+        {
+          "epoch": 1794810467.3428617,
+          "task": "core.tasks.scan_and_process_files",
+          "id": "08551f0b-e7bc-4348-8156-995391e9c528",
+          "root_id": "08551f0b-e7bc-4348-8156-995391e9c528",
+          "parent_id": null,
+          "periodic_task_name": "scan-files",
+          "args": [],
+          "kwargs": {},
+          "raw_frame_sha256": "ad9c9496ace4e48fe2d627faf340c1a288ef374a5d27bb1201a24c40b44b7158"
+        },
+        {
+          "epoch": 1794810467.3922324,
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "685a1767-d7a8-41c1-ae31-754f50da3407",
+          "root_id": "08551f0b-e7bc-4348-8156-995391e9c528",
+          "parent_id": "08551f0b-e7bc-4348-8156-995391e9c528",
+          "periodic_task_name": null,
+          "args": [
+            10
+          ],
+          "kwargs": {},
+          "raw_frame_sha256": "fb823a9f3f874590878810f65777a028f9db8918e7f670e85d6f3fbc29261aea"
+        },
+        {
+          "epoch": 1794810467.3988016,
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "9b8b93a1-efd8-44f1-a244-712b9c894f92",
+          "root_id": "08551f0b-e7bc-4348-8156-995391e9c528",
+          "parent_id": "08551f0b-e7bc-4348-8156-995391e9c528",
+          "periodic_task_name": null,
+          "args": [
+            10
+          ],
+          "kwargs": {},
+          "raw_frame_sha256": "6aaa5efd23ed4be074fe2b978b7cc2c5f509a2d3329bd2a3a9b82f72c0734eb8"
+        }
+      ],
+      "actual_saved_file_stat": {
+        "mtime": 1794810442.5703933,
+        "mtime_ns": 1794810442570393361,
+        "dev": 37,
+        "inode": 31782220,
+        "bytes": 275,
+        "sha256": "f956c872244bc8a712b3d9c32d22df9809dd8948f62c26496d193115ec061237"
+      },
+      "age_at_scanner_root_publication_seconds": 24.772468328475952,
+      "age_at_native_refresh_child_publication_seconds": 24.821839094161987,
+      "branch": "Existing active file6..30s: publish refresh",
+      "before_source": {
+        "id": 10,
+        "status": "success"
+      },
+      "before_programmes": [
+        {
+          "id": 6,
+          "title": "Owned local hook programme"
+        }
+      ],
+      "before_audit": [
+        {
+          "details": {
+            "channels": 1,
+            "programs": 1,
+            "skipped_programs": 0,
+            "source_name": "Owned local XML scoped hooks",
+            "unmapped_channels": 0
+          },
+          "id": 7
+        }
+      ],
+      "after_audit": [
+        {
+          "details": {
+            "channels": 1,
+            "programs": 1,
+            "skipped_programs": 0,
+            "source_name": "Owned local XML scoped hooks",
+            "unmapped_channels": 0
+          },
+          "id": 22
+        },
+        {
+          "details": {
+            "channels": 1,
+            "programs": 1,
+            "skipped_programs": 0,
+            "source_name": "Owned local XML scoped hooks",
+            "unmapped_channels": 0
+          },
+          "id": 7
+        }
+      ],
+      "tested_task": {
+        "id": "f0b36a50-13f3-4a79-905a-5fe4a3417a0e",
+        "status": "SUCCESS",
+        "date_done": "2026-11-16T06:31:39.637431+00:00",
+        "actual_children": [
+          [
+            [
+              "80682ea7-3c8b-4e2f-b98b-0ecdfa8c5410",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "ec8c4485-57c0-4ab8-8b21-119a8accc1c8",
+              null
+            ],
+            null
+          ]
+        ]
+      },
+      "limitations": [
+        "SystemEvent snapshots did not select timestamp or task foreign key; no direct audit-row creation timestamp/task linkage is invented. Earlier scanner source10 child plus before-state provides causal prelude evidence.",
+        "Scanner publication timestamps bound Native execution window; exact internal scan-now was not separately captured.",
+        "Saved local file was written only by prepare_context and unchanged; actual final stat binds its mtime, not an invented pre-run stat receipt.",
+        "No direct pre-scan processed_file marker GET was persisted; initial absence is inferred from fresh context FLUSHALL, first captured scanner publication and matching branch/publication effects, not asserted as a separately observed Redis read."
+      ],
+      "all_observed_periodic_scanner_roots": [
+        {
+          "id": "08551f0b-e7bc-4348-8156-995391e9c528",
+          "epoch": 1794810467.3428617
+        },
+        {
+          "id": "ec4dc011-83a8-4a93-830e-03e5f469a61b",
+          "epoch": 1794810487.3445885
+        },
+        {
+          "id": "c32a5d9c-e129-4461-9cab-2a84f78cfc4c",
+          "epoch": 1794810507.3448188
+        },
+        {
+          "id": "39abe44e-1c1e-4f13-abfc-3f49c31d0e53",
+          "epoch": 1794810527.3448682
+        },
+        {
+          "id": "e4d5b3b5-d3e4-4874-a71a-0a756055ee84",
+          "epoch": 1794810547.3467925
+        },
+        {
+          "id": "c7faa6e1-af57-4638-a29a-04438730a489",
+          "epoch": 1794810567.347082
+        },
+        {
+          "id": "a00f4e63-8c58-4ce0-bef1-3164f763acc2",
+          "epoch": 1794810587.3472867
+        },
+        {
+          "id": "1ff15d2e-8766-4cae-b8be-1d51c7c693ac",
+          "epoch": 1794810607.3488865
+        },
+        {
+          "id": "f1c1b60f-4553-47c6-92e9-f0c25547327c",
+          "epoch": 1794810627.3502831
+        },
+        {
+          "id": "7e92883b-a904-44dc-8b94-54be9531c07c",
+          "epoch": 1794810647.3524394
+        }
+      ]
+    },
+    {
+      "backend": "Source36",
+      "source_id": 10,
+      "source_name": "Owned local XML scoped hooks",
+      "scanner_publications": [
+        {
+          "epoch": 1794809186.1335373,
+          "task": "core.tasks.scan_and_process_files",
+          "id": "1a00da2c-0858-49c6-b056-5584c6f143e3",
+          "root_id": "1a00da2c-0858-49c6-b056-5584c6f143e3",
+          "parent_id": null,
+          "periodic_task_name": "scan-files",
+          "args": [],
+          "kwargs": {},
+          "raw_frame_sha256": "456bc13268ce7021f5d7c6d37f10e984c26f252fc6e8ee211818bdc273472b1e"
+        },
+        {
+          "epoch": 1794809186.1397853,
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "491331a3-7d4e-4bba-ad18-1f55e4ea11a6",
+          "root_id": "1a00da2c-0858-49c6-b056-5584c6f143e3",
+          "parent_id": "1a00da2c-0858-49c6-b056-5584c6f143e3",
+          "periodic_task_name": null,
+          "args": [
+            10
+          ],
+          "kwargs": {},
+          "raw_frame_sha256": "60e2c82e7144eb7004fefa3cd06594844e8fc4791fb4acb57c3d2f7500aad444"
+        }
+      ],
+      "actual_saved_file_stat": {
+        "mtime": 1794809154.6079113,
+        "mtime_ns": 1794809154607911404,
+        "dev": 37,
+        "inode": 31615922,
+        "bytes": 275,
+        "sha256": "f956c872244bc8a712b3d9c32d22df9809dd8948f62c26496d193115ec061237"
+      },
+      "age_at_scanner_root_publication_seconds": 31.525625944137573,
+      "age_at_native_refresh_child_publication_seconds": null,
+      "branch": "Existing DBfile older30s/no marker: mark mtime and skip refresh",
+      "before_source": {
+        "id": 10,
+        "status": "idle"
+      },
+      "before_programmes": [],
+      "before_audit": [],
+      "after_audit": [
+        {
+          "details": {
+            "channels": 1,
+            "programs": 1,
+            "skipped_programs": 0,
+            "source_name": "Owned local XML scoped hooks",
+            "unmapped_channels": 0
+          },
+          "id": 21
+        }
+      ],
+      "tested_task": {
+        "id": "06c55728-9b8f-4d7c-8401-55c25be486c4",
+        "status": "SUCCESS",
+        "date_done": "2026-11-16T06:10:15.327297+00:00",
+        "actual_children": [
+          [
+            [
+              "3ee912c0-c6f7-42b2-ac09-bc4e7086d36f",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "9ce0f15a-42e7-4577-8603-4bce416795a4",
+              null
+            ],
+            null
+          ]
+        ]
+      },
+      "limitations": [
+        "SystemEvent snapshots did not select timestamp or task foreign key; no direct audit-row creation timestamp/task linkage is invented. Earlier scanner source10 child plus before-state provides causal prelude evidence.",
+        "Scanner publication timestamps bound Native execution window; exact internal scan-now was not separately captured.",
+        "Saved local file was written only by prepare_context and unchanged; actual final stat binds its mtime, not an invented pre-run stat receipt.",
+        "No direct pre-scan processed_file marker GET was persisted; initial absence is inferred from fresh context FLUSHALL, first captured scanner publication and matching branch/publication effects, not asserted as a separately observed Redis read."
+      ],
+      "all_observed_periodic_scanner_roots": [
+        {
+          "id": "1a00da2c-0858-49c6-b056-5584c6f143e3",
+          "epoch": 1794809186.1335373
+        },
+        {
+          "id": "b95c3069-cf3a-4c19-92c8-397b0daea1c0",
+          "epoch": 1794809206.123208
+        },
+        {
+          "id": "6ce549b6-c908-4528-ba8e-d9db83934eb8",
+          "epoch": 1794809226.1244907
+        },
+        {
+          "id": "9bfe62ed-4ba2-41df-b01d-368d43e23ceb",
+          "epoch": 1794809246.1262228
+        },
+        {
+          "id": "e12cbe6e-1cb6-4f2c-8068-dac3a319837b",
+          "epoch": 1794809266.1280491
+        },
+        {
+          "id": "cef1aaf8-559c-4b3a-a219-fb730c4173d3",
+          "epoch": 1794809286.129451
+        },
+        {
+          "id": "778a3a80-43e9-4425-ac4f-259df9c838ec",
+          "epoch": 1794809306.1306293
+        },
+        {
+          "id": "91551c54-d8a2-4745-93b3-7aa1b4da8daa",
+          "epoch": 1794809326.1316712
+        },
+        {
+          "id": "b527004a-c24c-48a0-ba34-9ac89063ef35",
+          "epoch": 1794809346.1329303
+        }
+      ]
+    }
+  ],
+  "source_authority": {
+    "constants": "MIN_AGE_SECONDS6,STARTUP_SKIP_AGE30",
+    "skip_branch": "No processed_file marker and existingDBfile age>30: mark mtime and skip refresh",
+    "Native_rule": "scanner_files.rs430 mirrors Source branch",
+    "fixture_cache_reset": "Frozen fixture.py context setup executes Redis FLUSHALL before preparation/start; publication observer begins before actual app startup."
+  },
+  "Main37_failed_cell_remains_failed": true,
+  "helper_delta_scope": "One new source-name-scoped audit row in completed tested task window; all prior IDs/details immutable and all observed chosen fields absent; no unsupported direct task foreign key asserted",
+  "projection": {
+    "path": "artifacts/rust/m6-local-XML-audit-delta-helper-1/projection.json",
+    "sha256": "0f67bac5fbfaae952ae4c68705a8f732aaaba8515e895cf0df04afa18ce4a556",
+    "passed": true,
+    "controls": 12,
+    "actual_execution_receipt": {
+      "path": "artifacts/rust/m6-local-XML-audit-delta-helper-1/projection-execution.json",
+      "sha256": "0b54d6a8a39be5f09e0feb8622979bd7ffaf52cd97800ab7032b154c6cb5b668"
+    }
+  },
+  "evidence": [
+    {
+      "path": "artifacts/rust/normal-graph-batch37-functional-1/fixtures/Native-e99b4cd3/data/schedules-direct/sd-publications.jsonl",
+      "sha256": "49cd105c78e43ad64d98d779ace237f39741dce36312b77cc75e4e175d520419"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch37-functional-1/fixtures/Native-e99b4cd3/data/schedules-direct/epgs/local-hooks.xml",
+      "sha256": "f956c872244bc8a712b3d9c32d22df9809dd8948f62c26496d193115ec061237"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch37-functional-1/fixtures/Native-e99b4cd3/xml-local-hooks/private/before.json",
+      "sha256": "678fb9a7e3d7af22b50dd2944f62aee3681c3736215b2448b95b0b6d8923ee1c"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch37-functional-1/fixtures/Native-e99b4cd3/xml-local-hooks/private/after.json",
+      "sha256": "62768b51015ade10073ea283ce81d7ca030bb53c7be12d4cb23c4e8c64b5d92b"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch37-functional-1/fixtures/Native-e99b4cd3/xml-local-hooks/private/producer.json",
+      "sha256": "75662cb4de996aef54e7146f0a23b7e71c896b6e5600be186512b4e238ec2529"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch37-functional-1/fixtures/Native-e99b4cd3/xml-local-hooks/private/backend.json",
+      "sha256": "4a10ed4bcd42f2651e1c62521acbab1691a90b69565e69b9473c294f6a38ed07"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch37-functional-1/fixtures/Native-e99b4cd3/xml-local-hooks/report.json",
+      "sha256": "4777403a76227ad3518eec697a0279aad4539f175cb90491498c4abd4a20636c"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch37-functional-1/fixtures/Native-e99b4cd3/xml-local-hooks/private/failure.txt",
+      "sha256": "98dfae9449282e06acbacc072f70910e765539151aca8b899a6034a5cb378384"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-source-guide-1/fixtures/Original-5855e06f/data/schedules-direct/sd-publications.jsonl",
+      "sha256": "463640c5b9729ae03d0cf219cf79cdcd24058c49aa3da02947d3390a579b18cb"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-source-guide-1/fixtures/Original-5855e06f/data/schedules-direct/epgs/local-hooks.xml",
+      "sha256": "f956c872244bc8a712b3d9c32d22df9809dd8948f62c26496d193115ec061237"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-source-guide-1/fixtures/Original-5855e06f/xml-local-hooks/private/before.json",
+      "sha256": "00031d6cf351f8951eee161b67f59c00471ffb3ae3fd9626f8db7a82c287288f"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-source-guide-1/fixtures/Original-5855e06f/xml-local-hooks/private/after.json",
+      "sha256": "f85987ce31e097fabde7d0dd97df23d626705e01604aba2f5647a35da77b1881"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-source-guide-1/fixtures/Original-5855e06f/xml-local-hooks/private/producer.json",
+      "sha256": "e47b722e1a34eed8ad96517848380cf92698e9477399ec715522856f40d41c8d"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-source-guide-1/fixtures/Original-5855e06f/xml-local-hooks/private/backend.json",
+      "sha256": "6acf37e912e9730f3649d73cb63412206930090d9b28f3026db4c89e2da8c022"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-source-guide-1/fixtures/Original-5855e06f/xml-local-hooks/report.json",
+      "sha256": "3544def052efbde3bdbfd1fac303311443395cc1fcb9292552b788c8482d1e9f"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch36-source-guide-1/Original/core/tasks.py",
+      "sha256": "5e20b3a7395c9d78cc45f3b07abc1becc7d744a3f37e09735eac512ae537dcbc"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-batch17-sdk-1/attempt46/source/rust/crates/job-transport/src/scanner_files.rs",
+      "sha256": "605a780954a6b62bec9b230baec0c7252d89190a71d7a8926efdf5f06642d061"
+    },
+    {
+      "path": "artifacts/rust/m6-recording-following-driver-33-source-guide-1/cohort/xml_hook_cases.py",
+      "sha256": "437792a9ddc220d2dc89035f39af3ac60cbe8a90690bb4d8a9b035599c98c10d"
+    },
+    {
+      "path": "artifacts/rust/m6-recording-following-driver-33-source-guide-1/cohort/fixture.py",
+      "sha256": "712b1b96f9f158326cbe1532abbfb90d446a2a3d74778fa180a4d63fe0c21d77"
+    }
+  ],
+  "credit": "Original Dispatcharr, Celery and dependency authors retain full authorship and algorithm credit."
+}

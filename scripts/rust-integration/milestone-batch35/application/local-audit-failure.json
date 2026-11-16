@@ -1,0 +1,61 @@
+{
+  "assertion": "xml_hook_cases.py48 len(after.audit)==1 and chosen absent",
+  "actual_cell_status": "failed",
+  "observed": {
+    "Native37": {
+      "before": {
+        "source": "artifacts/rust/normal-graph-batch37-functional-1/fixtures/Native-e99b4cd3/xml-local-hooks/private/before.json",
+        "sha256": "678fb9a7e3d7af22b50dd2944f62aee3681c3736215b2448b95b0b6d8923ee1c",
+        "audit_ids": [
+          7
+        ],
+        "audit_count": 1,
+        "all_audits_chosen_absent": true,
+        "programme_count": 1
+      },
+      "after": {
+        "source": "artifacts/rust/normal-graph-batch37-functional-1/fixtures/Native-e99b4cd3/xml-local-hooks/private/after.json",
+        "sha256": "62768b51015ade10073ea283ce81d7ca030bb53c7be12d4cb23c4e8c64b5d92b",
+        "audit_ids": [
+          22,
+          7
+        ],
+        "audit_count": 2,
+        "all_audits_chosen_absent": true,
+        "programme_count": 1
+      }
+    },
+    "Source36": {
+      "before": {
+        "source": "artifacts/rust/normal-graph-batch36-source-guide-1/fixtures/Original-5855e06f/xml-local-hooks/private/before.json",
+        "sha256": "00031d6cf351f8951eee161b67f59c00471ffb3ae3fd9626f8db7a82c287288f",
+        "audit_ids": [],
+        "audit_count": 0,
+        "all_audits_chosen_absent": true,
+        "programme_count": 0
+      },
+      "after": {
+        "source": "artifacts/rust/normal-graph-batch36-source-guide-1/fixtures/Original-5855e06f/xml-local-hooks/private/after.json",
+        "sha256": "f85987ce31e097fabde7d0dd97df23d626705e01604aba2f5647a35da77b1881",
+        "audit_ids": [
+          21
+        ],
+        "audit_count": 1,
+        "all_audits_chosen_absent": true,
+        "programme_count": 1
+      }
+    }
+  },
+  "inference": "Earlier real periodic scanner ingested Native source10 while file age24.77\u201324.82s; Source first scan at31.53s skipped it under the identical30s existing-file rule. Each tested task adds exactly one source-scoped audit; accepted helper correction preserves every prior row and requires one new row. Actual Main37 failure remains failed until fresh execution.",
+  "initial_inference_retained": "Each tested task adds one audit, but Native has preexisting audit/programme. Prior-work origin investigation remains separate; no failure-to-pass relabel or production duplicate fix inferred.",
+  "grounded_cause": {
+    "path": "scripts/rust-integration/milestone-batch35/application/local-audit-cause/grounded-authority.json",
+    "sha256": "ae30429ffb16e9ce5320421e4fcf437157108fc6312ef63f680ded9eed4bf914"
+  },
+  "offline_projection": {
+    "actual_exit": 0,
+    "positive_pairs": 2,
+    "negative_controls_rejected": 10,
+    "new_app_pass_claimed": false
+  }
+}

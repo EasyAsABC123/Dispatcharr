@@ -9,13 +9,22 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The newest source candidate is [Candidate35](rust-milestone-batch35.md), runtime
-`b0fc1ab1085ae765cbc978b349f08171066edfff`: all four SDK46 gates and all six
-Docker package families pass. A real installed-image control qualifies the empty
-Source API app namespace without HTTP code or Django setup. The guide-only
-Native application run is active against the fresh Source36 guide reference.
-DVR plugin-domain changes remain private under review. All full milestones and
-new full-service performance acceptance remain open.
+The newest source candidate is [Candidate36](rust-milestone-batch36.md), runtime
+`350b4fdacc45ea7ec4136398d7e7bae4ba4b1f73`: all four SDK47 gates pass with
+1,115 tests, zero failures and 783 ignored. It allows unrelated Main startup
+with a populated plugin directory while refusing unsupported DVR effects before
+queue claim or producer mutation. Docker/package and actual boundary acceptance
+are pending. This does not implement DVR plugin execution, Source three-root
+startup parity or enabled-plugin restore. All full M0–M9 milestones and new
+full-service performance acceptance remain open.
+
+The preceding [Candidate35](rust-milestone-batch35.md), runtime
+`b0fc1ab1085ae765cbc978b349f08171066edfff`, passes all four SDK46 gates and
+all six Docker package families. Main37 reached validated real plugin startup
+and nonforced physical exit 0. Its whole Guide run exited 1 on a local XML
+audit-baseline assertion; other groups, including all seven download cases,
+passed. Fresh Source36 passes its complete 36-case guide reference. A scoped
+audit-delta observer correction is prepared; fresh Native acceptance is pending.
 
 The preceding source candidate is [Candidate34](rust-milestone-batch34.md), runtime
 `8c872439590511258750b31d856432e553f8192f`: all four SDK45 gates pass with

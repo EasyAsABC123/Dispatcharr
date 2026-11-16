@@ -1,0 +1,78 @@
+{
+  "source": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/private/command-0673.stderr",
+  "source_sha256": "cdc5ee04746bd348358f49e6bb57cf0dd0886ebcc06aa98fa9e434e6981c133d",
+  "records": [
+    {
+      "stage": "spawn_requested",
+      "category": "tasks"
+    },
+    {
+      "stage": "startup_ready_wait",
+      "operation": "startup",
+      "host_error": "Child",
+      "python_class": null
+    },
+    {
+      "stage": "stderr_signature",
+      "known_guard_signature": null,
+      "first_python_class": "ModuleNotFoundError",
+      "last_python_class": "ModuleNotFoundError",
+      "framework_locations": [
+        {
+          "file": "dispatcharr_native/bootstrap.py",
+          "line": 144
+        },
+        {
+          "file": "dispatcharr_native/bootstrap.py",
+          "line": 33
+        },
+        {
+          "file": "django/__init__.py",
+          "line": 24
+        },
+        {
+          "file": "django/apps/registry.py",
+          "line": 91
+        },
+        {
+          "file": "django/apps/config.py",
+          "line": 193
+        }
+      ],
+      "scanned_bytes": 1270,
+      "scan_clipped": false
+    },
+    {
+      "stage": "physical_retire",
+      "actual_exit": null,
+      "wait_observed": true,
+      "stdout_eof": true,
+      "stderr_eof": true,
+      "stderr_bytes": 1270,
+      "forced": true,
+      "descendants_absent": true,
+      "callbacks_settled": true
+    },
+    {
+      "stage": "spawn_result",
+      "operation": "startup",
+      "host_error": "Protocol",
+      "python_class": null
+    },
+    {
+      "stage": "sd_hook_begin",
+      "category": "StoreUnsupported"
+    },
+    {
+      "stage": "sd_audit_hook_setup",
+      "category": "StoreUnsupported"
+    },
+    {
+      "stage": "sd_guide_effects",
+      "category": "StoreUnsupported"
+    }
+  ],
+  "actual_child_exit": "null retained; no exit1 inference",
+  "DjangoReady_or_RPC_acceptance": false,
+  "missing_module_name_directly_captured": false
+}

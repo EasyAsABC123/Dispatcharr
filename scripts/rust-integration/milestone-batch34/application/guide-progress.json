@@ -1,0 +1,890 @@
+{
+  "groups": {
+    "custom-guide": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/custom-guide/report.json",
+      "sha256": "6523f619c7d33414c240f9df6d24a37a678aa639fef3917e88d733d76a9e3799",
+      "status": "passed",
+      "cases": [
+        {
+          "actual": {
+            "actual_programme_counts": [
+              7,
+              6,
+              6,
+              8
+            ],
+            "channels": 4,
+            "matched_empty_group_not_no_match": true,
+            "nativeTimeline_and_literal_unknown_placeholders": true
+          },
+          "name": "actual-named-groups-UTC-custom-XMLTV",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "Source_unclipped_last_custom_block": true,
+            "actual_grid_counts": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "explicit_microsecond_start_preserved": true
+          },
+          "name": "actual-named-groups-custom-grid",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_short_rows": [
+              2,
+              2,
+              2,
+              2
+            ],
+            "secret_in_public_capture": false
+          },
+          "name": "actual-named-groups-custom-XC",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_exit0_wait_EOF_group_absence_receipts": 6,
+            "actual_remaining_owned_regex_children": 0,
+            "other_regex_children": 0
+          },
+          "name": "actual-native-regex-worker-normal-retirement",
+          "status": "passed"
+        }
+      ]
+    },
+    "dummy-fallback": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/dummy-fallback/report.json",
+      "sha256": "5ed4972733eae037460716123d4a73a444eb61c03c9aa5b1bbd79b7a51b6dd85",
+      "status": "passed",
+      "cases": [
+        {
+          "actual": {
+            "channels": 4,
+            "literal_braces_not_interpolated": true,
+            "programme_counts": [
+              6,
+              6,
+              6,
+              6
+            ],
+            "source_byte_clock_parity_claimed": false
+          },
+          "name": "actual-dummy-fallback-XMLTV",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "dummy_rows_by_channel": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "existing_dummy_custom_identity_prefix_preserved": true
+          },
+          "name": "actual-dummy-fallback-grid",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_XC_short_rows_by_channel": [
+              2,
+              2,
+              2,
+              2
+            ],
+            "credential_logs_public": false
+          },
+          "name": "actual-dummy-fallback-XC",
+          "status": "passed"
+        }
+      ]
+    },
+    "epg-connect": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/epg-connect/report.json",
+      "sha256": "aadb49eecb65fab87e215feb815715b8ecb8b8dad7bb2950dd0a14ebe918a781",
+      "status": "failed",
+      "cases": [
+        {
+          "error_type": "ActualNativeCeleryFault",
+          "name": "actual-epg_refresh-Connect-form-template-mutation-status-catches",
+          "status": "failed"
+        },
+        {
+          "name": "actual-epg_error-Connect-form-template-mutation-status-catches",
+          "reason": "ActualNativeCommonCeleryFault",
+          "status": "blocked",
+          "task_produced": false
+        }
+      ]
+    },
+    "schedules-direct": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/schedules-direct/report.json",
+      "sha256": "fb3e42ec91d81a53d46d70b12ba65ba833a756cdd1ed1221436e915bf14781fc",
+      "status": "passed",
+      "cases": [
+        {
+          "actual": {
+            "Source_guest_duplicate_preserved": true,
+            "actual_owned_TLS": true,
+            "country_rating": "GBR",
+            "programmes": 3,
+            "real_API_auto_to_one_SD_batch": true,
+            "real_parent_root": true
+          },
+          "name": "actual-API-auto3-to-owned-SD-guide",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_MD5_and_credential_cache_reuse": true,
+            "unchanged_Programme_rows": true
+          },
+          "name": "actual-cache-MD5-nochange",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "real_SD_metadata_request_and_programme_persistence": true
+          },
+          "name": "actual-poster-provider-precedence-persistence",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_surgical_replacement_with_Source_cached_fields": true
+          },
+          "name": "actual-delta-surgical-oldmetadata",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_three_attempts_and_old_programme_fallback": true
+          },
+          "name": "actual-provider-error-retry-oldmetadata",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_persisted_lockout_and_credential_fingerprint_unlock": true
+          },
+          "name": "actual-auth-lockout-credential-unlock",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_debug_disable_and401_403_reauth": true
+          },
+          "name": "actual-debug2055-token403-reauth",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_single_skip_force_and_TVG_delegation": true
+          },
+          "name": "actual-single-and-TVG-SD-delegation",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_countdown90_publication_durable_reservation_and_due_execution": true,
+            "child": "dda6cb86-a8e1-46fa-bbc5-e804b3ddf57a"
+          },
+          "name": "actual-durable90-retry",
+          "status": "passed"
+        }
+      ]
+    },
+    "stream-name-guide": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/stream-name-guide/report.json",
+      "sha256": "edac579ecd9430cf43d444455fae43b8626d5e6937d6ca26d1dd0d81ee17cab1",
+      "status": "passed",
+      "cases": [
+        {
+          "actual": {
+            "channels": 9,
+            "display_names_unchanged_parse_names_used_for_programmes": true,
+            "programme_counts": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "source_byte_clock_parity_claimed": false
+          },
+          "name": "actual-stream-name-XMLTV",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "dummy_rows_by_channel": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "existing_dummy_custom_identity_prefix_preserved": true
+          },
+          "name": "actual-stream-name-grid",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_XC_short_rows_by_channel": [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "credential_logs_public": false
+          },
+          "name": "actual-stream-name-XC",
+          "status": "passed"
+        }
+      ]
+    },
+    "xml-local-hooks": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/xml-local-hooks/report.json",
+      "sha256": "1ddd439f4c95ef3817ac6b1f437ab4ca5fd974f1df450d53b43ce017bf9742d7",
+      "status": "blocked",
+      "cases": [
+        {
+          "name": "actual-local-XML-Connect-template-caught-continuation-and-terminal-trail",
+          "reason": "ActualNativeCommonCeleryFault",
+          "status": "blocked",
+          "task_produced": false
+        }
+      ]
+    },
+    "xml-remote-hooks": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/xml-remote-hooks/report.json",
+      "sha256": "9c418c4b04da973eb24a0aeb4e5a39a269064640e6f912e709e5024b65b39e29",
+      "status": "blocked",
+      "cases": [
+        {
+          "name": "actual-remote-XML-rejection-Connect-hooks-retired-before-SUCCESS",
+          "reason": "ActualNativeCommonCeleryFault",
+          "status": "blocked",
+          "task_produced": false
+        }
+      ]
+    },
+    "xml-tvg-deferral": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/xml-tvg-deferral/report.json",
+      "sha256": "ac1a75c3fca24c87f4ccef61be111f4b3810092dd5c0ca20c7f187bc4bd40c59",
+      "status": "passed",
+      "cases": [
+        {
+          "actual": {
+            "actual_busy_parent_and_fifteen_second_child": true,
+            "actual_durable_receipt_and_due_forced_unmapped_parse": true
+          },
+          "name": "source-refresh-busy-durable-retry",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual480_limit_no_child_no_parse": true
+          },
+          "name": "source-refresh-defer-limit480",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_pidbox_revoke_terminal_and_reservation_absence": true
+          },
+          "name": "source-refresh-deferred-revoked",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_normal_stop0_and_owner_receipt": true,
+            "actual_restored_pair_and_same_child_consumed_after_restart": true
+          },
+          "name": "source-refresh-warm-restored-restart",
+          "status": "passed"
+        }
+      ]
+    },
+    "xmltv-download": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/xmltv-download/report.json",
+      "sha256": "08414a21a06292b06f8a81a6b4f442fb42ba2e1bdd82d00622b0efb9d7348ec4",
+      "status": "failed",
+      "cases": [
+        {
+          "actual": {
+            "parent": {
+              "children": [
+                [
+                  [
+                    "eb41bad0-b762-4d3d-ae20-d25e119d98d7",
+                    null
+                  ],
+                  null
+                ],
+                [
+                  [
+                    "b0118644-7181-4642-9a5b-bab79411b530",
+                    null
+                  ],
+                  null
+                ]
+              ],
+              "date_done": "2026-11-16T05:49:57.919533+00:00",
+              "result": null,
+              "status": "SUCCESS",
+              "task_id": "658ff376-79be-43e2-9e3b-ac0884f12175",
+              "traceback": null
+            },
+            "requests": [
+              {
+                "compression": "none",
+                "consumer_disconnected": false,
+                "decoded_fixture_bytes": 6750261,
+                "kind": "owned_XMLTV_request",
+                "path": "/xmltv/guide.xml",
+                "status": 200,
+                "user_agent": "Owned-XMLTV/1.0",
+                "wire_bytes": 6750261,
+                "wire_sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+              }
+            ],
+            "state": {
+              "cache_file": {
+                "bytes": 6750261,
+                "dev": 37,
+                "exists": true,
+                "inode": 31577794,
+                "mtime_ns": 1794808197746133703,
+                "observed_path": "/app/media/cached_epg/5.xml",
+                "path_is_symlink": false,
+                "physical_observed_path": "/data/cached_epg/5.xml",
+                "realpath": "/shared/schedules-direct/cached_epg/5.xml",
+                "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+              },
+              "epgs": [
+                {
+                  "id": 7,
+                  "name": "Owned HTTP guide",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "events": [],
+              "private_incoming_names": [],
+              "programmes": [
+                {
+                  "end_time": "2026-11-17 10:30:00+00:00",
+                  "id": 18,
+                  "start_time": "2026-11-17 10:00:00+00:00",
+                  "title": "Owned HTTP programme",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "source": {
+                "extracted_file_path": null,
+                "file_path": "/app/media/cached_epg/5.xml",
+                "id": 5,
+                "last_message": "Parsed 1 programs for 1 channels (skipped 50,000 programs for 0 unmapped channels)",
+                "status": "success"
+              }
+            }
+          },
+          "name": "actual-API-plain-above4MiB-import-descendants",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "parent": {
+              "children": [
+                [
+                  [
+                    "d8f889af-d6e8-4aaa-bc49-dfb44f5c12f0",
+                    null
+                  ],
+                  null
+                ],
+                [
+                  [
+                    "56b59e6c-61b8-4c2f-9512-3ddf344fa61f",
+                    null
+                  ],
+                  null
+                ]
+              ],
+              "date_done": "2026-11-16T05:50:01.092891+00:00",
+              "result": null,
+              "status": "SUCCESS",
+              "task_id": "0a749e83-d235-45a5-8de2-161d7205833d",
+              "traceback": null
+            },
+            "requests": [
+              {
+                "compression": "archive-gzip",
+                "consumer_disconnected": false,
+                "decoded_fixture_bytes": 6750261,
+                "kind": "owned_XMLTV_request",
+                "path": "/xmltv/guide.xml.gz",
+                "status": 200,
+                "user_agent": "Owned-XMLTV/1.0",
+                "wire_bytes": 26446,
+                "wire_sha256": "d7fecc9d03ec65a0ba25b95574b5716701c02720527adc2b1ef946fcc541f8c3"
+              }
+            ],
+            "state": {
+              "cache_file": {
+                "bytes": 6750261,
+                "dev": 37,
+                "exists": true,
+                "inode": 31577876,
+                "mtime_ns": 1794808200927200450,
+                "observed_path": "/app/media/cached_epg/5.xml",
+                "path_is_symlink": false,
+                "physical_observed_path": "/data/cached_epg/5.xml",
+                "realpath": "/shared/schedules-direct/cached_epg/5.xml",
+                "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+              },
+              "epgs": [
+                {
+                  "id": 7,
+                  "name": "Owned HTTP guide",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "events": [],
+              "private_incoming_names": [],
+              "programmes": [
+                {
+                  "end_time": "2026-11-17 10:30:00+00:00",
+                  "id": 19,
+                  "start_time": "2026-11-17 10:00:00+00:00",
+                  "title": "Owned HTTP programme",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "source": {
+                "extracted_file_path": null,
+                "file_path": "/app/media/cached_epg/5.xml",
+                "id": 5,
+                "last_message": "Parsed 1 programs for 1 channels (skipped 50,000 programs for 0 unmapped channels)",
+                "status": "success"
+              }
+            }
+          },
+          "name": "actual-API-gzip-archive-preserving-promotion",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "parent": {
+              "children": [
+                [
+                  [
+                    "028a3202-2f7c-491d-baca-f88c5cb7ee93",
+                    null
+                  ],
+                  null
+                ],
+                [
+                  [
+                    "c64624f6-a22e-4a90-9f26-32f5d8c08e47",
+                    null
+                  ],
+                  null
+                ]
+              ],
+              "date_done": "2026-11-16T05:50:04.189687+00:00",
+              "result": null,
+              "status": "SUCCESS",
+              "task_id": "7a4442af-ea22-4b7a-8e5d-ac520ccab195",
+              "traceback": null
+            },
+            "requests": [
+              {
+                "compression": "HTTP-gzip",
+                "consumer_disconnected": false,
+                "decoded_fixture_bytes": 6750261,
+                "kind": "owned_XMLTV_request",
+                "path": "/xmltv/encoded.xml",
+                "status": 200,
+                "user_agent": "Owned-XMLTV/1.0",
+                "wire_bytes": 26446,
+                "wire_sha256": "d7fecc9d03ec65a0ba25b95574b5716701c02720527adc2b1ef946fcc541f8c3"
+              }
+            ],
+            "state": {
+              "cache_file": {
+                "bytes": 6750261,
+                "dev": 37,
+                "exists": true,
+                "inode": 31577945,
+                "mtime_ns": 1794808203990264733,
+                "observed_path": "/app/media/cached_epg/5.xml",
+                "path_is_symlink": false,
+                "physical_observed_path": "/data/cached_epg/5.xml",
+                "realpath": "/shared/schedules-direct/cached_epg/5.xml",
+                "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+              },
+              "epgs": [
+                {
+                  "id": 7,
+                  "name": "Owned HTTP guide",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "events": [],
+              "private_incoming_names": [],
+              "programmes": [
+                {
+                  "end_time": "2026-11-17 10:30:00+00:00",
+                  "id": 20,
+                  "start_time": "2026-11-17 10:00:00+00:00",
+                  "title": "Owned HTTP programme",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "source": {
+                "extracted_file_path": null,
+                "file_path": "/app/media/cached_epg/5.xml",
+                "id": 5,
+                "last_message": "Parsed 1 programs for 1 channels (skipped 50,000 programs for 0 unmapped channels)",
+                "status": "success"
+              }
+            }
+          },
+          "name": "actual-API-HTTP-content-encoding-wire-decoded-sizes",
+          "status": "passed"
+        },
+        {
+          "error_type": "AssertionError",
+          "name": "actual-API-redirect-cached-user-agent-invalidation",
+          "status": "failed"
+        },
+        {
+          "actual": {
+            "parent": {
+              "children": [],
+              "date_done": "2026-11-16T05:50:11.608220+00:00",
+              "result": null,
+              "status": "SUCCESS",
+              "task_id": "e770dd4d-32da-4262-9207-fedd2fca9015",
+              "traceback": null
+            },
+            "requests": [
+              {
+                "kind": "owned_XMLTV_request",
+                "path": "/xmltv/missing.xml",
+                "status": 404,
+                "user_agent": "Owned-XMLTV/2.0",
+                "wire_bytes": 21
+              }
+            ],
+            "state": {
+              "cache_file": {
+                "bytes": 6750261,
+                "dev": 37,
+                "exists": true,
+                "inode": 31577945,
+                "mtime_ns": 1794808203990264733,
+                "observed_path": "/app/media/cached_epg/5.xml",
+                "path_is_symlink": false,
+                "physical_observed_path": "/data/cached_epg/5.xml",
+                "realpath": "/shared/schedules-direct/cached_epg/5.xml",
+                "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+              },
+              "epgs": [
+                {
+                  "id": 7,
+                  "name": "Owned HTTP guide",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "events": [
+                {
+                  "details": {
+                    "message": "Connection error: Unable to connect to EPG source 'Owned HTTP XMLTV main'",
+                    "source_name": "Owned HTTP XMLTV main"
+                  }
+                },
+                {
+                  "details": {
+                    "message": "URL not found (404)",
+                    "source_name": "Owned HTTP XMLTV main"
+                  }
+                }
+              ],
+              "private_incoming_names": [],
+              "programmes": [
+                {
+                  "end_time": "2026-11-17 10:30:00+00:00",
+                  "id": 20,
+                  "start_time": "2026-11-17 10:00:00+00:00",
+                  "title": "Owned HTTP programme",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "source": {
+                "extracted_file_path": null,
+                "file_path": "/app/media/cached_epg/5.xml",
+                "id": 5,
+                "last_message": "EPG source 'Owned HTTP XMLTV main' returned 404 error - will retry on next scheduled run",
+                "status": "error"
+              }
+            }
+          },
+          "name": "actual-API-404-preserves-prior-cache-and-programmes",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "parent": {
+              "children": [],
+              "date_done": "2026-11-16T05:50:15.353069+00:00",
+              "result": null,
+              "status": "SUCCESS",
+              "task_id": "5a026b18-d12c-49d5-8828-db20c3691366",
+              "traceback": null
+            },
+            "requests": [
+              {
+                "compression": "none",
+                "consumer_disconnected": false,
+                "decoded_fixture_bytes": 6750256,
+                "kind": "owned_XMLTV_request",
+                "path": "/xmltv/incomplete.xml",
+                "status": 200,
+                "user_agent": "Owned-XMLTV/2.0",
+                "wire_bytes": 6750256,
+                "wire_sha256": "899942ce26947c1ec8e4df9698c686130d260073eb9f217fe52baebbfde2d8e5"
+              }
+            ],
+            "state": {
+              "cache_file": {
+                "bytes": 6750261,
+                "dev": 37,
+                "exists": true,
+                "inode": 31577945,
+                "mtime_ns": 1794808203990264733,
+                "observed_path": "/app/media/cached_epg/5.xml",
+                "path_is_symlink": false,
+                "physical_observed_path": "/data/cached_epg/5.xml",
+                "realpath": "/shared/schedules-direct/cached_epg/5.xml",
+                "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+              },
+              "epgs": [
+                {
+                  "id": 7,
+                  "name": "Owned HTTP guide",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "events": [
+                {
+                  "details": {
+                    "message": "Connection error: Unable to connect to EPG source 'Owned HTTP XMLTV main'",
+                    "source_name": "Owned HTTP XMLTV main"
+                  }
+                },
+                {
+                  "details": {
+                    "message": "URL not found (404)",
+                    "source_name": "Owned HTTP XMLTV main"
+                  }
+                },
+                {
+                  "details": {
+                    "message": "EPG file appears incomplete (missing closing </tv>). Keeping previous data when available; will retry on next refresh.",
+                    "source_name": "Owned HTTP XMLTV main"
+                  }
+                }
+              ],
+              "private_incoming_names": [],
+              "programmes": [
+                {
+                  "end_time": "2026-11-17 10:30:00+00:00",
+                  "id": 20,
+                  "start_time": "2026-11-17 10:00:00+00:00",
+                  "title": "Owned HTTP programme",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "source": {
+                "extracted_file_path": null,
+                "file_path": "/app/media/cached_epg/5.xml",
+                "id": 5,
+                "last_message": "EPG file appears incomplete (missing closing </tv>). Keeping previous data when available; will retry on next refresh.",
+                "status": "error"
+              }
+            }
+          },
+          "name": "actual-API-incomplete-preserves-prior-cache-and-programmes",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "actual_forced_TVG_download_then_streamed_parse": true,
+            "state": {
+              "cache_file": {
+                "bytes": 6750261,
+                "dev": 37,
+                "exists": true,
+                "inode": 31578220,
+                "mtime_ns": 1794808217871556218,
+                "observed_path": "/app/media/cached_epg/6.xml",
+                "path_is_symlink": false,
+                "physical_observed_path": "/data/cached_epg/6.xml",
+                "realpath": "/shared/schedules-direct/cached_epg/6.xml",
+                "sha256": "9f8d78df82c968f90652e42aa48e26a9c1a77df7b24fea80bf6dc4aeb0aa99d1"
+              },
+              "epgs": [
+                {
+                  "id": 8,
+                  "name": "Owned HTTP guide",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "events": [],
+              "private_incoming_names": [],
+              "programmes": [
+                {
+                  "end_time": "2026-11-17 10:30:00+00:00",
+                  "id": 21,
+                  "start_time": "2026-11-17 10:00:00+00:00",
+                  "title": "Owned HTTP programme",
+                  "tvg_id": "owned-http-guide"
+                }
+              ],
+              "source": {
+                "extracted_file_path": null,
+                "file_path": "/app/media/cached_epg/6.xml",
+                "id": 6,
+                "last_message": null,
+                "status": "parsing"
+              }
+            }
+          },
+          "name": "actual-missing-TVG-owned-download-then-parse",
+          "status": "passed"
+        }
+      ]
+    },
+    "xmltv-selected": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/xmltv-selected/report.json",
+      "sha256": "b4f1dd77d82bfcacb85ca57366cc1c0f7f8b77a3753e298d5c81e1d22ba17fb4",
+      "status": "passed",
+      "cases": [
+        {
+          "actual": {
+            "SQL": {
+              "count": 6001,
+              "description_bytes": 6145024,
+              "ordered_title_sha256": "2c8fd2a5f118c0356bd2700988c517333992f036cffbb66b16fc232b08c2e35b",
+              "row_content_sha256": "0231e8c84090019a5744c88820e917247fcfed484613f9d136e4e3fb55114817",
+              "row_identity_sha256": "597e4b8345cb6ba95dee4ec108d172ced4c56a4d588fbd03dc82918f3e3efc5e"
+            },
+            "backend": {
+              "backend": {
+                "children": [],
+                "date_done": "2026-11-16T05:50:20.748396+00:00",
+                "result": null,
+                "status": "SUCCESS",
+                "task_id": "f900f281-10e2-4f7d-9887-c1b9c2de9fe3",
+                "traceback": null
+              },
+              "observed_duration_seconds": 1.6392644099978497,
+              "task_id": "f900f281-10e2-4f7d-9887-c1b9c2de9fe3"
+            },
+            "invalid_sibling_skipped": true,
+            "whole_input_vector_required": false
+          },
+          "name": "actual-forced-TVG6001-selected-above4MiB-perrow-skip",
+          "status": "passed"
+        },
+        {
+          "actual": {
+            "SQL_after": {
+              "count": 6001,
+              "description_bytes": 6145024,
+              "ordered_title_sha256": "2c8fd2a5f118c0356bd2700988c517333992f036cffbb66b16fc232b08c2e35b",
+              "row_content_sha256": "0231e8c84090019a5744c88820e917247fcfed484613f9d136e4e3fb55114817",
+              "row_identity_sha256": "597e4b8345cb6ba95dee4ec108d172ced4c56a4d588fbd03dc82918f3e3efc5e"
+            },
+            "SQL_before": {
+              "count": 6001,
+              "description_bytes": 6145024,
+              "ordered_title_sha256": "2c8fd2a5f118c0356bd2700988c517333992f036cffbb66b16fc232b08c2e35b",
+              "row_content_sha256": "0231e8c84090019a5744c88820e917247fcfed484613f9d136e4e3fb55114817",
+              "row_identity_sha256": "597e4b8345cb6ba95dee4ec108d172ced4c56a4d588fbd03dc82918f3e3efc5e"
+            },
+            "Source_exception_text_parity_claimed": false,
+            "actual_original_rows_and_ids_preserved": true,
+            "backend": {
+              "backend": {
+                "children": [],
+                "date_done": "2026-11-16T05:50:24.624502+00:00",
+                "result": {
+                  "exc_message": [
+                    "owned selected second page refusal\nCONTEXT:  PL/pgSQL function owned_selected_insert_refusal() line 1 at RAISE"
+                  ],
+                  "exc_module": "django.db.utils",
+                  "exc_type": "ProgrammingError"
+                },
+                "status": "FAILURE",
+                "task_id": "d1dd7141-9f57-412d-92e4-4180a92422e7",
+                "traceback": "Native Dispatcharr per-channel programme task diagnostic [programme_insert]: owned selected second page refusal\nCONTEXT:  PL/pgSQL function owned_selected_insert_refusal() line 1 at RAISE"
+              },
+              "observed_duration_seconds": 0.9808744309993926,
+              "task_id": "d1dd7141-9f57-412d-92e4-4180a92422e7"
+            }
+          },
+          "name": "actual-second5000-insert-page-refusal-preserves-old-guide",
+          "status": "passed"
+        }
+      ]
+    },
+    "xmltv-source-properties-output": {
+      "path": "artifacts/rust/normal-graph-batch35-functional-1/fixtures/Native-95a81cc9/xmltv-source-properties-output/report.json",
+      "sha256": "b0f6a1ec5d50521d6367f46969a79214c1c95608b82d3b8532aeaab8e8585f88",
+      "status": "passed",
+      "cases": [
+        {
+          "actual": {
+            "HTTP_status": 200,
+            "Source_byte_parity_claimed": false,
+            "channel_count": 2,
+            "private_entity_sha256": "5cdc61523ee6f9c5e4e453ad7020964d5d4cdb1dc01838c9a7d0a2433027ee53",
+            "stored_programme_count": 2
+          },
+          "name": "actual-generated-XMLTV-stored-XML-and-SD-properties",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "leaf_status_counts_as_recorded": {
+    "passed": 32,
+    "failed": 2,
+    "blocked": 3
+  },
+  "note": "Failed admitted work and blocked unproduced dependencies are distinct. Independent output observations are retained; no full guide acceptance."
+}

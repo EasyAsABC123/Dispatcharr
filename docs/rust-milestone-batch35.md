@@ -35,7 +35,8 @@ Main35's physical host receipt records forced retirement, observed wait, both
 EOFs, descendant absence and callback settlement. Its child exit is null; an
 exit 1 is not inferred. The separate M8 failure occurred before Host bootstrap
 during DVR startup and is neither explained nor repaired by this candidate.
-The affected guide-only Native application run is now active.
+The affected guide-only Native run completed with one failed observer assertion,
+as recorded below.
 
 The [installed namespace control](../scripts/rust-integration/milestone-batch35/namespace-control/README.md)
 is frozen at guest SHA256
@@ -54,4 +55,28 @@ reference is retained without another Source replay; separate Source M8 evidence
 keeps its earlier scope. Neither reference transfers a pass to Candidate35's
 Native application. No full milestone or new performance gain is accepted.
 
-Candidate35 source `b0fc1ab1085ae765cbc978b349f08171066edfff` built with actual exit 0 in 195.071 seconds. Its immutable image is `sha256:852b248427d0f223991c7eefac52ed3087c8c15e73420dbafc72b1d50554720b`. The unchanged React/assets and Original credits, crypto, PostgreSQL, dependency regex, Python-host closure/production launcher/namespace metadata, and VLC package families each exited 0. The fresh Guide-only Main37 binding reuses the exact 138 Source36-qualified helpers; its separate UID65532 readability check passed and its owned container is absent. Application acceptance remains pending.
+Candidate35 source `b0fc1ab1085ae765cbc978b349f08171066edfff` built with actual exit 0 in 195.071 seconds. Its immutable image is `sha256:852b248427d0f223991c7eefac52ed3087c8c15e73420dbafc72b1d50554720b`. The unchanged React/assets and Original credits, crypto, PostgreSQL, dependency regex, Python-host closure/production launcher/namespace metadata, and VLC package families each exited 0. The fresh Guide-only Main37 binding reuses the exact 138 Source36-qualified helpers; its separate UID65532 readability check passed and its owned container is absent. Full Guide application acceptance is not established.
+
+Main37 completed naturally with [actual exit 1 in 323.637 seconds](../scripts/rust-integration/milestone-batch35/application/execution.json). Ten guide groups passed, including actual Connect/RPC work and all seven download cases; the local XML hook group failed its absolute audit-count assertion. Native already had one audit/programme before that task, whereas Source36 did not; both observed task increments were one audit. The original failed result remains failed. The actual task Host reached validated startup and retired without force at exit 0, with wait, both EOFs, descendant absence and callbacks settled. All four exact containers and individual process generations are absent. This is a substantial bootstrap observation, while the complete Guide workflow, M8/DVR and performance acceptance remain open.
+
+
+The [local-audit causal review](../scripts/rust-integration/milestone-batch35/application/local-audit-cause/grounded-authority.json)
+identifies earlier real periodic scanner work consistent with the preexisting
+Native audit. Its root publishes refresh source10 while the prepared file is 24.77–24.82 seconds
+old; Source36's first scanner publication sees a 31.53-second-old file and
+publishes only an index child for that source. Both frozen implementations use
+the same 6-second minimum and 30-second existing-file startup skip rule. No
+production scanner or refresh correction is inferred. The saved audit snapshots
+contain IDs/details but no timestamp or task foreign key; those missing values
+are not invented.
+
+The [accepted private helper delta](../scripts/rust-integration/milestone-batch35/application/local-audit-cause/helper.patch)
+requires exactly one new source-scoped audit row in the completed task window,
+while preserving every prior row by ID and logical value. It rejects duplicate
+IDs and retains chosen-field absence and every other backend/child/HTTP/payload
+assertion. Executing only that exact predicate against both actual Source36 and
+Native37 before/after pairs passes; all ten duplicate/mutation/missing-row
+negative controls are rejected. The [actual offline command](../scripts/rust-integration/milestone-batch35/application/local-audit-cause/projection-execution.json)
+exits 0 with both EOFs and a settled process group. This helper-only observation
+does not relabel Native37 or establish a new application pass. A fresh frozen
+Native run is required.

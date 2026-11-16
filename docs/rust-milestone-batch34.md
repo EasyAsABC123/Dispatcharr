@@ -73,9 +73,9 @@ package container IDs absent. All1,407 Rust inputs match SDK45; unchanged React,
 Original attribution and dependency notices remain preserved.
 
 A separate no-network UID65532 control reads and hashes all138 Driver32 helper
-inputs and verifies its exact container absent. The next Native-only diagnostic
-batch orders M8 before guides, enables only the declared bounded diagnostics,
-and uses backend-result failfast after actual typed permanent faults. Admitted
+inputs and verifies its exact container absent. The subsequent Main35 Native-only diagnostic
+batch ordered M8 before guides, enabled only the declared bounded diagnostics,
+and used backend-result failfast after actual typed permanent faults. Admitted
 failed tasks and unproduced blocked dependencies remain distinct. Earlier held
 physical and independent business outcomes retain their old-image scopes.
 These package and readability controls establish no new RPC/restore/application,
@@ -118,3 +118,5 @@ fixture neither sets nor changes cookies; earlier independent controls retain
 their separate cookie proof. A private no-idle-pool counterpart also passes 20/20,
 but is excluded because this close race affects Source too. No production HTTP,
 retry or pool behavior change is accepted.
+
+Main35 ran the affected Native M8 and complete Guide contexts naturally: [actual controller exit 1 in 414.420 seconds](../scripts/rust-integration/milestone-batch34/application/execution.json), with both contexts failed. M8 stopped before Host preparation at the populated-plugin DVR startup guard. Guide recorded the safe `ModuleNotFoundError` bootstrap signature and a null physical child exit; no successful Django/RPC stage is inferred. The dependency observer kept admitted failed work separate from blocked, unproduced follow-ups while independent guide outputs continued. Five exact containers are absent and top cleanup flags are true; one individual host-generation field remains null. The redirect failure was later reproduced in both backends as an owned Origin closure race; the separate fresh Source36 qualification covers its explicit-close correction. These records establish no Native full workflow or performance acceptance.
