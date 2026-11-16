@@ -1,0 +1,530 @@
+{
+  "actual_seconds": 2.2826159989926964,
+  "commands": [
+    {
+      "label": "Original-HLS-demux",
+      "actual_exit": 0,
+      "seconds": 0.29534311400493607,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "output_bytes_discarded": 0,
+      "inputs_unchanged": true,
+      "exact_CID": "b311b567d782ec0f7a814f72e45159ae749e74bd000e7c930e4cc13d43d601f4",
+      "exact_CID_absent": true,
+      "qualified": true
+    },
+    {
+      "label": "Original-pre-last-AAC-data",
+      "actual_exit": 0,
+      "seconds": 0.33886564799468033,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "output_bytes_discarded": 0,
+      "inputs_unchanged": true,
+      "exact_CID": "3524741f66df16689bab070537b593a850ecd9bc1f4cbdab8e1f6f602e0c2245",
+      "exact_CID_absent": true,
+      "qualified": true
+    },
+    {
+      "label": "Original-resume-first-AAC-data",
+      "actual_exit": 0,
+      "seconds": 0.32561859497218393,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "output_bytes_discarded": 0,
+      "inputs_unchanged": true,
+      "exact_CID": "bc33a4ada7e14deb818515b99b138c7c0eab864352629efe0b515acd1b3f60b7",
+      "exact_CID_absent": true,
+      "qualified": true
+    },
+    {
+      "label": "Native-HLS-demux",
+      "actual_exit": 0,
+      "seconds": 0.32482084300136194,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "output_bytes_discarded": 0,
+      "inputs_unchanged": true,
+      "exact_CID": "bb29fc088e67f9a788ce720a908d4a997ad46cf5ff61c43a76164c0bebb7b570",
+      "exact_CID_absent": true,
+      "qualified": true
+    },
+    {
+      "label": "Native-pre-last-AAC-data",
+      "actual_exit": 0,
+      "seconds": 0.3450389610079583,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "output_bytes_discarded": 0,
+      "inputs_unchanged": true,
+      "exact_CID": "67d2709b67c43381a2411fdfce275e3a4ca095bc6c2cffd1827efeed5f95a67c",
+      "exact_CID_absent": true,
+      "qualified": true
+    },
+    {
+      "label": "Native-resume-first-AAC-data",
+      "actual_exit": 0,
+      "seconds": 0.3397531730006449,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "output_bytes_discarded": 0,
+      "inputs_unchanged": true,
+      "exact_CID": "a1d706d3adc87c68d5b135acff55c6378a0ba189a2b42c058b52b49c81d955dd",
+      "exact_CID_absent": true,
+      "qualified": true
+    }
+  ],
+  "observations": {
+    "scope": "Actual sameflagHLSdemux and structurallyvalidatedoneADTSframepayload observations; cannot separate later ffmpegCLI timestampadjustment fromMKVmux alone",
+    "reports": [
+      {
+        "backend": "Original",
+        "kind": "HLS_demux",
+        "packets": 375,
+        "missing_DTS": 7,
+        "nonincreasing_adjacent_known_DTS": [
+          {
+            "index": 186,
+            "before": {
+              "pts": 846000,
+              "pts_time": "9.400000",
+              "dts": 846000,
+              "dts_time": "9.400000",
+              "duration": 1920,
+              "duration_time": "0.021333",
+              "size": "350",
+              "data_hash": "SHA256:6db30bc11c289f244e84768ef47ff909c5fb7eed76e522dd4417f36ba693065f",
+              "side_data_list": [
+                {
+                  "side_data_type": "MPEGTS Stream ID",
+                  "id": 192
+                }
+              ]
+            },
+            "after": {
+              "pts": 126000,
+              "pts_time": "1.400000",
+              "dts": 126000,
+              "dts_time": "1.400000",
+              "duration": 1920,
+              "duration_time": "0.021333",
+              "size": "444",
+              "pos": "644088",
+              "data_hash": "SHA256:805840b4342a34135a4186103c6b47344dd0395011dd386e27902f71e9891abf",
+              "side_data_list": [
+                {
+                  "side_data_type": "MPEGTS Stream ID",
+                  "id": 192
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "backend": "Original",
+        "kind": "pre-last",
+        "validated_packets": 187,
+        "errors": [],
+        "matches_final_equal_DTS_triplet": [
+          {
+            "TS": {
+              "pts": 558000,
+              "dts": 558000,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 350,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 343,
+              "payload_sha256": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 36
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "343",
+              "pos": "1187566",
+              "data_hash": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f"
+            }
+          },
+          {
+            "TS": {
+              "pts": 702000,
+              "dts": 702000,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 350,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 343,
+              "payload_sha256": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 111
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "343",
+              "pos": "1187566",
+              "data_hash": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f"
+            }
+          },
+          {
+            "TS": {
+              "pts": 846000,
+              "dts": 846000,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 350,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 343,
+              "payload_sha256": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 186
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "343",
+              "pos": "1187566",
+              "data_hash": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f"
+            }
+          }
+        ],
+        "CRC_integrity_or_decode_claimed": false
+      },
+      {
+        "backend": "Original",
+        "kind": "resume-first",
+        "validated_packets": 189,
+        "errors": [],
+        "matches_final_equal_DTS_triplet": [
+          {
+            "TS": {
+              "pts": 126000,
+              "dts": 126000,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 444,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 437,
+              "payload_sha256": "SHA256:b9fc3dd121baa8c08de3819f89f17b5c35cab29ed9a8a0f68cc30a1711ca6332",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 0
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "437",
+              "pos": "1187916",
+              "data_hash": "SHA256:b9fc3dd121baa8c08de3819f89f17b5c35cab29ed9a8a0f68cc30a1711ca6332"
+            }
+          },
+          {
+            "TS": {
+              "pts": 127920,
+              "dts": 127920,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 379,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 372,
+              "payload_sha256": "SHA256:ddb60a9c97a8caaab1be86394f0d34dafed9cb5672af368dd553c0e2c4b1f1ef",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 1
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "372",
+              "pos": "1188360",
+              "data_hash": "SHA256:ddb60a9c97a8caaab1be86394f0d34dafed9cb5672af368dd553c0e2c4b1f1ef"
+            }
+          },
+          {
+            "TS": {
+              "pts": 414000,
+              "dts": 414000,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 350,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 343,
+              "payload_sha256": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 150
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "343",
+              "pos": "1187566",
+              "data_hash": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f"
+            }
+          }
+        ],
+        "CRC_integrity_or_decode_claimed": false
+      },
+      {
+        "backend": "Native",
+        "kind": "HLS_demux",
+        "packets": 375,
+        "missing_DTS": 7,
+        "nonincreasing_adjacent_known_DTS": [
+          {
+            "index": 186,
+            "before": {
+              "pts": 846000,
+              "pts_time": "9.400000",
+              "dts": 846000,
+              "dts_time": "9.400000",
+              "duration": 1920,
+              "duration_time": "0.021333",
+              "size": "350",
+              "data_hash": "SHA256:6db30bc11c289f244e84768ef47ff909c5fb7eed76e522dd4417f36ba693065f",
+              "side_data_list": [
+                {
+                  "side_data_type": "MPEGTS Stream ID",
+                  "id": 192
+                }
+              ]
+            },
+            "after": {
+              "pts": 126000,
+              "pts_time": "1.400000",
+              "dts": 126000,
+              "dts_time": "1.400000",
+              "duration": 1920,
+              "duration_time": "0.021333",
+              "size": "444",
+              "pos": "644088",
+              "data_hash": "SHA256:805840b4342a34135a4186103c6b47344dd0395011dd386e27902f71e9891abf",
+              "side_data_list": [
+                {
+                  "side_data_type": "MPEGTS Stream ID",
+                  "id": 192
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "backend": "Native",
+        "kind": "pre-last",
+        "validated_packets": 187,
+        "errors": [],
+        "matches_final_equal_DTS_triplet": [
+          {
+            "TS": {
+              "pts": 558000,
+              "dts": 558000,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 350,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 343,
+              "payload_sha256": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 36
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "343",
+              "pos": "1187566",
+              "data_hash": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f"
+            }
+          },
+          {
+            "TS": {
+              "pts": 702000,
+              "dts": 702000,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 350,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 343,
+              "payload_sha256": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 111
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "343",
+              "pos": "1187566",
+              "data_hash": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f"
+            }
+          },
+          {
+            "TS": {
+              "pts": 846000,
+              "dts": 846000,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 350,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 343,
+              "payload_sha256": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 186
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "343",
+              "pos": "1187566",
+              "data_hash": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f"
+            }
+          }
+        ],
+        "CRC_integrity_or_decode_claimed": false
+      },
+      {
+        "backend": "Native",
+        "kind": "resume-first",
+        "validated_packets": 189,
+        "errors": [],
+        "matches_final_equal_DTS_triplet": [
+          {
+            "TS": {
+              "pts": 126000,
+              "dts": 126000,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 444,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 437,
+              "payload_sha256": "SHA256:b9fc3dd121baa8c08de3819f89f17b5c35cab29ed9a8a0f68cc30a1711ca6332",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 0
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "437",
+              "pos": "1187916",
+              "data_hash": "SHA256:b9fc3dd121baa8c08de3819f89f17b5c35cab29ed9a8a0f68cc30a1711ca6332"
+            }
+          },
+          {
+            "TS": {
+              "pts": 127920,
+              "dts": 127920,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 379,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 372,
+              "payload_sha256": "SHA256:ddb60a9c97a8caaab1be86394f0d34dafed9cb5672af368dd553c0e2c4b1f1ef",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 1
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "372",
+              "pos": "1188360",
+              "data_hash": "SHA256:ddb60a9c97a8caaab1be86394f0d34dafed9cb5672af368dd553c0e2c4b1f1ef"
+            }
+          },
+          {
+            "TS": {
+              "pts": 414000,
+              "dts": 414000,
+              "ADTS_header_bytes": 7,
+              "ADTS_frame_bytes": 350,
+              "sampling_frequency_index": 3,
+              "raw_data_blocks": 1,
+              "crc_integrity_validated": false,
+              "payload_bytes": 343,
+              "payload_sha256": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f",
+              "domain": "One structurally validated ADTS frame stripped to its raw AAC payload; no decode or CRC integrity claim",
+              "packet_index": 150
+            },
+            "final_MKV": {
+              "pts": 8000,
+              "pts_time": "8.000000",
+              "dts": 8000,
+              "dts_time": "8.000000",
+              "duration": 21,
+              "duration_time": "0.021000",
+              "size": "343",
+              "pos": "1187566",
+              "data_hash": "SHA256:29ced3926610634c2aa33ab1ac220e28889e649a571327e89a879923a4f51a8f"
+            }
+          }
+        ],
+        "CRC_integrity_or_decode_claimed": false
+      }
+    ],
+    "Source_and_Native_strict_workflow_status": "failed"
+  },
+  "ambiguous_periodic_sine_payload": "343-byte raw AAC payload also matches earlier presegment frames. Last preframe and first2resumed frames match finaltriplet bytes, but a payload hash alone is not unique chronology.",
+  "ADTS_validation": "All752actualpackets validated raw hex/size/SHA, sync/layer/frame length and single raw block before stripping header; no CRC/decode integrity claim.",
+  "actual_Source_playlists_changed": false,
+  "ffmpeg_CLI_adjustment_vs_MKV_mux_separated": false,
+  "missing_DTS_limit": "Each HLS probe has seven packets without DTS. No adjacent equal DTS was observed among known values; this does not exclude a collision in every demuxed packet or isolate ffmpeg CLI correction versus MKV mux."
+}

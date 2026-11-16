@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "Docker_security_options": [
+    "name=seccomp,profile=builtin",
+    "name=rootless",
+    "name=cgroupns"
+  ],
+  "host_file": {
+    "uid": 1000,
+    "gid": 1000,
+    "mode": "0o600",
+    "bytes": 3145728
+  },
+  "guest": {
+    "euid": 0,
+    "egid": 0,
+    "uid_map": "         0       1000          1\n         1     100000      65536\n",
+    "gid_map": "         0       1000          1\n         1     100000      65536\n",
+    "file_uid": 0,
+    "file_gid": 0,
+    "file_mode": "0o600",
+    "file_size": 3145728,
+    "read_bytes": 188,
+    "prefix188_sha256": "f9501eddbe99dcb75e6414e32ac4e4b2b59cdc347eaa23b1e5c426507c567b59"
+  },
+  "guest_uid0_maps_actual_host_file_owner": true,
+  "actual_exit": 0,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "process_group_settled": true,
+  "exact_CID": "41bb14950e1ef7cfe4ec86a12b8e9d142b839b454b5c9ee70f6076cadfe3211d",
+  "exact_CID_absent": true,
+  "production_privileges_or_modes_changed": false
+}
