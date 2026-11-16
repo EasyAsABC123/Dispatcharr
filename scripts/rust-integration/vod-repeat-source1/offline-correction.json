@@ -1,0 +1,209 @@
+{
+  "offline_corrected_capture_qualified": true,
+  "historical_controller_actual_exit": 1,
+  "historical_workflow_status": "failed",
+  "historical_cases": {
+    "passed": 4,
+    "failed": 1
+  },
+  "corrected_final_observer": {
+    "SQL_global_movies": 1,
+    "SQL_other_inactive_account_relations": 1,
+    "HTTP_status": 200,
+    "visible_catalogue_count": 0
+  },
+  "reason": "The only surviving Movie is referenced by the deliberately inactive other account. Source MovieViewSet filters active-account relations; global SQL retention does not imply API visibility. The final count1 assertion was incorrect.",
+  "all_five_business_phase_captures_available": true,
+  "application_replayed": false,
+  "historical_evidence_modified": false,
+  "Native_acceptance": false,
+  "full_milestone_accepted": false,
+  "performance_verified": false,
+  "inputs": [
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/binding.json",
+      "sha256": "d5d2505e95f110ba30043ff056ff8e79ce0690dfc9edea8991213d4bce2d28b9"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/dispatch/execution.json",
+      "sha256": "8e1875a4144685076e0ba4e612f334cc7fcac8d4c46a149d8fe3528b3a016a6d"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/results/Original/vod-repeat.json",
+      "sha256": "474e4b561ef1d487910784025dba794bb34ecc6169bf30074a4f2cf6a4e57969"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/independent-cleanup.json",
+      "sha256": "6e5473ed3b9ffd91cc8b26643b5dfc4dcda14cd7f0c973a2c6cb085a28be2a3d"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/Root-independent-cleanup.json",
+      "sha256": "abf53cbaa827d7fa8161148e8dc8048bf0f3f4bc8576beee89089371adff3faf"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/failure.txt",
+      "sha256": "785e5c33f471d0be43c6cb53d61bcbbafd843654f73cac23d67e0626b41feb77"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/final-catalogue.json",
+      "sha256": "4d252db52c1deb6b43b79e509630c25d68105512a2a34a19835b30ba8e40561e"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/ordinary-shared-reference-setup.json",
+      "sha256": "e65300e48d679886216ff1fdea565adf1d4d8da3dc48e771c82d383211af0914"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/Original-vod-support/apps/vod/api_views.py",
+      "sha256": "4c71de8a00619f4ad93d26e5891bda6a4f7597afcca22703a34e80cb8494bea2"
+    },
+    {
+      "path": "artifacts/rust/m6-vod-repeat-helper-1/vod_repeat_cases.py",
+      "sha256": "3f6bdf277634b0beba98ce3217a019fb1e40da97a04fbedd23755efec8f81f64"
+    },
+    {
+      "path": "artifacts/rust/m6-vod-repeat-helper-2/vod_repeat_projection.py",
+      "sha256": "6a530d109f001a605989bab6b88930b3a0b18e76547e6184a76a8d9b2227cb3e"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/unchanged/API.json",
+      "sha256": "2d731eb126c01aeb4da04eddb84944f5df81f1a528ccf39327ceb08f62fcf253"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/unchanged/backend.json",
+      "sha256": "8f8586179adba6774875e13077efd13bc09c72629a1a4f6c24d426668cb97d15"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/unchanged/SQL-before.json",
+      "sha256": "28842afed08018175bd2dd3a4a2e07d22e0338ce880f8af904335789b9a1d8ef"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/unchanged/SQL-after.json",
+      "sha256": "bc23203cabb77b504bc634dd432a58264ce7900724affdc326c21f84ccbe6007"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/unchanged/WS.json",
+      "sha256": "2c023b41e40ff4fc92130fa138953ea2e7729a9454f65571f5daa5ebf07df9fe"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/unchanged/Origin.json",
+      "sha256": "956fcb4209fc4eaddcce16bea4a2a2f60368e539a90f59ea34551031df4a1337"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/unchanged/durable-journal.json",
+      "sha256": "58e76e5f0ae98dc7a2bf7905ffdd0c80436a395fd3b1159db288217766aab918"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/update-reassign-deduplicate-category-replace/API.json",
+      "sha256": "2d731eb126c01aeb4da04eddb84944f5df81f1a528ccf39327ceb08f62fcf253"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/update-reassign-deduplicate-category-replace/backend.json",
+      "sha256": "930352e0be7feb17e544c1e0887fed67d1ec6bf5b1e254df784e19074a51ceae"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/update-reassign-deduplicate-category-replace/SQL-before.json",
+      "sha256": "041b174441c3b177c747d7652a0ae5817073556652f293eeab568719f300d594"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/update-reassign-deduplicate-category-replace/SQL-after.json",
+      "sha256": "0c22356cabe714c36d6c821fcc3849222d4b5b6713976167c3f8a80fa74fae67"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/update-reassign-deduplicate-category-replace/WS.json",
+      "sha256": "6d68dcb3fb2bcb634dc57198fa3c53b742bc1236f426f41786dbb62ba471a02f"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/update-reassign-deduplicate-category-replace/Origin.json",
+      "sha256": "8b9a130655ddc7e40d720a2f708c9580528906cc4e9b515817d34097a718e8c7"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/update-reassign-deduplicate-category-replace/durable-journal.json",
+      "sha256": "6d247785579c2eb87fab1317f5244c4639b7b71384c5f2e7dade46b17a558226"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/prune-stale-preserve-other-account/API.json",
+      "sha256": "2d731eb126c01aeb4da04eddb84944f5df81f1a528ccf39327ceb08f62fcf253"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/prune-stale-preserve-other-account/backend.json",
+      "sha256": "cf39fd4d33d8165f86ec5e006dae1c2b265d142e875fbc525dd3d34d43881c08"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/prune-stale-preserve-other-account/SQL-before.json",
+      "sha256": "8b89ceed372a53a1fdf3e65f8e565d8726a34d34580df00c11230b22b226f703"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/prune-stale-preserve-other-account/SQL-after.json",
+      "sha256": "0d402064b1a2201d10f9275e6d184cf6c483c7866713cead6833301cb0c300ab"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/prune-stale-preserve-other-account/WS.json",
+      "sha256": "a9c15c4ec8ceeed4eef95ac3ba623305ead956a0e9258b43fb6ce71bced665e9"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/prune-stale-preserve-other-account/Origin.json",
+      "sha256": "eaa8efa2a697786b396d97586294571476d9c05352fad142439064f0ff1e445d"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/prune-stale-preserve-other-account/durable-journal.json",
+      "sha256": "5ab750003a9dd6608bcbdf73fbc38c118b51be17a9b762c587e522605da9d04e"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-categories-preserve-selected-catalogue/API.json",
+      "sha256": "2d731eb126c01aeb4da04eddb84944f5df81f1a528ccf39327ceb08f62fcf253"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-categories-preserve-selected-catalogue/backend.json",
+      "sha256": "7c511b71ceb228418572c4b703784397503695d0ec5678892fef07f2b64a67a1"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-categories-preserve-selected-catalogue/SQL-before.json",
+      "sha256": "0d402064b1a2201d10f9275e6d184cf6c483c7866713cead6833301cb0c300ab"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-categories-preserve-selected-catalogue/SQL-after.json",
+      "sha256": "0d402064b1a2201d10f9275e6d184cf6c483c7866713cead6833301cb0c300ab"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-categories-preserve-selected-catalogue/WS.json",
+      "sha256": "8bb9525da47a9084aa6ecabc7596562e88475e475b22e867c0cd77ab9d9e7fee"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-categories-preserve-selected-catalogue/Origin.json",
+      "sha256": "d9c9ea6a17e8ecf92aac2e11bfecd0504841aef36518638bfa8ac4e8cb221b09"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-categories-preserve-selected-catalogue/durable-journal.json",
+      "sha256": "20d4004c6e3da1cbcf2013289db4245d31c16c72e018c4efd81855ce24ccd5d3"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-Movies-clean-only-owned-stale-orphans/API.json",
+      "sha256": "2d731eb126c01aeb4da04eddb84944f5df81f1a528ccf39327ceb08f62fcf253"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-Movies-clean-only-owned-stale-orphans/backend.json",
+      "sha256": "338fa4b14d049713fba7c6fc17c4a1e98a65f807d88cfff923ff831d4f7ea79c"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-Movies-clean-only-owned-stale-orphans/SQL-before.json",
+      "sha256": "0d402064b1a2201d10f9275e6d184cf6c483c7866713cead6833301cb0c300ab"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-Movies-clean-only-owned-stale-orphans/SQL-after.json",
+      "sha256": "f86297dc97051c88f641a42fc72e6722c67a3a10291bd587c911d2f8e0bd6197"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-Movies-clean-only-owned-stale-orphans/WS.json",
+      "sha256": "c2524d5e2780edf8edc9d834026c133181f3c7b65d2cd33d8f65aa5d1117136a"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-Movies-clean-only-owned-stale-orphans/Origin.json",
+      "sha256": "a4e5f5e794e19e6bc8611efe75be594cfc19f89c956bc2da4da4f57aa8ac666c"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-vod-repeat-source-1/fixtures/Original-a5482560/vod-repeat/private/empty-Movies-clean-only-owned-stale-orphans/durable-journal.json",
+      "sha256": "b6dd6524baae79fa36b955864151e839781060a913ed9907abf0256708539b1d"
+    }
+  ],
+  "projection_sha256": "bee54b38bf8efb7151b001567f2479a655f4c7b3c7215332aa649db7dd251798"
+}

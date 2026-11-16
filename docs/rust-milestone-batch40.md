@@ -54,8 +54,15 @@ builds successfully and both focused groups exit zero: 23 Source-contract tests
 pass, and the evidence-register group passes its public reproduction/control test
 with one optional private-raw test skipped. Both owned containers are independently
 absent. The full verifier CMD was not executed. The scoped Source mapping
-checks pass; the broader existing register module retains a separately proven
-pre-existing notification digest failure, whose evidence/assertion was not edited.
+checks pass. The earlier broader register failure remains in its original evidence.
+A later correction to the historical-preservation test accounts for 19 exact,
+validated Source assignments while retaining every old row hash. It reverses only
+Source mapping fields, checks the historical rows, then regenerates and compares
+the complete current rows. Identity, role and fixture corruption controls reject
+changes. The [whole host register gate](../scripts/rust-contracts/notification-preservation-current139/result.json)
+now passes 342 tests with one existing optional skip; no Source authority or
+expected historical hash changed. This does not imply execution of the full
+Docker verifier CMD.
 
 ## Complete affected batch
 

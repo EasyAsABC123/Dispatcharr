@@ -1,0 +1,29 @@
+{
+  "actual_exit": 0,
+  "bytes": 719267,
+  "sha256": "ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d",
+  "argv": [
+    "ffmpeg",
+    "-v",
+    "error",
+    "-f",
+    "lavfi",
+    "-i",
+    "testsrc2=size=320x180:rate=25",
+    "-f",
+    "lavfi",
+    "-i",
+    "sine=frequency=440:sample_rate=48000",
+    "-t",
+    "8",
+    "-c:v",
+    "libx264",
+    "-preset",
+    "ultrafast",
+    "-c:a",
+    "aac",
+    "-y",
+    "/shared/comskip-manual/manual.mkv"
+  ],
+  "stderr": ""
+}

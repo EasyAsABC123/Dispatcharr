@@ -1,0 +1,40 @@
+{
+  "status": "failed",
+  "Source_only": true,
+  "fresh_first_ingest_is_causal_warmup": true,
+  "cases": [
+    {
+      "name": "unchanged",
+      "status": "passed",
+      "actual_root": "9d580f56-c2fe-456a-978a-80b8fa9c7f9c",
+      "provider_actions": 5
+    },
+    {
+      "name": "update-reassign-deduplicate-category-replace",
+      "status": "passed",
+      "actual_root": "8ed3f64c-3c3e-4287-abc4-5e4195b338c5",
+      "provider_actions": 5
+    },
+    {
+      "name": "prune-stale-preserve-other-account",
+      "status": "passed",
+      "actual_root": "952605ea-7290-452c-9e71-6263f2004d91",
+      "provider_actions": 5
+    },
+    {
+      "name": "empty-categories-preserve-selected-catalogue",
+      "status": "passed",
+      "actual_root": "b85c5750-c13e-440a-bdbc-3b4df3d00002",
+      "provider_actions": 2
+    },
+    {
+      "name": "empty-Movies-clean-only-owned-stale-orphans",
+      "status": "failed",
+      "actual_root": "094bacf8-67ec-4f83-84b7-14b5adb27a22",
+      "provider_actions": 5,
+      "failure_type": "AssertionError"
+    }
+  ],
+  "full_milestone_passed": false,
+  "performance_verified": false
+}

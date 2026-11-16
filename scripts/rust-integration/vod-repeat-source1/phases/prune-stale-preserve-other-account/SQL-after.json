@@ -1,0 +1,196 @@
+{
+  "Movie": [
+    {
+      "id": 1,
+      "uuid": "1bfa0e9a-a670-4eda-ac82-da9e48ff3083",
+      "name": "Owned Movie (2020)",
+      "description": "",
+      "year": 2020,
+      "rating": null,
+      "genre": "",
+      "duration_secs": null,
+      "logo_id": null,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "language": "",
+      "is_adult": true,
+      "custom_properties": null,
+      "created_at": "2026-11-16 18:08:42.594004+00:00",
+      "updated_at": "2026-11-16 18:08:42.594013+00:00"
+    },
+    {
+      "id": 3,
+      "uuid": "34c038a5-3628-46d0-8b62-e84d71273209",
+      "name": "Owned Replacement (2022)",
+      "description": "",
+      "year": 2022,
+      "rating": null,
+      "genre": "",
+      "duration_secs": null,
+      "logo_id": null,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "language": "",
+      "is_adult": false,
+      "custom_properties": null,
+      "created_at": "2026-11-16 18:08:57.225241+00:00",
+      "updated_at": "2026-11-16 18:08:57.225248+00:00"
+    }
+  ],
+  "Series": [],
+  "Episode": [],
+  "VODCategory": [
+    {
+      "id": 2,
+      "name": "Uncategorized",
+      "category_type": "movie",
+      "created_at": "2026-11-16 18:08:42.587418+00:00",
+      "updated_at": "2026-11-16 18:08:42.587424+00:00"
+    },
+    {
+      "id": 3,
+      "name": "Uncategorized",
+      "category_type": "series",
+      "created_at": "2026-11-16 18:08:42.596221+00:00",
+      "updated_at": "2026-11-16 18:08:42.596227+00:00"
+    },
+    {
+      "id": 4,
+      "name": "Updated Films",
+      "category_type": "movie",
+      "created_at": "2026-11-16 18:08:57.208898+00:00",
+      "updated_at": "2026-11-16 18:08:57.208907+00:00"
+    }
+  ],
+  "VODLogo": [],
+  "M3UMovieRelation": [
+    {
+      "id": 1,
+      "m3u_account_id": 5,
+      "movie_id": 1,
+      "category_id": 4,
+      "stream_id": "9101",
+      "container_extension": "mkv",
+      "custom_properties": {
+        "basic_data": {
+          "num": 1,
+          "name": "Owned Movie (2020)",
+          "stream_id": 9101,
+          "category_id": "8",
+          "_category_id": 4,
+          "container_extension": "mkv",
+          "_provider_category_id": "8"
+        },
+        "owned_note": "preserve",
+        "detailed_fetched": true
+      },
+      "created_at": "2026-11-16 18:08:42.595000+00:00",
+      "updated_at": "2026-11-16 18:08:42.595008+00:00",
+      "last_advanced_refresh": "2026-11-16 18:08:54.767303+00:00",
+      "last_seen": "2026-11-16 18:09:04.066615+00:00"
+    },
+    {
+      "id": 4,
+      "m3u_account_id": 8,
+      "movie_id": 3,
+      "category_id": null,
+      "stream_id": "owned-shared",
+      "container_extension": "mp4",
+      "custom_properties": {},
+      "created_at": "2026-11-16 18:09:01.609111+00:00",
+      "updated_at": "2026-11-16 18:09:01.609119+00:00",
+      "last_advanced_refresh": null,
+      "last_seen": "2026-11-16 18:09:01.608958+00:00"
+    }
+  ],
+  "M3USeriesRelation": [],
+  "M3UEpisodeRelation": [],
+  "M3UVODCategoryRelation": [
+    {
+      "id": 2,
+      "m3u_account_id": 5,
+      "category_id": 2,
+      "enabled": true,
+      "custom_properties": {},
+      "created_at": "2026-11-16 18:08:42.588198+00:00",
+      "updated_at": "2026-11-16 18:08:42.588203+00:00"
+    },
+    {
+      "id": 3,
+      "m3u_account_id": 5,
+      "category_id": 3,
+      "enabled": true,
+      "custom_properties": {},
+      "created_at": "2026-11-16 18:08:42.596859+00:00",
+      "updated_at": "2026-11-16 18:08:42.596864+00:00"
+    },
+    {
+      "id": 5,
+      "m3u_account_id": 5,
+      "category_id": 4,
+      "enabled": true,
+      "custom_properties": {},
+      "created_at": "2026-11-16 18:08:57.209783+00:00",
+      "updated_at": "2026-11-16 18:08:57.209789+00:00"
+    }
+  ],
+  "SystemEvent": [
+    {
+      "id": 1,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-01 03:04:05+00:00",
+      "channel_id": null,
+      "channel_name": null,
+      "details": {
+        "ordinal": 1,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 2,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-02 03:04:05.123456+00:00",
+      "channel_id": null,
+      "channel_name": "rust-probe-event",
+      "details": {
+        "ordinal": 2,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 3,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-03 03:04:05+00:00",
+      "channel_id": "00000000-0000-0000-0000-000000000000",
+      "channel_name": "rust-probe-event",
+      "details": {
+        "ordinal": 3,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 4,
+      "event_type": "vod_stop",
+      "timestamp": "2020-01-04 03:04:05+00:00",
+      "channel_id": null,
+      "channel_name": "rust-probe-display-event",
+      "details": {
+        "owned_fixture": true
+      }
+    }
+  ],
+  "account": {
+    "id": 5,
+    "name": "Owned VOD ingest",
+    "status": "success",
+    "last_message": "Owned VOD account baseline",
+    "custom_properties": {
+      "enable_vod": true
+    },
+    "is_active": true,
+    "account_type": "XC"
+  }
+}

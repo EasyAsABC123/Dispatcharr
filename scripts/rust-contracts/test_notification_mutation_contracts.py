@@ -36,22 +36,74 @@ class NotificationMutationControls(unittest.TestCase):
  def test_SQL_fields_not_normalized(self):self.reject(lambda v:v['contracts'][0]['cases'][-2]['actual_framework_observation']['after']['notifications'][0].update(updated_at='<clock>'))
  def test_cache_explicit_null_not_dropped(self):self.reject(lambda v:v['contracts'][0]['cases'][0]['actual_framework_observation']['before_condition_cache'].pop('D'))
  def test_nonHTTP_not_invented(self):self.reject(lambda v:v['non_HTTP_contracts'].append({'candidate_id':'invented'}))
- def test_prior_rows_preserved_except_explicit_later_schema_assignment(self):
-  old=json.loads((ROOT/'scripts/rust-contracts/notification-mutation-preservation.json').read_text());new=json.loads((ROOT/'docs/rust-contract-register.json').read_text());ops={o['contract_id']:o for r in new['runtime_routes']for o in r['operations']};selected=set(old['new_selected_contract_ids'])
+ def assert_preserved_register(self,new):
+  import source_contracts
+  old=json.loads((ROOT/'scripts/rust-contracts/notification-mutation-preservation.json').read_text())
+  ops={o['contract_id']:o for r in new['runtime_routes']for o in r['operations']}
+  selected=set(old['new_selected_contract_ids'])
   self.assertEqual(len(ops),798);self.assertEqual(len(old['unselected_operation_dicts']),795)
-  import schema_cache_contracts as schema
-  import notification_credential_contracts as credentials
-  newer={c['contract_id']:c for c in credentials.generate(ROOT)['contracts']}
-  # The historical795-row receipt stays immutable. One later Source-only schema
-  # assignment and three real-credential assignments are explicit; other791 retain old SHA.
+  inputs=new['executable_Source_mapping']['inputs'];prior=old['existing_executable_Source_mapping_inputs']
+  self.assertEqual(inputs[:len(prior)],prior)
+  self.assertEqual(inputs[len(prior)]['kind'],subject.KIND)
+  # The receipt is immutable. Later schema/credential/VOD/logo/matching/station
+  # assignments are validated by their existing exact public generators below.
+  # Reverse ONLY their Source assignment fields to the register.py defaults,
+  # then require every original row SHA. Identity, required roles, unrelated
+  # evidence and all other fields retain the historical protection.
+  later=inputs[len(prior)+1:]
+  self.assertEqual([r['path']for r in later],[
+   'scripts/rust-contracts/schema-cache/bindings.json',
+   'scripts/rust-contracts/notification-credential-bindings.json',
+   'scripts/rust-contracts/vod-access/bindings.json',
+   'scripts/rust-contracts/logo-source/bindings.json',
+   'scripts/rust-contracts/channel-matching-source51-bindings.json',
+   'scripts/rust-contracts/station-aggregate-source53-55-bindings.json'])
+  later_ids=[]
+  for ref in later:
+   value=source_contracts.checked(ROOT,ref)
+   later_ids.extend(c['contract_id']for c in value['contracts'])
+  self.assertEqual(len(later_ids),19);self.assertEqual(len(set(later_ids)),19)
+  self.assertFalse(selected.intersection(later_ids))
+  historical=copy.deepcopy(new['runtime_routes'])
+  historical_ops={o['contract_id']:o for r in historical for o in r['operations']}
+  for key in later_ids:
+   operation=historical_ops[key]
+   operation.pop('executable_Source_contract')
+   operation.update(setup_fixture=None,assertions=[],result=None,
+    coverage_state='scoped_evidence_needs_case_mapping'if operation['related_evidence']else'not_yet_mapped')
+   for field in('observed_fixture_definitions','complete','observed_roles'):
+    operation['role_matrix'].pop(field,None)
+   operation['role_matrix']['state']='unmapped'
   for key,digest in old['unselected_operation_dicts'].items():
-   if key==schema.IDENT:
-    self.assertEqual(ops[key]['executable_Source_contract'],schema.build(ROOT)['contracts'][0]);self.assertIsNone(ops[key]['method']);self.assertEqual(ops[key]['owning_milestone'],'M0');self.assertFalse(ops[key]['fully_verified'])
-   elif key in newer:self.assertEqual(ops[key]['executable_Source_contract'],newer[key]);self.assertFalse(ops[key]['fully_verified'])
-   else:self.assertEqual(subject.digest(ops[key]),digest,key)
+   self.assertEqual(subject.digest(historical_ops[key]),digest,key)
+  # Exact reapplication validates each retained Source authority, not merely its
+  # kind/ID, and checks every regenerated assignment field against the full row.
+  bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_text())
+  mapping=source_contracts.apply(ROOT,historical,bindings)
+  self.assertEqual(historical,new['runtime_routes'])
+  self.assertEqual(mapping,new['executable_Source_mapping'])
   self.assertEqual(subject.digest([{k:v for k,v in r.items()if k!='operations'}for r in new['runtime_routes']]),old['routes_structural_projection_sha256'])
   self.assertEqual(subject.digest(new['openapi_operations']),old['openapi_operations_sha256']);self.assertEqual(subject.digest(new['non_HTTP_candidates']),old['non_HTTP_candidates_sha256']);self.assertEqual(subject.digest(new['observations_for_methods_not_declared_in_discovery']),old['observations_for_methods_not_declared_sha256'])
-  self.assertEqual(new['executable_Source_non_HTTP_mapping'],old['non_HTTP_mapping']);self.assertEqual([e for e in new['executable_Source_mapping']['inputs']if e['kind']not in(schema.KIND,credentials.KIND)][:-1],old['existing_executable_Source_mapping_inputs']);self.assertEqual(new['executable_Source_mapping']['operations'],124)
-  self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),124)
+  self.assertEqual(new['executable_Source_non_HTTP_mapping'],old['non_HTTP_mapping'])
+  expected=old['base_HTTP_assignments']+len(selected)+len(later_ids)
+  self.assertEqual(expected,139);self.assertEqual(mapping['operations'],expected)
+  self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)
   self.assertEqual({key for key,o in ops.items()if 'executable_Source_contract'in o and o['executable_Source_contract'].get('fixture_id')=='retained-Original-notification-mutations-Source2-48'},selected)
+ def test_prior_rows_preserved_except_exact_validated_later_assignments(self):
+  self.assert_preserved_register(json.loads((ROOT/'docs/rust-contract-register.json').read_text()))
+ def test_later_assignment_cannot_change_historical_identity(self):
+  value=json.loads((ROOT/'docs/rust-contract-register.json').read_text())
+  operation=next(o for r in value['runtime_routes']for o in r['operations']if o['contract_id']=='route-a53ed9176d67c2be1915:GET')
+  operation['source_action']='invented'
+  with self.assertRaises(AssertionError):self.assert_preserved_register(value)
+ def test_later_assignment_cannot_change_historical_required_roles(self):
+  value=json.loads((ROOT/'docs/rust-contract-register.json').read_text())
+  operation=next(o for r in value['runtime_routes']for o in r['operations']if o['contract_id']=='route-a53ed9176d67c2be1915:GET')
+  operation['role_matrix']['required_roles']=['invented-required-role']
+  with self.assertRaises(AssertionError):self.assert_preserved_register(value)
+ def test_later_assignment_requires_exact_Source_fields(self):
+  value=json.loads((ROOT/'docs/rust-contract-register.json').read_text())
+  operation=next(o for r in value['runtime_routes']for o in r['operations']if o['contract_id']=='route-a53ed9176d67c2be1915:GET')
+  operation['setup_fixture']['invented_success']=True
+  with self.assertRaises(AssertionError):self.assert_preserved_register(value)
 if __name__=='__main__':unittest.main()
