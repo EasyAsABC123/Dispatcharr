@@ -19,8 +19,8 @@ catalogue responses are retained.
 | SDK70 | Formatting, workspace check, strict Clippy and workspace tests pass |
 | Default tests | 1,169 passed, zero failed; 784 fixture-dependent tests ignored |
 | Physical SQL | 45 statements / 24 wrong-bind controls pass |
-| Candidate50 Docker build/packages | Pending |
-| Combined Native nine-context cohort | Prepared; not run |
+| Candidate50 Docker build/packages | Build and all six package families pass |
+| Combined Native nine-context cohort | Running; no acceptance claim yet |
 | New application performance | Pending |
 
 Movie aliases prefer `tmdb_id` over `tmdb` and `imdb_id` over `imdb`. Series
@@ -70,8 +70,8 @@ controls are prepared for the existing copied-schema executor. The physical read
 both EOFs and settled group. It performs no business DML/tasks/media, uses no
 statement cache, passes Ready/Close and leaves the default 62-table/59-sequence
 schema byte-identical. Root verifies its one exact container, eight original
-host process generations and project absent. Docker packages and the full
-affected Native cohort remain pending; ignored host tests do not satisfy them.
+host process generations and project absent. All six Docker package families now pass separately. The full affected Native
+nine-context cohort is running; ignored host tests do not satisfy it.
 
 Evidence: [Source authority](../scripts/rust-integration/external-identity-source1/README.md),
 [SDK70](../scripts/rust-integration/milestone-batch50/SDK/summary.json),
@@ -81,3 +81,16 @@ Source identity is the pinned Original runtime, not the unused declared
 Candidate49 dependency metadata. Public nine-context reproduction, larger or
 additional identity domains, cross-provider transports, performance and all
 complete migration milestones remain open.
+
+
+Published source `9b1e7988c36eaf21c5017b54476aa6efdd89dfbd` builds in
+302.470 seconds as
+`sha256:470a6c44d0de4d109149bcb581545ad4af53fa7a1ff2f59a257fd92319ef7d1a`.
+All 1,446 Rust inputs match SDK70; actual Store and Main recompilation is
+verified, and the Main ELF differs from Candidate49. Unchanged React assets
+and original credits remain verified. All six existing package families pass;
+all 55 exact package containers and scoped inventories are absent. These are
+[package proofs](../scripts/rust-integration/milestone-batch50/package/inventory.json),
+not application or performance acceptance. The full Source0/Native9 cohort is
+running with the actual image and UID177 helper proof. Its eventual terminal,
+strict Source comparisons and cleanup must be reviewed before acceptance.

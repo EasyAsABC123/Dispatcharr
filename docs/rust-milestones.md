@@ -13,8 +13,8 @@ alone does not establish application parity or an application performance gain.
 Movie/Series external-ID identity slice. Source passes nine characterized roots;
 SDK70 passes all four gates with 1,169 tests, and physical checks pass 45
 production statements and 24 wrong-bind controls with cleanup. SDK68's sandbox
-TCP-bind failure and SDK69's passing host diagnostics remain preserved. The
-Candidate50 Docker build, packages, full Native nine-context cohort, public
+TCP-bind failure and SDK69's passing host diagnostics remain preserved. Its Docker image and all six package families now pass with all 55 package
+containers absent. The full Native nine-context cohort is running; public
 reproduction, new application performance and complete milestones remain open.
 
 [Candidate49](rust-milestone-batch49.md) removes the temporary shared-account
