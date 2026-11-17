@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-comskip-positive-source-driver-3/cohort/comskip_positive_cases.py", line 226, in run_manual
+    cell=next(c for c in report['cases']if c['name']==label);cell['status']='running';save(out/'report.json',report);save(out/'private'/(label+'-settings-delta.json'),_settings(f,mode,False));r=f._positive_rows[mode];cell.update(_manual(f,label,mode,r['id'],r['file'],r['title'],repeat,out));save(out/'report.json',report)
+                                                                                                                                                                                                                                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-comskip-positive-source-driver-3/cohort/comskip_positive_cases.py", line 196, in _manual
+    assert after=={**before,'custom_properties':{**before['custom_properties'],'comskip':expected}}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

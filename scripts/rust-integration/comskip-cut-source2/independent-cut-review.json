@@ -1,0 +1,94 @@
+{
+  "state": "ACTUAL_REAL_CUT_BUSINESS_LEAF_QUALIFIED_OFFLINE_WHOLE_CONTROLLER_STILL_FAILED",
+  "Source_whole_controller_exit": 1,
+  "actual_result": "ok",
+  "literal_Comskip_CP": {
+    "edl": "recording.edl",
+    "status": "completed",
+    "ini_path": "/app/docker/comskip.ini",
+    "commercials": 2,
+    "segments_kept": 3
+  },
+  "only_old_expectation_difference": "comskip.ini_path expected custom /shared/comskip-positive-media/positive.ini, actual /app/docker/comskip.ini; no other Recording field differs. No mode key in either expected or actual cut CP.",
+  "real_EDL": [
+    [
+      150.52,
+      181.48
+    ],
+    [
+      332.52,
+      363.48
+    ]
+  ],
+  "segments_kept": 3,
+  "media_before": {
+    "bytes": 39148255,
+    "sha256": "be04f525c8783b7077b99130d5e26cc5941ce8e21eb887682248e2d5d2c4c29b"
+  },
+  "media_after": {
+    "bytes": 37212976,
+    "sha256": "5f99c17c67d3b29da75b86e694ea13c0137c2675b5d3ae405c110364d74b1787"
+  },
+  "duration_before": 544.021,
+  "duration_after": 483.113,
+  "full_A_V_decode_exit": 0,
+  "whole_producer_journal_exact_one_target": true,
+  "ordered_WS_exact_Source_cut": true,
+  "stage_and_EDL_cleanup": true,
+  "captured_OS_process_argv_or_returncode": false,
+  "code_exit0_branch_observed": true,
+  "actual_OS_selected_INI_receipt": null,
+  "Source_CP_reports_INI": "/app/docker/comskip.ini",
+  "Source_setting_save_reports_custom_INI": "/shared/comskip-positive-media/positive.ini",
+  "INI_selection_cause_unobserved": "Host copied custom INI and SQLsetting are recorded, but exact worker getter value/exception and exists test were not observed. No cache/getter/command inference asserted as captured fact.",
+  "cut_repeat_NOT_RUN": true,
+  "automatic_BLOCKED": true,
+  "known_cut_replay_needed": false,
+  "Native_acceptance": false,
+  "refs": [
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/EDL-watch-errors.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/HTTP.json",
+      "sha256": "e18776853d539d7f84c2407fa90b952bed0bb57d23382f0c203c2cbbd3cce373"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/SQL-after.json",
+      "sha256": "c155da34c8ea0975739fbe270674485e009785f0ccd5d0f678f7cbe8418e3267"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/SQL-before.json",
+      "sha256": "09dbe03114b406950549c5654ab6d13c21e54c33f57d392e7186e9725f2c796e"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/WS.json",
+      "sha256": "017eb65d34b4f69fbaf6a7cf086aa516a2fc84722d676167ade4247334bd9936"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/actual-generated-EDL.json",
+      "sha256": "3d63e1fadf3ea77a0b7fc34528b67389f9d56fae5d965b9f24e5bc793e03404c"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/backend.json",
+      "sha256": "e5b0c275ef7d9d3c6b3e50a07123833c1603717afb19ed1b84d80b1b8d9da107"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/frame.json",
+      "sha256": "1e1523e4f85eaeeba2e9666751c7004075fa436b1cda88e35b776f357ef9c1b0"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/journal.json",
+      "sha256": "03c8cd060bfb216112aa30377a3a9bf508abf380b302f851aaf4cf545f86d433"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/media-after.json",
+      "sha256": "fa79fa4adb010e2be8effe476ea0136b35dfe18cace79729d7a0d81800a78360"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/comskip-positive-manual/private/positive-cut/media-before.json",
+      "sha256": "45fd0fc0341c6e6d0eb02728b7629a0becfc4808a5fe8ebeccf5cfd9971713ba"
+    }
+  ]
+}
