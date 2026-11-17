@@ -1,0 +1,440 @@
+{
+  "Source_mutations": 12,
+  "Source_XML_readbacks": 13,
+  "leaves": [
+    {
+      "label": "xmltv-warm-before-coupling",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": null,
+      "generation_after": null,
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "b39191054672dffe7b4f8d5b2a0116cdd2f439167d84fbb2e98e75c9694c3b5b",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    },
+    {
+      "label": "create-dummy-EPG-channel",
+      "HTTP_status": 201,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channel",
+        "dispatcharr_channels_channelgroup",
+        "dispatcharr_channels_channelgroupm3uaccount"
+      ],
+      "generation_before": null,
+      "generation_after": "1",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "eb59313a462f06288b7f1a0a65fad7e0e0410f13e71e2b56db66397b62cb8d75",
+      "changed_sequence_names": [
+        "dispatcharr_channels_channel_id_seq",
+        "dispatcharr_channels_channelgroup_id_seq",
+        "dispatcharr_channels_channelgroupm3uaccount_id_seq"
+      ]
+    },
+    {
+      "label": "xmltv-after-create-dummy-EPG-channel",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": "1",
+      "generation_after": "1",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "1ebc6c7209b083f252b231f6e9c4e2035422320a2484f607904c0f5c89b28525",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    },
+    {
+      "label": "create-XML-EPG-channel",
+      "HTTP_status": 201,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channel",
+        "epg_programdata"
+      ],
+      "generation_before": "1",
+      "generation_after": "3",
+      "programme_root_publications": 1,
+      "programme_terminal_statuses": [
+        "SUCCESS"
+      ],
+      "WS_events": 0,
+      "body_sha256": "a36617f0de44aae48700f25f82adff5480f3c2ead5da9c28084df16ab42d15b4",
+      "changed_sequence_names": [
+        "dispatcharr_channels_channel_id_seq",
+        "epg_programdata_id_seq"
+      ]
+    },
+    {
+      "label": "xmltv-after-create-XML-EPG-channel",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": "3",
+      "generation_after": "3",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "14931d163cef6070f1c48c36f6d802a910d0db5601908148775ecfcfd20e4631",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    },
+    {
+      "label": "create-orphan-EPG-channel",
+      "HTTP_status": 201,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channel"
+      ],
+      "generation_before": "3",
+      "generation_after": "4",
+      "programme_root_publications": 1,
+      "programme_terminal_statuses": [
+        "SUCCESS"
+      ],
+      "WS_events": 0,
+      "body_sha256": "fed17e9766f86e65323cbe0cfdd5f2056688b4507b6b23e9793c2f546635facc",
+      "changed_sequence_names": [
+        "dispatcharr_channels_channel_id_seq"
+      ]
+    },
+    {
+      "label": "xmltv-after-create-orphan-EPG-channel",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": "4",
+      "generation_after": "4",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "738f6d1e256221436a05ed174bd2754e4fc0b97c344c91e3d1dae9f31db62f8d",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    },
+    {
+      "label": "override-first-dummy-assignment",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channeloverride"
+      ],
+      "generation_before": "4",
+      "generation_after": "5",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "e1b833e101c86113fd12181a3dd9736e732167c1188bec22066088f6188caac7",
+      "changed_sequence_names": [
+        "dispatcharr_channels_channeloverride_id_seq"
+      ]
+    },
+    {
+      "label": "xmltv-after-override-first-dummy-assignment",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": "5",
+      "generation_after": "5",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "738f6d1e256221436a05ed174bd2754e4fc0b97c344c91e3d1dae9f31db62f8d",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    },
+    {
+      "label": "override-same-dummy-no-EPG-change",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channeloverride"
+      ],
+      "generation_before": "5",
+      "generation_after": "5",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "e1b833e101c86113fd12181a3dd9736e732167c1188bec22066088f6188caac7",
+      "changed_sequence_names": []
+    },
+    {
+      "label": "xmltv-after-override-same-dummy-no-EPG-change",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [],
+      "generation_before": "5",
+      "generation_after": "5",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "738f6d1e256221436a05ed174bd2754e4fc0b97c344c91e3d1dae9f31db62f8d",
+      "changed_sequence_names": []
+    },
+    {
+      "label": "override-changed-dummy-assignment",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channeloverride"
+      ],
+      "generation_before": "5",
+      "generation_after": "6",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "a6612624702f92d34fbd4b8111393f56fea2c03c638ff231a63a820e55085382",
+      "changed_sequence_names": []
+    },
+    {
+      "label": "xmltv-after-override-changed-dummy-assignment",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": "6",
+      "generation_after": "6",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "899d6b71e807ee116a0884b33329808d8a792eac43efa402aead1fde37744ad9",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    },
+    {
+      "label": "override-changed-XML-A-assignment",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channeloverride",
+        "epg_programdata"
+      ],
+      "generation_before": "6",
+      "generation_after": "8",
+      "programme_root_publications": 1,
+      "programme_terminal_statuses": [
+        "SUCCESS"
+      ],
+      "WS_events": 0,
+      "body_sha256": "f9ed463e181b0ccea23eb9a0daca657c998875881a46bf3406498273f5d28ac5",
+      "changed_sequence_names": [
+        "epg_programdata_id_seq"
+      ]
+    },
+    {
+      "label": "xmltv-after-override-changed-XML-A-assignment",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": "8",
+      "generation_after": "8",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "af051bc42e05598c7ad50a31cb0b9a67c7b574f979ee2c95d4b1ee0bec3b0077",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    },
+    {
+      "label": "override-changed-XML-B-assignment",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channeloverride",
+        "epg_programdata"
+      ],
+      "generation_before": "8",
+      "generation_after": "10",
+      "programme_root_publications": 1,
+      "programme_terminal_statuses": [
+        "SUCCESS"
+      ],
+      "WS_events": 0,
+      "body_sha256": "137ab66335b19d1d1ef245c3eb4d13b9897bca7a742bebd8a9ee82ed0b3cc098",
+      "changed_sequence_names": [
+        "epg_programdata_id_seq"
+      ]
+    },
+    {
+      "label": "xmltv-after-override-changed-XML-B-assignment",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": "10",
+      "generation_after": "10",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "57e4ff04091e1dbaac5cde2dd72d68598b3529baedbf04ec1dde340c8fc7eb41",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    },
+    {
+      "label": "override-clear-EPG-preserve-name",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channeloverride"
+      ],
+      "generation_before": "10",
+      "generation_after": "11",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "ed16d0bf32adf5dd606f6c6c5f28874f4da5f497be29f8bbecaaa2124f28e333",
+      "changed_sequence_names": []
+    },
+    {
+      "label": "xmltv-after-override-clear-EPG-preserve-name",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": "11",
+      "generation_after": "11",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "bec5ead9e232da9a5977d39715003fa4598bcdb71c46a70d5f24bc5c4734df23",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    },
+    {
+      "label": "override-reassign-XML-B",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channeloverride",
+        "epg_programdata"
+      ],
+      "generation_before": "11",
+      "generation_after": "13",
+      "programme_root_publications": 1,
+      "programme_terminal_statuses": [
+        "SUCCESS"
+      ],
+      "WS_events": 0,
+      "body_sha256": "208441ba773ba0d37544428ec76885b4f0dbd3731525279af25a9f608b31698d",
+      "changed_sequence_names": [
+        "epg_programdata_id_seq"
+      ]
+    },
+    {
+      "label": "xmltv-after-override-reassign-XML-B",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": "13",
+      "generation_after": "13",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "6929811623968f823baeb2d383d6fc93bab09ee312c75d60e60a4bcc20bc9d7c",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    },
+    {
+      "label": "override-delete-entire-row",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channeloverride"
+      ],
+      "generation_before": "13",
+      "generation_after": "13",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "9d899974e89563d2dc6c0a04fe43919ee8018ab7c9aa381baaabaff8b6915b3f",
+      "changed_sequence_names": []
+    },
+    {
+      "label": "xmltv-after-override-delete-entire-row",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [],
+      "generation_before": "13",
+      "generation_after": "13",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "6929811623968f823baeb2d383d6fc93bab09ee312c75d60e60a4bcc20bc9d7c",
+      "changed_sequence_names": []
+    },
+    {
+      "label": "create-auto-base-dummy-override-XML",
+      "HTTP_status": 201,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "dispatcharr_channels_channel",
+        "dispatcharr_channels_channeloverride",
+        "epg_programdata"
+      ],
+      "generation_before": "13",
+      "generation_after": "16",
+      "programme_root_publications": 1,
+      "programme_terminal_statuses": [
+        "SUCCESS"
+      ],
+      "WS_events": 0,
+      "body_sha256": "a1d7e159bec246b9833517fbe096bbed543f52c00976c6c2d7d8b66927ad4c7f",
+      "changed_sequence_names": [
+        "dispatcharr_channels_channel_id_seq",
+        "dispatcharr_channels_channeloverride_id_seq",
+        "epg_programdata_id_seq"
+      ]
+    },
+    {
+      "label": "xmltv-after-create-auto-base-dummy-override-XML",
+      "HTTP_status": 200,
+      "positive_leaf_checked": true,
+      "changed_tables": [
+        "core_systemevent"
+      ],
+      "generation_before": "16",
+      "generation_after": "16",
+      "programme_root_publications": 0,
+      "programme_terminal_statuses": [],
+      "WS_events": 0,
+      "body_sha256": "ddafdef87f962de55e1c1e1f53f3568c735d570bb856dac1004b4b3074e2956e",
+      "changed_sequence_names": [
+        "core_systemevent_id_seq"
+      ]
+    }
+  ]
+}

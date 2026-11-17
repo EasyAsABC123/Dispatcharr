@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "image_id": "sha256:c110fe52e5a30e72e820b665339b416779f07bd425a1f236c6bf0fcfc8bb6e01",
+  "git_revision": "d6bf6787ad1ad504f9da5ce4fb30e53ee95ebcce",
+  "Main_application_acceptance": false,
+  "enabled_plugin_acceptance": false,
+  "performance_verified": false,
+  "actual_production_launcher_help": {
+    "actual_exit": 0,
+    "nonempty_usage": true,
+    "required_flags": [
+      "--mode",
+      "--role",
+      "--source",
+      "--plugins"
+    ],
+    "stdout_bytes": 281,
+    "stdout_sha256": "f1cee39617492a5f7fdc8c23a22ebb3636d08a8af6090201fe6651a87869d76f",
+    "scope": "Actual installed production wrapper invocation, no application/task/handshake acceptance"
+  },
+  "actual_namespace_AppConfig_control": {
+    "AppConfig_class": "django.apps.config.AppConfig",
+    "Django": "6.0.9",
+    "Django_AppConfig_sha256": "d59871b783abc119ce9ac4ff07f06eac89b3de88bcdf7d13246d2b451279f1b4",
+    "Django_DB_not_imported": true,
+    "Source_business_calls": 0,
+    "actual_UID": 65532,
+    "app_label": "api",
+    "app_name": "apps.api",
+    "app_started": false,
+    "namespace_empty_before_and_after": true,
+    "namespace_imported": "apps.api",
+    "namespace_mode": "0755",
+    "namespace_paths": [
+      "/opt/dispatcharr-python/application/apps/api"
+    ],
+    "no_Source_init_AppConfig_models_ready_or_HTTP_code": true,
+    "passed": true,
+    "performance_verified": false,
+    "registry_unpopulated": true,
+    "settings_unconfigured": true
+  },
+  "namespace_guest_sha256": "587d8073cebc17b047f2ea8e9cfd6c438724a13fe34ac1d547afc57fa3f628e4",
+  "manifest_summary": {
+    "source_application_assets_copied": true,
+    "actual_execution_audit_required": true,
+    "source_backend_started": false,
+    "application_started": false,
+    "manifest_sha256": "318904ee9a324ccbf2c725671af13bb81d93413a0199857663ac923cc3771f0c",
+    "manifest_bytes": 14879287,
+    "files": 32192,
+    "ELF": 425
+  },
+  "actual_audit": {
+    "actual_UID": 65532,
+    "hashes_checked": 32500,
+    "distributions": 127,
+    "ELF": 425,
+    "Original_retained_files": 328,
+    "dependency_module_origins": {
+      "django": "/opt/dispatcharr-python/lib/python3.13/dist-packages/django/__init__.py",
+      "psycopg": "/opt/dispatcharr-python/lib/python3.13/dist-packages/psycopg/__init__.py",
+      "celery": "/opt/dispatcharr-python/lib/python3.13/dist-packages/celery/__init__.py",
+      "kombu": "/opt/dispatcharr-python/lib/python3.13/dist-packages/kombu/__init__.py",
+      "redis": "/opt/dispatcharr-python/lib/python3.13/dist-packages/redis/__init__.py",
+      "django_redis": "/opt/dispatcharr-python/lib/python3.13/dist-packages/django_redis/__init__.py",
+      "channels": "/opt/dispatcharr-python/lib/python3.13/dist-packages/channels/__init__.py",
+      "channels_redis": "/opt/dispatcharr-python/lib/python3.13/dist-packages/channels_redis/__init__.py",
+      "rest_framework": "/opt/dispatcharr-python/lib/python3.13/dist-packages/rest_framework/__init__.py",
+      "regex": "/opt/dispatcharr-python/lib/python3.13/dist-packages/regex/__init__.py"
+    },
+    "django_application_registry_ready": false,
+    "application_root_on_generic_path": false
+  },
+  "Original_source_manifest_exact_Git": true,
+  "scope": "Packaged bytes, dependency origins and notices only. Actual plugin bootstrap/callback/execution audit and backend lifecycle remain untested.",
+  "failure": null,
+  "exact_cleanup": true
+}

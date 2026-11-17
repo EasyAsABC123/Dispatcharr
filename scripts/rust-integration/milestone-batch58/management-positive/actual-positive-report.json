@@ -1,0 +1,113 @@
+{
+  "status": "NATIVE_TWELVE_POSITIVE_LEAVES_QUALIFIED",
+  "Source_contexts": 0,
+  "Native_contexts": 1,
+  "steps": [
+    {
+      "label": "account-create",
+      "method": "POST",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 201,
+      "path": "/api/m3u/accounts/"
+    },
+    {
+      "label": "account-put",
+      "method": "PUT",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 200,
+      "path": "/api/m3u/accounts/5/"
+    },
+    {
+      "label": "account-patch",
+      "method": "PATCH",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 200,
+      "path": "/api/m3u/accounts/5/"
+    },
+    {
+      "label": "profile-create",
+      "method": "POST",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 201,
+      "path": "/api/m3u/accounts/5/profiles/"
+    },
+    {
+      "label": "profile-delete",
+      "method": "DELETE",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 204,
+      "path": "/api/m3u/accounts/5/profiles/7/"
+    },
+    {
+      "label": "epg-dummy-rename-new-data-and-WS",
+      "method": "PUT",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 200,
+      "path": "/api/epg/sources/3/"
+    },
+    {
+      "label": "epg-xmltv-activate-switch-interval-to-cron",
+      "method": "PATCH",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 200,
+      "path": "/api/epg/sources/4/"
+    },
+    {
+      "label": "epg-xmltv-patch-preserves-linked-cron",
+      "method": "PATCH",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 200,
+      "path": "/api/epg/sources/4/"
+    },
+    {
+      "label": "epg-xmltv-deactivate-status-and-task",
+      "method": "PATCH",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 200,
+      "path": "/api/epg/sources/4/"
+    },
+    {
+      "label": "epg-delete-cache-cascade-and-periodic-task",
+      "method": "DELETE",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 204,
+      "path": "/api/epg/sources/4/"
+    },
+    {
+      "label": "epg-delete-upload-protected-files-and-task",
+      "method": "DELETE",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 204,
+      "path": "/api/epg/sources/5/"
+    },
+    {
+      "label": "account-delete",
+      "method": "DELETE",
+      "state": "observed-not-Native-qualified",
+      "actual_HTTP_status": 200,
+      "path": "/api/m3u/accounts/5/"
+    }
+  ],
+  "new_route_method_roots": 9,
+  "prior_qualified_business_replayed": false,
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "whole_seconds": 1200,
+  "Native_qualification": false,
+  "Source_business_replayed": 0,
+  "Source_checkpoint_imported": false,
+  "required_unexplored_gaps": [
+    "All other account/profile/EPG branches and role Cartesian matrix",
+    "Profile PUT/PATCH prior Source authority is retained only; it is not replayed",
+    "External provider success, playback and performance are outside this context"
+  ],
+  "Native_positive_leaf_qualification": true,
+  "full_cross_run_exact_comparison_encoded": false,
+  "acceptance_gaps": [
+    "Full Source-to-Native row-field equality after typed identity mapping is not encoded: all table change sets/unlisted tables and explicit positive semantics are checked, but this is not full row parity.",
+    "Dynamic timestamp operation-clock bounds, task lock-token equality to acquisition, complete task-result value equality and arbitrary WS payload fields need separate comparison; no timestamps or unknown scalars are masked.",
+    "Cache DUMP hashes/type/expiry are captured and schema-checked, not whole-cache cross-run payload equality; upload-path files seeded, no uploadHTTP/ingestion acceptance.",
+    "Source1 literal controller exit1 with4positive leaves, Source2 exit0 with8 after typed checkpoint/fresh process-cache baseline; no one-controller Source12 qualification.",
+    "Outer input integrity, literal controller exit and independent cleanup must be required by driver/Root separately."
+  ]
+}

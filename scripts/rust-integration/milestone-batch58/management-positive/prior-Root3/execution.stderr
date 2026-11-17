@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m0-management-twelve-native-binding-2/bind.py", line 79, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m0-management-twelve-native-binding-2/bind.py", line 28, in main
+    sdkroot=load(a.sdk/'Root-terminal.json');assert sdkroot['actual_exit']==0 and sdkroot['actual_terminal_consumed']and sdkroot['all_four_actual_exits']==[0]*4 and sdkroot['SDK_input_count']==1461 and sdkroot['Rust_tree_input_count']==1455
+                                                                                                                         ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'all_four_actual_exits'

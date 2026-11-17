@@ -66,10 +66,22 @@ and source-tree SHA256 `49f371a7ccdecd143ad29f3642d170f8ffc5203b61fba510959c6246
 All 1,455 Rust build inputs match tested SDK96. Its
 [six package families](../scripts/rust-integration/milestone-batch58/package/inventory.json)
 pass with actual exit 0 in 26.044 seconds; independent verification finds all 55
-exact containers absent. The matched Native12 management workflow is running
-after correcting pre-application helper modes and stale entry metadata. The
-prepared whole16 batch remains held for the automatic CUT booking HTTP503 found
-on Candidate57; a repaired successor will run the combined affected batch.
+exact containers absent. The matched [Native12 management workflow](../scripts/rust-integration/milestone-batch58/management-positive/index.json)
+now passes all 12 positive API calls across nine route/method roots in **315.550
+seconds**, with actual Root exit 0, all 2,084 inputs unchanged and independent
+absence of four exact containers, three original host generations and project
+containers/networks/volumes. Earlier pre-application failures remain recorded:
+Root2 helper directory 0700 guard, Root3 stale SDK receipt schema and Root4 context
+attempt mismatch. No Source API replay or Source checkpoint import was used.
+
+This accepts the encoded positive workflow only. Full cross-run row-field equality,
+operation-clock bounds, task lock-token/result values, arbitrary websocket fields
+and whole-cache payload equality remain unencoded. Source authority comprises
+four leaves from Source1 plus eight from its qualified continuation, not one
+uninterrupted Source12 controller. Uploaded files were seeded; upload HTTP and
+broader account/profile/EPG branches remain unqualified. The prepared whole16
+batch remains held for the automatic CUT booking HTTP503 found on Candidate57;
+a repaired successor will run the combined affected batch.
 M0–M9 remain open.
 Compilation and test duration do not establish application CPU or memory gains;
 no new performance gain or full backend parity is accepted here.

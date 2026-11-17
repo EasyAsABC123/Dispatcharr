@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m0-management-twelve-native-binding-2/readability-probe.py", line 8, in <module>
+    for directory in[DRIVER,*[p for p in DRIVER.rglob('*')if p.is_dir()]]:assert stat.S_IMODE(directory.stat().st_mode)==0o755,str(directory)
+                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: /home/justin/github/Dispatcharr/artifacts/rust/m0-management-twelve-native-driver-2
