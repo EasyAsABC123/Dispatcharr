@@ -179,3 +179,13 @@ compare each subsequent raw value with its initial setup value before mapping it
 Check every reachable launcher path when reusing a runner; updating copied tools
 does not help if the launcher still selects its predecessor directory. Keep
 original process IDs and generations in durable, credential-free cleanup records.
+
+Do not infer database insertion order from a JSON array's order. Candidate50's
+relation `INSERT ... SELECT ... WHERE NOT EXISTS` passed compilation and the
+read-only SQL peer, but allocated exposed relation primary keys in a different
+order from Source. Its nine local semantic checks passed; strict full-row Source
+comparison caught the different stream-to-primary-key mapping. Preserve that
+failed run and fix production SQL with `WITH ORDINALITY` and an explicit final
+`ORDER BY`. Verify syntax/types on PostgreSQL, rebuild the changed executable,
+and rerun the complete affected application cohort. Do not normalize relation
+primary keys or replay unchanged Source evidence to obtain acceptance.
