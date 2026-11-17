@@ -1,0 +1,37 @@
+{
+  "credit": "Original Dispatcharr, Django, Celery, DRF and dependency authors retain all application, model, task, protocol and algorithm/code credit.",
+  "candidate": 58,
+  "application_commit": "0e52e4f0e406374243fad144c8055c83a4467595",
+  "SDK": 96,
+  "tests_passed_failed_ignored": [
+    1214,
+    0,
+    789
+  ],
+  "result_blocks": 180,
+  "inputs": 1461,
+  "delivered_Rust_tree_inputs": 1455,
+  "all_four_actual_exits": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "all_actual_waits_completed": true,
+  "source_unchanged": true,
+  "all_Git_Rust_inputs_match_tested_snapshot": true,
+  "changed_Rust_paths_against_SDK95": {
+    "rust/crates/job-transport/src/normal_xc_live.rs": "7f27603ac45dec804fedb583d5e33ec568311b1e924ceea0d60b66922ccff405",
+    "rust/crates/store/src/provider_account_writes.rs": "27fc3c19ef7d6cd0b9286ff95afe9f3f3bb74c4a85664d4a5e782f90c114e33f",
+    "rust/crates/store/src/vod_ingestion.rs": "bf27bdd4bb610b3936e3ef341e8eed7c22929f23d6696c490770a8fe2ad413ba",
+    "rust/crates/store/src/vod_ingestion_sql.rs": "31b4cf44b444a74f7fed23d4da10cac94e6dfef029feef7a13cc957065fd479a",
+    "rust/crates/store/src/vod_ingestion_values.rs": "64c84d99bf4560b4ce6f044bf7bc7c13b76062e6cd412abb1a5e9e757fd17e61",
+    "rust/crates/vod-http/src/engine.rs": "94d301edfd70e64b0393b768a3572d51e5b0217e9fcb7c31a5cd2b7744ddf952"
+  },
+  "new_unit_controls": 6,
+  "scope": "Bounded provider lifecycle deterministic domains, inactive STD unparented root early-exit, and missing provider302 metadata. Actual rebuilt-image application/workflow compatibility still pending.",
+  "new_physical_redis_execution_claimed": false,
+  "prior_six_Redis_controls_under_SDK95_are_unchanged_component_evidence_only": true,
+  "full_milestone_accepted": false,
+  "performance_gain_accepted": false
+}

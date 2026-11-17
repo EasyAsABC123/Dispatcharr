@@ -1,0 +1,107 @@
+{
+  "credit": "Original Dispatcharr, Django, Celery, DRF and dependency authors retain all application, model, task, protocol and algorithm/code credit.",
+  "baseline_SDK": 95,
+  "baseline_commit": "6ca3fcd63f9d7c838b1a462b181e675d44ef3c5c",
+  "tested_SDK": 96,
+  "tested_commit": "0e52e4f0e406374243fad144c8055c83a4467595",
+  "patches": {
+    "provider_deterministic_lifecycle": {
+      "patch_sha256": "670413c77782f0ac4f2d05d5dc1ae6d73974dad6ed541ee43a98d72f6d523c74",
+      "paths": [
+        "rust/crates/store/src/vod_ingestion_values.rs",
+        "rust/crates/store/src/vod_ingestion_sql.rs",
+        "rust/crates/store/src/vod_ingestion.rs",
+        "rust/crates/store/src/provider_account_writes.rs"
+      ],
+      "new_unit_controls": 3,
+      "Source_authority_controller_sha256": "fb88c9fe0a8afe2ab60065a74d8cd892de5744b8a6295631284e397ba6869479",
+      "Source_roots_observed": 10,
+      "category_work_budget_bytes": 262144,
+      "changes": [
+        "False category defaults no longer refuse a refresh.",
+        "Category count64 ceiling replaced with charged work and streamed category SQL maps; existing HTTP/parser budgets retained.",
+        "Existing-global relation inputs preserve provider order; newly-created globals use DB name-order refetch.",
+        "Disabled relations and bounded quality/inert dictionaries admitted without dropping fields.",
+        "Series Uncategorized enabled snapshot uses its actual stored state.",
+        "Existing active XC preference PATCH admits only the captured two false flags; broader XC mutations remain unsupported."
+      ],
+      "remaining_limits": [
+        "Raw logo URL-to-PK/name/sequence observations retained; Python-set multi-logo allocation does not specify deterministic cross-runtime PK order.",
+        "Actual new Native provider10 workflow and broader race/SQL fault domains still pending."
+      ]
+    },
+    "inactive_STD_root": {
+      "patch_sha256": "b0a81197a1bd0db355cdf3fb3a0cb0831062e4450aafdd12fc88b7fdfa9ad8d3",
+      "paths": [
+        "rust/crates/job-transport/src/normal_xc_live.rs"
+      ],
+      "new_unit_controls": 2,
+      "Source_controls_sha256": "95ff7b023399d8337f93cc387e1f65c3557d8336b8aac37a1d6b87759e6c6a9a",
+      "scope": "Strict existing actualroot parser\u2192readonly inactiveSTD admission\u2192same exactheadCAS\u2192realSource lock\u2192actualactive lookup\u2192token release+physicalSQLclose\u2192existing real terminal backend writer preserving parentNone",
+      "parented_scanner_semantics": "unchanged byte-for-byte; no synthetic parent/receipt or parser widening",
+      "unqualified_domains": [
+        "active STD unparented uploaded-file roots remain outside this narrow early-exit domain",
+        "full_refresh/use_cache/nondefault Groups options use original paths",
+        "concurrent reactivation after preflight fails closed after actuallocked reread rather than fabricating inactive success",
+        "SQL/lock/backend faults require actual qualification; original ownership faultguard retains unsettled operations"
+      ]
+    },
+    "provider302_headers": {
+      "patch_sha256": "fcda155f0b35f875b35635ca47caa5f061009119a6116dace1fadba4456d1422",
+      "path": "rust/crates/vod-http/src/engine.rs",
+      "new_unit_controls": 1,
+      "Source_correlated_wire_pairs": [
+        {
+          "label": "transformed-Movie",
+          "Source_wire_sha256": "603c39f0303fb2ea8bc694f13040bd86c70d1055c0698736faaa39762b2827e1",
+          "Native_wire_sha256": "1ad412c41e7f22db2db10b5bf7313115ee0b9926ae4669978e3bff64731f1959",
+          "status": 302,
+          "Source_Content_Type": "text/html; charset=utf-8",
+          "Source_Allow": "OPTIONS, GET",
+          "Native_missing": [
+            "content-type",
+            "allow"
+          ],
+          "actual_Location_equal": true
+        },
+        {
+          "label": "transformed-Episode",
+          "Source_wire_sha256": "9b9998f9b03e038f9c34cc974040ee5170af9736f285e3c21d1e14277371ae1c",
+          "Native_wire_sha256": "7a0f4371143c1cb82997db25d38da5af3df3973e57b2c16aaefd34996efd445c",
+          "status": 302,
+          "Source_Content_Type": "text/html; charset=utf-8",
+          "Source_Allow": "OPTIONS, GET",
+          "Native_missing": [
+            "content-type",
+            "allow"
+          ],
+          "actual_Location_equal": true
+        }
+      ],
+      "scope": "Adds missing HTML UTF8 Content-Type/GET-view Allow on provider302 only; shared streaming/session logic unchanged.",
+      "existing_strict_comparator_changed": false,
+      "offline_successor_proposal_sha256": "436a36ca8528658c441d0f4bf6b274c60bf1162ddf9d04dd0e4bf568c8cc8e21",
+      "offline_retained_wire_evaluation_sha256": "19fa10d60c50a65942de04515f6feb65fe2f0f2f3d5e3695e60180b315254d59",
+      "offline_actual_current57_header_evaluation": {
+        "actual_wires_evaluated": 9,
+        "application_header_fields_passed": 2,
+        "Date_obligations_passed": 9,
+        "worker_identity_uncertain_cells": [
+          "proxy-Movie-shared-login",
+          "proxy-Episode-other-login",
+          "proxy-Episode-unlimited"
+        ],
+        "literal_header_lists_equal": 0,
+        "all_application_fields_passed": false
+      },
+      "post_fix_runtime_evaluated": false,
+      "application_or_transport_full_acceptance": false
+    }
+  },
+  "draft_preparation_metadata_is_historical_not_a_new_runtime_pass": true,
+  "current_SDK_actual_all_four_passed": true,
+  "build_and_package_actual_results": "pending_at_this_checkpoint",
+  "Source_business_replayed_for_this_preparation": false,
+  "full_milestone_accepted": false,
+  "performance_gain_accepted": false
+}
