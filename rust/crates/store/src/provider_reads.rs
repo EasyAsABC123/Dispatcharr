@@ -439,6 +439,10 @@ nested!(profiles, profile_detail, Profiles);
 nested!(filters, filter_detail, Filters);
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
+        .route(
+            "/api/m3u/accounts/{parent}/group-settings/",
+            axum::routing::patch(crate::vod_category_settings::patch),
+        )
         .route("/api/m3u/accounts/", get(accounts).post(mutation))
         .route(
             "/api/m3u/accounts/{parent}/",

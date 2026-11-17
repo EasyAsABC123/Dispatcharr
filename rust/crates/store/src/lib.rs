@@ -100,6 +100,7 @@ mod stream_validation;
 mod stream_writes;
 mod streams;
 mod username;
+mod vod_category_settings;
 
 pub use auth::{AuthConfig, AuthService, Claims, TokenPair};
 pub use cache_codec::{decode_source_cache, encode_source_cache, source_cache_values_equal};

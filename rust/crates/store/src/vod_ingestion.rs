@@ -5,6 +5,8 @@ use dispatcharr_contracts::UpdateEventSink;
 use serde_json::{json, Value};
 use std::sync::Arc;
 type Owner = Arc<dyn Send + Sync>;
+#[path = "vod_ingestion_language_sql.rs"]
+mod language_sql;
 #[path = "vod_ingestion_series_sql.rs"]
 mod series_sql;
 #[path = "vod_ingestion_series_values.rs"]
@@ -201,7 +203,10 @@ pub async fn execute(
             account.series_enabled,
         )
         .await?;
-        let uncategorized = sql::uncategorized(
+        // Source retains one relation-property snapshot across both list kinds,
+        // updating only each freshly fetched Uncategorized relation.
+        let mut languages = sql::category_languages(&auth, owner.clone(), account.id).await?;
+        let (uncategorized, language) = sql::uncategorized(
             &auth,
             owner.clone(),
             account.id,
@@ -209,6 +214,7 @@ pub async fn execute(
             account.movie_enabled,
         )
         .await?;
+        languages.insert(uncategorized, language);
         movie_map.insert("__uncategorized__".into(), uncategorized);
         let enabled = sql::enabled(&auth, owner.clone(), account.id).await?;
         draining(cancellation.as_ref())?;
@@ -235,9 +241,9 @@ pub async fn execute(
                     imported.push((movie, category));
                 }
             }
-            sql::movies(&auth, owner.clone(), account.id, imported, scan).await?;
+            sql::movies(&auth, owner.clone(), account.id, imported, scan, &languages).await?;
         }
-        let uncategorized_series = sql::uncategorized(
+        let (uncategorized_series, language) = sql::uncategorized(
             &auth,
             owner.clone(),
             account.id,
@@ -246,6 +252,7 @@ pub async fn execute(
         )
         .await?;
         draining(cancellation.as_ref())?;
+        languages.insert(uncategorized_series, language);
         series_map.insert("__uncategorized__".into(), uncategorized_series);
         // Source refresh_series calls the decorated batch helper inline. It
         // creates no Celery child and does not fetch episodes/details here.
@@ -267,13 +274,14 @@ pub async fn execute(
                     imported.push((series, category));
                 }
             }
-            series_sql::apply(&auth, owner.clone(), account.id, imported, scan).await?;
+            series_sql::apply(&auth, owner.clone(), account.id, imported, scan, &languages).await?;
         }
         // Source leaves its XtreamCodesClient context BEFORE reconcile/cleanup.
         drop(client);
-        // None of the newly created identities is language tagged, so Source's
-        // reconcile needs no split/merge/update. Verify this in actual SQL.
-        sql::verify_untagged(&auth, owner.clone()).await?;
+        // Source reconciles once after both lists and before duration/cleanup.
+        let movie_language = language_sql::reconcile_movies(&auth, owner.clone(), account.id, scan).await?;
+        let series_language = language_sql::reconcile_series(&auth, owner.clone(), account.id, scan).await?;
+        let skip_note = language_sql::language_skip_note(movie_language.failed, series_language.failed);
         let end = chrono::Utc::now();
         let micros = end
             .signed_duration_since(scan)
@@ -281,7 +289,7 @@ pub async fn execute(
             .ok_or_else(unsupported)?;
         let seconds = micros as f64 / 1_000_000.0;
         let result = format!(
-            "Batch VOD refresh completed for account {} in {seconds:.2} seconds",
+            "Batch VOD refresh completed for account {} in {seconds:.2} seconds{skip_note}",
             account.name
         );
         sql::cleanup(&auth, owner.clone(), account.id, scan).await?;
@@ -290,7 +298,7 @@ pub async fn execute(
             &account,
             100,
             "success",
-            Some(&format!("VOD refresh completed in {seconds:.2} seconds")),
+            Some(&format!("VOD refresh completed in {seconds:.2} seconds{skip_note}")),
             owner.clone(),
         )
         .await?;
@@ -324,5 +332,15 @@ pub async fn api_target(auth: &AuthService, id: i64, owner: Owner) -> Result<Str
 pub(crate) fn schema_statements() -> Vec<(&'static str, String)> {
     let mut rows = series_sql::schema_statements();
     rows.extend(sql::schema_statements());
+    rows.extend(language_sql::schema_statements());
     rows
+}
+
+#[cfg(test)]
+pub(crate) fn language_schema_parameters(name: &str) -> Option<Vec<sqlx::postgres::PgTypeInfo>> {
+    language_sql::schema_parameters(name)
+}
+#[cfg(test)]
+pub(crate) fn language_schema_columns(name: &str) -> Option<Vec<(&'static str, &'static str)>> {
+    language_sql::schema_columns(name)
 }

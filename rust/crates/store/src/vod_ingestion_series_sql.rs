@@ -38,12 +38,28 @@ pub(super) async fn apply(
     account: i64,
     rows: Vec<(Series, i64)>,
     scan: DateTime<Utc>,
+    category_languages: &HashMap<i64, String>,
 ) -> Result<(), StoreError> {
+    let providers = rows.iter().map(|(item, _)| item.external.clone()).collect();
+    let pins = super::sql::list_pins(
+        auth,
+        owner.clone(),
+        account,
+        providers,
+        ADVANCED_SERIES_RELATION_EXISTING,
+    )
+    .await?;
     let mut positions = HashMap::<String, usize>::new();
     let mut representatives = Vec::<Value>::new();
     let mut occurrences = Vec::<Vec<usize>>::new();
-    for (ordinal, (item, _)) in rows.iter().enumerate() {
-        let incoming = json!({"uuid":uuid::Uuid::new_v4(),"name":item.name,"year":item.year,"tmdb_id":item.tmdb_id,"imdb_id":item.imdb_id,"description":item.description,"rating":item.rating,"genre":item.genre,"properties":item.properties,"logo":item.logo,"stamp":Utc::now()});
+    for (ordinal, (item, category)) in rows.iter().enumerate() {
+        let language = pins
+            .languages
+            .get(&item.external)
+            .or_else(|| category_languages.get(category))
+            .map(String::as_str)
+            .unwrap_or("");
+        let incoming = json!({"uuid":uuid::Uuid::new_v4(),"name":item.name,"year":item.year,"tmdb_id":item.tmdb_id,"imdb_id":item.imdb_id,"language":language,"description":item.description,"rating":item.rating,"genre":item.genre,"properties":item.properties,"logo":item.logo,"stamp":Utc::now()});
         let key = super::sql::list_identity(&incoming);
         if let Some(index) = positions.get(&key).copied() {
             super::sql::merge_representative(&mut representatives[index], &incoming);
@@ -64,9 +80,7 @@ pub(super) async fn apply(
     let observed=session.run(move|c|Box::pin(async move{
         sqlx::query("BEGIN").execute(&mut*c).await?;
         let result=async{
-            let provider_ids:Vec<String>=rows.iter().map(|(item,_)|item.external.clone()).collect();
-            let prefetched=sqlx::query(ADVANCED_SERIES_RELATION_EXISTING).bind(account).bind(&provider_ids).fetch_all(&mut*c).await?;
-            let prefetched:HashMap<String,i64>=prefetched.into_iter().map(|r|Ok((r.try_get("provider")?,r.try_get("target")?))).collect::<Result<_,StoreError>>()?;
+            let prefetched=pins.targets;
             let initial=super::sql::list_snapshot(sqlx::query(ADVANCED_SERIES_EXISTING).bind(json!(representatives)).fetch_all(&mut*c).await?)?;
             for row in &mut representatives {row["initial_id"]=json!(super::sql::list_existing(row,&initial,false));row["resolved_id"]=row["initial_id"].clone();}
             // Fresh database snapshot, not a map extended with other candidates.
@@ -94,10 +108,10 @@ pub(super) async fn apply(
     observed?
 }
 
-const ADVANCED_SERIES_RELATION_EXISTING:&str="SELECT external_series_id AS provider,series_id::bigint AS target FROM vod_m3useriesrelation WHERE m3u_account_id::bigint=$1 AND external_series_id=ANY($2)";
+const ADVANCED_SERIES_RELATION_EXISTING:&str="SELECT r.external_series_id AS provider,r.series_id::bigint AS target,m.language FROM vod_m3useriesrelation r JOIN vod_series m ON m.id=r.series_id WHERE r.m3u_account_id::bigint=$1 AND r.external_series_id=ANY($2)";
 
-const ADVANCED_SERIES_EXISTING:&str="WITH wanted AS MATERIALIZED (SELECT v FROM jsonb_array_elements($1) v), matches AS (SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id FROM vod_series m JOIN wanted w ON m.tmdb_id=w.v->>'tmdb_id' WHERE m.language='' UNION SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id FROM vod_series m JOIN wanted w ON m.imdb_id=w.v->>'imdb_id' WHERE m.language='' UNION SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id FROM vod_series m JOIN wanted w ON m.name=w.v->>'name' AND m.year IS NOT DISTINCT FROM (w.v->>'year')::integer WHERE m.language='' AND m.tmdb_id IS NULL AND m.imdb_id IS NULL AND w.v->>'tmdb_id' IS NULL AND w.v->>'imdb_id' IS NULL) SELECT id,name,year,tmdb_id,imdb_id FROM matches ORDER BY id LIMIT 2001";
-const ADVANCED_SERIES_INSERT: &str = "INSERT INTO vod_series(uuid,name,description,year,rating,genre,logo_id,tmdb_id,imdb_id,language,custom_properties,created_at,updated_at) SELECT (v->>'uuid')::uuid,v->>'name',v->>'description',(v->>'year')::integer,v->>'rating',v->>'genre',(v->>'logo_id')::bigint,v->>'tmdb_id',v->>'imdb_id','',NULLIF(v->'properties','null'::jsonb),(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz FROM jsonb_array_elements($1) v RETURNING id::bigint,uuid";
+const ADVANCED_SERIES_EXISTING:&str="WITH wanted AS MATERIALIZED (SELECT v FROM jsonb_array_elements($1) v), matches AS (SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id,m.language FROM vod_series m JOIN wanted w ON m.tmdb_id=w.v->>'tmdb_id' WHERE m.language IN(COALESCE(w.v->>'language',''),'') UNION SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id,m.language FROM vod_series m JOIN wanted w ON m.imdb_id=w.v->>'imdb_id' WHERE m.language IN(COALESCE(w.v->>'language',''),'') UNION SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id,m.language FROM vod_series m JOIN wanted w ON m.name=w.v->>'name' AND m.year IS NOT DISTINCT FROM (w.v->>'year')::integer WHERE m.language IN(COALESCE(w.v->>'language',''),'') AND m.tmdb_id IS NULL AND m.imdb_id IS NULL AND w.v->>'tmdb_id' IS NULL AND w.v->>'imdb_id' IS NULL) SELECT id,name,year,tmdb_id,imdb_id,language FROM matches ORDER BY id LIMIT 2001";
+const ADVANCED_SERIES_INSERT: &str = "INSERT INTO vod_series(uuid,name,description,year,rating,genre,logo_id,tmdb_id,imdb_id,language,custom_properties,created_at,updated_at) SELECT (v->>'uuid')::uuid,v->>'name',v->>'description',(v->>'year')::integer,v->>'rating',v->>'genre',(v->>'logo_id')::bigint,v->>'tmdb_id',v->>'imdb_id',COALESCE(v->>'language',''),NULLIF(v->'properties','null'::jsonb),(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz FROM jsonb_array_elements($1) v RETURNING id::bigint,uuid";
 const ADVANCED_SERIES_UPDATE: &str = "WITH projected AS MATERIALIZED (SELECT s.id,input.ordinal,(v->>'name' IS DISTINCT FROM s.name) AS queue_name_change,COALESCE((v->>'year')::integer,s.year) AS year,COALESCE(v->>'tmdb_id',s.tmdb_id) AS tmdb_id,COALESCE(v->>'imdb_id',s.imdb_id) AS imdb_id,CASE WHEN v->>'description'<>'' THEN v->>'description' ELSE s.description END AS description, COALESCE(v->>'rating',s.rating) AS rating, CASE WHEN v->>'genre'<>'' THEN v->>'genre' ELSE s.genre END AS genre, CASE WHEN (COALESCE(s.custom_properties,'{}'::jsonb)||COALESCE((SELECT jsonb_object_agg(p.key,p.value) FROM jsonb_each(COALESCE(NULLIF(v->'properties','null'::jsonb),'{}'::jsonb)) p WHERE NOT (p.value IN ('null'::jsonb,'\"\"'::jsonb,'[]'::jsonb) OR (jsonb_typeof(p.value)='array' AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.value)='array' THEN p.value ELSE '[]'::jsonb END) element WHERE element NOT IN ('null'::jsonb,'\"\"'::jsonb))))),'{}'::jsonb)) IS DISTINCT FROM COALESCE(s.custom_properties,'{}'::jsonb) THEN COALESCE(s.custom_properties,'{}'::jsonb)||COALESCE((SELECT jsonb_object_agg(p.key,p.value) FROM jsonb_each(COALESCE(NULLIF(v->'properties','null'::jsonb),'{}'::jsonb)) p WHERE NOT (p.value IN ('null'::jsonb,'\"\"'::jsonb,'[]'::jsonb) OR (jsonb_typeof(p.value)='array' AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.value)='array' THEN p.value ELSE '[]'::jsonb END) element WHERE element NOT IN ('null'::jsonb,'\"\"'::jsonb))))),'{}'::jsonb) ELSE s.custom_properties END AS custom_properties, (v->>'logo_id')::bigint AS logo_id FROM vod_series s CROSS JOIN jsonb_array_elements($1) WITH ORDINALITY AS input(v,ordinal) WHERE s.id::bigint=(v->>'initial_id')::bigint), changed AS MATERIALIZED (SELECT DISTINCT ON(p.id) p.*,CASE WHEN EXISTS(SELECT 1 FROM projected q WHERE q.id=p.id AND q.logo_id IS DISTINCT FROM s.logo_id) THEN (SELECT q.logo_id FROM projected q WHERE q.id=p.id AND q.logo_id IS DISTINCT FROM s.logo_id ORDER BY q.ordinal DESC LIMIT 1) ELSE s.logo_id END AS final_logo_id FROM projected p JOIN vod_series s ON s.id=p.id WHERE (p.queue_name_change OR ROW(s.year,s.tmdb_id,s.imdb_id,s.description,s.rating,s.genre,s.custom_properties,s.logo_id) IS DISTINCT FROM ROW(p.year,p.tmdb_id,p.imdb_id,p.description,p.rating,p.genre,p.custom_properties,p.logo_id)) ORDER BY p.id,p.ordinal) UPDATE vod_series s SET year=p.year,tmdb_id=p.tmdb_id,imdb_id=p.imdb_id,description=p.description,rating=p.rating,genre=p.genre,custom_properties=p.custom_properties,logo_id=p.final_logo_id FROM changed p WHERE s.id=p.id AND ROW(s.year,s.tmdb_id,s.imdb_id,s.description,s.rating,s.genre,s.custom_properties,s.logo_id) IS DISTINCT FROM ROW(p.year,p.tmdb_id,p.imdb_id,p.description,p.rating,p.genre,p.custom_properties,p.final_logo_id)";
 
 #[cfg(test)]

@@ -1,6 +1,6 @@
 //! Exact compiled matching, station and aggregate SQL against an owned migrated Source PostgreSQL schema.
 //! Original Dispatcharr/Django/SQLx authors retain model/algorithm/library credit.
-//! The 47/30 schema peer only prepares statements. A separate ignored control
+//! The 84/68 schema peer only prepares statements. A separate ignored control
 //! executes production UPDATEs on transaction-local shadow tables, then rolls back.
 use serde_json::{json, Value};
 use sqlx::{postgres::PgTypeInfo, Column, Connection, Executor, Statement, Type, TypeInfo};
@@ -33,13 +33,31 @@ fn statements() -> Vec<(&'static str, String)> {
         ("comskip_exists", crate::comskip_http::EXISTS.to_owned()),
     ]);
     rows.extend(crate::vod_ingestion::schema_statements());
+    rows.extend(crate::vod_category_settings::schema_statements());
     rows
 }
 fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
+    if let Some(types) = crate::vod_ingestion::language_schema_parameters(name) {
+        return types;
+    }
     // Named descriptors audited against each actual .bind expression. These
     // provide PostgreSQL the production Rust wire types, rather than asking it
     // to infer convenient types from otherwise-unbound SQL placeholders.
     match name {
+        "list_category_languages" => vec![<i64 as Type<sqlx::Postgres>>::type_info()],
+        "list_uncategorized_language" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+        ],
+        "vod_category_settings_valid" => vec![<Vec<i64> as Type<sqlx::Postgres>>::type_info()],
+        "vod_category_settings_existing" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <Vec<i64> as Type<sqlx::Postgres>>::type_info(),
+        ],
+        "vod_category_settings_upsert" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <Value as Type<sqlx::Postgres>>::type_info(),
+        ],
         "list_logo_insert"
         | "list_movie_insert"
         | "list_movie_update"
@@ -130,7 +148,28 @@ enum Output {
 }
 fn outputs(name: &str) -> Vec<(&'static str, Output)> {
     use Output::*;
+    if let Some(columns) = crate::vod_ingestion::language_schema_columns(name) {
+        return columns
+            .into_iter()
+            .map(|(column, kind)| {
+                (
+                    column,
+                    match kind {
+                        "JSONB" => Jsonb,
+                        "BOOL" => Bool,
+                        "INT8" => Int8,
+                        other => panic!("unreviewed language decoder {name}/{column}: {other}"),
+                    },
+                )
+            })
+            .collect();
+    }
     match name {
+        "list_category_languages" => vec![("category", Int8), ("language", Text)],
+        "list_uncategorized_language" => vec![("coalesce", Text)],
+        "vod_category_settings_valid" => vec![("category", Int8)],
+        "vod_category_settings_existing" => vec![("category", Int8), ("properties", Jsonb)],
+        "vod_category_settings_upsert" => vec![],
         "list_logo_insert"
         | "list_movie_update"
         | "list_movie_relation_insert"
@@ -138,7 +177,7 @@ fn outputs(name: &str) -> Vec<(&'static str, Output)> {
         | "advanced_series_relation_update" => vec![],
         "list_logo_select" => vec![("id", Int8), ("url", Text)],
         "list_movie_relation_existing" | "advanced_series_relation_existing" => {
-            vec![("provider", Text), ("target", Int8)]
+            vec![("provider", Text), ("target", Int8), ("language", Text)]
         }
         "list_movie_insert" | "advanced_series_insert" => vec![("id", Int8), ("uuid", Uuid)],
         "advanced_category_insert"
@@ -152,6 +191,7 @@ fn outputs(name: &str) -> Vec<(&'static str, Output)> {
                 ("year", Int4),
                 ("tmdb_id", Text),
                 ("imdb_id", Text),
+                ("language", Text),
             ]
         }
         "advanced_guard" => vec![("?column?", Bool)],
@@ -224,7 +264,7 @@ fn compatible(kind: Output, actual: &PgTypeInfo) -> bool {
 #[test]
 fn compiled_matching_statements_and_bind_ordinals_are_complete() {
     let rows = statements();
-    assert_eq!(rows.len(), 47);
+    assert_eq!(rows.len(), 84);
     let names: BTreeSet<_> = rows.iter().map(|(name, _)| *name).collect();
     assert_eq!(names.len(), rows.len());
     assert_eq!(
@@ -277,6 +317,43 @@ fn compiled_matching_statements_and_bind_ordinals_are_complete() {
             "advanced_orphan_children",
             "advanced_delete_episodes",
             "advanced_delete_series",
+            "vod_category_settings_valid",
+            "vod_category_settings_existing",
+            "vod_category_settings_upsert",
+            "language_movie_candidates",
+            "language_movie_min_rows",
+            "language_movie_row",
+            "language_movie_relations",
+            "language_movie_slot",
+            "language_movie_bulk_language",
+            "language_movie_insert",
+            "language_movie_move",
+            "language_movie_delete",
+            "language_movie_metadata",
+            "language_series_candidates",
+            "language_series_min_rows",
+            "language_series_row",
+            "language_series_relations",
+            "language_series_slot",
+            "language_series_bulk_language",
+            "language_series_insert",
+            "language_series_move",
+            "language_series_delete",
+            "language_series_metadata",
+            "language_episode_rows",
+            "language_episode_relations",
+            "language_episode_collision",
+            "language_episode_move",
+            "language_episode_move_all_relations",
+            "language_episode_move_relations",
+            "language_episode_insert",
+            "language_episode_delete_relations",
+            "language_episode_delete",
+            "language_episode_empty",
+            "language_episode_has_relations",
+            "language_category_map",
+            "list_category_languages",
+            "list_uncategorized_language",
         ]
         .into_iter()
         .collect()
@@ -403,6 +480,44 @@ async fn actual_compiled_matching_schema_prepare_only() {
         ("list_movie_relation_existing", 1),
         ("advanced_series_relation_existing", 0),
         ("advanced_series_relation_existing", 1),
+        ("language_movie_candidates", 0),
+        ("language_movie_min_rows", 0),
+        ("language_movie_row", 0),
+        ("language_movie_relations", 0),
+        ("language_movie_slot", 0),
+        ("language_movie_bulk_language", 0),
+        ("language_movie_insert", 0),
+        ("language_movie_move", 0),
+        ("language_movie_delete", 0),
+        ("language_movie_metadata", 0),
+        ("language_series_candidates", 0),
+        ("language_series_min_rows", 0),
+        ("language_series_row", 0),
+        ("language_series_relations", 0),
+        ("language_series_slot", 0),
+        ("language_series_bulk_language", 0),
+        ("language_series_insert", 0),
+        ("language_series_move", 0),
+        ("language_series_delete", 0),
+        ("language_series_metadata", 0),
+        ("language_episode_rows", 0),
+        ("language_episode_relations", 0),
+        ("language_episode_collision", 0),
+        ("language_episode_move", 0),
+        ("language_episode_move_all_relations", 0),
+        ("language_episode_move_relations", 0),
+        ("language_episode_insert", 0),
+        ("language_episode_delete_relations", 0),
+        ("language_episode_delete", 0),
+        ("language_episode_empty", 0),
+        ("language_episode_has_relations", 0),
+        ("language_category_map", 0),
+        ("language_category_map", 1),
+        ("list_category_languages", 0),
+        ("list_uncategorized_language", 0),
+        ("vod_category_settings_valid", 0),
+        ("vod_category_settings_existing", 0),
+        ("vod_category_settings_upsert", 0),
     ] {
         let sql = statements()
             .into_iter()
@@ -410,7 +525,20 @@ async fn actual_compiled_matching_schema_prepare_only() {
             .unwrap()
             .1;
         let mut types = parameter_types(name);
-        types[index] = if name == "list_logo_select"
+        types[index] = if name.starts_with("language_")
+            || name.starts_with("vod_category_settings_")
+            || matches!(
+                name,
+                "list_category_languages" | "list_uncategorized_language"
+            ) {
+            if types[index] == <i64 as Type<sqlx::Postgres>>::type_info() {
+                <bool as Type<sqlx::Postgres>>::type_info()
+            } else if types[index] == <Vec<i64> as Type<sqlx::Postgres>>::type_info() {
+                <Vec<bool> as Type<sqlx::Postgres>>::type_info()
+            } else {
+                <i64 as Type<sqlx::Postgres>>::type_info()
+            }
+        } else if name == "list_logo_select"
             || (matches!(
                 name,
                 "list_movie_relation_existing" | "advanced_series_relation_existing"
@@ -446,18 +574,18 @@ async fn actual_compiled_matching_schema_prepare_only() {
     }
     let ready = connection.ping().await;
     let closed = connection.close().await;
-    let passed = rows.len() == 47
+    let passed = rows.len() == 84
         && rows.iter().all(|r| {
             r["prepared"] == true
                 && r["row_decoder_compatible"] == true
                 && r["server_parameter_types_match"] == true
         })
-        && negatives.len() == 30
+        && negatives.len() == 68
         && negatives.iter().all(|r| r["rejected"] == true)
         && ready.is_ok()
         && closed.is_ok();
     let report = json!({"passed":passed,"schema_only":true,"DML_executed":false,"task_or_media_executed":false,
-        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1,"comskip":4,"vod_advanced":20,"vod_list_metadata":8},"statements":rows,"wrong_bind_type_controls":negatives,
+        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1,"comskip":4,"vod_advanced":20,"vod_list_metadata":8,"vod_language_pinning":2,"vod_language_reconcile":32,"vod_category_settings":3},"statements":rows,"wrong_bind_type_controls":negatives,
         "ready":format!("{ready:?}"),"closed":format!("{closed:?}"),"scope":"Compiled production SQL/constants and audited actual Rust bind types; prepares/row shapes only, not DML/data/event/task parity."});
     let bytes = serde_json::to_vec_pretty(&report).expect("report");
     assert!(bytes.len() <= 131072);
