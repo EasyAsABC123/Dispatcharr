@@ -1,0 +1,177 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "kind": "exact-CID",
+      "CID": "9b2434285c84b12ab2e8f383e57939d87afa135940e4956d76b836c877d88cdd",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1613976,
+      "original_starttime": "19766732",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-CID",
+      "CID": "a8acadc5860535901c76ab0d8e63843286b98976afefc156dba2f6551df4a14d",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1613859,
+      "original_starttime": "19766718",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-CID",
+      "CID": "d0e62c174125e9d707362bd8d7973783018e9f0dd7b98f96ec8d7268aa8629a3",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1616368,
+      "original_starttime": "19770413",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-CID",
+      "CID": "566d197895e5023fd16eaf8538bbbb83f7cacb3e3f654b53b0372aa9beb374f9",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1628907,
+      "original_starttime": "19776616",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-CID",
+      "CID": "44a7e1031c1c49af3b5f114d639f8932893e8416bf02506ce64e5091acb8c700",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1638970,
+      "original_starttime": "19781480",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-CID",
+      "CID": "94c2d41532e565f6e2e04e136558866a54404ec731dfcf14c9ecbc690f67f27a",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1646724,
+      "original_starttime": "19785426",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-CID",
+      "CID": "2e23297bc82127781192f02ac1262ab0fc32d47819005e01e472a3af95d30dfa",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1654388,
+      "original_starttime": "19789607",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-CID",
+      "CID": "027bfe5b7cca247669661a21634827464308047832c3759f2fe452dd4861c107",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1666131,
+      "original_starttime": "19795750",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-CID",
+      "CID": "9b67f9e4b8e1079f365481953a1637d3d1abe7eb70dde486dd289e54e0b0febe",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1676131,
+      "original_starttime": "19800751",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-CID",
+      "CID": "5715d35feb251952309cd2a86386e9940bed44ce82384711b7ec70abcd4e69d2",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1689558,
+      "original_starttime": "19807311",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "containers",
+      "project": "dispatcharr-normal-dvr-c825e95813",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-c825e95813"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "kind": "networks",
+      "project": "dispatcharr-normal-dvr-c825e95813",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-c825e95813"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "kind": "volumes",
+      "project": "dispatcharr-normal-dvr-c825e95813",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-c825e95813"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "passed": true
+    }
+  ],
+  "exact_CIDs": 10,
+  "positive_original_host_generations": 10,
+  "projects": [
+    "dispatcharr-normal-dvr-c825e95813"
+  ],
+  "checked_epoch": 1794885209.3009672,
+  "actual_controller_exit": 0,
+  "all_eight_contexts_passed": true
+}

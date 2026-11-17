@@ -26,8 +26,8 @@ relations and timestamps remain unchanged throughout each selected-account root.
 | SDK67 | Formatting, workspace check, strict Clippy and workspace tests pass |
 | Default tests | 1,163 passed, zero failed; 784 fixture-dependent tests ignored |
 | Physical SQL | 42 statements and 18 wrong-bind controls pass |
-| Candidate49 packaged build and runtime | Pending |
-| Combined Native eight-context cohort | Pending |
+| Candidate49 packaged build and runtime | Build and all six package families pass |
+| Combined Native eight-context cohort | All eight pass; actual exit 0 in 468.441 seconds |
 | New application performance | Pending |
 
 The three-file Rust change removes two obsolete capability-refusal queries and
@@ -44,10 +44,35 @@ passes Ready/Close with statement caching disabled, no business DML and unchange
 default schema. Its exact container, eight captured host process generations and
 project are independently absent.
 
+Committed source `64c35d3d6389e14fc586ae7fa05d04a0362c57e4` builds in
+303.385 seconds as image
+`sha256:1b0663e765891ccf930b6cc4b37b4c944002304fc91b56700739402bfc876e89`.
+All 1,445 Rust inputs match SDK67; the production Main ELF differs from
+Candidate48. All six package families pass, and all 55 exact package containers
+are absent. The unchanged React assets and original credits remain verified.
+
+The combined run passes all eight contexts in 468.441 seconds, with EOF and
+process-group settlement. It retains the seven prior workflows and adds all four
+shared-account roots on the actual packaged Main. Strict comparison validates
+full SQL/support data, all eleven sequences, the declared fixture seed, task,
+provider TLS, notifications, catalogue output and narrowly bound HTTP origins.
+Surviving selected-account relations have causal last_seen timestamps; unrelated
+owner rows stay exact. B's update and A's prune preserve the entire Episode row,
+A's prune removes only its Episode relation, and B's last-owner prune removes the
+global rows and Episode. Root independently verifies ten exact containers, ten
+captured original host process generations and the project absent.
+
+One binder preflight failed before application startup because it expected a
+separate stdout reference rather than the existing receipt's stdout field. Only
+the binder was corrected; the frozen 175-file driver, Source authority and image
+were unchanged. No runtime or Source failure is inferred from that preflight.
+
 Evidence: [Source authority](../scripts/rust-integration/shared-metadata-source1/README.md),
 [SDK67](../scripts/rust-integration/milestone-batch49/SDK/summary.json), and
-[physical SQL](../scripts/rust-integration/milestone-batch49/physical/README.md).
-The existing seven application contexts and the new shared-account context must
-run together on the packaged candidate. Cross-provider transport variations,
-larger catalogues, additional metadata domains, performance and all complete
-M0–M9 milestones remain open.
+[physical SQL](../scripts/rust-integration/milestone-batch49/physical/README.md),
+[package proofs](../scripts/rust-integration/milestone-batch49/package/inventory.json),
+and [eight-context acceptance](../scripts/rust-integration/milestone-batch49/application/index.json).
+Public eight-context reproduction, cross-provider transport variations, larger
+catalogues, additional metadata domains, performance and all complete M0–M9
+milestones remain open. Candidate48's public seven-context workflow retains its
+own image and scope.
