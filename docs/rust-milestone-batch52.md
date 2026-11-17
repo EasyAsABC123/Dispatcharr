@@ -3,8 +3,8 @@
 The pinned Original Dispatcharr reference passes eleven ordinary VOD refresh
 roots in 200.461 seconds (actual controller exit 0). This establishes the
 language behavior to implement after Candidate51, whose complete twelve-context
-application batch already passes. This document records reference qualification;
-the Rust language extension has not passed application acceptance.
+application batch already passes. The selected Rust language extension now passes the clean public13 application
+workflow below. The original private comparison failure remains separately recorded.
 
 The [reference evidence](../scripts/rust-integration/category-language-source1/index.json)
 retains initial import, shared-account import, English split, French retag,
@@ -58,20 +58,20 @@ and Main ELF `bba87a21` differs from accepted Candidate51. All six
 pass in a separately consumed 24.519-second batch, with both EOFs and settled
 group; 55 exact package containers and their scoped inventories are absent.
 React and original contributor credits remain preserved. Fresh UID182
-readability passes. The complete Source0/Native13 application batch exits 1 in 1,003.962 seconds,
+readability passes. The first private Source0/Native13 application batch exits 1 in 1,003.962 seconds,
 with both EOFs and settled group. The old twelve contexts and all eleven local
-language cases pass, but strict retained-Source comparison fails. The whole
-thirteen-context batch remains unaccepted. Root verifies sixteen exact
+language cases pass, but strict retained-Source comparison fails. That private
+thirteen-context attempt remains unaccepted. Root verifies sixteen exact
 containers, fifteen captured host generations and the project absent; the UID
 initial-generation limitation remains explicit. The [literal failed-run evidence](../scripts/rust-integration/milestone-batch52/application-attempt1/index.json)
 retains the failure. Two independent complete projection diffs find exactly six
 differences: generated receiver IDs in empty tag-API WebSocket wrappers. All
 business rows, primary keys, sequences, metadata, ownership, provider responses,
 roots and event arrays match. This diagnosis does not retroactively qualify the
-run. A narrow typed observer-identity correction and a complete clean public13
-run remain required; the Source oracle is unchanged. Public
-reproduction and equivalent-work performance measurement follow functional
-acceptance. No new performance gain or complete M0–M9 acceptance is claimed.
+run. A narrow typed observer-identity correction is validated by the separate
+clean public13 pass below; the Source oracle is unchanged. Equivalent-work
+performance measurement remains a separate gate. No new performance gain or
+complete M0–M9 acceptance is claimed.
 
 This extension admits distinct existing VOD categories with empty live
 `group_settings`. React's combined live/VOD settings save still reaches an
@@ -81,3 +81,27 @@ next reference batch. Wider language cycles and fault domains also remain open.
 
 Original Dispatcharr and dependency authors retain all application, algorithm
 and protocol credit.
+
+
+The [clean public13 application run](../scripts/rust-integration/milestone-batch52/public-application/index.json)
+passes all thirteen contexts in 999.062 seconds (Native child: 998.354 seconds),
+with both EOFs and settled groups. Archive `0ffd147b75e3bc6e5e642a0ffcb2dd56633c4c93`
+uses forty public Python payloads and the same 1,449 Rust inputs as SDK77. All
+eleven language roots pass full retained-Source comparison, including complete
+rows, exact primary keys/all eleven sequences, ownership and metadata, six real
+category PATCH calls, declared Episode seed, provider bytes and ordered events.
+Each of six Native tag receivers has a completed, owned group-add receipt with
+matching stdout/hash and a fresh UUIDv4. Only that verified fixture identifier
+maps to its bound Source identifier; empty raw/decoded arrays and all business
+values remain exact. The Source language49 projection/index and separate safe
+receipt addon stay unchanged. No Source business root is replayed. Root verifies
+sixteen exact containers, fifteen captured host generations and the project
+absent, retaining the UID initial-generation gap. The earlier private exit1 is
+not retroactively accepted.
+
+This accepts the selected category-language workflow, not complete UI or
+migration parity. The React combined live/VOD save sends nonempty live groups;
+that branch remains explicitly unavailable in the accepted Rust image. Its
+first Source save is captured and independently checked offline, while eleven
+remaining Source cells and the Rust live-group extension remain pending. New
+performance and complete M0–M9 acceptance remain open.
