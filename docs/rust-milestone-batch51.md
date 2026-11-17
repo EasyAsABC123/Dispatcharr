@@ -12,7 +12,8 @@ catalogues spanning Source's 1,000-row transaction boundary.
 | Catalogue-scale Source lifecycle | Five refresh roots pass |
 | SDK74 | All four gates pass; 1,174 tests pass, 785 ignored |
 | Physical SQL / UPDATE semantics | Readonly47/30 and separate temporary rollback4 pass |
-| Docker / full Native12 | New image and full affected cohort pending |
+| Docker / packages | Image passes; all six package families pass with 55 CIDs absent |
+| Full Native12 | Running; no result accepted yet |
 | New paired performance | Not run |
 
 The first grouped controller exits 1 in 232.145 seconds after completing the
@@ -54,8 +55,9 @@ The Rust join slices the owned provider array before category filtering
 or deduplication, processes and settles each raw 1,000-row chunk, and performs
 reconciliation and cleanup once. Scoped identity lookups replace whole-catalogue
 snapshots. SQL must preserve Source's ordered conflict handling and first queued
-metadata update while keeping stored-name behavior. SDK74 and the separate physical checks now pass. Docker packages and the complete
-affected application cohort remain pending before accepting Main behavior.
+metadata update while keeping stored-name behavior. SDK74, the separate physical checks and all six Docker package families now pass.
+The complete affected application cohort remains running before accepting Main
+behavior.
 
 Language reconciliation, wider logo domains, categories beyond the captured
 admission, other provider value/fault domains, public reproduction, performance
@@ -85,7 +87,22 @@ byte-identical across both invocations. Root verifies one exact container, eight
 captured original host generations and the project absent.
 
 Eight canonical Rust paths are published as
-`63e6672525d6fa58d8faeb424ea14051b56552f1`, byte-identical to SDK74. The
-Candidate51 Docker build is running; no new image, package, Native12, public12,
-performance or full milestone acceptance is inferred from compiler and SQL
-validation. Original Dispatcharr and dependency authors retain all credit.
+`63e6672525d6fa58d8faeb424ea14051b56552f1`, byte-identical to SDK74. The Candidate51 image and all six package families now pass separately;
+Native12 remains running, and public12, performance and full milestone acceptance
+remain pending. Original Dispatcharr and dependency authors retain all credit.
+
+
+The published source builds in 302.212 seconds as
+`sha256:f74847428a5987e923bcc255865b0a3a07dd504619b8b9622c2503aa2692efe9`.
+All 1,446 Rust inputs match SDK74. Actual Store and Main recompilation is
+verified, and Main ELF `d1ac47cf` differs from accepted Candidate50. All six
+[package families](../scripts/rust-integration/milestone-batch51/package/inventory.json)
+pass in a separately consumed 24.562-second batch, with both EOFs and settled
+group; 55 exact package containers and their scoped inventories are absent.
+The unchanged React assets, original contributor credit and runtime dependency
+closures remain verified. Fresh UID180 readability passes. The complete
+Source0/Native12 cohort is now RUNNING on this image, adding the seventeen
+Source-characterized roots to the unchanged old nine contexts. No Source
+business root is replayed. An eventual application result must be recorded
+separately; package success alone establishes no new Main, public12, performance
+or full milestone acceptance.

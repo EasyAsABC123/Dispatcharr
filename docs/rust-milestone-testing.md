@@ -189,3 +189,21 @@ failed run and fix production SQL with `WITH ORDINALITY` and an explicit final
 `ORDER BY`. Verify syntax/types on PostgreSQL, rebuild the changed executable,
 and rerun the complete affected application cohort. Do not normalize relation
 primary keys or replay unchanged Source evidence to obtain acceptance.
+
+Parsing Python syntax does not prove a fixture's preparation function can run.
+The grouped catalogue Source run completed twelve roots before its scale context
+referenced an undefined forwarding helper. Import the actual prepared module,
+check runtime-referenced globals and imported attributes, and exercise its real
+preparation delegate with an owned host control before starting applications.
+Preserve the original controller failure and completed captures. Run only the
+five missing scale roots, and report the two actual controller outcomes instead
+of inventing one successful seventeen-root controller.
+
+SQL Parse/Describe checks cannot establish update-selection semantics. Source can
+queue an object because its in-memory name changed, then omit that name from
+`bulk_update`; its first queued metadata CASE arm still wins. Exercise the exact
+production UPDATE with both input orders against typed temporary shadow tables.
+Use explicit seed identifiers without advancing sequences, verify complete rows
+and affected-row counts, roll back, and prove public rows/sequences unchanged.
+Keep these actual DML controls separate from the read-only schema receipt:
+rolled-back DML is still executed DML. Reuse the same owned physical executor.
