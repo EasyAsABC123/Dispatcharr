@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "failure": null,
+  "seconds": 71.29558044800069,
+  "results": [
+    {
+      "phase": "2-100-0-candidate",
+      "comparison": {
+        "passed": true,
+        "scope": "offline-completed100-decoder-qualification-only",
+        "readers_compared": 100,
+        "all_per_reader_semantic_proofs_exact": true,
+        "actual_physical_decodes": 1,
+        "honest_reused_decode_references": 199,
+        "live_connections_started": 0,
+        "measurement_replayed": false,
+        "old_gain_or_campaign_changed": false,
+        "physical_stderr_provenance_differences": []
+      }
+    }
+  ],
+  "owned": [
+    {
+      "project": "dispatcharr-offline-decode-1ae7e3d2769c",
+      "compose": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "compose",
+        "-p",
+        "dispatcharr-offline-decode-1ae7e3d2769c",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-complete-media-decode-reuse-plan-1/actual-replay-3/2-100-0-candidate/decoder-compose.json"
+      ],
+      "CID": "6d605c9eeef6810b443759ccfd1957939e6245d123a6ed94055a19342d7ef62a",
+      "hostPID": 41368,
+      "starttime": "23050884",
+      "actual_state": {
+        "Status": "running",
+        "Running": true,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 41368,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-11-17T12:12:20.775574312Z",
+        "FinishedAt": "0001-01-01T00:00:00Z"
+      },
+      "original_generation_absent": true,
+      "project_absent": true,
+      "CID_absent": true
+    }
+  ],
+  "actual_scope": "Native100-only-decoder-retry",
+  "retained_Source100_qualified_review": "/home/justin/github/Dispatcharr/artifacts/rust/m3-complete-media-decode-reuse-plan-1/actual-replay-2/post-terminal-Source100-review.json",
+  "retained_Source_controller_exit": 1,
+  "new_live_connections": 0,
+  "new_measurements": 0,
+  "gain_accepted": false,
+  "all_commands_waited_EOF": true
+}

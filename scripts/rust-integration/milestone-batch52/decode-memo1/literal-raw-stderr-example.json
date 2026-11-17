@@ -1,0 +1,30 @@
+{
+  "scope": "one actual owner example; all100warningtextmultisets independently checked",
+  "retained_literal_stderr": "[aac @ 0x555ac7a88940] Input buffer exhausted before END element found\n[aist#0:1/aac @ 0x555ac79d9080] [dec:aac @ 0x555ac7a88400] Error submitting packet to decoder: Invalid data found when processing input\n[h264 @ 0x555ac79fc6c0] Invalid level prefix\n[h264 @ 0x555ac79fc6c0] error while decoding MB 4 0\n",
+  "new_literal_stderr": "[h264 @ 0x558883f056c0] Invalid level prefix\n[h264 @ 0x558883f056c0] error while decoding MB 4 0\n[aac @ 0x558883f91940] Input buffer exhausted before END element found\n[aist#0:1/aac @ 0x558883ee2080] [dec:aac @ 0x558883f91400] Error submitting packet to decoder: Invalid data found when processing input\n",
+  "retained_actual_pointer_values": [
+    "0x555ac7a88940",
+    "0x555ac79d9080",
+    "0x555ac7a88400",
+    "0x555ac79fc6c0",
+    "0x555ac79fc6c0"
+  ],
+  "new_actual_pointer_values": [
+    "0x558883f056c0",
+    "0x558883f056c0",
+    "0x558883f91940",
+    "0x558883ee2080",
+    "0x558883f91400"
+  ],
+  "full_source_and_new_artifact_paths": {
+    "reader": "owner",
+    "kind": "full_raw_decode",
+    "retained_stderr_sha256": "668b2f0c1846c8bbbc169b6c66bfb6ff853570afab278abef49db6a20d215ace",
+    "new_stderr_sha256": "08d1c334e8c6fef90c676e1b010179fcaecbad1a81fe8681e6016bec75b69644",
+    "retained_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate52-performance-prep-2/pilot100-1/1-100-0-baseline/command-00325.stderr",
+    "new_path": "/home/justin/github/Dispatcharr/artifacts/rust/m3-complete-media-decode-reuse-plan-1/actual-replay-2/command-00007.stderr",
+    "same_exact_warning_text_multiset": true,
+    "difference_scope": "FFmpeg actual process pointers and independent stream warning order only"
+  },
+  "business_output_or_certificate_normalized": false
+}

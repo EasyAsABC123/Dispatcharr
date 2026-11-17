@@ -1,0 +1,29 @@
+{
+  "passed": false,
+  "failure": {
+    "type": "CalledProcessError",
+    "message": "Command '['/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker', 'compose', '-p', 'dispatcharr-offline-decode-2d95e2f3803b', '-f', '/home/justin/github/Dispatcharr/artifacts/rust/m3-complete-media-decode-reuse-plan-1/actual-replay-1/1-100-0-baseline/decoder-compose.json', 'up', '-d', '--no-build', 'baseline']' returned non-zero exit status 1."
+  },
+  "seconds": 1.5909793750033714,
+  "results": [],
+  "owned": [
+    {
+      "project": "dispatcharr-offline-decode-2d95e2f3803b",
+      "compose": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "compose",
+        "-p",
+        "dispatcharr-offline-decode-2d95e2f3803b",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-complete-media-decode-reuse-plan-1/actual-replay-1/1-100-0-baseline/decoder-compose.json"
+      ],
+      "CID": null,
+      "cleanup_error": "CalledProcessError",
+      "project_absent": false
+    }
+  ],
+  "new_live_connections": 0,
+  "new_measurements": 0,
+  "gain_accepted": false,
+  "all_commands_waited_EOF": true
+}
