@@ -1,0 +1,52 @@
+{
+  "candidate": 55,
+  "application_commit": "7c971c94853b4055158d65eca58a0725a78450c2",
+  "image_id": "sha256:ec3125bdb57a7e109b28c7be5f3c0b2beb3a7702ff523b7078d084f8762625dd",
+  "diagnostic_only": true,
+  "Source_business_replayed": false,
+  "actual_exit": 1,
+  "actual_seconds": 730.7388590979972,
+  "actual_owner_terminal_consumed": true,
+  "bound_inputs_unchanged": 2272,
+  "short20": {
+    "parent_status": "SUCCESS",
+    "child_status": "SUCCESS",
+    "child_result": "no_commercials",
+    "Source_business_parity_accepted": false
+  },
+  "long520": {
+    "parent_result_missing_in_databases": [
+      0,
+      1,
+      2
+    ],
+    "child_status": "SUCCESS",
+    "child_result": "ok",
+    "child_parent_link_matches": true,
+    "ready_HTTP_after_terminal_wait": 503,
+    "DVR_fault": "Transport(AmbiguousResult(parent_task_id))",
+    "physical_cause": "unknown"
+  },
+  "independent_during_recording_health": "Two actual Root checks returned HTTP200/ready and DVR Working(1); literal epochs retained. Only the second receipt records elapsed339s.",
+  "context_teardown_error": {
+    "type": "RuntimeError",
+    "message": "ActualContextTeardownFailed:comskip-manual"
+  },
+  "actual_resource_cleanup_passed": true,
+  "independent_cleanup": {
+    "exact_CIDs_absent": 5,
+    "captured_original_host_generations_absent": 4,
+    "UID_probe_host_generation_independently_captured": false
+  },
+  "diagnostic_complete": false,
+  "full_Native15_executed_by_this_diagnostic": false,
+  "full_milestone_passed": false,
+  "performance_gain_accepted": false,
+  "limitations": [
+    "Short20 completion is a focusedNative diagnostic, not Source business parity or fullbatch acceptance.",
+    "Long520 effect/childcompletion does not substitute for missingparentterminalmetadata.",
+    "Contextteardownreportedfailure remainsliteral even though ownedresourcesare independentlyabsent.",
+    "No physicalRedis/transport cause proven; no workaround or relaxed terminalcriteria accepted.",
+    "Fulljournals,SQL,rawresultbodies,requestcredentials and privatetaskframes are omitted."
+  ]
+}

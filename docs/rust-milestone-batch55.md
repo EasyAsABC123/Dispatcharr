@@ -48,12 +48,30 @@ process groups, and its one exact container, original host generation and
 project are independently absent. The outer command group was not separately
 instrumented and is not claimed.
 
-Fresh Native integration remains pending. The earlier package preflight exited
-1 before starting containers because its copied tag guard still named
-Candidate54; corrected tools2 runs all six families successfully. The complete
-Candidate54 application batch subsequently exposed missing automatic recording
-and Comskip result records, despite completed media effects. A focused diagnosis
-is required before replaying that known failing long workflow on Candidate55.
-Retained Source responses guide compatibility; they do not establish a fresh
-Native pass. No Candidate55 CPU or memory gain has been measured. No complete
-M0–M9 milestone or full Rust rewrite is accepted by these results.
+The earlier package preflight exited 1 before starting containers because its
+copied tag guard still named Candidate54; corrected tools2 runs all six families
+successfully.
+
+The [focused automatic-result diagnostic](../scripts/rust-integration/milestone-batch55/auto-terminal-diagnostic/index.json)
+finished with actual exit **1** in 730.739 seconds. Its short 20-second recording
+and Comskip child both recorded `SUCCESS`; the child returned `no_commercials`.
+The subsequent 520-second recording's child recorded `SUCCESS`/`ok` with the
+correct parent ID, while the parent result remained absent in Redis databases
+0, 1 and 2. Readiness returned HTTP 503 with DVR
+`Transport(AmbiguousResult(parent_task_id))`. Two independent checks during the
+long recording had returned HTTP 200 and DVR `Working(1)`. The physical transport
+cause remains unknown; the original 40-second terminal wait was preserved.
+
+The diagnostic also reported `ActualContextTeardownFailed:comskip-manual`.
+That failure remains literal alongside successful resource cleanup: five exact
+containers and four captured original host generations are independently absent,
+and all 2,272 bound inputs remained unchanged. Compact phase statuses, selected
+health observations, result-key presence and wire hashes are retained; full
+journals, SQL and private credentials are omitted.
+
+The short diagnostic is not Source business parity or a complete Native batch.
+The full Candidate55 fifteen-context application batch remains pending while
+the automatic parent-result fault is investigated. Retained Source responses
+guide compatibility; they do not establish a fresh Native pass. No Candidate55
+CPU or memory gain has been measured. No complete M0–M9 milestone or full Rust
+rewrite is accepted by these results.
