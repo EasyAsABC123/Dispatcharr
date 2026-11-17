@@ -133,3 +133,39 @@ individual short-lived processes. The sampler launches122 Redis CLI children per
 phase; they stay charged. A proposed persistent observer is a separate protocol
 revision requiring fresh Source/Native qualification and measurements. It changes
 no Rust result, historic failure, threshold or accounting boundary retroactively.
+
+## Fresh persistent-observer comparison
+
+The revised observer now passes fresh Source and Native pilots and twelve fresh
+measured phases: three alternating pairs each at one and two viewers. All six
+pairs pass the unchanged scoped budgets. Every phase preserves useful audio/video
+work, and all frozen inputs remain unchanged. The earlier failed comparison above
+is retained separately; its measurements are neither pooled nor corrected.
+
+The observer keeps both original synchronous Redis queries and their cadence,
+using one persistent helper in the existing infrastructure cgroup. All helper
+CPU, memory and Redis work remain charged. This instrumentation revision changes
+no Rust application code, so differences between the two measurement protocols
+are not attributed to a Rust optimization.
+
+Across the six new pairs, observed geometric-mean CPU ratio is 0.71565 and peak
+simultaneous working-memory ratio is 0.29729: about 28.4% and 70.3% lower respectively.
+Encoded useful throughput ratio is 0.99704. The memory measurement remains
+`memory.current - inactive_file`, not RSS or a lifetime peak.
+
+| Viewers | Source CPU seconds | Rust CPU seconds | Source working MiB | Rust working MiB |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | 1.5835 | 1.1552 | 904.37 | 269.90 |
+| 2 | 1.6527 | 1.1605 | 908.97 | 269.19 |
+
+Values are arithmetic means of three fixed 60-second phases; memory uses each
+phase's same-tick aggregate peak. Independent raw arithmetic and Root cleanup
+checks pass: 42 exact containers, 12 projects and 499 captured original host process
+generations are absent.
+
+[Observer qualification](../scripts/rust-integration/milestone-batch47/observer-protocol1/README.md)
+and the [new comparison packet](../scripts/rust-integration/milestone-batch47/observer-performance1/README.md)
+retain commands, hashes, raw counters, useful-work checks and reproducible
+arithmetic. These are descriptive steady-viewing results with idle consumers.
+The full 24-phase campaign, higher viewer counts, active DVR and all complete
+M0–M9 milestones remain open; all full gain-acceptance flags remain false.

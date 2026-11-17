@@ -1,0 +1,160 @@
+{
+  "status": "RECORDED_FRESH_SOURCE_NATIVE_PROTOCOL_PILOT_PEER_CLEAR",
+  "result": {
+    "path": "artifacts/rust/m3-persistent-observer-protocol-qualification-1/result.json",
+    "sha256": "b7750e29cb89198b23b3fc13b17c32fafeca7b544211f433eec1c1555fe66806"
+  },
+  "actual_new_phases": 2,
+  "retained_phases": 0,
+  "rows": [
+    {
+      "backend": "baseline",
+      "project": "dispatcharr-shared-ts-177901c5a433",
+      "helper": {
+        "hostPID": 1054966,
+        "starttime": "18717432",
+        "guestPID": 712,
+        "NSpid": [
+          "1054966",
+          "712"
+        ],
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/user.slice/docker-f3498cf37623214a930b27cc8278f852d8bfb9c45c737fd0b443da8676f56f7b.scope",
+        "CID": "f3498cf37623214a930b27cc8278f852d8bfb9c45c737fd0b443da8676f56f7b",
+        "marker": "dispatcharr-metadata-observer-16acb262be8e4ef694487eea261489b4",
+        "ready": {
+          "ready": true,
+          "marker": "dispatcharr-metadata-observer-16acb262be8e4ef694487eea261489b4",
+          "guestPID": 712,
+          "starttime": "18717432",
+          "cgroup": "/",
+          "database": 0,
+          "auth_source": "inherited_REDISCLI_AUTH",
+          "script_sha256": "9391526767e48e3d3ab0cc6084e32b2156458f35e9ac2f8be15cf479a5f6c79a"
+        }
+      },
+      "identities_readonly_rechecked": [
+        {
+          "kind": "helper",
+          "PID": 1054966,
+          "original_starttime": "18717432",
+          "current_starttime": null,
+          "original_generation_absent": true
+        },
+        {
+          "kind": "exec_CLI",
+          "PID": 1054906,
+          "original_starttime": "18717428",
+          "current_starttime": null,
+          "original_generation_absent": true
+        }
+      ],
+      "actual_completed_requests": 62,
+      "samples": 61,
+      "baseline_infrastructure_charging_proved_by_cgroup": true,
+      "original_helper_present_at_both_fixedwindow_endpoints": true,
+      "media_equivalence_passed": true,
+      "controller_EOF_group_settled": true,
+      "exact_CIDs": {
+        "baseline": "f3498cf37623214a930b27cc8278f852d8bfb9c45c737fd0b443da8676f56f7b",
+        "origin": "e5e45cfc02a9539d381343d9270bc28f49c0d029c03beaabefb8ae3d917ea5ec",
+        "publication-observer": "499efdc2926c62402c8cc7b0990518ab8f342d5faea5ff047c22cb4c69a54f78"
+      },
+      "evidence": [
+        {
+          "path": "artifacts/rust/m3-persistent-observer-protocol-qualification-1/1-2-0-baseline/metadata-observer-receipt.json",
+          "sha256": "a2e5e760477df0ab144d29b18b877eb54c47f4ea6d8a25ff2ddbac6cf478a29b"
+        },
+        {
+          "path": "artifacts/rust/m3-persistent-observer-protocol-qualification-1/1-2-0-baseline/resource-samples.json",
+          "sha256": "bdb59464bcafff2d99345b8f2f216f7a1f29551e8b0442f068256463c7dfea70"
+        },
+        {
+          "path": "artifacts/rust/m3-persistent-observer-protocol-qualification-1/1-2-0-baseline/shared-ts.json",
+          "sha256": "98cc8c5ca39d35b1019c5ea66ab198683fad1464242671c05cb7b24d6cbf68f7"
+        },
+        {
+          "path": "artifacts/rust/m3-persistent-observer-protocol-qualification-1/1-2-0-baseline/useful-media-complete.json",
+          "sha256": "990315582c3e9aad4ab48f86b9642e7b13e7dcb2aa261293b37e35ccd9896d44"
+        }
+      ]
+    },
+    {
+      "backend": "candidate",
+      "project": "dispatcharr-shared-ts-d2462effa212",
+      "helper": {
+        "hostPID": 1066534,
+        "starttime": "18732712",
+        "guestPID": 480,
+        "NSpid": [
+          "1066534",
+          "480"
+        ],
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/user.slice/docker-6a0ca19c422af328749423ceeb2a6eeeb85f1227f6c14d31d04025d552dcbe59.scope",
+        "CID": "6a0ca19c422af328749423ceeb2a6eeeb85f1227f6c14d31d04025d552dcbe59",
+        "marker": "dispatcharr-metadata-observer-c959b4ccd93844399c8ebe4686088809",
+        "ready": {
+          "ready": true,
+          "marker": "dispatcharr-metadata-observer-c959b4ccd93844399c8ebe4686088809",
+          "guestPID": 480,
+          "starttime": "18732712",
+          "cgroup": "/",
+          "database": 0,
+          "auth_source": "inherited_REDISCLI_AUTH",
+          "script_sha256": "9391526767e48e3d3ab0cc6084e32b2156458f35e9ac2f8be15cf479a5f6c79a"
+        }
+      },
+      "identities_readonly_rechecked": [
+        {
+          "kind": "helper",
+          "PID": 1066534,
+          "original_starttime": "18732712",
+          "current_starttime": null,
+          "original_generation_absent": true
+        },
+        {
+          "kind": "exec_CLI",
+          "PID": 1066474,
+          "original_starttime": "18732707",
+          "current_starttime": null,
+          "original_generation_absent": true
+        }
+      ],
+      "actual_completed_requests": 62,
+      "samples": 61,
+      "baseline_infrastructure_charging_proved_by_cgroup": true,
+      "original_helper_present_at_both_fixedwindow_endpoints": true,
+      "media_equivalence_passed": true,
+      "controller_EOF_group_settled": true,
+      "exact_CIDs": {
+        "baseline": "6a0ca19c422af328749423ceeb2a6eeeb85f1227f6c14d31d04025d552dcbe59",
+        "candidate": "fe2497d5f08667b1b8508059cef8d566a5e89d9134ac5087f1d4829e4122b3eb",
+        "origin": "d6f5dad6edcdabb4dd10cde30e23d877002575acc0ccf7becc245f1b66ecd597",
+        "publication-observer": "598dc5969c208b98b8aa0307681945dd5fa532ee26b0bb0f4e4427adb1b80c68"
+      },
+      "evidence": [
+        {
+          "path": "artifacts/rust/m3-persistent-observer-protocol-qualification-1/2-2-0-candidate/metadata-observer-receipt.json",
+          "sha256": "1c6efd4704b2176db0bf31b8edf3099d66a84de14630db80bac8dbd0c4457c5f"
+        },
+        {
+          "path": "artifacts/rust/m3-persistent-observer-protocol-qualification-1/2-2-0-candidate/resource-samples.json",
+          "sha256": "2b50eb4dbaa79bbc3c7e2c86a1c95e6b1ff298b2b2e3a5d26dc184dd58dc99fc"
+        },
+        {
+          "path": "artifacts/rust/m3-persistent-observer-protocol-qualification-1/2-2-0-candidate/shared-ts.json",
+          "sha256": "677ed6a5aa7f97b54709fd43daf9f724411ef19a65c2772180b4b17429b1eba4"
+        },
+        {
+          "path": "artifacts/rust/m3-persistent-observer-protocol-qualification-1/2-2-0-candidate/useful-media-complete.json",
+          "sha256": "666eea027d8c704d36fdf7e48beb5fbfe471f09d92775e0df131ddd55e902b5b"
+        }
+      ]
+    }
+  ],
+  "actual_Docker_commands_by_reviewer": 0,
+  "read_only_current_helper_CLI_generation_rechecks": true,
+  "Root_independent_CID_project_cleanup_still_required": true,
+  "measurement_study_accepted": false,
+  "performance_gain_accepted": false,
+  "full_migration_accepted": false
+}

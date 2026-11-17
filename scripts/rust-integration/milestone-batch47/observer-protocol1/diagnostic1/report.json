@@ -1,0 +1,213 @@
+{
+  "passed": false,
+  "application_run": false,
+  "performance_run": false,
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-0933968c18",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-1/actual/compose.json",
+        "up",
+        "-d",
+        "baseline"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "time=\"2026-11-16T19:04:03-05:00\" level=warning msg=\"The \\\"REDISCLI_AUTH\\\" variable is not set. Defaulting to a blank string.\"\n Network dispatcharr-observer-diagnostic-0933968c18_default  Creating\n Network dispatcharr-observer-diagnostic-0933968c18_default  Created\n Container dispatcharr-observer-diagnostic-0933968c18-baseline-1  Creating\n Container dispatcharr-observer-diagnostic-0933968c18-baseline-1  Created\n Container dispatcharr-observer-diagnostic-0933968c18-baseline-1  Starting\n Container dispatcharr-observer-diagnostic-0933968c18-baseline-1  Started\n"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-0933968c18",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-1/actual/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "baseline"
+      ],
+      "actual_exit": 0,
+      "stdout": "0cd6adbc116266c9761e0b0857ad3046c0b58f3be3134b4eda339ad6eecf2e31\n",
+      "stderr": "time=\"2026-11-16T19:04:04-05:00\" level=warning msg=\"The \\\"REDISCLI_AUTH\\\" variable is not set. Defaulting to a blank string.\"\n"
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{json .State}}",
+        "0cd6adbc116266c9761e0b0857ad3046c0b58f3be3134b4eda339ad6eecf2e31"
+      ],
+      "actual_exit": 0,
+      "stdout": "{\"Status\":\"running\",\"Running\":true,\"Paused\":false,\"Restarting\":false,\"OOMKilled\":false,\"Dead\":false,\"Pid\":1042334,\"ExitCode\":0,\"Error\":\"\",\"StartedAt\":\"2026-11-17T00:04:04.178177643Z\",\"FinishedAt\":\"0001-01-01T00:00:00Z\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{.Image}}",
+        "0cd6adbc116266c9761e0b0857ad3046c0b58f3be3134b4eda339ad6eecf2e31"
+      ],
+      "actual_exit": 0,
+      "stdout": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-0933968c18",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-1/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "redis-cli",
+        "PING"
+      ],
+      "actual_exit": 0,
+      "stdout": "PONG\n",
+      "stderr": "AUTH failed: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?\n"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-0933968c18",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-1/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nr.config_set('slowlog-log-slower-than',0);print('true')"
+      ],
+      "actual_exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 2, in <module>\n    r.config_set('slowlog-log-slower-than',0);print('true')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 871, in config_set\n    return self.execute_command(\"CONFIG SET\", name, value, *args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 627, in _execute_command\n    conn = self.connection or pool.get_connection()\n                              ~~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/utils.py\", line 195, in wrapper\n    return func(*args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 1533, in get_connection\n    connection.connect()\n    ~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 380, in connect\n    self.connect_check_health(check_health=True)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 403, in connect_check_health\n    self.on_connect_check_health(check_health=check_health)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 475, in on_connect_check_health\n    auth_response = self.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 650, in read_response\n    response = self._parser.read_response(disable_decoding=disable_decoding)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/_parsers/resp2.py\", line 15, in read_response\n    result = self._read_response(disable_decoding=disable_decoding)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/_parsers/resp2.py\", line 38, in _read_response\n    raise error\nredis.exceptions.AuthenticationError: AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?\n"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-0933968c18",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-1/actual/compose.json",
+        "down",
+        "--volumes",
+        "--remove-orphans",
+        "--timeout",
+        "5"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "time=\"2026-11-16T19:04:04-05:00\" level=warning msg=\"The \\\"REDISCLI_AUTH\\\" variable is not set. Defaulting to a blank string.\"\n Container dispatcharr-observer-diagnostic-0933968c18-baseline-1  Stopping\n Container dispatcharr-observer-diagnostic-0933968c18-baseline-1  Stopped\n Container dispatcharr-observer-diagnostic-0933968c18-baseline-1  Removing\n Container dispatcharr-observer-diagnostic-0933968c18-baseline-1  Removed\n Network dispatcharr-observer-diagnostic-0933968c18_default  Removing\n Network dispatcharr-observer-diagnostic-0933968c18_default  Removed\n"
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-a",
+        "--no-trunc",
+        "--filter",
+        "id=0cd6adbc116266c9761e0b0857ad3046c0b58f3be3134b4eda339ad6eecf2e31",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-a",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-observer-diagnostic-0933968c18",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-observer-diagnostic-0933968c18",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-observer-diagnostic-0933968c18",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "states": [],
+  "container": {
+    "CID": "0cd6adbc116266c9761e0b0857ad3046c0b58f3be3134b4eda339ad6eecf2e31",
+    "State": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 1042334,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-11-17T00:04:04.178177643Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+  },
+  "error": {
+    "type": "RuntimeError",
+    "message": "DiagnosticCommandFailed"
+  },
+  "diagnostic_assertions_passed": false,
+  "cleanup": {
+    "project": "dispatcharr-observer-diagnostic-0933968c18",
+    "CID": "0cd6adbc116266c9761e0b0857ad3046c0b58f3be3134b4eda339ad6eecf2e31",
+    "inventories_empty": true,
+    "identities": [
+      {
+        "kind": "container",
+        "pid": 1042334,
+        "starttime": "18681226",
+        "original_generation_absent": true
+      }
+    ],
+    "all_original_generations_absent": true
+  }
+}

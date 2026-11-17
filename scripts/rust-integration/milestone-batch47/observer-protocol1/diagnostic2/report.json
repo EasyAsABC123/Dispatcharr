@@ -1,0 +1,1130 @@
+{
+  "passed": true,
+  "application_run": false,
+  "performance_run": false,
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "up",
+        "-d",
+        "baseline"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": " Network dispatcharr-observer-diagnostic-61da323039_default  Creating\n Network dispatcharr-observer-diagnostic-61da323039_default  Created\n Container dispatcharr-observer-diagnostic-61da323039-baseline-1  Creating\n Container dispatcharr-observer-diagnostic-61da323039-baseline-1  Created\n Container dispatcharr-observer-diagnostic-61da323039-baseline-1  Starting\n Container dispatcharr-observer-diagnostic-61da323039-baseline-1  Started\n"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "baseline"
+      ],
+      "actual_exit": 0,
+      "stdout": "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{json .State}}",
+        "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437"
+      ],
+      "actual_exit": 0,
+      "stdout": "{\"Status\":\"running\",\"Running\":true,\"Paused\":false,\"Restarting\":false,\"OOMKilled\":false,\"Dead\":false,\"Pid\":1044104,\"ExitCode\":0,\"Error\":\"\",\"StartedAt\":\"2026-11-17T00:05:40.825465442Z\",\"FinishedAt\":\"0001-01-01T00:00:00Z\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{.Image}}",
+        "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437"
+      ],
+      "actual_exit": 0,
+      "stdout": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "redis-cli",
+        "PING"
+      ],
+      "actual_exit": 0,
+      "stdout": "PONG\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nr.config_set('slowlog-log-slower-than',0);print('true')"
+      ],
+      "actual_exit": 0,
+      "stdout": "true\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "baseline"
+      ],
+      "actual_exit": 0,
+      "stdout": "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{json .State}}",
+        "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437"
+      ],
+      "actual_exit": 0,
+      "stdout": "{\"Status\":\"running\",\"Running\":true,\"Paused\":false,\"Restarting\":false,\"OOMKilled\":false,\"Dead\":false,\"Pid\":1044104,\"ExitCode\":0,\"Error\":\"\",\"StartedAt\":\"2026-11-17T00:05:40.825465442Z\",\"FinishedAt\":\"0001-01-01T00:00:00Z\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "top",
+        "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437",
+        "-eo",
+        "pid,args"
+      ],
+      "actual_exit": 0,
+      "stdout": "PID                 COMMAND\n1044104             redis-server 127.0.0.1:6379\n1044492             /dispatcharrpy/bin/python -u /resource-tools/redis_observer.py --guest dispatcharr-metadata-observer-b8c8089a49af49c79824ddfb984cd1b1\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nr.flushdb()\np='live:channel:'+'11000000-0000-0000-0000-000000000001'\nr.slowlog_reset();print('true')"
+      ],
+      "actual_exit": 0,
+      "stdout": "true\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "redis-cli",
+        "--json",
+        "EVAL",
+        "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''}",
+        "0",
+        "11000000-0000-0000-0000-000000000001",
+        "7"
+      ],
+      "actual_exit": 0,
+      "stdout": "[\"\",\"0\",0,0,\"\",0,\"\"]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "redis-cli",
+        "--json",
+        "EVAL",
+        "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('HGET',k,'user_id')~=ARGV[2]then return {-1,#keys}end;n=n+1 end end;return {n,#keys}",
+        "0",
+        "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+        "17"
+      ],
+      "actual_exit": 0,
+      "stdout": "[0,0]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nrows=r.execute_command('SLOWLOG','GET',128);print(json.dumps([[v.decode('utf-8')for v in row[3]]for row in reversed(rows)if row[3][0].upper()==b'EVAL']))"
+      ],
+      "actual_exit": 0,
+      "stdout": "[[\"EVAL\", \"local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)\", \"0\", \"11000000-0000-0000-0000-000000000001\", \"7\"], [\"EVAL\", \"local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)\", \"0\", \"live:channel:11000000-0000-0000-0000-000000000001:clients:*\", \"17\"], [\"EVAL\", \"local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)\", \"0\", \"11000000-0000-0000-0000-000000000001\", \"7\"], [\"EVAL\", \"local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)\", \"0\", \"live:channel:11000000-0000-0000-0000-000000000001:clients:*\", \"17\"]]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nr.flushdb()\np='live:channel:'+'11000000-0000-0000-0000-000000000001'\nr.set(p+':owner','diagnostic-owner');r.set('profile_connections:7','1');r.hset(p+':metadata',mapping={'state':'active'});r.set(p+':input:buffer:index','12');r.zadd(p+':input:buffer:chunk_timestamps',{'chunk':1})\nr.sadd(p+':clients','0');r.hset(p+':clients:'+'0',mapping={'user_id':'17'})\nr.slowlog_reset();print('true')"
+      ],
+      "actual_exit": 0,
+      "stdout": "true\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "redis-cli",
+        "--json",
+        "EVAL",
+        "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''}",
+        "0",
+        "11000000-0000-0000-0000-000000000001",
+        "7"
+      ],
+      "actual_exit": 0,
+      "stdout": "[\"diagnostic-owner\",\"1\",1,1,\"12\",1,\"active\"]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "redis-cli",
+        "--json",
+        "EVAL",
+        "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('HGET',k,'user_id')~=ARGV[2]then return {-1,#keys}end;n=n+1 end end;return {n,#keys}",
+        "0",
+        "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+        "17"
+      ],
+      "actual_exit": 0,
+      "stdout": "[1,1]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nrows=r.execute_command('SLOWLOG','GET',128);print(json.dumps([[v.decode('utf-8')for v in row[3]]for row in reversed(rows)if row[3][0].upper()==b'EVAL']))"
+      ],
+      "actual_exit": 0,
+      "stdout": "[[\"EVAL\", \"local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)\", \"0\", \"11000000-0000-0000-0000-000000000001\", \"7\"], [\"EVAL\", \"local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)\", \"0\", \"live:channel:11000000-0000-0000-0000-000000000001:clients:*\", \"17\"], [\"EVAL\", \"local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)\", \"0\", \"11000000-0000-0000-0000-000000000001\", \"7\"], [\"EVAL\", \"local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)\", \"0\", \"live:channel:11000000-0000-0000-0000-000000000001:clients:*\", \"17\"]]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nr.flushdb()\np='live:channel:'+'11000000-0000-0000-0000-000000000001'\nr.set(p+':owner','diagnostic-owner');r.set('profile_connections:7','1');r.hset(p+':metadata',mapping={'state':'active'});r.set(p+':input:buffer:index','12');r.zadd(p+':input:buffer:chunk_timestamps',{'chunk':1})\nr.sadd(p+':clients','0');r.hset(p+':clients:'+'0',mapping={'user_id':'17'})\nr.sadd(p+':clients','1');r.hset(p+':clients:'+'1',mapping={'user_id':'17'})\nr.slowlog_reset();print('true')"
+      ],
+      "actual_exit": 0,
+      "stdout": "true\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "redis-cli",
+        "--json",
+        "EVAL",
+        "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''}",
+        "0",
+        "11000000-0000-0000-0000-000000000001",
+        "7"
+      ],
+      "actual_exit": 0,
+      "stdout": "[\"diagnostic-owner\",\"1\",2,1,\"12\",1,\"active\"]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "redis-cli",
+        "--json",
+        "EVAL",
+        "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('HGET',k,'user_id')~=ARGV[2]then return {-1,#keys}end;n=n+1 end end;return {n,#keys}",
+        "0",
+        "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+        "17"
+      ],
+      "actual_exit": 0,
+      "stdout": "[2,2]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nrows=r.execute_command('SLOWLOG','GET',128);print(json.dumps([[v.decode('utf-8')for v in row[3]]for row in reversed(rows)if row[3][0].upper()==b'EVAL']))"
+      ],
+      "actual_exit": 0,
+      "stdout": "[[\"EVAL\", \"local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)\", \"0\", \"11000000-0000-0000-0000-000000000001\", \"7\"], [\"EVAL\", \"local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)\", \"0\", \"live:channel:11000000-0000-0000-0000-000000000001:clients:*\", \"17\"], [\"EVAL\", \"local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)\", \"0\", \"11000000-0000-0000-0000-000000000001\", \"7\"], [\"EVAL\", \"local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)\", \"0\", \"live:channel:11000000-0000-0000-0000-000000000001:clients:*\", \"17\"]]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nr.flushdb()\np='live:channel:'+'11000000-0000-0000-0000-000000000001'\nr.set(p+':owner','diagnostic-owner');r.set('profile_connections:7','1');r.hset(p+':metadata',mapping={'state':'active'});r.set(p+':input:buffer:index','12');r.zadd(p+':input:buffer:chunk_timestamps',{'chunk':1})\nr.sadd(p+':clients','0');r.hset(p+':clients:'+'0',mapping={'user_id':'999'})\nr.sadd(p+':clients','1');r.hset(p+':clients:'+'1',mapping={'user_id':'17'})\nr.slowlog_reset();print('true')"
+      ],
+      "actual_exit": 0,
+      "stdout": "true\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "redis-cli",
+        "--json",
+        "EVAL",
+        "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata'),redis.call('GET',p..':input:buffer:index') or '',redis.call('ZCARD',p..':input:buffer:chunk_timestamps'),redis.call('HGET',p..':metadata','state') or ''}",
+        "0",
+        "11000000-0000-0000-0000-000000000001",
+        "7"
+      ],
+      "actual_exit": 0,
+      "stdout": "[\"diagnostic-owner\",\"1\",2,1,\"12\",1,\"active\"]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "redis-cli",
+        "--json",
+        "EVAL",
+        "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('HGET',k,'user_id')~=ARGV[2]then return {-1,#keys}end;n=n+1 end end;return {n,#keys}",
+        "0",
+        "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+        "17"
+      ],
+      "actual_exit": 0,
+      "stdout": "[-1,2]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nrows=r.execute_command('SLOWLOG','GET',128);print(json.dumps([[v.decode('utf-8')for v in row[3]]for row in reversed(rows)if row[3][0].upper()==b'EVAL']))"
+      ],
+      "actual_exit": 0,
+      "stdout": "[[\"EVAL\", \"local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)\", \"0\", \"11000000-0000-0000-0000-000000000001\", \"7\"], [\"EVAL\", \"local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)\", \"0\", \"live:channel:11000000-0000-0000-0000-000000000001:clients:*\", \"17\"], [\"EVAL\", \"local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)\", \"0\", \"11000000-0000-0000-0000-000000000001\", \"7\"], [\"EVAL\", \"local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)\", \"0\", \"live:channel:11000000-0000-0000-0000-000000000001:clients:*\", \"17\"]]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "ps",
+        "--all",
+        "-q",
+        "baseline"
+      ],
+      "actual_exit": 0,
+      "stdout": "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{json .State}}",
+        "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437"
+      ],
+      "actual_exit": 0,
+      "stdout": "{\"Status\":\"running\",\"Running\":true,\"Paused\":false,\"Restarting\":false,\"OOMKilled\":false,\"Dead\":false,\"Pid\":1044104,\"ExitCode\":0,\"Error\":\"\",\"StartedAt\":\"2026-11-17T00:05:40.825465442Z\",\"FinishedAt\":\"0001-01-01T00:00:00Z\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "top",
+        "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437",
+        "-eo",
+        "pid,args"
+      ],
+      "actual_exit": 0,
+      "stdout": "PID                 COMMAND\n1044104             redis-server 127.0.0.1:6379\n1045808             /dispatcharrpy/bin/python -u /resource-tools/redis_observer.py --guest dispatcharr-metadata-observer-700395eeaf6449c9a934d90006faec7e\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nclients=[x for x in r.client_list()if x['cmd']=='auth'];assert len(clients)==1;r.slowlog_reset();print(json.dumps({'exact_client_id':clients[0]['id'],'kill_count':r.execute_command('CLIENT','KILL','ID',clients[0]['id'])}))"
+      ],
+      "actual_exit": 0,
+      "stdout": "{\"exact_client_id\": \"23\", \"kill_count\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "exec",
+        "-T",
+        "baseline",
+        "/dispatcharrpy/bin/python",
+        "-c",
+        "import os,json,redis;r=redis.Redis(host='127.0.0.1',port=6379,db=0,password=os.environ['REDISCLI_AUTH'],socket_connect_timeout=2,socket_timeout=2)\nrows=r.execute_command('SLOWLOG','GET',128);print(json.dumps([[v.decode('utf-8')for v in row[3]]for row in reversed(rows)if row[3][0].upper()==b'EVAL']))"
+      ],
+      "actual_exit": 0,
+      "stdout": "[]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-p",
+        "dispatcharr-observer-diagnostic-61da323039",
+        "-f",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-persistent-observer-diagnostic-2/actual/compose.json",
+        "down",
+        "--volumes",
+        "--remove-orphans",
+        "--timeout",
+        "5"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": " Container dispatcharr-observer-diagnostic-61da323039-baseline-1  Stopping\n Container dispatcharr-observer-diagnostic-61da323039-baseline-1  Stopped\n Container dispatcharr-observer-diagnostic-61da323039-baseline-1  Removing\n Container dispatcharr-observer-diagnostic-61da323039-baseline-1  Removed\n Network dispatcharr-observer-diagnostic-61da323039_default  Removing\n Network dispatcharr-observer-diagnostic-61da323039_default  Removed\n"
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-a",
+        "--no-trunc",
+        "--filter",
+        "id=8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-a",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-observer-diagnostic-61da323039",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-observer-diagnostic-61da323039",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-observer-diagnostic-61da323039",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "states": [
+    {
+      "name": "empty",
+      "CLI": [
+        [
+          "",
+          "0",
+          0,
+          0,
+          "",
+          0,
+          ""
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "helper": [
+        [
+          "",
+          "0",
+          0,
+          0,
+          "",
+          0,
+          ""
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "EVAL_order": [
+        [
+          "EVAL",
+          "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)",
+          "0",
+          "11000000-0000-0000-0000-000000000001",
+          "7"
+        ],
+        [
+          "EVAL",
+          "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)",
+          "0",
+          "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+          "17"
+        ],
+        [
+          "EVAL",
+          "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)",
+          "0",
+          "11000000-0000-0000-0000-000000000001",
+          "7"
+        ],
+        [
+          "EVAL",
+          "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)",
+          "0",
+          "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+          "17"
+        ]
+      ],
+      "SLOWLOG_script_scope": [
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 227,
+          "full_script_sha256_bound_by_host_codec_and_source": "ade7a17634626198d5c4f04adf378e049139ca42f9444a0fa5ea5044d6841c45",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 83,
+          "full_script_sha256_bound_by_host_codec_and_source": "3652ad5ca4286236f1c6c2c06e27b53c27f697beaf0c9160d0a1a4dfc9181acb",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 227,
+          "full_script_sha256_bound_by_host_codec_and_source": "ade7a17634626198d5c4f04adf378e049139ca42f9444a0fa5ea5044d6841c45",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 83,
+          "full_script_sha256_bound_by_host_codec_and_source": "3652ad5ca4286236f1c6c2c06e27b53c27f697beaf0c9160d0a1a4dfc9181acb",
+          "full_bytes_observed_in_SLOWLOG": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "active-one",
+      "CLI": [
+        [
+          "diagnostic-owner",
+          "1",
+          1,
+          1,
+          "12",
+          1,
+          "active"
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "helper": [
+        [
+          "diagnostic-owner",
+          "1",
+          1,
+          1,
+          "12",
+          1,
+          "active"
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "EVAL_order": [
+        [
+          "EVAL",
+          "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)",
+          "0",
+          "11000000-0000-0000-0000-000000000001",
+          "7"
+        ],
+        [
+          "EVAL",
+          "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)",
+          "0",
+          "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+          "17"
+        ],
+        [
+          "EVAL",
+          "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)",
+          "0",
+          "11000000-0000-0000-0000-000000000001",
+          "7"
+        ],
+        [
+          "EVAL",
+          "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)",
+          "0",
+          "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+          "17"
+        ]
+      ],
+      "SLOWLOG_script_scope": [
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 227,
+          "full_script_sha256_bound_by_host_codec_and_source": "ade7a17634626198d5c4f04adf378e049139ca42f9444a0fa5ea5044d6841c45",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 83,
+          "full_script_sha256_bound_by_host_codec_and_source": "3652ad5ca4286236f1c6c2c06e27b53c27f697beaf0c9160d0a1a4dfc9181acb",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 227,
+          "full_script_sha256_bound_by_host_codec_and_source": "ade7a17634626198d5c4f04adf378e049139ca42f9444a0fa5ea5044d6841c45",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 83,
+          "full_script_sha256_bound_by_host_codec_and_source": "3652ad5ca4286236f1c6c2c06e27b53c27f697beaf0c9160d0a1a4dfc9181acb",
+          "full_bytes_observed_in_SLOWLOG": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "active-two",
+      "CLI": [
+        [
+          "diagnostic-owner",
+          "1",
+          2,
+          1,
+          "12",
+          1,
+          "active"
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "helper": [
+        [
+          "diagnostic-owner",
+          "1",
+          2,
+          1,
+          "12",
+          1,
+          "active"
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "EVAL_order": [
+        [
+          "EVAL",
+          "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)",
+          "0",
+          "11000000-0000-0000-0000-000000000001",
+          "7"
+        ],
+        [
+          "EVAL",
+          "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)",
+          "0",
+          "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+          "17"
+        ],
+        [
+          "EVAL",
+          "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)",
+          "0",
+          "11000000-0000-0000-0000-000000000001",
+          "7"
+        ],
+        [
+          "EVAL",
+          "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)",
+          "0",
+          "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+          "17"
+        ]
+      ],
+      "SLOWLOG_script_scope": [
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 227,
+          "full_script_sha256_bound_by_host_codec_and_source": "ade7a17634626198d5c4f04adf378e049139ca42f9444a0fa5ea5044d6841c45",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 83,
+          "full_script_sha256_bound_by_host_codec_and_source": "3652ad5ca4286236f1c6c2c06e27b53c27f697beaf0c9160d0a1a4dfc9181acb",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 227,
+          "full_script_sha256_bound_by_host_codec_and_source": "ade7a17634626198d5c4f04adf378e049139ca42f9444a0fa5ea5044d6841c45",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 83,
+          "full_script_sha256_bound_by_host_codec_and_source": "3652ad5ca4286236f1c6c2c06e27b53c27f697beaf0c9160d0a1a4dfc9181acb",
+          "full_bytes_observed_in_SLOWLOG": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "wrong-user",
+      "CLI": [
+        [
+          "diagnostic-owner",
+          "1",
+          2,
+          1,
+          "12",
+          1,
+          "active"
+        ],
+        [
+          -1,
+          2
+        ]
+      ],
+      "helper": [
+        [
+          "diagnostic-owner",
+          "1",
+          2,
+          1,
+          "12",
+          1,
+          "active"
+        ],
+        [
+          -1,
+          2
+        ]
+      ],
+      "EVAL_order": [
+        [
+          "EVAL",
+          "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)",
+          "0",
+          "11000000-0000-0000-0000-000000000001",
+          "7"
+        ],
+        [
+          "EVAL",
+          "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)",
+          "0",
+          "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+          "17"
+        ],
+        [
+          "EVAL",
+          "local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) o... (227 more bytes)",
+          "0",
+          "11000000-0000-0000-0000-000000000001",
+          "7"
+        ],
+        [
+          "EVAL",
+          "local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys)do if redis.call('TYPE',k).ok=='hash'then if redis.call('... (83 more bytes)",
+          "0",
+          "live:channel:11000000-0000-0000-0000-000000000001:clients:*",
+          "17"
+        ]
+      ],
+      "SLOWLOG_script_scope": [
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 227,
+          "full_script_sha256_bound_by_host_codec_and_source": "ade7a17634626198d5c4f04adf378e049139ca42f9444a0fa5ea5044d6841c45",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 83,
+          "full_script_sha256_bound_by_host_codec_and_source": "3652ad5ca4286236f1c6c2c06e27b53c27f697beaf0c9160d0a1a4dfc9181acb",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 227,
+          "full_script_sha256_bound_by_host_codec_and_source": "ade7a17634626198d5c4f04adf378e049139ca42f9444a0fa5ea5044d6841c45",
+          "full_bytes_observed_in_SLOWLOG": false
+        },
+        {
+          "observed_prefix_bytes": 128,
+          "omitted_bytes": 83,
+          "full_script_sha256_bound_by_host_codec_and_source": "3652ad5ca4286236f1c6c2c06e27b53c27f697beaf0c9160d0a1a4dfc9181acb",
+          "full_bytes_observed_in_SLOWLOG": false
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "container": {
+    "CID": "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437",
+    "State": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 1044104,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-11-17T00:05:40.825465442Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+  },
+  "normal_receipt": {
+    "identity": {
+      "hostPID": 1044492,
+      "starttime": "18690944",
+      "guestPID": 25,
+      "NSpid": [
+        "1044492",
+        "25"
+      ],
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/user.slice/docker-8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437.scope",
+      "CID": "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437",
+      "marker": "dispatcharr-metadata-observer-b8c8089a49af49c79824ddfb984cd1b1",
+      "ready": {
+        "ready": true,
+        "marker": "dispatcharr-metadata-observer-b8c8089a49af49c79824ddfb984cd1b1",
+        "guestPID": 25,
+        "starttime": "18690944",
+        "cgroup": "/",
+        "database": 0,
+        "auth_source": "inherited_REDISCLI_AUTH",
+        "script_sha256": "9391526767e48e3d3ab0cc6084e32b2156458f35e9ac2f8be15cf479a5f6c79a"
+      }
+    },
+    "CLI_identity": {
+      "pid": 1044429,
+      "starttime": "18690940"
+    },
+    "completed_requests": 4,
+    "normal_STOP": true,
+    "forced": [],
+    "failure": null,
+    "close_error": null,
+    "EOF": {
+      "stdout": true,
+      "stderr": true
+    },
+    "actual_exit": 0,
+    "original_guest_generation_absent": true,
+    "cleanup_passed": true
+  },
+  "interrupted": {
+    "exact_client": {
+      "exact_client_id": "23",
+      "kill_count": 1
+    },
+    "failures": [
+      "EOFError",
+      "RuntimeError"
+    ],
+    "EVAL_after_interruption": [],
+    "no_replay": true,
+    "receipt": {
+      "identity": {
+        "hostPID": 1045808,
+        "starttime": "18691187",
+        "guestPID": 128,
+        "NSpid": [
+          "1045808",
+          "128"
+        ],
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/user.slice/docker-8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437.scope",
+        "CID": "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437",
+        "marker": "dispatcharr-metadata-observer-700395eeaf6449c9a934d90006faec7e",
+        "ready": {
+          "ready": true,
+          "marker": "dispatcharr-metadata-observer-700395eeaf6449c9a934d90006faec7e",
+          "guestPID": 128,
+          "starttime": "18691187",
+          "cgroup": "/",
+          "database": 0,
+          "auth_source": "inherited_REDISCLI_AUTH",
+          "script_sha256": "9391526767e48e3d3ab0cc6084e32b2156458f35e9ac2f8be15cf479a5f6c79a"
+        }
+      },
+      "CLI_identity": {
+        "pid": 1045744,
+        "starttime": "18691182"
+      },
+      "completed_requests": 0,
+      "normal_STOP": false,
+      "forced": [],
+      "failure": "EOFError",
+      "close_error": null,
+      "EOF": {
+        "stdout": true,
+        "stderr": true
+      },
+      "actual_exit": 1,
+      "original_guest_generation_absent": true,
+      "cleanup_passed": false
+    }
+  },
+  "diagnostic_assertions_passed": true,
+  "cleanup": {
+    "project": "dispatcharr-observer-diagnostic-61da323039",
+    "CID": "8343430548a6775d2bcd56c364c35b3e6b3603696ae0197a739a4407f624b437",
+    "inventories_empty": true,
+    "identities": [
+      {
+        "kind": "container",
+        "pid": 1044104,
+        "starttime": "18690889",
+        "original_generation_absent": true
+      },
+      {
+        "kind": "normal-helper",
+        "pid": 1044492,
+        "starttime": "18690944",
+        "original_generation_absent": true
+      },
+      {
+        "kind": "interrupted-helper",
+        "pid": 1045808,
+        "starttime": "18691187",
+        "original_generation_absent": true
+      }
+    ],
+    "all_original_generations_absent": true
+  }
+}

@@ -19,6 +19,14 @@ viewing study is valid but fails one CPU pair (0.9284 >0.90); observed CPU/worki
 memory estimates fall about10.6%/70.7%. The clean public29 six-context run also
 passes; resource acceptance and full milestones remain open.
 
+A separate fresh persistent-observer comparison now passes all six scoped
+one/two-viewer budgets across twelve valid phases. Observed CPU/working-memory
+ratios are 0.71565/0.29729, with equivalent useful media. All observer costs remain
+charged; no Rust application change or retroactive correction of the failed
+study is claimed. Full 24-phase, active-work and full milestone acceptance remain
+open. The [Candidate47 record](rust-milestone-batch47.md#fresh-persistent-observer-comparison)
+keeps both protocols and their limits explicit.
+
 [Candidate46](rust-milestone-batch46.md) reuses compiled queue observation scripts
 and passes all four SDK63 gates (1,148 tests) plus three explicit physical Redis
 tests. Its source builds with actual changed-crate recompilation and passes all six

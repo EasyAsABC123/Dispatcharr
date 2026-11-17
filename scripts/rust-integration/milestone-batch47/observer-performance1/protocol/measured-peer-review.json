@@ -1,0 +1,5953 @@
+{
+  "status": "RAW12_ARITHMETIC_AND_RECORDED_LIFECYCLE_REVIEWED",
+  "owner_session_confirmed_consumed": 97461,
+  "result": {
+    "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/result.json",
+    "sha256": "a3c10db436f79df0e0fe0a2933e26095a387e279e0ba72ee91da21655ffd5892"
+  },
+  "new_protocol_only_no_old_metric_pooling": true,
+  "phases": [
+    {
+      "phase": 1,
+      "backend": "baseline",
+      "viewers": 1,
+      "trial": 1,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.170981,
+          "cpu_mean_cores": 0.019515219735390634,
+          "charged_memory_median_bytes": 840364032,
+          "charged_memory_max_simultaneous_bytes": 845303808,
+          "working_set_estimate_median_bytes": 840273920,
+          "working_set_estimate_max_simultaneous_bytes": 845213696
+        },
+        "origin": {
+          "cpu_core_seconds": 0.401768,
+          "cpu_mean_cores": 0.006695745535280611,
+          "charged_memory_median_bytes": 222875648,
+          "charged_memory_max_simultaneous_bytes": 223965184,
+          "working_set_estimate_median_bytes": 101593088,
+          "working_set_estimate_max_simultaneous_bytes": 102682624
+        },
+        "observer": {
+          "cpu_core_seconds": 0.339983,
+          "cpu_mean_cores": 0.00566605517194328,
+          "charged_memory_median_bytes": 266838016,
+          "charged_memory_max_simultaneous_bytes": 272310272,
+          "working_set_estimate_median_bytes": 203030528,
+          "working_set_estimate_max_simultaneous_bytes": 203825152
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.912732,
+          "cpu_mean_cores": 0.03187702044261453,
+          "charged_memory_median_bytes": 1329504256,
+          "charged_memory_max_simultaneous_bytes": 1338912768,
+          "working_set_estimate_median_bytes": 1143853056,
+          "working_set_estimate_max_simultaneous_bytes": 1149480960
+        },
+        "primary": {
+          "cpu_core_seconds": 1.572749,
+          "cpu_mean_cores": 0.026210965270671245,
+          "charged_memory_median_bytes": 1062666240,
+          "charged_memory_max_simultaneous_bytes": 1067782144,
+          "working_set_estimate_median_bytes": 941293568,
+          "working_set_estimate_max_simultaneous_bytes": 946409472
+        }
+      },
+      "measurement_seconds": 60.00347502500517,
+      "window_bytes": 9207152,
+      "window_encoded_useful_bytes": 8479751,
+      "window_bytes_per_second": 153443.64632486893,
+      "encoded_useful_bytes_per_second": 141320.99843327815,
+      "first_byte_p95_ms": 7097.020964982221,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/1-1-1-baseline/metadata-observer-receipt.json",
+        "sha256": "39a8758d084057757a3d1d7fe430b0be78e540c606be342298fc99bf9c7ce6be"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "d40c0e7ac070848beda252c2f60f10309fe1e55a021d9b497032ae5d3f3a6223",
+        "resource-samples.json": "99887687e21d3801a233dbe9fbe2afc5faa42c155f6c34b349f58cfec39c4538",
+        "useful-media-complete.json": "07dacb203c30b21ab55e79c7a0f28926d5affb07f377c5215a770d7a63f1b175"
+      }
+    },
+    {
+      "phase": 2,
+      "backend": "candidate",
+      "viewers": 1,
+      "trial": 1,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.757611,
+          "cpu_mean_cores": 0.012626143926881397,
+          "charged_memory_median_bytes": 174448640,
+          "charged_memory_max_simultaneous_bytes": 180953088,
+          "working_set_estimate_median_bytes": 174383104,
+          "working_set_estimate_max_simultaneous_bytes": 180887552
+        },
+        "origin": {
+          "cpu_core_seconds": 0.401035,
+          "cpu_mean_cores": 0.006683542912809978,
+          "charged_memory_median_bytes": 222629888,
+          "charged_memory_max_simultaneous_bytes": 223797248,
+          "working_set_estimate_median_bytes": 101347328,
+          "working_set_estimate_max_simultaneous_bytes": 102514688
+        },
+        "observer": {
+          "cpu_core_seconds": 0.291315,
+          "cpu_mean_cores": 0.004854978502238555,
+          "charged_memory_median_bytes": 271921152,
+          "charged_memory_max_simultaneous_bytes": 277635072,
+          "working_set_estimate_median_bytes": 208314368,
+          "working_set_estimate_max_simultaneous_bytes": 209829888
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.449961,
+          "cpu_mean_cores": 0.02416466534192993,
+          "charged_memory_median_bytes": 667963392,
+          "charged_memory_max_simultaneous_bytes": 680861696,
+          "working_set_estimate_median_bytes": 483643392,
+          "working_set_estimate_max_simultaneous_bytes": 492449792
+        },
+        "primary": {
+          "cpu_core_seconds": 1.158646,
+          "cpu_mean_cores": 0.01930968683969138,
+          "charged_memory_median_bytes": 396730368,
+          "charged_memory_max_simultaneous_bytes": 404402176,
+          "working_set_estimate_median_bytes": 275382272,
+          "working_set_estimate_max_simultaneous_bytes": 283054080
+        }
+      },
+      "measurement_seconds": 60.00335529100266,
+      "window_bytes": 9196775,
+      "window_encoded_useful_bytes": 8470121,
+      "window_bytes_per_second": 153271.01218586406,
+      "encoded_useful_bytes_per_second": 141160.7894078895,
+      "first_byte_p95_ms": 6765.461717004655,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/2-1-1-candidate/metadata-observer-receipt.json",
+        "sha256": "8a15e07de143aefefc094d6d85c87fc93bf917b4b522ea6f2461b45723f8e4b6"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "b17e41f2049c55d5c6fc13a59493cf613e8283bee33fd8004d27b075786b614a",
+        "resource-samples.json": "a4be5c2af79d63b6feb78b798adf2b10c5c61d40a5ce053fe09ea3ee0a761105",
+        "useful-media-complete.json": "c54ec6003f5aeb03687c6e8fc9e8918a1bc946ed5902ed24c5b9eddd0199daad"
+      }
+    },
+    {
+      "phase": 3,
+      "backend": "candidate",
+      "viewers": 1,
+      "trial": 2,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.749792,
+          "cpu_mean_cores": 0.012496079328693866,
+          "charged_memory_median_bytes": 176738304,
+          "charged_memory_max_simultaneous_bytes": 181927936,
+          "working_set_estimate_median_bytes": 176672768,
+          "working_set_estimate_max_simultaneous_bytes": 181862400
+        },
+        "origin": {
+          "cpu_core_seconds": 0.384031,
+          "cpu_mean_cores": 0.006400284133036407,
+          "charged_memory_median_bytes": 222507008,
+          "charged_memory_max_simultaneous_bytes": 223830016,
+          "working_set_estimate_median_bytes": 101224448,
+          "working_set_estimate_max_simultaneous_bytes": 102547456
+        },
+        "observer": {
+          "cpu_core_seconds": 0.292687,
+          "cpu_mean_cores": 0.004877939442508617,
+          "charged_memory_median_bytes": 271405056,
+          "charged_memory_max_simultaneous_bytes": 276496384,
+          "working_set_estimate_median_bytes": 207171584,
+          "working_set_estimate_max_simultaneous_bytes": 208756736
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.42651,
+          "cpu_mean_cores": 0.02377430290423889,
+          "charged_memory_median_bytes": 670609408,
+          "charged_memory_max_simultaneous_bytes": 678629376,
+          "working_set_estimate_median_bytes": 484724736,
+          "working_set_estimate_max_simultaneous_bytes": 491585536
+        },
+        "primary": {
+          "cpu_core_seconds": 1.133823,
+          "cpu_mean_cores": 0.01889636346173027,
+          "charged_memory_median_bytes": 399499264,
+          "charged_memory_max_simultaneous_bytes": 404467712,
+          "working_set_estimate_median_bytes": 278151168,
+          "working_set_estimate_max_simultaneous_bytes": 283119616
+        }
+      },
+      "measurement_seconds": 60.00217990600504,
+      "window_bytes": 9196775,
+      "window_encoded_useful_bytes": 8470121,
+      "window_bytes_per_second": 153274.01461758532,
+      "encoded_useful_bytes_per_second": 141163.5546119935,
+      "first_byte_p95_ms": 6762.852078973083,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/3-1-2-candidate/metadata-observer-receipt.json",
+        "sha256": "5fef659153625fd88893c2fb5a10d23a7ac2efc535feb2b24eb7671cd4ef2e98"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "16468edb00d176e7a2ab98b06aaa2dad5c5dd231f137dd105f33157e25d42982",
+        "resource-samples.json": "cb5e51a8dd79d87d13a36ff358ff3fd5f04c9ce18d8232b2dcba639e3bb9d254",
+        "useful-media-complete.json": "b537fa83a659e7ef055b187ce6e0a90ea05fb0d64642463c67bd950f9662eb55"
+      }
+    },
+    {
+      "phase": 4,
+      "backend": "baseline",
+      "viewers": 1,
+      "trial": 2,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.199036,
+          "cpu_mean_cores": 0.019983924921768134,
+          "charged_memory_median_bytes": 843243520,
+          "charged_memory_max_simultaneous_bytes": 848265216,
+          "working_set_estimate_median_bytes": 843153408,
+          "working_set_estimate_max_simultaneous_bytes": 848175104
+        },
+        "origin": {
+          "cpu_core_seconds": 0.402112,
+          "cpu_mean_cores": 0.006701863845741103,
+          "charged_memory_median_bytes": 222494720,
+          "charged_memory_max_simultaneous_bytes": 223531008,
+          "working_set_estimate_median_bytes": 101212160,
+          "working_set_estimate_max_simultaneous_bytes": 102248448
+        },
+        "observer": {
+          "cpu_core_seconds": 0.327424,
+          "cpu_mean_cores": 0.0054570643696978316,
+          "charged_memory_median_bytes": 274571264,
+          "charged_memory_max_simultaneous_bytes": 280993792,
+          "working_set_estimate_median_bytes": 211091456,
+          "working_set_estimate_max_simultaneous_bytes": 212303872
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.928572,
+          "cpu_mean_cores": 0.032142853137207064,
+          "charged_memory_median_bytes": 1340162048,
+          "charged_memory_max_simultaneous_bytes": 1350983680,
+          "working_set_estimate_median_bytes": 1154592768,
+          "working_set_estimate_max_simultaneous_bytes": 1160949760
+        },
+        "primary": {
+          "cpu_core_seconds": 1.601148,
+          "cpu_mean_cores": 0.026685788767509235,
+          "charged_memory_median_bytes": 1064734720,
+          "charged_memory_max_simultaneous_bytes": 1070985216,
+          "working_set_estimate_median_bytes": 943362048,
+          "working_set_estimate_max_simultaneous_bytes": 949612544
+        }
+      },
+      "measurement_seconds": 60.0000252549944,
+      "window_bytes": 9207152,
+      "window_encoded_useful_bytes": 8479751,
+      "window_bytes_per_second": 153452.46874264602,
+      "encoded_useful_bytes_per_second": 141329.1238455628,
+      "first_byte_p95_ms": 7098.731274978491,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/4-1-2-baseline/metadata-observer-receipt.json",
+        "sha256": "cfa06094533982279dd1e212139d475f85f02a924b974d69b50322fec7a6a516"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "e952bed9d045b3513d0d951022ae5f5ca7889451017d958620fc61b66f7321b6",
+        "resource-samples.json": "9098a1e7f0410f99e9871145e20fa5dfaeda33a8a86d01186bab556576f5e028",
+        "useful-media-complete.json": "4d9428d9f33ce481ac36d1d3674a48a3065dc8cf28a75b14433b0e81b9756c13"
+      }
+    },
+    {
+      "phase": 5,
+      "backend": "baseline",
+      "viewers": 1,
+      "trial": 3,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.175864,
+          "cpu_mean_cores": 0.019596627442407387,
+          "charged_memory_median_bytes": 841871360,
+          "charged_memory_max_simultaneous_bytes": 847241216,
+          "working_set_estimate_median_bytes": 841781248,
+          "working_set_estimate_max_simultaneous_bytes": 847151104
+        },
+        "origin": {
+          "cpu_core_seconds": 0.400686,
+          "cpu_mean_cores": 0.006677723157940413,
+          "charged_memory_median_bytes": 222507008,
+          "charged_memory_max_simultaneous_bytes": 223653888,
+          "working_set_estimate_median_bytes": 101224448,
+          "working_set_estimate_max_simultaneous_bytes": 102371328
+        },
+        "observer": {
+          "cpu_core_seconds": 0.329719,
+          "cpu_mean_cores": 0.005495006568517381,
+          "charged_memory_median_bytes": 272654336,
+          "charged_memory_max_simultaneous_bytes": 279191552,
+          "working_set_estimate_median_bytes": 209178624,
+          "working_set_estimate_max_simultaneous_bytes": 211267584
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.906269,
+          "cpu_mean_cores": 0.031769357168865184,
+          "charged_memory_median_bytes": 1338445824,
+          "charged_memory_max_simultaneous_bytes": 1349050368,
+          "working_set_estimate_median_bytes": 1153236992,
+          "working_set_estimate_max_simultaneous_bytes": 1158438912
+        },
+        "primary": {
+          "cpu_core_seconds": 1.57655,
+          "cpu_mean_cores": 0.0262743506003478,
+          "charged_memory_median_bytes": 1065406464,
+          "charged_memory_max_simultaneous_bytes": 1070243840,
+          "working_set_estimate_median_bytes": 944033792,
+          "working_set_estimate_max_simultaneous_bytes": 948871168
+        }
+      },
+      "measurement_seconds": 60.00338596300571,
+      "window_bytes": 9207152,
+      "window_encoded_useful_bytes": 8479751,
+      "window_bytes_per_second": 153443.8740786486,
+      "encoded_useful_bytes_per_second": 141321.2081936189,
+      "first_byte_p95_ms": 7095.250379003119,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/5-1-3-baseline/metadata-observer-receipt.json",
+        "sha256": "71ea7fc917c88447fea011467d5f44986c6243396a957ae672ee998642a62038"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "17c8a7395bd01c00658c29d84cf4ced29e661ea36fd2aa1d0c699455ed2ee285",
+        "resource-samples.json": "e9d12fb58471414220c5da2c6f9c3544f876feba25c90f15935c4f36d0669c0d",
+        "useful-media-complete.json": "c7916009ba0e9c2bcd38b16f8da47377bdec584c28ba9b0132359ac99a96da15"
+      }
+    },
+    {
+      "phase": 6,
+      "backend": "candidate",
+      "viewers": 1,
+      "trial": 3,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.761869,
+          "cpu_mean_cores": 0.012697565414012183,
+          "charged_memory_median_bytes": 174776320,
+          "charged_memory_max_simultaneous_bytes": 181596160,
+          "working_set_estimate_median_bytes": 174710784,
+          "working_set_estimate_max_simultaneous_bytes": 181530624
+        },
+        "origin": {
+          "cpu_core_seconds": 0.41135,
+          "cpu_mean_cores": 0.006855697676442946,
+          "charged_memory_median_bytes": 222224384,
+          "charged_memory_max_simultaneous_bytes": 223797248,
+          "working_set_estimate_median_bytes": 100941824,
+          "working_set_estimate_max_simultaneous_bytes": 102514688
+        },
+        "observer": {
+          "cpu_core_seconds": 0.297212,
+          "cpu_mean_cores": 0.004953435317396283,
+          "charged_memory_median_bytes": 270143488,
+          "charged_memory_max_simultaneous_bytes": 276307968,
+          "working_set_estimate_median_bytes": 206872576,
+          "working_set_estimate_max_simultaneous_bytes": 208056320
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.470431,
+          "cpu_mean_cores": 0.024506698407851413,
+          "charged_memory_median_bytes": 667430912,
+          "charged_memory_max_simultaneous_bytes": 678744064,
+          "working_set_estimate_median_bytes": 482422784,
+          "working_set_estimate_max_simultaneous_bytes": 490917888
+        },
+        "primary": {
+          "cpu_core_seconds": 1.173219,
+          "cpu_mean_cores": 0.019553263090455127,
+          "charged_memory_median_bytes": 397066240,
+          "charged_memory_max_simultaneous_bytes": 404209664,
+          "working_set_estimate_median_bytes": 275718144,
+          "working_set_estimate_max_simultaneous_bytes": 282861568
+        }
+      },
+      "measurement_seconds": 60.001187248009956,
+      "window_bytes": 9167815,
+      "window_encoded_useful_bytes": 8444484,
+      "window_bytes_per_second": 152793.8932625715,
+      "encoded_useful_bytes_per_second": 140738.61513932087,
+      "first_byte_p95_ms": 6766.915915010031,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/6-1-3-candidate/metadata-observer-receipt.json",
+        "sha256": "ef2b04e1223afdef6007b105625aa63b28f0c19913f38bfb4534ab909cea66fd"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "62b8c799eff7dedf5c6f44dcc7ffb207a135972a6e125556876a7cfc0748f5b9",
+        "resource-samples.json": "ba01a06a27ad8f2d678be491091825c4bd8bc1d93d84f9f81f9df2d4369403b4",
+        "useful-media-complete.json": "ea774ddabad5bfcb6fcc974f29d61acb0585b3c88cfb5723513001d0eb15e270"
+      }
+    },
+    {
+      "phase": 7,
+      "backend": "baseline",
+      "viewers": 2,
+      "trial": 1,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.254152,
+          "cpu_mean_cores": 0.020902710643021495,
+          "charged_memory_median_bytes": 845963264,
+          "charged_memory_max_simultaneous_bytes": 851529728,
+          "working_set_estimate_median_bytes": 845873152,
+          "working_set_estimate_max_simultaneous_bytes": 851439616
+        },
+        "origin": {
+          "cpu_core_seconds": 0.404602,
+          "cpu_mean_cores": 0.006743423868548456,
+          "charged_memory_median_bytes": 222392320,
+          "charged_memory_max_simultaneous_bytes": 223436800,
+          "working_set_estimate_median_bytes": 101109760,
+          "working_set_estimate_max_simultaneous_bytes": 102154240
+        },
+        "observer": {
+          "cpu_core_seconds": 0.391947,
+          "cpu_mean_cores": 0.006532505412741315,
+          "charged_memory_median_bytes": 280027136,
+          "charged_memory_max_simultaneous_bytes": 290643968,
+          "working_set_estimate_median_bytes": 207912960,
+          "working_set_estimate_max_simultaneous_bytes": 209203200
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 2.050701,
+          "cpu_mean_cores": 0.03417863992431127,
+          "charged_memory_median_bytes": 1348124672,
+          "charged_memory_max_simultaneous_bytes": 1365291008,
+          "working_set_estimate_median_bytes": 1154498560,
+          "working_set_estimate_max_simultaneous_bytes": 1161539584
+        },
+        "primary": {
+          "cpu_core_seconds": 1.658754,
+          "cpu_mean_cores": 0.027646134511569952,
+          "charged_memory_median_bytes": 1068224512,
+          "charged_memory_max_simultaneous_bytes": 1074647040,
+          "working_set_estimate_median_bytes": 946851840,
+          "working_set_estimate_max_simultaneous_bytes": 953274368
+        }
+      },
+      "measurement_seconds": 59.99949104298139,
+      "window_bytes": 18414304,
+      "window_encoded_useful_bytes": 16959502,
+      "window_bytes_per_second": 306907.6700468789,
+      "encoded_useful_bytes_per_second": 282660.7643696652,
+      "first_byte_p95_ms": 7101.64538299432,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/7-2-1-baseline/metadata-observer-receipt.json",
+        "sha256": "4fbd0b0ab1192b1ea52e77bf64d607008dddb5318e2792f7bcc85940b9960eec"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "6307e43e3b7ab518977523c46bf92def1d6ccf2afd9a8d67ce9e541e298002d9",
+        "resource-samples.json": "d42b0b72c6fbb29083b8638b97025f3467badf528ce1f6148315e34909ae8d3e",
+        "useful-media-complete.json": "b03caa6a66beaf503e372ac6533d30afc738439fca51b74cd66f877359297ab9"
+      }
+    },
+    {
+      "phase": 8,
+      "backend": "candidate",
+      "viewers": 2,
+      "trial": 1,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.758207,
+          "cpu_mean_cores": 0.012636066112537574,
+          "charged_memory_median_bytes": 174940160,
+          "charged_memory_max_simultaneous_bytes": 180011008,
+          "working_set_estimate_median_bytes": 174874624,
+          "working_set_estimate_max_simultaneous_bytes": 179945472
+        },
+        "origin": {
+          "cpu_core_seconds": 0.394652,
+          "cpu_mean_cores": 0.006577160014936791,
+          "charged_memory_median_bytes": 222490624,
+          "charged_memory_max_simultaneous_bytes": 223449088,
+          "working_set_estimate_median_bytes": 101208064,
+          "working_set_estimate_max_simultaneous_bytes": 102166528
+        },
+        "observer": {
+          "cpu_core_seconds": 0.324966,
+          "cpu_mean_cores": 0.005415792600604961,
+          "charged_memory_median_bytes": 282660864,
+          "charged_memory_max_simultaneous_bytes": 292909056,
+          "working_set_estimate_median_bytes": 211652608,
+          "working_set_estimate_max_simultaneous_bytes": 213295104
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.477825,
+          "cpu_mean_cores": 0.024629018728079325,
+          "charged_memory_median_bytes": 680669184,
+          "charged_memory_max_simultaneous_bytes": 693202944,
+          "working_set_estimate_median_bytes": 488534016,
+          "working_set_estimate_max_simultaneous_bytes": 493850624
+        },
+        "primary": {
+          "cpu_core_seconds": 1.152859,
+          "cpu_mean_cores": 0.019213226127474368,
+          "charged_memory_median_bytes": 397692928,
+          "charged_memory_max_simultaneous_bytes": 403251200,
+          "working_set_estimate_median_bytes": 276344832,
+          "working_set_estimate_max_simultaneous_bytes": 281903104
+        }
+      },
+      "measurement_seconds": 60.00340558899916,
+      "window_bytes": 18350110,
+      "window_encoded_useful_bytes": 16903489,
+      "window_bytes_per_second": 305817.80850392685,
+      "encoded_useful_bytes_per_second": 281708.82692530093,
+      "first_byte_p95_ms": 6765.939787990646,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/8-2-1-candidate/metadata-observer-receipt.json",
+        "sha256": "324c33f3d7207d8e268b52df408dc7341ba68d66b2c6767acb52245722efbd61"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "c009da073638fa2145e9079c2500394dca3f5acc6d9fa069379adea850ae0574",
+        "resource-samples.json": "533f1fec9e1cd9945acc8ecfe58846a6599673ade35b49cf5674c50afe526104",
+        "useful-media-complete.json": "f3f5dfec361a0a20919439229204d7ba0d83e99469e9af16b5d67337719968a9"
+      }
+    },
+    {
+      "phase": 9,
+      "backend": "candidate",
+      "viewers": 2,
+      "trial": 2,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.768085,
+          "cpu_mean_cores": 0.012801227866689947,
+          "charged_memory_median_bytes": 175161344,
+          "charged_memory_max_simultaneous_bytes": 181370880,
+          "working_set_estimate_median_bytes": 175095808,
+          "working_set_estimate_max_simultaneous_bytes": 181305344
+        },
+        "origin": {
+          "cpu_core_seconds": 0.41932,
+          "cpu_mean_cores": 0.006988563595253688,
+          "charged_memory_median_bytes": 222654464,
+          "charged_memory_max_simultaneous_bytes": 223547392,
+          "working_set_estimate_median_bytes": 101371904,
+          "working_set_estimate_max_simultaneous_bytes": 102264832
+        },
+        "observer": {
+          "cpu_core_seconds": 0.325834,
+          "cpu_mean_cores": 0.005430486574682558,
+          "charged_memory_median_bytes": 280285184,
+          "charged_memory_max_simultaneous_bytes": 291557376,
+          "working_set_estimate_median_bytes": 209178624,
+          "working_set_estimate_max_simultaneous_bytes": 211066880
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.513239,
+          "cpu_mean_cores": 0.025220278036626194,
+          "charged_memory_median_bytes": 677965824,
+          "charged_memory_max_simultaneous_bytes": 693936128,
+          "working_set_estimate_median_bytes": 485220352,
+          "working_set_estimate_max_simultaneous_bytes": 491950080
+        },
+        "primary": {
+          "cpu_core_seconds": 1.187405,
+          "cpu_mean_cores": 0.019789791461943637,
+          "charged_memory_median_bytes": 397594624,
+          "charged_memory_max_simultaneous_bytes": 404299776,
+          "working_set_estimate_median_bytes": 276246528,
+          "working_set_estimate_max_simultaneous_bytes": 282951680
+        }
+      },
+      "measurement_seconds": 60.00088491500355,
+      "window_bytes": 18332351,
+      "window_encoded_useful_bytes": 16888380,
+      "window_bytes_per_second": 305534.67712966836,
+      "encoded_useful_bytes_per_second": 281468.84873321204,
+      "first_byte_p95_ms": 6764.974636986153,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/9-2-2-candidate/metadata-observer-receipt.json",
+        "sha256": "d757b4c89fb2e021f3549f9f40bd6abfd58e671905d8485953e5ab383211baa5"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "bff70af2f29d06adfd2bdd7873feae9dbe9e981c27578fa8a4fec89f8efcb5ce",
+        "resource-samples.json": "ba21076857888d5bc746f1809934b89a653eb8cf7f6b8faa6616bb838c32612d",
+        "useful-media-complete.json": "5fc72e753b321593b11e08407409e10d97f23df639307fe14c9b15f6f1869bd5"
+      }
+    },
+    {
+      "phase": 10,
+      "backend": "baseline",
+      "viewers": 2,
+      "trial": 2,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.260184,
+          "cpu_mean_cores": 0.021001866987512496,
+          "charged_memory_median_bytes": 846434304,
+          "charged_memory_max_simultaneous_bytes": 851861504,
+          "working_set_estimate_median_bytes": 846344192,
+          "working_set_estimate_max_simultaneous_bytes": 851771392
+        },
+        "origin": {
+          "cpu_core_seconds": 0.395529,
+          "cpu_mean_cores": 0.006591773461418198,
+          "charged_memory_median_bytes": 222658560,
+          "charged_memory_max_simultaneous_bytes": 224468992,
+          "working_set_estimate_median_bytes": 101376000,
+          "working_set_estimate_max_simultaneous_bytes": 103186432
+        },
+        "observer": {
+          "cpu_core_seconds": 0.393423,
+          "cpu_mean_cores": 0.0065566754663034365,
+          "charged_memory_median_bytes": 278687744,
+          "charged_memory_max_simultaneous_bytes": 289714176,
+          "working_set_estimate_median_bytes": 206983168,
+          "working_set_estimate_max_simultaneous_bytes": 208338944
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 2.049136,
+          "cpu_mean_cores": 0.034150315915234125,
+          "charged_memory_median_bytes": 1347710976,
+          "charged_memory_max_simultaneous_bytes": 1364013056,
+          "working_set_estimate_median_bytes": 1154404352,
+          "working_set_estimate_max_simultaneous_bytes": 1160921088
+        },
+        "primary": {
+          "cpu_core_seconds": 1.655713,
+          "cpu_mean_cores": 0.027593640448930694,
+          "charged_memory_median_bytes": 1069023232,
+          "charged_memory_max_simultaneous_bytes": 1074872320,
+          "working_set_estimate_median_bytes": 947650560,
+          "working_set_estimate_max_simultaneous_bytes": 953499648
+        }
+      },
+      "measurement_seconds": 60.0034273500205,
+      "window_bytes": 18414304,
+      "window_encoded_useful_bytes": 16959502,
+      "window_bytes_per_second": 306887.53648325906,
+      "encoded_useful_bytes_per_second": 282642.2214362761,
+      "first_byte_p95_ms": 7097.758446005173,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/10-2-2-baseline/metadata-observer-receipt.json",
+        "sha256": "ea0eeaa2b006f8458d62c3112d04e52bfe78064515851464e5c29426752b3e73"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "ad65c0d2eb679cae336a7cff0a98b4f2dfadb935e520a8e415799c0d1a9d9b2e",
+        "resource-samples.json": "9ab96b531b72936fc7dfebfef87533fe4e5ce33354fac1c949d0bc8c4e774e0c",
+        "useful-media-complete.json": "6c41114488c33623190357079ca95d58a25cee986557a79eed56cbe10cec35a9"
+      }
+    },
+    {
+      "phase": 11,
+      "backend": "baseline",
+      "viewers": 2,
+      "trial": 3,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.243502,
+          "cpu_mean_cores": 0.02072507122393977,
+          "charged_memory_median_bytes": 846585856,
+          "charged_memory_max_simultaneous_bytes": 850976768,
+          "working_set_estimate_median_bytes": 846495744,
+          "working_set_estimate_max_simultaneous_bytes": 850886656
+        },
+        "origin": {
+          "cpu_core_seconds": 0.400079,
+          "cpu_mean_cores": 0.006667995524094533,
+          "charged_memory_median_bytes": 222371840,
+          "charged_memory_max_simultaneous_bytes": 223154176,
+          "working_set_estimate_median_bytes": 101089280,
+          "working_set_estimate_max_simultaneous_bytes": 101871616
+        },
+        "observer": {
+          "cpu_core_seconds": 0.396437,
+          "cpu_mean_cores": 0.006607295413119569,
+          "charged_memory_median_bytes": 281288704,
+          "charged_memory_max_simultaneous_bytes": 291450880,
+          "working_set_estimate_median_bytes": 208965632,
+          "working_set_estimate_max_simultaneous_bytes": 210182144
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 2.040018,
+          "cpu_mean_cores": 0.03400036216115387,
+          "charged_memory_median_bytes": 1350316032,
+          "charged_memory_max_simultaneous_bytes": 1364918272,
+          "working_set_estimate_median_bytes": 1156505600,
+          "working_set_estimate_max_simultaneous_bytes": 1162207232
+        },
+        "primary": {
+          "cpu_core_seconds": 1.643581,
+          "cpu_mean_cores": 0.027393066748034302,
+          "charged_memory_median_bytes": 1069027328,
+          "charged_memory_max_simultaneous_bytes": 1073963008,
+          "working_set_estimate_median_bytes": 947654656,
+          "working_set_estimate_max_simultaneous_bytes": 952590336
+        }
+      },
+      "measurement_seconds": 59.99989030501456,
+      "window_bytes": 18414304,
+      "window_encoded_useful_bytes": 16959502,
+      "window_bytes_per_second": 306905.62776680617,
+      "encoded_useful_bytes_per_second": 282658.88343770173,
+      "first_byte_p95_ms": 7097.784846002469,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/11-2-3-baseline/metadata-observer-receipt.json",
+        "sha256": "2c37e4c91004643f397e53c63d1f0a592ce54312d8c5d993ffb88252147f8975"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "a91f372a1cccabc60be915ba3b0a337b23f39f375f059d6e03e91beb5adc18fa",
+        "resource-samples.json": "2a1a1e8f5dc666d8697e4ce8014ba3b74848d9ad3ac5d30511a33a62cae10590",
+        "useful-media-complete.json": "ff140dcdd31ce3a5885a9f6c6254d00c229a612e42fbf0e557a2d0e0b313ba6f"
+      }
+    },
+    {
+      "phase": 12,
+      "backend": "candidate",
+      "viewers": 2,
+      "trial": 3,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.748622,
+          "cpu_mean_cores": 0.012476589461406411,
+          "charged_memory_median_bytes": 175394816,
+          "charged_memory_max_simultaneous_bytes": 180195328,
+          "working_set_estimate_median_bytes": 175329280,
+          "working_set_estimate_max_simultaneous_bytes": 180129792
+        },
+        "origin": {
+          "cpu_core_seconds": 0.392473,
+          "cpu_mean_cores": 0.006540983962115138,
+          "charged_memory_median_bytes": 222404608,
+          "charged_memory_max_simultaneous_bytes": 223277056,
+          "working_set_estimate_median_bytes": 101122048,
+          "working_set_estimate_max_simultaneous_bytes": 101994496
+        },
+        "observer": {
+          "cpu_core_seconds": 0.32194,
+          "cpu_mean_cores": 0.005365475782444519,
+          "charged_memory_median_bytes": 281837568,
+          "charged_memory_max_simultaneous_bytes": 291602432,
+          "working_set_estimate_median_bytes": 209580032,
+          "working_set_estimate_max_simultaneous_bytes": 211406848
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.463035,
+          "cpu_mean_cores": 0.024383049205966068,
+          "charged_memory_median_bytes": 679075840,
+          "charged_memory_max_simultaneous_bytes": 694046720,
+          "working_set_estimate_median_bytes": 486658048,
+          "working_set_estimate_max_simultaneous_bytes": 491376640
+        },
+        "primary": {
+          "cpu_core_seconds": 1.141095,
+          "cpu_mean_cores": 0.019017573423521547,
+          "charged_memory_median_bytes": 398024704,
+          "charged_memory_max_simultaneous_bytes": 403283968,
+          "working_set_estimate_median_bytes": 276676608,
+          "working_set_estimate_max_simultaneous_bytes": 281935872
+        }
+      },
+      "measurement_seconds": 60.00213458298822,
+      "window_bytes": 18342547,
+      "window_encoded_useful_bytes": 16894256,
+      "window_bytes_per_second": 305698.2410289195,
+      "encoded_useful_bytes_per_second": 281560.91641429457,
+      "first_byte_p95_ms": 6769.150531996274,
+      "helper_receipt": {
+        "path": "artifacts/rust/m3-persistent-observer-protocol-measured-1/12-2-3-candidate/metadata-observer-receipt.json",
+        "sha256": "82857a1cd282f7dc42e86acba1f48d771619e685dbc11ba329d7ed5fe181c589"
+      },
+      "raw_sha256": {
+        "shared-ts.json": "d1f1694185b6e46cd20cd3c90b5727b8daa6e933b5e0075e45b4b3c2011d4d4f",
+        "resource-samples.json": "e8f5f78f969e900a2e5c1187c10882435145459c9f63a3ea2915c784c6dfb5ba",
+        "useful-media-complete.json": "9aee7b806f5a0f14068bf88aa62bc173298bdf6fa6294f66fb087e5b6e534820"
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "viewers": 1,
+      "trial": 1,
+      "ratios": {
+        "CPU": 0.7367026219861482,
+        "memory": 0.2990820446902712,
+        "throughput": 0.9988729413829597,
+        "encoded_useful_throughput": 0.9988643534462274,
+        "first_byte_p95": 0.953281912282135
+      },
+      "failed": [],
+      "passed": true,
+      "source_phase": 1,
+      "native_phase": 2
+    },
+    {
+      "viewers": 1,
+      "trial": 2,
+      "ratios": {
+        "CPU": 0.7081058621260307,
+        "memory": 0.2981422452650331,
+        "throughput": 0.9988729413829597,
+        "encoded_useful_throughput": 0.9988643534462274,
+        "first_byte_p95": 0.9526846160257806
+      },
+      "failed": [],
+      "passed": true,
+      "source_phase": 4,
+      "native_phase": 3
+    },
+    {
+      "viewers": 1,
+      "trial": 3,
+      "ratios": {
+        "CPU": 0.7441958656894947,
+        "memory": 0.29810323839452985,
+        "throughput": 0.9957275604877599,
+        "encoded_useful_throughput": 0.995841033539782,
+        "first_byte_p95": 0.9537247529749305
+      },
+      "failed": [],
+      "passed": true,
+      "source_phase": 5,
+      "native_phase": 6
+    },
+    {
+      "viewers": 2,
+      "trial": 1,
+      "ratios": {
+        "CPU": 0.6949697115679445,
+        "memory": 0.2957208474947687,
+        "throughput": 0.9965139057115598,
+        "encoded_useful_throughput": 0.9966972497187713,
+        "first_byte_p95": 0.952728476726315
+      },
+      "failed": [],
+      "passed": true,
+      "source_phase": 7,
+      "native_phase": 8
+    },
+    {
+      "viewers": 2,
+      "trial": 2,
+      "ratios": {
+        "CPU": 0.7171866828724489,
+        "memory": 0.2967506916164063,
+        "throughput": 0.995549492394608,
+        "encoded_useful_throughput": 0.9958063627104144,
+        "first_byte_p95": 0.95311423859369
+      },
+      "failed": [],
+      "passed": true,
+      "source_phase": 10,
+      "native_phase": 9
+    },
+    {
+      "viewers": 2,
+      "trial": 3,
+      "ratios": {
+        "CPU": 0.6942476940770507,
+        "memory": 0.2959675962952452,
+        "throughput": 0.9961031923878306,
+        "encoded_useful_throughput": 0.9961528351481075,
+        "first_byte_p95": 0.9536990312982953
+      },
+      "failed": [],
+      "passed": true,
+      "source_phase": 11,
+      "native_phase": 12
+    }
+  ],
+  "geometric_mean_ratios": {
+    "0": {
+      "CPU": 0.7156461947809836,
+      "memory": 0.29729189321099464,
+      "throughput": 0.9969390233158271,
+      "encoded_useful_throughput": 0.9970368191346142,
+      "first_byte_p95": 0.9532054149328566
+    },
+    "1": {
+      "CPU": 0.7295009908330516,
+      "memory": 0.29844216665200846,
+      "throughput": 0.9978233786459358,
+      "encoded_useful_throughput": 0.9978555616691938,
+      "first_byte_p95": 0.9532303318134161
+    },
+    "2": {
+      "CPU": 0.7020545311660972,
+      "memory": 0.2961460532218752,
+      "throughput": 0.9960554517760831,
+      "encoded_useful_throughput": 0.9962187483799633,
+      "first_byte_p95": 0.9531804987036098
+    }
+  },
+  "descriptive_per_backend_arithmetic_means": {
+    "1": {
+      "baseline": {
+        "cpu_mean_cores": 0.02639036821284276,
+        "mean_of_phase_working_set_peaks_bytes": 948297728,
+        "encoded_useful_bytes_per_second": 141323.7768241533
+      },
+      "candidate": {
+        "cpu_mean_cores": 0.019253104463958927,
+        "mean_of_phase_working_set_peaks_bytes": 283011754.6666667,
+        "encoded_useful_bytes_per_second": 141020.9863864013
+      }
+    },
+    "2": {
+      "baseline": {
+        "cpu_mean_cores": 0.02754428056951165,
+        "mean_of_phase_working_set_peaks_bytes": 953121450.6666666,
+        "encoded_useful_bytes_per_second": 282653.9564145477
+      },
+      "candidate": {
+        "cpu_mean_cores": 0.019340197004313185,
+        "mean_of_phase_working_set_peaks_bytes": 282263552,
+        "encoded_useful_bytes_per_second": 281579.53069093585
+      }
+    }
+  },
+  "independently_recomputed_A_V_PTS_equivalence": [
+    true,
+    true
+  ],
+  "all_pair_budgets_passed": true,
+  "passed_pairs": 6,
+  "original_process_generation_checks": [
+    {
+      "pid": 1073922,
+      "generation": "18753679",
+      "kind": "orchestrator:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1073924,
+      "generation": "18753698",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1074058,
+      "generation": "18753763",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1074143,
+      "generation": "18753776",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1074421,
+      "generation": "18753838",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1074422,
+      "generation": "18753843",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1074423,
+      "generation": "18753843",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1074425,
+      "generation": "18753843",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1074426,
+      "generation": "18753843",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1074427,
+      "generation": "18753843",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1074456,
+      "generation": "18753862",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1074516,
+      "generation": "18754012",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1076867,
+      "generation": "18756711",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1076970,
+      "generation": "18756735",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1076971,
+      "generation": "18756735",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1076983,
+      "generation": "18756782",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077226,
+      "generation": "18756879",
+      "kind": "baseline:daphne",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077474,
+      "generation": "18756936",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077691,
+      "generation": "18756964",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077692,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077693,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077694,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077695,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077696,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077697,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077698,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077699,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077700,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077701,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077702,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077703,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077704,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077705,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077706,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077707,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077708,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077709,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077710,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077711,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077712,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077713,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077714,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077715,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077717,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077718,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077719,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077720,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077721,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077722,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077723,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077724,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077726,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077732,
+      "generation": "18756965",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1077916,
+      "generation": "18756987",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1078051,
+      "generation": "18757004",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1078192,
+      "generation": "18757022",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1078362,
+      "generation": "18757156",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1079343,
+      "generation": "18759188",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1079371,
+      "generation": "18759210",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1079372,
+      "generation": "18759210",
+      "kind": "baseline:vlc",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1079991,
+      "generation": "18759968",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1080025,
+      "generation": "18759970",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1080053,
+      "generation": "18759973",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1080264,
+      "generation": "18759996",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1080396,
+      "generation": "18761195",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1081756,
+      "generation": "18767199",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1085911,
+      "generation": "18769493",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1086046,
+      "generation": "18769558",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1086132,
+      "generation": "18769572",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1086424,
+      "generation": "18769636",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1086425,
+      "generation": "18769640",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1086426,
+      "generation": "18769640",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1086428,
+      "generation": "18769640",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1086429,
+      "generation": "18769640",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1086430,
+      "generation": "18769640",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1086459,
+      "generation": "18769659",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1086499,
+      "generation": "18769808",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1089028,
+      "generation": "18772671",
+      "kind": "candidate:dispatcharr-rs",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1091056,
+      "generation": "18774381",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1091091,
+      "generation": "18774401",
+      "kind": "candidate:ld-linux-x86-64",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1091667,
+      "generation": "18775130",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1091699,
+      "generation": "18775132",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1091733,
+      "generation": "18775134",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1091981,
+      "generation": "18775159",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1096610,
+      "generation": "18784141",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1096736,
+      "generation": "18784203",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1096822,
+      "generation": "18784217",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1097098,
+      "generation": "18784280",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1097099,
+      "generation": "18784284",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1097100,
+      "generation": "18784284",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1097102,
+      "generation": "18784285",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1097103,
+      "generation": "18784285",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1097104,
+      "generation": "18784285",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1097133,
+      "generation": "18784303",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1097207,
+      "generation": "18784452",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1099723,
+      "generation": "18787263",
+      "kind": "candidate:dispatcharr-rs",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1101556,
+      "generation": "18788950",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1101589,
+      "generation": "18788970",
+      "kind": "candidate:ld-linux-x86-64",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1102158,
+      "generation": "18789696",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1102191,
+      "generation": "18789698",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1102218,
+      "generation": "18789700",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1102470,
+      "generation": "18789726",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1106600,
+      "generation": "18798683",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1106723,
+      "generation": "18798746",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1106810,
+      "generation": "18798759",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1107147,
+      "generation": "18798822",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1107149,
+      "generation": "18798827",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1107150,
+      "generation": "18798827",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1107152,
+      "generation": "18798827",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1107153,
+      "generation": "18798827",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1107154,
+      "generation": "18798827",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1107183,
+      "generation": "18798846",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1107285,
+      "generation": "18798990",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1109621,
+      "generation": "18801695",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1109740,
+      "generation": "18801719",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1109741,
+      "generation": "18801719",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1109742,
+      "generation": "18801767",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1109985,
+      "generation": "18801873",
+      "kind": "baseline:daphne",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110196,
+      "generation": "18801932",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110397,
+      "generation": "18801957",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110398,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110399,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110400,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110401,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110402,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110403,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110404,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110405,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110406,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110407,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110408,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110409,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110410,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110411,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110412,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110413,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110414,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110415,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110416,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110417,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110418,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110420,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110421,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110422,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110423,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110424,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110425,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110426,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110427,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110429,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110434,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110435,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110436,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110437,
+      "generation": "18801958",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110620,
+      "generation": "18801980",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110755,
+      "generation": "18801997",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1110891,
+      "generation": "18802015",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1111068,
+      "generation": "18802145",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1112057,
+      "generation": "18804174",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1112091,
+      "generation": "18804195",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1112092,
+      "generation": "18804195",
+      "kind": "baseline:vlc",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1112641,
+      "generation": "18804954",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1112679,
+      "generation": "18804956",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1112710,
+      "generation": "18804959",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1112926,
+      "generation": "18804982",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1113085,
+      "generation": "18806183",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1114366,
+      "generation": "18812187",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1118677,
+      "generation": "18814479",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1118841,
+      "generation": "18814537",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1118940,
+      "generation": "18814550",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1119225,
+      "generation": "18814614",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1119226,
+      "generation": "18814618",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1119227,
+      "generation": "18814618",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1119229,
+      "generation": "18814618",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1119230,
+      "generation": "18814618",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1119231,
+      "generation": "18814618",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1119260,
+      "generation": "18814637",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1119308,
+      "generation": "18814791",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1121650,
+      "generation": "18817525",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1121752,
+      "generation": "18817549",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1121753,
+      "generation": "18817549",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1121774,
+      "generation": "18817599",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122015,
+      "generation": "18817694",
+      "kind": "baseline:daphne",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122222,
+      "generation": "18817753",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122436,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122437,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122438,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122439,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122440,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122441,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122442,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122443,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122444,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122445,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122446,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122447,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122448,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122449,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122450,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122451,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122452,
+      "generation": "18817779",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122453,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122454,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122455,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122456,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122457,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122458,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122459,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122460,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122461,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122462,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122463,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122464,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122465,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122466,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122467,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122468,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122470,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122471,
+      "generation": "18817780",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122669,
+      "generation": "18817801",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122818,
+      "generation": "18817819",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1122955,
+      "generation": "18817837",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1123119,
+      "generation": "18817971",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1124095,
+      "generation": "18819994",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1124126,
+      "generation": "18820015",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1124127,
+      "generation": "18820015",
+      "kind": "baseline:vlc",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1124770,
+      "generation": "18820773",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1124801,
+      "generation": "18820776",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1124832,
+      "generation": "18820778",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1125035,
+      "generation": "18820801",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1125199,
+      "generation": "18822008",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1126244,
+      "generation": "18828012",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130281,
+      "generation": "18830219",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130408,
+      "generation": "18830282",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130533,
+      "generation": "18830296",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130783,
+      "generation": "18830359",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130784,
+      "generation": "18830363",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130785,
+      "generation": "18830363",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130787,
+      "generation": "18830363",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130788,
+      "generation": "18830364",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130789,
+      "generation": "18830364",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130818,
+      "generation": "18830382",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1130891,
+      "generation": "18830525",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1133228,
+      "generation": "18833416",
+      "kind": "candidate:dispatcharr-rs",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1135073,
+      "generation": "18835105",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1135108,
+      "generation": "18835125",
+      "kind": "candidate:ld-linux-x86-64",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1135913,
+      "generation": "18835854",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1135946,
+      "generation": "18835856",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1135974,
+      "generation": "18835858",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1136221,
+      "generation": "18835883",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1140565,
+      "generation": "18844841",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1140694,
+      "generation": "18844903",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1140778,
+      "generation": "18844916",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1141061,
+      "generation": "18844981",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1141062,
+      "generation": "18844985",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1141063,
+      "generation": "18844985",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1141065,
+      "generation": "18844985",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1141066,
+      "generation": "18844985",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1141067,
+      "generation": "18844985",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1141096,
+      "generation": "18845004",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1141171,
+      "generation": "18845157",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1143445,
+      "generation": "18847841",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1143549,
+      "generation": "18847863",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1143550,
+      "generation": "18847863",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1143551,
+      "generation": "18847913",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1143842,
+      "generation": "18848014",
+      "kind": "baseline:daphne",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144054,
+      "generation": "18848069",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144304,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144305,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144306,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144307,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144308,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144309,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144310,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144311,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144312,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144313,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144314,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144315,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144316,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144317,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144318,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144319,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144320,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144321,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144322,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144323,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144324,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144325,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144326,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144328,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144329,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144330,
+      "generation": "18848100",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144331,
+      "generation": "18848101",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144332,
+      "generation": "18848101",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144333,
+      "generation": "18848101",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144334,
+      "generation": "18848101",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144338,
+      "generation": "18848101",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144341,
+      "generation": "18848101",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144342,
+      "generation": "18848101",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144343,
+      "generation": "18848101",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144344,
+      "generation": "18848101",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144549,
+      "generation": "18848122",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144719,
+      "generation": "18848140",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1144869,
+      "generation": "18848158",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1145034,
+      "generation": "18848286",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1146016,
+      "generation": "18850307",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1146048,
+      "generation": "18850329",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1146049,
+      "generation": "18850329",
+      "kind": "baseline:vlc",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1146602,
+      "generation": "18851108",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1146635,
+      "generation": "18851110",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1146665,
+      "generation": "18851112",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1146883,
+      "generation": "18851135",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1147016,
+      "generation": "18852324",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1147897,
+      "generation": "18858328",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1152558,
+      "generation": "18860762",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1152685,
+      "generation": "18860823",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1152768,
+      "generation": "18860836",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1153055,
+      "generation": "18860899",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1153056,
+      "generation": "18860901",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1153057,
+      "generation": "18860901",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1153059,
+      "generation": "18860901",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1153060,
+      "generation": "18860901",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1153061,
+      "generation": "18860901",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1153090,
+      "generation": "18860923",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1153133,
+      "generation": "18861067",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1155547,
+      "generation": "18863946",
+      "kind": "candidate:dispatcharr-rs",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1157386,
+      "generation": "18865634",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1157428,
+      "generation": "18865654",
+      "kind": "candidate:ld-linux-x86-64",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1157946,
+      "generation": "18866393",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1157980,
+      "generation": "18866395",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1158012,
+      "generation": "18866397",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1158257,
+      "generation": "18866422",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163271,
+      "generation": "18875694",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163404,
+      "generation": "18875751",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163528,
+      "generation": "18875765",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163762,
+      "generation": "18875829",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163763,
+      "generation": "18875830",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163764,
+      "generation": "18875830",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163766,
+      "generation": "18875830",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163767,
+      "generation": "18875830",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163768,
+      "generation": "18875830",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163797,
+      "generation": "18875852",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1163836,
+      "generation": "18876005",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1166214,
+      "generation": "18878864",
+      "kind": "candidate:dispatcharr-rs",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1167984,
+      "generation": "18880558",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1168019,
+      "generation": "18880578",
+      "kind": "candidate:ld-linux-x86-64",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1168574,
+      "generation": "18881317",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1168607,
+      "generation": "18881320",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1168634,
+      "generation": "18881322",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1168883,
+      "generation": "18881347",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1173653,
+      "generation": "18890598",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1173779,
+      "generation": "18890656",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1173903,
+      "generation": "18890670",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1174154,
+      "generation": "18890735",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1174155,
+      "generation": "18890739",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1174156,
+      "generation": "18890739",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1174158,
+      "generation": "18890739",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1174159,
+      "generation": "18890739",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1174160,
+      "generation": "18890739",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1174189,
+      "generation": "18890758",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1174228,
+      "generation": "18890910",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1176517,
+      "generation": "18893876",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1176622,
+      "generation": "18893900",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1176623,
+      "generation": "18893900",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1176624,
+      "generation": "18893947",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1176855,
+      "generation": "18894054",
+      "kind": "baseline:daphne",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177068,
+      "generation": "18894113",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177279,
+      "generation": "18894139",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177280,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177281,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177282,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177283,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177284,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177285,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177286,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177287,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177288,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177289,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177290,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177291,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177292,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177293,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177294,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177295,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177296,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177297,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177298,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177299,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177300,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177301,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177302,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177303,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177305,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177306,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177307,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177308,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177309,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177310,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177311,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177312,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177316,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177319,
+      "generation": "18894140",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177503,
+      "generation": "18894162",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177640,
+      "generation": "18894179",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177779,
+      "generation": "18894197",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1177974,
+      "generation": "18894328",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1178945,
+      "generation": "18896340",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1178981,
+      "generation": "18896361",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1178982,
+      "generation": "18896362",
+      "kind": "baseline:vlc",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1179660,
+      "generation": "18897130",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1179693,
+      "generation": "18897132",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1179721,
+      "generation": "18897135",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1179960,
+      "generation": "18897158",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1180162,
+      "generation": "18898367",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1181148,
+      "generation": "18904371",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1185491,
+      "generation": "18906747",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1185620,
+      "generation": "18906804",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1185705,
+      "generation": "18906818",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1185984,
+      "generation": "18906881",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1185985,
+      "generation": "18906885",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1185986,
+      "generation": "18906885",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1185988,
+      "generation": "18906885",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1185989,
+      "generation": "18906885",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1185990,
+      "generation": "18906886",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1186019,
+      "generation": "18906904",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1186074,
+      "generation": "18907048",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1188538,
+      "generation": "18909810",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1188656,
+      "generation": "18909832",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1188657,
+      "generation": "18909832",
+      "kind": "baseline:uwsgi",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1188658,
+      "generation": "18909879",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1188908,
+      "generation": "18909983",
+      "kind": "baseline:daphne",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189136,
+      "generation": "18910041",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189330,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189331,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189332,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189333,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189334,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189335,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189336,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189337,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189338,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189339,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189340,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189341,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189342,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189343,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189344,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189345,
+      "generation": "18910065",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189346,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189347,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189348,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189349,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189350,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189351,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189352,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189353,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189354,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189355,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189357,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189358,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189359,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189360,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189361,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189362,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189363,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189364,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189367,
+      "generation": "18910066",
+      "kind": "baseline:nginx",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189562,
+      "generation": "18910086",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189697,
+      "generation": "18910103",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1189837,
+      "generation": "18910121",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1190016,
+      "generation": "18910245",
+      "kind": "baseline:celery",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1190971,
+      "generation": "18912271",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1191006,
+      "generation": "18912292",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1191007,
+      "generation": "18912293",
+      "kind": "baseline:vlc",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1191560,
+      "generation": "18913061",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1191592,
+      "generation": "18913063",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1191623,
+      "generation": "18913065",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1191835,
+      "generation": "18913089",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1191990,
+      "generation": "18914283",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1192705,
+      "generation": "18920287",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197264,
+      "generation": "18922752",
+      "kind": "observer:python3",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197406,
+      "generation": "18922812",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197491,
+      "generation": "18922825",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197765,
+      "generation": "18922888",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197766,
+      "generation": "18922893",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197767,
+      "generation": "18922893",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197769,
+      "generation": "18922893",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197770,
+      "generation": "18922893",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197771,
+      "generation": "18922893",
+      "kind": "baseline:postgres",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197800,
+      "generation": "18922912",
+      "kind": "baseline:redis-server",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1197846,
+      "generation": "18923061",
+      "kind": "origin:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1200292,
+      "generation": "18925880",
+      "kind": "candidate:dispatcharr-rs",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1202144,
+      "generation": "18927574",
+      "kind": "publication-observer:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1202189,
+      "generation": "18927594",
+      "kind": "candidate:ld-linux-x86-64",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1202757,
+      "generation": "18928334",
+      "kind": "observer:docker",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1202792,
+      "generation": "18928336",
+      "kind": "observer:docker-compose",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1202821,
+      "generation": "18928339",
+      "kind": "baseline:python",
+      "current_generation": null,
+      "original_generation_absent": true
+    },
+    {
+      "pid": 1203066,
+      "generation": "18928364",
+      "kind": "counter-sampler",
+      "current_generation": null,
+      "original_generation_absent": true
+    }
+  ],
+  "exact_containers": [
+    {
+      "phase": 1,
+      "service": "baseline",
+      "CID": "8a129c0c78adaf1244dc9c8207738d48ce5e1b7e8942d35b56280d52177d8c5a",
+      "PID": 1074143,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-8a129c0c78adaf1244dc9c8207738d48ce5e1b7e8942d35b56280d52177d8c5a.scope"
+    },
+    {
+      "phase": 1,
+      "service": "origin",
+      "CID": "39442e321dc399ac007976a21d798c79e2c7f7e26327376a4d486e122e3a4761",
+      "PID": 1074058,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-39442e321dc399ac007976a21d798c79e2c7f7e26327376a4d486e122e3a4761.scope"
+    },
+    {
+      "phase": 1,
+      "service": "publication-observer",
+      "CID": "a11580c3d28b95e47c45bc3e00af5c5b1824fd6b4df6e58abaf9153300e4b0c4",
+      "PID": 1079343,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-a11580c3d28b95e47c45bc3e00af5c5b1824fd6b4df6e58abaf9153300e4b0c4.scope"
+    },
+    {
+      "phase": 2,
+      "service": "baseline",
+      "CID": "4364adc8c7f718c8f40994c025b2570f63b26c11a58674b70b9e1b2d763deefd",
+      "PID": 1086132,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-4364adc8c7f718c8f40994c025b2570f63b26c11a58674b70b9e1b2d763deefd.scope"
+    },
+    {
+      "phase": 2,
+      "service": "candidate",
+      "CID": "bee272b846df02399d9266fce825917bae3def45d07b3930ec3e1b057f0afca0",
+      "PID": 1089028,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-bee272b846df02399d9266fce825917bae3def45d07b3930ec3e1b057f0afca0.scope"
+    },
+    {
+      "phase": 2,
+      "service": "origin",
+      "CID": "d6673035c1f0b92c88f61ff5fa383c00f85d7cbd1090d6367a3c2195266cae11",
+      "PID": 1086046,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-d6673035c1f0b92c88f61ff5fa383c00f85d7cbd1090d6367a3c2195266cae11.scope"
+    },
+    {
+      "phase": 2,
+      "service": "publication-observer",
+      "CID": "9947c6685299cfd7a30502fe2e589fcc7e660ab30cda86be55155aa422d84bc3",
+      "PID": 1091056,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-9947c6685299cfd7a30502fe2e589fcc7e660ab30cda86be55155aa422d84bc3.scope"
+    },
+    {
+      "phase": 3,
+      "service": "baseline",
+      "CID": "ce2e687cb976afd94bbca010b87b9f627f47fd115b518a55156156218232b435",
+      "PID": 1096822,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-ce2e687cb976afd94bbca010b87b9f627f47fd115b518a55156156218232b435.scope"
+    },
+    {
+      "phase": 3,
+      "service": "candidate",
+      "CID": "baf1af44f9f493244ef99ccc41553f58f0de6028eaefff26ea4ebfc0288a19ac",
+      "PID": 1099723,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-baf1af44f9f493244ef99ccc41553f58f0de6028eaefff26ea4ebfc0288a19ac.scope"
+    },
+    {
+      "phase": 3,
+      "service": "origin",
+      "CID": "3fde2c678fe91a442ad81b8c12236053cfae56116488c18b0c65f7d1e2edd27c",
+      "PID": 1096736,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-3fde2c678fe91a442ad81b8c12236053cfae56116488c18b0c65f7d1e2edd27c.scope"
+    },
+    {
+      "phase": 3,
+      "service": "publication-observer",
+      "CID": "a55a73966391e9c8ff5b0483df952b3174fc3fd14c51dc68522b930700047979",
+      "PID": 1101556,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-a55a73966391e9c8ff5b0483df952b3174fc3fd14c51dc68522b930700047979.scope"
+    },
+    {
+      "phase": 4,
+      "service": "baseline",
+      "CID": "15d699df86ebf48badf54c5eb84cafca002d98cd8170f0258fdd45f9c765bc94",
+      "PID": 1106810,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-15d699df86ebf48badf54c5eb84cafca002d98cd8170f0258fdd45f9c765bc94.scope"
+    },
+    {
+      "phase": 4,
+      "service": "origin",
+      "CID": "d8b5d5652977da564fddbd76abaed2198c86e693b37ad47417f7dc655960d281",
+      "PID": 1106723,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-d8b5d5652977da564fddbd76abaed2198c86e693b37ad47417f7dc655960d281.scope"
+    },
+    {
+      "phase": 4,
+      "service": "publication-observer",
+      "CID": "e3bcf7175cb77d8b4727437d3025cfed00c76b8d5ea1e65005b8da4bcc64f680",
+      "PID": 1112057,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-e3bcf7175cb77d8b4727437d3025cfed00c76b8d5ea1e65005b8da4bcc64f680.scope"
+    },
+    {
+      "phase": 5,
+      "service": "baseline",
+      "CID": "4c678c0a5cb00ca00eeb36beebf6b4a77e833cb61f3c3d2ed8e89a70a0365a46",
+      "PID": 1118940,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-4c678c0a5cb00ca00eeb36beebf6b4a77e833cb61f3c3d2ed8e89a70a0365a46.scope"
+    },
+    {
+      "phase": 5,
+      "service": "origin",
+      "CID": "a395c4c51cf47ce63d7dba066a0f8081a30b65f4c0f93254aec5d49a41288232",
+      "PID": 1118841,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-a395c4c51cf47ce63d7dba066a0f8081a30b65f4c0f93254aec5d49a41288232.scope"
+    },
+    {
+      "phase": 5,
+      "service": "publication-observer",
+      "CID": "a3ae7c2125888a8c5fe339f1c5fb78198219158dd399a6e39257700361741b0e",
+      "PID": 1124095,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-a3ae7c2125888a8c5fe339f1c5fb78198219158dd399a6e39257700361741b0e.scope"
+    },
+    {
+      "phase": 6,
+      "service": "baseline",
+      "CID": "2fa2e8a81c092727279e7c097d3ec2f1b816ba30452b2447310e72cd199ed3b3",
+      "PID": 1130533,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-2fa2e8a81c092727279e7c097d3ec2f1b816ba30452b2447310e72cd199ed3b3.scope"
+    },
+    {
+      "phase": 6,
+      "service": "candidate",
+      "CID": "4213fd8d5f4b5e0b398d29037f38ff4fe72b3271500aa4970c4315b284bf03c1",
+      "PID": 1133228,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-4213fd8d5f4b5e0b398d29037f38ff4fe72b3271500aa4970c4315b284bf03c1.scope"
+    },
+    {
+      "phase": 6,
+      "service": "origin",
+      "CID": "beaa9fa5bf44407f1d07113492e8391800262a45b3f7cc03c2fa660d32ea4e47",
+      "PID": 1130408,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-beaa9fa5bf44407f1d07113492e8391800262a45b3f7cc03c2fa660d32ea4e47.scope"
+    },
+    {
+      "phase": 6,
+      "service": "publication-observer",
+      "CID": "1badfa35292ab5fec76a2d0c5563972666128664c059116743da64d800d9a3d0",
+      "PID": 1135073,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-1badfa35292ab5fec76a2d0c5563972666128664c059116743da64d800d9a3d0.scope"
+    },
+    {
+      "phase": 7,
+      "service": "baseline",
+      "CID": "ae98038f8f50e6be9ebc51bb9e8946b2574dd5ebaaa31113e84c23342d5fd90d",
+      "PID": 1140778,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-ae98038f8f50e6be9ebc51bb9e8946b2574dd5ebaaa31113e84c23342d5fd90d.scope"
+    },
+    {
+      "phase": 7,
+      "service": "origin",
+      "CID": "44b316c62122f6a1db0462bd6371f43c2460e5a4fcd187ef79d72bdc09c44999",
+      "PID": 1140694,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-44b316c62122f6a1db0462bd6371f43c2460e5a4fcd187ef79d72bdc09c44999.scope"
+    },
+    {
+      "phase": 7,
+      "service": "publication-observer",
+      "CID": "425e1bc72ee8381d0d0c07f643eeb4f8390ed47aad404a5c0abfcfd4e8e29547",
+      "PID": 1146016,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-425e1bc72ee8381d0d0c07f643eeb4f8390ed47aad404a5c0abfcfd4e8e29547.scope"
+    },
+    {
+      "phase": 8,
+      "service": "baseline",
+      "CID": "ddc9adc13a6ba2860909eb318b6b3e71a34183c9ef9102ac056e915aebefffe8",
+      "PID": 1152768,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-ddc9adc13a6ba2860909eb318b6b3e71a34183c9ef9102ac056e915aebefffe8.scope"
+    },
+    {
+      "phase": 8,
+      "service": "candidate",
+      "CID": "bc2ff1dff798b14f8fa8f632aa9e569ddf2842f0239c39a07ff0e1cca1523b9a",
+      "PID": 1155547,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-bc2ff1dff798b14f8fa8f632aa9e569ddf2842f0239c39a07ff0e1cca1523b9a.scope"
+    },
+    {
+      "phase": 8,
+      "service": "origin",
+      "CID": "46e10c8f7457159b64600f3318619c1019368d282a17094b5a12e98b29d2c5c7",
+      "PID": 1152685,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-46e10c8f7457159b64600f3318619c1019368d282a17094b5a12e98b29d2c5c7.scope"
+    },
+    {
+      "phase": 8,
+      "service": "publication-observer",
+      "CID": "0a7556da642d9c906c881bdf33be41ecc56a40b5992be8e934ff3fafdb3a552d",
+      "PID": 1157386,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-0a7556da642d9c906c881bdf33be41ecc56a40b5992be8e934ff3fafdb3a552d.scope"
+    },
+    {
+      "phase": 9,
+      "service": "baseline",
+      "CID": "a11c4d33f8d7c672686b4c02c4c01f879bf830c6a6ef0c197a9e5e83f7cfa0e1",
+      "PID": 1163528,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-a11c4d33f8d7c672686b4c02c4c01f879bf830c6a6ef0c197a9e5e83f7cfa0e1.scope"
+    },
+    {
+      "phase": 9,
+      "service": "candidate",
+      "CID": "959d5247bb706e13f7a7cb1cfe69b643b53f5cbb9a2b1aba375438a0e17c9950",
+      "PID": 1166214,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-959d5247bb706e13f7a7cb1cfe69b643b53f5cbb9a2b1aba375438a0e17c9950.scope"
+    },
+    {
+      "phase": 9,
+      "service": "origin",
+      "CID": "f28b9165bbbdaa9e852a7f058898d82bedd73f23d9d086c43719ecf52c9e06a8",
+      "PID": 1163404,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-f28b9165bbbdaa9e852a7f058898d82bedd73f23d9d086c43719ecf52c9e06a8.scope"
+    },
+    {
+      "phase": 9,
+      "service": "publication-observer",
+      "CID": "baebe5803a711b2cdb348ae6b346c8ec091dfc995762e7dbeef6c471ee1c68a1",
+      "PID": 1167984,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-baebe5803a711b2cdb348ae6b346c8ec091dfc995762e7dbeef6c471ee1c68a1.scope"
+    },
+    {
+      "phase": 10,
+      "service": "baseline",
+      "CID": "24f64eb8196f289697f3b38d6c551a5e2b36aae84376ad833dd4c91f92a9566f",
+      "PID": 1173903,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-24f64eb8196f289697f3b38d6c551a5e2b36aae84376ad833dd4c91f92a9566f.scope"
+    },
+    {
+      "phase": 10,
+      "service": "origin",
+      "CID": "3a947255194028e06cd4d597d9f8bb1e194aad0bc264ab2c795f3a2f96e3c98f",
+      "PID": 1173779,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-3a947255194028e06cd4d597d9f8bb1e194aad0bc264ab2c795f3a2f96e3c98f.scope"
+    },
+    {
+      "phase": 10,
+      "service": "publication-observer",
+      "CID": "b64bdb58771e6cad3647d73390260be8a9bfeb94e068d0a1f0408b62076be02d",
+      "PID": 1178945,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-b64bdb58771e6cad3647d73390260be8a9bfeb94e068d0a1f0408b62076be02d.scope"
+    },
+    {
+      "phase": 11,
+      "service": "baseline",
+      "CID": "b677783f8583647dd274de9f971d78364bf574e850a4b7ccc69fe3c8aeef8d85",
+      "PID": 1185705,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-b677783f8583647dd274de9f971d78364bf574e850a4b7ccc69fe3c8aeef8d85.scope"
+    },
+    {
+      "phase": 11,
+      "service": "origin",
+      "CID": "5368547b806df013766b64f20eda7ba1df0a6befbaac89f5d92881b0ae043cbc",
+      "PID": 1185620,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-5368547b806df013766b64f20eda7ba1df0a6befbaac89f5d92881b0ae043cbc.scope"
+    },
+    {
+      "phase": 11,
+      "service": "publication-observer",
+      "CID": "7dfef0cdb4b0f3f611d1fea7eaa389863577750eeab7a149441c414f779f5faf",
+      "PID": 1190971,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-7dfef0cdb4b0f3f611d1fea7eaa389863577750eeab7a149441c414f779f5faf.scope"
+    },
+    {
+      "phase": 12,
+      "service": "baseline",
+      "CID": "8f0b351b79218f9747caf4d965c196fcbafcd320821cae8525ad849aaf43994f",
+      "PID": 1197491,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-8f0b351b79218f9747caf4d965c196fcbafcd320821cae8525ad849aaf43994f.scope"
+    },
+    {
+      "phase": 12,
+      "service": "candidate",
+      "CID": "971789ea8c7499f07c11ee0ddb7df3d78bec77993b8a2acc42dcca76f79fbb1a",
+      "PID": 1200292,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-971789ea8c7499f07c11ee0ddb7df3d78bec77993b8a2acc42dcca76f79fbb1a.scope"
+    },
+    {
+      "phase": 12,
+      "service": "origin",
+      "CID": "8beef404836291b146f296fa92fd7fce5b3738e4a28256c6d3d77956d2e8efab",
+      "PID": 1197406,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-8beef404836291b146f296fa92fd7fce5b3738e4a28256c6d3d77956d2e8efab.scope"
+    },
+    {
+      "phase": 12,
+      "service": "publication-observer",
+      "CID": "0b83ad4472a228035027903e1fb00e73c7c62e8513d22f37bef505c018ad1a07",
+      "PID": 1202144,
+      "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/user.slice/docker-0b83ad4472a228035027903e1fb00e73c7c62e8513d22f37bef505c018ad1a07.scope"
+    }
+  ],
+  "projects": [
+    {
+      "phase": 1,
+      "project": "dispatcharr-shared-ts-a4cd15f3de16",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a4cd15f3de16"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a4cd15f3de16"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-a4cd15f3de16"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=8a129c0c78adaf1244dc9c8207738d48ce5e1b7e8942d35b56280d52177d8c5a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=39442e321dc399ac007976a21d798c79e2c7f7e26327376a4d486e122e3a4761"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=a11580c3d28b95e47c45bc3e00af5c5b1824fd6b4df6e58abaf9153300e4b0c4"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "project": "dispatcharr-shared-ts-16be9d83c877",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-16be9d83c877"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-16be9d83c877"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-16be9d83c877"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=4364adc8c7f718c8f40994c025b2570f63b26c11a58674b70b9e1b2d763deefd"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=bee272b846df02399d9266fce825917bae3def45d07b3930ec3e1b057f0afca0"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=d6673035c1f0b92c88f61ff5fa383c00f85d7cbd1090d6367a3c2195266cae11"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=9947c6685299cfd7a30502fe2e589fcc7e660ab30cda86be55155aa422d84bc3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "project": "dispatcharr-shared-ts-25b63c4a0030",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-25b63c4a0030"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-25b63c4a0030"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-25b63c4a0030"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=ce2e687cb976afd94bbca010b87b9f627f47fd115b518a55156156218232b435"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=baf1af44f9f493244ef99ccc41553f58f0de6028eaefff26ea4ebfc0288a19ac"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=3fde2c678fe91a442ad81b8c12236053cfae56116488c18b0c65f7d1e2edd27c"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=a55a73966391e9c8ff5b0483df952b3174fc3fd14c51dc68522b930700047979"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "project": "dispatcharr-shared-ts-29a0e7518ea7",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-29a0e7518ea7"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-29a0e7518ea7"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-29a0e7518ea7"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=15d699df86ebf48badf54c5eb84cafca002d98cd8170f0258fdd45f9c765bc94"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=d8b5d5652977da564fddbd76abaed2198c86e693b37ad47417f7dc655960d281"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=e3bcf7175cb77d8b4727437d3025cfed00c76b8d5ea1e65005b8da4bcc64f680"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "project": "dispatcharr-shared-ts-4d9c5e0217ec",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-4d9c5e0217ec"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-4d9c5e0217ec"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-4d9c5e0217ec"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=4c678c0a5cb00ca00eeb36beebf6b4a77e833cb61f3c3d2ed8e89a70a0365a46"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=a395c4c51cf47ce63d7dba066a0f8081a30b65f4c0f93254aec5d49a41288232"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=a3ae7c2125888a8c5fe339f1c5fb78198219158dd399a6e39257700361741b0e"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "project": "dispatcharr-shared-ts-8e03b7c6917f",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8e03b7c6917f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8e03b7c6917f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-8e03b7c6917f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=2fa2e8a81c092727279e7c097d3ec2f1b816ba30452b2447310e72cd199ed3b3"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=4213fd8d5f4b5e0b398d29037f38ff4fe72b3271500aa4970c4315b284bf03c1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=beaa9fa5bf44407f1d07113492e8391800262a45b3f7cc03c2fa660d32ea4e47"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=1badfa35292ab5fec76a2d0c5563972666128664c059116743da64d800d9a3d0"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "project": "dispatcharr-shared-ts-259cd6bf1222",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-259cd6bf1222"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-259cd6bf1222"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-259cd6bf1222"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=ae98038f8f50e6be9ebc51bb9e8946b2574dd5ebaaa31113e84c23342d5fd90d"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=44b316c62122f6a1db0462bd6371f43c2460e5a4fcd187ef79d72bdc09c44999"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=425e1bc72ee8381d0d0c07f643eeb4f8390ed47aad404a5c0abfcfd4e8e29547"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 8,
+      "project": "dispatcharr-shared-ts-fd9b523c243f",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-fd9b523c243f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-fd9b523c243f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-fd9b523c243f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=ddc9adc13a6ba2860909eb318b6b3e71a34183c9ef9102ac056e915aebefffe8"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=bc2ff1dff798b14f8fa8f632aa9e569ddf2842f0239c39a07ff0e1cca1523b9a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=46e10c8f7457159b64600f3318619c1019368d282a17094b5a12e98b29d2c5c7"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=0a7556da642d9c906c881bdf33be41ecc56a40b5992be8e934ff3fafdb3a552d"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 9,
+      "project": "dispatcharr-shared-ts-709a5812d64b",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-709a5812d64b"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-709a5812d64b"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-709a5812d64b"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=a11c4d33f8d7c672686b4c02c4c01f879bf830c6a6ef0c197a9e5e83f7cfa0e1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=959d5247bb706e13f7a7cb1cfe69b643b53f5cbb9a2b1aba375438a0e17c9950"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=f28b9165bbbdaa9e852a7f058898d82bedd73f23d9d086c43719ecf52c9e06a8"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=baebe5803a711b2cdb348ae6b346c8ec091dfc995762e7dbeef6c471ee1c68a1"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 10,
+      "project": "dispatcharr-shared-ts-cd28f1f90509",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-cd28f1f90509"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-cd28f1f90509"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-cd28f1f90509"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=24f64eb8196f289697f3b38d6c551a5e2b36aae84376ad833dd4c91f92a9566f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=3a947255194028e06cd4d597d9f8bb1e194aad0bc264ab2c795f3a2f96e3c98f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=b64bdb58771e6cad3647d73390260be8a9bfeb94e068d0a1f0408b62076be02d"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 11,
+      "project": "dispatcharr-shared-ts-08cee69f5610",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-08cee69f5610"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-08cee69f5610"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-08cee69f5610"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=b677783f8583647dd274de9f971d78364bf574e850a4b7ccc69fe3c8aeef8d85"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=5368547b806df013766b64f20eda7ba1df0a6befbaac89f5d92881b0ae043cbc"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=7dfef0cdb4b0f3f611d1fea7eaa389863577750eeab7a149441c414f779f5faf"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "phase": 12,
+      "project": "dispatcharr-shared-ts-caf411a245fb",
+      "recorded_cleanup_passed": true,
+      "cleanup_checks": [
+        {
+          "kind": "containers",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-caf411a245fb"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "networks",
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-caf411a245fb"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "volumes",
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-shared-ts-caf411a245fb"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "baseline-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=8f0b351b79218f9747caf4d965c196fcbafcd320821cae8525ad849aaf43994f"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "candidate-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=971789ea8c7499f07c11ee0ddb7df3d78bec77993b8a2acc42dcca76f79fbb1a"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "origin-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=8beef404836291b146f296fa92fd7fce5b3738e4a28256c6d3d77956d2e8efab"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        },
+        {
+          "kind": "publication-observer-exact-CID",
+          "argv": [
+            "docker",
+            "ps",
+            "-aq",
+            "--no-trunc",
+            "--filter",
+            "id=0b83ad4472a228035027903e1fb00e73c7c62e8513d22f37bef505c018ad1a07"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "Root_independent_CID_project_cleanup_required": true,
+  "Docker_commands_by_reviewer": 0,
+  "observer_cost_removed": false,
+  "full_migration_accepted": false
+}
